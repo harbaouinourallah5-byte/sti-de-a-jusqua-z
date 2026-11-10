@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STI de A à Z - Portail d'Étude Web (HTML5, CSS3, JS)</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+</head>
+<body>
+
+  <!-- ==========================================
+       EN-TÊTE PRINCIPAL ET BARRE DE NAVIGATION
+       ========================================== -->
+  <header class="site-header">
+    <div class="container nav-inner">
+      <div class="brand-logo" onclick="switchView('home')">
+        <div class="brand-icon">STI</div>
+        <div>
+          <span>STI de A à Z</span>
+          <span class="brand-badge">Révision Web</span>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <button class="nav-btn active" data-view="home">🏠 Accueil</button>
+        <button class="nav-btn" data-view="html" style="color: #f97316;">🌐 HTML5</button>
+        <button class="nav-btn" data-view="css" style="color: #38bdf8;">🎨 CSS3</button>
+        <button class="nav-btn" data-view="js" style="color: #facc15;">⚡ JavaScript</button>
+        
+        <button class="theme-toggle-btn" id="themeToggleBtn" title="Basculer thème sombre / clair">☀️</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==========================================
+         VUE 1 : PAGE D'ACCUEIL (LES 3 GRANDS BLOCS)
+         ========================================== -->
+    <section id="view-home" class="view-section active">
+      <div class="container">
+        
+        <div class="hero">
+          <span class="hero-tag">📚 Annexe & Fiches de Révision Officielles</span>
+          <h1 class="hero-title">Portail d'Étude Web - STI de A à Z</h1>
+          <p class="hero-desc">
+            Retrouvez toutes les notions de votre programme : les balises HTML5 avec photos du résultat, les propriétés CSS3 avec vidéos explicatives et notes sur <code>:hover</code>, ainsi que les fonctions JavaScript.
+          </p>
+        </div>
+
+        <!-- LES 3 GRANDS BLOCS DU COURS (HTML, CSS, JS) -->
+        <div class="portal-grid">
+          
+          <!-- BLOC 1 : HTML5 -->
+          <div class="portal-card card-html" data-view="html">
+            <div class="card-icon-wrap">🌐</div>
+            <h2 class="card-title">HTML5</h2>
+            <p class="card-subtitle">
+              Annexe complète : balises de structuration, tableaux, conteneurs, listes, éléments multimédias et éléments de formulaire.
+            </p>
+            <div class="card-badges">
+              <span class="pill-badge">57 Notions & Balises</span>
+              <span class="pill-badge">Comment utiliser</span>
+              <span class="pill-badge">Code & Photo du rendu</span>
+            </div>
+            <div class="card-cta-btn">
+              <span>Ouvrir l'annexe HTML5</span>
+              <span>→</span>
+            </div>
+          </div>
+
+          <!-- BLOC 2 : CSS3 -->
+          <div class="portal-card card-css" data-view="css">
+            <div class="card-icon-wrap">🎨</div>
+            <h2 class="card-title">CSS3</h2>
+            <p class="card-subtitle">
+              Annexe complète : 61 propriétés avec sélecteurs #id, polices, arrière-plan, boîtes, transitions, animations et filtres.
+            </p>
+            <div class="card-badges">
+              <span class="pill-badge" style="color:#38bdf8;">🎬 61 Vidéos Démo Live</span>
+              <span class="pill-badge" style="color:#facc15;">💡 Note :hover (#id)</span>
+              <span class="pill-badge">Valeurs du Bac</span>
+            </div>
+            <div class="card-cta-btn">
+              <span>Ouvrir l'annexe CSS3 & Vidéos</span>
+              <span>→</span>
+            </div>
+          </div>
+
+          <!-- BLOC 3 : JAVASCRIPT -->
+          <div class="portal-card card-js" data-view="js">
+            <div class="card-icon-wrap">⚡</div>
+            <h2 class="card-title">JavaScript</h2>
+            <p class="card-subtitle">
+              Annexe officielle : les 12 sections du Bac STI (opérateurs, chaînes, Math, Date, Tableaux, DOM et validation).
+            </p>
+            <div class="card-badges">
+              <span class="pill-badge" style="color:#eab308;">45 Fonctions Officielles</span>
+              <span class="pill-badge">Chaînes, Math, Date, DOM</span>
+              <span class="pill-badge">Console de test en direct</span>
+            </div>
+            <div class="card-cta-btn">
+              <span>Ouvrir l'annexe JS & Tests</span>
+              <span>→</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Astuce pour les révisions -->
+        <div style="margin-top: 50px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 4px;">🎯 Astuce d'examen pour la section STI :</h3>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;">
+              Chaque fiche contient le code source réutilisable en un clic et le résultat visuel ou vidéo correspondant pour mémoriser rapidement.
+            </p>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button class="nav-btn" onclick="switchView('html')">Voir HTML5</button>
+            <button class="nav-btn" onclick="switchView('css')">Voir CSS3</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VUE 2 : PAGE DÉDIÉE HTML5
+         ========================================== -->
+    <section id="view-html" class="view-section">
+      <div class="page-header-banner">
+        <div class="container">
+          <div class="breadcrumb">
+            <a onclick="switchView('home')">Accueil</a>
+            <span>/</span>
+            <span style="color: #f97316; font-weight: 600;">HTML5</span>
+          </div>
+          <div class="subpage-title-row">
+            <h2 class="subpage-title">
+              <span style="color: #f97316;">🌐</span> Annexe Complète HTML5
+            </h2>
+            <button class="back-to-home-btn">
+              <span>←</span>
+              <span>Retour à l'accueil</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <!-- Recherche et Catégories -->
+        <div class="filter-search-bar">
+          <div class="search-box-wrap">
+            <span class="search-icon-inside">🔍</span>
+            <input type="text" id="htmlSearchInput" class="search-input" placeholder="Rechercher une balise HTML (ex: input, table, details, form, header...)" oninput="handleHtmlSearch(this.value)">
+          </div>
+          <div class="categories-bar" id="htmlCategoriesBar">
+            <!-- Rempli dynamiquement par JS -->
+          </div>
+        </div>
+
+        <!-- Grille des balises HTML -->
+        <div class="items-grid" id="htmlItemsGrid">
+          <!-- Rempli dynamiquement par JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VUE 3 : PAGE DÉDIÉE CSS3
+         ========================================== -->
+    <section id="view-css" class="view-section">
+      <div class="page-header-banner">
+        <div class="container">
+          <div class="breadcrumb">
+            <a onclick="switchView('home')">Accueil</a>
+            <span>/</span>
+            <span style="color: #38bdf8; font-weight: 600;">CSS3</span>
+          </div>
+          <div class="subpage-title-row">
+            <h2 class="subpage-title">
+              <span style="color: #38bdf8;">🎨</span> Annexe Complète CSS3
+            </h2>
+            <button class="back-to-home-btn">
+              <span>←</span>
+              <span>Retour à l'accueil</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        
+        <!-- Alerte Globale Obligatoire :hover -->
+        <div class="hover-global-notice">
+          <div class="notice-icon">🖱️</div>
+          <div class="notice-content">
+            <h4>RÈGLE D'OR STI SUR LE SURVOL (:hover)</h4>
+            <p>
+              Pour appliquer n'importe quel style uniquement lors du passage de la souris de l'internaute, ajoutez le pseudo-sélecteur <strong><code>:hover</code></strong> sur la règle correspondante (ex: <code>element:hover { transform: scale(1.1); color: red; }</code>). Chaque fiche ci-dessous contient un rappel dédié !
+            </p>
+          </div>
+        </div>
+
+        <!-- Recherche et Catégories -->
+        <div class="filter-search-bar">
+          <div class="search-box-wrap">
+            <span class="search-icon-inside">🔍</span>
+            <input type="text" id="cssSearchInput" class="search-input" placeholder="Rechercher une propriété CSS (ex: box-shadow, transform, transition, color, border...)" oninput="handleCssSearch(this.value)">
+          </div>
+          <div class="categories-bar" id="cssCategoriesBar">
+            <!-- Rempli dynamiquement par JS -->
+          </div>
+        </div>
+
+        <!-- Grille des propriétés CSS -->
+        <div class="items-grid" id="cssItemsGrid">
+          <!-- Rempli dynamiquement par JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VUE 4 : PAGE DÉDIÉE JAVASCRIPT
+         ========================================== -->
+    <section id="view-js" class="view-section">
+      <div class="page-header-banner">
+        <div class="container">
+          <div class="breadcrumb">
+            <a onclick="switchView('home')">Accueil</a>
+            <span>/</span>
+            <span style="color: #facc15; font-weight: 600;">JavaScript</span>
+          </div>
+          <div class="subpage-title-row">
+            <h2 class="subpage-title">
+              <span style="color: #facc15;">⚡</span> Fonctions JavaScript de Révision
+            </h2>
+            <button class="back-to-home-btn">
+              <span>←</span>
+              <span>Retour à l'accueil</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        
+        <!-- Bannière officielle Annexe JS -->
+        <div style="background: linear-gradient(135deg, rgba(234, 179, 8, 0.15), rgba(202, 138, 4, 0.1)); border: 1px solid rgba(234, 179, 8, 0.4); border-left: 6px solid #eab308; border-radius: var(--radius-md); padding: 18px 22px; margin-bottom: 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+          <div>
+            <h4 style="color: #facc15; font-size: 1.05rem; margin-bottom: 4px;">⚡ Annexe Officielle JavaScript - Baccalauréat STI</h4>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;">
+              L'intégralité des 12 sections de l'annexe officielle : opérateurs logiques, comparaisons, Math, chaînes de caractères, dates, tableaux, sélection DOM, modification de style et validation !
+            </p>
+          </div>
+          <span style="background: #eab308; color: #000; font-weight: 800; font-size: 0.8rem; padding: 6px 14px; border-radius: 20px;">
+            45 Notions Officielles JS
+          </span>
+        </div>
+
+        <!-- Recherche et Catégories JS -->
+        <div class="filter-search-bar">
+          <div class="search-box-wrap">
+            <span class="search-icon-inside">🔍</span>
+            <input type="text" id="jsSearchInput" class="search-input" placeholder="Rechercher une fonction JS (ex: isNaN, Math, trim, Date, getElementById, selectedIndex...)" oninput="handleJsSearch(this.value)">
+          </div>
+          <div class="categories-bar" id="jsCategoriesBar">
+            <!-- Rempli dynamiquement par JS -->
+          </div>
+        </div>
+
+        <!-- Grille des fonctions JavaScript -->
+        <div class="items-grid" id="jsItemsGrid">
+          <!-- Rempli dynamiquement par JS -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================
+       MODALE UNIVERSELLE DE DÉTAILS
+       ========================================== -->
+  <div class="modal-overlay" id="detailsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <div class="category-label" id="modalCategory">Catégorie</div>
+          <h3 id="modalTitle">Titre de l'élément</h3>
+        </div>
+        <button class="close-modal-btn" id="closeModalBtn" title="Fermer la fenêtre (Échap)">&times;</button>
+      </div>
+
+      <!-- Corps dynamique injecté par JS -->
+      <div class="modal-body" id="modalDynamicBody">
+      </div>
+    </div>
+  </div>
+
+  <!-- Fichiers Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
