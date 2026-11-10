@@ -89,14 +89,14 @@
 
           <!-- BLOC 3 : JAVASCRIPT -->
           <div class="portal-card card-js" data-view="js">
-            <div class="card-icon-wrap">⚡</div>
+            <div class="card-icon-wrap" style="background: linear-gradient(135deg, #059669, #10b981);">⚡</div>
             <h2 class="card-title">JavaScript</h2>
             <p class="card-subtitle">
-              Annexe officielle : les 12 sections du Bac STI (opérateurs, chaînes, Math, Date, Tableaux, DOM et validation).
+              Annexe officielle conforme : les 12 sections du Bac STI (opérateurs, chaînes, Math, Date, Tableaux, DOM et validation).
             </p>
             <div class="card-badges">
-              <span class="pill-badge" style="color:#eab308;">45 Fonctions Officielles</span>
-              <span class="pill-badge">Chaînes, Math, Date, DOM</span>
+              <span class="pill-badge" style="color:#34d399;">53 Notions Officielles (12 sections)</span>
+              <span class="pill-badge" style="color:#10b981;">📋 Tableau Officiel 3 Colonnes</span>
               <span class="pill-badge">Console de test en direct</span>
             </div>
             <div class="card-cta-btn">
@@ -229,11 +229,11 @@
           <div class="breadcrumb">
             <a onclick="switchView('home')">Accueil</a>
             <span>/</span>
-            <span style="color: #facc15; font-weight: 600;">JavaScript</span>
+            <span style="color: #10b981; font-weight: 600;">JavaScript</span>
           </div>
           <div class="subpage-title-row">
             <h2 class="subpage-title">
-              <span style="color: #facc15;">⚡</span> Fonctions JavaScript de Révision
+              <span style="color: #10b981;">⚡</span> Annexe Complète JavaScript (Bac STI)
             </h2>
             <button class="back-to-home-btn">
               <span>←</span>
@@ -245,34 +245,406 @@
 
       <div class="container">
         
-        <!-- Bannière officielle Annexe JS -->
-        <div style="background: linear-gradient(135deg, rgba(234, 179, 8, 0.15), rgba(202, 138, 4, 0.1)); border: 1px solid rgba(234, 179, 8, 0.4); border-left: 6px solid #eab308; border-radius: var(--radius-md); padding: 18px 22px; margin-bottom: 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
-          <div>
-            <h4 style="color: #facc15; font-size: 1.05rem; margin-bottom: 4px;">⚡ Annexe Officielle JavaScript - Baccalauréat STI</h4>
-            <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;">
-              L'intégralité des 12 sections de l'annexe officielle : opérateurs logiques, comparaisons, Math, chaînes de caractères, dates, tableaux, sélection DOM, modification de style et validation !
-            </p>
-          </div>
-          <span style="background: #eab308; color: #000; font-weight: 800; font-size: 0.8rem; padding: 6px 14px; border-radius: 20px;">
-            45 Notions Officielles JS
-          </span>
+        <!-- Onglets de bascule d'affichage -->
+        <div class="view-tabs-bar">
+          <button id="tabBtnAnnexeDoc" class="view-mode-tab active" onclick="switchJsTab('doc')">
+            <span>📄</span>
+            <span>Tableau Officiel Annexe JS (Recommandé)</span>
+          </button>
+          <button id="tabBtnCardsGrid" class="view-mode-tab" onclick="switchJsTab('cards')">
+            <span>🎴</span>
+            <span>Fiches Détaillées & Recherche (53 notions)</span>
+          </button>
         </div>
 
-        <!-- Recherche et Catégories JS -->
-        <div class="filter-search-bar">
-          <div class="search-box-wrap">
-            <span class="search-icon-inside">🔍</span>
-            <input type="text" id="jsSearchInput" class="search-input" placeholder="Rechercher une fonction JS (ex: isNaN, Math, trim, Date, getElementById, selectedIndex...)" oninput="handleJsSearch(this.value)">
+        <!-- ==========================================
+             1. VUE TABLEAU OFFICIEL (RÉPLIQUE 3 COLONNES)
+             ========================================== -->
+        <div class="annexe-doc-container" id="jsOfficialDocView">
+          <div class="annexe-doc-header">
+            <div class="annexe-title-wrap">
+              <div class="annexe-logo-shield">
+                <span style="font-size:0.7rem; font-weight:bold;">JS</span>
+                <span style="font-size:1.15rem; font-weight:900; line-height:1;">5</span>
+              </div>
+              <div>
+                <h2 class="annexe-title-text">Annexe JS</h2>
+                <span style="font-size:0.85rem; color:var(--text-secondary);">Baccalauréat STI - Sciences & Technologies de l'Informatique</span>
+              </div>
+            </div>
+            <div class="annexe-doc-tip">
+              <span>👆</span>
+              <span><strong>Interactif :</strong> Cliquez sur n'importe quelle ligne pour voir le code d'examen & tester !</span>
+            </div>
           </div>
-          <div class="categories-bar" id="jsCategoriesBar">
+
+          <div class="annexe-3col-grid">
+            <!-- COLONNE 1 -->
+            <div class="annexe-col">
+              <!-- 1. Opérateurs logiques -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Opérateurs logiques</div>
+                <table class="annexe-table">
+                  <tr onclick="openJsModalById('js-op-et')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&amp;&amp;</td>
+                    <td class="desc-col">ET</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-op-ou')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">||</td>
+                    <td class="desc-col">OU</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-op-non')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">!</td>
+                    <td class="desc-col">NON</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- 2. Opérateurs de comparaison -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Opérateurs de comparaison</div>
+                <table class="annexe-table">
+                  <tr onclick="openJsModalById('js-comp-egal')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">==</td>
+                    <td class="desc-col">Egal</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-comp-diff')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">!=</td>
+                    <td class="desc-col">Différent</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-comp-sup')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&gt;</td>
+                    <td class="desc-col">Supérieur à</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-comp-supegal')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&gt;=</td>
+                    <td class="desc-col">Supérieur ou égal à</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-comp-inf')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;</td>
+                    <td class="desc-col">Inférieur</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-comp-infegal')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;=</td>
+                    <td class="desc-col">Inférieur ou égal à</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- 3. Opérateurs arithmétiques -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Opérateurs arithmétiques</div>
+                <table class="annexe-table">
+                  <tr onclick="openJsModalById('js-arithm-add')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">+</td>
+                    <td class="desc-col">Addition</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-arithm-sous')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">-</td>
+                    <td class="desc-col">Soustraction</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-arithm-mult')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">*</td>
+                    <td class="desc-col">Multiplication</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-arithm-div')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">/</td>
+                    <td class="desc-col">Division</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-arithm-modulo')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">%</td>
+                    <td class="desc-col">Reste de la division euclidienne</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- 4. Méthodes pour afficher une sortie* -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Méthodes pour afficher une sortie*</div>
+                <table class="annexe-table">
+                  <tr onclick="openJsModalById('js-out-alert')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">alert()</td>
+                    <td class="desc-col">Affiche un message dans une boîte de dialogue.</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-out-docwrite')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">Document.write()</td>
+                    <td class="desc-col">Affiche directement dans le document HTML.</td>
+                  </tr>
+                </table>
+                <div class="annexe-box-footer" onclick="openJsModalById('js-out-innerhtml')" style="cursor:pointer;" title="Cliquez pour ouvrir la fiche innerHTML">
+                  *Pour afficher/modifier un contenu dynamique, on peut utiliser la propriété <strong>innerHTML</strong> d'un élément HTML. 👆
+                </div>
+              </div>
+
+              <!-- 5. Méthode pour saisir une entrée -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Méthode pour saisir une entrée</div>
+                <table class="annexe-table">
+                  <tr onclick="openJsModalById('js-in-prompt')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">prompt()</td>
+                    <td class="desc-col">Affiche une boîte de dialogue avec une zone de saisie.</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- 6. Fonctions/Méthodes JS -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Fonctions/Méthodes JS</div>
+                <table class="annexe-table">
+                  <tr onclick="openJsModalById('js-fn-isnan')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">isNaN(ch)</td>
+                    <td class="desc-col">Retourne true si l'argument ch n'est pas convertible en un nombre, sinon retourne false.</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-fn-number')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">Number(ch)</td>
+                    <td class="desc-col">Convertit une chaîne ch en un nombre*.</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-fn-parsefloat')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">parseFloat(ch)</td>
+                    <td class="desc-col">Convertit une chaîne ch en un réel.</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-fn-parseint')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">parseInt(ch [,b])</td>
+                    <td class="desc-col">Convertit une chaîne ch en un entier exprimé dans la base b.</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-fn-string')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">String(a)</td>
+                    <td class="desc-col">Convertit la valeur a en une chaîne.</td>
+                  </tr>
+                </table>
+                <div class="annexe-box-footer">
+                  *Si la conversion n'est pas possible, la fonction retourne NaN.
+                </div>
+              </div>
+
+              <!-- 7. Méthodes pour sélectionner des éléments HTML -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Méthodes pour sélectionner des éléments HTML</div>
+                <table class="annexe-table">
+                  <tr onclick="openJsModalById('js-dom-getelementbyid')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col" style="font-size:0.76rem;">document.getElementById()</td>
+                    <td class="desc-col">permet de sélectionner un élément unique en fonction de son identifiant.</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-dom-getelementsbyname')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col" style="font-size:0.76rem;">document.getElementsByName()</td>
+                    <td class="desc-col">permet de sélectionner tous les éléments ayant le même nom.</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            <!-- COLONNE 2 -->
+            <div class="annexe-col">
+              <!-- 8. Méthodes de l'objet Math (Math) -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Méthodes de l'objet Math (Math)</div>
+                <table class="annexe-table">
+                  <tr onclick="openJsModalById('js-math-abs')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">abs(x)</td>
+                    <td class="desc-col">Retourne la valeur absolue.</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-math-sqrt')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">sqrt(x)</td>
+                    <td class="desc-col">Retourne la racine carrée.</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-math-round')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">round(x)</td>
+                    <td class="desc-col">Retourne l'entier le plus proche.</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-math-trunc')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">trunc(x)</td>
+                    <td class="desc-col">Retourne la troncature entière d'un nombre en retirant sa partie décimale.</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-math-random')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">random()</td>
+                    <td class="desc-col">Retourne un réel aléatoire dans [0, 1[.</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- 9. Les chaînes de caractères -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Les chaînes de caractères</div>
+                <table class="annexe-table">
+                  <tr onclick="openJsModalById('js-str-concat')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">+</td>
+                    <td class="desc-col">Opérateur de concaténation.</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-str-length')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">ch.length</td>
+                    <td class="desc-col">Propriété qui retourne la longueur de ch.</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-str-indexof')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col" style="font-size:0.76rem;">ch.indexOf(ch1 [,p])</td>
+                    <td class="desc-col">Retourne la position de la 1ère occurrence de ch1 dans ch, en effectuant la recherche à partir de la position p (sinon -1).</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-str-lastindexof')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col" style="font-size:0.76rem;">ch.lastIndexOf(ch1 [,p])</td>
+                    <td class="desc-col">Retourne la position de la dernière occurrence de ch1 dans ch à partir de la position p.</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-str-substring')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">ch.substring(d, f)</td>
+                    <td class="desc-col">Retourne une sous-chaîne de ch de la position d à la position f (non incluse).</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-str-replace')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">ch.replace(ch1, ch2)</td>
+                    <td class="desc-col">Retourne une chaîne dans laquelle la 1ère occurrence de ch1 dans ch est remplacée par ch2.</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-str-tolowercase')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">ch.toLowerCase()</td>
+                    <td class="desc-col">Convertit tous les caractères de ch en minuscules.</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-str-touppercase')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">ch.toUpperCase()</td>
+                    <td class="desc-col">Convertit tous les caractères de ch en majuscules.</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-str-trim')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">ch.trim()</td>
+                    <td class="desc-col">Supprime tous les espaces existants au début et à la fin de ch.</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-str-fromcharcode')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col" style="font-size:0.72rem;">String.fromCharCode(num, ..., numN)</td>
+                    <td class="desc-col">Retourne une chaîne formée par la concaténation des résultats de conversion des codes ASCII passés en paramètres.</td>
+                  </tr>
+                </table>
+                <div class="annexe-box-footer">
+                  ch est un objet String
+                </div>
+              </div>
+
+              <!-- 10. L'objet Date -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">L'objet Date</div>
+                <table class="annexe-table">
+                  <tr onclick="openJsModalById('js-date-now')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">new Date()</td>
+                    <td class="desc-col">Retourne la date courante.</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-date-parse')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">new Date(ch)</td>
+                    <td class="desc-col">Retourne un objet Date à partir d'une chaîne de caractères ch représentant une date.</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-date-getdate')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">d.getDate()</td>
+                    <td class="desc-col">Retourne le jour du mois (entre 1 et 31).</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-date-getmonth')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">d.getMonth()</td>
+                    <td class="desc-col">Retourne le numéro du mois (entre 1 et 11).</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-date-getfullyear')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">d.getFullYear()</td>
+                    <td class="desc-col">Retourne la valeur de l'année sur 4 chiffres.</td>
+                  </tr>
+                  <tr onclick="openJsModalById('js-date-tostring')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">d.toString()</td>
+                    <td class="desc-col">Retourne une chaîne de caractères représentant la date d.</td>
+                  </tr>
+                </table>
+                <div class="annexe-box-footer">
+                  d est un objet Date.
+                </div>
+              </div>
+            </div>
+
+            <!-- COLONNE 3 -->
+            <div class="annexe-col">
+              <!-- 11. L'objet Array -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">L'objet Array</div>
+                <table class="annexe-table">
+                  <tr onclick="openJsModalById('js-arr-length')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">length</td>
+                    <td class="desc-col">Propriété qui représente le nombre d'éléments dans un tableau.</td>
+                  </tr>
+                </table>
+                <div class="annexe-box-footer" onclick="openJsModalById('js-arr-literal')" style="cursor:pointer;" title="Cliquez pour ouvrir la fiche littéraux []">
+                  Pour créer un tableau, utiliser les littéraux de tableau <strong>[]</strong>. 👆
+                </div>
+              </div>
+
+              <!-- 12. Modification du contenu, des attributs ou des styles des éléments HTML -->
+              <div class="annexe-box">
+                <div class="annexe-box-header" style="font-size:0.84rem; line-height:1.3;">
+                  Modification du contenu, des attributs ou des styles des éléments HTML
+                </div>
+                
+                <!-- Sous-partie 1 : Attributs -->
+                <table class="annexe-table">
+                  <tr onclick="openJsModalById('js-dom-attr-val')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col" style="font-size:0.75rem;">element.attribut = valeur</td>
+                    <td class="desc-col">Change la valeur de l'attribut d'un élément HTML.</td>
+                  </tr>
+                </table>
+                <div class="annexe-box-footer" style="margin-bottom:8px;">
+                  Se limiter à la manipulation des attributs <em>value, checked, disabled, readonly, src, muted.</em>
+                </div>
+
+                <!-- Sous-partie 2 : Styles -->
+                <table class="annexe-table">
+                  <tr onclick="openJsModalById('js-dom-style-prop')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col" style="font-size:0.73rem;">element.style.propriété = valeur</td>
+                    <td class="desc-col">Change le style d'un élément HTML.</td>
+                  </tr>
+                </table>
+                <div class="annexe-box-footer" style="margin-bottom:8px;">
+                  Se limiter à la manipulation des propriétés <em>color, background, border, font, width, height.</em>
+                </div>
+
+                <!-- Sous-partie 3 : Méthodes -->
+                <table class="annexe-table">
+                  <tr onclick="openJsModalById('js-dom-method-play')" title="Cliquer pour afficher la fiche play()">
+                    <td class="syntax-col" style="font-size:0.76rem;">element.méthode()</td>
+                    <td class="desc-col">Effectue une action sur un élément HTML (play / pause).</td>
+                  </tr>
+                </table>
+                <div class="annexe-box-footer" style="margin-bottom:8px;">
+                  Se limiter à la manipulation des méthodes <em>play(), pause().</em>
+                </div>
+
+                <!-- Note selectedIndex -->
+                <div class="annexe-box-footer" onclick="openJsModalById('js-dom-selectedindex')" style="cursor:pointer; background:rgba(16, 185, 129, 0.15); border-top:1px solid #059669; color:#f8fafc;" title="Cliquez pour ouvrir la fiche selectedIndex">
+                  <strong>Pour une liste déroulante (&lt;select&gt;) :</strong> utiliser la propriété <strong>selectedIndex</strong> pour récupérer l'indice de l'option sélectionnée. 👆
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             2. VUE CARTES & RECHERCHE JS
+             ========================================== -->
+        <div id="jsCardsGridView" style="display:none;">
+          <!-- Bannière officielle Annexe JS -->
+          <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.1)); border: 1px solid rgba(16, 185, 129, 0.4); border-left: 6px solid #10b981; border-radius: var(--radius-md); padding: 18px 22px; margin-bottom: 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+            <div>
+              <h4 style="color: #34d399; font-size: 1.05rem; margin-bottom: 4px;">⚡ 53 Notions JavaScript - Baccalauréat STI</h4>
+              <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;">
+                L'intégralité des 12 sections de l'annexe officielle : opérateurs logiques, comparaisons, Math, chaînes de caractères, dates, tableaux, sélection DOM, modification de style et validation !
+              </p>
+            </div>
+            <span style="background: #059669; color: #fff; font-weight: 800; font-size: 0.8rem; padding: 6px 14px; border-radius: 20px;">
+              53 Notions avec Console Interactive
+            </span>
+          </div>
+
+          <!-- Recherche et Catégories JS -->
+          <div class="filter-search-bar">
+            <div class="search-box-wrap">
+              <span class="search-icon-inside">🔍</span>
+              <input type="text" id="jsSearchInput" class="search-input" placeholder="Rechercher une fonction JS (ex: isNaN, Math, trim, Date, getElementById, selectedIndex...)" oninput="handleJsSearch(this.value)">
+            </div>
+            <div class="categories-bar" id="jsCategoriesBar">
+              <!-- Rempli dynamiquement par JS -->
+            </div>
+          </div>
+
+          <!-- Grille des fonctions JavaScript -->
+          <div class="items-grid" id="jsItemsGrid">
             <!-- Rempli dynamiquement par JS -->
           </div>
         </div>
 
-        <!-- Grille des fonctions JavaScript -->
-        <div class="items-grid" id="jsItemsGrid">
-          <!-- Rempli dynamiquement par JS -->
-        </div>
       </div>
     </section>
 

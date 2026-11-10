@@ -1808,579 +1808,934 @@ const DATA = {
   ],
   "js": [
   {
-    "id": "js-op-logique-et",
+    "id": "js-op-et",
+    "section": "Opérateurs logiques",
     "category": "Opérateurs logiques",
-    "name": "&& - ET logique",
-    "summary": "Renvoie true si et seulement si les deux conditions sont vraies en même temps.",
-    "description": "L'opérateur '&&' (ET logique) permet d'associer deux conditions dans une structure conditionnelle if. La condition globale ne sera validée que si les deux sous-conditions sont simultanément vraies. Au Bac STI, on l'utilise souvent pour vérifier qu'une note est à la fois >= 0 ET <= 20.",
+    "name": "&& (ET logique)",
+    "tag": "&&",
+    "syntax": "condition1 && condition2",
+    "summary": "ET",
+    "description": "Opérateur logique ET. Renvoie true si et seulement si toutes les conditions liées sont vraies en même temps. Très utilisé dans les contrôles de formulaire pour combiner plusieurs validations.",
+    "howToUse": "Dans une structure conditionnelle if (...), relier deux expressions avec &&. Si la première est fausse, JavaScript s'arrête (court-circuit).",
     "values": [
       "condition1 && condition2",
       "true && true -> true",
       "true && false -> false"
     ],
-    "code": "let note = 15;\n\n// Vérifie que la note est comprise entre 0 et 20\nif (note >= 0 && note <= 20) {\n  alert(\"Note valide !\");\n} else {\n  alert(\"Note invalide !\");\n}",
-    "testCode": "let note = 16;\nlet valide = (note >= 0 && note <= 20);\nalert(\"Test && : (16 >= 0 && 16 <= 20) renvoie : \" + valide);"
+    "code": "// Validation d'une note de Bac entre 0 et 20\nfunction validerNote() {\n  var note = Number(document.getElementById(\"note\").value);\n  if (note >= 0 && note <= 20) {\n    alert(\"Note valide (\" + note + \"/20)\");\n    return true;\n  } else {\n    alert(\"Erreur : la note doit être comprise entre 0 et 20 !\");\n    return false;\n  }\n}",
+    "runnableCode": "var note = 14;\nvar estValide = (note >= 0 && note <= 20);\nconsole.log(\"Note = \" + note + \" -> Est valide (note >= 0 && note <= 20) : \" + estValide);"
   },
   {
-    "id": "js-op-logique-ou",
+    "id": "js-op-ou",
+    "section": "Opérateurs logiques",
     "category": "Opérateurs logiques",
-    "name": "|| - OU logique",
-    "summary": "Renvoie true si au moins l'une des deux conditions est vraie.",
-    "description": "L'opérateur '||' (OU logique) s'écrit avec deux barres verticales. Il renvoie true dès qu'au moins l'une des conditions est vérifiée. Très utile en validation de formulaire pour détecter si l'un des deux champs obligatoires a été laissé vide.",
+    "name": "|| (OU logique)",
+    "tag": "||",
+    "syntax": "condition1 || condition2",
+    "summary": "OU",
+    "description": "Opérateur logique OU. Renvoie true si au moins l'une des conditions est vraie. Renvoie false uniquement si toutes les conditions sont fausses.",
+    "howToUse": "Utiliser || pour autoriser plusieurs choix alternatifs ou détecter si un champ parmi plusieurs est manquant.",
     "values": [
       "condition1 || condition2",
-      "true || false -> true",
+      "false || true -> true",
       "false || false -> false"
     ],
-    "code": "let nom = \"\";\nlet prenom = \"Ali\";\n\nif (nom == \"\" || prenom == \"\") {\n  alert(\"Veuillez remplir tous les champs obligatoires !\");\n}",
-    "testCode": "let nom = \"\";\nlet test = (nom == \"\" || 5 > 10);\nalert(\"Test || : (\"\" == \"\" || 5 > 10) renvoie : \" + test);"
+    "code": "// Vérifier si au moins un des champs obligatoires est vide\nfunction verifierChamps() {\n  var nom = document.getElementById(\"nom\").value;\n  var email = document.getElementById(\"email\").value;\n  if (nom == \"\" || email == \"\") {\n    alert(\"Attention : vous devez remplir le nom OU l'email !\");\n    return false;\n  }\n  return true;\n}",
+    "runnableCode": "var ville = \"Sousse\";\nvar estTunisie = (ville == \"Tunis\" || ville == \"Sousse\" || ville == \"Sfax\");\nconsole.log(\"Ville = \" + ville + \" -> Ville en Tunisie : \" + estTunisie);"
   },
   {
-    "id": "js-op-logique-non",
+    "id": "js-op-non",
+    "section": "Opérateurs logiques",
     "category": "Opérateurs logiques",
-    "name": "! - NON logique (Négation)",
-    "summary": "Inverse la valeur de vérité d'une condition (transforme true en false et vice-versa).",
-    "description": "Le point d'exclamation '!' inverse la valeur booléenne. Si une condition est fausse, !condition devient vrai. En examen, on l'utilise pour vérifier qu'une case n'est pas cochée (!case.checked) ou qu'un champ n'est pas vide (!isNaN(valeur)).",
+    "name": "! (NON logique)",
+    "tag": "!",
+    "syntax": "!condition",
+    "summary": "NON",
+    "description": "Opérateur logique NON (négation). Inverse la valeur booléenne : transforme true en false, et transforme false en true.",
+    "howToUse": "Placer le point d'exclamation devant une variable booléenne ou une condition pour tester son contraire.",
     "values": [
       "!true -> false",
-      "!false -> true"
+      "!false -> true",
+      "!isNaN(val) -> teste si c'est un nombre"
     ],
-    "code": "let majeur = false;\n\nif (!majeur) {\n  alert(\"Accès réservé aux personnes majeures.\");\n}",
-    "testCode": "let actif = false;\nalert(\"Test ! : !false renvoie : \" + (!actif));"
+    "code": "// Vérifier si une case à cocher n'est PAS cochée\nfunction validerReglement() {\n  var accepte = document.getElementById(\"chk_accord\").checked;\n  if (!accepte) {\n    alert(\"Vous devez accepter le règlement avant d'envoyer !\");\n    return false;\n  }\n  return true;\n}",
+    "runnableCode": "var connecte = false;\nconsole.log(\"Connecté : \" + connecte);\nconsole.log(\"!connecte (Non connecté) : \" + (!connecte));"
   },
   {
-    "id": "js-op-comp-egal",
+    "id": "js-comp-egal",
+    "section": "Opérateurs de comparaison",
     "category": "Opérateurs de comparaison",
-    "name": "== - Égal à",
-    "summary": "Compare deux valeurs et renvoie true si elles sont égales.",
-    "description": "L'opérateur de comparaison d'égalité '==' compare deux valeurs. ATTENTION au Bac : ne confondez pas un seul égal '=' (qui sert à affecter une valeur à une variable) et le double égal '==' (qui sert à comparer dans un if) !",
+    "name": "== (Egal)",
+    "tag": "==",
+    "syntax": "a == b",
+    "summary": "Egal",
+    "description": "Teste l'égalité de valeur entre deux expressions. Renvoie true si les deux valeurs sont équivalentes après conversion implicite de type.",
+    "howToUse": "Attention à ne pas confondre avec le simple signe d'affectation =. Dans un test if, utiliser toujours ==.",
     "values": [
       "a == b",
-      "5 == 5 -> true",
-      "'test' == 'test' -> true"
+      "10 == '10' -> true",
+      "'bac' == 'bac' -> true"
     ],
-    "code": "let section = \"STI\";\n\nif (section == \"STI\") {\n  alert(\"Bienvenue en section STI !\");\n}",
-    "testCode": "let a = \"STI\";\nalert(\"Test == : (\"STI\" == \"STI\") -> \" + (a == \"STI\"));"
+    "code": "// Vérifier la confirmation d'un mot de passe\nfunction verifierMdp() {\n  var p1 = document.getElementById(\"pass1\").value;\n  var p2 = document.getElementById(\"pass2\").value;\n  if (p1 == p2) {\n    alert(\"Mots de passe identiques !\");\n    return true;\n  } else {\n    alert(\"Erreur : les mots de passe ne correspondent pas !\");\n    return false;\n  }\n}",
+    "runnableCode": "var code = \"BAC2026\";\nconsole.log(\"Test (code == 'BAC2026') : \" + (code == \"BAC2026\"));"
   },
   {
-    "id": "js-op-comp-diff",
+    "id": "js-comp-diff",
+    "section": "Opérateurs de comparaison",
     "category": "Opérateurs de comparaison",
-    "name": "!= - Différent de",
-    "summary": "Renvoie true si les deux valeurs sont différentes.",
-    "description": "L'opérateur '!=' vérifie que deux valeurs ne sont pas égales. Par exemple : if (motDePasse != confirmation) { alert('Mots de passe non identiques'); }.",
+    "name": "!= (Différent)",
+    "tag": "!=",
+    "syntax": "a != b",
+    "summary": "Différent",
+    "description": "Teste la non-égalité entre deux expressions. Renvoie true si les valeurs sont différentes.",
+    "howToUse": "Très utile pour s'assurer qu'un champ texte n'est pas vide (ch != '') ou qu'une sélection n'est pas celle par défaut.",
     "values": [
       "a != b",
-      "5 != 3 -> true",
-      "5 != 5 -> false"
+      "5 != 10 -> true",
+      "ch != '' -> true si non vide"
     ],
-    "code": "let pass1 = \"123\";\nlet pass2 = \"abc\";\n\nif (pass1 != pass2) {\n  alert(\"Erreur : les deux mots de passe ne correspondent pas !\");\n}",
-    "testCode": "alert(\"Test != : (10 != 20) renvoie : \" + (10 != 20));"
+    "code": "// Contrôler qu'un champ texte n'est pas vide\nfunction verifierChamp() {\n  var nom = document.getElementById(\"nom\").value;\n  if (nom != \"\") {\n    alert(\"Nom renseigné : \" + nom);\n    return true;\n  } else {\n    alert(\"Le champ nom ne doit pas être vide !\");\n    return false;\n  }\n}",
+    "runnableCode": "var prenom = \"Nour\";\nconsole.log(\"Prénom : \" + prenom + \" -> (prenom != '') : \" + (prenom != \"\"));"
   },
   {
-    "id": "js-op-comp-sup",
+    "id": "js-comp-sup",
+    "section": "Opérateurs de comparaison",
     "category": "Opérateurs de comparaison",
-    "name": "> et >= - Supérieur / Supérieur ou égal",
-    "summary": "Vérifie si une valeur est strictement supérieure (>) ou supérieure ou égale (>=) à une autre.",
-    "description": "Permet de vérifier des seuils numériques (ex: moyenne >= 10 pour l'admission, âge >= 18).",
+    "name": "> (Supérieur à)",
+    "tag": ">",
+    "syntax": "a > b",
+    "summary": "Supérieur à",
+    "description": "Renvoie true si la valeur de gauche est strictement plus grande que la valeur de droite.",
+    "howToUse": "Utiliser > pour vérifier des seuils stricts (ex: montant > 0, moyenne > 10).",
     "values": [
-      "> (strictement supérieur)",
-      ">= (supérieur ou égal)"
+      "a > b",
+      "15 > 10 -> true",
+      "10 > 10 -> false"
     ],
-    "code": "let moyenne = 14;\n\nif (moyenne >= 10) {\n  alert(\"Félicitations, vous êtes admis !\");\n}",
-    "testCode": "let moy = 14;\nalert(\"Test >= : (14 >= 10) -> \" + (moy >= 10));"
+    "code": "// Vérifier si un prix est strictement positif\nfunction verifierPrix() {\n  var prix = Number(document.getElementById(\"prix\").value);\n  if (prix > 0) {\n    alert(\"Prix valide !\");\n  } else {\n    alert(\"Le prix doit être strictement supérieur à 0 !\");\n  }\n}",
+    "runnableCode": "var note = 13.5;\nconsole.log(\"Note = 13.5 -> (note > 10) : \" + (note > 10));"
   },
   {
-    "id": "js-op-comp-inf",
+    "id": "js-comp-supegal",
+    "section": "Opérateurs de comparaison",
     "category": "Opérateurs de comparaison",
-    "name": "< et <= - Inférieur / Inférieur ou égal",
-    "summary": "Vérifie si une valeur est strictement inférieure (<) ou inférieure ou égale (<=) à une autre.",
-    "description": "Permet de vérifier qu'une valeur ne dépasse pas une limite autorisée (ex: prix <= 100, note <= 20).",
+    "name": ">= (Supérieur ou égal à)",
+    "tag": ">=",
+    "syntax": "a >= b",
+    "summary": "Supérieur ou égal à",
+    "description": "Renvoie true si la valeur de gauche est plus grande ou égale à celle de droite.",
+    "howToUse": "Indispensable pour les conditions de majorité ou d'admission (ex: age >= 18, moyenne >= 10).",
     "values": [
-      "< (strictement inférieur)",
-      "<= (inférieur ou égal)"
+      "a >= b",
+      "18 >= 18 -> true",
+      "20 >= 10 -> true"
     ],
-    "code": "let score = 5;\n\nif (score < 10) {\n  alert(\"Score insuffisant pour valider le niveau.\");\n}",
-    "testCode": "alert(\"Test < : (5 < 10) -> \" + (5 < 10));"
+    "code": "// Vérification de la majorité\nfunction verifierAge() {\n  var age = Number(document.getElementById(\"age\").value);\n  if (age >= 18) {\n    alert(\"Accès autorisé (Majeur)\");\n  } else {\n    alert(\"Accès refusé : vous devez avoir au moins 18 ans !\");\n  }\n}",
+    "runnableCode": "var age = 18;\nconsole.log(\"Age = 18 -> (age >= 18) : \" + (age >= 18));"
   },
   {
-    "id": "js-op-arithm-bases",
-    "category": "Opérateurs arithmétiques",
-    "name": "+ , - , * , / - Opérations de base",
-    "summary": "Effectue l'addition (+), la soustraction (-), la multiplication (*) ou la division (/).",
-    "description": "Les 4 opérations mathématiques élémentaires. ATTENTION avec '+' : si l'une des deux variables est une chaîne de caractères (string), '+' fera une concaténation au lieu d'une addition ! Utilisez Number() ou parseInt() pour additionner des nombres saisis dans un formulaire.",
+    "id": "js-comp-inf",
+    "section": "Opérateurs de comparaison",
+    "category": "Opérateurs de comparaison",
+    "name": "< (Inférieur)",
+    "tag": "<",
+    "syntax": "a < b",
+    "summary": "Inférieur",
+    "description": "Renvoie true si la valeur de gauche est strictement inférieure à la valeur de droite.",
+    "howToUse": "Utiliser pour tester un plafond strict ou les indices dans une boucle (ex: for (var i=0; i < tab.length; i++)).",
     "values": [
-      "a + b (addition ou concaténation)",
-      "a - b (soustraction)",
-      "a * b (multiplication)",
-      "a / b (division)"
+      "a < b",
+      "5 < 10 -> true",
+      "10 < 10 -> false"
     ],
-    "code": "let prix = 20;\nlet quantite = 3;\nlet total = prix * quantite; // 60",
-    "testCode": "let calc = (10 + 5) * 2 / 3;\nalert(\"Test arithmétique : (10 + 5) * 2 / 3 = \" + calc);"
+    "code": "// Vérifier la longueur minimale\nfunction verifierTaille() {\n  var texte = document.getElementById(\"comm\").value;\n  if (texte.length < 10) {\n    alert(\"Votre commentaire est trop court (min 10 caractères) !\");\n  }\n}",
+    "runnableCode": "var temperature = 5;\nconsole.log(\"Température = 5 -> (temperature < 10) : \" + (temperature < 10));"
   },
   {
-    "id": "js-op-arithm-modulo",
+    "id": "js-comp-infegal",
+    "section": "Opérateurs de comparaison",
+    "category": "Opérateurs de comparaison",
+    "name": "<= (Inférieur ou égal à)",
+    "tag": "<=",
+    "syntax": "a <= b",
+    "summary": "Inférieur ou égal à",
+    "description": "Renvoie true si la valeur de gauche est plus petite ou égale à celle de droite.",
+    "howToUse": "Utiliser pour valider un nombre qui ne doit pas dépasser un maximum (ex: note <= 20).",
+    "values": [
+      "a <= b",
+      "20 <= 20 -> true",
+      "15 <= 20 -> true"
+    ],
+    "code": "// Borne supérieure d'une note\nfunction controlerPlafond() {\n  var note = Number(document.getElementById(\"note\").value);\n  if (note <= 20) {\n    alert(\"Note dans la limite autorisée.\");\n  } else {\n    alert(\"La note ne peut pas dépasser 20 !\");\n  }\n}",
+    "runnableCode": "var note = 20;\nconsole.log(\"Note = 20 -> (note <= 20) : \" + (note <= 20));"
+  },
+  {
+    "id": "js-arithm-add",
+    "section": "Opérateurs arithmétiques",
     "category": "Opérateurs arithmétiques",
-    "name": "% - Reste de la division euclidienne (Modulo)",
-    "summary": "Retourne le reste de la division entière d'un nombre par un autre.",
-    "description": "L'opérateur modulo '%' calcule le reste de la division entière. C'est l'exercice classique du Bac pour déterminer si un nombre est pair ou impair : si (n % 2 == 0), alors le nombre est pair !",
+    "name": "+ (Addition)",
+    "tag": "+",
+    "syntax": "a + b",
+    "summary": "Addition",
+    "description": "Additionne deux valeurs numériques. Attention : si l'une des valeurs est une chaîne, le symbole '+' effectue une concaténation au lieu d'une addition !",
+    "howToUse": "Toujours convertir les valeurs issues d'un formulaire avec Number() ou parseInt() avant de les additionner.",
+    "values": [
+      "a + b",
+      "10 + 5 -> 15",
+      "Number('10') + Number('5') -> 15"
+    ],
+    "code": "// Calculer la somme de deux nombres saisis\nfunction calculerSomme() {\n  var n1 = Number(document.getElementById(\"txt1\").value);\n  var n2 = Number(document.getElementById(\"txt2\").value);\n  var total = n1 + n2;\n  alert(\"La somme est : \" + total);\n}",
+    "runnableCode": "var a = 12.5;\nvar b = 7.5;\nconsole.log(\"a = \" + a + \", b = \" + b + \" -> Somme (a + b) = \" + (a + b));"
+  },
+  {
+    "id": "js-arithm-sous",
+    "section": "Opérateurs arithmétiques",
+    "category": "Opérateurs arithmétiques",
+    "name": "- (Soustraction)",
+    "tag": "-",
+    "syntax": "a - b",
+    "summary": "Soustraction",
+    "description": "Soustrait le second nombre du premier.",
+    "howToUse": "Effectue une soustraction arithmétique. Contrairement au +, le - convertit automatiquement les chaînes en nombres si possible.",
+    "values": [
+      "a - b",
+      "20 - 8 -> 12"
+    ],
+    "code": "// Calculer le prix net après remise\nfunction calculerRemise() {\n  var brut = Number(document.getElementById(\"prixBrut\").value);\n  var remise = Number(document.getElementById(\"remise\").value);\n  var net = brut - remise;\n  document.getElementById(\"resNet\").innerHTML = \"Net à payer : \" + net + \" DT\";\n}",
+    "runnableCode": "var brut = 100;\nvar remise = 15;\nconsole.log(\"Brut : \" + brut + \", Remise : \" + remise + \" -> Net : \" + (brut - remise));"
+  },
+  {
+    "id": "js-arithm-mult",
+    "section": "Opérateurs arithmétiques",
+    "category": "Opérateurs arithmétiques",
+    "name": "* (Multiplication)",
+    "tag": "*",
+    "syntax": "a * b",
+    "summary": "Multiplication",
+    "description": "Multiplie deux nombres et renvoie le produit.",
+    "howToUse": "Utiliser pour les calculs de totaux (quantité * prix) ou de coefficients de matières au Bac.",
+    "values": [
+      "a * b",
+      "5 * 4 -> 20",
+      "prix * quantite"
+    ],
+    "code": "// Calcul du total d'une commande\nfunction calculerTotal() {\n  var qte = parseInt(document.getElementById(\"qte\").value);\n  var pu = parseFloat(document.getElementById(\"pu\").value);\n  var total = qte * pu;\n  alert(\"Total commande : \" + total + \" DT\");\n}",
+    "runnableCode": "var qte = 4;\nvar pu = 12.5;\nconsole.log(qte + \" x \" + pu + \" DT = \" + (qte * pu) + \" DT\");"
+  },
+  {
+    "id": "js-arithm-div",
+    "section": "Opérateurs arithmétiques",
+    "category": "Opérateurs arithmétiques",
+    "name": "/ (Division)",
+    "tag": "/",
+    "syntax": "a / b",
+    "summary": "Division",
+    "description": "Divise le dividende par le diviseur et renvoie le quotient exact.",
+    "howToUse": "Penser à vérifier que le diviseur b est différent de 0 pour éviter une valeur spéciale Infinity.",
+    "values": [
+      "a / b",
+      "15 / 2 -> 7.5",
+      "somme / nb"
+    ],
+    "code": "// Calcul de la moyenne arithmétique\nfunction calculerMoyenne() {\n  var noteTech = Number(document.getElementById(\"tech\").value);\n  var noteMath = Number(document.getElementById(\"math\").value);\n  var moyenne = (noteTech + noteMath) / 2;\n  alert(\"Moyenne : \" + moyenne + \"/20\");\n}",
+    "runnableCode": "var total = 45;\nvar nb = 3;\nconsole.log(\"Moyenne (45 / 3) = \" + (total / nb));"
+  },
+  {
+    "id": "js-arithm-modulo",
+    "section": "Opérateurs arithmétiques",
+    "category": "Opérateurs arithmétiques",
+    "name": "% (Reste de la division euclidienne)",
+    "tag": "%",
+    "syntax": "a % b",
+    "summary": "Reste de la division euclidienne",
+    "description": "Opérateur modulo. Calcule et renvoie le reste entier de la division euclidienne de a par b. Très fréquent au Bac pour déterminer la parité ou tester des diviseurs.",
+    "howToUse": "Pour savoir si n est pair : (n % 2 == 0). Pour tester si n est divisible par 5 : (n % 5 == 0).",
     "values": [
       "a % b",
-      "ex: 7 % 2 donne 1",
-      "ex: 10 % 2 donne 0"
+      "10 % 3 -> 1",
+      "8 % 2 -> 0 (pair)",
+      "7 % 2 -> 1 (impair)"
     ],
-    "code": "let n = 15;\n\nif (n % 2 == 0) {\n  alert(n + \" est PAIR\");\n} else {\n  alert(n + \" est IMPAIR\");\n}",
-    "testCode": "let nb = 17;\nlet reste = nb % 5;\nalert(\"Reste de la division euclidienne de 17 par 5 (17 % 5) = \" + reste);"
+    "code": "// Tester si un entier est pair ou impair\nfunction testerParite() {\n  var n = parseInt(document.getElementById(\"nombre\").value);\n  if (n % 2 == 0) {\n    alert(n + \" est un nombre PAIR.\");\n  } else {\n    alert(n + \" est un nombre IMPAIR.\");\n  }\n}",
+    "runnableCode": "var n1 = 17, n2 = 24;\nconsole.log(n1 + \" % 2 = \" + (n1 % 2) + \" (Impair)\");\nconsole.log(n2 + \" % 2 = \" + (n2 % 2) + \" (Pair)\");"
   },
   {
-    "id": "js-output-alert",
-    "category": "Méthodes pour afficher une sortie",
-    "name": "alert() - Boîte de dialogue d'alerte",
-    "summary": "Affiche un message d'information dans une boîte de dialogue contextuelle avec un bouton OK.",
-    "description": "C'est la méthode de sortie la plus utilisée dans les formulaires pour signaler une erreur de saisie ou un message de succès à l'élève.",
+    "id": "js-out-alert",
+    "section": "Méthodes pour afficher une sortie*",
+    "category": "Méthodes pour afficher une sortie*",
+    "name": "alert()",
+    "tag": "alert()",
+    "syntax": "alert(message)",
+    "summary": "Affiche un message dans une boîte de dialogue.",
+    "description": "Affiche un message textuel à l'utilisateur dans une boîte de dialogue modale du navigateur dotée d'un bouton OK. L'exécution du script est mise en pause jusqu'à ce que l'utilisateur clique sur OK.",
+    "howToUse": "C'est la méthode reine demandée au Baccalauréat STI pour signaler à l'internaute une erreur de saisie ou un succès de validation.",
     "values": [
-      "alert(message)"
+      "alert('Message')",
+      "alert('Erreur : champ obligatoire !')"
     ],
-    "code": "alert(\"Bienvenue sur le portail de révision Bac STI !\");",
-    "testCode": "alert(\"Ceci est un message affiché par la fonction alert() !\");"
+    "code": "// Alerte d'information Bac STI\nfunction verifierChamp() {\n  var nom = document.getElementById(\"nom\").value;\n  if (nom == \"\") {\n    alert(\"Erreur : veuillez remplir votre nom !\");\n    return false;\n  }\n  alert(\"Bienvenue \" + nom + \" ! Formulaire validé.\");\n  return true;\n}",
+    "runnableCode": "console.log(\"Appel alert('Bonjour candidat Bac STI !')\");\nalert(\"Bonjour candidat Bac STI !\");*/"
   },
   {
-    "id": "js-output-docwrite",
-    "category": "Méthodes pour afficher une sortie",
-    "name": "document.write() - Écriture directe dans la page",
-    "summary": "Affiche directement du texte ou du code HTML dans le document web.",
-    "description": "Écrit du contenu brut à l'endroit exact où le script est exécuté lors du chargement de la page.",
+    "id": "js-out-docwrite",
+    "section": "Méthodes pour afficher une sortie*",
+    "category": "Méthodes pour afficher une sortie*",
+    "name": "Document.write()",
+    "tag": "document.write()",
+    "syntax": "document.write(chaineHTML)",
+    "summary": "Affiche directement dans le document HTML.",
+    "description": "Écrit directement une chaîne de caractères ou du code HTML dans le document au moment du chargement de la page.",
+    "howToUse": "Appelée directement dans la balise <script> du fichier HTML pour insérer du contenu généré dynamiquement.",
     "values": [
-      "document.write(texteOuHtml)"
+      "document.write('Texte')",
+      "document.write('<h1>Titre</h1>')"
     ],
-    "code": "document.write(\"<h2>Titre généré dynamiquement en JavaScript</h2>\");",
-    "testCode": "alert(\"document.write() écrit directement dans le flux HTML de la page.\");"
+    "code": "<!-- Exemple d'insertion directe dans la page -->\n<script>\n  var annee = new Date().getFullYear();\n  document.write(\"<p>Copyright &copy; \" + annee + \" - Section STI Lycée Technique</p>\");\n</script>",
+    "runnableCode": "console.log(\"document.write() écrit directement dans le corps de la page HTML.\");"
   },
   {
-    "id": "js-output-innerhtml",
-    "category": "Méthodes pour afficher une sortie",
-    "name": "element.innerHTML - Contenu HTML dynamique",
-    "summary": "Permet de lire ou modifier le contenu HTML dynamique situé à l'intérieur d'un élément.",
-    "description": "Cité expressément dans la note de l'annexe officielle : pour afficher ou modifier un contenu dynamique sans recharger la page, on utilise la propriété innerHTML (ex: document.getElementById('resultat').innerHTML = '<b>Bravo !</b>';).",
+    "id": "js-out-innerhtml",
+    "section": "Méthodes pour afficher une sortie*",
+    "category": "Méthodes pour afficher une sortie*",
+    "name": "innerHTML (Note officielle)",
+    "tag": "element.innerHTML",
+    "syntax": "element.innerHTML = 'contenu'",
+    "summary": "*Pour afficher/modifier un contenu dynamique, on peut utiliser la propriété innerHTML d'un élément HTML.",
+    "description": "Propriété officielle mise en avant par la note de bas de tableau de l'annexe. Elle permet de lire ou d'injecter du texte formaté ou de nouvelles balises HTML à l'intérieur d'un élément repéré par son id.",
+    "howToUse": "document.getElementById('idBloc').innerHTML = '<b>Texte formaté</b>';",
     "values": [
-      "element.innerHTML = 'nouveau contenu HTML'"
+      "element.innerHTML = 'texte'",
+      "element.innerHTML = '<b>Gras</b>'"
     ],
-    "code": "// Remplace le texte de la division par un résultat en vert\ndocument.getElementById(\"resultat\").innerHTML = \"<strong style='color:green;'>Calcul réussi !</strong>\";",
-    "testCode": "let div = document.getElementById(\"detailsModal\");\nalert(\"Propriété innerHTML : permet d'insérer du texte ou des balises HTML à l'intérieur d'un élément !\");"
+    "code": "// Afficher un message de validation stylé sans recharger la page\nfunction afficherStatut() {\n  var zone = document.getElementById(\"zoneMessage\");\n  zone.innerHTML = \"<span style='color: green; font-weight: bold;'>✔ Données enregistrées avec succès !</span>\";\n}",
+    "runnableCode": "// Exemple conceptuel\nvar contenu = \"<span style='color:green;'>Succès !</span>\";\nconsole.log(\"Contenu injecté via innerHTML : \" + contenu);"
   },
   {
-    "id": "js-input-prompt",
+    "id": "js-in-prompt",
+    "section": "Méthode pour saisir une entrée",
     "category": "Méthode pour saisir une entrée",
-    "name": "prompt() - Boîte de dialogue de saisie",
-    "summary": "Affiche une boîte de dialogue avec une zone de saisie pour demander une information à l'utilisateur.",
-    "description": "Ouvre une petite fenêtre modale demandant à l'utilisateur de taper un texte. La fonction retourne la chaîne tapée, ou null si l'utilisateur clique sur Annuler. Toujours couplée à parseInt() si on demande un nombre.",
+    "name": "prompt()",
+    "tag": "prompt()",
+    "syntax": "prompt(message [, valeurParDefaut])",
+    "summary": "Affiche une boîte de dialogue avec une zone de saisie.",
+    "description": "Ouvre une fenêtre modale contenant un message, une zone de texte permettant à l'utilisateur de saisir une valeur, ainsi que les boutons OK et Annuler. Renvoie la chaîne saisie sous forme de texte, ou null si l'utilisateur clique sur Annuler.",
+    "howToUse": "var rep = prompt('Question ?', 'Valeur initiale'); Penser à convertir la réponse avec Number() si vous attendez un chiffre.",
     "values": [
-      "prompt(message [, valeurParDefaut])"
+      "prompt('Message')",
+      "prompt('Message', 'Par défaut')"
     ],
-    "code": "let prenom = prompt(\"Veuillez saisir votre prénom :\");\n\nif (prenom != null && prenom != \"\") {\n  alert(\"Bonjour \" + prenom + \" !\");\n}",
-    "testCode": "let p = prompt(\"Quel est votre prénom ?\");\nif (p) alert(\"Enchanté, \" + p + \" !\");"
+    "code": "// Demander le nom d'un élève\nfunction demanderNom() {\n  var nom = prompt(\"Veuillez saisir votre prénom :\", \"Nour\");\n  if (nom != null && nom != \"\") {\n    alert(\"Bonjour \" + nom + \" !\");\n  } else {\n    alert(\"Saisie annulée.\");\n  }\n}",
+    "runnableCode": "// Simulation console\nconsole.log(\"prompt() ouvre une boîte de saisie pour l'utilisateur.\");"
   },
   {
     "id": "js-fn-isnan",
-    "category": "Fonctions / Méthodes JS",
-    "name": "isNaN(ch) - Test de validité numérique",
+    "section": "Fonctions/Méthodes JS",
+    "category": "Fonctions/Méthodes JS",
+    "name": "isNaN(ch)",
+    "tag": "isNaN(ch)",
+    "syntax": "isNaN(ch)",
     "summary": "Retourne true si l'argument ch n'est pas convertible en un nombre, sinon retourne false.",
-    "description": "LA FONCTION INDISPENSABLE DU BAC STI ! isNaN signifie 'is Not a Number'. Elle permet de vérifier si ce que l'utilisateur a tapé dans un champ est bien un nombre ou du texte invalide. Si isNaN(valeur) vaut true, c'est une erreur !",
+    "description": "Indispensable pour contrôler la validité des champs numériques d'un formulaire au Bac STI (numéro de téléphone, code postal, âge, prix). Si l'utilisateur tape des lettres dans un champ réservé aux nombres, isNaN(...) renvoie true.",
+    "howToUse": "if (isNaN(document.getElementById('tel').value)) { alert('Numéro invalide !'); return false; }",
     "values": [
-      "isNaN('123') -> false (c'est un nombre valide)",
-      "isNaN('abc') -> true (ce n'est PAS un nombre)"
+      "isNaN('123') -> false",
+      "isNaN('abc') -> true",
+      "isNaN('') -> false (vide compte comme 0)"
     ],
-    "code": "let saisie = document.getElementById(\"age\").value;\n\nif (isNaN(saisie)) {\n  alert(\"Erreur : veuillez entrer un âge numérique !\");\n  return false;\n}",
-    "testCode": "let test1 = isNaN(\"125\");\nlet test2 = isNaN(\"Tunis\");\nalert(\"isNaN('125') = \" + test1 + \" (valide)\nisNaN('Tunis') = \" + test2 + \" (invalide, ce n'est pas un nombre !)\");"
+    "code": "// Validation d'un code postal tunisien (4 chiffres)\nfunction validerCodePostal() {\n  var cp = document.getElementById(\"cp\").value;\n  if (isNaN(cp) || cp.length != 4) {\n    alert(\"Le code postal doit être un NOMBRE composé d'exactement 4 chiffres !\");\n    return false;\n  }\n  return true;\n}",
+    "runnableCode": "console.log(\"isNaN('2026') : \" + isNaN(\"2026\") + \" (C'est un nombre valide)\");\nconsole.log(\"isNaN('BAC2026') : \" + isNaN(\"BAC2026\") + \" (Ce n'est PAS un nombre)\");"
   },
   {
     "id": "js-fn-number",
-    "category": "Fonctions / Méthodes JS",
-    "name": "Number(ch) - Conversion en nombre",
-    "summary": "Convertit une chaîne ch en un nombre. Si la conversion n'est pas possible, retourne NaN.",
-    "description": "Permet de convertir n'importe quelle chaîne numérique ('42', '3.14') en valeur de type Number manipulable pour les opérations arithmétiques.",
+    "section": "Fonctions/Méthodes JS",
+    "category": "Fonctions/Méthodes JS",
+    "name": "Number(ch)",
+    "tag": "Number(ch)",
+    "syntax": "Number(ch)",
+    "summary": "Convertit une chaîne ch en un nombre*. (*Si la conversion n'est pas possible, la fonction retourne NaN.)",
+    "description": "Convertit une chaîne de caractères représentant un nombre (entier ou flottant) en valeur numérique réelle. Si la chaîne ne peut pas être convertie, retourne la valeur spéciale NaN (Not a Number).",
+    "howToUse": "var note = Number(document.getElementById('note').value);",
     "values": [
-      "Number('45') -> 45",
-      "Number('abc') -> NaN"
+      "Number('15.5') -> 15.5",
+      "Number('42') -> 42",
+      "Number('xyz') -> NaN"
     ],
-    "code": "let texte = \"50\";\nlet total = Number(texte) + 10; // Donne 60 (et non '5010')",
-    "testCode": "let n = Number(\"42.5\");\nalert(\"Number('42.5') donne : \" + n + \" (Type: \" + typeof n + \")\");"
+    "code": "// Calcul de la TVA avec Number()\nfunction calculerTVA() {\n  var prixHT = Number(document.getElementById(\"ht\").value);\n  if (isNaN(prixHT) || prixHT <= 0) {\n    alert(\"Prix HT invalide !\");\n    return;\n  }\n  var tva = prixHT * 0.19;\n  var ttc = prixHT + tva;\n  alert(\"Montant TTC : \" + ttc.toFixed(3) + \" DT\");\n}",
+    "runnableCode": "var s1 = \"12.75\";\nvar n1 = Number(s1);\nconsole.log(\"Number('\" + s1 + \"') = \" + n1 + \" (Type: \" + typeof n1 + \")\");\nconsole.log(\"Number('ABC') = \" + Number(\"ABC\") + \" (Non convertible)\");"
   },
   {
     "id": "js-fn-parsefloat",
-    "category": "Fonctions / Méthodes JS",
-    "name": "parseFloat(ch) - Conversion en réel",
-    "summary": "Convertit une chaîne ch en un nombre réel (à virgule flottante).",
-    "description": "Lit une chaîne de caractères et extrait le nombre décimal correspondant (ex: '15.75' donne le nombre 15.75). Très utilisé pour les moyennes ou les prix.",
+    "section": "Fonctions/Méthodes JS",
+    "category": "Fonctions/Méthodes JS",
+    "name": "parseFloat(ch)",
+    "tag": "parseFloat(ch)",
+    "syntax": "parseFloat(ch)",
+    "summary": "Convertit une chaîne ch en un réel.",
+    "description": "Analyse une chaîne textuelle et extrait un nombre décimal à virgule flottante. Lit les caractères jusqu'au premier caractère non numérique.",
+    "howToUse": "var reel = parseFloat('14.25'); Utiliser le point '.' comme séparateur décimal.",
     "values": [
       "parseFloat('14.5') -> 14.5",
-      "parseFloat('10') -> 10"
+      "parseFloat('10.25 DT') -> 10.25",
+      "parseFloat('abc') -> NaN"
     ],
-    "code": "let moy = parseFloat(\"15.75\");\nif (moy >= 10) {\n  alert(\"Admis avec \" + moy);\n}",
-    "testCode": "let r = parseFloat(\"17.85 DT\");\nalert(\"parseFloat('17.85 DT') extrait : \" + r);"
+    "code": "// Calcul de moyenne avec parseFloat\nfunction calculerMoyenneReelle() {\n  var n1 = parseFloat(document.getElementById(\"note1\").value);\n  var n2 = parseFloat(document.getElementById(\"note2\").value);\n  var moy = (n1 + n2) / 2;\n  document.getElementById(\"res\").innerHTML = \"Moyenne : \" + moy;\n}",
+    "runnableCode": "var str = \"17.85 sur 20\";\nvar val = parseFloat(str);\nconsole.log(\"parseFloat('\" + str + \"') = \" + val);"
   },
   {
     "id": "js-fn-parseint",
-    "category": "Fonctions / Méthodes JS",
-    "name": "parseInt(ch [,b]) - Conversion en entier",
-    "summary": "Convertit une chaîne ch en un entier exprimé dans la base b (par défaut base 10).",
-    "howToUse": "Indispensable pour transformer une valeur d'input de formulaire en nombre entier avant de faire une addition ou une boucle.",
+    "section": "Fonctions/Méthodes JS",
+    "category": "Fonctions/Méthodes JS",
+    "name": "parseInt(ch [,b])",
+    "tag": "parseInt(ch [,b])",
+    "syntax": "parseInt(ch [,b])",
+    "summary": "Convertit une chaîne ch en un entier exprimé dans la base b.",
+    "description": "Analyse une chaîne de caractères et retourne un nombre entier selon la base numérique spécifiée par b (2 pour binaire, 8 pour octal, 10 pour décimal, 16 pour hexadécimal).",
+    "howToUse": "parseInt('1010', 2) convertit du binaire en décimal. parseInt('FF', 16) convertit de l'hexadécimal. Si b est omis, la base 10 est utilisée.",
     "values": [
-      "parseInt('42') -> 42",
-      "parseInt('101', 2) -> 5 (en binaire base 2)",
-      "parseInt('FF', 16) -> 255 (en hexadécimal)"
+      "parseInt('42', 10) -> 42",
+      "parseInt('1010', 2) -> 10",
+      "parseInt('1F', 16) -> 31"
     ],
-    "code": "let annee = parseInt(\"2026\");\nlet age = 2026 - parseInt(\"2008\"); // 18",
-    "testCode": "let e = parseInt(\"25 élèves\");\nalert(\"parseInt('25 élèves') extrait l'entier : \" + e);"
+    "code": "// Conversion binaire vers décimal (programme STI)\nfunction convertirBinaire() {\n  var binaire = document.getElementById(\"txtBinaire\").value;\n  var decimal = parseInt(binaire, 2);\n  if (isNaN(decimal)) {\n    alert(\"Format binaire incorrect !\");\n  } else {\n    alert(\"En décimal : \" + decimal);\n  }\n}",
+    "runnableCode": "console.log(\"parseInt('1101', 2) = \" + parseInt(\"1101\", 2) + \" (Binaire -> Décimal)\");\nconsole.log(\"parseInt('2A', 16) = \" + parseInt(\"2A\", 16) + \" (Hexa -> Décimal)\");\nconsole.log(\"parseInt('25', 10) = \" + parseInt(\"25\", 10) + \" (Décimal)\");"
   },
   {
     "id": "js-fn-string",
-    "category": "Fonctions / Méthodes JS",
-    "name": "String(a) - Conversion en chaîne de caractères",
-    "summary": "Convertit la valeur a en une chaîne de caractères textuelle.",
-    "description": "Permet de convertir un nombre, un booléen ou une date en texte afin de pouvoir lui appliquer des méthodes de chaînes comme length ou charAt.",
+    "section": "Fonctions/Méthodes JS",
+    "category": "Fonctions/Méthodes JS",
+    "name": "String(a)",
+    "tag": "String(a)",
+    "syntax": "String(a)",
+    "summary": "Convertit la valeur a en une chaîne.",
+    "description": "Convertit n'importe quel type de données JavaScript (nombre, booléen, date, etc.) en sa représentation textuelle sous forme d'objet String.",
+    "howToUse": "var s = String(2026); Permet ensuite d'utiliser toutes les méthodes de chaînes comme .length, .indexOf()...",
     "values": [
-      "String(125) -> '125'",
-      "String(true) -> 'true'"
+      "String(123) -> '123'",
+      "String(true) -> 'true'",
+      "String(new Date()) -> texte"
     ],
-    "code": "let code = 1045;\nlet texteCode = String(code); // '1045'\nalert(\"Longueur : \" + texteCode.length);",
-    "testCode": "let s = String(2026);\nalert(\"String(2026) donne la chaîne : '\" + s + \"' de longueur \" + s.length);"
+    "code": "// Tester le nombre de chiffres d'un entier\nfunction compterChiffres() {\n  var nombre = 15894;\n  var str = String(nombre);\n  alert(\"Le nombre \" + nombre + \" possède \" + str.length + \" chiffres.\");\n}",
+    "runnableCode": "var num = 2026;\nvar str = String(num);\nconsole.log(\"String(\" + num + \") = '\" + str + \"' -> Longueur : \" + str.length + \" caractères.\");"
   },
   {
     "id": "js-dom-getelementbyid",
+    "section": "Méthodes pour sélectionner des éléments HTML",
     "category": "Sélection d'éléments HTML",
-    "name": "document.getElementById(id)",
-    "summary": "Permet de sélectionner un élément HTML unique en fonction de la valeur de son attribut id.",
-    "description": "LA MÉTHODE DE SÉLECTION FONDAMENTALE DU BAC STI ! Elle cherche dans tout le document l'élément qui porte l'id spécifié (ex: document.getElementById('nom')). On accède ensuite à sa valeur avec .value, à son contenu avec .innerHTML ou à son style avec .style.",
+    "name": "document.getElementById()",
+    "tag": "document.getElementById()",
+    "syntax": "document.getElementById(id)",
+    "summary": "permet de sélectionner un élément unique en fonction de son identifiant.",
+    "description": "C'est la méthode de sélection HTML centrale du programme officiel STI. Elle recherche dans le document la balise portant l'attribut id='nomId' et en retourne la référence directe.",
+    "howToUse": "var elt = document.getElementById('monId'); elt.value pour les champs, elt.innerHTML pour les blocs.",
     "values": [
-      "document.getElementById('identifiant')"
+      "document.getElementById('id')",
+      "document.getElementById('nom').value",
+      "document.getElementById('titre').style"
     ],
-    "code": "// Récupère la valeur tapée dans l'input id=\"nomEleve\"\nlet nom = document.getElementById(\"nomEleve\").value;\n\n// Modifie la couleur du titre id=\"h1\"\ndocument.getElementById(\"h1\").style.color = \"red\";",
-    "testCode": "let body = document.getElementById(\"detailsModal\");\nalert(\"document.getElementById('detailsModal') trouvé avec succès dans la page !\");"
+    "code": "// Récupérer la valeur d'un champ avec son ID\nfunction validerIdentifiant() {\n  var champ = document.getElementById(\"login\");\n  if (champ.value == \"\") {\n    alert(\"Veuillez saisir votre login !\");\n    champ.focus();\n    return false;\n  }\n  return true;\n}",
+    "runnableCode": "console.log(\"document.getElementById('champ').value récupère la saisie.\");"
   },
   {
     "id": "js-dom-getelementsbyname",
+    "section": "Méthodes pour sélectionner des éléments HTML",
     "category": "Sélection d'éléments HTML",
-    "name": "document.getElementsByName(nom)",
-    "summary": "Permet de sélectionner tous les éléments HTML ayant le même attribut name (retourne une collection / tableau).",
-    "description": "Très utilisé pour les boutons radio (<input type=\"radio\" name=\"genre\">) qui partagent tous le même nom de groupe. Comme elle renvoie un tableau, on utilise [0], [1] pour accéder à chaque choix et vérifier s'il est coché avec .checked.",
+    "name": "document.getElementsByName()",
+    "tag": "document.getElementsByName()",
+    "syntax": "document.getElementsByName(nom)",
+    "summary": "permet de sélectionner tous les éléments ayant le même nom.",
+    "description": "Retourne une liste (NodeList) de tous les éléments HTML du document qui partagent la même valeur pour leur attribut name='monNom'. Indispensable au Bac pour vérifier quel bouton radio a été coché par l'internaute !",
+    "howToUse": "var radios = document.getElementsByName('genre'); puis boucler pour tester radios[i].checked.",
     "values": [
-      "document.getElementsByName('nomDuGroupe')"
+      "document.getElementsByName('name')",
+      "radios[i].checked -> true si sélectionné"
     ],
-    "code": "let choix = document.getElementsByName(\"genre\");\n\nif (choix[0].checked) {\n  alert(\"Option 1 choisie\");\n} else if (choix[1].checked) {\n  alert(\"Option 2 choisie\");\n}",
-    "testCode": "alert(\"document.getElementsByName('nav') sélectionne tous les boutons du même groupe sous forme de tableau !\");"
+    "code": "// Vérifier si un bouton radio est coché dans un groupe\nfunction verifierRadio() {\n  var options = document.getElementsByName(\"civilite\");\n  var coche = false;\n  for (var i = 0; i < options.length; i++) {\n    if (options[i].checked) {\n      coche = true;\n      break;\n    }\n  }\n  if (!coche) {\n    alert(\"Veuillez choisir une civilité (M. ou Mme) !\");\n    return false;\n  }\n  return true;\n}",
+    "runnableCode": "console.log(\"document.getElementsByName('groupe') retourne une liste de tous les éléments du groupe radio.\");"
   },
   {
     "id": "js-math-abs",
+    "section": "Méthodes de l'objet Math (Math)",
     "category": "Méthodes de l'objet Math",
-    "name": "Math.abs(x) - Valeur absolue",
-    "summary": "Retourne la valeur absolue d'un nombre (rend le nombre toujours positif).",
-    "description": "Élimine le signe négatif : Math.abs(-15) retourne 15. Math.abs(15) retourne 15.",
+    "name": "abs(x)",
+    "tag": "Math.abs(x)",
+    "syntax": "Math.abs(x)",
+    "summary": "Retourne la valeur absolue.",
+    "description": "Donne la valeur absolue d'un nombre x, c'est-à-dire le nombre positif correspondant (|x| sans son signe négatif).",
+    "howToUse": "Math.abs(-12) donne 12. Math.abs(5) donne 5.",
     "values": [
-      "Math.abs(-x) -> x"
+      "Math.abs(-15) -> 15",
+      "Math.abs(15) -> 15"
     ],
-    "code": "let ecart = Math.abs(10 - 25); // Donne 15",
-    "testCode": "alert(\"Math.abs(-42) = \" + Math.abs(-42));"
+    "code": "// Calculer l'écart absolu entre deux notes\nfunction calculerEcart() {\n  var note1 = Number(document.getElementById(\"n1\").value);\n  var note2 = Number(document.getElementById(\"n2\").value);\n  var ecart = Math.abs(note1 - note2);\n  alert(\"L'écart absolu est de : \" + ecart + \" points.\");\n}",
+    "runnableCode": "var diff = 10 - 18;\nconsole.log(\"Différence brute : \" + diff);\nconsole.log(\"Math.abs(\" + diff + \") = \" + Math.abs(diff));"
   },
   {
     "id": "js-math-sqrt",
+    "section": "Méthodes de l'objet Math (Math)",
     "category": "Méthodes de l'objet Math",
-    "name": "Math.sqrt(x) - Racine carrée",
-    "summary": "Retourne la racine carrée d'un nombre positif x.",
-    "description": "Calcule la racine carrée. Exemple : Math.sqrt(25) donne 5.",
+    "name": "sqrt(x)",
+    "tag": "Math.sqrt(x)",
+    "syntax": "Math.sqrt(x)",
+    "summary": "Retourne la racine carrée.",
+    "description": "Calcule la racine carrée positive d'un nombre (√x). Si x est négatif, la fonction retourne NaN.",
+    "howToUse": "Math.sqrt(9) donne 3. Math.sqrt(25) donne 5.",
     "values": [
-      "Math.sqrt(x)"
+      "Math.sqrt(16) -> 4",
+      "Math.sqrt(25) -> 5",
+      "Math.sqrt(2) -> 1.4142..."
     ],
-    "code": "let r = Math.sqrt(64); // 8",
-    "testCode": "alert(\"Math.sqrt(81) = \" + Math.sqrt(81));"
+    "code": "// Théorème de Pythagore pour STI\nfunction calculerHypotenuse() {\n  var a = Number(document.getElementById(\"coteA\").value);\n  var b = Number(document.getElementById(\"coteB\").value);\n  var h = Math.sqrt(a * a + b * b);\n  alert(\"Hypoténuse : \" + h.toFixed(2));\n}",
+    "runnableCode": "console.log(\"Math.sqrt(64) = \" + Math.sqrt(64));\nconsole.log(\"Math.sqrt(2) = \" + Math.sqrt(2).toFixed(4));"
   },
   {
     "id": "js-math-round",
+    "section": "Méthodes de l'objet Math (Math)",
     "category": "Méthodes de l'objet Math",
-    "name": "Math.round(x) - Arrondi à l'entier le plus proche",
-    "summary": "Retourne l'entier le plus proche du nombre décimal x.",
-    "description": "Si la partie décimale est >= 0.5, arrondit vers le haut, sinon vers le bas. Exemple : Math.round(14.6) donne 15, Math.round(14.2) donne 14.",
+    "name": "round(x)",
+    "tag": "Math.round(x)",
+    "syntax": "Math.round(x)",
+    "summary": "Retourne l'entier le plus proche.",
+    "description": "Arrondit la valeur x à l'entier le plus proche. Si la partie décimale est supérieure ou égale à 0.5, arrondit vers le haut, sinon vers le bas.",
+    "howToUse": "Math.round(14.4) donne 14. Math.round(14.5) donne 15.",
     "values": [
-      "Math.round(4.7) -> 5",
-      "Math.round(4.3) -> 4"
+      "Math.round(4.4) -> 4",
+      "Math.round(4.5) -> 5",
+      "Math.round(4.9) -> 5"
     ],
-    "code": "let moyenne = Math.round(13.7); // 14",
-    "testCode": "alert(\"Math.round(14.6) donne : \" + Math.round(14.6));"
+    "code": "// Arrondir une moyenne générale\nfunction arrondirMoyenne() {\n  var moy = 13.65;\n  var arr = Math.round(moy);\n  alert(\"Moyenne arrondie : \" + arr);\n}",
+    "runnableCode": "console.log(\"Math.round(12.4) = \" + Math.round(12.4));\nconsole.log(\"Math.round(12.5) = \" + Math.round(12.5));\nconsole.log(\"Math.round(12.9) = \" + Math.round(12.9));"
   },
   {
     "id": "js-math-trunc",
+    "section": "Méthodes de l'objet Math (Math)",
     "category": "Méthodes de l'objet Math",
-    "name": "Math.trunc(x) - Troncature entière",
+    "name": "trunc(x)",
+    "tag": "Math.trunc(x)",
+    "syntax": "Math.trunc(x)",
     "summary": "Retourne la troncature entière d'un nombre en retirant sa partie décimale.",
-    "description": "Coupe simplement les chiffres après la virgule sans arrondir. Exemple : Math.trunc(14.9) donne 14.",
+    "description": "Supprime purement et simplement les chiffres après la virgule, sans effectuer d'arrondi. Renvoie la partie entière brute.",
+    "howToUse": "Math.trunc(14.89) donne 14. Math.trunc(-14.89) donne -14.",
     "values": [
-      "Math.trunc(15.99) -> 15"
+      "Math.trunc(17.9) -> 17",
+      "Math.trunc(5.1) -> 5",
+      "Math.trunc(-3.8) -> -3"
     ],
-    "code": "let entier = Math.trunc(19.85); // 19",
-    "testCode": "alert(\"Math.trunc(19.89) = \" + Math.trunc(19.89));"
+    "code": "// Extraire la partie entière d'un nombre\nfunction tronquerValeur() {\n  var val = 18.95;\n  var entier = Math.trunc(val);\n  alert(\"Partie entière : \" + entier); // 18\n}",
+    "runnableCode": "console.log(\"Math.trunc(15.99) = \" + Math.trunc(15.99) + \" (sans arrondi)\");\nconsole.log(\"Math.round(15.99) = \" + Math.round(15.99) + \" (avec arrondi)\");"
   },
   {
     "id": "js-math-random",
+    "section": "Méthodes de l'objet Math (Math)",
     "category": "Méthodes de l'objet Math",
-    "name": "Math.random() - Nombre aléatoire",
-    "summary": "Retourne un réel aléatoire dans l'intervalle [0, 1[ (entre 0 inclus et 1 exclu).",
-    "description": "Pour obtenir un entier aléatoire entre 1 et N en STI, on utilise la formule classique : Math.trunc(Math.random() * N) + 1 ou Math.floor.",
+    "name": "random()",
+    "tag": "Math.random()",
+    "syntax": "Math.random()",
+    "summary": "Retourne un réel aléatoire dans [0, 1[.",
+    "description": "Génère un nombre décimal pseudo-aléatoire compris entre 0 inclus et 1 exclu (0 <= r < 1).",
+    "howToUse": "Pour tirer un entier au sort entre min et max : Math.floor(Math.random() * (max - min + 1)) + min.",
     "values": [
-      "Math.random() -> nombre entre 0.000... et 0.999..."
+      "Math.random() -> réel entre 0 et 1",
+      "Math.trunc(Math.random() * 6) + 1 -> dé à 6 faces"
     ],
-    "code": "// Nombre aléatoire entier entre 1 et 20 pour une note\nlet tirage = Math.trunc(Math.random() * 20) + 1;\nalert(\"Note tirée au sort : \" + tirage + \"/20\");",
-    "testCode": "let rand = Math.trunc(Math.random() * 100) + 1;\nalert(\"Tirage aléatoire entre 1 et 100 : \" + rand);"
+    "code": "// Générer un code de vérification aléatoire à 4 chiffres\nfunction genererCodeCaptcha() {\n  var code = Math.trunc(Math.random() * 9000) + 1000;\n  document.getElementById(\"captcha\").innerHTML = \"Code : \" + code;\n}",
+    "runnableCode": "var r = Math.random();\nconsole.log(\"Réel aléatoire : \" + r);\nconsole.log(\"Tirage entier entre 1 et 100 : \" + (Math.trunc(r * 100) + 1));"
   },
   {
     "id": "js-str-concat",
+    "section": "Les chaînes de caractères",
     "category": "Les chaînes de caractères",
-    "name": "+ (Concaténation de chaînes)",
-    "summary": "Opérateur de concaténation pour assembler plusieurs chaînes de caractères ensemble.",
-    "description": "Permet de coller bout à bout des variables et des textes fixes.",
+    "name": "+ (Concaténation)",
+    "tag": "ch1 + ch2",
+    "syntax": "ch1 + ch2",
+    "summary": "Opérateur de concaténation.",
+    "description": "Assemble et concatène deux ou plusieurs chaînes de caractères les unes au bout des autres pour en former une seule.",
+    "howToUse": "var nomComplet = nom + ' ' + prenom;",
     "values": [
-      "ch1 + ch2"
+      "'Bac ' + 'STI' -> 'Bac STI'",
+      "'Note : ' + 15 -> 'Note : 15'"
     ],
-    "code": "let message = \"Bonjour \" + \"Ali\" + \" !\"; // \"Bonjour Ali !\"",
-    "testCode": "let s = \"Bac \" + \"STI \" + 2026;\nalert(\"Concaténation : \" + s);"
+    "code": "// Concaténer le nom et le prénom saisis\nfunction afficherBienvenue() {\n  var prenom = document.getElementById(\"prenom\").value;\n  var nom = document.getElementById(\"nom\").value;\n  var message = \"Bienvenue, \" + prenom + \" \" + nom + \" !\";\n  alert(message);\n}",
+    "runnableCode": "var s1 = \"Révision Web \";\nvar s2 = \"Baccalauréat STI\";\nconsole.log(s1 + s2);"
   },
   {
     "id": "js-str-length",
+    "section": "Les chaînes de caractères",
     "category": "Les chaînes de caractères",
-    "name": "ch.length - Longueur de la chaîne",
-    "summary": "Propriété qui retourne le nombre total de caractères de la chaîne ch.",
-    "description": "Très utilisé au Bac pour vérifier si un mot de passe a la taille minimale exigée (ex: if (pass.length < 8)).",
+    "name": "ch.length",
+    "tag": "ch.length",
+    "syntax": "ch.length",
+    "summary": "Propriété qui retourne la longueur de ch.",
+    "description": "Propriété qui renvoie le nombre total de caractères contenus dans la chaîne de caractères ch (y compris les espaces).",
+    "howToUse": "Indispensable pour contrôler la longueur d'un mot de passe (mdp.length >= 8) ou d'un numéro de CIN tunisien (cin.length == 8).",
     "values": [
-      "ch.length (nombre entier)"
+      "'STI'.length -> 3",
+      "'Tunisie'.length -> 7",
+      "cin.length == 8"
     ],
-    "code": "let mot = \"Tunisie\";\nalert(mot.length); // 7",
-    "testCode": "let ch = \"Baccalauréat STI\";\nalert(\"Longueur de '\" + ch + \"' : \" + ch.length + \" caractères\");"
+    "code": "// Validation de la carte d'identité (CIN tunisienne : 8 chiffres)\nfunction validerCIN() {\n  var cin = document.getElementById(\"cin\").value;\n  if (cin.length != 8 || isNaN(cin)) {\n    alert(\"Le numéro de CIN doit comporter exactement 8 chiffres !\");\n    return false;\n  }\n  return true;\n}",
+    "runnableCode": "var mot = \"Informatique\";\nconsole.log(\"Mot : '\" + mot + \"' -> Longueur (ch.length) : \" + mot.length);"
   },
   {
     "id": "js-str-indexof",
+    "section": "Les chaînes de caractères",
     "category": "Les chaînes de caractères",
-    "name": "ch.indexOf(ch1 [,p]) - Première occurrence",
-    "summary": "Retourne la position de la 1ère occurrence de ch1 dans ch, à partir de la position p (sinon retourne -1).",
-    "description": "Recherche un caractère ou sous-chaîne. Si l'élément est trouvé, renvoie son indice (commence à 0). S'il n'existe pas, renvoie -1. Idéal pour vérifier la présence du symbole '@' dans un email !",
+    "name": "ch.indexOf(ch1 [,p])",
+    "tag": "ch.indexOf(ch1 [,p])",
+    "syntax": "ch.indexOf(ch1 [,p])",
+    "summary": "Retourne la position de la 1ère occurrence de ch1 dans ch, en effectuant la recherche à partir de la position p (sinon -1).",
+    "description": "Cherche la première position où apparaît ch1 dans ch à partir de l'indice p (0 par défaut). Retourne l'indice (base 0) ou -1 si la sous-chaîne est introuvable.",
+    "howToUse": "C'est l'outil officiel du Bac pour vérifier si une adresse email contient un arobase : if (email.indexOf('@') == -1) { ... }",
     "values": [
-      "ch.indexOf('@') -> indice ou -1 si absent"
+      "ch.indexOf('@') -> position ou -1",
+      "ch.indexOf('a', 3) -> cherche à partir de l'indice 3"
     ],
-    "code": "let email = \"eleve@sti.tn\";\nif (email.indexOf(\"@\") == -1) {\n  alert(\"Adresse email invalide : il manque le caractère @ !\");\n}",
-    "testCode": "let email = \"prof@sti.tn\";\nalert(\"Position du '@' dans '\" + email + \"' : \" + email.indexOf(\"@\"));"
+    "code": "// Vérification de la présence de l'arobase dans l'email\nfunction validerEmail() {\n  var email = document.getElementById(\"email\").value;\n  var pos = email.indexOf(\"@\");\n  if (pos == -1 || pos == 0 || pos == email.length - 1) {\n    alert(\"Adresse email invalide : l'arobase '@' est absent ou mal positionné !\");\n    return false;\n  }\n  return true;\n}",
+    "runnableCode": "var mail = \"candidat@bac.tn\";\nconsole.log(\"ch.indexOf('@') dans '\" + mail + \"' : position \" + mail.indexOf(\"@\"));\nconsole.log(\"ch.indexOf('xyz') : \" + mail.indexOf(\"xyz\") + \" (Introuvable -> -1)\");"
   },
   {
     "id": "js-str-lastindexof",
+    "section": "Les chaînes de caractères",
     "category": "Les chaînes de caractères",
-    "name": "ch.lastIndexOf(ch1 [,p]) - Dernière occurrence",
-    "summary": "Retourne la position de la dernière occurrence de ch1 dans ch (sinon retourne -1).",
-    "description": "Cherche en partant de la fin de la chaîne pour trouver la dernière apparition du motif recherché.",
+    "name": "ch.lastIndexOf(ch1 [,p])",
+    "tag": "ch.lastIndexOf(ch1 [,p])",
+    "syntax": "ch.lastIndexOf(ch1 [,p])",
+    "summary": "Retourne la position de la dernière occurrence de ch1 dans ch à partir de la position p.",
+    "description": "Recherche la dernière apparition de ch1 en parcourant la chaîne de droite à gauche. Retourne l'indice trouvé ou -1.",
+    "howToUse": "Utile pour trouver la dernière extension d'un nom de fichier (ex: le dernier point '.') ou vérifier la position du point après l'@ dans un email.",
     "values": [
-      "ch.lastIndexOf(ch1)"
+      "ch.lastIndexOf('.') -> position du dernier point",
+      "retourne -1 si introuvable"
     ],
-    "code": "let texte = \"site.sti.tn\";\nlet posPoint = texte.lastIndexOf(\".\"); // Position du dernier point",
-    "testCode": "let txt = \"informatique.sti.tn\";\nalert(\"Dernier point '.' trouvé à la position : \" + txt.lastIndexOf(\".\"));"
+    "code": "// Vérifier la position du dernier point dans un email\nfunction verifierPointEmail() {\n  var email = document.getElementById(\"email\").value;\n  var posPoint = email.lastIndexOf(\".\");\n  var posArobase = email.indexOf(\"@\");\n  if (posPoint < posArobase) {\n    alert(\"Le point doit se trouver APRÈS l'arobase !\");\n    return false;\n  }\n  return true;\n}",
+    "runnableCode": "var phrase = \"bac.sti.revision.html\";\nconsole.log(\"Dernier point dans '\" + phrase + \"' : position \" + phrase.lastIndexOf(\".\"));"
   },
   {
     "id": "js-str-substring",
+    "section": "Les chaînes de caractères",
     "category": "Les chaînes de caractères",
-    "name": "ch.substring(d, f) - Extraction de sous-chaîne",
+    "name": "ch.substring(d, f)",
+    "tag": "ch.substring(d, f)",
+    "syntax": "ch.substring(d, f)",
     "summary": "Retourne une sous-chaîne de ch de la position d à la position f (non incluse).",
-    "description": "Extrait une portion de texte. Attention : l'indice de fin 'f' est exclu (non compris).",
+    "description": "Extrait et renvoie une portion de la chaîne ch commençant à l'indice d (inclus) jusqu'à l'indice f (non inclus).",
+    "howToUse": "ch.substring(0, 3) extrait les 3 premiers caractères (indices 0, 1 et 2).",
     "values": [
-      "ch.substring(debut, fin)"
+      "'Baccalauréat'.substring(0, 3) -> 'Bac'",
+      "'Technologie'.substring(4, 8) -> 'nolo'"
     ],
-    "code": "let ch = \"Sciences Technique\";\nlet extrait = ch.substring(0, 8); // \"Sciences\"",
-    "testCode": "let phrase = \"Baccalauréat\";\nalert(\"phrase.substring(0, 3) = \" + phrase.substring(0, 3));"
+    "code": "// Extraire les deux premiers chiffres d'un code postal pour identifier le gouvernorat\nfunction extraireGouvernorat() {\n  var cp = document.getElementById(\"cp\").value;\n  var codeGouv = cp.substring(0, 2);\n  alert(\"Code gouvernorat : \" + codeGouv);\n}",
+    "runnableCode": "var ch = \"Technologie\";\nconsole.log(\"'\" + ch + \"'.substring(0, 4) = '\" + ch.substring(0, 4) + \"'\");"
   },
   {
     "id": "js-str-replace",
+    "section": "Les chaînes de caractères",
     "category": "Les chaînes de caractères",
-    "name": "ch.replace(ch1, ch2) - Remplacement",
+    "name": "ch.replace(ch1, ch2)",
+    "tag": "ch.replace(ch1, ch2)",
+    "syntax": "ch.replace(ch1, ch2)",
     "summary": "Retourne une chaîne dans laquelle la 1ère occurrence de ch1 dans ch est remplacée par ch2.",
-    "description": "Remplace le premier motif trouvé par un nouveau texte.",
+    "description": "Recherche la première occurrence de la sous-chaîne ch1 et la remplace par le texte ch2. La chaîne d'origine n'est pas modifiée, une nouvelle chaîne est retournée.",
+    "howToUse": "var propre = ch.replace(',', '.'); pour remplacer une virgule par un point avant conversion en réel.",
     "values": [
-      "ch.replace(ancien, nouveau)"
+      "ch.replace(',', '.')",
+      "'Bonjour Ali'.replace('Ali', 'Sami') -> 'Bonjour Sami'"
     ],
-    "code": "let phrase = \"Bonjour Paul\";\nlet modif = phrase.replace(\"Paul\", \"Sami\"); // \"Bonjour Sami\"",
-    "testCode": "let t = \"Le chat dort\";\nalert(\"t.replace('chat', 'chien') -> \" + t.replace(\"chat\", \"chien\"));"
+    "code": "// Remplacer la virgule décimale par un point\nfunction corrigerNombre() {\n  var saisie = document.getElementById(\"prix\").value;\n  var corrigee = saisie.replace(\",\", \".\");\n  var prix = parseFloat(corrigee);\n  alert(\"Prix converti : \" + prix);\n}",
+    "runnableCode": "var str = \"15,75 DT\";\nvar res = str.replace(\",\", \".\");\nconsole.log(\"Avant : \" + str + \" -> Après replace(',', '.') : \" + res);"
   },
   {
     "id": "js-str-tolowercase",
+    "section": "Les chaînes de caractères",
     "category": "Les chaînes de caractères",
-    "name": "ch.toLowerCase() - Minuscules",
-    "summary": "Convertit tous les caractères de la chaîne ch en minuscules.",
-    "description": "Met tout le texte en minuscules pour uniformiser une saisie.",
+    "name": "ch.toLowerCase()",
+    "tag": "ch.toLowerCase()",
+    "syntax": "ch.toLowerCase()",
+    "summary": "Convertit tous les caractères de ch en minuscules.",
+    "description": "Renvoie une nouvelle chaîne dans laquelle toutes les lettres majuscules ont été converties en minuscules.",
+    "howToUse": "Très utile pour comparer deux chaînes sans tenir compte de la casse : if (ch1.toLowerCase() == ch2.toLowerCase()).",
     "values": [
-      "ch.toLowerCase()"
+      "'BAC'.toLowerCase() -> 'bac'",
+      "'Tunisie'.toLowerCase() -> 'tunisie'"
     ],
-    "code": "let code = \"ABCDE\";\nlet min = code.toLowerCase(); // \"abcde\"",
-    "testCode": "let c = \"TUNISIE STI\";\nalert(\"toLowerCase() donne : \" + c.toLowerCase());"
+    "code": "// Normaliser une adresse email en minuscules\nfunction normaliserEmail() {\n  var champ = document.getElementById(\"email\");\n  champ.value = champ.value.toLowerCase();\n}",
+    "runnableCode": "var nom = \"BAC TECHNIQUE 2026\";\nconsole.log(\"'\" + nom + \"'.toLowerCase() = '\" + nom.toLowerCase() + \"'\");"
   },
   {
     "id": "js-str-touppercase",
+    "section": "Les chaînes de caractères",
     "category": "Les chaînes de caractères",
-    "name": "ch.toUpperCase() - Majuscules",
-    "summary": "Convertit tous les caractères de la chaîne ch en majuscules.",
-    "description": "Très utilisé en validation pour forcer le nom de famille ou le code postal en MAJUSCULES.",
+    "name": "ch.toUpperCase()",
+    "tag": "ch.toUpperCase()",
+    "syntax": "ch.toUpperCase()",
+    "summary": "Convertit tous les caractères de ch en majuscules.",
+    "description": "Renvoie une nouvelle chaîne avec tous les caractères convertis en majuscules.",
+    "howToUse": "Utilisé pour formater automatiquement les noms de famille ou les codes de série.",
     "values": [
-      "ch.toUpperCase()"
+      "'sti'.toUpperCase() -> 'STI'",
+      "'tunis'.toUpperCase() -> 'TUNIS'"
     ],
-    "code": "let nom = \"gharbi\";\nlet maj = nom.toUpperCase(); // \"GHARBI\"",
-    "testCode": "let pays = \"tunisie\";\nalert(\"toUpperCase() donne : \" + pays.toUpperCase());"
+    "code": "// Mettre le nom en majuscules\nfunction formaterNom() {\n  var champNom = document.getElementById(\"nom\");\n  champNom.value = champNom.value.toUpperCase();\n}",
+    "runnableCode": "var ville = \"tunis\";\nconsole.log(\"'\" + ville + \"'.toUpperCase() = '\" + ville.toUpperCase() + \"'\");"
   },
   {
     "id": "js-str-trim",
+    "section": "Les chaînes de caractères",
     "category": "Les chaînes de caractères",
-    "name": "ch.trim() - Suppression des espaces",
-    "summary": "Supprime tous les espaces existants au début et à la fin de la chaîne ch.",
-    "description": "Indispensable pour vérifier qu'un champ n'est pas rempli uniquement avec des espaces blancs vides ! if (champ.value.trim() == '') alert('Vide !');",
+    "name": "ch.trim()",
+    "tag": "ch.trim()",
+    "syntax": "ch.trim()",
+    "summary": "Supprime tous les espaces existants au début et à la fin de ch.",
+    "description": "Nettoie une chaîne de caractères en retirant les espaces superflus avant le premier mot et après le dernier mot. Les espaces situés à l'intérieur ne sont pas touchés.",
+    "howToUse": "if (document.getElementById('nom').value.trim() == '') { alert('Champ vide !'); }",
     "values": [
-      "ch.trim()"
+      "'  test  '.trim() -> 'test'",
+      "Supprime espaces, tabulations et retours chariot aux extrémités"
     ],
-    "code": "let login = \"   ali   \";\nlet nettoye = login.trim(); // \"ali\"",
-    "testCode": "let test = \"   Bac STI   \";\nalert(\"Avant trim() : '\" + test + \"' (longueur: \" + test.length + \")\nAprès trim() : '\" + test.trim() + \"' (longueur: \" + test.trim().length + \")\");"
+    "code": "// Nettoyer la saisie avant validation\nfunction validerSansEspaces() {\n  var nom = document.getElementById(\"nom\").value.trim();\n  if (nom == \"\") {\n    alert(\"Vous ne pouvez pas valider avec uniquement des espaces !\");\n    return false;\n  }\n  return true;\n}",
+    "runnableCode": "var brut = \"   Technologie STI   \";\nconsole.log(\"Brut : '\" + brut + \"' (longueur: \" + brut.length + \")\");\nvar propre = brut.trim();\nconsole.log(\"Après trim() : '\" + propre + \"' (longueur: \" + propre.length + \")\");"
   },
   {
     "id": "js-str-fromcharcode",
+    "section": "Les chaînes de caractères",
     "category": "Les chaînes de caractères",
-    "name": "String.fromCharCode(num, ...)",
-    "summary": "Retourne une chaîne formée par la conversion des codes ASCII passés en paramètres.",
-    "description": "Transforme un code numérique ASCII en caractère (ex: 65 donne 'A', 97 donne 'a').",
+    "name": "String.fromCharCode(num, ..., numN)",
+    "tag": "String.fromCharCode()",
+    "syntax": "String.fromCharCode(num1, num2, ...)",
+    "summary": "Retourne une chaîne formée par la concaténation des résultats de conversion des codes ASCII passés en paramètres.",
+    "description": "Méthode statique de l'objet String qui convertit un ou plusieurs codes numériques ASCII / UTF-16 en leurs caractères correspondants.",
+    "howToUse": "String.fromCharCode(65) donne 'A'. String.fromCharCode(97) donne 'a'.",
     "values": [
-      "String.fromCharCode(codeAscii)"
+      "String.fromCharCode(65) -> 'A'",
+      "String.fromCharCode(66) -> 'B'",
+      "String.fromCharCode(65, 66, 67) -> 'ABC'"
     ],
-    "code": "let lettre = String.fromCharCode(65); // Donne \"A\"",
-    "testCode": "alert(\"String.fromCharCode(65, 66, 67) donne : \" + String.fromCharCode(65, 66, 67));"
+    "code": "// Générer l'alphabet majuscule avec les codes ASCII 65 à 90\nfunction genererAlphabet() {\n  var alpha = \"\";\n  for (var code = 65; code <= 90; code++) {\n    alpha += String.fromCharCode(code) + \" \";\n  }\n  alert(\"Alphabet : \" + alpha);\n}",
+    "runnableCode": "console.log(\"String.fromCharCode(65, 66, 67) = \" + String.fromCharCode(65, 66, 67));\nconsole.log(\"Code 83, 84, 73 -> \" + String.fromCharCode(83, 84, 73) + \" (STI)\");"
   },
   {
-    "id": "js-date-creation",
+    "id": "js-date-now",
+    "section": "L'objet Date",
     "category": "L'objet Date",
-    "name": "new Date() et new Date(ch)",
-    "summary": "new Date() retourne la date courante. new Date(ch) crée un objet Date à partir d'une chaîne.",
-    "description": "Permet de manipuler le jour, le mois et l'année pour vérifier l'âge d'un candidat ou la date d'inscription.",
+    "name": "new Date()",
+    "tag": "new Date()",
+    "syntax": "var d = new Date();",
+    "summary": "Retourne la date courante.",
+    "description": "Instancie et initialise un nouvel objet Date représentant la date et l'heure système actuelles au moment de l'exécution.",
+    "howToUse": "var aujourdhui = new Date(); puis appeler .getDate(), .getMonth(), .getFullYear() sur cette variable.",
     "values": [
-      "new Date()",
-      "new Date('2026-06-15')"
+      "new Date() -> objet Date courante"
     ],
-    "code": "let aujourdhui = new Date();\nlet dateBac = new Date(\"2026-06-10\");",
-    "testCode": "let d = new Date();\nalert(\"Date courante : \" + d.toString());"
+    "code": "// Récupérer la date du jour\nfunction afficherDateDuJour() {\n  var d = new Date();\n  alert(\"Date courante : \" + d.toString());\n}",
+    "runnableCode": "var ajd = new Date();\nconsole.log(\"new Date() : \" + ajd.toString());"
+  },
+  {
+    "id": "js-date-parse",
+    "section": "L'objet Date",
+    "category": "L'objet Date",
+    "name": "new Date(ch)",
+    "tag": "new Date(ch)",
+    "syntax": "var d = new Date(ch);",
+    "summary": "Retourne un objet Date à partir d'une chaine de caractères ch représentant une date.",
+    "description": "Crée un objet Date à partir d'une chaîne textuelle formatée (ex: '2026-06-15'). Permet ensuite de comparer deux dates ou d'extraire des éléments.",
+    "howToUse": "var dNaiss = new Date(document.getElementById('dateNaiss').value);",
+    "values": [
+      "new Date('2026-06-15')",
+      "new Date('2007-03-22')"
+    ],
+    "code": "// Calculer l'âge à partir d'un champ HTML5 <input type=\"date\">\nfunction calculerAge() {\n  var dateSaisie = document.getElementById(\"dateNaiss\").value;\n  var dNaiss = new Date(dateSaisie);\n  var auj = new Date();\n  var age = auj.getFullYear() - dNaiss.getFullYear();\n  alert(\"Âge approximatif : \" + age + \" ans.\");\n}",
+    "runnableCode": "var d = new Date(\"2026-06-15\");\nconsole.log(\"new Date('2026-06-15') : \" + d.toString());"
   },
   {
     "id": "js-date-getdate",
+    "section": "L'objet Date",
     "category": "L'objet Date",
-    "name": "d.getDate() - Jour du mois",
-    "summary": "Retourne le jour du mois sous forme de nombre entier (entre 1 et 31).",
-    "description": "Extrait le numéro du jour du mois de la date d.",
+    "name": "d.getDate()",
+    "tag": "d.getDate()",
+    "syntax": "d.getDate()",
+    "summary": "Retourne le jour du mois (entre 1 et 31).",
+    "description": "Extrait et retourne le quantième du mois (nombre entier de 1 à 31) pour l'objet Date d.",
+    "howToUse": "var jour = d.getDate();",
     "values": [
-      "d.getDate() (1 à 31)"
+      "d.getDate() -> 1 à 31"
     ],
-    "code": "let d = new Date();\nlet jour = d.getDate(); // ex: 10",
-    "testCode": "let d = new Date();\nalert(\"Jour du mois actuel (d.getDate()) : \" + d.getDate());"
+    "code": "// Afficher le jour actuel\nfunction afficherJour() {\n  var d = new Date();\n  alert(\"Nous sommes le \" + d.getDate() + \" du mois.\");\n}",
+    "runnableCode": "var d = new Date();\nconsole.log(\"Jour actuel (d.getDate()) : \" + d.getDate());"
   },
   {
     "id": "js-date-getmonth",
+    "section": "L'objet Date",
     "category": "L'objet Date",
-    "name": "d.getMonth() - Numéro du mois (0 à 11)",
-    "summary": "Retourne le numéro du mois (entre 0 pour Janvier et 11 pour Décembre).",
-    "description": "PIÈGE CLASSIQUE DU BAC : En JavaScript, les mois commencent à 0 ! Janvier = 0, Février = 1, Mars = 2... Décembre = 11. Pour afficher le mois humain, on ajoute toujours + 1 : (d.getMonth() + 1).",
+    "name": "d.getMonth()",
+    "tag": "d.getMonth()",
+    "syntax": "d.getMonth()",
+    "summary": "Retourne le numéro du mois (entre 1 et 11).",
+    "description": "Extrait le mois de l'objet Date. Note officielle de l'annexe Bac STI : mentionne le numéro du mois. En JavaScript standard, les mois sont indexés de 0 (Janvier) à 11 (Décembre), donc pour un affichage usuel, on ajoute généralement +1.",
+    "howToUse": "var mois = d.getMonth() + 1; // 1 pour Janvier, 12 pour Décembre",
     "values": [
-      "d.getMonth() (0 = Janvier, ..., 11 = Décembre)"
+      "0 = Janvier",
+      "1 = Février",
+      "11 = Décembre",
+      "Note Bac : entre 1 et 11"
     ],
-    "code": "let d = new Date();\nlet moisReel = d.getMonth() + 1; // Ajoute 1 pour avoir 1 à 12",
-    "testCode": "let d = new Date();\nalert(\"Mois JS (d.getMonth()) : \" + d.getMonth() + \"\n(Soit le mois civil : \" + (d.getMonth() + 1) + \")\");"
+    "code": "// Formater le mois de la date courante\nfunction afficherMois() {\n  var d = new Date();\n  var mois = d.getMonth() + 1;\n  alert(\"Mois numéro : \" + mois);\n}",
+    "runnableCode": "var d = new Date();\nconsole.log(\"Mois natif (0 à 11) : \" + d.getMonth());\nconsole.log(\"Mois usuel (+1) : \" + (d.getMonth() + 1));"
   },
   {
     "id": "js-date-getfullyear",
+    "section": "L'objet Date",
     "category": "L'objet Date",
-    "name": "d.getFullYear() - Année sur 4 chiffres",
-    "summary": "Retourne la valeur de l'année sur 4 chiffres (ex: 2026).",
-    "description": "Permet de calculer l'âge exact en soustrayant l'année de naissance de l'année actuelle.",
+    "name": "d.getFullYear()",
+    "tag": "d.getFullYear()",
+    "syntax": "d.getFullYear()",
+    "summary": "Retourne la valeur de l'année sur 4 chiffres.",
+    "description": "Retourne l'année complète sous forme d'un entier à 4 chiffres (ex: 2026). Ne pas utiliser getYear() qui est déprécié.",
+    "howToUse": "var annee = d.getFullYear();",
     "values": [
-      "d.getFullYear() (ex: 2026)"
+      "d.getFullYear() -> ex: 2026"
     ],
-    "code": "let d = new Date();\nlet anneeCourante = d.getFullYear(); // 2026\nlet anneeNais = 2008;\nlet age = anneeCourante - anneeNais; // 18",
-    "testCode": "let d = new Date();\nalert(\"Année actuelle (d.getFullYear()) : \" + d.getFullYear());"
+    "code": "// Afficher l'année actuelle pour la session du Bac\nfunction afficherSession() {\n  var d = new Date();\n  alert(\"Session du Baccalauréat : \" + d.getFullYear());\n}",
+    "runnableCode": "var d = new Date();\nconsole.log(\"Année sur 4 chiffres (d.getFullYear()) : \" + d.getFullYear());"
   },
   {
     "id": "js-date-tostring",
+    "section": "L'objet Date",
     "category": "L'objet Date",
-    "name": "d.toString() - Conversion en chaîne",
-    "summary": "Retourne une chaîne de caractères complète représentant la date d.",
-    "description": "Convertit l'objet Date en texte lisible avec le jour, le mois, l'année et l'heure.",
+    "name": "d.toString()",
+    "tag": "d.toString()",
+    "syntax": "d.toString()",
+    "summary": "Retourne une chaine de caractères représentant la date d.",
+    "description": "Convertit l'objet Date d en chaîne textuelle lisible complète incluant le jour, le mois, le numéro du jour, l'année, l'heure et le fuseau horaire.",
+    "howToUse": "var str = d.toString();",
     "values": [
-      "d.toString()"
+      "d.toString() -> 'Tue Nov 10 2026 20:30:00 GMT...'"
     ],
-    "code": "let d = new Date();\nlet texteDate = d.toString();",
-    "testCode": "let d = new Date();\nalert(\"d.toString() : \" + d.toString());"
+    "code": "// Journaliser l'envoi d'un formulaire\nfunction enregistrerDateEnvoi() {\n  var d = new Date();\n  document.getElementById(\"dateEnvoi\").value = d.toString();\n}",
+    "runnableCode": "var d = new Date();\nconsole.log(\"d.toString() : \" + d.toString());"
   },
   {
-    "id": "js-array-basics",
+    "id": "js-arr-literal",
+    "section": "L'objet Array",
     "category": "L'objet Array",
-    "name": "Tableaux [] et propriété length",
-    "summary": "Création avec littéraux [] et propriété length représentant le nombre d'éléments du tableau.",
-    "description": "Pour créer un tableau en JavaScript au Bac STI, on utilise les crochets littéraux []. Les indices commencent à 0 (premier élément = tab[0]). La propriété tab.length donne le nombre total d'éléments.",
+    "name": "[] (Littéraux de tableau)",
+    "tag": "[ ]",
+    "syntax": "var tab = [elem1, elem2, ...];",
+    "summary": "Pour créer un tableau, utiliser les littéraux de tableau [].",
+    "description": "Règle officielle de l'annexe : pour instancier un tableau en JavaScript, on utilise la notation littérale entre crochets []. Les éléments sont séparés par des virgules et peuvent être de n'importe quel type.",
+    "howToUse": "var t = ['Technique', 'Math', 'Sciences']; Accès au 1er élément par t[0].",
     "values": [
-      "let tab = [elem1, elem2, ...];",
-      "tab.length"
+      "var t = [] -> tableau vide",
+      "var t = [10, 15, 20] -> tableau de nombres"
     ],
-    "code": "// Création du tableau de matières\nlet matieres = [\"Informatique\", \"Technologie\", \"Mathématiques\"];\n\nalert(\"Nombre de matières : \" + matieres.length); // 3\nalert(\"Première matière : \" + matieres[0]); // \"Informatique\"",
-    "testCode": "let t = [\"HTML5\", \"CSS3\", \"JavaScript\"];\nalert(\"Tableau : [\" + t.join(\", \") + \"]\nNombre d'éléments (t.length) : \" + t.length);"
+    "code": "// Déclarer et manipuler un tableau de filières\nfunction listerFilieres() {\n  var filieres = [\"STI (Sciences & Technologies)\", \"Mathématiques\", \"Sciences Expérimentales\", \"Économie & Gestion\"];\n  alert(\"Première filière : \" + filieres[0]);\n}",
+    "runnableCode": "var matieres = [\"Techno\", \"Math\", \"Info\", \"Physique\"];\nconsole.log(\"Tableau créé avec [] :\", matieres);\nconsole.log(\"Premier élément : \" + matieres[0]);"
   },
   {
-    "id": "js-dom-attr-modif",
+    "id": "js-arr-length",
+    "section": "L'objet Array",
+    "category": "L'objet Array",
+    "name": "length (Tableau)",
+    "tag": "tab.length",
+    "syntax": "tab.length",
+    "summary": "Propriété qui représente le nombre d'éléments dans un tableau.",
+    "description": "Propriété de l'objet Array renvoyant le nombre exact d'éléments contenus dans le tableau. Essentielle pour les conditions d'arrêt des boucles for.",
+    "howToUse": "for (var i = 0; i < tab.length; i++) { ... }",
+    "values": [
+      "tab.length -> nombre entier >= 0"
+    ],
+    "code": "// Calculer la moyenne des notes d'un tableau\nfunction moyenneTableau() {\n  var notes = [12, 14, 16, 18];\n  var somme = 0;\n  for (var i = 0; i < notes.length; i++) {\n    somme += notes[i];\n  }\n  var moy = somme / notes.length;\n  alert(\"Moyenne des \" + notes.length + \" notes : \" + moy);\n}",
+    "runnableCode": "var t = [\"A\", \"B\", \"C\", \"D\", \"E\"];\nconsole.log(\"Nombre d'éléments dans le tableau (tab.length) : \" + t.length);"
+  },
+  {
+    "id": "js-dom-attr-val",
+    "section": "Modification du contenu, des attributs ou des styles des éléments HTML",
     "category": "Modification HTML & Styles",
     "name": "element.attribut = valeur",
-    "summary": "Change la valeur de l'attribut d'un élément HTML (value, checked, disabled, readonly, src, muted).",
-    "description": "Permet de modifier directement un attribut HTML. La liste au programme se limite à : value (pour lire/écrire le texte d'un champ), checked (cocher true/false), disabled (désactiver true/false), readonly (lecture seule), src (changer la source d'une image) et muted.",
+    "tag": "element.attribut = valeur",
+    "syntax": "element.attribut = valeur",
+    "summary": "Change la valeur de l'attribut d'un élément HTML.",
+    "description": "Permet de modifier dynamiquement les attributs d'une balise HTML. Règle officielle de l'annexe Bac STI : 'Se limiter à la manipulation des attributs value, checked, disabled, readonly, src, muted.'",
+    "howToUse": "document.getElementById('monBouton').disabled = true; document.getElementById('photo').src = 'nouveau.jpg';",
     "values": [
-      "element.value = 'texte'",
-      "element.checked = true / false",
-      "element.disabled = true / false",
-      "element.readonly = true / false",
-      "element.src = 'nouvelle_image.jpg'",
-      "element.muted = true / false"
+      "value : valeur textuelle d'un champ",
+      "checked : true ou false pour checkbox/radio",
+      "disabled : true ou false pour désactiver un bouton",
+      "readonly : true ou false pour lecture seule",
+      "src : chemin de l'image ou du média",
+      "muted : true ou false pour couper le son"
     ],
-    "code": "// Coche une case\ndocument.getElementById(\"accepter\").checked = true;\n\n// Désactive un bouton\ndocument.getElementById(\"btnEnvoyer\").disabled = true;\n\n// Change une image\ndocument.getElementById(\"logo\").src = \"nouveau_logo.png\";",
-    "testCode": "alert(\"Manipulation d'attributs :\nelement.value pour lire le texte\nelement.checked pour cocher\nelement.disabled pour désactiver\");"
+    "code": "// Exemple Bac STI : manipulation des attributs officiels\nfunction modifierAttributs() {\n  // 1. Modifier la valeur (value)\n  document.getElementById(\"prenom\").value = \"Nour\";\n\n  // 2. Cocher une case (checked)\n  document.getElementById(\"chk_accord\").checked = true;\n\n  // 3. Désactiver un bouton (disabled)\n  document.getElementById(\"btnEnvoyer\").disabled = true;\n\n  // 4. Mettre en lecture seule (readonly)\n  document.getElementById(\"login\").readonly = true;\n\n  // 5. Modifier la source d'une image (src)\n  document.getElementById(\"logo\").src = \"images/bac_reussite.png\";\n\n  // 6. Rendre muette une vidéo (muted)\n  document.getElementById(\"maVideo\").muted = true;\n}",
+    "runnableCode": "console.log(\"element.attribut = valeur modifie: value, checked, disabled, readonly, src, muted.\");"
   },
   {
-    "id": "js-dom-style-modif",
+    "id": "js-dom-style-prop",
+    "section": "Modification du contenu, des attributs ou des styles des éléments HTML",
     "category": "Modification HTML & Styles",
     "name": "element.style.propriété = valeur",
-    "summary": "Change le style CSS d'un élément HTML (color, background, border, font, width, height).",
-    "description": "Permet d'appliquer du style CSS en direct via JavaScript. La liste officielle de l'annexe se limite à : color, background, border, font, width, height.",
+    "tag": "element.style.propriété = valeur",
+    "syntax": "element.style.propriete = 'valeur'",
+    "summary": "Change le style d'un élément HTML.",
+    "description": "Permet de modifier dynamiquement le style CSS en ligne d'un élément HTML. Règle officielle de l'annexe Bac STI : 'Se limiter à la manipulation des propriétés color, background, border, font, width, height.'",
+    "howToUse": "document.getElementById('titre').style.color = 'red';",
     "values": [
-      "element.style.color = 'red'",
-      "element.style.background = 'yellow'",
-      "element.style.border = '2px solid red'",
-      "element.style.width = '200px'",
-      "element.style.height = '100px'"
+      "color : couleur du texte ('red', '#ff0000')",
+      "background : fond de l'élément ('yellow', '#eee')",
+      "border : bordure ('1px solid red')",
+      "font : police combinée ('bold 16px Arial')",
+      "width : largeur ('300px', '50%')",
+      "height : hauteur ('150px')"
     ],
-    "code": "let boite = document.getElementById(\"boite\");\nboite.style.color = \"blue\";\nboite.style.background = \"#facc15\";\nboite.style.border = \"2px dashed red\";",
-    "testCode": "let modal = document.getElementById(\"detailsModal\");\nalert(\"element.style.propriété permet de changer color, background, border, width, height en direct !\");"
+    "code": "// Exemple Bac STI : manipulation des styles officiels\nfunction appliquerStylesSTI() {\n  var boite = document.getElementById(\"boite\");\n  \n  // Les 6 propriétés officielles de l'annexe :\n  boite.style.color = \"red\";\n  boite.style.background = \"#fff3cd\";\n  boite.style.border = \"2px dashed #f59e0b\";\n  boite.style.font = \"bold 16px 'Segoe UI', sans-serif\";\n  boite.style.width = \"400px\";\n  boite.style.height = \"120px\";\n}",
+    "runnableCode": "console.log(\"element.style.propriété modifie : color, background, border, font, width, height.\");"
   },
   {
-    "id": "js-dom-method-play-pause",
+    "id": "js-dom-method-play",
+    "section": "Modification du contenu, des attributs ou des styles des éléments HTML",
     "category": "Modification HTML & Styles",
-    "name": "element.play() et element.pause()",
-    "summary": "Effectue une action sur un élément HTML multimédia audio ou vidéo.",
-    "description": "Se limite à la manipulation des méthodes de lecture multimédia : play() pour démarrer la lecture et pause() pour l'arrêter.",
+    "name": "element.play()",
+    "tag": "element.play()",
+    "syntax": "element.play()",
+    "summary": "Effectue une action sur un élément HTML (méthode play()).",
+    "description": "Lance la lecture d'un élément multimédia HTML5 (<audio> ou <video>). Fait partie des 2 méthodes multimédia officielles autorisées par l'annexe ('Se limiter à la manipulation des méthodes play(), pause()').",
+    "howToUse": "document.getElementById('monAudio').play();",
     "values": [
-      "element.play() (lance la lecture)",
-      "element.pause() (met en pause)"
+      "element.play() lance la lecture"
     ],
-    "code": "let video = document.getElementById(\"maVideo\");\nvideo.play(); // Lance la vidéo\nvideo.pause(); // Met la vidéo en pause",
-    "testCode": "alert(\"element.play() et element.pause() contrôlent les balises <audio> et <video> !\");"
+    "code": "// Démarrer la lecture d'un enregistrement audio\nfunction demarrerAudio() {\n  var lecteur = document.getElementById(\"audioCours\");\n  lecteur.play();\n  alert(\"Lecture audio démarrée !\");\n}",
+    "runnableCode": "console.log(\"element.play() démarre la lecture audio ou vidéo.\");"
+  },
+  {
+    "id": "js-dom-method-pause",
+    "section": "Modification du contenu, des attributs ou des styles des éléments HTML",
+    "category": "Modification HTML & Styles",
+    "name": "element.pause()",
+    "tag": "element.pause()",
+    "syntax": "element.pause()",
+    "summary": "Effectue une action sur un élément HTML (méthode pause()).",
+    "description": "Met en pause la lecture en cours d'un fichier audio ou vidéo HTML5. Seconde méthode multimédia officielle autorisée par l'annexe STI.",
+    "howToUse": "document.getElementById('maVideo').pause();",
+    "values": [
+      "element.pause() met en pause"
+    ],
+    "code": "// Mettre en pause une vidéo explicative\nfunction arreterVideo() {\n  var video = document.getElementById(\"videoDemo\");\n  video.pause();\n  alert(\"Vidéo mise en pause.\");\n}",
+    "runnableCode": "console.log(\"element.pause() met en pause la lecture multimédia.\");"
   },
   {
     "id": "js-dom-selectedindex",
+    "section": "Modification du contenu, des attributs ou des styles des éléments HTML",
     "category": "Modification HTML & Styles",
-    "name": "selectedIndex - Indice du menu déroulant <select>",
-    "summary": "Pour une liste déroulante (<select>), utilise la propriété selectedIndex pour récupérer l'indice de l'option sélectionnée.",
-    "description": "NOTE SPÉCIALE BAC STI : Sur une balise <select id=\"menu\">, selectedIndex renvoie le numéro de l'option choisie (0 pour la première option, 1 pour la deuxième, etc.). Si aucune option n'est choisie (ou l'option par défaut), on vérifie souvent : if (menu.selectedIndex == 0) alert('Veuillez faire un choix !');",
+    "name": "selectedIndex (<select>)",
+    "tag": "select.selectedIndex",
+    "syntax": "selectElement.selectedIndex",
+    "summary": "Pour une liste déroulante (<select>), utiliser la propriété selectedIndex pour récupérer l'indice de l'option sélectionnée.",
+    "description": "Note officielle de l'annexe : renvoie le numéro d'indice (commençant à 0) de l'option active dans un menu déroulant <select>. Si l'option 0 est '--- Choisissez ---', la condition (liste.selectedIndex == 0) permet de vérifier que l'utilisateur a bien fait un choix !",
+    "howToUse": "if (document.getElementById('filiere').selectedIndex == 0) { alert('Veuillez choisir une option !'); return false; }",
     "values": [
-      "select.selectedIndex (0, 1, 2... ou -1 si rien)"
+      "0 = première option (<option>)",
+      "1 = deuxième option",
+      "selectedIndex == -1 si rien n'est sélectionné"
     ],
-    "code": "let menu = document.getElementById(\"filiere\");\n\nif (menu.selectedIndex == 0) {\n  alert(\"Erreur : Veuillez sélectionner une filière !\");\n  return false;\n} else {\n  alert(\"Option choisie n° : \" + menu.selectedIndex);\n}",
-    "testCode": "alert(\"select.selectedIndex : renvoie 0 pour la 1ère option, 1 pour la 2ème, etc. Indispensable pour valider les <select> !\");"
+    "code": "// Validation d'une liste déroulante au Bac STI\nfunction validerListe() {\n  var menu = document.getElementById(\"selectVille\");\n  if (menu.selectedIndex == 0) {\n    alert(\"Veuillez sélectionner votre ville dans la liste !\");\n    return false;\n  }\n  var optionChoisie = menu.options[menu.selectedIndex].text;\n  alert(\"Ville choisie : \" + optionChoisie);\n  return true;\n}",
+    "runnableCode": "console.log(\"select.selectedIndex donne l'indice de l'option choisie (0 pour la première).\");"
   }
 ]
 };

@@ -587,19 +587,19 @@ function openJsModal(item) {
   const cat = document.getElementById('modalCategory');
 
   cat.textContent = `JAVASCRIPT • ${item.category}`;
-  cat.style.color = '#eab308';
+  cat.style.color = '#10b981';
   title.textContent = item.name;
 
   let valuesHtml = '';
   if (item.values && item.values.length > 0) {
     valuesHtml = `
       <div class="modal-section">
-        <div class="modal-section-title yellow">
+        <div class="modal-section-title green">
           <span>⚙️</span>
           <span>Syntaxe & Valeurs Autorisées (Bac STI)</span>
         </div>
         <div class="attr-tags-list">
-          ${item.values.map(val => `<span class="attr-tag" style="color:#eab308; background:rgba(234, 179, 8, 0.1); border-color:rgba(234, 179, 8, 0.3); font-weight:600; font-size:0.85rem;">${escapeHtml(val)}</span>`).join('')}
+          ${item.values.map(val => `<span class="attr-tag" style="color:#34d399; background:rgba(16, 185, 129, 0.1); border-color:rgba(16, 185, 129, 0.35); font-weight:600; font-size:0.85rem;">${escapeHtml(val)}</span>`).join('')}
         </div>
       </div>
     `;
@@ -608,30 +608,39 @@ function openJsModal(item) {
   body.innerHTML = `
     <!-- 1. Description & Explication Détaillée -->
     <div class="modal-section">
-      <div class="modal-section-title yellow">
+      <div class="modal-section-title green">
         <span>📖</span>
-        <span>Description & Explication Détaillée</span>
+        <span>Description & Rôle au Bac STI</span>
       </div>
       <p class="modal-text" style="font-size:0.98rem; line-height:1.65;">
         ${item.description || item.summary}
       </p>
     </div>
 
-    <!-- 2. Syntaxe & Valeurs -->
-    ${valuesHtml}
-
-    <!-- 3. Rôle dans l'examen Bac STI -->
+    <!-- 2. Comment utiliser au Bac -->
     <div class="modal-section">
-      <div class="modal-section-title yellow">
-        <span>🎯</span>
-        <span>Rôle au Baccalauréat STI</span>
+      <div class="modal-section-title green">
+        <span>📘</span>
+        <span>Comment utiliser (How to use)</span>
       </div>
-      <p class="modal-text">${item.summary}</p>
+      <p class="modal-text">${item.howToUse || item.syntax || ''}</p>
     </div>
 
-    <!-- 4. Code JavaScript d'exemple -->
+    <!-- 3. Syntaxe & Valeurs -->
+    ${valuesHtml}
+
+    <!-- 4. Définition officielle de l'Annexe -->
     <div class="modal-section">
-      <div class="modal-section-title yellow">
+      <div class="modal-section-title green">
+        <span>🎯</span>
+        <span>Texte officiel de l'Annexe</span>
+      </div>
+      <p class="modal-text" style="font-style:italic; color:var(--text-secondary);">${item.summary}</p>
+    </div>
+
+    <!-- 5. Code JavaScript d'exemple -->
+    <div class="modal-section">
+      <div class="modal-section-title green">
         <span>💻</span>
         <span>Code JavaScript d'exemple (Bac STI)</span>
       </div>
@@ -644,23 +653,52 @@ function openJsModal(item) {
       </div>
     </div>
 
-    <!-- 5. Exécution interactive en direct -->
+    <!-- 6. Exécution interactive en direct -->
     <div class="modal-section">
-      <div class="modal-section-title yellow">
+      <div class="modal-section-title green">
         <span>⚡</span>
         <span>Console Interactive : Tester le code en direct</span>
       </div>
       <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:10px;">
         Cliquez sur le bouton ci-dessous pour lancer l'exécution de cet exemple dans votre navigateur :
       </p>
-      <button onclick="runInteractiveJsTest('${item.id}')" style="background:#eab308; color:#000; border:none; padding:10px 20px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:0.95rem; box-shadow:0 2px 6px rgba(0,0,0,0.2);">
-        ▶ Exécuter cette fonction en direct
+      <button onclick="runInteractiveJsTest('${item.id}')" style="background:#10b981; color:#000; border:none; padding:10px 22px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:0.95rem; box-shadow:0 3px 8px rgba(0,0,0,0.3); display:inline-flex; align-items:center; gap:8px;">
+        <span>▶</span>
+        <span>Exécuter cette fonction en direct</span>
       </button>
-      <div id="jsRunOutput" style="margin-top:12px; font-family:monospace; font-size:0.85rem; padding:12px; background:#090d16; color:#a3e635; border-radius:6px; display:none; border:1px solid #1e293b; line-height:1.5;"></div>
+      <div id="jsRunOutput" style="margin-top:14px; font-family:Consolas, Monaco, monospace; font-size:0.88rem; padding:12px 14px; background:#090d16; color:#a3e635; border-radius:6px; display:none; border:1px solid rgba(16, 185, 129, 0.3); line-height:1.6;"></div>
     </div>
   `;
 
   modal.classList.add('active');
+}
+
+function openJsModalById(id) {
+  const item = DATA.js.find(j => j.id === id);
+  if (item) {
+    openJsModal(item);
+  }
+}
+
+function switchJsTab(mode) {
+  const docView = document.getElementById('jsOfficialDocView');
+  const cardsView = document.getElementById('jsCardsGridView');
+  const tabDoc = document.getElementById('tabBtnAnnexeDoc');
+  const tabCards = document.getElementById('tabBtnCardsGrid');
+
+  if (mode === 'doc') {
+    if (docView) docView.style.display = 'block';
+    if (cardsView) cardsView.style.display = 'none';
+    if (tabDoc) tabDoc.classList.add('active');
+    if (tabCards) tabCards.classList.remove('active');
+  } else {
+    if (docView) docView.style.display = 'none';
+    if (cardsView) cardsView.style.display = 'block';
+    if (tabDoc) tabDoc.classList.remove('active');
+    if (tabCards) tabCards.classList.add('active');
+    renderJsCategories();
+    renderJsCards();
+  }
 }
 
 function runInteractiveJsTest(id) {
@@ -669,12 +707,25 @@ function runInteractiveJsTest(id) {
   if (!output) return;
   output.style.display = 'block';
 
-  if (item && item.testCode) {
+  const codeToRun = item.runnableCode || item.testCode || item.code;
+  if (codeToRun) {
+    let logs = [];
+    const origLog = console.log;
+    console.log = function(...args) {
+      logs.push(args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' '));
+      origLog.apply(console, args);
+    };
     try {
-      eval(item.testCode);
-      output.innerHTML = `✓ Exécution réussie de <strong>${escapeHtml(item.name)}</strong>.<br>Résultat affiché dans la boîte de dialogue contextuelle.`;
+      eval(codeToRun);
+      console.log = origLog;
+      if (logs.length > 0) {
+        output.innerHTML = `<strong style="color:#10b981;">Sortie console :</strong><br>` + logs.map(l => escapeHtml(l)).join('<br>');
+      } else {
+        output.innerHTML = `<strong style="color:#10b981;">✓ Fonction exécutée avec succès.</strong>`;
+      }
     } catch (e) {
-      output.innerHTML = `⚠️ Info d'exécution : ${e.message}`;
+      console.log = origLog;
+      output.innerHTML = `<strong style="color:#ef4444;">⚠️ Info d'exécution :</strong> ${escapeHtml(e.message)}`;
     }
   } else {
     output.textContent = "> Fonction JavaScript exécutée avec succès.";

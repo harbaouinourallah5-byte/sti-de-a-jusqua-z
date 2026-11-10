@@ -28,18 +28,19 @@ Portail d'étude et de révision complet spécialement conçu selon le programme
 * **Bordures & Arrière-plans :** `border`, `border-radius`, `background`, etc.
 * **Transitions & Animations :** `transition`, `@keyframes`, `animation`.
 
-### 3. ⚡ JavaScript (45 Notions & Fonctions)
-* **100% conforme à l'Annexe JS du Bac STI.**
+### 3. ⚡ JavaScript (53 Notions & Tableau Officiel 3 Colonnes)
+* **100% conforme à l'Annexe JS du Bac STI (Réplique exacte du document officiel en 3 colonnes).**
+* **Chaque ligne du tableau officiel est cliquable** pour ouvrir la fiche explicative, le code d'examen et tester en direct.
 * **Opérateurs :** Logiques (`&&`, `||`, `!`), comparaison (`==`, `!=`, `>`, `>=`, `<`, `<=`), arithmétiques (`+`, `-`, `*`, `/`, `%`).
-* **Affichage & Saisie :** `alert()`, `document.write()`, `element.innerHTML`, `prompt()`.
+* **Affichage & Saisie :** `alert()`, `document.write()`, `element.innerHTML` (note officielle), `prompt()`.
 * **Conversions & Tests :** `isNaN()`, `Number()`, `parseFloat()`, `parseInt()`, `String()`.
 * **DOM :** `document.getElementById()`, `document.getElementsByName()`.
 * **Objet Math :** `abs()`, `sqrt()`, `round()`, `trunc()`, `random()`.
 * **Chaînes (String) :** `+`, `length`, `indexOf()`, `lastIndexOf()`, `substring()`, `replace()`, `toLowerCase()`, `toUpperCase()`, `trim()`, `String.fromCharCode()`.
-* **Objet Date :** `new Date()`, `getDate()`, `getMonth()`, `getFullYear()`, `toString()`.
-* **Objet Array :** `[]`, `length`.
-* **Modification HTML :** `element.attribut`, `element.style.propriété`, `element.play()`, `element.pause()`, `selectedIndex`.
-* **Console Interactive :** Bouton pour exécuter chaque fonction directement dans le navigateur !
+* **Objet Date :** `new Date()`, `new Date(ch)`, `getDate()`, `getMonth()`, `getFullYear()`, `toString()`.
+* **Objet Array :** `[]` (littéraux de tableau), `length`.
+* **Modification HTML :** `element.attribut = valeur` (value, checked, disabled, readonly, src, muted), `element.style.propriété = valeur` (color, background, border, font, width, height), `element.play()`, `element.pause()`, `selectedIndex` (menu déroulant `<select>`).
+* **Console Interactive :** Bouton pour exécuter chaque fonction directement dans le navigateur avec affichage de la sortie console en direct !
 
 ---
 

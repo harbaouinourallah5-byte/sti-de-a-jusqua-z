@@ -741,6 +741,7 @@ body {
 
 .modal-section-title.orange { color: #f97316; }
 .modal-section-title.yellow { color: #facc15; }
+.modal-section-title.green { color: #10b981; }
 
 .modal-text {
   font-size: 0.95rem;
@@ -1024,3 +1025,188 @@ body {
     padding: 16px;
   }
 }
+
+/* ===================================================================
+   DOCUMENT RÉPLIQUE OFFICIEL ANNEXE JS (BAC STI)
+   =================================================================== */
+.view-tabs-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.view-mode-tab {
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+}
+
+.view-mode-tab:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.view-mode-tab.active {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border-color: #059669;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.25);
+}
+
+.annexe-doc-container {
+  background: var(--bg-card);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  margin-bottom: 35px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.annexe-doc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #059669;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.annexe-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.annexe-logo-shield {
+  width: 48px;
+  height: 52px;
+  background: linear-gradient(135deg, #059669, #047857);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.35);
+}
+
+.annexe-title-text {
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: #10b981;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.annexe-doc-tip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px dashed rgba(16, 185, 129, 0.45);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.88rem;
+  color: #34d399;
+}
+
+.annexe-3col-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 1080px) {
+  .annexe-3col-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.annexe-box {
+  background: var(--bg-secondary);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 6px;
+  margin-bottom: 18px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.annexe-box:hover {
+  border-color: #10b981;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.15);
+}
+
+.annexe-box-header {
+  background: #059669;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.92rem;
+  padding: 8px 12px;
+}
+
+.annexe-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+}
+
+.annexe-table tr {
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background 0.15s ease, padding-left 0.15s ease;
+}
+
+.annexe-table tr:hover {
+  background: rgba(16, 185, 129, 0.16);
+}
+
+.annexe-table td {
+  padding: 8px 10px;
+  vertical-align: top;
+}
+
+.annexe-table td.syntax-col {
+  font-family: Consolas, Monaco, monospace;
+  font-weight: bold;
+  color: #34d399;
+  width: 44%;
+  border-right: 1px solid var(--border-color);
+  word-break: break-word;
+}
+
+.annexe-table td.desc-col {
+  color: var(--text-primary);
+  width: 56%;
+  line-height: 1.4;
+}
+
+.annexe-box-footer {
+  font-size: 0.78rem;
+  font-style: italic;
+  color: var(--text-secondary);
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px dashed rgba(16, 185, 129, 0.3);
+  line-height: 1.4;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.annexe-box-footer:hover {
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.1);
+}
+
