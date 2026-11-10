@@ -115,9 +115,10 @@
               Chaque fiche contient le code source réutilisable en un clic et le résultat visuel ou vidéo correspondant pour mémoriser rapidement.
             </p>
           </div>
-          <div style="display: flex; gap: 10px;">
-            <button class="nav-btn" onclick="switchView('html')">Voir HTML5</button>
-            <button class="nav-btn" onclick="switchView('css')">Voir CSS3</button>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="nav-btn" data-view="html" onclick="switchView('html')">🌐 Voir HTML5</button>
+            <button class="nav-btn" data-view="css" onclick="switchView('css')">🎨 Voir CSS3</button>
+            <button class="nav-btn" data-view="js" onclick="switchView('js')">⚡ Voir JavaScript</button>
           </div>
         </div>
 
@@ -162,6 +163,18 @@
         <!-- Grille des balises HTML -->
         <div class="items-grid" id="htmlItemsGrid">
           <!-- Rempli dynamiquement par JS -->
+        </div>
+
+        <!-- Navigation bas de page HTML5 -->
+        <div style="margin-top: 40px; padding: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+          <button class="back-to-home-btn" onclick="switchView('home')">
+            <span>←</span>
+            <span>Retour à l'accueil</span>
+          </button>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="nav-btn" data-view="css" onclick="switchView('css')">🎨 Passer à CSS3 →</button>
+            <button class="nav-btn" data-view="js" onclick="switchView('js')">⚡ Passer à JavaScript →</button>
+          </div>
         </div>
       </div>
     </section>
@@ -216,6 +229,18 @@
         <!-- Grille des propriétés CSS -->
         <div class="items-grid" id="cssItemsGrid">
           <!-- Rempli dynamiquement par JS -->
+        </div>
+
+        <!-- Navigation bas de page CSS3 -->
+        <div style="margin-top: 40px; padding: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+          <button class="back-to-home-btn" onclick="switchView('home')">
+            <span>←</span>
+            <span>Retour à l'accueil</span>
+          </button>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="nav-btn" data-view="html" onclick="switchView('html')">🌐 Voir HTML5</button>
+            <button class="nav-btn" data-view="js" onclick="switchView('js')">⚡ Passer à JavaScript →</button>
+          </div>
         </div>
       </div>
     </section>
@@ -642,6 +667,18 @@
           <!-- Grille des fonctions JavaScript -->
           <div class="items-grid" id="jsItemsGrid">
             <!-- Rempli dynamiquement par JS -->
+          </div>
+        </div>
+
+        <!-- Navigation bas de page JavaScript -->
+        <div style="margin-top: 40px; padding: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+          <button class="back-to-home-btn" onclick="switchView('home')">
+            <span>←</span>
+            <span>Retour à l'accueil</span>
+          </button>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="nav-btn" data-view="html" onclick="switchView('html')">🌐 Voir HTML5</button>
+            <button class="nav-btn" data-view="css" onclick="switchView('css')">🎨 Voir CSS3</button>
           </div>
         </div>
 

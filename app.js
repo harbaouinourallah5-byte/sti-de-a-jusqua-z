@@ -34,7 +34,9 @@ function setupNavigation() {
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const target = btn.getAttribute('data-view');
-      switchView(target);
+      if (target) {
+        switchView(target);
+      }
     });
   });
 
@@ -60,6 +62,7 @@ function setupNavigation() {
 }
 
 function switchView(viewName) {
+  if (!viewName) return;
   currentView = viewName;
   currentCategory = 'all';
   currentSearch = '';
