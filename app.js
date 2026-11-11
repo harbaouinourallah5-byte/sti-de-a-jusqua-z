@@ -1947,7 +1947,10 @@ function openJsModal(item) {
       </div>
     </div>
 
-    <!-- 6. Exécution interactive en direct -->
+    <!-- 6. Laboratoire & Simulateur Dédié Bac STI (si applicable) -->
+    ${buildJsInteractiveStage(item)}
+
+    <!-- 7. Exécution interactive en direct -->
     <div class="modal-section">
       <div class="modal-section-title green">
         <span>⚡</span>
@@ -1965,6 +1968,15 @@ function openJsModal(item) {
   `;
 
   modal.classList.add('active');
+
+  // Initialisations automatiques pour les simulateurs interactifs
+  if (item.id === 'js-structure-switch-saisons') {
+    demoSwitchMois(4);
+  } else if (item.id === 'js-fn-captcha' || item.id === 'js-fn-nbmajus' || item.id === 'js-fn-actualiser') {
+    demoActualiserCaptcha();
+  } else if (item.id === 'js-fn-verif-complete') {
+    demoFillVerif(true);
+  }
 }
 
 function openJsModalById(id) {
@@ -2024,6 +2036,608 @@ function runInteractiveJsTest(id) {
   } else {
     output.textContent = "> Fonction JavaScript exécutée avec succès.";
   }
+}
+
+// -------------------------------------------------------------
+// MODULE INTERACTIF JAVASCRIPT (Bac STI Formulaires & Switch)
+// -------------------------------------------------------------
+
+function buildJsInteractiveStage(item) {
+  if (item.id === 'js-structure-switch-saisons') {
+    return `
+      <!-- DÉMONSTRATION INTERACTIVE DÉDIÉE : STRUCTURE SWITCH DES SAISONS -->
+      <div class="modal-section" style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 18px;">
+        <div class="modal-section-title green" style="margin-bottom: 12px;">
+          <span>🔀</span>
+          <span>Comprendre & Manipuler la Structure switch en Direct</span>
+        </div>
+
+        <!-- 1. Explication Pédagogique Claire -->
+        <div style="background:#090d16; border-radius:6px; padding:12px 16px; margin-bottom:16px; font-size:0.9rem; line-height:1.6; border-left:4px solid #10b981;">
+          <strong style="color:#34d399;">🔑 Les 4 Règles d'Or du switch au Bac STI :</strong>
+          <ul style="margin:8px 0 0 18px; padding:0; color:var(--text-secondary);">
+            <li><strong style="color:#f8fafc;">1. let mois = Number(prompt(...)) :</strong> La conversion <code>Number()</code> est indispensable car <code>switch</code> teste avec égalité stricte <code>===</code> (valeur et type).</li>
+            <li><strong style="color:#f8fafc;">2. Cas groupés (OU logique) :</strong> <code>case 12: case 1: case 2:</code> permet d'exécuter le même code si le mois vaut 12, 1 ou 2.</li>
+            <li><strong style="color:#f8fafc;">3. L'instruction break; :</strong> Indispensable à la fin de chaque bloc pour sortir immédiatement du <code>switch</code> et ne pas exécuter les cas suivants !</li>
+            <li><strong style="color:#f8fafc;">4. Le bloc default: :</strong> Sert d'alternative par défaut si aucune valeur ne correspond (ex: mois = 13 ou -1).</li>
+          </ul>
+        </div>
+
+        <!-- 2. Test Rapide par Saison -->
+        <div style="margin-bottom:14px;">
+          <span style="font-size:0.85rem; font-weight:700; color:#94a3b8; display:block; margin-bottom:8px;">
+            🧪 Test Rapide : Cliquez sur une saison pour voir le case correspondant s'activer :
+          </span>
+          <div style="display:flex; flex-wrap:wrap; gap:8px;">
+            <button onclick="demoSwitchMois(12)" class="btn-switch-demo" style="background:#1e293b; color:#38bdf8; border:1px solid #0284c7; padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">❄️ Décembre (12) ➔ Hiver</button>
+            <button onclick="demoSwitchMois(1)" class="btn-switch-demo" style="background:#1e293b; color:#38bdf8; border:1px solid #0284c7; padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">❄️ Janvier (1) ➔ Hiver</button>
+            <button onclick="demoSwitchMois(4)" class="btn-switch-demo" style="background:#1e293b; color:#ec4899; border:1px solid #db2777; padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">🌸 Avril (4) ➔ Printemps</button>
+            <button onclick="demoSwitchMois(7)" class="btn-switch-demo" style="background:#1e293b; color:#facc15; border:1px solid #ca8a04; padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">☀️ Juillet (7) ➔ Été</button>
+            <button onclick="demoSwitchMois(10)" class="btn-switch-demo" style="background:#1e293b; color:#fb923c; border:1px solid #ea580c; padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">🍂 Octobre (10) ➔ Automne</button>
+            <button onclick="demoSwitchMois(15)" class="btn-switch-demo" style="background:#1e293b; color:#ef4444; border:1px solid #dc2626; padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">❌ Mois 15 ➔ default (Erreur)</button>
+          </div>
+        </div>
+
+        <!-- 3. Saisie Personnalisée ou Vrai Prompt -->
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:12px;">
+          <input type="number" id="inputSwitchMois" placeholder="Entrez un mois (1..12)" min="1" max="15" value="4" style="background:#0f172a; border:1px solid #334155; color:#fff; padding:8px 12px; border-radius:6px; width:170px; font-size:0.9rem;">
+          <button onclick="demoSwitchCustom()" style="background:#10b981; color:#0f172a; border:none; padding:8px 16px; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.9rem;">
+            Tester la saisie (switch)
+          </button>
+          <button onclick="demoSwitchRealPrompt()" style="background:#3b82f6; color:#fff; border:none; padding:8px 16px; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.9rem;">
+            🚀 Lancer le prompt() réel
+          </button>
+        </div>
+
+        <!-- Boîte d'affichage du résultat animé -->
+        <div id="switchResultBox" style="background:#090d16; border:1px solid rgba(16, 185, 129, 0.4); border-radius:6px; padding:14px; font-family:Consolas, Monaco, monospace; font-size:0.92rem; color:#f8fafc; line-height:1.6;">
+          <span style="color:#94a3b8;">Résultat de la structure conditionnelle :</span><br>
+          <span id="switchResultContent" style="color:#34d399; font-weight:bold;">Sélectionnez une option ci-dessus pour lancer le switch !</span>
+        </div>
+      </div>
+    `;
+  }
+
+  if (item.id === 'js-fn-captcha' || item.id === 'js-fn-nbmajus' || item.id === 'js-fn-actualiser') {
+    return `
+      <!-- DÉMONSTRATION INTERACTIVE DÉDIÉE : CAPTCHA & MAJUSCULES -->
+      <div class="modal-section" style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 18px;">
+        <div class="modal-section-title green" style="margin-bottom: 12px;">
+          <span>🔐</span>
+          <span>Simulateur Interactif Captcha & Comptage de Majuscules (Bac STI)</span>
+        </div>
+        <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:14px;">
+          Ce laboratoire utilise exactement les IDs de la fiche officielle : <code>id="cap"</code> pour le code généré et <code>id="nbmaj"</code> pour votre réponse.
+        </p>
+
+        <!-- Ligne Captcha -->
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:14px;">
+          <label style="font-weight:600; font-size:0.88rem; color:#94a3b8;">Code Captcha (#cap) :</label>
+          <input type="text" id="demoCapInput" readonly style="font-family:monospace; font-size:1.15rem; letter-spacing:4px; background:#0f172a; color:#38bdf8; border:1px solid #0284c7; padding:6px 14px; border-radius:6px; width:200px; font-weight:bold; text-align:center;">
+          <button onclick="demoActualiserCaptcha()" style="background:#0284c7; color:#fff; border:none; padding:8px 14px; border-radius:6px; font-size:0.85rem; font-weight:600; cursor:pointer;">
+            🔄 actualiser()
+          </button>
+        </div>
+
+        <!-- Ligne Vérification Nb Majuscules -->
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:14px;">
+          <label style="font-weight:600; font-size:0.88rem; color:#94a3b8;">Nombre de majuscules (#nbmaj) :</label>
+          <input type="number" id="demoNbmajInput" placeholder="Ex: 4" min="0" max="10" style="background:#0f172a; color:#fff; border:1px solid #334155; padding:6px 12px; border-radius:6px; width:90px; font-size:0.95rem; font-weight:bold; text-align:center; transition:background-color 0.3s ease;">
+          <button onclick="demoVerifierNbMajus()" style="background:#10b981; color:#0f172a; border:none; padding:8px 18px; border-radius:6px; font-size:0.85rem; font-weight:bold; cursor:pointer;">
+            🔍 nbmajus() (Vérifier)
+          </button>
+        </div>
+
+        <div id="demoCaptchaFeedback" style="padding:10px 14px; border-radius:6px; font-size:0.88rem; line-height:1.5; background:#090d16; color:#94a3b8; border:1px solid rgba(16, 185, 129, 0.25);">
+          Cliquez sur <strong>actualiser()</strong> pour générer un code, puis comptez les lettres majuscules !
+        </div>
+      </div>
+    `;
+  }
+
+  if (item.id === 'js-fn-validage') {
+    return `
+      <!-- DÉMONSTRATION INTERACTIVE DÉDIÉE : VALIDAGE -->
+      <div class="modal-section" style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 18px;">
+        <div class="modal-section-title green" style="margin-bottom: 12px;">
+          <span>📅</span>
+          <span>Simulateur Interactif validage() (Objet Date)</span>
+        </div>
+        <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:12px;">
+          Vérifie si l'âge (différence entre l'année courante <code>dc.getFullYear()</code> et l'année de naissance <code>dp.getFullYear()</code>) est compris entre 15 et 30 ans.
+        </p>
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:12px;">
+          <label style="font-weight:600; font-size:0.88rem; color:#94a3b8;">Date de naissance (#dnais) :</label>
+          <input type="date" id="demoDnaisInput" value="2007-06-15" style="background:#0f172a; color:#fff; border:1px solid #334155; padding:6px 12px; border-radius:6px; font-size:0.9rem;">
+          <button onclick="demoValidage()" style="background:#10b981; color:#0f172a; border:none; padding:8px 18px; border-radius:6px; font-size:0.85rem; font-weight:bold; cursor:pointer;">
+            🚀 Exécuter validage()
+          </button>
+        </div>
+        <div id="demoValidageFeedback" style="background:#090d16; border:1px solid rgba(16, 185, 129, 0.3); border-radius:6px; padding:12px; font-family:Consolas, Monaco, monospace; font-size:0.88rem; color:#34d399;">
+          Cliquez sur "Exécuter validage()" pour tester le calcul de l'âge (ac - ap) !
+        </div>
+      </div>
+    `;
+  }
+
+  if (item.id === 'js-fn-verif-complete') {
+    return `
+      <!-- DÉMONSTRATION INTERACTIVE DÉDIÉE : FORMULAIRE COMPLET VERIF() -->
+      <div class="modal-section" style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 18px;">
+        <div class="modal-section-title green" style="margin-bottom: 12px;">
+          <span>📝</span>
+          <span>Simulateur Interactif du Formulaire Complet (verif())</span>
+        </div>
+        <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:12px;">
+          Testez en direct les 10 contrôles officiels de <code>function verif()</code>. Observez l'alerte d'erreur et le changement de fond en rouge si le mot de passe ne correspond pas !
+        </p>
+
+        <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+          <button onclick="demoFillVerif(true)" style="background:#059669; color:#fff; border:none; padding:6px 14px; border-radius:6px; font-size:0.82rem; cursor:pointer; font-weight:600;">
+            ✓ Remplir données valides
+          </button>
+          <button onclick="demoFillVerif(false)" style="background:#dc2626; color:#fff; border:none; padding:6px 14px; border-radius:6px; font-size:0.82rem; cursor:pointer; font-weight:600;">
+            ⚠️ Remplir avec erreurs (passwords différents, tel faux...)
+          </button>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; background:#090d16; padding:16px; border-radius:6px; border:1px solid #1e293b; margin-bottom:14px; font-size:0.85rem;">
+          <div>
+            <label style="display:block; color:#94a3b8; margin-bottom:4px; font-weight:600;">Civilité (name="civ") :</label>
+            <label style="margin-right:12px; cursor:pointer;"><input type="radio" name="demoV_civ" id="demoV_civ0" value="Mme"> Mme</label>
+            <label style="cursor:pointer;"><input type="radio" name="demoV_civ" id="demoV_civ1" value="M."> M.</label>
+          </div>
+          <div>
+            <label style="display:block; color:#94a3b8; margin-bottom:4px; font-weight:600;">Nom & Prénom (id="np") :</label>
+            <input type="text" id="demoV_np" style="width:100%; background:#0f172a; border:1px solid #334155; color:#fff; padding:5px 8px; border-radius:4px;">
+          </div>
+          <div>
+            <label style="display:block; color:#94a3b8; margin-bottom:4px; font-weight:600;">Numéro tél (id="ntel") :</label>
+            <input type="text" id="demoV_ntel" maxlength="8" style="width:100%; background:#0f172a; border:1px solid #334155; color:#fff; padding:5px 8px; border-radius:4px;">
+          </div>
+          <div>
+            <label style="display:block; color:#94a3b8; margin-bottom:4px; font-weight:600;">E-mail (id="mail") :</label>
+            <input type="text" id="demoV_mail" style="width:100%; background:#0f172a; border:1px solid #334155; color:#fff; padding:5px 8px; border-radius:4px;">
+          </div>
+          <div>
+            <label style="display:block; color:#94a3b8; margin-bottom:4px; font-weight:600;">Mot de passe (id="mps") :</label>
+            <input type="password" id="demoV_mps" maxlength="8" style="width:100%; background:#0f172a; border:1px solid #334155; color:#fff; padding:5px 8px; border-radius:4px;">
+          </div>
+          <div>
+            <label style="display:block; color:#94a3b8; margin-bottom:4px; font-weight:600;">Confirmation (id="cfmps") :</label>
+            <input type="password" id="demoV_cfmps" maxlength="8" style="width:100%; background:#0f172a; border:1px solid #334155; color:#fff; padding:5px 8px; border-radius:4px; transition:background-color 0.3s ease;">
+          </div>
+          <div>
+            <label style="display:block; color:#94a3b8; margin-bottom:4px; font-weight:600;">Adresse (id="adr") :</label>
+            <input type="text" id="demoV_adr" style="width:100%; background:#0f172a; border:1px solid #334155; color:#fff; padding:5px 8px; border-radius:4px;">
+          </div>
+          <div>
+            <label style="display:block; color:#94a3b8; margin-bottom:4px; font-weight:600;">Ville (id="vill") :</label>
+            <select id="demoV_vill" style="width:100%; background:#0f172a; border:1px solid #334155; color:#fff; padding:5px 8px; border-radius:4px;">
+              <option value="">-- Choisir une ville --</option>
+              <option value="Tunis">Tunis</option>
+              <option value="Sousse">Sousse</option>
+              <option value="Sfax">Sfax</option>
+              <option value="Monastir">Monastir</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block; color:#94a3b8; margin-bottom:4px; font-weight:600;">Code postal (id="cp") :</label>
+            <input type="text" id="demoV_cp" maxlength="4" style="width:100%; background:#0f172a; border:1px solid #334155; color:#fff; padding:5px 8px; border-radius:4px;">
+          </div>
+          <div>
+            <label style="display:block; color:#94a3b8; margin-bottom:4px; font-weight:600;">Remarque (id="rq") :</label>
+            <input type="text" id="demoV_rq" style="width:100%; background:#0f172a; border:1px solid #334155; color:#fff; padding:5px 8px; border-radius:4px;">
+          </div>
+        </div>
+
+        <button onclick="demoRunVerif()" style="background:#10b981; color:#0f172a; border:none; padding:10px 22px; border-radius:6px; font-weight:800; cursor:pointer; font-size:0.95rem; box-shadow:0 3px 8px rgba(0,0,0,0.3); display:inline-flex; align-items:center; gap:8px;">
+          <span>🚀</span>
+          <span>Exécuter verif() (Valider le formulaire)</span>
+        </button>
+
+        <div id="demoVerifFeedback" style="margin-top:12px; padding:10px 14px; border-radius:6px; font-size:0.88rem; display:none; line-height:1.5;"></div>
+      </div>
+    `;
+  }
+
+  if (item.id === 'js-fn-alpha' || item.id === 'js-fn-isnum' || item.id === 'js-fn-testtel' || item.id === 'js-fn-testmail') {
+    return `
+      <!-- TESTEUR INTERACTIF EN DIRECT POUR FONCTION AUXILIAIRE -->
+      <div class="modal-section" style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 18px;">
+        <div class="modal-section-title green" style="margin-bottom: 12px;">
+          <span>🧪</span>
+          <span>Testeur Interactif en Direct : ${escapeHtml(item.name)}</span>
+        </div>
+        <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:12px;">
+          Saisissez une valeur dans le champ ci-dessous pour voir le retour booléen (<code>true</code> / <code>false</code>) en temps réel :
+        </p>
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:12px;">
+          <input type="text" id="demoHelperInput" placeholder="Saisissez une valeur de test..." style="background:#0f172a; border:1px solid #334155; color:#fff; padding:8px 12px; border-radius:6px; width:260px; font-size:0.9rem;" oninput="demoTestHelper('${item.id}', this.value)">
+          <div id="demoHelperResult" style="font-weight:bold; font-size:0.92rem; padding:8px 14px; border-radius:6px; background:#090d16; border:1px solid rgba(16, 185, 129, 0.3); color:#94a3b8;">
+            En attente de saisie...
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  return '';
+}
+
+// DÉMO SWITCH (Mois & Saisons)
+function demoSwitchMois(m) {
+  const content = document.getElementById('switchResultContent');
+  const input = document.getElementById('inputSwitchMois');
+  if (input) input.value = m;
+
+  let mois = Number(m);
+  let saison = "";
+  let icon = "";
+  let color = "";
+  let caseExpl = "";
+
+  switch (mois) {
+    case 12: case 1: case 2:
+      saison = "hiver";
+      icon = "❄️";
+      color = "#38bdf8";
+      caseExpl = "case 12 : case 1 : case 2 : (Mois d'hiver)";
+      break;
+    case 3: case 4: case 5:
+      saison = "printemps";
+      icon = "🌸";
+      color = "#ec4899";
+      caseExpl = "case 3 : case 4 : case 5 : (Mois de printemps)";
+      break;
+    case 6: case 7: case 8:
+      saison = "été";
+      icon = "☀️";
+      color = "#facc15";
+      caseExpl = "case 6 : case 7 : case 8 : (Mois d'été)";
+      break;
+    case 9: case 10: case 11:
+      saison = "Automne";
+      icon = "🍂";
+      color = "#fb923c";
+      caseExpl = "case 9 : case 10 : case 11 : (Mois d'automne)";
+      break;
+    default:
+      saison = "Numéro erroné";
+      icon = "❌";
+      color = "#ef4444";
+      caseExpl = "default : (Aucun case ne correspond)";
+      break;
+  }
+
+  if (content) {
+    content.innerHTML = `
+      <div style="margin-top:6px; padding:10px; background:rgba(0,0,0,0.3); border-radius:6px; border-left:4px solid ${color};">
+        <span style="font-size:1.15rem; color:${color}; font-weight:800;">${icon} ${saison.toUpperCase()}</span><br>
+        <span style="color:#cbd5e1; font-size:0.85rem;">➔ <strong>Valeur saisie :</strong> <code>mois = ${mois}</code></span><br>
+        <span style="color:#94a3b8; font-size:0.83rem;">➔ <strong>Branche activée :</strong> <code>${caseExpl}</code></span><br>
+        <span style="color:#a3e635; font-size:0.83rem;">➔ <strong>Action :</strong> <code>alert("${saison}"); break;</code></span>
+      </div>
+    `;
+  }
+}
+
+function demoSwitchCustom() {
+  const input = document.getElementById('inputSwitchMois');
+  if (input) {
+    demoSwitchMois(input.value);
+  }
+}
+
+function demoSwitchRealPrompt() {
+  let mois = prompt("mois=");
+  if (mois === null) return;
+  mois = Number(mois);
+  switch (mois) {
+    case 12: case 1: case 2:
+      alert("hiver"); break;
+    case 3: case 4: case 5:
+      alert("printemps"); break;
+    case 6: case 7: case 8:
+      alert("été"); break;
+    case 9: case 10: case 11:
+      alert("Automne"); break;
+    default:
+      alert("Numéro erroné"); break;
+  }
+  demoSwitchMois(mois);
+}
+
+// DÉMO CAPTCHA & MAJUSCULES
+function demoActualiserCaptcha() {
+  let code = "";
+  for (let i = 1; i <= 10; i++) {
+    let n = Math.trunc(Math.random() * 26);
+    if (n % 2 == 0) {
+      code = code + String.fromCharCode(n + 65);
+    } else {
+      code = code + String.fromCharCode(n + 97);
+    }
+  }
+  const cap = document.getElementById('demoCapInput');
+  if (cap) cap.value = code;
+
+  const nbmaj = document.getElementById('demoNbmajInput');
+  if (nbmaj) {
+    nbmaj.value = '';
+    nbmaj.style.backgroundColor = '';
+  }
+
+  const fb = document.getElementById('demoCaptchaFeedback');
+  if (fb) {
+    fb.style.display = 'block';
+    fb.style.background = '#090d16';
+    fb.style.color = '#38bdf8';
+    fb.innerHTML = `Nouveau code Captcha généré : <strong>${code}</strong>. Comptez les majuscules et saisissez votre réponse !`;
+  }
+}
+
+function demoVerifierNbMajus() {
+  const cap = document.getElementById('demoCapInput');
+  if (!cap) return;
+  const ch = cap.value;
+  let nb = 0;
+  for (let i = 0; i < ch.length; i++) {
+    if (ch[i] >= "A" && ch[i] <= "Z") {
+      nb = nb + 1;
+    }
+  }
+  const nbmaj = document.getElementById('demoNbmajInput');
+  const val = nbmaj ? nbmaj.value : '';
+  const fb = document.getElementById('demoCaptchaFeedback');
+
+  if (val === '') {
+    alert("Veuillez saisir votre réponse dans le champ #nbmaj !");
+    return;
+  }
+
+  if (nb != val) {
+    if (nbmaj) nbmaj.style.backgroundColor = 'red';
+    if (fb) {
+      fb.style.display = 'block';
+      fb.style.background = 'rgba(239, 68, 68, 0.2)';
+      fb.style.color = '#fca5a5';
+      fb.innerHTML = `❌ <strong>Erreur !</strong> Vous avez saisi <code>${val}</code>, mais il y a en réalité <code>${nb}</code> majuscule(s). Comme spécifié dans le cours : <code>document.getElementById('nbmaj').style.backgroundColor = 'red';</code> !`;
+    }
+  } else {
+    if (nbmaj) nbmaj.style.backgroundColor = '#10b981';
+    if (fb) {
+      fb.style.display = 'block';
+      fb.style.background = 'rgba(16, 185, 129, 0.2)';
+      fb.style.color = '#86efac';
+      fb.innerHTML = `✓ <strong>Bravo !</strong> Le nombre exact de majuscules est bien <code>${nb}</code>. Le test est validé !`;
+    }
+  }
+}
+
+// DÉMO VALIDAGE
+function demoValidage() {
+  const input = document.getElementById('demoDnaisInput');
+  if (!input || !input.value) {
+    alert("Veuillez sélectionner une date !");
+    return;
+  }
+  let dt = input.value;
+  let dc = new Date();
+  let dp = new Date(dt);
+  let ap = dp.getFullYear();
+  let ac = dc.getFullYear();
+  let diff = ac - ap;
+  const fb = document.getElementById('demoValidageFeedback');
+
+  if (diff < 15 || diff > 30) {
+    alert('age invalid');
+    if (fb) {
+      fb.style.color = '#ef4444';
+      fb.innerHTML = `❌ <strong>alert('age invalid') :</strong> Année courante ac = ${ac}, Année naissance ap = ${ap} ➔ Âge diff = ${diff} ans. Doit être entre 15 et 30 ans !`;
+    }
+  } else {
+    if (fb) {
+      fb.style.color = '#34d399';
+      fb.innerHTML = `✓ <strong>Âge Valide :</strong> ac = ${ac}, ap = ${ap} ➔ diff = ${diff} ans. Âge conforme au barème (15 à 30 ans) !`;
+    }
+  }
+}
+
+// DÉMO FORMULAIRE COMPLET VERIF()
+function demoFillVerif(valid) {
+  const civ0 = document.getElementById('demoV_civ0');
+  const civ1 = document.getElementById('demoV_civ1');
+  const np = document.getElementById('demoV_np');
+  const ntel = document.getElementById('demoV_ntel');
+  const mail = document.getElementById('demoV_mail');
+  const mps = document.getElementById('demoV_mps');
+  const cfmps = document.getElementById('demoV_cfmps');
+  const adr = document.getElementById('demoV_adr');
+  const vill = document.getElementById('demoV_vill');
+  const cp = document.getElementById('demoV_cp');
+  const rq = document.getElementById('demoV_rq');
+  const fb = document.getElementById('demoVerifFeedback');
+
+  if (cfmps) cfmps.style.backgroundColor = '';
+  if (fb) fb.style.display = 'none';
+
+  if (valid) {
+    if (civ1) civ1.checked = true;
+    if (np) np.value = "Ahmed Ben Salah";
+    if (ntel) ntel.value = "98123456";
+    if (mail) mail.value = "ahmed.ben@domaine.tn";
+    if (mps) mps.value = "pass1234";
+    if (cfmps) cfmps.value = "pass1234";
+    if (adr) adr.value = "Avenue Habib Bourguiba";
+    if (vill) vill.selectedIndex = 1;
+    if (cp) cp.value = "1000";
+    if (rq) rq.value = "Dossier d'inscription complet";
+  } else {
+    if (civ0) civ0.checked = false;
+    if (civ1) civ1.checked = false; // erreur civilité
+    if (np) np.value = "Ali123"; // faux nom
+    if (ntel) ntel.value = "1234"; // faux tel
+    if (mail) mail.value = "emailinvalide"; // faux mail
+    if (mps) mps.value = "pass1234";
+    if (cfmps) cfmps.value = "different"; // mot de passe différent -> rouge !
+    if (adr) adr.value = "sans_espace"; // sans espace
+    if (vill) vill.selectedIndex = 0; // non sélectionné
+    if (cp) cp.value = "500"; // < 1000
+    if (rq) rq.value = "";
+  }
+}
+
+function demoRunVerif() {
+  const civ = document.getElementsByName('demoV_civ');
+  const np = (document.getElementById('demoV_np') || {}).value || '';
+  const ntel = (document.getElementById('demoV_ntel') || {}).value || '';
+  const mail = (document.getElementById('demoV_mail') || {}).value || '';
+  const mps = (document.getElementById('demoV_mps') || {}).value || '';
+  const cfmpsInput = document.getElementById('demoV_cfmps');
+  const cfmps = cfmpsInput ? cfmpsInput.value : '';
+  const adr = (document.getElementById('demoV_adr') || {}).value || '';
+  const vil = document.getElementById('demoV_vill') || { selectedIndex: 0 };
+  const cp = (document.getElementById('demoV_cp') || {}).value || '';
+  const req = (document.getElementById('demoV_rq') || {}).value || '';
+  const fb = document.getElementById('demoVerifFeedback');
+
+  if (cfmpsInput) cfmpsInput.style.backgroundColor = '';
+
+  // Helpers
+  function _alpha(ch) {
+    ch = ch.toUpperCase();
+    for (let i = 0; i < ch.length; i++) {
+      if ((ch[i] < "A" || ch[i] > "Z") && ch[i] != " ") return false;
+    }
+    return true;
+  }
+  function _isnum(ch) {
+    for (let i = 0; i < ch.length; i++) {
+      if (ch[i] < "0" || ch[i] > "9") return false;
+    }
+    return true;
+  }
+  function _testtel(ch) {
+    let prem = ch.charAt(0);
+    return (prem == "2" || prem == "4" || prem == "5" || prem == "7" || prem == "9");
+  }
+  function _testmail(m) {
+    let pA = m.indexOf("@");
+    let pP = m.lastIndexOf(".");
+    return (pA > 0 && pP > pA + 1 && pP < m.length - 1);
+  }
+
+  // Contrôles successifs
+  if (civ[0].checked == false && civ[1].checked == false) {
+    alert("Veuillez cocher la civilité");
+    if (fb) { fb.style.display = 'block'; fb.style.background = '#7f1d1d'; fb.style.color = '#fca5a5'; fb.textContent = "alert('Veuillez cocher la civilité')"; }
+    return false;
+  }
+  if (np == "" || np.length > 30 || _alpha(np) == false) {
+    alert("Nom vide ou incorrect");
+    if (fb) { fb.style.display = 'block'; fb.style.background = '#7f1d1d'; fb.style.color = '#fca5a5'; fb.textContent = "alert('Nom vide ou incorrect')"; }
+    return false;
+  }
+  if (ntel.length != 8 || _testtel(ntel) == false || _isnum(ntel) == false) {
+    alert("numéro téléphone vide ou incorrect");
+    if (fb) { fb.style.display = 'block'; fb.style.background = '#7f1d1d'; fb.style.color = '#fca5a5'; fb.textContent = "alert('numéro téléphone vide ou incorrect')"; }
+    return false;
+  }
+  if (mail == "" || mail.indexOf("@") == -1 || _testmail(mail) == false) {
+    alert("Mail obligatoire ou invalide");
+    if (fb) { fb.style.display = 'block'; fb.style.background = '#7f1d1d'; fb.style.color = '#fca5a5'; fb.textContent = "alert('Mail obligatoire ou invalide')"; }
+    return false;
+  }
+  if (mps.length != 8) {
+    alert("Mot de Passe obligatoire ou invalide");
+    if (fb) { fb.style.display = 'block'; fb.style.background = '#7f1d1d'; fb.style.color = '#fca5a5'; fb.textContent = "alert('Mot de Passe obligatoire ou invalide')"; }
+    return false;
+  }
+  if (cfmps != mps) {
+    alert("Mot de Passe incorrect");
+    if (cfmpsInput) cfmpsInput.style.backgroundColor = 'red';
+    if (fb) { fb.style.display = 'block'; fb.style.background = '#7f1d1d'; fb.style.color = '#fca5a5'; fb.innerHTML = "alert('Mot de Passe incorrect')<br>➔ <code>document.getElementById('cfmps').style.backgroundColor = 'red';</code>"; }
+    return false;
+  }
+  if (adr == "" || adr.indexOf(" ") == -1) {
+    alert("adresse vide ou incorrecte");
+    if (fb) { fb.style.display = 'block'; fb.style.background = '#7f1d1d'; fb.style.color = '#fca5a5'; fb.textContent = "alert('adresse vide ou incorrecte')"; }
+    return false;
+  }
+  if (vil.selectedIndex == 0) {
+    alert("selectionner une ville");
+    if (fb) { fb.style.display = 'block'; fb.style.background = '#7f1d1d'; fb.style.color = '#fca5a5'; fb.textContent = "alert('selectionner une ville')"; }
+    return false;
+  }
+  if (Number(cp) < 1000 || Number(cp) > 9999) {
+    alert("code postal obligatoire ou invalid");
+    if (fb) { fb.style.display = 'block'; fb.style.background = '#7f1d1d'; fb.style.color = '#fca5a5'; fb.textContent = "alert('code postal obligatoire ou invalid')"; }
+    return false;
+  }
+  if (req == "" || req.length > 50) {
+    alert("remarque obligatoire ou invalid");
+    if (fb) { fb.style.display = 'block'; fb.style.background = '#7f1d1d'; fb.style.color = '#fca5a5'; fb.textContent = "alert('remarque obligatoire ou invalid')"; }
+    return false;
+  }
+
+  if (fb) {
+    fb.style.display = 'block';
+    fb.style.background = 'rgba(16, 185, 129, 0.2)';
+    fb.style.color = '#86efac';
+    fb.innerHTML = "✓ <strong>Formulaire validé avec succès !</strong> Tous les 10 critères du Bac STI ont été respectés.";
+  }
+  alert("Formulaire validé avec succès !");
+  return true;
+}
+
+// DÉMO TESTEUR FONCTIONS AUXILIAIRES
+function demoTestHelper(id, val) {
+  const res = document.getElementById('demoHelperResult');
+  if (!res) return;
+  if (!val) {
+    res.style.color = '#94a3b8';
+    res.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+    res.textContent = "En attente de saisie...";
+    return;
+  }
+
+  let ok = false;
+  let expl = "";
+
+  if (id === 'js-fn-alpha') {
+    let ch = val.toUpperCase();
+    ok = true;
+    for (let i = 0; i < ch.length; i++) {
+      if ((ch[i] < "A" || ch[i] > "Z") && ch[i] != " ") {
+        ok = false;
+        break;
+      }
+    }
+    expl = ok ? "✓ Contient uniquement des lettres et espaces" : "❌ Contient des caractères non alphabétiques";
+  } else if (id === 'js-fn-isnum') {
+    ok = true;
+    for (let i = 0; i < val.length; i++) {
+      if (val[i] < "0" || val[i] > "9") {
+        ok = false;
+        break;
+      }
+    }
+    expl = ok ? "✓ Contient uniquement des chiffres ('0' à '9')" : "❌ Contient des caractères non numériques";
+  } else if (id === 'js-fn-testtel') {
+    let prem = val.charAt(0);
+    ok = (prem == "2" || prem == "4" || prem == "5" || prem == "7" || prem == "9");
+    expl = ok ? `✓ Commence par '${prem}' (indicatif tunisien valide)` : `❌ Commence par '${prem}' (doit être 2, 4, 5, 7 ou 9)`;
+  } else if (id === 'js-fn-testmail') {
+    let pA = val.indexOf("@");
+    let pP = val.lastIndexOf(".");
+    ok = (pA > 0 && pP > pA + 1 && pP < val.length - 1);
+    expl = ok ? "✓ Format e-mail valide (@ et . bien positionnés)" : "❌ Format e-mail invalide (@ ou . mal positionnés)";
+  }
+
+  res.style.color = ok ? '#34d399' : '#ef4444';
+  res.style.borderColor = ok ? '#10b981' : '#ef4444';
+  res.innerHTML = `<strong>${ok ? 'true' : 'false'}</strong> &bull; ${expl}`;
 }
 
 function closeModal() {

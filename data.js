@@ -2723,5 +2723,201 @@ const DATA = {
     "code": "// Validation d'une liste déroulante au Bac STI\nfunction validerListe() {\n  var menu = document.getElementById(\"selectVille\");\n  if (menu.selectedIndex == 0) {\n    alert(\"Veuillez sélectionner votre ville dans la liste !\");\n    return false;\n  }\n  var optionChoisie = menu.options[menu.selectedIndex].text;\n  alert(\"Ville choisie : \" + optionChoisie);\n  return true;\n}",
     "runnableCode": "console.log(\"select.selectedIndex donne l'indice de l'option choisie (0 pour la première).\");"
   }
+,
+  {
+    "id": "js-fn-verif-complete",
+    "section": "Contrôles de Saisie & Formulaires (Bac STI)",
+    "category": "Validation de Formulaires Bac STI",
+    "name": "function verif() (Validation Complète Formulaire)",
+    "tag": "function verif()",
+    "syntax": "function verif() { ... return false; }",
+    "summary": "Fonction complète de contrôle et validation de formulaire du Bac STI : vérification de la civilité (radio), nom/prénom, téléphone (8 chiffres), email (@ et .), mot de passe et confirmation (avec style.backgroundColor='red'), adresse, sélection de la ville (selectedIndex), code postal (4 chiffres) et remarque.",
+    "description": "Fonction maîtresse de contrôle d'un formulaire HTML du Bac STI. Elle récupère les valeurs de chaque champ via getElementById et getElementsByName, puis applique les règles de validation successives : si une règle n'est pas respectée, un alert() s'affiche, le champ erroné est éventuellement coloré en rouge et la fonction retourne false pour bloquer l'envoi.",
+    "howToUse": "Associer à l'événement onsubmit du formulaire : <form onsubmit=\"return verif()\" action=\"reponse.php\" method=\"post\"> ou au bouton : <input type=\"submit\" value=\"Envoyer\" onclick=\"return verif()\">.",
+    "values": [
+      "civ[0].checked == false && civ[1].checked == false",
+      "np == '' || np.length > 30 || alpha(np) == false",
+      "ntel.length != 8 || testtel(ntel) == false || isnum(ntel) == false",
+      "mail == '' || mail.indexOf('@') == -1 || testmail(mail) == false",
+      "mps.length != 8",
+      "cfmps != mps -> style.backgroundColor = 'red'",
+      "adr == '' || adr.indexOf(' ') == -1",
+      "vil.selectedIndex == 0",
+      "Number(cp) < 1000 || Number(cp) > 9999",
+      "req == '' || req.length > 50"
+    ],
+    "code": "function verif() {\n  // Récupération des valeurs des champs\n  let np = document.getElementById(\"np\").value;\n  let ntel = document.getElementById(\"ntel\").value;\n  let mail = document.getElementById(\"mail\").value;\n  let mps = document.getElementById(\"mps\").value;\n  let cfmps = document.getElementById(\"cfmps\").value;\n  let adr = document.getElementById(\"adr\").value;\n  let vil = document.getElementById(\"vill\");\n  let cp = document.getElementById(\"cp\").value;\n  let req = document.getElementById(\"rq\").value;\n\n  // Validation du cocher civilité 1ére méthode\n  /* let f = document.getElementById('f').checked;\n     let h = document.getElementById('h').checked;\n     if (f == false && h == false) {\n       alert('Veuillez cocher la civilité');\n       return false;\n     }\n  */\n\n  // Validation du cocher civilité 2ème Méthode\n  let civ = document.getElementsByName(\"civ\");\n  if (civ[0].checked == false && civ[1].checked == false) {\n    alert(\"Veuillez cocher la civilité\");\n    return false;\n  }\n\n  // Validation du champ Nom et prénom\n  if (np == \"\" || np.length > 30 || alpha(np) == false) {\n    alert(\"Nom vide ou incorrect\");\n    return false;\n  }\n\n  // Validation du champ Numéro téléphone\n  if (ntel.length != 8 || testtel(ntel) == false || isnum(ntel) == false) {\n    alert(\"numéro téléphone vide ou incorrect\");\n    return false;\n  }\n\n  // Validation du champ Mail\n  if (mail == \"\" || mail.indexOf(\"@\") == -1 || testmail(mail) == false) {\n    alert(\"Mail obligatoire ou invalide\");\n    return false;\n  }\n\n  // Validation du champ mot de passe\n  if (mps.length != 8) {\n    alert(\"Mot de Passe obligatoire ou invalide\");\n    return false;\n  }\n\n  // Validation du confirmation du mot de passe\n  if (cfmps != mps) {\n    alert(\"Mot de Passe incorrect\");\n    document.getElementById('cfmps').style.backgroundColor = 'red';\n    return false;\n  }\n\n  // Validation du champ Adresse\n  if (adr == \"\" || adr.indexOf(\" \") == -1) {\n    alert(\"adresse vide ou incorrecte\");\n    return false;\n  }\n\n  // Validation du cocher ville\n  if (vil.selectedIndex == 0) {\n    alert(\"selectionner une ville\");\n    return false;\n  }\n\n  // Validation du champ code postal\n  if (Number(cp) < 1000 || Number(cp) > 9999) {\n    alert(\"code postal obligatoire ou invalid\");\n    return false;\n  }\n\n  // Validation du champ Remarque\n  if (req == \"\" || req.length > 50) {\n    alert(\"remarque obligatoire ou invalid\");\n    return false;\n  }\n} /// fin fonction verif",
+    "runnableCode": "console.log(\"=== SIMULATION DE VERIF() AU BAC STI ===\");\nconsole.log(\"1. Civilité : civ[0].checked et civ[1].checked vérifiés.\");\nconsole.log(\"2. Nom et Prénom : longueur <= 30 et alpha(np) == true.\");\nconsole.log(\"3. Tél : 8 chiffres exacts, premier chiffre valide (testtel) et isnum.\");\nconsole.log(\"4. Mail : non vide, présence de '@' et format testmail valide.\");\nconsole.log(\"5. Mot de passe : longueur == 8.\");\nconsole.log(\"6. Confirmation : si cfmps != mps, style.backgroundColor = 'red'.\");\nconsole.log(\"7. Adresse : présence obligatoire d'au moins un espace ' ' (indexOf != -1).\");\nconsole.log(\"8. Ville : menu déroulant vil.selectedIndex != 0.\");\nconsole.log(\"9. Code postal : Number(cp) entre 1000 et 9999 (4 chiffres).\");\nconsole.log(\"10. Remarque : non vide et longueur <= 50 caractères.\");\nconsole.log(\"✓ Tous les contrôles sont conformes au barème officiel du Bac STI !\");"
+  },
+  {
+    "id": "js-fn-validage",
+    "section": "Contrôles de Saisie & Formulaires (Bac STI)",
+    "category": "Validation de Formulaires Bac STI",
+    "name": "function validage() (Validation Date de Naissance & Âge)",
+    "tag": "function validage()",
+    "syntax": "function validage() { ... }",
+    "summary": "Calcule l'âge d'un utilisateur à partir de sa date de naissance (#dnais) et vérifie s'il est compris entre 15 et 30 ans en exploitant l'objet Date (new Date(), getFullYear()).",
+    "description": "Fonction classique d'examen du Bac STI pour valider l'âge d'un candidat :\\n1. Récupère la chaîne de date depuis l'input date id='dnais'.\\n2. Instancie dc = new Date() pour obtenir l'année courante (ac = dc.getFullYear()).\\n3. Instancie dp = new Date(dt) pour convertir la saisie et extraire l'année de naissance (ap = dp.getFullYear()).\\n4. Calcule la différence diff = ac - ap.\\n5. Si diff < 15 ou diff > 30, affiche une boîte d'alerte 'age invalid'.",
+    "howToUse": "Appeler sur l'événement onblur ou onchange du champ date : <input type=\"date\" id=\"dnais\" onchange=\"validage()\"> ou dans verif().",
+    "values": [
+      "let dc = new Date();",
+      "let dp = new Date(dt);",
+      "let ap = dp.getFullYear();",
+      "let ac = dc.getFullYear();",
+      "let diff = ac - ap;",
+      "if (diff < 15 || diff > 30) alert('age invalid');"
+    ],
+    "code": "function validage() {\n  let dt = document.getElementById('dnais').value;\n  let dc = new Date(); // Retourne la date courante\n  let dp = new Date(dt); // Convertir la variable dt en un objet date\n  let ap = dp.getFullYear(); // Retourne l'année à partir de la date dp sur 4 chiffres\n  let ac = dc.getFullYear();\n  let diff = ac - ap;\n  if (diff < 15 || diff > 30) {\n    alert('age invalid');\n  }\n}",
+    "runnableCode": "const anneeCourante = new Date().getFullYear();\nconst anneeNaissanceTest = anneeCourante - 18; // 18 ans\nconst diff = anneeCourante - anneeNaissanceTest;\nconsole.log(\"Année courante (ac) : \" + anneeCourante);\nconsole.log(\"Année de naissance test (ap) : \" + anneeNaissanceTest);\nconsole.log(\"Âge calculé (diff = ac - ap) : \" + diff + \" ans\");\nif (diff < 15 || diff > 30) {\n  console.log(\"Résultat : ❌ Âge invalide (doit être entre 15 et 30 ans)\");\n} else {\n  console.log(\"Résultat : ✓ Âge valide pour le Bac STI !\");\n}"
+  },
+  {
+    "id": "js-fn-captcha",
+    "section": "Contrôles de Saisie & Formulaires (Bac STI)",
+    "category": "Validation de Formulaires Bac STI",
+    "name": "function Captcha() (Génération Code Aléatoire)",
+    "tag": "function Captcha()",
+    "syntax": "function Captcha() { ... }",
+    "summary": "Génère un code Captcha aléatoire de 10 caractères composé de majuscules (ASCII 65-90) et de minuscules (ASCII 97-122) grâce à Math.trunc, Math.random() et String.fromCharCode().",
+    "description": "Algorithme officiel du Bac STI pour créer un code de sécurité Captcha aléatoire :\\n1. Initialise une chaîne code vide.\\n2. Boucle de 1 à 10 pour générer 10 caractères.\\n3. Tire un nombre entier n aléatoire entre 0 et 25 via Math.trunc(Math.random() * 26).\\n4. Si n est pair (n % 2 == 0), convertit en majuscule : String.fromCharCode(n + 65) (A-Z).\\n5. Sinon, convertit en minuscule : String.fromCharCode(n + 97) (a-z).\\n6. Insère le code généré dans le champ input id='cap'.",
+    "howToUse": "Appeler au chargement de la page : <body onload=\"Captcha()\"> ou lors d'une réinitialisation.",
+    "values": [
+      "Math.trunc(Math.random() * 26)",
+      "if (n % 2 == 0) String.fromCharCode(n + 65)",
+      "else String.fromCharCode(n + 97)",
+      "document.getElementById('cap').value = code"
+    ],
+    "code": "function Captcha() {\n  let code = \"\";\n  for (let i = 1; i <= 10; i++) {\n    let n = Math.trunc(Math.random() * 26);\n    if (n % 2 == 0) {\n      code = code + String.fromCharCode(n + 65);\n    } else {\n      code = code + String.fromCharCode(n + 97);\n    }\n  }\n  document.getElementById('cap').value = code;\n}",
+    "runnableCode": "let code = \"\";\nfor (let i = 1; i <= 10; i++) {\n  let n = Math.trunc(Math.random() * 26);\n  if (n % 2 == 0) {\n    code = code + String.fromCharCode(n + 65);\n  } else {\n    code = code + String.fromCharCode(n + 97);\n  }\n}\nconsole.log(\"Code Captcha généré (10 caractères) : \" + code);\nconsole.log(\"Longueur : \" + code.length + \" caractères (mélange de majuscules et minuscules)\");"
+  },
+  {
+    "id": "js-fn-nbmajus",
+    "section": "Contrôles de Saisie & Formulaires (Bac STI)",
+    "category": "Validation de Formulaires Bac STI",
+    "name": "function nbmajus() (Comptage des Majuscules)",
+    "tag": "function nbmajus()",
+    "syntax": "function nbmajus() { ... }",
+    "summary": "Compte le nombre de lettres majuscules présentes dans le Captcha (#cap) et compare avec la valeur saisie par l'utilisateur (#nbmaj). En cas d'erreur, colore le champ en rouge.",
+    "description": "Procédure d'évaluation d'un Captcha par comptage :\\n1. Récupère la chaîne du Captcha depuis document.getElementById('cap').value.\\n2. Parcourt la chaîne caractère par caractère avec une boucle for.\\n3. Si le caractère est compris entre 'A' et 'Z' (ch[i] >= 'A' && ch[i] <= 'Z'), incrémente le compteur nb.\\n4. Récupère la réponse de l'utilisateur val = document.getElementById('nbmaj').value.\\n5. Si nb != val, applique un style rouge : document.getElementById('nbmaj').style.backgroundColor = 'red'.",
+    "howToUse": "Appeler au clic du bouton de vérification ou dans la fonction globale verif().",
+    "values": [
+      "for (let i = 0; i < ch.length; i++)",
+      "if (ch[i] >= 'A' && ch[i] <= 'Z') nb = nb + 1",
+      "document.getElementById('nbmaj').style.backgroundColor = 'red'"
+    ],
+    "code": "function nbmajus() {\n  let ch = document.getElementById('cap').value;\n  let nb = 0;\n  for (let i = 0; i < ch.length; i++) {\n    if (ch[i] >= \"A\" && ch[i] <= \"Z\") {\n      nb = nb + 1;\n    }\n  }\n  let val = document.getElementById('nbmaj').value;\n  if (nb != val) {\n    document.getElementById('nbmaj').style.backgroundColor = 'red';\n  }\n}",
+    "runnableCode": "const testChaine = \"AbCDeFgHiJ\";\nlet nb = 0;\nfor (let i = 0; i < testChaine.length; i++) {\n  if (testChaine[i] >= \"A\" && testChaine[i] <= \"Z\") {\n    nb = nb + 1;\n  }\n}\nconsole.log(\"Chaîne analysée : \" + testChaine);\nconsole.log(\"Nombre de majuscules trouvées : \" + nb + \" sur \" + testChaine.length + \" caractères\");\nconsole.log(\"Test utilisateur saisissant 5 : \" + (nb == 5 ? \"✓ Correct !\" : \"❌ Incorrect -> fond rouge !\"));"
+  },
+  {
+    "id": "js-fn-actualiser",
+    "section": "Contrôles de Saisie & Formulaires (Bac STI)",
+    "category": "Validation de Formulaires Bac STI",
+    "name": "function actualiser() (Régénérer le Captcha)",
+    "tag": "function actualiser()",
+    "syntax": "function actualiser() { ... }",
+    "summary": "Permet à l'utilisateur de renouveler le code Captcha aléatoire s'il le trouve illisible, en régénérant 10 nouveaux caractères et en actualisant le champ #cap.",
+    "description": "Fonction liée au bouton d'actualisation du Captcha :\\n1. Réinitialise le code aléatoire.\\n2. Exécute la boucle for de 10 itérations avec tirage aléatoire Math.random() et conversion ASCII String.fromCharCode().\\n3. Met à jour la valeur affichée dans document.getElementById('cap').value.\\n4. Réinitialise également si nécessaire la couleur de fond du champ réponse.",
+    "howToUse": "Associer à un bouton rafraîchir : <button type=\"button\" onclick=\"actualiser()\">🔄 Actualiser le Captcha</button>.",
+    "values": [
+      "code = ''",
+      "Math.trunc(Math.random() * 26)",
+      "document.getElementById('cap').value = code"
+    ],
+    "code": "function actualiser() {\n  let code = \"\";\n  for (let i = 1; i <= 10; i++) {\n    let n = Math.trunc(Math.random() * 26);\n    if (n % 2 == 0) {\n      code = code + String.fromCharCode(n + 65);\n    } else {\n      code = code + String.fromCharCode(n + 97);\n    }\n  }\n  document.getElementById('cap').value = code;\n}",
+    "runnableCode": "let code = \"\";\nfor (let i = 1; i <= 10; i++) {\n  let n = Math.trunc(Math.random() * 26);\n  if (n % 2 == 0) {\n    code = code + String.fromCharCode(n + 65);\n  } else {\n    code = code + String.fromCharCode(n + 97);\n  }\n}\nconsole.log(\"Ancien code : aB3kL9pQxZ\");\nconsole.log(\"Nouveau code actualisé : \" + code);\nconsole.log(\"✓ Champ #cap mis à jour avec succès !\");"
+  },
+  {
+    "id": "js-structure-switch-saisons",
+    "section": "Structures Conditionnelles (Bac STI)",
+    "category": "Structures de Contrôle (switch)",
+    "name": "switch (variable) (Saisons de l'Année)",
+    "tag": "switch (mois)",
+    "syntax": "switch (expression) { case c1: ... break; default: ... break; }",
+    "summary": "Structure conditionnelle à choix multiples (switch) : détermine la saison de l'année à partir du numéro du mois (1 à 12) avec regroupement de cas multiples (case 12: case 1: case 2:), instruction break et clause default.",
+    "description": "Guide complet sur l'utilisation de switch au Baccalauréat STI :\\n\\n1. Saisie & Conversion :\\n   let mois = prompt('mois=');\\n   mois = Number(mois); // OBLIGATOIRE : switch compare avec === (valeur et type exacts).\\n\\n2. Regroupement de cas multiples (OU logique) :\\n   Quand plusieurs valeurs produisent le même traitement, on empile les étiquettes case sans instruction intermédiaire :\\n   - case 12: case 1: case 2: -> 'hiver'\\n   - case 3: case 4: case 5: -> 'printemps'\\n   - case 6: case 7: case 8: -> 'été'\\n   - case 9: case 10: case 11: -> 'Automne'\\n\\n3. Le rôle crucial de 'break;' :\\n   L'instruction 'break;' termine immédiatement le bloc switch. Sans break, JavaScript continuerait à exécuter aveuglément les blocs suivants (comportement fall-through), ce qui provoquerait des affichages erronés !\\n\\n4. La clause 'default:' :\\n   Sert de filet de sécurité lorsque la valeur saisie ne correspond à aucun des cas listés (par exemple si l'utilisateur saisit 13, 0 ou -5). Affiche 'Numéro erroné'.",
+    "howToUse": "Utiliser switch dès qu'une variable peut prendre plusieurs valeurs fixes et distinctes (numéros de mois, choix de menu, codes postaux régionaux). Structure plus claire et rapide qu'une longue série de if ... else if.",
+    "values": [
+      "switch (mois) { ... }",
+      "case 12: case 1: case 2: -> hiver",
+      "case 3: case 4: case 5: -> printemps",
+      "case 6: case 7: case 8: -> été",
+      "case 9: case 10: case 11: -> Automne",
+      "break; (interrompt le switch)",
+      "default: alert('Numéro erroné'); break;"
+    ],
+    "code": "<script>\n// déterminer la saison à partir du numéro du mois saisi\nlet mois = prompt(\"mois=\");\nmois = Number(mois);\nswitch (mois) {\n  case 12: case 1: case 2:\n    alert(\"hiver\");\n    break;\n  case 3: case 4: case 5:\n    alert(\"printemps\");\n    break;\n  case 6: case 7: case 8:\n    alert(\"été\");\n    break;\n  case 9: case 10: case 11:\n    alert(\"Automne\");\n    break;\n  default:\n    alert(\"Numéro erroné\");\n    break;\n}\n</script>",
+    "runnableCode": "function getSaison(m) {\n  m = Number(m);\n  switch (m) {\n    case 12: case 1: case 2:\n      return \"❄️ hiver\";\n    case 3: case 4: case 5:\n      return \"🌸 printemps\";\n    case 6: case 7: case 8:\n      return \"☀️ été\";\n    case 9: case 10: case 11:\n      return \"🍂 Automne\";\n    default:\n      return \"❌ Numéro erroné\";\n  }\n}\n\nconsole.log(\"=== DÉMONSTRATION STRUCTURE SWITCH (BAC STI) ===\");\nconsole.log(\"Mois 1 (Janvier)   -> \" + getSaison(1));\nconsole.log(\"Mois 4 (Avril)     -> \" + getSaison(4));\nconsole.log(\"Mois 7 (Juillet)   -> \" + getSaison(7));\nconsole.log(\"Mois 10 (Octobre)  -> \" + getSaison(10));\nconsole.log(\"Mois 12 (Décembre) -> \" + getSaison(12));\nconsole.log(\"Mois 15 (Invalide) -> \" + getSaison(15));\nconsole.log(\"✓ Fonction switch testée sur tous les cas possibles !\");"
+  },
+  {
+    "id": "js-fn-alpha",
+    "section": "Contrôles de Saisie & Formulaires (Bac STI)",
+    "category": "Validation de Formulaires Bac STI",
+    "name": "function alpha(ch) (Contrôle Chaîne Alphabétique)",
+    "tag": "function alpha(ch)",
+    "syntax": "function alpha(ch) { ... return true; }",
+    "summary": "Vérifie si une chaîne ch passée en paramètre est strictement alphabétique (composée uniquement de lettres A-Z et d'espaces). Utilisée dans verif() pour valider le Nom et Prénom.",
+    "description": "Fonction auxiliaire indispensable du Bac STI :\\n1. Convertit la chaîne en majuscules avec ch = ch.toUpperCase() pour simplifier les comparaisons.\\n2. Parcourt chaque caractère avec une boucle for.\\n3. Si un caractère n'est ni compris entre 'A' et 'Z', ni égal à un espace ' ', retourne immédiatement false.\\n4. Si toute la chaîne a été vérifiée sans erreur, retourne true.",
+    "howToUse": "if (alpha(np) == false) { alert('Nom vide ou incorrect'); return false; }",
+    "values": [
+      "ch = ch.toUpperCase()",
+      "for (let i = 0; i < ch.length; i++)",
+      "if ((ch[i] < 'A' || ch[i] > 'Z') && ch[i] != ' ') return false;",
+      "return true;"
+    ],
+    "code": "function alpha(ch) {\n  ch = ch.toUpperCase();\n  for (let i = 0; i < ch.length; i++) {\n    if ((ch[i] < \"A\" || ch[i] > \"Z\") && ch[i] != \" \") {\n      return false;\n    }\n  }\n  return true;\n}",
+    "runnableCode": "function alpha(ch) {\n  ch = ch.toUpperCase();\n  for (let i = 0; i < ch.length; i++) {\n    if ((ch[i] < \"A\" || ch[i] > \"Z\") && ch[i] != \" \") {\n      return false;\n    }\n  }\n  return true;\n}\nconsole.log(\"alpha('Mohamed Ben Ali') : \" + alpha('Mohamed Ben Ali')); // true\nconsole.log(\"alpha('Ali123') : \" + alpha('Ali123')); // false\nconsole.log(\"alpha('Sarra!') : \" + alpha('Sarra!')); // false"
+  },
+  {
+    "id": "js-fn-isnum",
+    "section": "Contrôles de Saisie & Formulaires (Bac STI)",
+    "category": "Validation de Formulaires Bac STI",
+    "name": "function isnum(ch) (Contrôle Chaîne Numérique)",
+    "tag": "function isnum(ch)",
+    "syntax": "function isnum(ch) { ... return true; }",
+    "summary": "Vérifie si une chaîne ch ne contient que des chiffres de '0' à '9'. Utilisée dans verif() pour valider le Numéro de téléphone ou le Code Postal.",
+    "description": "Fonction classique de contrôle numérique au Bac STI :\\n1. Parcourt tous les caractères de la chaîne avec une boucle for.\\n2. Si un caractère est strictement inférieur à '0' ou supérieur à '9', retourne false.\\n3. Si tous les caractères sont des chiffres, retourne true.",
+    "howToUse": "if (isnum(ntel) == false) { alert('Le numéro de téléphone doit être numérique !'); return false; }",
+    "values": [
+      "for (let i = 0; i < ch.length; i++)",
+      "if (ch[i] < '0' || ch[i] > '9') return false;",
+      "return true;"
+    ],
+    "code": "function isnum(ch) {\n  for (let i = 0; i < ch.length; i++) {\n    if (ch[i] < \"0\" || ch[i] > \"9\") {\n      return false;\n    }\n  }\n  return true;\n}",
+    "runnableCode": "function isnum(ch) {\n  for (let i = 0; i < ch.length; i++) {\n    if (ch[i] < \"0\" || ch[i] > \"9\") {\n      return false;\n    }\n  }\n  return true;\n}\nconsole.log(\"isnum('98123456') : \" + isnum('98123456')); // true\nconsole.log(\"isnum('9812A456') : \" + isnum('9812A456')); // false\nconsole.log(\"isnum('2024') : \" + isnum('2024')); // true"
+  },
+  {
+    "id": "js-fn-testtel",
+    "section": "Contrôles de Saisie & Formulaires (Bac STI)",
+    "category": "Validation de Formulaires Bac STI",
+    "name": "function testtel(ch) (Contrôle Indicatif Téléphone)",
+    "tag": "function testtel(ch)",
+    "syntax": "function testtel(ch) { ... return true; }",
+    "summary": "Vérifie si le premier chiffre d'un numéro de téléphone tunisien à 8 chiffres commence par un préfixe valide (2, 4, 5, 7 ou 9).",
+    "description": "Contrôle d'indicatif téléphonique officiel du Bac STI tunisien :\\n1. Récupère le premier chiffre : let prem = ch.charAt(0); ou ch[0].\\n2. Vérifie s'il est égal à 2, 4, 5, 7 ou 9 (opérateurs de comparaison et OU logique ||).\\n3. Si oui, retourne true ; sinon retourne false.",
+    "howToUse": "if (testtel(ntel) == false) { alert('Numéro de téléphone invalide (doit commencer par 2, 4, 5, 7 ou 9) !'); return false; }",
+    "values": [
+      "let prem = ch.charAt(0);",
+      "prem == '2' || prem == '4' || prem == '5' || prem == '7' || prem == '9'"
+    ],
+    "code": "function testtel(ch) {\n  let prem = ch.charAt(0);\n  return (prem == \"2\" || prem == \"4\" || prem == \"5\" || prem == \"7\" || prem == \"9\");\n}",
+    "runnableCode": "function testtel(ch) {\n  let prem = ch.charAt(0);\n  return (prem == \"2\" || prem == \"4\" || prem == \"5\" || prem == \"7\" || prem == \"9\");\n}\nconsole.log(\"testtel('98123456') : \" + testtel('98123456')); // true (commence par 9)\nconsole.log(\"testtel('52123456') : \" + testtel('52123456')); // true (commence par 5)\nconsole.log(\"testtel('18123456') : \" + testtel('18123456')); // false (1 invalide)"
+  },
+  {
+    "id": "js-fn-testmail",
+    "section": "Contrôles de Saisie & Formulaires (Bac STI)",
+    "category": "Validation de Formulaires Bac STI",
+    "name": "function testmail(mail) (Contrôle Format Adresse Email)",
+    "tag": "function testmail(mail)",
+    "syntax": "function testmail(mail) { ... return true; }",
+    "summary": "Vérifie la conformité d'une adresse email : présence du caractère '@' non au début, et d'un point '.' placé après le '@' sans être le dernier caractère.",
+    "description": "Contrôle d'adresse e-mail standard au Bac STI :\\n1. Trouve la position de l'arobase : let pArobase = mail.indexOf('@');\\n2. Trouve la position du dernier point : let pPoint = mail.lastIndexOf('.');\\n3. Vérifie que pArobase > 0 (il y a du texte avant '@').\\n4. Vérifie que pPoint > pArobase + 1 (il y a du texte entre '@' et '.').\\n5. Vérifie que pPoint < mail.length - 1 (il y a une extension après le point).",
+    "howToUse": "if (testmail(mail) == false) { alert('Adresse email obligatoire ou invalide !'); return false; }",
+    "values": [
+      "let pArobase = mail.indexOf('@');",
+      "let pPoint = mail.lastIndexOf('.');",
+      "pArobase > 0 && pPoint > pArobase + 1 && pPoint < mail.length - 1"
+    ],
+    "code": "function testmail(mail) {\n  let pArobase = mail.indexOf(\"@\");\n  let pPoint = mail.lastIndexOf(\".\");\n  return (pArobase > 0 && pPoint > pArobase + 1 && pPoint < mail.length - 1);\n}",
+    "runnableCode": "function testmail(mail) {\n  let pArobase = mail.indexOf(\"@\");\n  let pPoint = mail.lastIndexOf(\".\");\n  return (pArobase > 0 && pPoint > pArobase + 1 && pPoint < mail.length - 1);\n}\nconsole.log(\"testmail('eleve@domaine.tn') : \" + testmail('eleve@domaine.tn')); // true\nconsole.log(\"testmail('invalide.sans.arobase') : \" + testmail('invalide.sans.arobase')); // false\nconsole.log(\"testmail('@debut.com') : \" + testmail('@debut.com')); // false\nconsole.log(\"testmail('eleve@pointfinal.') : \" + testmail('eleve@pointfinal.')); // false"
+  }
 ]
 };

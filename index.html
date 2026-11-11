@@ -91,11 +91,11 @@
             <div class="card-icon-wrap" style="background: linear-gradient(135deg, #059669, #10b981);">⚡</div>
             <h2 class="card-title">JavaScript</h2>
             <p class="card-subtitle">
-              Annexe officielle conforme : les 12 sections du Bac STI (opérateurs, chaînes, Math, Date, Tableaux, DOM et validation).
+              Annexe officielle conforme : 14 sections du Bac STI (opérateurs, chaînes, Math, Date, Tableaux, DOM, validation verif, Captcha, et structure switch).
             </p>
             <div class="card-badges">
-              <span class="pill-badge" style="color:#34d399;">53 Notions Officielles (12 sections)</span>
-              <span class="pill-badge" style="color:#10b981;">📋 Tableau Officiel 3 Colonnes</span>
+              <span class="pill-badge" style="color:#34d399;">63 Notions & Fonctions (14 sections)</span>
+              <span class="pill-badge" style="color:#10b981;">📋 Tableau Officiel & Fonctions Bac</span>
               <span class="pill-badge">Console de test en direct</span>
             </div>
             <div class="card-cta-btn">
@@ -981,7 +981,7 @@
           </button>
           <button id="tabBtnCardsGrid" class="view-mode-tab" onclick="switchJsTab('cards')">
             <span>🎴</span>
-            <span>Fiches Détaillées & Recherche (53 notions)</span>
+            <span>Fiches Détaillées & Recherche (63 notions)</span>
           </button>
         </div>
 
@@ -1337,6 +1337,119 @@
               </div>
             </div>
           </div>
+
+          <!-- ========================================================
+               NOUVELLE SECTION DÉDIÉE : FONCTIONS COURS PRATIQUE BAC STI
+               (Images de révision : verif, validage, Captcha, switch...)
+               ======================================================== -->
+          <div style="margin-top: 36px; border-top: 2px dashed rgba(16, 185, 129, 0.4); padding-top: 26px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin-bottom: 22px;">
+              <div style="display: flex; align-items: center; gap: 14px;">
+                <span style="font-size: 2rem;">🎓</span>
+                <div>
+                  <h3 style="font-size: 1.25rem; color: #34d399; margin: 0; font-weight: 800; letter-spacing: -0.3px;">
+                    Fonctions Types & Structures de Contrôle Clés (Baccalauréat STI)
+                  </h3>
+                  <p style="font-size: 0.88rem; color: var(--text-secondary); margin: 4px 0 0 0;">
+                    L'intégralité des 4 fiches de cours pratique : validation complète de formulaire (<code>verif()</code>), contrôle d'âge (<code>validage()</code>), sécurité Captcha aléatoire & majuscules, et structure conditionnelle à choix multiples (<code>switch</code>) !
+                  </p>
+                </div>
+              </div>
+              <span style="background: rgba(16, 185, 129, 0.18); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.45); font-size: 0.8rem; font-weight: 700; padding: 5px 14px; border-radius: 20px;">
+                Fiches Pratiques STI (Pages 1 à 4)
+              </span>
+            </div>
+
+            <div class="annexe-3col-grid">
+              <!-- BOÎTE 1 : CONTRÔLE COMPLET DE FORMULAIRE & FONCTIONS AUXILIAIRES -->
+              <div class="annexe-col">
+                <div class="annexe-box" style="border-color: rgba(16, 185, 129, 0.5);">
+                  <div class="annexe-box-header" style="background: linear-gradient(135deg, #059669, #10b981);">
+                    Validation Formulaire & Aides (Pages 1 & 2)
+                  </div>
+                  <table class="annexe-table">
+                    <tr onclick="openJsModalById('js-fn-verif-complete')" title="Cliquer pour afficher la fonction verif complète">
+                      <td class="syntax-col" style="font-size:0.75rem; color:#34d399; font-weight:800;">function verif()</td>
+                      <td class="desc-col">Contrôle complet : civilité (radio), nom/prénom, tel (8 chiffres), mail, mot de passe & confirmation (rouge), adresse, ville, code postal et remarque.</td>
+                    </tr>
+                    <tr onclick="openJsModalById('js-fn-alpha')" title="Cliquer pour afficher la fonction alpha(ch)">
+                      <td class="syntax-col" style="font-size:0.75rem; color:#facc15;">alpha(ch)</td>
+                      <td class="desc-col">Vérifie si ch ne contient que des lettres majuscules/minuscules et espaces.</td>
+                    </tr>
+                    <tr onclick="openJsModalById('js-fn-isnum')" title="Cliquer pour afficher la fonction isnum(ch)">
+                      <td class="syntax-col" style="font-size:0.75rem; color:#facc15;">isnum(ch)</td>
+                      <td class="desc-col">Vérifie si ch est composé uniquement de chiffres ('0' à '9').</td>
+                    </tr>
+                    <tr onclick="openJsModalById('js-fn-testtel')" title="Cliquer pour afficher la fonction testtel(ch)">
+                      <td class="syntax-col" style="font-size:0.75rem; color:#facc15;">testtel(ch)</td>
+                      <td class="desc-col">Vérifie l'indicatif téléphonique tunisien (commence par 2, 4, 5, 7 ou 9).</td>
+                    </tr>
+                    <tr onclick="openJsModalById('js-fn-testmail')" title="Cliquer pour afficher la fonction testmail(mail)">
+                      <td class="syntax-col" style="font-size:0.75rem; color:#facc15;">testmail(mail)</td>
+                      <td class="desc-col">Vérifie le format e-mail : présence de '@' et '.' avec positions relatives.</td>
+                    </tr>
+                  </table>
+                  <div class="annexe-box-footer" onclick="openJsModalById('js-fn-verif-complete')" style="cursor:pointer; background:rgba(16, 185, 129, 0.12); color:#e2e8f0;" title="Ouvrir la fiche verif()">
+                    💡 <strong>Astuce examen :</strong> <code>onsubmit="return verif()"</code> sur le formulaire <code>&lt;form&gt;</code> pour bloquer l'envoi si invalide. 👆
+                  </div>
+                </div>
+              </div>
+
+              <!-- BOÎTE 2 : DATES & SÉCURITÉ CAPTCHA -->
+              <div class="annexe-col">
+                <div class="annexe-box" style="border-color: rgba(16, 185, 129, 0.5);">
+                  <div class="annexe-box-header" style="background: linear-gradient(135deg, #059669, #10b981);">
+                    Date & Sécurité Captcha (Page 3)
+                  </div>
+                  <table class="annexe-table">
+                    <tr onclick="openJsModalById('js-fn-validage')" title="Cliquer pour afficher la fonction validage()">
+                      <td class="syntax-col" style="font-size:0.75rem; color:#34d399; font-weight:800;">validage()</td>
+                      <td class="desc-col">Contrôle de l'âge (15 à 30 ans) via l'objet Date (new Date(), getFullYear()).</td>
+                    </tr>
+                    <tr onclick="openJsModalById('js-fn-captcha')" title="Cliquer pour afficher la fonction Captcha()">
+                      <td class="syntax-col" style="font-size:0.75rem; color:#34d399; font-weight:800;">Captcha()</td>
+                      <td class="desc-col">Génération d'un code aléatoire de 10 caractères majuscules/minuscules (Math.random, fromCharCode).</td>
+                    </tr>
+                    <tr onclick="openJsModalById('js-fn-nbmajus')" title="Cliquer pour afficher la fonction nbmajus()">
+                      <td class="syntax-col" style="font-size:0.75rem; color:#34d399; font-weight:800;">nbmajus()</td>
+                      <td class="desc-col">Comptage des majuscules dans #cap et coloration du fond en rouge si erreur (style.backgroundColor='red').</td>
+                    </tr>
+                    <tr onclick="openJsModalById('js-fn-actualiser')" title="Cliquer pour afficher la fonction actualiser()">
+                      <td class="syntax-col" style="font-size:0.75rem; color:#34d399; font-weight:800;">actualiser()</td>
+                      <td class="desc-col">Régénère un nouveau code Captcha de 10 caractères et actualise l'input #cap.</td>
+                    </tr>
+                  </table>
+                  <div class="annexe-box-footer" onclick="openJsModalById('js-fn-captcha')" style="cursor:pointer; background:rgba(16, 185, 129, 0.12); color:#e2e8f0;" title="Ouvrir la fiche Captcha()">
+                    🔐 <strong>Formule ASCII :</strong> <code>String.fromCharCode(n + 65)</code> pour 'A'-'Z' et <code>(n + 97)</code> pour 'a'-'z'. 👆
+                  </div>
+                </div>
+              </div>
+
+              <!-- BOÎTE 3 : STRUCTURE CONDITIONNELLE SWITCH -->
+              <div class="annexe-col">
+                <div class="annexe-box" style="border-color: rgba(16, 185, 129, 0.5);">
+                  <div class="annexe-box-header" style="background: linear-gradient(135deg, #059669, #10b981);">
+                    Structure Conditionnelle (Page 4)
+                  </div>
+                  <table class="annexe-table">
+                    <tr onclick="openJsModalById('js-structure-switch-saisons')" title="Cliquer pour afficher la fiche switch complète">
+                      <td class="syntax-col" style="font-size:0.75rem; color:#38bdf8; font-weight:800;">switch (mois)</td>
+                      <td class="desc-col">Déterminer la saison de l'année (1 à 12) avec cas groupés (case 12: case 1: case 2:), break et default.</td>
+                    </tr>
+                  </table>
+                  <div class="annexe-box-footer" onclick="openJsModalById('js-structure-switch-saisons')" style="cursor:pointer; background:rgba(56, 189, 248, 0.15); border-top:1px solid #0284c7; color:#f8fafc; padding:12px;" title="Cliquez pour ouvrir l'explication complète de switch">
+                    <div style="font-weight:700; color:#38bdf8; margin-bottom:4px;">🔀 Savoir utiliser switch :</div>
+                    <ul style="margin:0; padding-left:16px; font-size:0.78rem; line-height:1.45; color:#cbd5e1;">
+                      <li><code>Number(prompt())</code> obligatoire pour égalité stricte</li>
+                      <li>Cas groupés pour réaliser un OU logique</li>
+                      <li><code>break;</code> pour empêcher le fall-through</li>
+                      <li><code>default:</code> pour gérer les cas erronés</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- ==========================================
@@ -1346,13 +1459,13 @@
           <!-- Bannière officielle Annexe JS -->
           <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.1)); border: 1px solid rgba(16, 185, 129, 0.4); border-left: 6px solid #10b981; border-radius: var(--radius-md); padding: 18px 22px; margin-bottom: 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
             <div>
-              <h4 style="color: #34d399; font-size: 1.05rem; margin-bottom: 4px;">⚡ 53 Notions JavaScript - Baccalauréat STI</h4>
+              <h4 style="color: #34d399; font-size: 1.05rem; margin-bottom: 4px;">⚡ 63 Notions & Fonctions JavaScript - Baccalauréat STI</h4>
               <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;">
-                L'intégralité des 12 sections de l'annexe officielle : opérateurs logiques, comparaisons, Math, chaînes de caractères, dates, tableaux, sélection DOM, modification de style et validation !
+                L'intégralité des 14 sections officielles : opérateurs, comparaisons, Math, chaînes, dates, tableaux, sélection DOM, validation verif, Captcha, et structure conditionnelle switch !
               </p>
             </div>
             <span style="background: #059669; color: #fff; font-weight: 800; font-size: 0.8rem; padding: 6px 14px; border-radius: 20px;">
-              53 Notions avec Console Interactive
+              63 Notions avec Console Interactive
             </span>
           </div>
 

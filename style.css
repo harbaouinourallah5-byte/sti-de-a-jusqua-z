@@ -2660,5 +2660,29 @@ body {
   filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
 }
 
+/* Boutons et éléments de démonstration Switch & Formulaires Bac STI */
+.btn-switch-demo {
+  transition: all 0.25s ease;
+  user-select: none;
+}
+
+.btn-switch-demo:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.btn-switch-demo:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 640px) {
+  .btn-switch-demo {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+
 
 
