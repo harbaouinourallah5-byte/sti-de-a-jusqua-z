@@ -1210,3 +1210,242 @@ body {
   background: rgba(16, 185, 129, 0.1);
 }
 
+/* ===================================================================
+   THÈMES ANNEXE ORANGE (HTML5) & BLEU (CSS3)
+   =================================================================== */
+
+/* Thème Orange (HTML5) */
+.view-mode-tab.active.orange {
+  background: rgba(249, 115, 22, 0.15);
+  color: #fb923c;
+  border-color: #ea580c;
+  box-shadow: 0 0 12px rgba(249, 115, 22, 0.25);
+}
+
+.annexe-doc-container.orange-theme {
+  border-color: rgba(249, 115, 22, 0.35);
+}
+
+.annexe-doc-container.orange-theme .annexe-doc-header {
+  border-bottom: 2px solid #ea580c;
+}
+
+.annexe-doc-container.orange-theme .annexe-logo-shield {
+  background: linear-gradient(135deg, #ea580c, #c2410c);
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.35);
+}
+
+.annexe-doc-container.orange-theme .annexe-title-text {
+  color: #f97316;
+}
+
+.annexe-doc-container.orange-theme .annexe-doc-tip {
+  background: rgba(249, 115, 22, 0.12);
+  border-color: rgba(249, 115, 22, 0.45);
+  color: #fb923c;
+}
+
+.annexe-doc-container.orange-theme .annexe-box {
+  border-color: rgba(249, 115, 22, 0.25);
+}
+
+.annexe-doc-container.orange-theme .annexe-box:hover {
+  border-color: #f97316;
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.18);
+}
+
+.annexe-doc-container.orange-theme .annexe-box-header {
+  background: #ea580c;
+}
+
+.annexe-doc-container.orange-theme .annexe-table tr:hover {
+  background: rgba(249, 115, 22, 0.16);
+}
+
+.annexe-doc-container.orange-theme .annexe-table td.syntax-col {
+  color: #fb923c;
+}
+
+.annexe-doc-container.orange-theme .annexe-box-footer {
+  border-top-color: rgba(249, 115, 22, 0.3);
+}
+
+.annexe-doc-container.orange-theme .annexe-box-footer:hover {
+  color: #fb923c;
+  background: rgba(249, 115, 22, 0.12);
+}
+
+/* Thème Bleu (CSS3) */
+.view-mode-tab.active.blue {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border-color: #0284c7;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+}
+
+.annexe-doc-container.blue-theme {
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.annexe-doc-container.blue-theme .annexe-doc-header {
+  border-bottom: 2px solid #0284c7;
+}
+
+.annexe-doc-container.blue-theme .annexe-logo-shield {
+  background: linear-gradient(135deg, #0284c7, #0369a1);
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+}
+
+.annexe-doc-container.blue-theme .annexe-title-text {
+  color: #38bdf8;
+}
+
+.annexe-doc-container.blue-theme .annexe-doc-tip {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.45);
+  color: #38bdf8;
+}
+
+.annexe-doc-container.blue-theme .annexe-box {
+  border-color: rgba(56, 189, 248, 0.25);
+}
+
+.annexe-doc-container.blue-theme .annexe-box:hover {
+  border-color: #38bdf8;
+  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.18);
+}
+
+.annexe-doc-container.blue-theme .annexe-box-header {
+  background: #0284c7;
+}
+
+.annexe-doc-container.blue-theme .annexe-table tr:hover {
+  background: rgba(56, 189, 248, 0.16);
+}
+
+.annexe-doc-container.blue-theme .annexe-table td.syntax-col {
+  color: #38bdf8;
+}
+
+.annexe-doc-container.blue-theme .annexe-box-footer {
+  border-top-color: rgba(56, 189, 248, 0.3);
+}
+
+.annexe-doc-container.blue-theme .annexe-box-footer:hover {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+}
+
+/* ===================================================================
+   SYSTÈME DE BOUTONS RADIO / VARIANTES INTERACTIVES AVEC ANIMATION
+   =================================================================== */
+.variety-selector-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  transition: all 0.25s ease;
+}
+
+.variety-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.variety-header-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.variety-radios-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.variety-radio-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.variety-radio-label:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+  border-color: #38bdf8;
+  transform: translateY(-1px);
+}
+
+.variety-radio-label input[type="radio"] {
+  accent-color: #38bdf8;
+  margin: 0;
+  cursor: pointer;
+}
+
+.variety-radio-label.active {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: #38bdf8;
+  color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+}
+
+.variety-radio-label.active.orange {
+  background: rgba(249, 115, 22, 0.15);
+  border-color: #f97316;
+  color: #f97316;
+  box-shadow: 0 0 10px rgba(249, 115, 22, 0.3);
+}
+
+.variety-radio-label.orange input[type="radio"] {
+  accent-color: #f97316;
+}
+
+.variety-applied-toast {
+  font-size: 0.82rem;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid #10b981;
+  color: #34d399;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  animation: fadeInToast 0.3s ease;
+}
+
+@keyframes fadeInToast {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseStage {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+.pulse-anim {
+  animation: pulseStage 0.4s ease-in-out;
+}
+
+

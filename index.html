@@ -59,9 +59,9 @@
               Annexe complète : balises de structuration, tableaux, conteneurs, listes, éléments multimédias et éléments de formulaire.
             </p>
             <div class="card-badges">
-              <span class="pill-badge">57 Notions & Balises</span>
-              <span class="pill-badge">Comment utiliser</span>
-              <span class="pill-badge">Code & Photo du rendu</span>
+              <span class="pill-badge" style="color:#fb923c;">57 Notions & Balises</span>
+              <span class="pill-badge" style="color:#f97316;">📋 Tableau Officiel 3 Colonnes</span>
+              <span class="pill-badge">🎛️ Variantes Radio & Rendu</span>
             </div>
             <div class="card-cta-btn">
               <span>Ouvrir l'annexe HTML5</span>
@@ -77,9 +77,9 @@
               Annexe complète : 61 propriétés avec sélecteurs #id, polices, arrière-plan, boîtes, transitions, animations et filtres.
             </p>
             <div class="card-badges">
-              <span class="pill-badge" style="color:#38bdf8;">🎬 61 Vidéos Démo Live</span>
-              <span class="pill-badge" style="color:#facc15;">💡 Note :hover (#id)</span>
-              <span class="pill-badge">Valeurs du Bac</span>
+              <span class="pill-badge" style="color:#38bdf8;">61 Propriétés (#id)</span>
+              <span class="pill-badge" style="color:#38bdf8;">📋 Tableau Officiel 3 Colonnes</span>
+              <span class="pill-badge" style="color:#facc15;">🎛️ Variantes Radio (solid, dotted...)</span>
             </div>
             <div class="card-cta-btn">
               <span>Ouvrir l'annexe CSS3 & Vidéos</span>
@@ -131,38 +131,401 @@
     <section id="view-html" class="view-section">
       <div class="page-header-banner">
         <div class="container">
-          <div class="breadcrumb">
-            <a onclick="switchView('home')">Accueil</a>
-            <span>/</span>
-            <span style="color: #f97316; font-weight: 600;">HTML5</span>
+
+        <!-- Onglets de bascule d'affichage HTML5 -->
+        <div class="view-tabs-bar">
+          <button id="tabBtnHtmlDoc" class="view-mode-tab active orange" onclick="switchHtmlTab('doc')">
+            <span>📄</span>
+            <span>Tableau Officiel Annexe HTML5 (Recommandé)</span>
+          </button>
+          <button id="tabBtnHtmlCards" class="view-mode-tab" onclick="switchHtmlTab('cards')">
+            <span>🎴</span>
+            <span>Fiches Détaillées & Recherche (57 notions)</span>
+          </button>
+        </div>
+
+        <!-- ==========================================
+             1. VUE TABLEAU OFFICIEL HTML5 (RÉPLIQUE 3 COLONNES)
+             ========================================== -->
+        <div class="annexe-doc-container orange-theme" id="htmlOfficialDocView">
+          <div class="annexe-doc-header">
+            <div class="annexe-title-wrap">
+              <div class="annexe-logo-shield">
+                <span style="font-size:0.7rem; font-weight:bold;">HTML</span>
+                <span style="font-size:1.15rem; font-weight:900; line-height:1;">5</span>
+              </div>
+              <div>
+                <h2 class="annexe-title-text">Annexe HTML5</h2>
+                <span style="font-size:0.85rem; color:var(--text-secondary);">Baccalauréat STI - Sciences & Technologies de l'Informatique</span>
+              </div>
+            </div>
+            <div class="annexe-doc-tip">
+              <span>👆</span>
+              <span><strong>Interactif :</strong> Cliquez sur n'importe quelle balise pour voir les variantes avec boutons radio & rendu animé !</span>
+            </div>
           </div>
-          <div class="subpage-title-row">
-            <h2 class="subpage-title">
-              <span style="color: #f97316;">🌐</span> Annexe Complète HTML5
-            </h2>
-            <button class="back-to-home-btn">
-              <span>←</span>
-              <span>Retour à l'accueil</span>
-            </button>
+
+          <div class="annexe-3col-grid">
+            <!-- COLONNE 1 -->
+            <div class="annexe-col">
+              <!-- 1. Éléments de 1er niveau -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Éléments de 1er niveau</div>
+                <table class="annexe-table">
+                  <tr onclick="openHtmlModalById('tag-html')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;html&gt;</td>
+                    <td class="desc-col">Représente la racine d'un document HTML.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-head')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;head&gt;</td>
+                    <td class="desc-col">Conteneur de métadonnées placé entre la balise &lt;html&gt; et la balise &lt;body&gt;.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-body')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;body&gt;</td>
+                    <td class="desc-col">Définit le corps du document.</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- 2. Éléments d'en-tête -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Éléments d'en-tête</div>
+                <table class="annexe-table">
+                  <tr onclick="openHtmlModalById('tag-link')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;link&gt;</td>
+                    <td class="desc-col">Définit la relation entre le document actuel et une ressource externe. <br><em style="font-size:0.75rem; color:var(--text-muted);">Attributs : href, rel, type</em></td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-meta')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;meta&gt;</td>
+                    <td class="desc-col">Définit les métadonnées du document. <br><em style="font-size:0.75rem; color:var(--text-muted);">Attributs : charset, name, content</em></td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-script')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;script&gt;</td>
+                    <td class="desc-col">Intègre un script côté client (JavaScript). <br><em style="font-size:0.75rem; color:var(--text-muted);">Attributs : src, type</em></td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-style')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;style&gt;</td>
+                    <td class="desc-col">Définit les informations de style (CSS) pour un document. <br><em style="font-size:0.75rem; color:var(--text-muted);">Attributs : type, media</em></td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-title')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;title&gt;</td>
+                    <td class="desc-col">Définit le titre du document.</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- 3. Structuration d'une page web -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Éléments de structuration d'une page web</div>
+                <table class="annexe-table">
+                  <tr onclick="openHtmlModalById('tag-header')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;header&gt;</td>
+                    <td class="desc-col">Conteneur pour le contenu d'introduction ou un ensemble de liens de navigation.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-nav')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;nav&gt;</td>
+                    <td class="desc-col">Définit un ensemble de liens de navigation.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-footer')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;footer&gt;</td>
+                    <td class="desc-col">Définit un pied de page pour un document ou une section.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-section')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;section&gt;</td>
+                    <td class="desc-col">Définit une section dans un document.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-article')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;article&gt;</td>
+                    <td class="desc-col">Spécifie un contenu indépendant et autonome.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-aside')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;aside&gt;</td>
+                    <td class="desc-col">Définit un contenu en dehors du contenu principal (barre latérale).</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-main')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;main&gt;</td>
+                    <td class="desc-col">Définit le contenu principal d'un document.</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- 4. Conteneurs -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Conteneurs</div>
+                <table class="annexe-table">
+                  <tr onclick="openHtmlModalById('tag-span')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;span&gt;</td>
+                    <td class="desc-col">Regroupe des éléments dans un bloc de contenu en ligne (inline).</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-div')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;div&gt;</td>
+                    <td class="desc-col">Grouper plusieurs éléments Html de type block.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-iframe')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;iframe&gt;</td>
+                    <td class="desc-col">Définit un cadre en ligne. <br><em style="font-size:0.75rem; color:var(--text-muted);">Attributs : src, name</em></td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- 5. Listes -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Listes</div>
+                <table class="annexe-table">
+                  <tr onclick="openHtmlModalById('tag-ul')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;ul&gt;</td>
+                    <td class="desc-col">Définit une liste à puces (non ordonnée).</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-ol')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;ol&gt;</td>
+                    <td class="desc-col">Définit une liste ordonnée. <br><em style="font-size:0.75rem; color:var(--text-muted);">Attributs : reversed, type, start</em></td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-li')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;li&gt;</td>
+                    <td class="desc-col">Définit un élément dans une liste.</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            <!-- COLONNE 2 -->
+            <div class="annexe-col">
+              <!-- 6. Éléments de structuration de texte et média -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Éléments de structuration de texte et média</div>
+                <table class="annexe-table">
+                  <tr onclick="openHtmlModalById('tag-cite')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;cite&gt;</td>
+                    <td class="desc-col">Définit le titre d'une œuvre.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-p')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;p&gt;</td>
+                    <td class="desc-col">Définit un paragraphe.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-source')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;source&gt;</td>
+                    <td class="desc-col">Spécifie plusieurs ressources multimédias pour les éléments multimédias. <br><em style="font-size:0.75rem; color:var(--text-muted);">Attributs : src, type, media</em></td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-hn')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;h_n&gt;</td>
+                    <td class="desc-col">Définit un titre de niveau n (de 1 à 6).</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-hr')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;hr&gt;</td>
+                    <td class="desc-col">Définit une rupture thématique sous forme de ligne horizontale.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-img')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;img&gt;</td>
+                    <td class="desc-col">Intègre une image. <br><em style="font-size:0.75rem; color:var(--text-muted);">Attributs : src, alt</em></td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-figure-figcaption')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;figure&gt; &amp; &lt;figcaption&gt;</td>
+                    <td class="desc-col">Spécifie un conteneur autonome avec légende pour des médias.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-audio')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;audio&gt;</td>
+                    <td class="desc-col">Intégrer du contenu sonore dans un document. <br><em style="font-size:0.75rem; color:var(--text-muted);">Attributs : controls, src</em></td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-video')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;video&gt;</td>
+                    <td class="desc-col">Intègre du contenu vidéo dans un document. <br><em style="font-size:0.75rem; color:var(--text-muted);">Attributs : controls, src</em></td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-a')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;a&gt;</td>
+                    <td class="desc-col">Définit un lien hypertexte via l'attribut href. <br><em style="font-size:0.75rem; color:var(--text-muted);">Attributs : href, target</em></td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-br')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;br&gt;</td>
+                    <td class="desc-col">Définit un retour à la ligne.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-address')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;address&gt;</td>
+                    <td class="desc-col">Définit les coordonnées de l'auteur/propriétaire d'un document.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-output')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;output&gt;</td>
+                    <td class="desc-col">Représente le résultat d'un calcul ou d'une action utilisateur.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-mark')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;mark&gt;</td>
+                    <td class="desc-col">Définit le texte qui doit être marqué ou mis en surbrillance.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-details-summary')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;details&gt; &amp; &lt;summary&gt;</td>
+                    <td class="desc-col">Spécifie des détails supplémentaires pliables/dépliables avec en-tête visible. <br><em style="font-size:0.75rem; color:var(--text-muted);">Attribut : open</em></td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- 7. Tableau -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Tableau</div>
+                <table class="annexe-table">
+                  <tr onclick="openHtmlModalById('tag-table-complete')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;table&gt;</td>
+                    <td class="desc-col">Définit un tableau HTML structuré.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-table-complete')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;thead&gt;, &lt;tbody&gt;, &lt;tfoot&gt;</td>
+                    <td class="desc-col">Définit l'entête, le corps et le pied d'un tableau.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-table-complete')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;caption&gt;</td>
+                    <td class="desc-col">Définit une légende de tableau.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-table-complete')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;tr&gt;, &lt;th&gt;, &lt;td&gt;</td>
+                    <td class="desc-col">Ligne (&lt;tr&gt;), cellule d'entête (&lt;th&gt;) et cellule standard (&lt;td&gt;).</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- 8. Attributs globaux -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Attributs globaux</div>
+                <table class="annexe-table">
+                  <tr onclick="openHtmlModalById('global-attributes')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">class</td>
+                    <td class="desc-col">Spécifie un nom de classe pour un élément.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('global-attributes')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">id</td>
+                    <td class="desc-col">Spécifie un identifiant unique pour un élément HTML (fondamental au Bac STI).</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('global-attributes')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">hidden</td>
+                    <td class="desc-col">Renseigne la visibilité d'un élément (masqué).</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('global-attributes')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">lang</td>
+                    <td class="desc-col">Spécifie la langue du contenu de l'élément (ex: lang="fr").</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('global-attributes')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">style</td>
+                    <td class="desc-col">Spécifie un style en ligne CSS.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('global-attributes')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">title</td>
+                    <td class="desc-col">Spécifie des informations supplémentaires sous forme d'infobulle au survol.</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            <!-- COLONNE 3 -->
+            <div class="annexe-col">
+              <!-- 9. Éléments de formulaire -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Éléments de formulaire</div>
+                <table class="annexe-table">
+                  <tr onclick="openHtmlModalById('tag-form')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;form&gt;</td>
+                    <td class="desc-col">Crée un formulaire HTML. <br><em style="font-size:0.75rem; color:var(--text-muted);">Attributs : action, method ("post", "get"), onsubmit="return validerFormulaire()"</em></td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-fieldset-legend')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;fieldset&gt; &amp; &lt;legend&gt;</td>
+                    <td class="desc-col">Regroupe des éléments liés avec un titre d'encadré &lt;legend&gt;.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-label')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;label&gt;</td>
+                    <td class="desc-col">Définit un libellé pour un élément graphique (attribut for).</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-input')" title="Cliquer pour afficher la fiche complète (avec boutons radio pour chaque type)">
+                    <td class="syntax-col" style="color:#f97316; font-weight:800;">&lt;input&gt; 🎛️</td>
+                    <td class="desc-col"><strong>Définit un champ de saisie :</strong> text, password, email, number, date, range, checkbox, radio, submit, reset, button.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-textarea')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;textarea&gt;</td>
+                    <td class="desc-col">Définit une zone de saisie de texte multilignes. <br><em style="font-size:0.75rem; color:var(--text-muted);">cols, rows, readonly, required, maxlength</em></td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('tag-select-datalist-option')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">&lt;select&gt; &amp; &lt;option&gt;</td>
+                    <td class="desc-col">Définit une liste déroulante et ses options sélectionnables. <br><em style="font-size:0.75rem; color:var(--text-muted);">&lt;datalist&gt; pour suggestions prédéfinies</em></td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- 10. Evènements -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Evènements (Conforme Bac STI)</div>
+                <table class="annexe-table">
+                  <tr onclick="openHtmlModalById('event-onclick')" title="Cliquer pour afficher la fiche onclick">
+                    <td class="syntax-col">onclick</td>
+                    <td class="desc-col">Se déclenche lors d'un clic sur l'élément.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('event-onmouseover')" title="Cliquer pour afficher la fiche onmouseover">
+                    <td class="syntax-col">onmouseover</td>
+                    <td class="desc-col">Se déclenche lorsque le pointeur de la souris survole l'élément.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('event-onmouseout')" title="Cliquer pour afficher la fiche onmouseout">
+                    <td class="syntax-col">onmouseout</td>
+                    <td class="desc-col">Se déclenche lorsque le pointeur de la souris sort de l'élément.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('event-onfocus')" title="Cliquer pour afficher la fiche onfocus">
+                    <td class="syntax-col">onfocus</td>
+                    <td class="desc-col">Se déclenche au moment où l'élément obtient le focus.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('event-onblur')" title="Cliquer pour afficher la fiche onblur">
+                    <td class="syntax-col">onblur</td>
+                    <td class="desc-col">Se déclenche au moment où l'élément perd le focus.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('event-oninput')" title="Cliquer pour afficher la fiche oninput">
+                    <td class="syntax-col">oninput</td>
+                    <td class="desc-col">Se déclenche dès que la valeur d'un élément a changé.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('event-onchange')" title="Cliquer pour afficher la fiche onchange">
+                    <td class="syntax-col">onchange</td>
+                    <td class="desc-col">Se déclenche lorsque la valeur d'un élément est modifiée (validation/perte de focus).</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('event-onsubmit')" title="Cliquer pour afficher la fiche onsubmit">
+                    <td class="syntax-col">onsubmit</td>
+                    <td class="desc-col">Se déclenche lorsqu'un formulaire est soumis (onsubmit="return valider()").</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('event-onkeydown')" title="Cliquer pour afficher la fiche onkeydown">
+                    <td class="syntax-col">onkeydown</td>
+                    <td class="desc-col">Se déclenche lorsqu'une touche du clavier est pressée.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('event-onkeyup')" title="Cliquer pour afficher la fiche onkeyup">
+                    <td class="syntax-col">onkeyup</td>
+                    <td class="desc-col">Se déclenche lorsqu'une touche est relâchée.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('event-onload')" title="Cliquer pour afficher la fiche onload">
+                    <td class="syntax-col">onload</td>
+                    <td class="desc-col">Se déclenche lorsque la page est complètement chargée.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('event-onplay')" title="Cliquer pour afficher la fiche onplay">
+                    <td class="syntax-col">onplay</td>
+                    <td class="desc-col">Se déclenche lorsque la lecture d'un fichier audio/vidéo commence.</td>
+                  </tr>
+                  <tr onclick="openHtmlModalById('event-onpause')" title="Cliquer pour afficher la fiche onpause">
+                    <td class="syntax-col">onpause</td>
+                    <td class="desc-col">Se déclenche lorsqu'un élément audio/vidéo est mis en pause.</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="container">
-        <!-- Recherche et Catégories -->
-        <div class="filter-search-bar">
-          <div class="search-box-wrap">
-            <span class="search-icon-inside">🔍</span>
-            <input type="text" id="htmlSearchInput" class="search-input" placeholder="Rechercher une balise HTML (ex: input, table, details, form, header...)" oninput="handleHtmlSearch(this.value)">
+        <!-- ==========================================
+             2. VUE CARTES & RECHERCHE HTML5
+             ========================================== -->
+        <div id="htmlCardsGridView" style="display:none;">
+          <!-- Recherche et Catégories -->
+          <div class="filter-search-bar">
+            <div class="search-box-wrap">
+              <span class="search-icon-inside">🔍</span>
+              <input type="text" id="htmlSearchInput" class="search-input" placeholder="Rechercher une balise HTML (ex: input, table, details, form, header...)" oninput="handleHtmlSearch(this.value)">
+            </div>
+            <div class="categories-bar" id="htmlCategoriesBar">
+              <!-- Rempli dynamiquement par JS -->
+            </div>
           </div>
-          <div class="categories-bar" id="htmlCategoriesBar">
+
+          <!-- Grille des balises HTML -->
+          <div class="items-grid" id="htmlItemsGrid">
             <!-- Rempli dynamiquement par JS -->
           </div>
-        </div>
-
-        <!-- Grille des balises HTML -->
-        <div class="items-grid" id="htmlItemsGrid">
-          <!-- Rempli dynamiquement par JS -->
         </div>
 
         <!-- Navigation bas de page HTML5 -->
@@ -200,35 +563,380 @@
             </button>
           </div>
         </div>
-      </div>
 
-      <div class="container">
-        
-        <!-- Alerte Globale Obligatoire :hover -->
-        <div class="hover-global-notice">
-          <div class="notice-icon">🖱️</div>
-          <div class="notice-content">
-            <h4>RÈGLE D'OR STI SUR LE SURVOL (:hover)</h4>
-            <p>
-              Pour appliquer n'importe quel style uniquement lors du passage de la souris de l'internaute, ajoutez le pseudo-sélecteur <strong><code>:hover</code></strong> sur la règle correspondante (ex: <code>element:hover { transform: scale(1.1); color: red; }</code>). Chaque fiche ci-dessous contient un rappel dédié !
-            </p>
+        <!-- Onglets de bascule d'affichage CSS3 -->
+        <div class="view-tabs-bar">
+          <button id="tabBtnCssDoc" class="view-mode-tab active blue" onclick="switchCssTab('doc')">
+            <span>📄</span>
+            <span>Tableau Officiel Annexe CSS3 (Recommandé)</span>
+          </button>
+          <button id="tabBtnCssCards" class="view-mode-tab" onclick="switchCssTab('cards')">
+            <span>🎴</span>
+            <span>Fiches Détaillées & Recherche (61 propriétés)</span>
+          </button>
+        </div>
+
+        <!-- ==========================================
+             1. VUE TABLEAU OFFICIEL CSS3 (RÉPLIQUE 3 COLONNES)
+             ========================================== -->
+        <div class="annexe-doc-container blue-theme" id="cssOfficialDocView">
+          <div class="annexe-doc-header">
+            <div class="annexe-title-wrap">
+              <div class="annexe-logo-shield">
+                <span style="font-size:0.7rem; font-weight:bold;">CSS</span>
+                <span style="font-size:1.15rem; font-weight:900; line-height:1;">3</span>
+              </div>
+              <div>
+                <h2 class="annexe-title-text">Annexe CSS3</h2>
+                <span style="font-size:0.85rem; color:var(--text-secondary);">Baccalauréat STI - Sciences & Technologies de l'Informatique</span>
+              </div>
+            </div>
+            <div class="annexe-doc-tip">
+              <span>👆</span>
+              <span><strong>Interactif :</strong> Cliquez sur n'importe quelle propriété pour voir les variantes avec boutons radio & vidéo animée !</span>
+            </div>
+          </div>
+
+          <div class="annexe-3col-grid">
+            <!-- COLONNE 1 -->
+            <div class="annexe-col">
+              <!-- 1. Sélecteurs -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Sélecteurs</div>
+                <table class="annexe-table">
+                  <tr onclick="openCssModalById('css-sel-universal')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">*</td>
+                    <td class="desc-col">Sélectionne tous les éléments.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-sel-element')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">element</td>
+                    <td class="desc-col">Sélectionne tous les éléments de type element.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-sel-id')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col" style="color:#38bdf8; font-weight:800;">#id</td>
+                    <td class="desc-col"><strong>Cible un élément en fonction de la valeur de son attribut id.</strong> (Sélecteur officiel Bac STI)</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-sel-class')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">.class</td>
+                    <td class="desc-col">Cible les éléments en fonction de la valeur de leur attribut class.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-sel-element-attr')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">element[attr]</td>
+                    <td class="desc-col">Cible les éléments qui possèdent l'attribut attr.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-sel-element-attr-val')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">element[attr=valeur]</td>
+                    <td class="desc-col">Cible les éléments en fonction de la valeur de l'attribut attr.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-sel-element-class')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">element.class</td>
+                    <td class="desc-col">Cible tous les éléments de type element ayant la classe class.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-sel-link')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">a:link</td>
+                    <td class="desc-col">Cible tous les liens non visités.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-sel-visited')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">a:visited</td>
+                    <td class="desc-col">Cible tous les liens visités.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-sel-hover')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col" style="color:#facc15; font-weight:800;">a:hover</td>
+                    <td class="desc-col">Cible l'élément au moment où l'utilisateur le survole avec le pointeur de la souris.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-sel-active')" title="Cliquer pour afficher la fiche complète">
+                    <td class="syntax-col">a:active</td>
+                    <td class="desc-col">Cible tous les liens activés.</td>
+                  </tr>
+                </table>
+                <div class="annexe-box-footer" onclick="openCssModalById('css-sel-grouped')" style="cursor:pointer;" title="Cliquez pour voir les sélecteurs groupés">
+                  Remarque: pour grouper plusieurs sélecteurs dans une règle, il suffit de les lister en les séparant par des virgules ",". 👆
+                </div>
+              </div>
+
+              <!-- 2. Propriétés de mise en forme du texte -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Propriétés de mise en forme du texte</div>
+                <table class="annexe-table">
+                  <tr onclick="openCssModalById('css-font-family')" title="Cliquer pour afficher la fiche font-family">
+                    <td class="syntax-col">font-family</td>
+                    <td class="desc-col">Spécifie les noms de polices possibles par ordre de préférence.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-font-weight')" title="Cliquer pour afficher la fiche font-weight (variantes radio)">
+                    <td class="syntax-col">font-weight 🎛️</td>
+                    <td class="desc-col">Spécifie la manière dont les caractères d'un texte doivent être affichés (bold ; bolder ; lighter).</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-font-style')" title="Cliquer pour afficher la fiche font-style">
+                    <td class="syntax-col">font-style</td>
+                    <td class="desc-col">Spécifie le style d'un texte (italic).</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-font-size')" title="Cliquer pour afficher la fiche font-size">
+                    <td class="syntax-col">font-size</td>
+                    <td class="desc-col">Spécifie la taille d'une police (px, %).</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-font-shorthand')" title="Cliquer pour afficher la fiche font">
+                    <td class="syntax-col">font</td>
+                    <td class="desc-col">Super-propriété de font. Combine font-family, font-weight, font-style, font-size.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-text-align')" title="Cliquer pour afficher la fiche text-align (variantes radio)">
+                    <td class="syntax-col">text-align 🎛️</td>
+                    <td class="desc-col">Spécifie l'alignement horizontal d'un texte (left ; center ; right ; justify).</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-text-shadow')" title="Cliquer pour afficher la fiche text-shadow">
+                    <td class="syntax-col">text-shadow</td>
+                    <td class="desc-col">Définit une ombre au texte.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-text-transform')" title="Cliquer pour afficher la fiche text-transform (variantes radio)">
+                    <td class="syntax-col">text-transform 🎛️</td>
+                    <td class="desc-col">Spécifie la façon de transformer les caractères en majuscules ou minuscules (uppercase ; lowercase ; capitalize).</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-color')" title="Cliquer pour afficher la fiche color">
+                    <td class="syntax-col">color 🎛️</td>
+                    <td class="desc-col">Spécifie la couleur du texte.</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- 3. Propriétés des listes -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Propriétés des listes</div>
+                <table class="annexe-table">
+                  <tr onclick="openCssModalById('css-list-style-type')" title="Cliquer pour tester les puces (variantes radio)">
+                    <td class="syntax-col">list-style-type 🎛️</td>
+                    <td class="desc-col">Définit le type de marqueur d'éléments de liste (circle ; square ; upper-roman ; lower-alpha).</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-list-style-position')" title="Cliquer pour afficher la fiche">
+                    <td class="syntax-col">list-style-position</td>
+                    <td class="desc-col">Spécifie la position des marqueurs d'éléments d'une liste à puces (outside ; inside).</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-list-style-image')" title="Cliquer pour afficher la fiche">
+                    <td class="syntax-col">list-style-image</td>
+                    <td class="desc-col">Spécifie une image comme marqueur d'éléments de liste.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-list-style-shorthand')" title="Cliquer pour afficher la fiche">
+                    <td class="syntax-col">list-style</td>
+                    <td class="desc-col">Super-propriété de liste. Combine list-style-type, list-style-position, list-style-image.</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            <!-- COLONNE 2 -->
+            <div class="annexe-col">
+              <!-- 4. Propriétés des tableaux -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Propriétés des tableaux</div>
+                <table class="annexe-table">
+                  <tr onclick="openCssModalById('css-table-layout')" title="Cliquer pour afficher la fiche">
+                    <td class="syntax-col">table-layout</td>
+                    <td class="desc-col">Définit la façon de disposer les cellules, lignes et colonnes d'un tableau.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-border-collapse')" title="Cliquer pour afficher la fiche (variantes radio)">
+                    <td class="syntax-col">border-collapse 🎛️</td>
+                    <td class="desc-col">Définit si les bordures des cellules sont fusionnées ou séparées (separate ; collapse).</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- 5. Propriétés des boîtes -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Propriétés des boîtes</div>
+                <table class="annexe-table">
+                  <tr onclick="openCssModalById('css-width')" title="Cliquer pour afficher la fiche width">
+                    <td class="syntax-col">width</td>
+                    <td class="desc-col">Définit la largeur d'un élément (px, %).</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-height')" title="Cliquer pour afficher la fiche height">
+                    <td class="syntax-col">height</td>
+                    <td class="desc-col">Définit la hauteur d'un élément.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-position')" title="Cliquer pour tester le positionnement">
+                    <td class="syntax-col">position</td>
+                    <td class="desc-col">Spécifie le type de positionnement utilisé (absolute ; fixed ; relative ; static ; sticky).</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-float')" title="Cliquer pour afficher la fiche float">
+                    <td class="syntax-col">float</td>
+                    <td class="desc-col">Place/Fait flotter un élément dans un conteneur (left ; right ; none).</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-padding')" title="Cliquer pour afficher la fiche padding">
+                    <td class="syntax-col">padding</td>
+                    <td class="desc-col">Propriété abrégée qui définit la marge intérieure d'un élément des 4 cotés.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-margin')" title="Cliquer pour afficher la fiche margin">
+                    <td class="syntax-col">margin</td>
+                    <td class="desc-col">Définit les marges extérieures d'un élément.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-box-shadow')" title="Cliquer pour tester les ombres (variantes radio)">
+                    <td class="syntax-col">box-shadow 🎛️</td>
+                    <td class="desc-col">Ajoute des ombres à la boîte d'un élément.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-display')" title="Cliquer pour tester display (variantes radio)">
+                    <td class="syntax-col">display 🎛️</td>
+                    <td class="desc-col">Spécifie le comportement d'affichage d'un élément (inline ; block ; inline-block).</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-coords-top-bottom-left-right')" title="Cliquer pour afficher la fiche">
+                    <td class="syntax-col">top, bottom, left, right</td>
+                    <td class="desc-col">Spécifie la position verticale et horizontale par rapport aux bords.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-overflow')" title="Cliquer pour tester le débordement (variantes radio)">
+                    <td class="syntax-col">overflow 🎛️</td>
+                    <td class="desc-col">Spécifie le comportement du contenu lorsqu'il déborde (visible ; hidden ; clip ; scroll ; auto).</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-opacity')" title="Cliquer pour tester l'opacité (variantes radio)">
+                    <td class="syntax-col">opacity 🎛️</td>
+                    <td class="desc-col">Définit le niveau de transparence.</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- 6. Arrière-plan, Transformation & Filtres -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Arrière-plan, Transformation &amp; Filtres</div>
+                <table class="annexe-table">
+                  <tr onclick="openCssModalById('css-background-color')" title="Cliquer pour tester la couleur de fond">
+                    <td class="syntax-col">background-color</td>
+                    <td class="desc-col">Définit la couleur d'arrière-plan d'un élément.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-background-image')" title="Cliquer pour afficher la fiche">
+                    <td class="syntax-col">background-image</td>
+                    <td class="desc-col">Définit une image d'arrière-plan pour un élément.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-background-repeat')" title="Cliquer pour tester la répétition (variantes radio)">
+                    <td class="syntax-col">background-repeat 🎛️</td>
+                    <td class="desc-col">Définit la façon dont une image d'arrière-plan est répétée (repeat ; repeat-x ; repeat-y).</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-background-size')" title="Cliquer pour tester la taille">
+                    <td class="syntax-col">background-size</td>
+                    <td class="desc-col">Spécifie la taille d'une image d'arrière-plan (cover, contain, %).</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-background-shorthand')" title="Cliquer pour afficher la fiche">
+                    <td class="syntax-col">background</td>
+                    <td class="desc-col">Super-propriété d'arrière-plan combinée.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-transform')" title="Cliquer pour tester les transformations (variantes radio)">
+                    <td class="syntax-col" style="color:#38bdf8; font-weight:800;">transform 🎛️</td>
+                    <td class="desc-col">Applique un effet de transformation 2D ou 3D (rotate(), skew(), scale(), translate()).</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-filter')" title="Cliquer pour tester les filtres (variantes radio)">
+                    <td class="syntax-col" style="color:#38bdf8; font-weight:800;">filter 🎛️</td>
+                    <td class="desc-col">Définit des effets visuels à un élément (blur() ; grayscale() ; sepia()).</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            <!-- COLONNE 3 -->
+            <div class="annexe-col">
+              <!-- 7. Propriétés des bordures -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Propriétés des bordures</div>
+                <table class="annexe-table">
+                  <tr onclick="openCssModalById('css-border-color')" title="Cliquer pour tester la couleur de bordure (variantes radio)">
+                    <td class="syntax-col">border-color 🎛️</td>
+                    <td class="desc-col">Définit la couleur des bordures d'un élément.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-border-style')" title="Cliquer pour tester solid, dotted, dashed... (variantes radio)">
+                    <td class="syntax-col" style="color:#38bdf8; font-weight:800;">border-style 🎛️</td>
+                    <td class="desc-col"><strong>Définit le style des bordures :</strong> solid, dotted, dashed, double, groove, ridge.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-border-radius')" title="Cliquer pour tester les coins arrondis (variantes radio)">
+                    <td class="syntax-col">border-radius 🎛️</td>
+                    <td class="desc-col">Définit le rayon des coins arrondis d'un élément (px, %).</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-border-width')" title="Cliquer pour tester l'épaisseur de bordure (variantes radio)">
+                    <td class="syntax-col">border-width 🎛️</td>
+                    <td class="desc-col">Définit la largeur des bordures (medium ; thin ; thick ; valeur en px).</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-border-shorthand')" title="Cliquer pour tester la super-propriété border (variantes radio)">
+                    <td class="syntax-col" style="color:#38bdf8; font-weight:800;">border 🎛️</td>
+                    <td class="desc-col">Super-propriété de bordure. Combine border-color, border-style, border-width, border-radius.</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- 8. Transition -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Transition</div>
+                <table class="annexe-table">
+                  <tr onclick="openCssModalById('css-transition-delay')" title="Cliquer pour afficher la fiche">
+                    <td class="syntax-col">transition-delay</td>
+                    <td class="desc-col">Spécifie le délai nécessaire avant que la transition commence.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-transition-duration')" title="Cliquer pour afficher la fiche">
+                    <td class="syntax-col">transition-duration</td>
+                    <td class="desc-col">Spécifie la durée de la transition.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-transition-property')" title="Cliquer pour afficher la fiche">
+                    <td class="syntax-col">transition-property</td>
+                    <td class="desc-col">Spécifie les propriétés CSS sur lesquelles l'effet de transition sera appliqué.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-transition-shorthand')" title="Cliquer pour afficher la fiche">
+                    <td class="syntax-col">transition</td>
+                    <td class="desc-col">Super-propriété de transition combinée.</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- 9. Animation -->
+              <div class="annexe-box">
+                <div class="annexe-box-header">Animation</div>
+                <table class="annexe-table">
+                  <tr onclick="openCssModalById('css-keyframes')" title="Cliquer pour afficher la fiche @keyframes">
+                    <td class="syntax-col">@keyframes</td>
+                    <td class="desc-col">Spécifie les états clés de l'animation.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-animation-name')" title="Cliquer pour afficher la fiche">
+                    <td class="syntax-col">animation-name</td>
+                    <td class="desc-col">Spécifie le nom de l'animation.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-animation-delay')" title="Cliquer pour afficher la fiche">
+                    <td class="syntax-col">animation-delay</td>
+                    <td class="desc-col">Spécifie le délai nécessaire avant que l'animation commence.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-animation-duration')" title="Cliquer pour afficher la fiche">
+                    <td class="syntax-col">animation-duration</td>
+                    <td class="desc-col">Spécifie la durée de l'animation.</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-animation-iteration-count')" title="Cliquer pour afficher la fiche">
+                    <td class="syntax-col">animation-iteration-count</td>
+                    <td class="desc-col">Spécifie le nombre de répétition de l'animation (infinite...).</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-animation-direction')" title="Cliquer pour afficher la fiche">
+                    <td class="syntax-col">animation-direction</td>
+                    <td class="desc-col">Définit la direction de l'animation (normal, reverse, alternate...).</td>
+                  </tr>
+                  <tr onclick="openCssModalById('css-animation-shorthand')" title="Cliquer pour afficher la fiche">
+                    <td class="syntax-col">animation</td>
+                    <td class="desc-col">Super-propriété de l'animation combinée.</td>
+                  </tr>
+                </table>
+                <div class="annexe-box-footer">
+                  Important: pour exprimer les mesures des dimensions, se limiter aux unités (pixel et %). Note :hover systématique avec #id.
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Recherche et Catégories -->
-        <div class="filter-search-bar">
-          <div class="search-box-wrap">
-            <span class="search-icon-inside">🔍</span>
-            <input type="text" id="cssSearchInput" class="search-input" placeholder="Rechercher une propriété CSS (ex: box-shadow, transform, transition, color, border...)" oninput="handleCssSearch(this.value)">
+        <!-- ==========================================
+             2. VUE CARTES & RECHERCHE CSS3
+             ========================================== -->
+        <div id="cssCardsGridView" style="display:none;">
+          <!-- Recherche et Catégories -->
+          <div class="filter-search-bar">
+            <div class="search-box-wrap">
+              <span class="search-icon-inside">🔍</span>
+              <input type="text" id="cssSearchInput" class="search-input" placeholder="Rechercher une propriété CSS (ex: box-shadow, transform, transition, color, border...)" oninput="handleCssSearch(this.value)">
+            </div>
+            <div class="categories-bar" id="cssCategoriesBar">
+              <!-- Rempli dynamiquement par JS -->
+            </div>
           </div>
-          <div class="categories-bar" id="cssCategoriesBar">
+
+          <!-- Grille des propriétés CSS -->
+          <div class="items-grid" id="cssItemsGrid">
             <!-- Rempli dynamiquement par JS -->
           </div>
-        </div>
-
-        <!-- Grille des propriétés CSS -->
-        <div class="items-grid" id="cssItemsGrid">
-          <!-- Rempli dynamiquement par JS -->
         </div>
 
         <!-- Navigation bas de page CSS3 -->
