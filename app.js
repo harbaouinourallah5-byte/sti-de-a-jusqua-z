@@ -1150,6 +1150,8 @@ let currentCategory = 'all';
 let currentSearch = '';
 let activeVideoTimer = null;
 let isVideoPlaying = false;
+let currentVideoItemId = null;
+let currentVideoVariantIdx = 0;
 
 // Initialisation au chargement
 document.addEventListener('DOMContentLoaded', () => {
@@ -1646,6 +1648,9 @@ function openCssModal(item) {
   cat.style.color = '#38bdf8';
   title.textContent = `${item.property} - ${item.name}`;
 
+  currentVideoItemId = item.id;
+  currentVideoVariantIdx = 0;
+
   let valuesHtml = '';
   if (item.values && item.values.length > 0) {
     valuesHtml = `
@@ -1661,23 +1666,79 @@ function openCssModal(item) {
     `;
   }
 
-  // Panneau interactif de Boutons Radio pour les variantes CSS
-  let varietySectionHtml = '';
   const varietyConfig = VARIETIES_CONFIG[item.id];
-  if (varietyConfig) {
+  let playlistSectionHtml = '';
+  let comparisonSectionHtml = '';
+  let varietySectionHtml = '';
+  const hasVariants = varietyConfig && varietyConfig.options && varietyConfig.options.length > 0;
+  const initialOption = hasVariants ? varietyConfig.options[0] : null;
+  const initialTitle = initialOption 
+    ? `VIDÉO 1/${varietyConfig.options.length} : ${initialOption.label}` 
+    : `VIDÉO DÉMO : ${item.name}`;
+  const initialBadgeVal = initialOption ? initialOption.value : (item.property || 'CSS3');
+
+  if (hasVariants) {
+    const opts = varietyConfig.options;
+
+    // 1. Barre de sélection directe de la vidéo dédiée (Playlist de vidéos)
+    playlistSectionHtml = `
+      <div class="video-playlist-section">
+        <div class="video-playlist-title">
+          <span>🎬</span>
+          <span>Sélectionnez la Vidéo Dédiée (${opts.length} vidéos distinctes pour ${escapeHtml(item.property)}) :</span>
+        </div>
+        <div class="video-playlist-bar">
+          ${opts.map((opt, idx) => `
+            <button type="button" class="video-playlist-tab-btn ${idx === 0 ? 'active' : ''}" id="videoTabBtn_${idx}" onclick="playSpecificVideo('${item.id}', ${idx})">
+              <span class="video-tab-icon">🎬</span>
+              <span class="video-tab-name">Vidéo ${idx + 1} : ${escapeHtml(opt.value)}</span>
+            </button>
+          `).join('')}
+        </div>
+      </div>
+    `;
+
+    // 2. Grille comparative de toutes les vidéos
+    comparisonSectionHtml = `
+      <div class="video-comparison-section">
+        <div class="video-comparison-title">
+          <span>📺</span>
+          <span>Toutes les vidéos disponibles (1 vidéo dédiée pour chaque valeur de la propriété) :</span>
+        </div>
+        <div class="video-comparison-grid">
+          ${opts.map((opt, idx) => `
+            <div class="video-mini-card ${idx === 0 ? 'active' : ''}" id="videoMiniCard_${idx}" onclick="playSpecificVideo('${item.id}', ${idx})">
+              <div class="video-mini-header">
+                <span class="video-mini-badge">Vidéo ${idx + 1}</span>
+                <span class="video-mini-val">${escapeHtml(opt.value)}</span>
+              </div>
+              <div class="video-mini-stage-wrap">
+                ${buildMiniStage(item.id, idx, opt)}
+              </div>
+              <div class="video-mini-desc">${escapeHtml(opt.label)}</div>
+              <button type="button" class="video-mini-play-btn">
+                ${idx === 0 ? '▶ En cours de lecture' : '▶ Lancer cette vidéo'}
+              </button>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+
+    // 3. Panneau interactif de Boutons Radio
     varietySectionHtml = `
       <div class="variety-selector-card">
         <div class="variety-header">
           <div class="variety-header-title" style="color:#38bdf8;">
             <span>🎛️</span>
-            <span>${varietyConfig.title}</span>
+            <span>${varietyConfig.title} (Choix de la vidéo par bouton radio)</span>
           </div>
           <div id="varietyToastCss" class="variety-applied-toast" style="display:none;"></div>
         </div>
         <div class="variety-radios-wrap">
-          ${varietyConfig.options.map((opt, idx) => `
+          ${opts.map((opt, idx) => `
             <label class="variety-radio-label ${idx === 0 ? 'active' : ''}" onclick="applyCssVariety('${item.id}', ${idx}, this)">
-              <input type="radio" name="cssVariantRadio" value="${opt.value}" ${idx === 0 ? 'checked' : ''}>
+              <input type="radio" name="cssVariantRadio" value="${escapeHtml(opt.value)}" ${idx === 0 ? 'checked' : ''}>
               <span>${escapeHtml(opt.label)}</span>
             </label>
           `).join('')}
@@ -1742,19 +1803,24 @@ function openCssModal(item) {
       </div>
     </div>
 
-    <!-- 7. VIDÉO / DÉMONSTRATION ANIMÉE DU CODE -->
+    <!-- 7. VIDÉO / DÉMONSTRATION ANIMÉE DU CODE (1 VIDÉO DÉDIÉE PAR VALEUR) -->
     <div class="modal-section">
       <div class="modal-section-title">
         <span>🎬</span>
-        <span>Démonstration Vidéo en direct du code (Avec animation de variante)</span>
+        <span>Démonstration Vidéo en direct du code (1 Vidéo Dédiée par Valeur)</span>
       </div>
-      <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:8px;">
-        Lecteur vidéo interactif démontrant le fonctionnement dynamique de cette propriété CSS :
+      <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:10px;">
+        Chaque valeur possède sa propre vidéo d'animation dédiée. Cliquez sur l'une des vidéos ci-dessous pour lancer sa démonstration complète :
       </p>
+
+      ${playlistSectionHtml}
 
       <div class="video-player-container">
         <div class="video-player-header">
-          <span>▶ VIDÉO DÉMO : ${item.name}</span>
+          <div class="video-header-title-wrap">
+            <span class="video-header-dot">●</span>
+            <span id="videoPlayerTitle">▶ ${escapeHtml(initialTitle)}</span>
+          </div>
           <span class="video-hd-badge">1080p HD LIVE</span>
         </div>
         
@@ -1765,22 +1831,30 @@ function openCssModal(item) {
 
         <div class="video-controls-bar">
           <button class="video-btn" id="playPauseVideoBtn" title="Play / Pause" onclick="toggleVideoPlay('${item.id}')">⏸</button>
-          <button class="video-btn" title="Rejouer" onclick="replayVideo('${item.id}')">🔄</button>
+          <button class="video-btn" title="Rejouer cette vidéo" onclick="replayVideo('${item.id}')">🔄</button>
           
           <div class="video-timeline-wrap">
             <div class="video-progress-fill" id="videoProgress"></div>
           </div>
+
+          <span class="video-current-badge" id="videoCurrentBadge">${escapeHtml(initialBadgeVal)}</span>
 
           <button class="video-hover-toggle-btn" title="Tester avec :hover" onclick="enableHoverStageTest()">
             🖱️ Tester avec :hover
           </button>
         </div>
       </div>
+
+      ${comparisonSectionHtml}
     </div>
   `;
 
   modal.classList.add('active');
-  startVideoSimulation(item.id);
+  if (hasVariants) {
+    playSpecificVideo(item.id, 0);
+  } else {
+    startVideoSimulation(item.id, 0);
+  }
 }
 
 // MODALE JS (Annexe Officielle Bac STI)
@@ -1944,9 +2018,6 @@ function closeModal() {
 // -------------------------------------------------------------
 // 7. MOTEUR DU SIMULATEUR VIDÉO POUR CSS3 (CONVENTION BAC STI)
 // -------------------------------------------------------------
-// -------------------------------------------------------------
-// 7. MOTEUR DU SIMULATEUR VIDÉO POUR CSS3 (CONVENTION BAC STI)
-// -------------------------------------------------------------
 function buildVideoStageElement(item) {
   const cat = item.category || '';
   const prop = item.property || '';
@@ -2089,12 +2160,151 @@ function buildVideoStageElement(item) {
   </div>`;
 }
 
-function startVideoSimulation(itemId) {
+// Construction de la scène miniature pour les cartes de comparaison vidéo
+function buildMiniStage(itemId, idx, opt) {
+  // Bordure
+  if (itemId === 'css-border-style' || itemId === 'css-border-shorthand') {
+    const val = opt.value;
+    if (val === 'none') {
+      return `<div style="width:80%; height:36px; border:none; background:rgba(56,189,248,0.15); outline:1px dashed rgba(255,255,255,0.3); border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:10px; color:#94a3b8; font-weight:bold;">none</div>`;
+    }
+    const width = (val === 'double' || val === 'groove') ? '5px' : '3px';
+    const color = val === 'dotted' ? '#facc15' : (val === 'dashed' ? '#f43f5e' : (val === 'double' ? '#10b981' : (val === 'groove' ? '#ec4899' : '#38bdf8')));
+    return `<div style="width:80%; height:36px; border:${width} ${val} ${color}; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:11px; color:#fff; font-weight:bold; background:rgba(0,0,0,0.3);">${escapeHtml(val)}</div>`;
+  }
+
+  // Marge extérieure (margin)
+  if (itemId === 'css-margin') {
+    if (opt.value === '0px') {
+      return `<div style="display:flex; flex-direction:column; align-items:center; width:85%;"><div style="width:100%; height:8px; background:#475569; border-radius:2px;"></div><div style="width:100%; height:18px; background:#38bdf8; color:#0f172a; font-weight:bold; font-size:9px; display:flex; align-items:center; justify-content:center;">0px (Collé)</div><div style="width:100%; height:8px; background:#475569; border-radius:2px;"></div></div>`;
+    }
+    if (opt.value === '15px') {
+      return `<div style="display:flex; flex-direction:column; align-items:center; width:85%;"><div style="width:100%; height:7px; background:#475569; border-radius:2px;"></div><div style="width:100%; height:18px; background:#38bdf8; margin:5px 0; color:#0f172a; font-weight:bold; font-size:9px; display:flex; align-items:center; justify-content:center;">15px</div><div style="width:100%; height:7px; background:#475569; border-radius:2px;"></div></div>`;
+    }
+    if (opt.value === '30px') {
+      return `<div style="display:flex; flex-direction:column; align-items:center; width:85%;"><div style="width:100%; height:6px; background:#475569; border-radius:2px;"></div><div style="width:100%; height:18px; background:#38bdf8; margin:9px 0; color:#0f172a; font-weight:bold; font-size:9px; display:flex; align-items:center; justify-content:center;">30px</div><div style="width:100%; height:6px; background:#475569; border-radius:2px;"></div></div>`;
+    }
+    if (opt.value === '10px 40px') {
+      return `<div style="display:flex; align-items:center; justify-content:center; width:85%;"><div style="width:70%; height:20px; background:#38bdf8; margin:4px 14px; color:#0f172a; font-weight:bold; font-size:8px; display:flex; align-items:center; justify-content:center;">10px 40px</div></div>`;
+    }
+    if (opt.value === 'auto') {
+      return `<div style="width:90%; background:rgba(255,255,255,0.06); padding:3px; border-radius:4px;"><div style="width:55%; height:20px; background:#38bdf8; margin:0 auto; color:#0f172a; font-weight:bold; font-size:8px; display:flex; align-items:center; justify-content:center;">auto (Centré)</div></div>`;
+    }
+  }
+
+  // Marge intérieure (padding)
+  if (itemId === 'css-padding') {
+    const padVal = opt.value === '0px' ? '0px' : (opt.value === '12px' ? '4px' : (opt.value === '25px' ? '8px' : '2px 8px'));
+    return `<div style="width:85%; border:2px dashed #38bdf8; padding:${padVal}; border-radius:4px; background:rgba(56,189,248,0.1);"><div style="background:#38bdf8; color:#0f172a; font-weight:bold; font-size:9px; text-align:center; padding:3px 0;">${escapeHtml(opt.value)}</div></div>`;
+  }
+
+  // Flottement (float)
+  if (itemId === 'css-float') {
+    if (opt.value === 'none') {
+      return `<div style="width:90%; font-size:8px; color:#cbd5e1; text-align:center;"><div style="width:50%; height:14px; background:#38bdf8; margin:0 auto 3px auto; color:#0f172a; font-weight:bold; display:flex; align-items:center; justify-content:center;">#boite</div>Texte normal</div>`;
+    }
+    if (opt.value === 'left') {
+      return `<div style="width:90%; font-size:8px; color:#cbd5e1; overflow:hidden;"><div style="float:left; width:35%; height:24px; background:#38bdf8; margin:0 4px 2px 0; color:#0f172a; font-weight:bold; display:flex; align-items:center; justify-content:center;">G</div>Texte enroulé...</div>`;
+    }
+    if (opt.value === 'right') {
+      return `<div style="width:90%; font-size:8px; color:#cbd5e1; overflow:hidden;"><div style="float:right; width:35%; height:24px; background:#38bdf8; margin:0 0 2px 4px; color:#0f172a; font-weight:bold; display:flex; align-items:center; justify-content:center;">D</div>Texte enroulé...</div>`;
+    }
+  }
+
+  // Arrondi (border-radius)
+  if (itemId === 'css-border-radius') {
+    return `<div style="width:70%; height:32px; background:linear-gradient(135deg,#38bdf8,#2563eb); border-radius:${opt.value}; display:flex; align-items:center; justify-content:center; color:#fff; font-size:9px; font-weight:bold;">${escapeHtml(opt.value)}</div>`;
+  }
+
+  // Ombre (box-shadow)
+  if (itemId === 'css-box-shadow') {
+    const sh = opt.value === 'none' ? 'none' : (opt.value === 'soft' ? '0 4px 8px rgba(0,0,0,0.5)' : (opt.value === 'neon' ? '0 0 10px #38bdf8' : (opt.value === '3d' ? '4px 4px 0 #ef4444' : 'inset 0 0 6px #38bdf8')));
+    return `<div style="width:70%; height:28px; background:#1e293b; border:1px solid #38bdf8; border-radius:4px; box-shadow:${sh}; display:flex; align-items:center; justify-content:center; color:#fff; font-size:9px; font-weight:bold;">${escapeHtml(opt.value)}</div>`;
+  }
+
+  // Rendu par défaut dynamique avec opt.css
+  return `<div style="width:80%; height:32px; display:flex; align-items:center; justify-content:center; font-size:10px; border-radius:4px; background:linear-gradient(135deg, rgba(56,189,248,0.25), rgba(37,99,235,0.25)); color:#fff; font-weight:bold; ${opt.css};">#boite</div>`;
+}
+
+// Lancer une vidéo spécifique pour une propriété (1 vidéo par valeur/variante)
+function playSpecificVideo(itemId, variantIdx) {
+  currentVideoItemId = itemId;
+  currentVideoVariantIdx = variantIdx;
+  const config = VARIETIES_CONFIG[itemId];
+  if (!config || !config.options || !config.options[variantIdx]) {
+    startVideoSimulation(itemId, 0);
+    return;
+  }
+  const opt = config.options[variantIdx];
+
+  // 1. Mettre à jour l'en-tête du lecteur vidéo
+  const playerTitle = document.getElementById('videoPlayerTitle');
+  if (playerTitle) {
+    playerTitle.textContent = `▶ VIDÉO ${variantIdx + 1}/${config.options.length} : ${opt.label}`;
+  }
+
+  const badge = document.getElementById('videoCurrentBadge');
+  if (badge) {
+    badge.textContent = opt.value;
+  }
+
+  // 2. Mettre à jour les onglets de la playlist vidéo
+  document.querySelectorAll('.video-playlist-tab-btn').forEach((btn, idx) => {
+    btn.classList.toggle('active', idx === variantIdx);
+  });
+
+  // 3. Mettre à jour les cartes comparatives
+  document.querySelectorAll('.video-mini-card').forEach((card, idx) => {
+    const isCur = idx === variantIdx;
+    card.classList.toggle('active', isCur);
+    const playBtn = card.querySelector('.video-mini-play-btn');
+    if (playBtn) {
+      playBtn.textContent = isCur ? '▶ En cours de lecture' : '▶ Lancer cette vidéo';
+    }
+  });
+
+  // 4. Mettre à jour les boutons radio
+  const radioWrap = document.querySelector('.variety-radios-wrap');
+  if (radioWrap) {
+    const labels = radioWrap.querySelectorAll('.variety-radio-label');
+    labels.forEach((lbl, idx) => {
+      const isCur = idx === variantIdx;
+      lbl.classList.toggle('active', isCur);
+      const input = lbl.querySelector('input[type="radio"]');
+      if (input) input.checked = isCur;
+    });
+  }
+
+  // 5. Mettre à jour le code CSS synchronisé avec convention #id Bac STI
+  const codePre = document.querySelector('.code-pre code');
+  if (codePre) {
+    codePre.textContent = opt.code || (
+      `/* Code CSS officiel de la Vidéo ${variantIdx + 1} (${opt.value}) */\n` +
+      `#boite {\n  ${opt.css.replace(/!important/g, '').replace(/;\s*/g, ';\n  ').trim()}\n}\n\n` +
+      `/* Note obligatoire :hover */\n#boite:hover {\n  opacity: 0.85;\n}`
+    );
+  }
+
+  // 6. Toast d'information
+  const toast = document.getElementById('varietyToastCss');
+  if (toast) {
+    toast.style.display = 'inline-flex';
+    toast.innerHTML = `🎬 Vidéo active : <strong>${escapeHtml(opt.value)}</strong>`;
+  }
+
+  // 7. Lancer le moteur d'animation pour cette vidéo dédiée
+  startVideoSimulation(itemId, variantIdx);
+}
+
+// Moteur du lecteur vidéo (Timer et boucle temporelle 1080p)
+function startVideoSimulation(itemId, variantIdx = 0) {
   if (activeVideoTimer) clearInterval(activeVideoTimer);
   isVideoPlaying = true;
+  currentVideoItemId = itemId;
+  currentVideoVariantIdx = variantIdx;
   
   const stage = document.getElementById('videoStage');
-  const box = stage ? stage.firstElementChild : null;
+  const box = stage ? (stage.querySelector('#boite') || stage.querySelector('.demo-box') || stage.querySelector('#h1') || stage.querySelector('#tab') || stage.querySelector('#img1') || stage.querySelector('#liste') || stage.firstElementChild) : null;
   const progress = document.getElementById('videoProgress');
   const btn = document.getElementById('playPauseVideoBtn');
   if (btn) btn.textContent = '⏸';
@@ -2102,129 +2312,450 @@ function startVideoSimulation(itemId) {
   let step = 0;
   let progressVal = 0;
 
+  // Appliquer immédiatement la première image de cette vidéo
+  applyVideoFrame(itemId, box, 0, variantIdx);
+
   activeVideoTimer = setInterval(() => {
     if (!isVideoPlaying) return;
 
     progressVal = (progressVal + 2) % 100;
     if (progress) progress.style.width = `${progressVal}%`;
 
-    // Changement d'état à 50% de la boucle vidéo
+    // À 0% et 50%, alterner l'animation de la vidéo active
     if (progressVal === 0 || progressVal === 50) {
       step = step === 0 ? 1 : 0;
-      applyVideoFrame(itemId, box, step);
+      applyVideoFrame(itemId, box, step, currentVideoVariantIdx);
     }
   }, 100);
 }
 
-function applyVideoFrame(itemId, box, step) {
+// Rendu des images d'animation : 1 VIDÉO INDÉPENDANTE PAR VALEUR
+function applyVideoFrame(itemId, box, step, variantIdx = 0) {
   if (!box) return;
+  const config = VARIETIES_CONFIG[itemId];
+  const opt = (config && config.options && config.options[variantIdx]) ? config.options[variantIdx] : null;
 
-  // 1. MARGE EXTÉRIEURE (MARGIN)
+  // 1. STYLE DE BORDURE (BORDER-STYLE) - 1 VIDÉO DÉDIÉE PAR VALEUR
+  if (itemId === 'css-border-style' || itemId.includes('border-style')) {
+    box.style.padding = '18px 24px';
+    box.style.background = 'rgba(15, 23, 42, 0.85)';
+    box.style.color = '#fff';
+    box.style.transition = 'all 0.4s ease';
+
+    if (variantIdx === 0) {
+      // VIDÉO 1 : SOLID (Trait plein continu)
+      box.style.border = step === 1 ? '5px solid #38bdf8' : '3px solid #38bdf8';
+      box.style.boxShadow = step === 1 ? '0 0 20px rgba(56, 189, 248, 0.6)' : 'none';
+      box.style.transform = step === 1 ? 'scale(1.05)' : 'scale(1)';
+      box.innerHTML = `<span>#boite • <strong>border-style: solid</strong><br><small style="color:#38bdf8; font-size:0.75rem;">Ligne pleine continue sans coupure</small></span>`;
+    } else if (variantIdx === 1) {
+      // VIDÉO 2 : DOTTED (Pointillés réguliers)
+      box.style.border = step === 1 ? '6px dotted #facc15' : '3px dotted #facc15';
+      box.style.boxShadow = step === 1 ? '0 0 20px rgba(250, 204, 21, 0.6)' : 'none';
+      box.style.transform = step === 1 ? 'scale(1.05)' : 'scale(1)';
+      box.innerHTML = `<span>#boite • <strong>border-style: dotted</strong><br><small style="color:#facc15; font-size:0.75rem;">Série de points ronds espacés</small></span>`;
+    } else if (variantIdx === 2) {
+      // VIDÉO 3 : DASHED (Tirets rectangulaires)
+      box.style.border = step === 1 ? '6px dashed #f43f5e' : '3px dashed #f43f5e';
+      box.style.boxShadow = step === 1 ? '0 0 20px rgba(244, 63, 94, 0.6)' : 'none';
+      box.style.transform = step === 1 ? 'scale(1.05)' : 'scale(1)';
+      box.innerHTML = `<span>#boite • <strong>border-style: dashed</strong><br><small style="color:#f43f5e; font-size:0.75rem;">Série de tirets espacés</small></span>`;
+    } else if (variantIdx === 3) {
+      // VIDÉO 4 : DOUBLE (Double trait parallèle)
+      box.style.border = step === 1 ? '8px double #10b981' : '5px double #10b981';
+      box.style.boxShadow = step === 1 ? '0 0 20px rgba(16, 185, 129, 0.6)' : 'none';
+      box.style.transform = step === 1 ? 'scale(1.05)' : 'scale(1)';
+      box.innerHTML = `<span>#boite • <strong>border-style: double</strong><br><small style="color:#10b981; font-size:0.75rem;">Deux bordures parallèles concentriques</small></span>`;
+    } else if (variantIdx === 4) {
+      // VIDÉO 5 : GROOVE (Rainure en relief 3D)
+      box.style.border = step === 1 ? '8px groove #ec4899' : '5px groove #ec4899';
+      box.style.boxShadow = step === 1 ? '0 0 20px rgba(236, 72, 153, 0.6)' : 'none';
+      box.style.transform = step === 1 ? 'scale(1.05)' : 'scale(1)';
+      box.innerHTML = `<span>#boite • <strong>border-style: groove</strong><br><small style="color:#ec4899; font-size:0.75rem;">Effet de rainure sculptée en relief 3D</small></span>`;
+    } else {
+      // VIDÉO 6 : NONE (Aucune bordure)
+      box.style.border = 'none';
+      box.style.outline = step === 1 ? '2px dashed rgba(255,255,255,0.45)' : '1px dashed rgba(255,255,255,0.15)';
+      box.style.background = step === 1 ? 'rgba(56, 189, 248, 0.25)' : 'rgba(56, 189, 248, 0.1)';
+      box.style.transform = step === 1 ? 'scale(1.03)' : 'scale(1)';
+      box.innerHTML = `<span>#boite • <strong>border-style: none</strong><br><small style="color:#94a3b8; font-size:0.75rem;">Bordure désactivée (Invisible)</small></span>`;
+    }
+    return;
+  }
+
+  // 2. BORDER SHORTHAND (border: largeur style couleur)
+  if (itemId === 'css-border-shorthand') {
+    box.style.padding = '18px 24px';
+    box.style.background = 'rgba(15, 23, 42, 0.85)';
+    box.style.color = '#fff';
+    box.style.transition = 'all 0.4s ease';
+
+    if (variantIdx === 0) {
+      box.style.border = step === 1 ? '5px solid #38bdf8' : '3px solid #38bdf8';
+      box.style.boxShadow = step === 1 ? '0 0 16px rgba(56,189,248,0.5)' : 'none';
+      box.innerHTML = `<span>#boite • <strong>border: 3px solid #38bdf8</strong></span>`;
+    } else if (variantIdx === 1) {
+      box.style.border = step === 1 ? '6px dotted #facc15' : '4px dotted #facc15';
+      box.style.boxShadow = step === 1 ? '0 0 16px rgba(250,204,21,0.5)' : 'none';
+      box.innerHTML = `<span>#boite • <strong>border: 4px dotted #facc15</strong></span>`;
+    } else if (variantIdx === 2) {
+      box.style.border = step === 1 ? '6px dashed #ef4444' : '3px dashed #ef4444';
+      box.style.boxShadow = step === 1 ? '0 0 16px rgba(239,68,68,0.5)' : 'none';
+      box.innerHTML = `<span>#boite • <strong>border: 3px dashed #ef4444</strong></span>`;
+    } else {
+      box.style.border = step === 1 ? '9px double #10b981' : '6px double #10b981';
+      box.style.boxShadow = step === 1 ? '0 0 16px rgba(16,185,129,0.5)' : 'none';
+      box.innerHTML = `<span>#boite • <strong>border: 6px double #10b981</strong></span>`;
+    }
+    box.style.transform = step === 1 ? 'scale(1.04)' : 'scale(1)';
+    return;
+  }
+
+  // 3. MARGE EXTÉRIEURE (MARGIN) - 1 VIDÉO DÉDIÉE PAR VALEUR
   if (itemId === 'css-margin') {
     const boite = document.getElementById('boite');
     const vHaut = document.getElementById('voisinHaut');
     const vBas = document.getElementById('voisinBas');
     const txt = document.getElementById('marginIndicatorText');
     if (boite) {
-      if (step === 1) {
+      boite.style.transition = 'all 0.5s ease';
+      if (variantIdx === 0) {
+        // VIDÉO 1 : 0px (Collé aux voisins)
+        boite.style.margin = '0px auto';
+        if (vHaut) { vHaut.style.transform = step === 1 ? 'translateY(2px)' : 'translateY(0)'; vHaut.style.borderColor = step === 1 ? '#ef4444' : '#475569'; }
+        if (vBas) { vBas.style.transform = step === 1 ? 'translateY(-2px)' : 'translateY(0)'; vBas.style.borderColor = step === 1 ? '#ef4444' : '#475569'; }
+        boite.style.borderColor = step === 1 ? '#ef4444' : '#38bdf8';
+        if (txt) txt.textContent = 'margin: 0px (Éléments directement en contact, sans espacement)';
+      } else if (variantIdx === 1) {
+        // VIDÉO 2 : 15px (Marge normale)
+        boite.style.margin = '15px auto';
+        if (vHaut) { vHaut.style.transform = step === 1 ? 'translateY(-6px)' : 'translateY(0)'; vHaut.style.borderColor = '#475569'; }
+        if (vBas) { vBas.style.transform = step === 1 ? 'translateY(6px)' : 'translateY(0)'; vBas.style.borderColor = '#475569'; }
+        boite.style.borderColor = '#38bdf8';
+        if (txt) txt.textContent = 'margin: 15px auto (Espacement standard régulier)';
+      } else if (variantIdx === 2) {
+        // VIDÉO 3 : 30px (Grande séparation)
         boite.style.margin = '35px auto';
-        if (vHaut) vHaut.style.transform = 'translateY(-12px)';
-        if (vBas) vBas.style.transform = 'translateY(12px)';
-        if (txt) txt.textContent = 'margin: 35px auto (Voisins repoussés !)';
-      } else {
-        boite.style.margin = '5px auto';
+        if (vHaut) { vHaut.style.transform = step === 1 ? 'translateY(-16px)' : 'translateY(-8px)'; vHaut.style.borderColor = '#f97316'; }
+        if (vBas) { vBas.style.transform = step === 1 ? 'translateY(16px)' : 'translateY(8px)'; vBas.style.borderColor = '#f97316'; }
+        boite.style.borderColor = '#f97316';
+        if (txt) txt.textContent = 'margin: 30px auto (Voisins fortement repoussés)';
+      } else if (variantIdx === 3) {
+        // VIDÉO 4 : 10px 40px (Asymétrique)
+        boite.style.margin = '10px 40px';
+        boite.style.transform = step === 1 ? 'scale(1.03)' : 'scale(1)';
+        boite.style.borderColor = '#38bdf8';
         if (vHaut) vHaut.style.transform = 'translateY(0)';
         if (vBas) vBas.style.transform = 'translateY(0)';
-        if (txt) txt.textContent = 'margin: 5px auto (Proche des voisins)';
+        if (txt) txt.textContent = 'margin: 10px 40px (Haut/Bas 10px • Gauche/Droite 40px)';
+      } else {
+        // VIDÉO 5 : auto (Centrage horizontal)
+        boite.style.margin = step === 1 ? '10px auto' : '10px 25% 10px 5%';
+        boite.style.borderColor = '#10b981';
+        if (txt) txt.textContent = step === 1 ? 'margin: 10px auto (Centrage horizontal parfait dans le parent !)' : 'Sans auto (Bloc décalé à gauche)';
       }
     }
     return;
   }
 
-  // 2. MARGE INTÉRIEURE (PADDING)
+  // 4. MARGE INTÉRIEURE (PADDING) - 1 VIDÉO DÉDIÉE PAR VALEUR
   if (itemId === 'css-padding') {
     const boite = document.getElementById('boite');
     const txt = document.getElementById('paddingIndicatorText');
     if (boite) {
-      if (step === 1) {
-        boite.style.padding = '28px';
-        if (txt) txt.textContent = 'padding: 28px (Aération spacieuse)';
+      boite.style.transition = 'all 0.5s ease';
+      if (variantIdx === 0) {
+        // VIDÉO 1 : 0px
+        boite.style.padding = '0px';
+        boite.style.borderColor = step === 1 ? '#ef4444' : '#38bdf8';
+        if (txt) txt.textContent = 'padding: 0px (Texte comprimé contre la bordure)';
+      } else if (variantIdx === 1) {
+        // VIDÉO 2 : 12px
+        boite.style.padding = '12px';
+        boite.style.borderColor = '#38bdf8';
+        boite.style.transform = step === 1 ? 'scale(1.02)' : 'scale(1)';
+        if (txt) txt.textContent = 'padding: 12px (Aération intérieure confortable)';
+      } else if (variantIdx === 2) {
+        // VIDÉO 3 : 25px
+        boite.style.padding = step === 1 ? '28px' : '22px';
+        boite.style.borderColor = '#10b981';
+        if (txt) txt.textContent = 'padding: 25px (Intérieur très spacieux qui dilate le bloc)';
       } else {
-        boite.style.padding = '3px';
-        if (txt) txt.textContent = 'padding: 3px (Texte collé au bord)';
+        // VIDÉO 4 : 5px 30px
+        boite.style.padding = '5px 30px';
+        boite.style.borderColor = '#facc15';
+        if (txt) txt.textContent = 'padding: 5px 30px (Haut/Bas 5px • Côtés 30px)';
       }
     }
     return;
   }
 
-  // 3. FLOTTEMENT (FLOAT)
+  // 5. FLOTTEMENT (FLOAT) - 1 VIDÉO DÉDIÉE PAR VALEUR
   if (itemId === 'css-float') {
     const boite = document.getElementById('boite');
     const lbl = document.getElementById('floatLabel');
     if (boite) {
-      if (step === 1) {
-        boite.style.float = 'left';
-        boite.style.margin = '4px 14px 6px 0';
-        if (lbl) lbl.textContent = 'float: left; (Texte enroulé)';
-      } else {
+      boite.style.transition = 'all 0.5s ease';
+      if (variantIdx === 0) {
+        // VIDÉO 1 : none
         boite.style.float = 'none';
         boite.style.margin = '0 auto 10px auto';
-        if (lbl) lbl.textContent = 'float: none; (Flux normal)';
+        if (lbl) lbl.textContent = 'float: none; (Flux standard, texte dessous)';
+      } else if (variantIdx === 1) {
+        // VIDÉO 2 : left
+        boite.style.float = 'left';
+        boite.style.margin = '4px 14px 6px 0';
+        boite.style.transform = step === 1 ? 'scale(1.04)' : 'scale(1)';
+        if (lbl) lbl.textContent = 'float: left; (Boîte à gauche, texte enroulé à droite)';
+      } else {
+        // VIDÉO 3 : right
+        boite.style.float = 'right';
+        boite.style.margin = '4px 0 6px 14px';
+        boite.style.transform = step === 1 ? 'scale(1.04)' : 'scale(1)';
+        if (lbl) lbl.textContent = 'float: right; (Boîte à droite, texte enroulé à gauche)';
       }
     }
     return;
   }
 
-  // 4. POSITIONNEMENT & COORDONNÉES
-  if (itemId === 'css-position' || itemId === 'css-coords-top-bottom-left-right') {
+  // 6. POSITIONNEMENT (POSITION) - 1 VIDÉO DÉDIÉE PAR VALEUR
+  if (itemId === 'css-position') {
     const boite = document.getElementById('boite');
     const badge = document.getElementById('posBadge');
     if (boite) {
-      if (step === 1) {
-        boite.style.top = '65px';
-        boite.style.left = '130px';
-        if (badge) badge.textContent = 'top: 40px; left: 105px; (Décalé)';
+      boite.style.transition = 'all 0.5s ease';
+      if (variantIdx === 0) {
+        // VIDÉO 1 : static
+        boite.style.position = 'static';
+        boite.style.top = 'auto';
+        boite.style.left = 'auto';
+        if (badge) badge.textContent = 'position: static; (Position par défaut dans le flux)';
+      } else if (variantIdx === 1) {
+        // VIDÉO 2 : relative
+        boite.style.position = 'relative';
+        boite.style.top = step === 1 ? '35px' : '20px';
+        boite.style.left = step === 1 ? '55px' : '30px';
+        if (badge) badge.textContent = 'position: relative; (Décalé par rapport à l\'emplacement fantôme)';
+      } else if (variantIdx === 2) {
+        // VIDÉO 3 : absolute
+        boite.style.position = 'absolute';
+        boite.style.top = step === 1 ? '20px' : '10px';
+        boite.style.right = step === 1 ? '25px' : '10px';
+        boite.style.left = 'auto';
+        if (badge) badge.textContent = 'position: absolute; (Placé au coin supérieur droit du parent)';
       } else {
-        boite.style.top = '25px';
-        boite.style.left = '25px';
-        if (badge) badge.textContent = 'top: 0px; left: 0px; (Origine)';
+        // VIDÉO 4 : fixed
+        boite.style.position = 'absolute';
+        boite.style.bottom = '15px';
+        boite.style.right = '15px';
+        boite.style.top = 'auto';
+        boite.style.left = 'auto';
+        boite.style.transform = step === 1 ? 'scale(1.05)' : 'scale(1)';
+        if (badge) badge.textContent = 'position: fixed; (Verrouillé dans la fenêtre du navigateur)';
       }
     }
     return;
   }
 
-  // 5. DÉBORDEMENT (OVERFLOW)
+  // 7. COORDONNÉES TOP / BOTTOM / LEFT / RIGHT
+  if (itemId === 'css-coords-top-bottom-left-right') {
+    const boite = document.getElementById('boite');
+    const badge = document.getElementById('posBadge');
+    if (boite) {
+      boite.style.position = 'relative';
+      boite.style.transition = 'all 0.5s ease';
+      if (variantIdx === 0) {
+        boite.style.top = '0px'; boite.style.left = '0px';
+        if (badge) badge.textContent = 'top: 0px; left: 0px; (Origine)';
+      } else if (variantIdx === 1) {
+        boite.style.top = step === 1 ? '40px' : '25px';
+        boite.style.left = step === 1 ? '90px' : '65px';
+        if (badge) badge.textContent = 'top: 35px; left: 85px; (Décalage Bas/Droite)';
+      } else if (variantIdx === 2) {
+        boite.style.top = '10px'; boite.style.right = '20px'; boite.style.left = 'auto';
+        if (badge) badge.textContent = 'top: 10px; right: 20px; (Haut/Droite)';
+      } else {
+        boite.style.bottom = '15px'; boite.style.left = '40px'; boite.style.top = 'auto';
+        if (badge) badge.textContent = 'bottom: 15px; left: 40px; (Bas/Gauche)';
+      }
+    }
+    return;
+  }
+
+  // 8. DÉBORDEMENT (OVERFLOW) - 1 VIDÉO DÉDIÉE PAR VALEUR
   if (itemId === 'css-overflow') {
     const boite = document.getElementById('boite');
     const badge = document.getElementById('overflowBadge');
     if (boite) {
-      if (step === 1) {
-        boite.style.overflow = 'hidden';
-        if (badge) badge.textContent = 'overflow: hidden; (Coupé net)';
-      } else {
+      boite.style.height = '85px';
+      if (variantIdx === 0) {
+        // VIDÉO 1 : visible
         boite.style.overflow = 'visible';
-        if (badge) badge.textContent = 'overflow: visible; (Dépassement)';
+        boite.style.borderColor = step === 1 ? '#ef4444' : '#38bdf8';
+        if (badge) badge.textContent = 'overflow: visible; (Le texte s\'échappe hors du cadre)';
+      } else if (variantIdx === 1) {
+        // VIDÉO 2 : hidden
+        boite.style.overflow = 'hidden';
+        boite.style.borderColor = '#10b981';
+        if (badge) badge.textContent = 'overflow: hidden; (Le débordement est masqué et coupé net)';
+      } else if (variantIdx === 2) {
+        // VIDÉO 3 : scroll
+        boite.style.overflow = 'scroll';
+        boite.style.borderColor = '#38bdf8';
+        boite.scrollTop = step === 1 ? 40 : 0;
+        if (badge) badge.textContent = 'overflow: scroll; (Barres de défilement toujours visibles)';
+      } else {
+        // VIDÉO 4 : auto
+        boite.style.overflow = 'auto';
+        boite.style.borderColor = '#facc15';
+        boite.scrollTop = step === 1 ? 30 : 0;
+        if (badge) badge.textContent = 'overflow: auto; (Barre de défilement automatique si besoin)';
       }
     }
     return;
   }
 
-  // 6. AFFICHAGE (DISPLAY)
+  // 9. AFFICHAGE (DISPLAY) - 1 VIDÉO DÉDIÉE PAR VALEUR
   if (itemId === 'css-display') {
     const boite = document.getElementById('boite');
     if (boite) {
-      if (step === 1) {
+      if (variantIdx === 0) {
+        // VIDÉO 1 : block
         boite.style.display = 'block';
         boite.style.width = '100%';
-      } else {
+        boite.style.transform = step === 1 ? 'scale(1.02)' : 'scale(1)';
+      } else if (variantIdx === 1) {
+        // VIDÉO 2 : inline
+        boite.style.display = 'inline';
+        boite.style.width = 'auto';
+        boite.style.transform = 'none';
+      } else if (variantIdx === 2) {
+        // VIDÉO 3 : inline-block
         boite.style.display = 'inline-block';
         boite.style.width = '130px';
+        boite.style.transform = step === 1 ? 'scale(1.04)' : 'scale(1)';
+      } else {
+        // VIDÉO 4 : none
+        boite.style.display = step === 1 ? 'none' : 'inline-block';
       }
     }
     return;
   }
 
-  // 7. SÉLECTEURS
+  // 10. ARRONDIS DES COINS (BORDER-RADIUS)
+  if (itemId === 'css-border-radius') {
+    box.style.transition = 'all 0.5s ease';
+    if (variantIdx === 0) {
+      box.style.borderRadius = '0px';
+      box.style.transform = step === 1 ? 'scale(1.04)' : 'scale(1)';
+    } else if (variantIdx === 1) {
+      box.style.borderRadius = step === 1 ? '12px' : '8px';
+    } else if (variantIdx === 2) {
+      box.style.borderRadius = step === 1 ? '25px' : '20px';
+    } else {
+      box.style.borderRadius = '50%';
+      box.style.transform = step === 1 ? 'scale(1.08)' : 'scale(1)';
+    }
+    return;
+  }
+
+  // 11. OMBRE PORTÉE (BOX-SHADOW)
+  if (itemId === 'css-box-shadow') {
+    box.style.transition = 'all 0.4s ease';
+    if (variantIdx === 0) {
+      box.style.boxShadow = 'none';
+      box.style.transform = 'translateY(0)';
+    } else if (variantIdx === 1) {
+      box.style.boxShadow = step === 1 ? '0 12px 24px rgba(0,0,0,0.6)' : '0 4px 12px rgba(0,0,0,0.3)';
+      box.style.transform = step === 1 ? 'translateY(-4px)' : 'translateY(0)';
+    } else if (variantIdx === 2) {
+      box.style.boxShadow = step === 1 ? '0 0 28px #38bdf8, 0 0 50px rgba(56,189,248,0.5)' : '0 0 12px #38bdf8';
+      box.style.transform = step === 1 ? 'scale(1.04)' : 'scale(1)';
+    } else if (variantIdx === 3) {
+      box.style.boxShadow = step === 1 ? '8px 8px 0 #ef4444' : '4px 4px 0 #ef4444';
+      box.style.transform = step === 1 ? 'translate(-4px, -4px)' : 'translate(0, 0)';
+    } else {
+      box.style.boxShadow = step === 1 ? 'inset 0 0 22px #38bdf8' : 'inset 0 0 8px #38bdf8';
+    }
+    return;
+  }
+
+  // 12. ALIGNEMENT DU TEXTE (TEXT-ALIGN)
+  if (itemId === 'css-text-align') {
+    if (variantIdx === 0) box.style.textAlign = 'left';
+    else if (variantIdx === 1) box.style.textAlign = 'center';
+    else if (variantIdx === 2) box.style.textAlign = 'right';
+    else box.style.textAlign = 'justify';
+    box.style.transform = step === 1 ? 'scale(1.02)' : 'scale(1)';
+    return;
+  }
+
+  // 13. POLICE DE CARACTÈRES (FONT-FAMILY)
+  if (itemId === 'css-font-family') {
+    if (variantIdx === 0) box.style.fontFamily = 'Arial, sans-serif';
+    else if (variantIdx === 1) box.style.fontFamily = "'Times New Roman', serif";
+    else if (variantIdx === 2) box.style.fontFamily = "'Courier New', monospace";
+    else box.style.fontFamily = "'Comic Sans MS', cursive";
+    box.style.transform = step === 1 ? 'scale(1.04)' : 'scale(1)';
+    return;
+  }
+
+  // 14. CASSE DU TEXTE (TEXT-TRANSFORM)
+  if (itemId === 'css-text-transform') {
+    const txt = document.getElementById('h1Text') || box;
+    if (variantIdx === 0) txt.style.textTransform = 'uppercase';
+    else if (variantIdx === 1) txt.style.textTransform = 'lowercase';
+    else if (variantIdx === 2) txt.style.textTransform = 'capitalize';
+    else txt.style.textTransform = 'none';
+    box.style.transform = step === 1 ? 'scale(1.03)' : 'scale(1)';
+    return;
+  }
+
+  // 15. TRANSFORMATIONS (TRANSFORM)
+  if (itemId === 'css-transform') {
+    box.style.transition = 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    if (variantIdx === 0) box.style.transform = step === 1 ? 'rotate(25deg)' : 'rotate(0deg)';
+    else if (variantIdx === 1) box.style.transform = step === 1 ? 'scale(1.28)' : 'scale(1)';
+    else if (variantIdx === 2) box.style.transform = step === 1 ? 'translate(30px, -15px)' : 'translate(0, 0)';
+    else box.style.transform = step === 1 ? 'skewX(-20deg)' : 'skewX(0deg)';
+    return;
+  }
+
+  // 16. FILTRES GRAPHIQUES (FILTER)
+  if (itemId === 'css-filter') {
+    box.style.transition = 'filter 0.5s ease';
+    if (variantIdx === 0) box.style.filter = 'none';
+    else if (variantIdx === 1) box.style.filter = step === 1 ? 'grayscale(100%)' : 'grayscale(20%)';
+    else if (variantIdx === 2) box.style.filter = step === 1 ? 'blur(4px)' : 'blur(1px)';
+    else if (variantIdx === 3) box.style.filter = step === 1 ? 'invert(100%)' : 'invert(0%)';
+    else box.style.filter = step === 1 ? 'sepia(100%)' : 'sepia(15%)';
+    return;
+  }
+
+  // 17. LISTES (LIST-STYLE-TYPE)
+  if (itemId === 'css-list-style-type') {
+    if (variantIdx === 0) box.style.listStyleType = 'circle';
+    else if (variantIdx === 1) box.style.listStyleType = 'square';
+    else if (variantIdx === 2) box.style.listStyleType = 'disc';
+    else if (variantIdx === 3) box.style.listStyleType = 'decimal';
+    else box.style.listStyleType = 'none';
+    box.style.transform = step === 1 ? 'scale(1.03)' : 'scale(1)';
+    return;
+  }
+
+  // 18. TABLEAUX (BORDER-COLLAPSE & TABLE-LAYOUT)
+  if (itemId === 'css-border-collapse') {
+    box.style.borderCollapse = variantIdx === 1 ? 'collapse' : 'separate';
+    box.style.backgroundColor = step === 1 ? 'rgba(56, 189, 248, 0.15)' : 'transparent';
+    return;
+  }
+  if (itemId === 'css-table-layout') {
+    box.style.tableLayout = variantIdx === 1 ? 'fixed' : 'auto';
+    box.style.transform = step === 1 ? 'scale(1.02)' : 'scale(1)';
+    return;
+  }
+
+  // 19. SÉLECTEURS
   if (itemId.startsWith('css-sel-')) {
     const items = document.querySelectorAll('.selector-item');
     items.forEach((it, idx) => {
@@ -2233,64 +2764,34 @@ function applyVideoFrame(itemId, box, step) {
     return;
   }
 
-  // 8. TRANSFORMATIONS
+  // 20. TOUT AUTRE ÉLÉMENT AVEC VARIANTES DANS VARIETIES_CONFIG
+  if (opt && opt.css) {
+    box.style.cssText += opt.css;
+    box.style.transform = step === 1 ? 'scale(1.06)' : 'scale(1)';
+    return;
+  }
+
+  // 21. ANIMATION PAR DÉFAUT POUR LES PROPRIÉTÉS SANS VARIANTES
   if (itemId.includes('transform')) {
     box.style.transform = step === 1 ? 'rotate(15deg) scale(1.2)' : 'rotate(0deg) scale(1)';
-    box.style.background = step === 1 ? 'linear-gradient(135deg, #ec4899, #8b5cf6)' : '';
   } else if (itemId.includes('color') && !itemId.includes('background') && !itemId.includes('border')) {
     box.style.color = step === 1 ? '#ef4444' : '#38bdf8';
   } else if (itemId.includes('background-color') || (itemId.includes('background') && !itemId.includes('repeat') && !itemId.includes('size'))) {
     box.style.backgroundColor = step === 1 ? '#991b1b' : '#1e3a8a';
-    box.style.color = '#fff';
   } else if (itemId.includes('font-size')) {
-    box.style.fontSize = step === 1 ? '30px' : '18px';
-  } else if (itemId.includes('font-family')) {
-    box.style.fontFamily = step === 1 ? "'Times New Roman', serif" : 'Arial, sans-serif';
+    box.style.fontSize = step === 1 ? '28px' : '18px';
   } else if (itemId.includes('font-weight')) {
     box.style.fontWeight = step === 1 ? '900' : '400';
   } else if (itemId.includes('font-style')) {
     box.style.fontStyle = step === 1 ? 'italic' : 'normal';
-  } else if (itemId.includes('text-align')) {
-    box.style.textAlign = step === 1 ? 'right' : 'center';
-  } else if (itemId.includes('text-transform')) {
-    const txt = document.getElementById('h1Text') || box;
-    txt.style.textTransform = step === 1 ? 'uppercase' : 'lowercase';
-  } else if (itemId.includes('text-shadow')) {
-    box.style.textShadow = step === 1 ? '2px 2px 6px #facc15, 0 0 15px #eab308' : 'none';
-  } else if (itemId.includes('box-shadow')) {
-    box.style.boxShadow = step === 1 ? '0 16px 32px rgba(56, 189, 248, 0.7)' : '0 2px 5px rgba(0,0,0,0.2)';
-    box.style.transform = step === 1 ? 'translateY(-6px)' : 'translateY(0)';
-  } else if (itemId.includes('border-radius')) {
-    box.style.borderRadius = step === 1 ? '30px' : '0px';
-  } else if (itemId.includes('border-style') || itemId.includes('border-shorthand')) {
-    box.style.border = step === 1 ? '4px dashed #f43f5e' : '3px solid #38bdf8';
-  } else if (itemId.includes('border-width')) {
-    box.style.borderWidth = step === 1 ? '8px' : '2px';
-    box.style.borderStyle = 'solid';
-    box.style.borderColor = '#38bdf8';
-  } else if (itemId.includes('border-color')) {
-    box.style.borderColor = step === 1 ? '#facc15' : '#38bdf8';
-    box.style.borderStyle = 'solid';
-    box.style.borderWidth = '4px';
-  } else if (itemId.includes('filter')) {
-    box.style.filter = step === 1 ? 'grayscale(100%) blur(1px)' : 'grayscale(0%) blur(0px)';
   } else if (itemId.includes('opacity')) {
-    box.style.opacity = step === 1 ? '0.25' : '1.0';
+    box.style.opacity = step === 1 ? '0.3' : '1.0';
   } else if (itemId.includes('width')) {
     box.style.width = step === 1 ? '260px' : '130px';
   } else if (itemId.includes('height')) {
     box.style.height = step === 1 ? '120px' : '60px';
-  } else if (itemId.includes('table') || itemId.includes('collapse')) {
-    box.style.borderCollapse = step === 1 ? 'collapse' : 'separate';
-    box.style.backgroundColor = step === 1 ? 'rgba(56, 189, 248, 0.15)' : 'transparent';
-  } else if (itemId.includes('list-style')) {
-    box.style.listStyleType = step === 1 ? 'square' : 'circle';
-  } else if (itemId.includes('transition') || itemId.includes('animation') || itemId.includes('keyframes')) {
-    box.style.transform = step === 1 ? 'scale(1.18) rotate(6deg)' : 'scale(1) rotate(0deg)';
-    box.style.backgroundColor = step === 1 ? '#10b981' : '#2563eb';
   } else {
     box.style.transform = step === 1 ? 'scale(1.08)' : 'scale(1)';
-    box.style.opacity = step === 1 ? '0.85' : '1.0';
   }
 }
 
@@ -2301,12 +2802,12 @@ function toggleVideoPlay(itemId) {
 }
 
 function replayVideo(itemId) {
-  startVideoSimulation(itemId);
+  startVideoSimulation(itemId || currentVideoItemId, currentVideoVariantIdx);
 }
 
 function enableHoverStageTest() {
   const stage = document.getElementById('videoStage');
-  const box = stage ? (stage.querySelector('#boite') || stage.querySelector('.demo-box') || stage.firstElementChild) : null;
+  const box = stage ? (stage.querySelector('#boite') || stage.querySelector('.demo-box') || stage.querySelector('#h1') || stage.querySelector('#tab') || stage.querySelector('#img1') || stage.querySelector('#liste') || stage.firstElementChild) : null;
   if (!box) return;
   alert("Mode Survol Activé ! Survolez maintenant l'élément (#" + (box.id || 'element') + ") avec votre curseur pour tester l'effet :hover.");
   box.onmouseenter = () => {
@@ -2325,112 +2826,7 @@ function enableHoverStageTest() {
 // 8. GESTION DES VARIANTES INTERACTIVES (BOUTONS RADIO)
 // -------------------------------------------------------------
 function applyCssVariety(itemId, optionIdx, labelElement) {
-  const config = VARIETIES_CONFIG[itemId];
-  if (!config || !config.options[optionIdx]) return;
-  const opt = config.options[optionIdx];
-
-  // Mettre à jour l'état visuel du bouton radio
-  const container = labelElement.closest('.variety-radios-wrap');
-  if (container) {
-    container.querySelectorAll('.variety-radio-label').forEach(lbl => lbl.classList.remove('active'));
-    labelElement.classList.add('active');
-    const input = labelElement.querySelector('input[type="radio"]');
-    if (input) input.checked = true;
-  }
-
-  // Mettre en pause la vidéo automatique pour admirer la variante choisie
-  if (activeVideoTimer) clearInterval(activeVideoTimer);
-  isVideoPlaying = false;
-  const playBtn = document.getElementById('playPauseVideoBtn');
-  if (playBtn) playBtn.textContent = '▶';
-
-  // Application intelligente selon la scène
-  if (itemId === 'css-margin') {
-    const boite = document.getElementById('boite');
-    const vHaut = document.getElementById('voisinHaut');
-    const vBas = document.getElementById('voisinBas');
-    const txt = document.getElementById('marginIndicatorText');
-    if (boite) {
-      boite.classList.remove('pulse-anim');
-      void boite.offsetWidth;
-      boite.classList.add('pulse-anim');
-      boite.style.cssText += opt.css;
-      if (txt) txt.textContent = opt.label;
-      if (opt.value === '30px' || opt.value === '10px 40px') {
-        if (vHaut) vHaut.style.transform = 'translateY(-12px)';
-        if (vBas) vBas.style.transform = 'translateY(12px)';
-      } else {
-        if (vHaut) vHaut.style.transform = 'translateY(0)';
-        if (vBas) vBas.style.transform = 'translateY(0)';
-      }
-    }
-  } else if (itemId === 'css-padding') {
-    const boite = document.getElementById('boite');
-    const txt = document.getElementById('paddingIndicatorText');
-    if (boite) {
-      boite.classList.remove('pulse-anim');
-      void boite.offsetWidth;
-      boite.classList.add('pulse-anim');
-      boite.style.cssText += opt.css;
-      if (txt) txt.textContent = opt.label;
-    }
-  } else if (itemId === 'css-float') {
-    const boite = document.getElementById('boite');
-    const lbl = document.getElementById('floatLabel');
-    if (boite) {
-      boite.style.cssText += opt.css;
-      if (lbl) lbl.textContent = 'float: ' + opt.value;
-    }
-  } else if (itemId === 'css-position' || itemId === 'css-coords-top-bottom-left-right') {
-    const boite = document.getElementById('boite');
-    const badge = document.getElementById('posBadge');
-    if (boite) {
-      boite.style.cssText += opt.css;
-      if (badge) badge.textContent = opt.label;
-    }
-  } else if (itemId === 'css-overflow') {
-    const boite = document.getElementById('boite');
-    const badge = document.getElementById('overflowBadge');
-    if (boite) {
-      boite.style.cssText += opt.css;
-      if (badge) badge.textContent = 'overflow: ' + opt.value;
-    }
-  } else {
-    const stage = document.getElementById('videoStage');
-    if (stage) {
-      const demoBox = stage.querySelector('.margin-stage-target') || 
-                      stage.querySelector('.padding-stage-target') || 
-                      stage.querySelector('.float-box') || 
-                      stage.querySelector('.position-target') || 
-                      stage.querySelector('.overflow-stage-box') || 
-                      stage.querySelector('.demo-box') || 
-                      stage.querySelector('#h1') || 
-                      stage.querySelector('#boite') || 
-                      stage.querySelector('#tab') || 
-                      stage.querySelector('#img1') || 
-                      stage.querySelector('#liste') || 
-                      stage.firstElementChild;
-      if (demoBox) {
-        demoBox.classList.remove('pulse-anim');
-        void demoBox.offsetWidth;
-        demoBox.classList.add('pulse-anim');
-        demoBox.style.cssText += opt.css;
-      }
-    }
-  }
-
-  // Mettre à jour le code affiché avec convention #id Bac STI
-  const codePre = document.querySelector('.code-pre code');
-  if (codePre) {
-    codePre.textContent = opt.code || ('/* Règle CSS avec la variante choisie (#id) : */\n#boite {\n  ' + opt.css.replace(/!important/g, '').replace(/;\s*/g, ';\n  ').trim() + '\n}\n\n/* Note au survol avec :hover */\n#boite:hover {\n  transform: scale(1.05);\n}');
-  }
-
-  // Toast de confirmation
-  const toast = document.getElementById('varietyToastCss');
-  if (toast) {
-    toast.style.display = 'inline-flex';
-    toast.innerHTML = '✨ Variante active : <strong>' + escapeHtml(opt.value) + '</strong>';
-  }
+  playSpecificVideo(itemId, optionIdx);
 }
 
 function applyHtmlVariety(itemId, optionIdx, labelElement) {
