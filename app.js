@@ -959,43 +959,43 @@ const VARIETIES_CONFIG = {
       {
         "label": "text (Champ texte libre)",
         "value": "text",
-        "previewHtml": "<label style=\"display:block; margin-bottom:5px; font-weight:600; color:#cbd5e1;\">Nom du candidat :</label><input type=\"text\" id=\"nom\" placeholder=\"Ex: Mohamed Ben Salah\" style=\"width:100%; padding:9px 12px; background:#1e293b; border:2px solid #f97316; border-radius:6px; color:#fff; font-size:14px;\">",
+        "previewHtml": "<label style=\"display:block; margin-bottom:5px; font-weight:600; color:var(--text-primary);\">Nom du candidat :</label><input type=\"text\" id=\"nom\" class=\"sti-input\" placeholder=\"Ex: Mohamed Ben Salah\" style=\"width:100%; border:2px solid #f97316;\">",
         "code": "<input type=\"text\" id=\"nom\" name=\"nom\" required placeholder=\"Votre nom complet\">"
       },
       {
         "label": "password (Mot de passe masqué)",
         "value": "password",
-        "previewHtml": "<label style=\"display:block; margin-bottom:5px; font-weight:600; color:#cbd5e1;\">Mot de passe :</label><input type=\"password\" id=\"mdp\" value=\"Secret123\" style=\"width:100%; padding:9px 12px; background:#1e293b; border:2px solid #ef4444; border-radius:6px; color:#fff; font-size:14px;\">",
+        "previewHtml": "<label style=\"display:block; margin-bottom:5px; font-weight:600; color:var(--text-primary);\">Mot de passe :</label><input type=\"password\" id=\"mdp\" class=\"sti-input\" value=\"Secret123\" style=\"width:100%; border:2px solid #ef4444;\">",
         "code": "<input type=\"password\" id=\"pwd\" name=\"pwd\" required>"
       },
       {
         "label": "number (Nombre avec min et max)",
         "value": "number",
-        "previewHtml": "<label style=\"display:block; margin-bottom:5px; font-weight:600; color:#cbd5e1;\">Moyenne Bac STI (0 à 20) :</label><input type=\"number\" id=\"note\" min=\"0\" max=\"20\" value=\"16\" style=\"width:100%; padding:9px 12px; background:#1e293b; border:2px solid #10b981; border-radius:6px; color:#fff; font-size:14px;\">",
+        "previewHtml": "<label style=\"display:block; margin-bottom:5px; font-weight:600; color:var(--text-primary);\">Moyenne Bac STI (0 à 20) :</label><input type=\"number\" id=\"note\" class=\"sti-input sti-input-number\" min=\"0\" max=\"20\" value=\"16\" style=\"width:100%; border:2px solid #10b981;\">",
         "code": "<input type=\"number\" id=\"note\" name=\"note\" min=\"0\" max=\"20\" step=\"0.25\">"
       },
       {
         "label": "radio (Boutons radio exclusifs)",
         "value": "radio",
-        "previewHtml": "<div style=\"display:flex; gap:16px; align-items:center;\"><label style=\"color:#fff;\"><input type=\"radio\" name=\"sec\" checked> STI</label><label style=\"color:#fff;\"><input type=\"radio\" name=\"sec\"> Math</label><label style=\"color:#fff;\"><input type=\"radio\" name=\"sec\"> Éco</label></div>",
+        "previewHtml": "<div style=\"display:flex; gap:16px; align-items:center;\"><label style=\"color:var(--text-primary); font-weight:600;\"><input type=\"radio\" name=\"sec\" checked> STI</label><label style=\"color:var(--text-primary); font-weight:600;\"><input type=\"radio\" name=\"sec\"> Math</label><label style=\"color:var(--text-primary); font-weight:600;\"><input type=\"radio\" name=\"sec\"> Éco</label></div>",
         "code": "<input type=\"radio\" id=\"sti\" name=\"section\" value=\"STI\" checked>\n<label for=\"sti\">STI</label>"
       },
       {
         "label": "checkbox (Cases à cocher multiples)",
         "value": "checkbox",
-        "previewHtml": "<div style=\"display:flex; flex-direction:column; gap:6px;\"><label style=\"color:#fff;\"><input type=\"checkbox\" checked> Option Informatique</label><label style=\"color:#fff;\"><input type=\"checkbox\"> Option Allemand</label></div>",
+        "previewHtml": "<div style=\"display:flex; flex-direction:column; gap:6px;\"><label style=\"color:var(--text-primary); font-weight:600;\"><input type=\"checkbox\" checked> Option Informatique</label><label style=\"color:var(--text-primary); font-weight:600;\"><input type=\"checkbox\"> Option Allemand</label></div>",
         "code": "<input type=\"checkbox\" id=\"optInfo\" name=\"optInfo\" checked>"
       },
       {
         "label": "date (Sélecteur de date)",
         "value": "date",
-        "previewHtml": "<label style=\"display:block; margin-bottom:5px; font-weight:600; color:#cbd5e1;\">Date de naissance :</label><input type=\"date\" id=\"datenaiss\" value=\"2007-06-15\" style=\"width:100%; padding:9px 12px; background:#1e293b; border:2px solid #38bdf8; border-radius:6px; color:#fff; font-size:14px;\">",
+        "previewHtml": "<label style=\"display:block; margin-bottom:5px; font-weight:600; color:var(--text-primary);\">Date de naissance :</label><input type=\"date\" id=\"datenaiss\" class=\"sti-input\" value=\"2007-06-15\" style=\"width:100%; border:2px solid #38bdf8;\">",
         "code": "<input type=\"date\" id=\"dateNaiss\" name=\"dateNaiss\">"
       },
       {
         "label": "submit (Bouton d'envoi)",
         "value": "submit",
-        "previewHtml": "<input type=\"submit\" value=\"Envoyer le Formulaire\" style=\"background:#10b981; color:#fff; border:none; padding:10px 22px; font-weight:bold; border-radius:6px; cursor:pointer;\">",
+        "previewHtml": "<input type=\"submit\" value=\"Envoyer le Formulaire\" style=\"background:#10b981; color:#0f172a; border:none; padding:10px 22px; font-weight:bold; border-radius:6px; cursor:pointer;\">",
         "code": "<input type=\"submit\" id=\"btnSubmit\" value=\"Valider l'inscription\">"
       },
       {
@@ -1012,13 +1012,13 @@ const VARIETIES_CONFIG = {
       {
         "label": "select simple (Menu déroulant standard)",
         "value": "simple",
-        "previewHtml": "<label style=\"color:#fff; display:block; margin-bottom:5px;\">Section :</label><select id=\"selSection\" style=\"padding:8px 14px; background:#1e293b; color:#fff; border:2px solid #38bdf8; border-radius:6px;\"><option value=\"sti\">Sciences Techniques (STI)</option><option value=\"math\">Mathématiques</option><option value=\"si\">Sciences Informatiques</option></select>",
+        "previewHtml": "<label style=\"color:var(--text-primary); display:block; margin-bottom:5px; font-weight:600;\">Section :</label><select id=\"selSection\" class=\"sti-select\" style=\"padding:8px 14px; border:2px solid #38bdf8;\"><option value=\"sti\">Sciences Techniques (STI)</option><option value=\"math\">Mathématiques</option><option value=\"si\">Sciences Informatiques</option></select>",
         "code": "<select id=\"section\" name=\"section\">\n  <option value=\"sti\">Sciences Techniques</option>\n  <option value=\"math\">Mathématiques</option>\n</select>"
       },
       {
         "label": "select multiple (Choix multiples)",
         "value": "multiple",
-        "previewHtml": "<label style=\"color:#fff; display:block; margin-bottom:5px;\">Matières préférées (Ctrl+Clic) :</label><select id=\"selM\" multiple style=\"padding:8px; background:#1e293b; color:#fff; border:2px solid #f97316; border-radius:6px; height:80px;\"><option value=\"elec\">Génie Électrique</option><option value=\"meca\">Génie Mécanique</option><option value=\"info\">Informatique</option></select>",
+        "previewHtml": "<label style=\"color:var(--text-primary); display:block; margin-bottom:5px; font-weight:600;\">Matières préférées (Ctrl+Clic) :</label><select id=\"selM\" class=\"sti-select\" multiple style=\"padding:8px; border:2px solid #f97316; height:80px;\"><option value=\"elec\">Génie Électrique</option><option value=\"meca\">Génie Mécanique</option><option value=\"info\">Informatique</option></select>",
         "code": "<select id=\"matieres\" name=\"matieres\" multiple>\n  <option value=\"elec\">Génie Électrique</option>\n  <option value=\"meca\">Génie Mécanique</option>\n</select>"
       }
     ]
@@ -2097,22 +2097,22 @@ function buildJsInteractiveStage(item) {
 
         <!-- 2. Test Rapide par Saison -->
         <div style="margin-bottom:14px;">
-          <span style="font-size:0.85rem; font-weight:700; color:#94a3b8; display:block; margin-bottom:8px;">
+          <span style="font-size:0.85rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:8px;">
             🧪 Test Rapide : Cliquez sur une saison pour voir le case correspondant s'activer :
           </span>
           <div style="display:flex; flex-wrap:wrap; gap:8px;">
-            <button onclick="demoSwitchMois(12)" class="btn-switch-demo" style="background:#1e293b; color:#38bdf8; border:1px solid #0284c7; padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">❄️ Décembre (12) ➔ Hiver</button>
-            <button onclick="demoSwitchMois(1)" class="btn-switch-demo" style="background:#1e293b; color:#38bdf8; border:1px solid #0284c7; padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">❄️ Janvier (1) ➔ Hiver</button>
-            <button onclick="demoSwitchMois(4)" class="btn-switch-demo" style="background:#1e293b; color:#ec4899; border:1px solid #db2777; padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">🌸 Avril (4) ➔ Printemps</button>
-            <button onclick="demoSwitchMois(7)" class="btn-switch-demo" style="background:#1e293b; color:#facc15; border:1px solid #ca8a04; padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">☀️ Juillet (7) ➔ Été</button>
-            <button onclick="demoSwitchMois(10)" class="btn-switch-demo" style="background:#1e293b; color:#fb923c; border:1px solid #ea580c; padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">🍂 Octobre (10) ➔ Automne</button>
-            <button onclick="demoSwitchMois(15)" class="btn-switch-demo" style="background:#1e293b; color:#ef4444; border:1px solid #dc2626; padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">❌ Mois 15 ➔ default (Erreur)</button>
+            <button onclick="demoSwitchMois(12)" class="btn-switch-demo" style="background:var(--bg-canvas); color:#38bdf8; border:1px solid var(--border-color); padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">❄️ Décembre (12) ➔ Hiver</button>
+            <button onclick="demoSwitchMois(1)" class="btn-switch-demo" style="background:var(--bg-canvas); color:#38bdf8; border:1px solid var(--border-color); padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">❄️ Janvier (1) ➔ Hiver</button>
+            <button onclick="demoSwitchMois(4)" class="btn-switch-demo" style="background:var(--bg-canvas); color:#ec4899; border:1px solid var(--border-color); padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">🌸 Avril (4) ➔ Printemps</button>
+            <button onclick="demoSwitchMois(7)" class="btn-switch-demo" style="background:var(--bg-canvas); color:#facc15; border:1px solid var(--border-color); padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">☀️ Juillet (7) ➔ Été</button>
+            <button onclick="demoSwitchMois(10)" class="btn-switch-demo" style="background:var(--bg-canvas); color:#fb923c; border:1px solid var(--border-color); padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">🍂 Octobre (10) ➔ Automne</button>
+            <button onclick="demoSwitchMois(15)" class="btn-switch-demo" style="background:var(--bg-canvas); color:#ef4444; border:1px solid var(--border-color); padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">❌ Mois 15 ➔ default (Erreur)</button>
           </div>
         </div>
 
         <!-- 3. Saisie Personnalisée ou Vrai Prompt -->
         <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:12px;">
-          <input type="number" id="inputSwitchMois" placeholder="Entrez un mois (1..12)" min="1" max="15" value="4" style="background:#0f172a; border:1px solid #334155; color:#fff; padding:8px 12px; border-radius:6px; width:170px; font-size:0.9rem;">
+          <input type="number" id="inputSwitchMois" class="sti-input sti-input-number" placeholder="Entrez un mois (1..12)" min="1" max="15" value="4" style="width:170px;">
           <button onclick="demoSwitchCustom()" style="background:#10b981; color:#0f172a; border:none; padding:8px 16px; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.9rem;">
             Tester la saisie (switch)
           </button>
@@ -2122,8 +2122,8 @@ function buildJsInteractiveStage(item) {
         </div>
 
         <!-- Boîte d'affichage du résultat animé -->
-        <div id="switchResultBox" style="background:#090d16; border:1px solid rgba(16, 185, 129, 0.4); border-radius:6px; padding:14px; font-family:Consolas, Monaco, monospace; font-size:0.92rem; color:#f8fafc; line-height:1.6;">
-          <span style="color:#94a3b8;">Résultat de la structure conditionnelle :</span><br>
+        <div id="switchResultBox" style="background:var(--bg-canvas); border:1px solid rgba(16, 185, 129, 0.4); border-radius:6px; padding:14px; font-family:Consolas, Monaco, monospace; font-size:0.92rem; color:var(--text-primary); line-height:1.6;">
+          <span style="color:var(--text-secondary);">Résultat de la structure conditionnelle :</span><br>
           <span id="switchResultContent" style="color:#34d399; font-weight:bold;">Sélectionnez une option ci-dessus pour lancer le switch !</span>
         </div>
       </div>
@@ -2144,8 +2144,8 @@ function buildJsInteractiveStage(item) {
 
         <!-- Ligne Captcha -->
         <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:14px;">
-          <label style="font-weight:600; font-size:0.88rem; color:#94a3b8;">Code Captcha (#cap) :</label>
-          <input type="text" id="demoCapInput" readonly style="font-family:monospace; font-size:1.15rem; letter-spacing:4px; background:#0f172a; color:#38bdf8; border:1px solid #0284c7; padding:6px 14px; border-radius:6px; width:200px; font-weight:bold; text-align:center;">
+          <label style="font-weight:600; font-size:0.88rem; color:var(--text-secondary);">Code Captcha (#cap) :</label>
+          <input type="text" id="demoCapInput" readonly class="sti-input sti-input-captcha" style="width:220px;">
           <button onclick="demoActualiserCaptcha()" style="background:#0284c7; color:#fff; border:none; padding:8px 14px; border-radius:6px; font-size:0.85rem; font-weight:600; cursor:pointer;">
             🔄 actualiser()
           </button>
@@ -2153,14 +2153,14 @@ function buildJsInteractiveStage(item) {
 
         <!-- Ligne Vérification Nb Majuscules -->
         <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:14px;">
-          <label style="font-weight:600; font-size:0.88rem; color:#94a3b8;">Nombre de majuscules (#nbmaj) :</label>
-          <input type="number" id="demoNbmajInput" placeholder="Ex: 4" min="0" max="10" style="background:#0f172a; color:#fff; border:1px solid #334155; padding:6px 12px; border-radius:6px; width:90px; font-size:0.95rem; font-weight:bold; text-align:center; transition:background-color 0.3s ease;">
+          <label style="font-weight:600; font-size:0.88rem; color:var(--text-secondary);">Nombre de majuscules (#nbmaj) :</label>
+          <input type="number" id="demoNbmajInput" class="sti-input sti-input-number" placeholder="Ex: 4" min="0" max="10" style="width:110px;">
           <button onclick="demoVerifierNbMajus()" style="background:#10b981; color:#0f172a; border:none; padding:8px 18px; border-radius:6px; font-size:0.85rem; font-weight:bold; cursor:pointer;">
             🔍 nbmajus() (Vérifier)
           </button>
         </div>
 
-        <div id="demoCaptchaFeedback" style="padding:10px 14px; border-radius:6px; font-size:0.88rem; line-height:1.5; background:#090d16; color:#94a3b8; border:1px solid rgba(16, 185, 129, 0.25);">
+        <div id="demoCaptchaFeedback" style="padding:10px 14px; border-radius:6px; font-size:0.88rem; line-height:1.5; background:var(--bg-canvas); color:var(--text-primary); border:1px solid rgba(16, 185, 129, 0.25);">
           Cliquez sur <strong>actualiser()</strong> pour générer un code, puis comptez les lettres majuscules !
         </div>
       </div>
@@ -2179,13 +2179,13 @@ function buildJsInteractiveStage(item) {
           Vérifie si l'âge (différence entre l'année courante <code>dc.getFullYear()</code> et l'année de naissance <code>dp.getFullYear()</code>) est compris entre 15 et 30 ans.
         </p>
         <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:12px;">
-          <label style="font-weight:600; font-size:0.88rem; color:#94a3b8;">Date de naissance (#dnais) :</label>
-          <input type="date" id="demoDnaisInput" value="2007-06-15" style="background:#0f172a; color:#fff; border:1px solid #334155; padding:6px 12px; border-radius:6px; font-size:0.9rem;">
+          <label style="font-weight:600; font-size:0.88rem; color:var(--text-secondary);">Date de naissance (#dnais) :</label>
+          <input type="date" id="demoDnaisInput" class="sti-input" value="2007-06-15" style="padding:6px 12px; font-size:0.9rem;">
           <button onclick="demoValidage()" style="background:#10b981; color:#0f172a; border:none; padding:8px 18px; border-radius:6px; font-size:0.85rem; font-weight:bold; cursor:pointer;">
             🚀 Exécuter validage()
           </button>
         </div>
-        <div id="demoValidageFeedback" style="background:#090d16; border:1px solid rgba(16, 185, 129, 0.3); border-radius:6px; padding:12px; font-family:Consolas, Monaco, monospace; font-size:0.88rem; color:#34d399;">
+        <div id="demoValidageFeedback" style="background:var(--bg-canvas); border:1px solid rgba(16, 185, 129, 0.3); border-radius:6px; padding:12px; font-family:Consolas, Monaco, monospace; font-size:0.88rem; color:#34d399;">
           Cliquez sur "Exécuter validage()" pour tester le calcul de l'âge (ac - ap) !
         </div>
       </div>
@@ -2213,39 +2213,39 @@ function buildJsInteractiveStage(item) {
           </button>
         </div>
 
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; background:#090d16; padding:16px; border-radius:6px; border:1px solid #1e293b; margin-bottom:14px; font-size:0.85rem;">
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; background:var(--bg-canvas); padding:16px; border-radius:6px; border:1px solid var(--border-color); margin-bottom:14px; font-size:0.85rem;">
           <div>
-            <label style="display:block; color:#94a3b8; margin-bottom:4px; font-weight:600;">Civilité (name="civ") :</label>
-            <label style="margin-right:12px; cursor:pointer;"><input type="radio" name="demoV_civ" id="demoV_civ0" value="Mme"> Mme</label>
-            <label style="cursor:pointer;"><input type="radio" name="demoV_civ" id="demoV_civ1" value="M."> M.</label>
+            <label style="display:block; color:var(--text-primary); margin-bottom:4px; font-weight:600;">Civilité (name="civ") :</label>
+            <label style="margin-right:12px; cursor:pointer; color:var(--text-primary);"><input type="radio" name="demoV_civ" id="demoV_civ0" value="Mme"> Mme</label>
+            <label style="cursor:pointer; color:var(--text-primary);"><input type="radio" name="demoV_civ" id="demoV_civ1" value="M."> M.</label>
           </div>
           <div>
-            <label style="display:block; color:#94a3b8; margin-bottom:4px; font-weight:600;">Nom & Prénom (id="np") :</label>
-            <input type="text" id="demoV_np" style="width:100%; background:#0f172a; border:1px solid #334155; color:#fff; padding:5px 8px; border-radius:4px;">
+            <label style="display:block; color:var(--text-primary); margin-bottom:4px; font-weight:600;">Nom & Prénom (id="np") :</label>
+            <input type="text" id="demoV_np" class="sti-input" style="width:100%;">
           </div>
           <div>
-            <label style="display:block; color:#94a3b8; margin-bottom:4px; font-weight:600;">Numéro tél (id="ntel") :</label>
-            <input type="text" id="demoV_ntel" maxlength="8" style="width:100%; background:#0f172a; border:1px solid #334155; color:#fff; padding:5px 8px; border-radius:4px;">
+            <label style="display:block; color:var(--text-primary); margin-bottom:4px; font-weight:600;">Numéro tél (id="ntel") :</label>
+            <input type="text" id="demoV_ntel" class="sti-input" maxlength="8" style="width:100%;">
           </div>
           <div>
-            <label style="display:block; color:#94a3b8; margin-bottom:4px; font-weight:600;">E-mail (id="mail") :</label>
-            <input type="text" id="demoV_mail" style="width:100%; background:#0f172a; border:1px solid #334155; color:#fff; padding:5px 8px; border-radius:4px;">
+            <label style="display:block; color:var(--text-primary); margin-bottom:4px; font-weight:600;">E-mail (id="mail") :</label>
+            <input type="text" id="demoV_mail" class="sti-input" style="width:100%;">
           </div>
           <div>
-            <label style="display:block; color:#94a3b8; margin-bottom:4px; font-weight:600;">Mot de passe (id="mps") :</label>
-            <input type="password" id="demoV_mps" maxlength="8" style="width:100%; background:#0f172a; border:1px solid #334155; color:#fff; padding:5px 8px; border-radius:4px;">
+            <label style="display:block; color:var(--text-primary); margin-bottom:4px; font-weight:600;">Mot de passe (id="mps") :</label>
+            <input type="password" id="demoV_mps" class="sti-input" maxlength="8" style="width:100%;">
           </div>
           <div>
-            <label style="display:block; color:#94a3b8; margin-bottom:4px; font-weight:600;">Confirmation (id="cfmps") :</label>
-            <input type="password" id="demoV_cfmps" maxlength="8" style="width:100%; background:#0f172a; border:1px solid #334155; color:#fff; padding:5px 8px; border-radius:4px; transition:background-color 0.3s ease;">
+            <label style="display:block; color:var(--text-primary); margin-bottom:4px; font-weight:600;">Confirmation (id="cfmps") :</label>
+            <input type="password" id="demoV_cfmps" class="sti-input" maxlength="8" style="width:100%;">
           </div>
           <div>
-            <label style="display:block; color:#94a3b8; margin-bottom:4px; font-weight:600;">Adresse (id="adr") :</label>
-            <input type="text" id="demoV_adr" style="width:100%; background:#0f172a; border:1px solid #334155; color:#fff; padding:5px 8px; border-radius:4px;">
+            <label style="display:block; color:var(--text-primary); margin-bottom:4px; font-weight:600;">Adresse (id="adr") :</label>
+            <input type="text" id="demoV_adr" class="sti-input" style="width:100%;">
           </div>
           <div>
-            <label style="display:block; color:#94a3b8; margin-bottom:4px; font-weight:600;">Ville (id="vill") :</label>
-            <select id="demoV_vill" style="width:100%; background:#0f172a; border:1px solid #334155; color:#fff; padding:5px 8px; border-radius:4px;">
+            <label style="display:block; color:var(--text-primary); margin-bottom:4px; font-weight:600;">Ville (id="vill") :</label>
+            <select id="demoV_vill" class="sti-select" style="width:100%;">
               <option value="">-- Choisir une ville --</option>
               <option value="Tunis">Tunis</option>
               <option value="Sousse">Sousse</option>
@@ -2254,12 +2254,12 @@ function buildJsInteractiveStage(item) {
             </select>
           </div>
           <div>
-            <label style="display:block; color:#94a3b8; margin-bottom:4px; font-weight:600;">Code postal (id="cp") :</label>
-            <input type="text" id="demoV_cp" maxlength="4" style="width:100%; background:#0f172a; border:1px solid #334155; color:#fff; padding:5px 8px; border-radius:4px;">
+            <label style="display:block; color:var(--text-primary); margin-bottom:4px; font-weight:600;">Code postal (id="cp") :</label>
+            <input type="text" id="demoV_cp" class="sti-input" maxlength="4" style="width:100%;">
           </div>
           <div>
-            <label style="display:block; color:#94a3b8; margin-bottom:4px; font-weight:600;">Remarque (id="rq") :</label>
-            <input type="text" id="demoV_rq" style="width:100%; background:#0f172a; border:1px solid #334155; color:#fff; padding:5px 8px; border-radius:4px;">
+            <label style="display:block; color:var(--text-primary); margin-bottom:4px; font-weight:600;">Remarque (id="rq") :</label>
+            <input type="text" id="demoV_rq" class="sti-input" style="width:100%;">
           </div>
         </div>
 
@@ -2285,8 +2285,8 @@ function buildJsInteractiveStage(item) {
           Saisissez une valeur dans le champ ci-dessous pour voir le retour booléen (<code>true</code> / <code>false</code>) en temps réel :
         </p>
         <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:12px;">
-          <input type="text" id="demoHelperInput" placeholder="Saisissez une valeur de test..." style="background:#0f172a; border:1px solid #334155; color:#fff; padding:8px 12px; border-radius:6px; width:260px; font-size:0.9rem;" oninput="demoTestHelper('${item.id}', this.value)">
-          <div id="demoHelperResult" style="font-weight:bold; font-size:0.92rem; padding:8px 14px; border-radius:6px; background:#090d16; border:1px solid rgba(16, 185, 129, 0.3); color:#94a3b8;">
+          <input type="text" id="demoHelperInput" class="sti-input" placeholder="Saisissez une valeur de test..." style="width:260px;" oninput="demoTestHelper('${item.id}', this.value)">
+          <div id="demoHelperResult" style="font-weight:bold; font-size:0.92rem; padding:8px 14px; border-radius:6px; background:var(--bg-canvas); border:1px solid rgba(16, 185, 129, 0.3); color:var(--text-secondary);">
             En attente de saisie...
           </div>
         </div>
@@ -2398,14 +2398,16 @@ function demoActualiserCaptcha() {
   if (nbmaj) {
     nbmaj.value = '';
     nbmaj.style.backgroundColor = '';
+    nbmaj.style.color = '';
+    nbmaj.classList.remove('bg-red-error', 'bg-green-success', 'input-error', 'input-success');
   }
 
   const fb = document.getElementById('demoCaptchaFeedback');
   if (fb) {
     fb.style.display = 'block';
-    fb.style.background = '#090d16';
-    fb.style.color = '#38bdf8';
-    fb.innerHTML = `Nouveau code Captcha généré : <strong>${code}</strong>. Comptez les majuscules et saisissez votre réponse !`;
+    fb.style.background = 'var(--bg-canvas)';
+    fb.style.color = 'var(--text-primary)';
+    fb.innerHTML = `Nouveau code Captcha généré : <strong style="color:#38bdf8; font-family:monospace; letter-spacing:2px; font-size:1.05rem;">${code}</strong>. Comptez les majuscules et saisissez votre réponse !`;
   }
 }
 
@@ -2429,7 +2431,12 @@ function demoVerifierNbMajus() {
   }
 
   if (nb != val) {
-    if (nbmaj) nbmaj.style.backgroundColor = 'red';
+    if (nbmaj) {
+      nbmaj.style.backgroundColor = '#dc2626';
+      nbmaj.style.color = '#ffffff';
+      nbmaj.classList.add('bg-red-error');
+      nbmaj.classList.remove('bg-green-success');
+    }
     if (fb) {
       fb.style.display = 'block';
       fb.style.background = 'rgba(239, 68, 68, 0.2)';
@@ -2437,7 +2444,12 @@ function demoVerifierNbMajus() {
       fb.innerHTML = `❌ <strong>Erreur !</strong> Vous avez saisi <code>${val}</code>, mais il y a en réalité <code>${nb}</code> majuscule(s). Comme spécifié dans le cours : <code>document.getElementById('nbmaj').style.backgroundColor = 'red';</code> !`;
     }
   } else {
-    if (nbmaj) nbmaj.style.backgroundColor = '#10b981';
+    if (nbmaj) {
+      nbmaj.style.backgroundColor = '#059669';
+      nbmaj.style.color = '#ffffff';
+      nbmaj.classList.add('bg-green-success');
+      nbmaj.classList.remove('bg-red-error');
+    }
     if (fb) {
       fb.style.display = 'block';
       fb.style.background = 'rgba(16, 185, 129, 0.2)';
@@ -2491,7 +2503,11 @@ function demoFillVerif(valid) {
   const rq = document.getElementById('demoV_rq');
   const fb = document.getElementById('demoVerifFeedback');
 
-  if (cfmps) cfmps.style.backgroundColor = '';
+  if (cfmps) {
+    cfmps.style.backgroundColor = '';
+    cfmps.style.color = '';
+    cfmps.classList.remove('bg-red-error', 'input-error');
+  }
   if (fb) fb.style.display = 'none';
 
   if (valid) {
@@ -2534,7 +2550,11 @@ function demoRunVerif() {
   const req = (document.getElementById('demoV_rq') || {}).value || '';
   const fb = document.getElementById('demoVerifFeedback');
 
-  if (cfmpsInput) cfmpsInput.style.backgroundColor = '';
+  if (cfmpsInput) {
+    cfmpsInput.style.backgroundColor = '';
+    cfmpsInput.style.color = '';
+    cfmpsInput.classList.remove('bg-red-error', 'input-error');
+  }
 
   // Helpers
   function _alpha(ch) {
@@ -2588,7 +2608,11 @@ function demoRunVerif() {
   }
   if (cfmps != mps) {
     alert("Mot de Passe incorrect");
-    if (cfmpsInput) cfmpsInput.style.backgroundColor = 'red';
+    if (cfmpsInput) {
+      cfmpsInput.style.backgroundColor = '#dc2626';
+      cfmpsInput.style.color = '#ffffff';
+      cfmpsInput.classList.add('bg-red-error');
+    }
     if (fb) { fb.style.display = 'block'; fb.style.background = '#7f1d1d'; fb.style.color = '#fca5a5'; fb.innerHTML = "alert('Mot de Passe incorrect')<br>➔ <code>document.getElementById('cfmps').style.backgroundColor = 'red';</code>"; }
     return false;
   }

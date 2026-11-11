@@ -29,6 +29,12 @@
   --hover-badge-bg: #854d0e;
   --hover-badge-text: #fef08a;
 
+  --bg-input: #0f172a;
+  --bg-input-focus: #1e293b;
+  --border-input: #334155;
+  --text-input: #f8fafc;
+  --placeholder-input: #64748b;
+
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 20px;
@@ -46,6 +52,12 @@
   --text-muted: #94a3b8;
   --hover-badge-bg: #fef3c7;
   --hover-badge-text: #92400e;
+
+  --bg-input: #f1f5f9;
+  --bg-input-focus: #ffffff;
+  --border-input: #cbd5e1;
+  --text-input: #0f172a;
+  --placeholder-input: #94a3b8;
 }
 
 * {
@@ -473,11 +485,22 @@ body {
   width: 100%;
 }
 
+/* Styling universel et accessible pour tous les champs de saisie (inputs, selects, textareas) */
+input, select, textarea {
+  color-scheme: dark;
+}
+
+[data-theme="light"] input,
+[data-theme="light"] select,
+[data-theme="light"] textarea {
+  color-scheme: light;
+}
+
 .search-input {
   width: 100%;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  color: var(--text-primary);
+  background: var(--bg-input);
+  border: 1px solid var(--border-input);
+  color: var(--text-input);
   padding: 14px 20px 14px 44px;
   border-radius: var(--radius-md);
   font-size: 1rem;
@@ -486,8 +509,93 @@ body {
 }
 
 .search-input:focus {
+  background: var(--bg-input-focus);
   border-color: #38bdf8;
-  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+  color: var(--text-input);
+}
+
+.search-input::placeholder {
+  color: var(--placeholder-input);
+  opacity: 1;
+}
+
+/* Classes universelles pour les formulaires du simulateur & d'administration */
+.sti-input,
+.sti-select,
+.sti-textarea {
+  background-color: var(--bg-input) !important;
+  color: var(--text-input) !important;
+  border: 1px solid var(--border-input) !important;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 0.92rem;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.sti-input:focus,
+.sti-select:focus,
+.sti-textarea:focus {
+  background-color: var(--bg-input-focus) !important;
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25) !important;
+  color: var(--text-input) !important;
+}
+
+.sti-input::placeholder,
+.sti-textarea::placeholder {
+  color: var(--placeholder-input);
+  opacity: 1;
+}
+
+.sti-select option {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+}
+
+/* Input numérique pour le Captcha et le mois (haute lisibilité garantie) */
+.sti-input-number {
+  font-weight: 800 !important;
+  text-align: center !important;
+  font-size: 1.05rem !important;
+  letter-spacing: 1px;
+}
+
+/* Input Captcha 10 caractères aléatoires */
+.sti-input-captcha {
+  font-family: Consolas, Monaco, monospace !important;
+  font-size: 1.15rem !important;
+  letter-spacing: 4px !important;
+  font-weight: 800 !important;
+  text-align: center !important;
+  background-color: var(--bg-input) !important;
+  color: #38bdf8 !important;
+  border-color: #0284c7 !important;
+}
+
+[data-theme="light"] .sti-input-captcha {
+  color: #0369a1 !important;
+  border-color: #0284c7 !important;
+}
+
+/* Gestion du fond rouge en cas d'erreur (conforme aux cours du Bac STI) */
+.sti-input.input-error,
+.sti-input.bg-red-error {
+  background-color: #dc2626 !important;
+  border-color: #ef4444 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.35) !important;
+}
+
+/* Gestion du fond vert en cas de succès */
+.sti-input.input-success,
+.sti-input.bg-green-success {
+  background-color: #059669 !important;
+  border-color: #10b981 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.35) !important;
 }
 
 .search-icon-inside {
@@ -867,9 +975,26 @@ body {
 
 .browser-viewport {
   background: #ffffff;
-  color: #1e293b;
+  color: #0f172a;
   padding: 24px;
   min-height: 120px;
+}
+
+.browser-viewport label {
+  color: #0f172a !important;
+}
+
+.browser-viewport .sti-input,
+.browser-viewport .sti-select,
+.browser-viewport input:not([type="submit"]):not([type="reset"]):not([type="button"]):not([type="radio"]):not([type="checkbox"]),
+.browser-viewport select {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  border: 1px solid #94a3b8 !important;
+}
+
+.browser-viewport input::placeholder {
+  color: #64748b !important;
 }
 
 /* ===================================================================
