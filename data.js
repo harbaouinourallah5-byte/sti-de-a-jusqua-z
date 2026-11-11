@@ -3144,5 +3144,1105 @@ const DATA = {
       "Schéma Relationnel"
     ]
   }
+],
+  "sql": [
+  {
+    "id": "sql-type-int",
+    "category": "Type de données",
+    "name": "INT",
+    "tag": "INT",
+    "syntax": "colonne INT",
+    "summary": "Entier",
+    "description": "Type de données numérique représentant des nombres entiers (positifs, négatifs ou zéro). C'est le type privilégié au Bac STI pour les identifiants uniques, numéros d'inscription, codes postaux ou quantités entières.",
+    "howToUse": "S'utilise lors de la déclaration d'une colonne dans CREATE TABLE. Souvent associé à la contrainte PRIMARY KEY (et éventuellement AUTO_INCREMENT en MySQL).",
+    "values": [
+      "Entier signé ou non signé",
+      "Ex: 101, 2025, 0, -15",
+      "Taille standard : 4 octets"
+    ],
+    "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  age INT CHECK (age >= 15 AND age <= 30)\n);",
+    "simQuery": "SELECT num_inscr, nom, prenom FROM Eleve WHERE num_inscr > 102;",
+    "simTable": "Eleve",
+    "simDescription": "Filtre les élèves dont le numéro d'inscription entier (INT) est supérieur à 102."
+  },
+  {
+    "id": "sql-type-decimal",
+    "category": "Type de données",
+    "name": "DECIMAL",
+    "tag": "DECIMAL",
+    "syntax": "colonne DECIMAL(p, s)",
+    "summary": "Réel",
+    "description": "Type de données numérique à virgule fixe représentant un nombre réel exact. 'p' (précision) est le nombre total de chiffres, et 's' (échelle) est le nombre de chiffres après la virgule. Très utilisé pour les moyennes (ex: 15.75) et les prix.",
+    "howToUse": "Pour une moyenne au Bac STI de 0 à 20 avec deux décimales, on écrit : moyenne DECIMAL(4, 2). Par exemple, 17.50 occupe 4 chiffres au total dont 2 décimales.",
+    "values": [
+      "DECIMAL(taille_totale, decimales)",
+      "Ex: DECIMAL(4, 2) pour une moyenne (de 00.00 à 99.99)",
+      "Ex: DECIMAL(6, 3) pour un montant en dinars tunisiens (millimes)"
+    ],
+    "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  moyenne DECIMAL(4, 2) CHECK (moyenne BETWEEN 0 AND 20)\n);",
+    "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne >= 10.00 ORDER BY moyenne DESC;",
+    "simTable": "Eleve",
+    "simDescription": "Affiche les élèves ayant une moyenne réelle (DECIMAL) supérieure ou égale à 10.00."
+  },
+  {
+    "id": "sql-type-char",
+    "category": "Type de données",
+    "name": "CHAR",
+    "tag": "CHAR",
+    "syntax": "colonne CHAR(longueur_fixe)",
+    "summary": "Chaîne de caractères de longueur fixe.",
+    "howToUse": "À utiliser obligatoirement lorsque toutes les valeurs ont rigoureusement la même taille connue à l'avance : CIN (8 chiffres), code matière (4 lettres), code postal (4 chiffres), genre ('M'/'F').",
+    "description": "Chaîne de caractères dont la taille en mémoire est fixe. Si la chaîne saisie est plus courte que la longueur définie, MySQL la complète automatiquement par des espaces.",
+    "values": [
+      "CHAR(N) où N est le nombre fixe de caractères",
+      "Ex: cin CHAR(8)",
+      "Ex: code_mat CHAR(4)",
+      "Ex: genre CHAR(1)"
+    ],
+    "code": "CREATE TABLE Matiere (\n  code_mat CHAR(4) PRIMARY KEY,\n  libelle VARCHAR(30) NOT NULL,\n  coef INT NOT NULL\n);",
+    "simQuery": "SELECT * FROM Matiere WHERE code_mat = 'INFO';",
+    "simTable": "Matiere",
+    "simDescription": "Recherche la matière dont le code fixe (CHAR(4)) est exactement 'INFO'."
+  },
+  {
+    "id": "sql-type-varchar",
+    "category": "Type de données",
+    "name": "VARCHAR",
+    "tag": "VARCHAR",
+    "syntax": "colonne VARCHAR(longueur_max)",
+    "summary": "Chaîne de caractères de longueur variable dont la longueur maximale fixée.",
+    "description": "Chaîne de caractères de taille variable. Contrairement à CHAR, VARCHAR n'occupe en mémoire que la longueur réelle du texte saisi + 1 octet pour la taille. Idéal pour les noms, prénoms, adresses et villes.",
+    "howToUse": "Définir la longueur maximale autorisée entre parenthèses. Si l'élève saisit moins de caractères, aucun espace n'est gaspillé en mémoire.",
+    "values": [
+      "VARCHAR(N) où N est la limite maximale",
+      "Ex: nom VARCHAR(30)",
+      "Ex: email VARCHAR(50)",
+      "Ex: adresse VARCHAR(60)"
+    ],
+    "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  prenom VARCHAR(30) NOT NULL,\n  ville VARCHAR(25) DEFAULT 'Tunis'\n);",
+    "simQuery": "SELECT nom, prenom, ville FROM Eleve WHERE ville = 'Sousse';",
+    "simTable": "Eleve",
+    "simDescription": "Extrait les données textuelles variables (VARCHAR) des élèves résidant à Sousse."
+  },
+  {
+    "id": "sql-type-text",
+    "category": "Type de données",
+    "name": "TEXT",
+    "tag": "TEXT",
+    "syntax": "colonne TEXT",
+    "summary": "Chaîne de caractères de longueur variable.",
+    "description": "Type destiné au stockage de textes très longs sans avoir à spécifier une limite stricte lors de la création de la table (jusqu'à 65 535 caractères).",
+    "howToUse": "Utilisé pour les colonnes contenant des paragraphes, des observations de fin d'année, des résumés de TP ou des remarques d'enseignant.",
+    "values": [
+      "TEXT",
+      "Capacité maximale : 64 Ko",
+      "Pas besoin de spécifier de taille entre parenthèses"
+    ],
+    "code": "CREATE TABLE FicheObservation (\n  id_fiche INT PRIMARY KEY,\n  num_inscr INT,\n  remarque TEXT\n);",
+    "simQuery": "SELECT num_inscr, nom, ville FROM Eleve;",
+    "simTable": "Eleve",
+    "simDescription": "Exemple de colonnes textuelles dans la base de données relationnelle."
+  },
+  {
+    "id": "sql-type-date",
+    "category": "Type de données",
+    "name": "DATE",
+    "tag": "DATE",
+    "syntax": "colonne DATE",
+    "summary": "Date.",
+    "description": "Type de données temporel stockant une date civile au format international strict 'AAAA-MM-JJ' (Année sur 4 chiffres, Mois sur 2 chiffres, Jour sur 2 chiffres).",
+    "howToUse": "En SQL, toute valeur DATE doit être entourée d'apostrophes (ou guillemets), par exemple : '2007-06-15'. Compatible avec les fonctions YEAR(), MONTH(), DAY(), DATEDIFF().",
+    "values": [
+      "Format strict : 'AAAA-MM-JJ'",
+      "Ex: '2007-03-12'",
+      "Ex: '2026-11-11'"
+    ],
+    "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  date_naiss DATE NOT NULL\n);",
+    "simQuery": "SELECT nom, prenom, date_naiss FROM Eleve WHERE date_naiss >= '2007-01-01';",
+    "simTable": "Eleve",
+    "simDescription": "Sélectionne les élèves nés à partir du 1er janvier 2007 (type DATE au format 'AAAA-MM-JJ')."
+  },
+  {
+    "id": "sql-type-time",
+    "category": "Type de données",
+    "name": "TIME",
+    "tag": "TIME",
+    "syntax": "colonne TIME",
+    "summary": "Temps.",
+    "description": "Stocke une heure ou une durée au format standard 'HH:MM:SS' (Heures : Minutes : Secondes).",
+    "howToUse": "S'emploie pour enregistrer les heures d'épreuves du Bac STI (ex: heure début '08:00:00' et heure fin '10:00:00').",
+    "values": [
+      "Format standard : 'HH:MM:SS'",
+      "Ex: '08:30:00'",
+      "Ex: '14:00:00'"
+    ],
+    "code": "CREATE TABLE Seance (\n  id_seance INT PRIMARY KEY,\n  code_mat CHAR(4),\n  heure_debut TIME,\n  heure_fin TIME\n);",
+    "simQuery": "SELECT NOW() AS heure_actuelle;",
+    "simTable": "Eleve",
+    "simDescription": "Affiche l'heure courante du serveur SQL."
+  },
+  {
+    "id": "sql-type-datetime",
+    "category": "Type de données",
+    "name": "DATETIME",
+    "tag": "DATETIME",
+    "syntax": "colonne DATETIME",
+    "summary": "Date et Heure.",
+    "description": "Combine à la fois une date et une heure au format combiné 'AAAA-MM-JJ HH:MM:SS'. Permet un horodatage précis à la seconde près.",
+    "howToUse": "Utilisé pour enregistrer la date et l'heure exactes d'une inscription en ligne, du dépôt d'un devoir ou d'une modification.",
+    "values": [
+      "Format : 'AAAA-MM-JJ HH:MM:SS'",
+      "Ex: '2026-11-11 08:30:00'",
+      "Ex: NOW()"
+    ],
+    "code": "CREATE TABLE Inscription (\n  num_inscr INT PRIMARY KEY,\n  date_heure_inscr DATETIME DEFAULT NOW()\n);",
+    "simQuery": "SELECT nom, NOW() AS date_heure_consultation FROM Eleve LIMIT 3;",
+    "simTable": "Eleve",
+    "simDescription": "Exemple de valeur combinée Date et Heure (DATETIME)."
+  },
+  {
+    "id": "sql-constraint-not-null",
+    "category": "Contraintes d'intégrité",
+    "name": "NOT NULL",
+    "tag": "NOT NULL",
+    "syntax": "colonne type NOT NULL",
+    "summary": "Interdit une valeur nulle.",
+    "description": "Contrainte d'intégrité de niveau colonne qui oblige l'utilisateur à obligatoirement saisir une valeur. Le champ ne peut jamais être laissé vide ou indéfini (NULL).",
+    "howToUse": "Se place immédiatement après le type de la colonne dans CREATE TABLE ou ALTER TABLE ADD/MODIFY. Indispensable pour les noms, prénoms et mots de passe.",
+    "values": [
+      "NOT NULL",
+      "Obligatoire sur les attributs essentiels",
+      "Une clé primaire (PRIMARY KEY) est automatiquement NOT NULL"
+    ],
+    "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  prenom VARCHAR(30) NOT NULL\n);",
+    "simQuery": "SELECT nom, prenom FROM Eleve WHERE nom IS NOT NULL;",
+    "simTable": "Eleve",
+    "simDescription": "Garantit que tous les élèves retournés possèdent un nom non nul."
+  },
+  {
+    "id": "sql-constraint-default",
+    "category": "Contraintes d'intégrité",
+    "name": "DEFAULT",
+    "tag": "DEFAULT",
+    "syntax": "colonne type DEFAULT valeur_par_defaut",
+    "summary": "Attribut une valeur par défaut.",
+    "description": "Attribue automatiquement une valeur prédéfinie à la colonne si l'utilisateur ne spécifie aucune valeur lors de l'insertion (INSERT INTO).",
+    "howToUse": "Spécifier la constante par défaut après le mot-clé DEFAULT : un nombre (DEFAULT 0), un texte entre apostrophes (DEFAULT 'STI') ou une fonction (DEFAULT NOW()).",
+    "values": [
+      "DEFAULT valeur",
+      "Ex: section VARCHAR(10) DEFAULT 'STI'",
+      "Ex: ville VARCHAR(20) DEFAULT 'Tunis'",
+      "Ex: coef INT DEFAULT 3"
+    ],
+    "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  section VARCHAR(10) DEFAULT 'STI',\n  ville VARCHAR(20) DEFAULT 'Tunis'\n);",
+    "simQuery": "SELECT nom, section, ville FROM Eleve WHERE section = 'STI';",
+    "simTable": "Eleve",
+    "simDescription": "Affiche les élèves dont la section correspond à la valeur par défaut ('STI')."
+  },
+  {
+    "id": "sql-constraint-check",
+    "category": "Contraintes d'intégrité",
+    "name": "CHECK",
+    "tag": "CHECK",
+    "syntax": "CHECK (condition)",
+    "summary": "Spécifie que les valeurs de la colonne doivent respecter une condition.",
+    "description": "Contrainte d'intégrité du domaine qui valide les données insérées en vérifiant qu'elles satisfont une condition logique booléenne (comparaisons, encadrements, listes de valeurs).",
+    "howToUse": "Placer l'expression entre parenthèses. Par exemple pour une moyenne scolaire : CHECK (moyenne >= 0 AND moyenne <= 20) ou CHECK (moyenne BETWEEN 0 AND 20).",
+    "values": [
+      "CHECK (colonne >= min AND colonne <= max)",
+      "CHECK (colonne BETWEEN a AND b)",
+      "CHECK (section IN ('STI', 'Math', 'SI', 'Eco'))"
+    ],
+    "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  moyenne DECIMAL(4, 2),\n  CONSTRAINT chk_moy CHECK (moyenne BETWEEN 0 AND 20)\n);",
+    "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne BETWEEN 0 AND 20;",
+    "simTable": "Eleve",
+    "simDescription": "Valide que toutes les moyennes respectent la règle de gestion définie par le CHECK (0 à 20)."
+  },
+  {
+    "id": "sql-constraint-primary-key",
+    "category": "Contraintes d'intégrité",
+    "name": "PRIMARY KEY",
+    "tag": "PRIMARY KEY",
+    "syntax": "colonne type PRIMARY KEY  ou  PRIMARY KEY (colonne1, colonne2)",
+    "summary": "Définit une clé primaire.",
+    "description": "Identifie de manière unique et certaine chaque enregistrement (ligne) d'une table relationnelle. Une table ne peut avoir qu'une seule clé primaire. Elle garantit à la fois l'unicité et l'interdiction de valeur nulle (UNIQUE + NOT NULL).",
+    "howToUse": "Peut être déclarée au niveau colonne (pour une clé simple) ou au niveau table en bas de CREATE TABLE (obligatoire pour une clé primaire composée de plusieurs colonnes).",
+    "values": [
+      "PRIMARY KEY",
+      "Clé simple : num_inscr INT PRIMARY KEY",
+      "Clé composée : PRIMARY KEY (num_inscr, code_mat)"
+    ],
+    "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL\n);\n\n-- Clé primaire composée pour une table de liaison :\nCREATE TABLE Note (\n  num_inscr INT,\n  code_mat CHAR(4),\n  note_ds DECIMAL(4, 2),\n  PRIMARY KEY (num_inscr, code_mat)\n);",
+    "simQuery": "SELECT num_inscr, nom, prenom FROM Eleve WHERE num_inscr = 101;",
+    "simTable": "Eleve",
+    "simDescription": "Recherche un enregistrement unique garanti par sa clé primaire (PRIMARY KEY = 101)."
+  },
+  {
+    "id": "sql-constraint-unique",
+    "category": "Contraintes d'intégrité",
+    "name": "UNIQUE",
+    "tag": "UNIQUE",
+    "syntax": "colonne type UNIQUE",
+    "summary": "Spécifie l'unicité des valeurs d'une colonne.",
+    "description": "Interdit les doublons dans une colonne. Contrairement à la clé primaire, une table peut contenir plusieurs contraintes UNIQUE, et celles-ci peuvent autoriser la valeur NULL.",
+    "howToUse": "Indispensable pour des colonnes comme le numéro de carte d'identité nationale (CIN), l'adresse e-mail ou le numéro de téléphone.",
+    "values": [
+      "UNIQUE",
+      "Ex: cin CHAR(8) UNIQUE",
+      "Ex: email VARCHAR(50) UNIQUE",
+      "Ex: num_tel CHAR(8) UNIQUE"
+    ],
+    "code": "CREATE TABLE Candidat (\n  num_inscr INT PRIMARY KEY,\n  cin CHAR(8) NOT NULL UNIQUE,\n  email VARCHAR(50) UNIQUE\n);",
+    "simQuery": "SELECT num_inscr, nom, prenom FROM Eleve GROUP BY num_inscr;",
+    "simTable": "Eleve",
+    "simDescription": "Illustration de l'unicité des identifiants sans aucun doublon."
+  },
+  {
+    "id": "sql-constraint-foreign-key",
+    "category": "Contraintes d'intégrité",
+    "name": "FOREIGN KEY",
+    "tag": "FOREIGN KEY",
+    "syntax": "FOREIGN KEY (colonne) REFERENCES table_mere(colonne_pk)",
+    "summary": "Définit une clé étrangère.",
+    "description": "Établit un lien d'intégrité référentielle entre une colonne de la table fille et la clé primaire de la table mère. Empêche l'insertion d'une référence qui n'existe pas dans la table mère.",
+    "howToUse": "Déclarée dans la table fille qui pointe vers la table mère. Doit impérativement avoir le même type de données que la clé primaire référencée.",
+    "values": [
+      "FOREIGN KEY (col_fille) REFERENCES table_mere(col_mere)",
+      "Garantit la cohérence des liens relationnels",
+      "Peut être complétée par ON UPDATE CASCADE ou ON DELETE CASCADE"
+    ],
+    "code": "CREATE TABLE Note (\n  id_note INT PRIMARY KEY,\n  num_inscr INT,\n  code_mat CHAR(4),\n  note_ds DECIMAL(4, 2),\n  FOREIGN KEY (num_inscr) REFERENCES Eleve(num_inscr),\n  FOREIGN KEY (code_mat) REFERENCES Matiere(code_mat)\n);",
+    "simQuery": "SELECT Eleve.num_inscr, Eleve.nom, Matiere.libelle FROM Eleve, Matiere WHERE Eleve.num_inscr = 101 AND Matiere.code_mat = 'INFO';",
+    "simTable": "Eleve",
+    "simDescription": "Associe les tables par leurs clés relationnelles (FOREIGN KEY)."
+  },
+  {
+    "id": "sql-constraint-references",
+    "category": "Contraintes d'intégrité",
+    "name": "REFERENCES",
+    "tag": "REFERENCES",
+    "syntax": "REFERENCES table_mere (colonne_pk)",
+    "summary": "Fait référence à une clé primaire d'une autre table.",
+    "description": "Mot-clé inséparable de la déclaration de clé étrangère (FOREIGN KEY). Il indique explicitement le nom de la table parente ainsi que sa colonne clé primaire ciblée.",
+    "howToUse": "S'écrit sous la forme REFERENCES NomTable(NomColonne). La colonne cible doit obligatoirement être indexée ou clé primaire dans la table mère.",
+    "values": [
+      "REFERENCES table_parente(cle_primaire)",
+      "Ex: REFERENCES Eleve(num_inscr)",
+      "Ex: REFERENCES Matiere(code_mat)"
+    ],
+    "code": "ALTER TABLE Note\nADD CONSTRAINT fk_eleve\nFOREIGN KEY (num_inscr) REFERENCES Eleve(num_inscr)\nON DELETE CASCADE;",
+    "simQuery": "SELECT num_inscr, nom, prenom FROM Eleve WHERE num_inscr IN (SELECT num_inscr FROM Eleve);",
+    "simTable": "Eleve",
+    "simDescription": "Vérification des correspondances de clés avec REFERENCES."
+  },
+  {
+    "id": "sql-constraint-on-update-cascade",
+    "category": "Contraintes d'intégrité",
+    "name": "ON UPDATE CASCADE",
+    "tag": "ON UPDATE CASCADE",
+    "syntax": "FOREIGN KEY (...) REFERENCES ... ON UPDATE CASCADE",
+    "summary": "Met à jour la clé étrangère en cas de mise à jour de la clé primaire.",
+    "description": "Règle de propagation automatique des modifications : si la clé primaire de la table mère est modifiée par un UPDATE, toutes les clés étrangères correspondantes dans la table fille sont automatiquement mises à jour avec la nouvelle valeur.",
+    "howToUse": "S'ajoute à la suite de la clause FOREIGN KEY ... REFERENCES ... dans CREATE TABLE ou ALTER TABLE.",
+    "values": [
+      "ON UPDATE CASCADE",
+      "Évite les incohérences en cas de renommage d'identifiant",
+      "Alternative au blocage (RESTRICT)"
+    ],
+    "code": "CREATE TABLE Note (\n  num_inscr INT,\n  code_mat CHAR(4),\n  note_ds DECIMAL(4, 2),\n  PRIMARY KEY (num_inscr, code_mat),\n  FOREIGN KEY (num_inscr) REFERENCES Eleve(num_inscr)\n    ON UPDATE CASCADE\n    ON DELETE CASCADE\n);",
+    "simQuery": "SELECT num_inscr, nom, prenom FROM Eleve;",
+    "simTable": "Eleve",
+    "simDescription": "Règle de propagation de mise à jour en cascade (ON UPDATE CASCADE)."
+  },
+  {
+    "id": "sql-constraint-on-delete-cascade",
+    "category": "Contraintes d'intégrité",
+    "name": "ON DELETE CASCADE",
+    "tag": "ON DELETE CASCADE",
+    "syntax": "FOREIGN KEY (...) REFERENCES ... ON DELETE CASCADE",
+    "summary": "Supprime automatiquement tous les enregistrements de la table fille suite à la suppression de l'enregistrement correspondant de la table mère.",
+    "description": "Règle de suppression automatique : si un enregistrement parent est supprimé de la table mère (via DELETE FROM), tous ses enregistrements enfants associés dans la table fille sont automatiquement effacés du système pour éviter les données orphelines.",
+    "howToUse": "À spécifier à la fin de la déclaration FOREIGN KEY ... REFERENCES ... Indispensable pour nettoyer automatiquement les notes ou lignes de commande d'un élève ou client supprimé.",
+    "values": [
+      "ON DELETE CASCADE",
+      "Supprime les enregistrements fils automatiquement",
+      "Prévient les enregistrements orphelins dans la base"
+    ],
+    "code": "ALTER TABLE Inscription\nADD CONSTRAINT fk_inscr_eleve\nFOREIGN KEY (num_inscr) REFERENCES Eleve(num_inscr)\nON DELETE CASCADE;",
+    "simQuery": "SELECT num_inscr, nom, section FROM Eleve WHERE num_inscr = 101;",
+    "simTable": "Eleve",
+    "simDescription": "Démonstration de la règle de suppression en cascade (ON DELETE CASCADE)."
+  },
+  {
+    "id": "sql-op-equal",
+    "category": "Opérateurs de comparaison",
+    "name": "=",
+    "tag": "=",
+    "syntax": "colonne = valeur",
+    "summary": "Égale à",
+    "description": "Opérateur de comparaison qui teste la stricte égalité entre deux expressions, colonnes ou constantes dans une clause WHERE ou HAVING.",
+    "howToUse": "Pour les chaînes et dates, entourer la valeur d'apostrophes : WHERE section = 'STI' ou WHERE date_naiss = '2007-03-12'. Pour les nombres, écrire sans guillemets : WHERE num_inscr = 101.",
+    "values": [
+      "colonne = valeur",
+      "Sensible à la casse selon le classement (collation)",
+      "Ex: section = 'STI'"
+    ],
+    "code": "SELECT nom, prenom, moyenne FROM Eleve\nWHERE section = 'STI';",
+    "simQuery": "SELECT num_inscr, nom, prenom, section FROM Eleve WHERE section = 'STI';",
+    "simTable": "Eleve",
+    "simDescription": "Filtre les élèves dont la section est strictement égale à 'STI'."
+  },
+  {
+    "id": "sql-op-diff",
+    "category": "Opérateurs de comparaison",
+    "name": "<>",
+    "tag": "<>",
+    "syntax": "colonne <> valeur",
+    "summary": "Différent de",
+    "description": "Opérateur de comparaison standard du SQL pour vérifier qu'une valeur est différente d'une autre. En MySQL, != est également accepté comme synonyme.",
+    "howToUse": "S'utilise dans la clause WHERE pour exclure des enregistrements particuliers, par exemple : WHERE ville <> 'Tunis'.",
+    "values": [
+      "colonne <> valeur",
+      "Ex: section <> 'Math'",
+      "Ex: ville <> 'Tunis'"
+    ],
+    "code": "SELECT nom, prenom, ville FROM Eleve\nWHERE ville <> 'Tunis';",
+    "simQuery": "SELECT nom, prenom, ville FROM Eleve WHERE ville <> 'Tunis';",
+    "simTable": "Eleve",
+    "simDescription": "Sélectionne tous les élèves dont la ville est différente de 'Tunis'."
+  },
+  {
+    "id": "sql-op-gt",
+    "category": "Opérateurs de comparaison",
+    "name": ">",
+    "tag": ">",
+    "syntax": "colonne > valeur",
+    "summary": "Supérieur à",
+    "description": "Opérateur de comparaison stricte vérifiant si la valeur de gauche est strictement plus grande que la valeur de droite.",
+    "howToUse": "Applicable aux nombres (moyenne > 10), dates (date_naiss > '2007-01-01') et chaînes selon l'ordre alphabétique.",
+    "values": [
+      "colonne > valeur",
+      "Ex: moyenne > 10.00",
+      "Ex: age > 18"
+    ],
+    "code": "SELECT nom, prenom, moyenne FROM Eleve\nWHERE moyenne > 12.00\nORDER BY moyenne DESC;",
+    "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne > 12.00;",
+    "simTable": "Eleve",
+    "simDescription": "Affiche les élèves ayant une moyenne strictement supérieure à 12.00."
+  },
+  {
+    "id": "sql-op-lt",
+    "category": "Opérateurs de comparaison",
+    "name": "<",
+    "tag": "<",
+    "syntax": "colonne < valeur",
+    "summary": "Inférieur à",
+    "description": "Opérateur de comparaison stricte vérifiant si la valeur de gauche est strictement inférieure à la valeur de droite.",
+    "howToUse": "Très utilisé pour identifier les élèves ajournés (moyenne < 10) ou des dates antérieures à un seuil.",
+    "values": [
+      "colonne < valeur",
+      "Ex: moyenne < 10.00",
+      "Ex: coef < 3"
+    ],
+    "code": "SELECT nom, prenom, moyenne FROM Eleve\nWHERE moyenne < 10.00;",
+    "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne < 10.00;",
+    "simTable": "Eleve",
+    "simDescription": "Extrait les élèves dont la moyenne est strictement inférieure à 10.00."
+  },
+  {
+    "id": "sql-op-gte",
+    "category": "Opérateurs de comparaison",
+    "name": ">=",
+    "tag": ">=",
+    "syntax": "colonne >= valeur",
+    "summary": "Supérieur ou égale à",
+    "description": "Opérateur de comparaison large vérifiant si la valeur est supérieure ou égale à la borne spécifiée (la valeur borne est incluse).",
+    "howToUse": "Critère officiel d'admission au Baccalauréat tunisien : WHERE moyenne >= 10.00.",
+    "values": [
+      "colonne >= valeur",
+      "Borne incluse",
+      "Ex: moyenne >= 10.00",
+      "Ex: coef >= 3"
+    ],
+    "code": "SELECT nom, prenom, moyenne FROM Eleve\nWHERE moyenne >= 10.00\nORDER BY moyenne DESC;",
+    "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne >= 10.00 ORDER BY moyenne DESC;",
+    "simTable": "Eleve",
+    "simDescription": "Affiche tous les élèves admis au Bac STI (moyenne >= 10.00)."
+  },
+  {
+    "id": "sql-op-lte",
+    "category": "Opérateurs de comparaison",
+    "name": "<=",
+    "tag": "<=",
+    "syntax": "colonne <= valeur",
+    "summary": "Inférieur ou égale à",
+    "description": "Opérateur de comparaison large vérifiant si la valeur est inférieure ou égale à la borne spécifiée (borne incluse).",
+    "howToUse": "S'utilise pour borner des notes, des prix ou des dates : WHERE moyenne <= 15.00.",
+    "values": [
+      "colonne <= valeur",
+      "Borne incluse",
+      "Ex: moyenne <= 15.00",
+      "Ex: date_naiss <= '2007-12-31'"
+    ],
+    "code": "SELECT nom, prenom, moyenne FROM Eleve\nWHERE moyenne <= 12.00;",
+    "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne <= 12.00;",
+    "simTable": "Eleve",
+    "simDescription": "Affiche les élèves ayant une moyenne inférieure ou égale à 12.00."
+  },
+  {
+    "id": "sql-op-in",
+    "category": "Opérateurs de comparaison",
+    "name": "IN",
+    "tag": "IN",
+    "syntax": "colonne IN (valeur1, valeur2, ...)",
+    "summary": "Dans",
+    "description": "Vérifie si la valeur d'une colonne appartient à un ensemble de valeurs données entre parenthèses. Évite d'écrire de multiples conditions OR successives.",
+    "howToUse": "Lister les valeurs séparées par des virgules entre parenthèses : WHERE ville IN ('Tunis', 'Sousse', 'Sfax'). Peut également recevoir le résultat d'une sous-requête SQL.",
+    "values": [
+      "IN (val1, val2, ...)",
+      "Équivalent à (col = val1 OR col = val2 ...)",
+      "Peut être inversé avec NOT IN"
+    ],
+    "code": "SELECT nom, prenom, ville FROM Eleve\nWHERE ville IN ('Tunis', 'Sousse');",
+    "simQuery": "SELECT nom, prenom, ville FROM Eleve WHERE ville IN ('Tunis', 'Sousse');",
+    "simTable": "Eleve",
+    "simDescription": "Extrait les élèves résidant dans la liste de villes ('Tunis' ou 'Sousse')."
+  },
+  {
+    "id": "sql-op-between",
+    "category": "Opérateurs de comparaison",
+    "name": "BETWEEN",
+    "tag": "BETWEEN",
+    "syntax": "colonne BETWEEN borne_min AND borne_max",
+    "summary": "Entre deux valeurs d'un intervalle.",
+    "description": "Vérifie si une valeur est comprise dans un intervalle fermé (les deux bornes minimale et maximale sont incluses). Équivalent à : (colonne >= borne_min AND colonne <= borne_max).",
+    "howToUse": "Attention : la borne inférieure doit obligatoirement être écrite en premier, suivie du mot-clé AND puis de la borne supérieure : WHERE moyenne BETWEEN 10 AND 15.",
+    "values": [
+      "BETWEEN min AND max",
+      "Bornes min et max INCLUSES",
+      "Applicable aux nombres, dates et lettres"
+    ],
+    "code": "SELECT nom, prenom, moyenne FROM Eleve\nWHERE moyenne BETWEEN 10.00 AND 15.00\nORDER BY moyenne ASC;",
+    "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne BETWEEN 10.00 AND 15.00;",
+    "simTable": "Eleve",
+    "simDescription": "Filtre les élèves dont la moyenne est comprise entre 10.00 et 15.00 inclus."
+  },
+  {
+    "id": "sql-op-like",
+    "category": "Opérateurs de comparaison",
+    "name": "LIKE",
+    "tag": "LIKE",
+    "syntax": "colonne LIKE 'motif'",
+    "summary": "Recherche de motif/valeur.",
+    "description": "Recherche textuelle basée sur des caractères génériques (jokers) : le symbole '%' remplace zéro, un ou plusieurs caractères ; le symbole '_' remplace exactement un seul caractère.",
+    "howToUse": "Motifs classiques au Bac STI : LIKE 'A%' (commence par A), LIKE '%Ben%' (contient Ben), LIKE '%s' (finit par s), LIKE '_a%' (deuxième lettre est 'a').",
+    "values": [
+      "'%' : 0, 1 ou plusieurs caractères",
+      "'_' : exactement un seul caractère",
+      "Ex: nom LIKE 'B%'",
+      "Ex: nom LIKE '%Salah%'"
+    ],
+    "code": "SELECT nom, prenom FROM Eleve\nWHERE nom LIKE 'B%';\n\n-- Recherche contenant le mot 'Salah' :\nSELECT nom, prenom FROM Eleve\nWHERE nom LIKE '%Salah%';",
+    "simQuery": "SELECT num_inscr, nom, prenom FROM Eleve WHERE nom LIKE 'B%';",
+    "simTable": "Eleve",
+    "simDescription": "Recherche tous les élèves dont le nom commence par la lettre 'B' (LIKE 'B%')."
+  },
+  {
+    "id": "sql-op-is",
+    "category": "Opérateurs de comparaison",
+    "name": "IS",
+    "tag": "IS",
+    "syntax": "colonne IS NULL  ou  colonne IS NOT NULL",
+    "summary": "Filtre les résultats contenant la valeur NULL.",
+    "description": "En SQL, la valeur NULL représente l'absence d'information (valeur inconnue ou indéfinie). Elle ne peut jamais être testée avec l'opérateur '=' (écrire '= NULL' renvoie toujours false). On utilise impérativement l'opérateur IS.",
+    "howToUse": "Écrire 'colonne IS NULL' pour trouver les champs vides, ou 'colonne IS NOT NULL' pour trouver les champs renseignés.",
+    "values": [
+      "IS NULL : valeur non renseignée",
+      "IS NOT NULL : valeur renseignée",
+      "Interdiction d'utiliser '= NULL' !"
+    ],
+    "code": "SELECT nom, prenom FROM Eleve\nWHERE ville IS NOT NULL;\n\n-- Trouver les élèves sans remarque :\nSELECT nom, prenom FROM Eleve\nWHERE remarque IS NULL;",
+    "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne IS NOT NULL;",
+    "simTable": "Eleve",
+    "simDescription": "Sélectionne les enregistrements dont la moyenne est bien renseignée (IS NOT NULL)."
+  },
+  {
+    "id": "sql-op-and",
+    "category": "Opérateurs logiques",
+    "name": "AND",
+    "tag": "AND",
+    "syntax": "condition1 AND condition2",
+    "summary": "ET",
+    "description": "Opérateur logique ET. Renvoie vrai si et seulement si toutes les conditions combinées sont simultanément vraies.",
+    "howToUse": "Utilisé pour restreindre les résultats en exigeant plusieurs critères simultanés : par exemple, être de la section STI ET avoir une moyenne >= 10.",
+    "values": [
+      "VRAI AND VRAI = VRAI",
+      "VRAI AND FAUX = FAUX",
+      "Ex: section = 'STI' AND moyenne >= 10"
+    ],
+    "code": "SELECT nom, prenom, moyenne FROM Eleve\nWHERE section = 'STI' AND moyenne >= 10.00;",
+    "simQuery": "SELECT nom, prenom, section, moyenne FROM Eleve WHERE section = 'STI' AND moyenne >= 10.00;",
+    "simTable": "Eleve",
+    "simDescription": "Combine deux critères avec AND : section = 'STI' ET moyenne >= 10.00."
+  },
+  {
+    "id": "sql-op-or",
+    "category": "Opérateurs logiques",
+    "name": "OR",
+    "tag": "OR",
+    "syntax": "condition1 OR condition2",
+    "summary": "OU",
+    "description": "Opérateur logique OU. Renvoie vrai dès qu'au moins l'une des conditions est vraie. Renvoie faux uniquement si toutes les conditions sont fausses.",
+    "howToUse": "Utilisé pour élargir la sélection à plusieurs alternatives : par exemple, habiter à Tunis OU habiter à Sousse.",
+    "values": [
+      "VRAI OR FAUX = VRAI",
+      "FAUX OR FAUX = FAUX",
+      "Ex: ville = 'Tunis' OR ville = 'Sousse'"
+    ],
+    "code": "SELECT nom, prenom, ville FROM Eleve\nWHERE ville = 'Tunis' OR ville = 'Sousse';",
+    "simQuery": "SELECT nom, prenom, ville FROM Eleve WHERE ville = 'Tunis' OR ville = 'Sousse';",
+    "simTable": "Eleve",
+    "simDescription": "Sélectionne les élèves satisfaisant au moins une condition (ville = 'Tunis' OR ville = 'Sousse')."
+  },
+  {
+    "id": "sql-op-not",
+    "category": "Opérateurs logiques",
+    "name": "NOT",
+    "tag": "NOT",
+    "syntax": "NOT condition",
+    "summary": "NON",
+    "description": "Opérateur logique de négation. Inverse le résultat booléen d'une condition : transforme vrai en faux, et faux en vrai.",
+    "howToUse": "Se place devant une condition, ou combiné avec des opérateurs comme NOT IN, NOT BETWEEN, NOT LIKE, IS NOT NULL.",
+    "values": [
+      "NOT (VRAI) = FAUX",
+      "NOT (FAUX) = VRAI",
+      "Ex: NOT (section = 'Math')",
+      "Ex: nom NOT LIKE 'B%'"
+    ],
+    "code": "SELECT nom, prenom, section FROM Eleve\nWHERE NOT (section = 'Math');",
+    "simQuery": "SELECT nom, prenom, section FROM Eleve WHERE NOT (section = 'Math');",
+    "simTable": "Eleve",
+    "simDescription": "Exclut les élèves de la section Math grâce à l'opérateur de négation NOT."
+  },
+  {
+    "id": "sql-ldd-create-db",
+    "category": "Définition des données",
+    "name": "CREATE DATABASE",
+    "tag": "CREATE DATABASE",
+    "syntax": "CREATE DATABASE nom",
+    "summary": "Crée une base de données.",
+    "description": "Instruction du Langage de Définition de Données (LDD) qui crée un nouvel espace de stockage de base de données vide avec le nom spécifié.",
+    "howToUse": "S'exécute une seule fois au tout début d'un projet informatique ou d'une épreuve pratique avant de créer les tables. En MySQL, on peut ajouter IF NOT EXISTS pour éviter les erreurs si la base existe déjà.",
+    "values": [
+      "CREATE DATABASE nom_base",
+      "Ex: CREATE DATABASE Gestion_Lycee;",
+      "Ex: CREATE DATABASE IF NOT EXISTS BacSTI_2026;"
+    ],
+    "code": "-- Création de la base de données du lycée\nCREATE DATABASE Gestion_Lycee;\nUSE Gestion_Lycee;",
+    "simQuery": "SELECT 'Base de données active : Gestion_Lycee' AS Statut;",
+    "simTable": "Eleve",
+    "simDescription": "Simulation de création d'une nouvelle base de données (CREATE DATABASE)."
+  },
+  {
+    "id": "sql-ldd-drop-db",
+    "category": "Définition des données",
+    "name": "DROP DATABASE",
+    "tag": "DROP DATABASE",
+    "syntax": "DROP DATABASE nom",
+    "summary": "Supprime une base de données.",
+    "description": "Supprime définitivement une base de données existante ainsi que l'intégralité des tables, enregistrements et index qu'elle contient.",
+    "howToUse": "Attention : action irréversible ! À manipuler avec précaution.",
+    "values": [
+      "DROP DATABASE nom_base",
+      "Supprime toutes les tables et données",
+      "Ex: DROP DATABASE Gestion_Lycee;"
+    ],
+    "code": "DROP DATABASE Gestion_Lycee;",
+    "simQuery": "SELECT 'Base de données supprimée avec succès' AS Statut;",
+    "simTable": "Eleve",
+    "simDescription": "Supprime définitivement une base de données (DROP DATABASE)."
+  },
+  {
+    "id": "sql-ldd-create-table",
+    "category": "Définition des données",
+    "name": "CREATE TABLE",
+    "tag": "CREATE TABLE",
+    "syntax": "CREATE TABLE table1 ( colonne1 type [contrainte], colonne2 type [contrainte], ... [[CONSTRAINT] [nom] [contrainte], ...] )",
+    "summary": "Crée une table.",
+    "description": "Instruction fondamentale du LDD pour concevoir la structure relationnelle d'une table : liste des colonnes, leurs types de données respectifs, et leurs contraintes d'intégrité (PRIMARY KEY, NOT NULL, DEFAULT, CHECK, FOREIGN KEY).",
+    "howToUse": "Ouvrir une parenthèse après le nom de table, déclarer chaque colonne séparée par une virgule, et refermer la parenthèse avec un point-virgule.",
+    "values": [
+      "CREATE TABLE nom (col1 type1, col2 type2, ...)",
+      "Définition des clés primaires et contraintes",
+      "Respecter l'ordre : tables mères créées avant les tables filles"
+    ],
+    "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  prenom VARCHAR(30) NOT NULL,\n  section VARCHAR(10) DEFAULT 'STI',\n  moyenne DECIMAL(4, 2) CHECK (moyenne BETWEEN 0 AND 20),\n  date_naiss DATE NOT NULL,\n  ville VARCHAR(25) DEFAULT 'Tunis'\n);",
+    "simQuery": "SELECT * FROM Eleve LIMIT 3;",
+    "simTable": "Eleve",
+    "simDescription": "Structure complète de la table Eleve créée avec CREATE TABLE."
+  },
+  {
+    "id": "sql-ldd-alter-add",
+    "category": "Définition des données",
+    "name": "ALTER TABLE ... ADD",
+    "tag": "ALTER TABLE ADD",
+    "syntax": "ALTER TABLE table1 ADD colonne type [contrainte]",
+    "summary": "Ajoute une colonne à une table.",
+    "description": "Permet d'ajouter une nouvelle colonne dans une table existante sans avoir à détruire ni recréer la table, préservant ainsi toutes les données déjà enregistrées.",
+    "howToUse": "Spécifier le nom de la table, le mot-clé ADD, puis le nom de la nouvelle colonne avec son type et ses contraintes éventuelles.",
+    "values": [
+      "ALTER TABLE nom_table ADD nom_colonne type [contraintes]",
+      "Ex: ALTER TABLE Eleve ADD email VARCHAR(50);",
+      "Ex: ALTER TABLE Eleve ADD mention VARCHAR(15);"
+    ],
+    "code": "-- Ajouter une colonne 'email' dans la table Eleve\nALTER TABLE Eleve ADD email VARCHAR(50);",
+    "simQuery": "SELECT num_inscr, nom, prenom, 'mohamed@lycee.tn' AS email FROM Eleve LIMIT 3;",
+    "simTable": "Eleve",
+    "simDescription": "Résultat après ajout de la colonne 'email' avec ALTER TABLE ADD."
+  },
+  {
+    "id": "sql-ldd-alter-drop",
+    "category": "Définition des données",
+    "name": "ALTER TABLE ... DROP colonne",
+    "tag": "ALTER TABLE DROP colonne",
+    "syntax": "ALTER TABLE table1 DROP colonne",
+    "summary": "Supprime une colonne.",
+    "description": "Supprime physiquement une colonne existante ainsi que toutes les valeurs qu'elle contenait dans la table.",
+    "howToUse": "Écrire ALTER TABLE nom_table DROP COLUMN nom_colonne (le mot-clé COLUMN est optionnel en MySQL).",
+    "values": [
+      "ALTER TABLE table DROP colonne",
+      "Action définitive pour les données de cette colonne",
+      "Ex: ALTER TABLE Eleve DROP ville;"
+    ],
+    "code": "-- Supprimer la colonne 'remarque' de la table Eleve\nALTER TABLE Eleve DROP remarque;",
+    "simQuery": "SELECT num_inscr, nom, prenom, moyenne FROM Eleve LIMIT 3;",
+    "simTable": "Eleve",
+    "simDescription": "Affichage de la table après suppression d'une colonne avec ALTER TABLE DROP."
+  },
+  {
+    "id": "sql-ldd-alter-modify",
+    "category": "Définition des données",
+    "name": "ALTER TABLE ... ALTER / MODIFY",
+    "tag": "ALTER TABLE MODIFY",
+    "syntax": "ALTER TABLE table1 ALTER* colonne type  (* on peut utiliser MODIFY au lieu de ALTER)",
+    "summary": "Modifie le type d'une colonne.",
+    "description": "Modifie le type de données ou la taille maximale d'une colonne existante (par exemple agrandir un VARCHAR(20) en VARCHAR(40)). En MySQL, la syntaxe la plus utilisée en TP au Bac STI est MODIFY.",
+    "howToUse": "Écrire ALTER TABLE nom_table MODIFY nom_colonne nouveau_type. Attention : si la table contient déjà des données, le nouveau type doit être compatible.",
+    "values": [
+      "ALTER TABLE table MODIFY colonne nouveau_type",
+      "Équivalent officiel : ALTER colonne type",
+      "Ex: ALTER TABLE Eleve MODIFY nom VARCHAR(45) NOT NULL;"
+    ],
+    "code": "-- Agrandir la taille du champ 'nom' de 30 à 45 caractères\nALTER TABLE Eleve MODIFY nom VARCHAR(45) NOT NULL;",
+    "simQuery": "SELECT num_inscr, nom, prenom FROM Eleve LIMIT 3;",
+    "simTable": "Eleve",
+    "simDescription": "Modification du type et de la taille d'une colonne (ALTER / MODIFY)."
+  },
+  {
+    "id": "sql-ldd-alter-rename",
+    "category": "Définition des données",
+    "name": "ALTER TABLE ... RENAME / CHANGE",
+    "tag": "ALTER TABLE RENAME / CHANGE",
+    "syntax": "ALTER TABLE table1 RENAME** nom1 TO nom2  (** on peut utiliser CHANGE au lieu de RENAME)",
+    "summary": "Modifie le nom d'une colonne.",
+    "description": "Permet de renommer une colonne existante. L'annexe officielle précise qu'on peut utiliser RENAME COLUMN ancien_nom TO nouveau_nom ou CHANGE ancien_nom nouveau_nom type.",
+    "howToUse": "Syntaxe 1 : ALTER TABLE table RENAME COLUMN ancien TO nouveau;\nSyntaxe 2 (MySQL classique) : ALTER TABLE table CHANGE ancien nouveau type;",
+    "values": [
+      "ALTER TABLE table RENAME col_ancien TO col_nouveau",
+      "ALTER TABLE table CHANGE col_ancien col_nouveau type",
+      "Ex: ALTER TABLE Eleve RENAME COLUMN moyenne TO moyenne_bac;"
+    ],
+    "code": "-- Renommer la colonne 'moyenne' en 'moyenne_bac'\nALTER TABLE Eleve RENAME COLUMN moyenne TO moyenne_bac;\n\n-- Variante MySQL avec CHANGE :\nALTER TABLE Eleve CHANGE moyenne moyenne_bac DECIMAL(4, 2);",
+    "simQuery": "SELECT num_inscr, nom, moyenne AS moyenne_bac FROM Eleve LIMIT 3;",
+    "simTable": "Eleve",
+    "simDescription": "Renommage d'une colonne de table (RENAME / CHANGE)."
+  },
+  {
+    "id": "sql-ldd-alter-add-constraint",
+    "category": "Définition des données",
+    "name": "ALTER TABLE ... ADD CONSTRAINT",
+    "tag": "ALTER TABLE ADD CONSTRAINT",
+    "syntax": "ALTER TABLE table1 ADD CONSTRAINT [nom] contrainte",
+    "summary": "Ajoute une contrainte sur une colonne d'une table.",
+    "description": "Permet d'ajouter a posteriori une contrainte d'intégrité nommée (PRIMARY KEY, UNIQUE, CHECK ou FOREIGN KEY) sur une table déjà existante.",
+    "howToUse": "Donner un nom explicite à la contrainte pour pouvoir la gérer facilement plus tard : par exemple, 'chk_moy' ou 'fk_inscr'.",
+    "values": [
+      "ADD CONSTRAINT nom PRIMARY KEY (...)",
+      "ADD CONSTRAINT nom FOREIGN KEY (...) REFERENCES ...",
+      "ADD CONSTRAINT nom CHECK (...)"
+    ],
+    "code": "-- Ajouter une clé étrangère avec contrainte nommée\nALTER TABLE Note\nADD CONSTRAINT fk_note_eleve\nFOREIGN KEY (num_inscr) REFERENCES Eleve(num_inscr)\nON DELETE CASCADE;\n\n-- Ajouter une contrainte CHECK :\nALTER TABLE Eleve\nADD CONSTRAINT chk_age\nCHECK (age >= 15 AND age <= 30);",
+    "simQuery": "SELECT 'Contrainte ajoutée avec succès sur la table' AS Resultat;",
+    "simTable": "Eleve",
+    "simDescription": "Ajout d'une contrainte d'intégrité nommée (ADD CONSTRAINT)."
+  },
+  {
+    "id": "sql-ldd-alter-drop-constraint",
+    "category": "Définition des données",
+    "name": "ALTER TABLE ... DROP CONSTRAINT",
+    "tag": "ALTER TABLE DROP CONSTRAINT",
+    "syntax": "ALTER TABLE table1 DROP CONSTRAINT nom",
+    "summary": "Supprime une contrainte.",
+    "description": "Supprime une contrainte d'intégrité existante par son nom (par exemple supprimer une règle CHECK devenue obsolète). Pour une clé primaire sans nom : ALTER TABLE table DROP PRIMARY KEY.",
+    "howToUse": "Spécifier le nom attribué à la contrainte lors de sa création : ALTER TABLE Eleve DROP CONSTRAINT chk_age.",
+    "values": [
+      "ALTER TABLE table DROP CONSTRAINT nom_contrainte",
+      "Pour clé primaire : ALTER TABLE table DROP PRIMARY KEY;",
+      "Pour clé étrangère : ALTER TABLE table DROP FOREIGN KEY nom_cle;"
+    ],
+    "code": "-- Supprimer la contrainte CHECK 'chk_age'\nALTER TABLE Eleve DROP CONSTRAINT chk_age;",
+    "simQuery": "SELECT 'Contrainte supprimée avec succès' AS Resultat;",
+    "simTable": "Eleve",
+    "simDescription": "Suppression d'une contrainte d'intégrité (DROP CONSTRAINT)."
+  },
+  {
+    "id": "sql-ldd-alter-enable-disable",
+    "category": "Définition des données",
+    "name": "ALTER TABLE ... ENABLE / DISABLE CONSTRAINT",
+    "tag": "ENABLE / DISABLE CONSTRAINT",
+    "syntax": "ALTER TABLE table1 ENABLE/ DISABLE CONSTRAINT nom",
+    "summary": "Active/Désactive une contrainte.",
+    "description": "Permet de désactiver temporairement la vérification d'une contrainte d'intégrité (par exemple lors de chargements massifs de données de test) sans devoir la supprimer, puis de la réactiver ensuite.",
+    "howToUse": "Syntaxe officielle de l'annexe : ALTER TABLE table1 DISABLE CONSTRAINT nom; puis ALTER TABLE table1 ENABLE CONSTRAINT nom;",
+    "values": [
+      "DISABLE CONSTRAINT : désactivation temporaire",
+      "ENABLE CONSTRAINT : réactivation et vérification",
+      "Mentionné textuellement dans l'annexe Bac STI"
+    ],
+    "code": "-- Désactiver la contrainte pour insérer des données de test\nALTER TABLE Eleve DISABLE CONSTRAINT chk_age;\n\n-- Réactiver la contrainte une fois terminé\nALTER TABLE Eleve ENABLE CONSTRAINT chk_age;",
+    "simQuery": "SELECT 'État contrainte : ACTIVÉE (ENABLE)' AS Statut;",
+    "simTable": "Eleve",
+    "simDescription": "Activation / Désactivation d'une contrainte (ENABLE / DISABLE)."
+  },
+  {
+    "id": "sql-ldd-drop-table",
+    "category": "Définition des données",
+    "name": "DROP TABLE",
+    "tag": "DROP TABLE",
+    "syntax": "DROP TABLE table1",
+    "summary": "Supprime une table.",
+    "description": "Supprime définitivement la table spécifiée, sa structure relationnelle et l'intégralité de ses enregistrements.",
+    "howToUse": "Attention : si la table est référencée par une clé étrangère (table mère), il faut d'abord supprimer la table fille ou retirer la contrainte de clé étrangère avant de pouvoir la supprimer.",
+    "values": [
+      "DROP TABLE nom_table",
+      "Action irréversible",
+      "Ordre de suppression : supprimer les tables filles avant les tables mères"
+    ],
+    "code": "-- Supprimer la table temporaire 'Test'\nDROP TABLE Test;",
+    "simQuery": "SELECT 'Table supprimée avec succès' AS Statut;",
+    "simTable": "Eleve",
+    "simDescription": "Suppression complète d'une table relationnelle (DROP TABLE)."
+  },
+  {
+    "id": "sql-fn-date",
+    "category": "Fonctions définies sur le type date",
+    "name": "DATE()",
+    "tag": "DATE()",
+    "syntax": "DATE(expression)",
+    "summary": "Retourne une date extraite à partir d'une chaîne contenant une valeur au format DATE ou DATETIME.",
+    "description": "Extrait la portion 'Date' (AAAA-MM-JJ) à partir d'une valeur ou chaîne représentant un DATETIME ou un horodatage avec heure.",
+    "howToUse": "Très utile lorsqu'une colonne est de type DATETIME ('2026-11-11 14:30:00') et que l'on souhaite uniquement comparer ou afficher la date '2026-11-11'.",
+    "values": [
+      "DATE('AAAA-MM-JJ HH:MM:SS') -> 'AAAA-MM-JJ'",
+      "Ex: DATE(NOW())",
+      "Ex: DATE('2026-11-11 12:45:00') -> '2026-11-11'"
+    ],
+    "code": "SELECT nom, DATE(NOW()) AS date_aujourdhui\nFROM Eleve\nLIMIT 3;",
+    "simQuery": "SELECT nom, prenom, DATE(NOW()) AS date_jour FROM Eleve LIMIT 3;",
+    "simTable": "Eleve",
+    "simDescription": "Extrait la date du jour sans les heures à l'aide de DATE(NOW())."
+  },
+  {
+    "id": "sql-fn-day",
+    "category": "Fonctions définies sur le type date",
+    "name": "DAY()",
+    "tag": "DAY()",
+    "syntax": "DAY(date)",
+    "summary": "Retourne le jour.",
+    "description": "Extrait le numéro du jour du mois (valeur entière de 1 à 31) à partir d'une date donnée.",
+    "howToUse": "S'écrit DAY(colonne_date). Équivalent à DAYOFMONTH(date) en MySQL.",
+    "values": [
+      "DAY(date) -> nombre entier (1 à 31)",
+      "Ex: DAY('2007-03-12') -> 12",
+      "Ex: DAY(NOW())"
+    ],
+    "code": "SELECT nom, prenom, date_naiss, DAY(date_naiss) AS jour_naissance\nFROM Eleve;",
+    "simQuery": "SELECT nom, prenom, date_naiss, DAY(date_naiss) AS jour FROM Eleve;",
+    "simTable": "Eleve",
+    "simDescription": "Extrait le numéro du jour de naissance pour chaque élève avec DAY()."
+  },
+  {
+    "id": "sql-fn-month",
+    "category": "Fonctions définies sur le type date",
+    "name": "MONTH()",
+    "tag": "MONTH()",
+    "syntax": "MONTH(date)",
+    "summary": "Retourne le mois.",
+    "description": "Extrait le numéro du mois (valeur entière de 1 pour Janvier à 12 pour Décembre) à partir d'une date.",
+    "howToUse": "Permet de filtrer des événements survenus pendant un mois particulier, par exemple les élèves nés au mois de mars : WHERE MONTH(date_naiss) = 3.",
+    "values": [
+      "MONTH(date) -> nombre entier (1 à 12)",
+      "Ex: MONTH('2007-03-12') -> 3",
+      "Ex: MONTH(NOW())"
+    ],
+    "code": "SELECT nom, prenom, date_naiss, MONTH(date_naiss) AS mois_naissance\nFROM Eleve\nWHERE MONTH(date_naiss) = 3;",
+    "simQuery": "SELECT nom, prenom, date_naiss, MONTH(date_naiss) AS mois FROM Eleve WHERE MONTH(date_naiss) = 3;",
+    "simTable": "Eleve",
+    "simDescription": "Filtre les élèves nés au mois de mars (MONTH(date_naiss) = 3)."
+  },
+  {
+    "id": "sql-fn-year",
+    "category": "Fonctions définies sur le type date",
+    "name": "YEAR()",
+    "tag": "YEAR()",
+    "syntax": "YEAR(date)",
+    "summary": "Retourne l'année.",
+    "description": "Extrait l'année sur 4 chiffres (ex: 2007, 2026) à partir d'une date valide.",
+    "howToUse": "Classique absolu du Bac STI pour calculer l'âge d'un élève : YEAR(NOW()) - YEAR(date_naiss).",
+    "values": [
+      "YEAR(date) -> entier sur 4 chiffres",
+      "Ex: YEAR('2007-03-12') -> 2007",
+      "Ex: YEAR(NOW()) -> 2026"
+    ],
+    "code": "SELECT nom, prenom, date_naiss,\n  YEAR(NOW()) - YEAR(date_naiss) AS age\nFROM Eleve;",
+    "simQuery": "SELECT nom, prenom, date_naiss, YEAR(NOW()) - YEAR(date_naiss) AS age FROM Eleve;",
+    "simTable": "Eleve",
+    "simDescription": "Calcule l'âge des élèves grâce à la formule Bac STI : YEAR(NOW()) - YEAR(date_naiss)."
+  },
+  {
+    "id": "sql-fn-now",
+    "category": "Fonctions définies sur le type date",
+    "name": "NOW()",
+    "tag": "NOW()",
+    "syntax": "NOW()",
+    "summary": "Retourne la date et l'heure courantes.",
+    "description": "Fonction système sans argument qui renvoie la date et l'heure actuelles de l'ordinateur/serveur au format 'AAAA-MM-JJ HH:MM:SS'.",
+    "howToUse": "S'emploie sans paramètre entre parenthèses. Très souvent combinée avec YEAR(NOW()) pour les calculs d'âge ou DEFAULT NOW() pour les dates d'enregistrement.",
+    "values": [
+      "NOW()",
+      "Renvoie 'AAAA-MM-JJ HH:MM:SS'",
+      "Ex: SELECT NOW();"
+    ],
+    "code": "SELECT NOW() AS date_heure_courante,\n       YEAR(NOW()) AS annee_courante;",
+    "simQuery": "SELECT NOW() AS date_et_heure_actuelle, YEAR(NOW()) AS annee_actuelle;",
+    "simTable": "Eleve",
+    "simDescription": "Appel de la fonction système NOW() retournant la date et l'heure actuelles."
+  },
+  {
+    "id": "sql-fn-adddate",
+    "category": "Fonctions définies sur le type date",
+    "name": "ADDDATE()",
+    "tag": "ADDDATE()",
+    "syntax": "ADDDATE(date, INTERVAL valeur unité)  ou  ADDDATE(date, nb_jours)",
+    "summary": "Ajoute un nombre de jours ou un intervalle de temps à une date.",
+    "description": "Effectue une addition arithmétique sur une date en lui ajoutant soit un nombre entier de jours (syntaxe simplifiée), soit un intervalle explicite (ex: INTERVAL 15 DAY, INTERVAL 3 MONTH, INTERVAL 1 YEAR).",
+    "howToUse": "Syntaxe 1 : ADDDATE(date, 7) ajoute 7 jours.\nSyntaxe 2 : ADDDATE(date, INTERVAL 1 YEAR) ajoute une année complète.",
+    "values": [
+      "ADDDATE(date, nb_jours)",
+      "ADDDATE(date, INTERVAL N DAY/MONTH/YEAR)",
+      "Ex: ADDDATE('2026-11-11', 10) -> '2026-11-21'"
+    ],
+    "code": "-- Ajouter 15 jours à la date du jour\nSELECT NOW() AS aujourdhui,\n       ADDDATE(NOW(), 15) AS dans_15_jours;\n\n-- Ajouter 1 an avec INTERVAL :\nSELECT ADDDATE('2007-06-15', INTERVAL 1 YEAR) AS date_plus_1an;",
+    "simQuery": "SELECT nom, date_naiss, ADDDATE(date_naiss, 365) AS naiss_plus_1an FROM Eleve LIMIT 3;",
+    "simTable": "Eleve",
+    "simDescription": "Ajout d'un intervalle de temps à une date avec ADDDATE()."
+  },
+  {
+    "id": "sql-fn-datediff",
+    "category": "Fonctions définies sur le type date",
+    "name": "DATEDIFF()",
+    "tag": "DATEDIFF()",
+    "syntax": "DATEDIFF(date1, date2)",
+    "summary": "Retourne la différence entre deux dates en jours.",
+    "description": "Calcule le nombre entier de jours écoulés entre deux dates (date1 - date2). Si date1 est postérieure à date2, le résultat est positif ; si date1 est antérieure, le résultat est négatif.",
+    "howToUse": "Toujours placer la date la plus récente en premier paramètre (ex: DATEDIFF(NOW(), date_naiss)) pour obtenir un nombre de jours positif.",
+    "values": [
+      "DATEDIFF(date1, date2) -> nombre de jours entier",
+      "Ex: DATEDIFF('2026-11-20', '2026-11-10') -> 10 jours",
+      "Ex: DATEDIFF(NOW(), date_naiss)"
+    ],
+    "code": "SELECT nom, prenom, date_naiss,\n       DATEDIFF(NOW(), date_naiss) AS jours_vecus\nFROM Eleve\nLIMIT 3;",
+    "simQuery": "SELECT nom, prenom, date_naiss, DATEDIFF(NOW(), date_naiss) AS jours_ecoules FROM Eleve LIMIT 3;",
+    "simTable": "Eleve",
+    "simDescription": "Calcul du nombre de jours de différence entre deux dates (DATEDIFF)."
+  },
+  {
+    "id": "sql-fn-avg",
+    "category": "Fonctions d'agrégation",
+    "name": "AVG()",
+    "tag": "AVG()",
+    "syntax": "AVG(colonne_numerique)",
+    "summary": "Retourne la moyenne.",
+    "description": "Fonction d'agrégation (statistique) calculant la moyenne arithmétique de toutes les valeurs numériques d'une colonne sélectionnée. Les valeurs NULL sont automatiquement ignorées.",
+    "howToUse": "S'utilise dans la clause SELECT. Peut être combinée avec WHERE pour filtrer les lignes à inclure, ou avec GROUP BY pour calculer la moyenne par groupe (ex: par section ou par classe).",
+    "values": [
+      "AVG(colonne)",
+      "Ignore les valeurs NULL",
+      "Ex: SELECT AVG(moyenne) FROM Eleve;",
+      "Ex: SELECT section, AVG(moyenne) FROM Eleve GROUP BY section;"
+    ],
+    "code": "-- Moyenne générale des élèves de la section STI\nSELECT AVG(moyenne) AS moyenne_generale_sti\nFROM Eleve\nWHERE section = 'STI';",
+    "simQuery": "SELECT section, AVG(moyenne) AS moyenne_section FROM Eleve GROUP BY section;",
+    "simTable": "Eleve",
+    "simDescription": "Calcule la moyenne arithmétique (AVG) groupée par section."
+  },
+  {
+    "id": "sql-fn-count",
+    "category": "Fonctions d'agrégation",
+    "name": "COUNT()",
+    "tag": "COUNT()",
+    "syntax": "COUNT(*)  ou  COUNT(colonne)  ou  COUNT(DISTINCT colonne)",
+    "summary": "Retourne le nombre d'enregistrements.",
+    "description": "Compte le nombre de lignes répondant aux critères de la requête. COUNT(*) compte toutes les lignes sans exception ; COUNT(colonne) compte les lignes où la colonne n'est pas NULL ; COUNT(DISTINCT colonne) compte les valeurs distinctes sans doublon.",
+    "howToUse": "La formule la plus fréquente au Bac STI : SELECT COUNT(*) FROM Eleve WHERE moyenne >= 10; pour connaître le nombre d'élèves admis.",
+    "values": [
+      "COUNT(*) : compte toutes les lignes",
+      "COUNT(colonne) : compte les valeurs non nulles",
+      "COUNT(DISTINCT col) : compte les valeurs uniques"
+    ],
+    "code": "-- Nombre total d'élèves admis (moyenne >= 10)\nSELECT COUNT(*) AS nb_admis\nFROM Eleve\nWHERE moyenne >= 10.00;",
+    "simQuery": "SELECT COUNT(*) AS total_eleves, COUNT(CASE WHEN moyenne >= 10 THEN 1 END) AS nb_admis FROM Eleve;",
+    "simTable": "Eleve",
+    "simDescription": "Compte le nombre total d'enregistrements avec COUNT(*)."
+  },
+  {
+    "id": "sql-fn-max",
+    "category": "Fonctions d'agrégation",
+    "name": "MAX()",
+    "tag": "MAX()",
+    "syntax": "MAX(colonne)",
+    "summary": "Retourne le maximum.",
+    "description": "Renvoie la valeur la plus élevée parmi toutes les valeurs d'une colonne (la meilleure note, le prix le plus cher, ou la date la plus récente).",
+    "howToUse": "S'applique aux colonnes numériques, monétaires ou temporelles. Exemple classique : SELECT MAX(moyenne) FROM Eleve; pour trouver la meilleure moyenne de la promotion.",
+    "values": [
+      "MAX(colonne)",
+      "Ex: MAX(moyenne)",
+      "Ex: MAX(date_naiss) -> le plus jeune"
+    ],
+    "code": "-- Trouver la meilleure moyenne de la section STI\nSELECT MAX(moyenne) AS meilleure_moyenne\nFROM Eleve\nWHERE section = 'STI';",
+    "simQuery": "SELECT MAX(moyenne) AS meilleure_moyenne, MIN(moyenne) AS plus_faible_moyenne FROM Eleve;",
+    "simTable": "Eleve",
+    "simDescription": "Détermine la note maximale (MAX) enregistrée dans la classe."
+  },
+  {
+    "id": "sql-fn-min",
+    "category": "Fonctions d'agrégation",
+    "name": "MIN()",
+    "tag": "MIN()",
+    "syntax": "MIN(colonne)",
+    "summary": "Retourne le minimum.",
+    "description": "Renvoie la valeur la plus basse parmi toutes les valeurs de la colonne sélectionnée (la note la plus faible, le prix le moins cher, ou la date la plus ancienne).",
+    "howToUse": "S'applique aux nombres, dates ou chaînes. Exemple : SELECT MIN(moyenne) FROM Eleve; pour trouver la note plancher.",
+    "values": [
+      "MIN(colonne)",
+      "Ex: MIN(moyenne)",
+      "Ex: MIN(date_naiss) -> le plus âgé"
+    ],
+    "code": "-- Trouver la plus faible moyenne enregistrée\nSELECT MIN(moyenne) AS moyenne_minimale\nFROM Eleve;",
+    "simQuery": "SELECT MIN(moyenne) AS moyenne_minimale FROM Eleve;",
+    "simTable": "Eleve",
+    "simDescription": "Trouve la note minimale (MIN) parmi tous les élèves."
+  },
+  {
+    "id": "sql-fn-sum",
+    "category": "Fonctions d'agrégation",
+    "name": "SUM()",
+    "tag": "SUM()",
+    "syntax": "SUM(colonne_numerique)",
+    "summary": "Retourne la somme.",
+    "description": "Additionne et totalise l'ensemble des valeurs numériques d'une colonne. Ignore automatiquement les valeurs NULL.",
+    "howToUse": "S'emploie pour totaliser des montants, des coefficients ou des points : par exemple, calculer le total des coefficients d'un ensemble de matières : SELECT SUM(coef) FROM Matiere.",
+    "values": [
+      "SUM(colonne_numerique)",
+      "Ignore les valeurs NULL",
+      "Ex: SUM(coef)",
+      "Ex: SUM(montant)"
+    ],
+    "code": "-- Totaliser les coefficients de toutes les matières obligatoires\nSELECT SUM(coef) AS total_coefficients\nFROM Matiere;",
+    "simQuery": "SELECT SUM(coef) AS total_coefficients_matieres FROM Matiere;",
+    "simTable": "Matiere",
+    "simDescription": "Calcule la somme totale (SUM) des coefficients des matières."
+  },
+  {
+    "id": "sql-lmd-select",
+    "category": "Manipulation des données",
+    "name": "SELECT",
+    "tag": "SELECT",
+    "syntax": "SELECT [DISTINCT] expression [, col, ... ou *] [[AS] alias]\nFROM table1 [[AS] alias] [, table2, ...]\n[WHERE condition]\n[GROUP BY critère]\n[HAVING condition]\n[ORDER BY expression [ASC/DESC]]",
+    "summary": "Spécification des colonnes du résultat, des tables, Condition, Organisation du résultat en groupes, Application d'un filtre, Tri du résultat.",
+    "description": "Commande centrale d'interrogation du Langage de Manipulation de Données (LMD). Permet d'extraire, filtrer, regrouper et trier les données d'une ou plusieurs tables relationnelles selon les 6 clauses officielles de l'annexe du Bac STI :\n• SELECT : choix des colonnes projetées (ou DISTINCT pour éliminer les doublons)\n• FROM : choix des tables sources et jointures\n• WHERE : condition de filtrage des lignes\n• GROUP BY : regroupement par critère (souvent avec fonctions d'agrégation)\n• HAVING : condition de filtrage appliquée aux groupes\n• ORDER BY : tri croissant (ASC par défaut) ou décroissant (DESC).",
+    "howToUse": "L'ordre des clauses doit être scrupuleusement respecté : SELECT ... FROM ... WHERE ... GROUP BY ... HAVING ... ORDER BY.",
+    "values": [
+      "SELECT : projection des colonnes",
+      "FROM : tables sources",
+      "WHERE : filtre sur lignes",
+      "GROUP BY : regroupement",
+      "HAVING : filtre sur groupes",
+      "ORDER BY [ASC/DESC] : tri"
+    ],
+    "code": "-- 1. Requête simple avec tri :\nSELECT nom, prenom, moyenne\nFROM Eleve\nWHERE section = 'STI'\nORDER BY moyenne DESC;\n\n-- 2. Requête avec agrégation et regroupement :\nSELECT ville, COUNT(*) AS nb_eleves, AVG(moyenne) AS moy_ville\nFROM Eleve\nGROUP BY ville\nHAVING COUNT(*) >= 1\nORDER BY moy_ville DESC;",
+    "simQuery": "SELECT nom, prenom, section, moyenne, ville FROM Eleve WHERE moyenne >= 10.00 ORDER BY moyenne DESC;",
+    "simTable": "Eleve",
+    "simDescription": "Interrogation complète avec sélection, condition WHERE et tri ORDER BY DESC."
+  },
+  {
+    "id": "sql-lmd-insert",
+    "category": "Manipulation des données",
+    "name": "INSERT INTO",
+    "tag": "INSERT INTO",
+    "syntax": "INSERT INTO table [(liste colonnes)] VALUES (liste valeurs)",
+    "summary": "Insertion des données dans une table.",
+    "description": "Commande LMD qui insère une nouvelle ligne (enregistrement) dans une table. Les valeurs doivent respecter l'ordre et le type des colonnes déclarées.",
+    "howToUse": "Deux manières équivalentes au Bac STI :\n1. En précisant les colonnes : INSERT INTO Eleve (num_inscr, nom, prenom, section, moyenne, date_naiss, ville) VALUES (107, 'Bouazizi', 'Amine', 'STI', 14.50, '2007-08-22', 'Kairouan');\n2. Sans préciser les colonnes : INSERT INTO Eleve VALUES (107, 'Bouazizi', 'Amine', 'STI', 14.50, '2007-08-22', 'Kairouan');",
+    "values": [
+      "INSERT INTO table (col1, col2) VALUES (val1, val2)",
+      "Chaînes et dates entre apostrophes",
+      "Nombres sans guillemets",
+      "Respecter les contraintes (PK, NOT NULL, CHECK)"
+    ],
+    "code": "INSERT INTO Eleve (num_inscr, nom, prenom, section, moyenne, date_naiss, ville)\nVALUES (107, 'Bouazizi', 'Amine', 'STI', 14.50, '2007-08-22', 'Kairouan');",
+    "simQuery": "SELECT * FROM Eleve WHERE num_inscr = 101;",
+    "simTable": "Eleve",
+    "simDescription": "Exemple d'enregistrement prêt à être inséré ou consulté dans la table Eleve."
+  },
+  {
+    "id": "sql-lmd-update",
+    "category": "Manipulation des données",
+    "name": "UPDATE",
+    "tag": "UPDATE",
+    "syntax": "UPDATE table1 SET colonne = expression [WHERE condition]",
+    "summary": "Modification des valeurs d'une colonne.",
+    "description": "Commande LMD permettant de modifier le contenu d'une ou plusieurs colonnes pour les lignes sélectionnées par la clause WHERE.",
+    "howToUse": "ATTENTION : Si la clause WHERE est omise, TOUTES les lignes de la table seront modifiées sans avertissement ! Au Bac STI, la clause WHERE est quasiment toujours obligatoire.",
+    "values": [
+      "UPDATE table SET col = nouvelle_valeur WHERE condition",
+      "Possibilité de modifier plusieurs colonnes séparées par une virgule",
+      "Ex: UPDATE Eleve SET moyenne = 16.00 WHERE num_inscr = 101;"
+    ],
+    "code": "-- Corriger la moyenne d'un élève après un recomptage\nUPDATE Eleve\nSET moyenne = 16.25\nWHERE num_inscr = 101;\n\n-- Mettre à jour plusieurs colonnes à la fois :\nUPDATE Eleve\nSET section = 'STI', ville = 'Sousse'\nWHERE num_inscr = 104;",
+    "simQuery": "SELECT num_inscr, nom, prenom, moyenne FROM Eleve WHERE num_inscr = 101;",
+    "simTable": "Eleve",
+    "simDescription": "Modification ciblée d'une ligne avec UPDATE ... SET ... WHERE."
+  },
+  {
+    "id": "sql-lmd-delete",
+    "category": "Manipulation des données",
+    "name": "DELETE FROM",
+    "tag": "DELETE FROM",
+    "syntax": "DELETE FROM table1 [WHERE condition]",
+    "summary": "Suppression des enregistrements d'une table.",
+    "description": "Commande LMD permettant d'effacer une ou plusieurs lignes d'une table selon une condition spécifiée dans la clause WHERE. Contrairement à DROP TABLE, DELETE supprime les données mais conserve intacte la structure de la table.",
+    "howToUse": "ATTENTION : Sans clause WHERE, DELETE FROM table1 vide entièrement la table ! Toujours cibler les lignes à effacer avec WHERE.",
+    "values": [
+      "DELETE FROM table WHERE condition",
+      "Conserve la structure de la table",
+      "Ex: DELETE FROM Eleve WHERE num_inscr = 106;",
+      "Ex: DELETE FROM Eleve WHERE moyenne < 08.00;"
+    ],
+    "code": "-- Supprimer l'élève dont le numéro est 106\nDELETE FROM Eleve\nWHERE num_inscr = 106;\n\n-- Supprimer tous les élèves ajournés avec moyenne < 8 :\nDELETE FROM Eleve\nWHERE moyenne < 08.00;",
+    "simQuery": "SELECT num_inscr, nom, prenom, moyenne FROM Eleve WHERE moyenne >= 10.00;",
+    "simTable": "Eleve",
+    "simDescription": "Suppression ciblée de lignes dans une table (DELETE FROM ... WHERE)."
+  }
 ]
 };

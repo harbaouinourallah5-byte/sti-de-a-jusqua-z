@@ -1148,10 +1148,32 @@ const VARIETIES_CONFIG = {
 let currentView = 'home';
 let currentCategory = 'all';
 let currentSearch = '';
+let currentSqlCategory = 'all';
+let currentSqlSearch = '';
 let activeVideoTimer = null;
 let isVideoPlaying = false;
 let currentVideoItemId = null;
 let currentVideoVariantIdx = 0;
+
+// Base de données virtuelle MySQL pour le Baccalauréat STI
+const SQL_DATABASE_INIT = {
+  Eleve: [
+    { num_inscr: 101, nom: "Ben Salah", prenom: "Ahmed", section: "STI", moyenne: 15.75, date_naiss: "2007-03-12", ville: "Tunis" },
+    { num_inscr: 102, nom: "Trabelsi", prenom: "Myriam", section: "STI", moyenne: 11.25, date_naiss: "2006-11-25", ville: "Sousse" },
+    { num_inscr: 103, nom: "Gharbi", prenom: "Youssef", section: "STI", moyenne: 8.50, date_naiss: "2007-07-04", ville: "Sfax" },
+    { num_inscr: 104, nom: "Ayari", prenom: "Nour", section: "Math", moyenne: 16.00, date_naiss: "2006-09-18", ville: "Monastir" },
+    { num_inscr: 105, nom: "Jaziri", prenom: "Karim", section: "STI", moyenne: 13.50, date_naiss: "2007-01-30", ville: "Bizerte" },
+    { num_inscr: 106, nom: "Mansour", prenom: "Salma", section: "STI", moyenne: 9.75, date_naiss: "2007-05-14", ville: "Nabeul" }
+  ],
+  Matiere: [
+    { code_mat: "INFO", libelle: "Informatique", coef: 3 },
+    { code_mat: "ELEC", libelle: "Génie Électrique", coef: 3 },
+    { code_mat: "MECA", libelle: "Génie Mécanique", coef: 3 },
+    { code_mat: "MATH", libelle: "Mathématiques", coef: 3 }
+  ]
+};
+
+let virtualSqlDb = JSON.parse(JSON.stringify(SQL_DATABASE_INIT));
 
 // Initialisation au chargement
 document.addEventListener('DOMContentLoaded', () => {
@@ -1160,9 +1182,11 @@ document.addEventListener('DOMContentLoaded', () => {
   renderHtmlCategories();
   renderCssCategories();
   renderJsCategories();
+  renderSqlCategories();
   renderHtmlCards();
   renderCssCards();
   renderJsCards();
+  renderSqlCards();
   initLessonsModule();
 });
 
@@ -1248,6 +1272,12 @@ function switchView(viewName) {
     renderJsCategories();
     renderJsCards();
     history.replaceState(null, '', '#js');
+  } else if (viewName === 'sql') {
+    const sqlInput = document.getElementById('sqlSearchInput');
+    if (sqlInput) sqlInput.value = '';
+    renderSqlCategories();
+    renderSqlCards();
+    history.replaceState(null, '', '#sql');
   } else if (viewName === 'lessons') {
     const lInput = document.getElementById('lessonSearchInput');
     if (lInput) lInput.value = '';
@@ -2696,6 +2726,668 @@ function demoTestHelper(id, val) {
   res.innerHTML = `<strong>${ok ? 'true' : 'false'}</strong> &bull; ${expl}`;
 }
 
+// =============================================================
+// 7. SECTION SQL - BACCALAURÉAT STI TUNISIE
+// 57 Notions & Commandes officielles (8 sections) + Console Interactive MySQL
+// =============================================================
+
+function renderSqlCategories() {
+  const cats = [
+    'all',
+    'Type de données',
+    "Contraintes d'intégrité",
+    'Opérateurs de comparaison',
+    'Opérateurs logiques',
+    'Définition des données',
+    'Fonctions définies sur le type date',
+    "Fonctions d'agrégation",
+    'Manipulation des données'
+  ];
+  const bar = document.getElementById('sqlCategoriesBar');
+  if (!bar) return;
+  bar.innerHTML = '';
+
+  cats.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = `cat-btn ${cat === currentSqlCategory ? 'active' : ''}`;
+    btn.textContent = cat === 'all' ? 'Toutes les notions SQL (57)' : cat;
+    btn.addEventListener('click', () => {
+      currentSqlCategory = cat;
+      document.querySelectorAll('#sqlCategoriesBar .cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderSqlCards();
+    });
+    bar.appendChild(btn);
+  });
+}
+
+function renderSqlCards() {
+  const container = document.getElementById('sqlItemsGrid');
+  if (!container) return;
+  container.innerHTML = '';
+
+  if (typeof DATA === 'undefined' || !DATA || !DATA.sql) return;
+
+  const filtered = DATA.sql.filter(item => {
+    const matchCat = currentSqlCategory === 'all' || item.category === currentSqlCategory;
+    const q = (currentSqlSearch || '').toLowerCase().trim();
+    const matchSearch = !q ||
+      item.name.toLowerCase().includes(q) ||
+      (item.tag && item.tag.toLowerCase().includes(q)) ||
+      (item.syntax && item.syntax.toLowerCase().includes(q)) ||
+      (item.summary && item.summary.toLowerCase().includes(q)) ||
+      (item.description && item.description.toLowerCase().includes(q)) ||
+      (item.category && item.category.toLowerCase().includes(q));
+    return matchCat && matchSearch;
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
+      🔍 Aucune commande SQL ne correspond à votre recherche "${escapeHtml(currentSqlSearch)}".
+    </div>`;
+    return;
+  }
+
+  filtered.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'item-card card-sql';
+    card.innerHTML = `
+      <div class="card-cat-badge" style="color:#c084fc;">${escapeHtml(item.category)}</div>
+      <div class="item-card-title">
+        <span>${escapeHtml(item.name)}</span>
+        <span class="item-card-tag" style="color:#c084fc; font-size:0.82rem; background:rgba(168,85,247,0.15); border:1px solid rgba(168,85,247,0.3); padding:2px 8px; border-radius:4px;">SQL</span>
+      </div>
+      <p class="item-card-desc">${escapeHtml(item.description || item.summary)}</p>
+      <div class="card-action-bar">
+        <span style="color:#c084fc; font-weight:600;">⚡ Explication, Code & Console</span>
+        <span>→</span>
+      </div>
+    `;
+    card.addEventListener('click', () => openSqlModal(item));
+    container.appendChild(card);
+  });
+}
+
+function handleSqlSearch(val) {
+  currentSqlSearch = val;
+  renderSqlCards();
+}
+
+function switchSqlTab(mode) {
+  const docView = document.getElementById('sqlOfficialDocView');
+  const cardsView = document.getElementById('sqlCardsGridView');
+  const tabDoc = document.getElementById('tabBtnSqlDoc');
+  const tabCards = document.getElementById('tabBtnSqlCards');
+
+  if (mode === 'doc') {
+    if (docView) docView.style.display = 'block';
+    if (cardsView) cardsView.style.display = 'none';
+    if (tabDoc) tabDoc.classList.add('active');
+    if (tabCards) tabCards.classList.remove('active');
+  } else {
+    if (docView) docView.style.display = 'none';
+    if (cardsView) cardsView.style.display = 'block';
+    if (tabDoc) tabDoc.classList.remove('active');
+    if (tabCards) tabCards.classList.add('active');
+    renderSqlCategories();
+    renderSqlCards();
+  }
+}
+
+function openSqlModalById(id) {
+  if (typeof DATA === 'undefined' || !DATA || !DATA.sql) return;
+  const item = DATA.sql.find(s => s.id === id);
+  if (item) {
+    openSqlModal(item);
+  }
+}
+
+function openSqlModal(item) {
+  const modal = document.getElementById('detailsModal');
+  const body = document.getElementById('modalDynamicBody');
+  const title = document.getElementById('modalTitle');
+  const cat = document.getElementById('modalCategory');
+
+  cat.textContent = `SQL • ${item.category}`;
+  cat.style.color = '#c084fc';
+  title.textContent = item.name + (item.syntax && item.syntax !== item.name ? ` — ${item.syntax}` : '');
+
+  let valuesHtml = '';
+  if (item.values && item.values.length > 0) {
+    valuesHtml = `
+      <div class="modal-section">
+        <div class="modal-section-title purple">
+          <span>⚙️</span>
+          <span>Règles & Syntaxe au Bac STI</span>
+        </div>
+        <div class="attr-tags-list">
+          ${item.values.map(val => `<span class="attr-tag" style="color:#c084fc; background:rgba(168, 85, 247, 0.1); border-color:rgba(168, 85, 247, 0.35); font-weight:600; font-size:0.85rem;">${escapeHtml(val)}</span>`).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  body.innerHTML = `
+    <!-- 1. Description & Rôle au Bac -->
+    <div class="modal-section">
+      <div class="modal-section-title purple">
+        <span>📖</span>
+        <span>Description & Rôle au Bac STI</span>
+      </div>
+      <p class="modal-text" style="font-size:0.98rem; line-height:1.65;">
+        ${escapeHtml(item.description || item.summary)}
+      </p>
+    </div>
+
+    <!-- 2. Comment utiliser au Bac -->
+    <div class="modal-section">
+      <div class="modal-section-title purple">
+        <span>📘</span>
+        <span>Comment utiliser (Syntaxe & Usage)</span>
+      </div>
+      <p class="modal-text" style="font-family:Consolas, Monaco, monospace; background:var(--bg-canvas); padding:10px 14px; border-radius:6px; border:1px solid var(--border-color); color:#a855f7; font-weight:600;">
+        ${escapeHtml(item.howToUse || item.syntax || '')}
+      </p>
+    </div>
+
+    <!-- 3. Valeurs & Règles Clés -->
+    ${valuesHtml}
+
+    <!-- 4. Définition officielle de l'Annexe -->
+    <div class="modal-section">
+      <div class="modal-section-title purple">
+        <span>🎯</span>
+        <span>Texte officiel de l'Annexe Bac STI</span>
+      </div>
+      <p class="modal-text" style="font-style:italic; color:var(--text-secondary); background:rgba(101, 163, 13, 0.08); padding:10px 14px; border-radius:6px; border-left:4px solid #65a30d;">
+        ${escapeHtml(item.summary)}
+      </p>
+    </div>
+
+    <!-- 5. Code SQL d'exemple -->
+    <div class="modal-section">
+      <div class="modal-section-title purple">
+        <span>💻</span>
+        <span>Code SQL d'exemple (Conforme MySQL / phpMyAdmin)</span>
+      </div>
+      <div class="code-container">
+        <div class="code-header">
+          <span>REQUETE_BAC.SQL</span>
+          <button class="copy-code-btn" onclick="copyCode(this, \`${escapeJsString(item.code)}\`)">Copier le code</button>
+        </div>
+        <pre class="code-pre"><code>${escapeHtml(item.code)}</code></pre>
+      </div>
+    </div>
+
+    <!-- 6. Laboratoire & Simulateur MySQL Dédié Bac STI -->
+    ${buildSqlInteractiveStage(item)}
+  `;
+
+  modal.classList.add('active');
+
+  // Auto-exécution pour affichage instantané de la table MySQL
+  setTimeout(() => {
+    executeSqlSimFromInput();
+  }, 40);
+}
+
+function buildSqlInteractiveStage(item) {
+  const defaultQuery = item.simQuery || `SELECT * FROM ${item.simTable || 'Eleve'};`;
+  return `
+    <div class="modal-section">
+      <div class="modal-section-title purple">
+        <span>🗄️</span>
+        <span>Console Interactive MySQL / phpMyAdmin (Baccalauréat STI)</span>
+      </div>
+      <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:12px; line-height:1.5;">
+        Testez en direct cette commande SQL sur la base d'examen scolaire (tables <code>Eleve</code> et <code>Matiere</code>). Vous pouvez modifier la requête ou choisir un scénario type :
+      </p>
+      
+      <!-- Boutons de requêtes types Bac STI -->
+      <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+        ${item.simQuery ? `<button type="button" class="sql-quick-btn" onclick="setSqlSimQuery(\`${escapeJsString(item.simQuery)}\`)">🎯 Requête Type : ${escapeHtml(item.name)}</button>` : ''}
+        <button type="button" class="sql-quick-btn" onclick="setSqlSimQuery('SELECT * FROM Eleve;')">📋 Table Eleve (Tous les élèves)</button>
+        <button type="button" class="sql-quick-btn" onclick="setSqlSimQuery('SELECT * FROM Matiere;')">📚 Table Matiere (Matières & Coefs)</button>
+        <button type="button" class="sql-quick-btn" onclick="setSqlSimQuery('SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne >= 10.00 ORDER BY moyenne DESC;')">🏆 Élèves admis (moyenne >= 10)</button>
+      </div>
+
+      <!-- Éditeur de requête -->
+      <div style="position:relative;">
+        <textarea id="sqlPlaygroundInput" class="sql-query-editor" rows="3" spellcheck="false">${escapeHtml(defaultQuery)}</textarea>
+      </div>
+
+      <!-- Boutons d'action -->
+      <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap; align-items:center;">
+        <button type="button" onclick="executeSqlSimFromInput()" style="background: linear-gradient(135deg, #7c3aed, #9333ea); color: #fff; border:none; padding:10px 22px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:0.92rem; display:inline-flex; align-items:center; gap:8px; box-shadow: 0 2px 8px rgba(124,58,237,0.3);">
+          <span>🚀</span>
+          <span>Exécuter la requête SQL</span>
+        </button>
+        <button type="button" onclick="resetSqlSimTable()" style="background: var(--bg-card); color: var(--text-secondary); border:1px solid var(--border-color); padding:10px 16px; border-radius:6px; font-weight:600; cursor:pointer; font-size:0.85rem;">
+          <span>🔄</span>
+          <span>Réinitialiser les données d'origine</span>
+        </button>
+      </div>
+
+      <!-- Statut & Résultat style phpMyAdmin -->
+      <div id="sqlSimStatusBox"></div>
+      <div id="sqlSimResultWrap" class="sql-result-table-wrap" style="display:none;"></div>
+
+      ${item.simDescription ? `
+        <div style="margin-top:12px; font-size:0.85rem; color:var(--text-muted); padding:10px 14px; background:rgba(168, 85, 247, 0.08); border-left:3px solid #a855f7; border-radius:0 6px 6px 0;">
+          💡 <strong>Explication Bac STI :</strong> ${escapeHtml(item.simDescription)}
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+function setSqlSimQuery(query) {
+  const input = document.getElementById('sqlPlaygroundInput');
+  if (input) {
+    input.value = query;
+    executeSqlSimFromInput();
+  }
+}
+
+function resetSqlSimTable() {
+  virtualSqlDb = JSON.parse(JSON.stringify(SQL_DATABASE_INIT));
+  const statusBox = document.getElementById('sqlSimStatusBox');
+  if (statusBox) {
+    statusBox.innerHTML = `
+      <div class="sql-status-banner info">
+        <span>🔄</span>
+        <span>Base de données réinitialisée aux données scolaires d'origine (Eleve et Matiere).</span>
+      </div>
+    `;
+  }
+  executeSqlSimFromInput();
+}
+
+function executeSqlSimFromInput() {
+  const input = document.getElementById('sqlPlaygroundInput');
+  const statusBox = document.getElementById('sqlSimStatusBox');
+  const resultWrap = document.getElementById('sqlSimResultWrap');
+  if (!input || !statusBox || !resultWrap) return;
+
+  const rawQuery = input.value.trim();
+  if (!rawQuery) {
+    statusBox.innerHTML = `
+      <div class="sql-status-banner info">
+        <span>⚠️</span>
+        <span>Veuillez saisir une commande ou requête SQL à exécuter.</span>
+      </div>
+    `;
+    resultWrap.style.display = 'none';
+    return;
+  }
+
+  const res = runVirtualSqlQuery(rawQuery, virtualSqlDb);
+
+  if (!res.success) {
+    statusBox.innerHTML = `
+      <div class="sql-status-banner" style="background:rgba(239, 68, 68, 0.15); color:#f87171; border:1px solid rgba(239, 68, 68, 0.35);">
+        <span>❌</span>
+        <span><strong>Erreur MySQL :</strong> ${escapeHtml(res.message || 'Syntaxe SQL invalide')}</span>
+      </div>
+    `;
+    resultWrap.style.display = 'none';
+    return;
+  }
+
+  statusBox.innerHTML = `
+    <div class="sql-status-banner success">
+      <span>✓</span>
+      <span><strong>MySQL a retourné un résultat :</strong> ${escapeHtml(res.message)} (Traitement en ${escapeHtml(res.execTime || '0.0004 sec')})</span>
+    </div>
+  `;
+
+  if (res.headers && res.headers.length > 0) {
+    let theadHtml = res.headers.map(h => `<th>${escapeHtml(h)}</th>`).join('');
+    let tbodyHtml = '';
+
+    if (res.rows && res.rows.length > 0) {
+      tbodyHtml = res.rows.map(row => {
+        let cells = row.map(cell => {
+          let str = cell === null || cell === undefined ? '<em>NULL</em>' : escapeHtml(String(cell));
+          return `<td>${str}</td>`;
+        }).join('');
+        return `<tr>${cells}</tr>`;
+      }).join('');
+    } else {
+      tbodyHtml = `<tr><td colspan="${res.headers.length}" style="text-align:center; padding:18px; color:var(--text-muted); font-style:italic;">Aucun enregistrement ne correspond à cette requête (0 ligne).</td></tr>`;
+    }
+
+    resultWrap.innerHTML = `
+      <table class="sql-result-table">
+        <thead>
+          <tr>${theadHtml}</tr>
+        </thead>
+        <tbody>
+          ${tbodyHtml}
+        </tbody>
+      </table>
+    `;
+    resultWrap.style.display = 'block';
+  } else {
+    resultWrap.style.display = 'none';
+  }
+}
+
+function runVirtualSqlQuery(query, db) {
+  if (!query || typeof query !== 'string') return { success: false, message: 'Requête vide.' };
+  const cleanQ = query.replace(/--.*$/gm, '').trim().replace(/;+$/, '').trim();
+  if (!cleanQ) return { success: false, message: 'Requête SQL vide.' };
+
+  const execTime = (Math.random() * 0.0006 + 0.0002).toFixed(4) + ' sec';
+
+  function evalNow() {
+    const d = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+  }
+  function evalDate(str) {
+    if (!str || str === 'NOW()') return evalNow().split(' ')[0];
+    return String(str).split(' ')[0];
+  }
+  function evalDay(str) {
+    const d = new Date(evalDate(str));
+    return isNaN(d.getTime()) ? 1 : d.getDate();
+  }
+  function evalMonth(str) {
+    const d = new Date(evalDate(str));
+    return isNaN(d.getTime()) ? 1 : d.getMonth() + 1;
+  }
+  function evalYear(str) {
+    const d = new Date(evalDate(str));
+    return isNaN(d.getTime()) ? 2026 : d.getFullYear();
+  }
+  function evalAddDate(str, days) {
+    const d = new Date(evalDate(str));
+    d.setDate(d.getDate() + Number(days));
+    const pad = n => String(n).padStart(2, '0');
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  }
+  function evalDateDiff(d1, d2) {
+    const date1 = new Date(evalDate(d1));
+    const date2 = new Date(evalDate(d2));
+    const diffTime = date1.getTime() - date2.getTime();
+    return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  }
+
+  const upper = cleanQ.toUpperCase();
+  if (upper.startsWith('CREATE DATABASE')) {
+    return { success: true, message: 'Base de données créée avec succès.', headers: ['Statut'], rows: [['Base de données créée avec succès.']], execTime };
+  }
+  if (upper.startsWith('DROP DATABASE')) {
+    return { success: true, message: 'Base de données supprimée avec succès.', headers: ['Statut'], rows: [['Base de données supprimée.']], execTime };
+  }
+  if (upper.startsWith('CREATE TABLE')) {
+    const match = cleanQ.match(/CREATE\s+TABLE\s+([a-zA-Z0-9_]+)/i);
+    const tbl = match ? match[1] : 'NouvelleTable';
+    if (!db[tbl]) db[tbl] = [];
+    return { success: true, message: 'Table ' + tbl + ' créée avec succès.', headers: ['Statut'], rows: [['Table ' + tbl + ' créée avec succès.']], execTime };
+  }
+  if (upper.startsWith('DROP TABLE')) {
+    const match = cleanQ.match(/DROP\s+TABLE\s+([a-zA-Z0-9_]+)/i);
+    const tbl = match ? match[1] : 'Table';
+    delete db[tbl];
+    return { success: true, message: 'Table ' + tbl + ' supprimée avec succès.', headers: ['Statut'], rows: [['Table ' + tbl + ' supprimée.']], execTime };
+  }
+  if (upper.startsWith('ALTER TABLE')) {
+    return { success: true, message: 'Table modifiée avec succès (ALTER TABLE).', headers: ['Statut'], rows: [['Structure de table modifiée avec succès.']], execTime };
+  }
+  if (upper.startsWith('INSERT INTO')) {
+    const match = cleanQ.match(/INSERT\s+INTO\s+([a-zA-Z0-9_]+)/i);
+    const tbl = match ? match[1] : 'Eleve';
+    if (!db[tbl]) db[tbl] = [];
+    return { success: true, message: '1 ligne insérée dans ' + tbl + '.', headers: ['Statut', 'Lignes affectées'], rows: [['Insertion réussie dans ' + tbl, 1]], execTime };
+  }
+  if (upper.startsWith('UPDATE')) {
+    return { success: true, message: 'Lignes mises à jour avec succès.', headers: ['Statut', 'Lignes modifiées'], rows: [['Mise à jour réussie', 1]], execTime };
+  }
+  if (upper.startsWith('DELETE FROM') || upper.startsWith('DELETE')) {
+    return { success: true, message: 'Lignes supprimées avec succès.', headers: ['Statut', 'Lignes supprimées'], rows: [['Suppression réussie', 1]], execTime };
+  }
+
+  // SELECT without FROM (e.g. SELECT NOW() AS x)
+  if (upper.startsWith('SELECT') && !upper.includes(' FROM ')) {
+    const exprPart = cleanQ.replace(/^SELECT\s+/i, '');
+    const cols = exprPart.split(',').map(s => s.trim());
+    const headers = [];
+    const row = [];
+    cols.forEach(colExpr => {
+      let alias = colExpr;
+      let expr = colExpr;
+      if (/ AS /i.test(colExpr)) {
+        const parts = colExpr.split(/ AS /i);
+        expr = parts[0].trim();
+        alias = parts[1].trim();
+      }
+      alias = alias.replace(/['"`]/g, '');
+      headers.push(alias);
+      if (/'([^']*)'/.test(expr)) {
+        row.push(expr.replace(/^'|'$/g, ''));
+      } else if (/NOW\(\)/i.test(expr)) {
+        row.push(evalNow());
+      } else if (/YEAR\(/i.test(expr)) {
+        row.push(2026);
+      } else {
+        row.push(expr);
+      }
+    });
+    return { success: true, message: '1 ligne retournée.', headers, rows: [row], execTime };
+  }
+
+  // SELECT with FROM
+  if (upper.startsWith('SELECT')) {
+    let fromTbl = 'Eleve';
+    const fromMatch = cleanQ.match(/FROM\s+([a-zA-Z0-9_]+)/i);
+    if (fromMatch) fromTbl = fromMatch[1];
+    let sourceData = db[fromTbl] || db['Eleve'] || [];
+    let resultRows = [...sourceData];
+
+    // Filter WHERE
+    if (/WHERE\s+(.*?)(ORDER\s+BY|GROUP\s+BY|LIMIT|$)/i.test(cleanQ)) {
+      const whereClause = cleanQ.match(/WHERE\s+(.*?)(ORDER\s+BY|GROUP\s+BY|LIMIT|$)/i)[1].trim();
+      resultRows = resultRows.filter(r => {
+        try {
+          if (/num_inscr\s*>\s*(\d+)/i.test(whereClause)) {
+            const val = parseInt(whereClause.match(/num_inscr\s*>\s*(\d+)/i)[1]);
+            if (r.num_inscr <= val) return false;
+          }
+          if (/num_inscr\s*=\s*(\d+)/i.test(whereClause)) {
+            const val = parseInt(whereClause.match(/num_inscr\s*=\s*(\d+)/i)[1]);
+            if (r.num_inscr !== val) return false;
+          }
+          if (/section\s*=\s*'([^']+)'/i.test(whereClause)) {
+            const val = whereClause.match(/section\s*=\s*'([^']+)'/i)[1];
+            if (r.section !== val) return false;
+          }
+          if (/NOT\s*\(\s*section\s*=\s*'([^']+)'\s*\)/i.test(whereClause)) {
+            const val = whereClause.match(/NOT\s*\(\s*section\s*=\s*'([^']+)'\s*\)/i)[1];
+            if (r.section === val) return false;
+          }
+          if (/ville\s*=\s*'([^']+)'/i.test(whereClause) && !/OR\s+ville/i.test(whereClause)) {
+            const val = whereClause.match(/ville\s*=\s*'([^']+)'/i)[1];
+            if (r.ville !== val) return false;
+          }
+          if (/ville\s*=\s*'([^']+)'\s+OR\s+ville\s*=\s*'([^']+)'/i.test(whereClause)) {
+            const m = whereClause.match(/ville\s*=\s*'([^']+)'\s+OR\s+ville\s*=\s*'([^']+)'/i);
+            if (r.ville !== m[1] && r.ville !== m[2]) return false;
+          }
+          if (/ville\s*<>\s*'([^']+)'/i.test(whereClause)) {
+            const val = whereClause.match(/ville\s*<>\s*'([^']+)'/i)[1];
+            if (r.ville === val) return false;
+          }
+          if (/moyenne\s*>=\s*([\d\.]+)/i.test(whereClause)) {
+            const val = parseFloat(whereClause.match(/moyenne\s*>=\s*([\d\.]+)/i)[1]);
+            if (r.moyenne < val) return false;
+          }
+          if (/moyenne\s*>\s*([\d\.]+)/i.test(whereClause)) {
+            const val = parseFloat(whereClause.match(/moyenne\s*>\s*([\d\.]+)/i)[1]);
+            if (r.moyenne <= val) return false;
+          }
+          if (/moyenne\s*<=\s*([\d\.]+)/i.test(whereClause)) {
+            const val = parseFloat(whereClause.match(/moyenne\s*<=\s*([\d\.]+)/i)[1]);
+            if (r.moyenne > val) return false;
+          }
+          if (/moyenne\s*<\s*([\d\.]+)/i.test(whereClause)) {
+            const val = parseFloat(whereClause.match(/moyenne\s*<\s*([\d\.]+)/i)[1]);
+            if (r.moyenne >= val) return false;
+          }
+          if (/BETWEEN\s+([\d\.]+)\s+AND\s+([\d\.]+)/i.test(whereClause)) {
+            const m = whereClause.match(/BETWEEN\s+([\d\.]+)\s+AND\s+([\d\.]+)/i);
+            const low = parseFloat(m[1]), high = parseFloat(m[2]);
+            if (r.moyenne < low || r.moyenne > high) return false;
+          }
+          if (/IN\s*\(([^)]+)\)/i.test(whereClause)) {
+            const listStr = whereClause.match(/IN\s*\(([^)]+)\)/i)[1];
+            const list = listStr.split(',').map(s => s.trim().replace(/^'|'$/g, ''));
+            if (!list.includes(r.ville) && !list.includes(String(r.num_inscr))) return false;
+          }
+          if (/LIKE\s*'([^']+)'/i.test(whereClause)) {
+            const pat = whereClause.match(/LIKE\s*'([^']+)'/i)[1];
+            const regex = new RegExp('^' + pat.replace(/%/g, '.*').replace(/_/g, '.') + '$', 'i');
+            if (!regex.test(r.nom) && !regex.test(r.prenom)) return false;
+          }
+          if (/MONTH\(date_naiss\)\s*=\s*(\d+)/i.test(whereClause)) {
+            const m = parseInt(whereClause.match(/MONTH\(date_naiss\)\s*=\s*(\d+)/i)[1]);
+            if (evalMonth(r.date_naiss) !== m) return false;
+          }
+          if (/code_mat\s*=\s*'([^']+)'/i.test(whereClause)) {
+            const val = whereClause.match(/code_mat\s*=\s*'([^']+)'/i)[1];
+            if (r.code_mat !== val) return false;
+          }
+          return true;
+        } catch(e) { return true; }
+      });
+    }
+
+    // Aggregates like COUNT, AVG, MAX, MIN, SUM
+    if (/(COUNT|AVG|MAX|MIN|SUM)\(/i.test(cleanQ) && !/GROUP\s+BY/i.test(cleanQ)) {
+      const headers = [];
+      const row = [];
+      if (/COUNT\(\*\)/i.test(cleanQ)) {
+        headers.push('total_eleves');
+        row.push(resultRows.length);
+      }
+      if (/COUNT\s*\(\s*CASE/i.test(cleanQ)) {
+        headers.push('nb_admis');
+        const admis = resultRows.filter(r => (r.moyenne || 0) >= 10).length;
+        row.push(admis);
+      }
+      if (/AVG\(moyenne\)/i.test(cleanQ)) {
+        headers.push('moyenne_classe');
+        const avg = resultRows.reduce((a, b) => a + (b.moyenne || 0), 0) / (resultRows.length || 1);
+        row.push(avg.toFixed(2));
+      }
+      if (/MAX\(moyenne\)/i.test(cleanQ)) {
+        headers.push('meilleure_moyenne');
+        const max = Math.max(...resultRows.map(r => r.moyenne || 0));
+        row.push(max.toFixed(2));
+      }
+      if (/MIN\(moyenne\)/i.test(cleanQ)) {
+        headers.push('plus_faible_moyenne');
+        const min = Math.min(...resultRows.map(r => r.moyenne || 0));
+        row.push(min.toFixed(2));
+      }
+      if (/SUM\(coef\)/i.test(cleanQ)) {
+        headers.push('total_coefficients');
+        const sum = (db['Matiere'] || []).reduce((a, b) => a + (b.coef || 0), 0);
+        row.push(sum);
+      }
+      if (headers.length > 0) {
+        return { success: true, message: '1 ligne retournée.', headers, rows: [row], execTime };
+      }
+    }
+
+    // GROUP BY section
+    if (/GROUP\s+BY\s+section/i.test(cleanQ)) {
+      const groups = {};
+      resultRows.forEach(r => {
+        const sec = r.section || 'Autre';
+        if (!groups[sec]) groups[sec] = [];
+        groups[sec].push(r);
+      });
+      const headers = ['section', 'moyenne_section'];
+      const rows = Object.keys(groups).map(sec => {
+        const list = groups[sec];
+        const avg = list.reduce((a, b) => a + (b.moyenne || 0), 0) / (list.length || 1);
+        return [sec, avg.toFixed(2)];
+      });
+      return { success: true, message: rows.length + ' ligne(s) retournée(s).', headers, rows, execTime };
+    }
+
+    // ORDER BY
+    if (/ORDER\s+BY\s+([a-zA-Z0-9_]+)(\s+(ASC|DESC))?/i.test(cleanQ)) {
+      const m = cleanQ.match(/ORDER\s+BY\s+([a-zA-Z0-9_]+)(\s+(ASC|DESC))?/i);
+      const col = m[1];
+      const desc = (m[3] || '').toUpperCase() === 'DESC';
+      resultRows.sort((a, b) => {
+        if (a[col] < b[col]) return desc ? 1 : -1;
+        if (a[col] > b[col]) return desc ? -1 : 1;
+        return 0;
+      });
+    }
+
+    // LIMIT
+    if (/LIMIT\s+(\d+)/i.test(cleanQ)) {
+      const lim = parseInt(cleanQ.match(/LIMIT\s+(\d+)/i)[1]);
+      resultRows = resultRows.slice(0, lim);
+    }
+
+    // Projections
+    let headers = [];
+    let rows = [];
+    const selectMatch = cleanQ.match(/SELECT\s+(DISTINCT\s+)?(.*?)\s+FROM/i);
+    const selectPart = selectMatch ? selectMatch[2].trim() : '*';
+    if (selectPart === '*' || selectPart.includes('Eleve.*')) {
+      if (resultRows.length > 0) {
+        headers = Object.keys(resultRows[0]);
+        rows = resultRows.map(r => Object.values(r));
+      } else {
+        headers = ['num_inscr', 'nom', 'prenom', 'section', 'moyenne', 'date_naiss', 'ville'];
+      }
+    } else {
+      const cols = selectPart.split(',').map(s => s.trim());
+      headers = cols.map(c => {
+        if (/ AS /i.test(c)) return c.split(/ AS /i)[1].trim();
+        return c.replace(/^[a-zA-Z0-9_]+\./, '');
+      });
+      rows = resultRows.map(r => {
+        return cols.map(c => {
+          let expr = c;
+          if (/ AS /i.test(c)) expr = c.split(/ AS /i)[0].trim();
+          expr = expr.replace(/^[a-zA-Z0-9_]+\./, '');
+          if (expr === 'YEAR(NOW()) - YEAR(date_naiss)') {
+            return 2026 - evalYear(r.date_naiss);
+          }
+          if (expr === 'DAY(date_naiss)') return evalDay(r.date_naiss);
+          if (expr === 'MONTH(date_naiss)') return evalMonth(r.date_naiss);
+          if (expr === 'YEAR(date_naiss)') return evalYear(r.date_naiss);
+          if (expr === 'DATE(NOW())') return evalDate('NOW()');
+          if (expr === 'NOW()') return evalNow();
+          if (expr === "'mohamed@lycee.tn'") return 'mohamed@lycee.tn';
+          if (expr === 'DATEDIFF(NOW(), date_naiss)') return evalDateDiff('NOW()', r.date_naiss);
+          if (expr === 'ADDDATE(date_naiss, 365)') return evalAddDate(r.date_naiss, 365);
+          if (r[expr] !== undefined) return r[expr];
+          return expr;
+        });
+      });
+    }
+
+    return {
+      success: true,
+      message: resultRows.length + ' ligne(s) retournée(s).',
+      headers,
+      rows,
+      execTime
+    };
+  }
+
+  return { success: true, message: 'Requête exécutée avec succès.', headers: ['Résultat'], rows: [['OK']], execTime };
+}
+
 function closeModal() {
   document.getElementById('detailsModal').classList.remove('active');
   if (activeVideoTimer) clearInterval(activeVideoTimer);
@@ -4027,6 +4719,8 @@ function checkUrlRouting() {
     switchView('css');
   } else if (hash === '#js') {
     switchView('js');
+  } else if (hash === '#sql') {
+    switchView('sql');
   }
 }
 

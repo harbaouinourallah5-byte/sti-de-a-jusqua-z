@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>STI de A à Z - Portail d'Étude Web (HTML5, CSS3, JS)</title>
+  <title>STI de A à Z - Portail d'Étude Web (HTML5, CSS3, JS, SQL)</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -26,7 +26,8 @@
         <button class="nav-btn" data-view="html" style="color: #f97316;">🌐 HTML5</button>
         <button class="nav-btn" data-view="css" style="color: #38bdf8;">🎨 CSS3</button>
         <button class="nav-btn" data-view="js" style="color: #facc15;">⚡ JavaScript</button>
-        <button class="nav-btn" data-view="lessons" style="color: #c084fc;">📚 Cours & Séries PDF</button>
+        <button class="nav-btn" data-view="sql" style="color: #c084fc;">🗄️ SQL</button>
+        <button class="nav-btn" data-view="lessons" style="color: #a855f7;">📚 Cours & Séries PDF</button>
         <button class="nav-btn nav-admin-btn" data-view="admin" style="color: #34d399; border: 1px dashed rgba(16, 185, 129, 0.45); padding: 6px 12px; border-radius: 6px; font-weight: 700;">🔒 Espace Enseignant</button>
         
         <button class="theme-toggle-btn" id="themeToggleBtn" title="Basculer thème sombre / clair">☀️</button>
@@ -45,7 +46,7 @@
           <span class="hero-tag">📚 Annexe & Fiches de Révision Officielles</span>
           <h1 class="hero-title">Portail d'Étude Web - STI de A à Z</h1>
           <p class="hero-desc">
-            Retrouvez toutes les notions de votre programme : les balises HTML5 avec photos du résultat, les propriétés CSS3 avec vidéos explicatives et notes sur <code>:hover</code>, ainsi que les fonctions JavaScript.
+            Retrouvez toutes les notions officielles du Baccalauréat STI : les balises HTML5 avec photos du résultat, les propriétés CSS3 avec vidéos explicatives, les fonctions JavaScript avec validation de formulaires, ainsi que la section SQL complète avec console MySQL en direct.
           </p>
         </div>
 
@@ -106,7 +107,25 @@
             </div>
           </div>
 
-          <!-- BLOC 4 : COURS & SÉRIES PDF (PROFESSEUR) -->
+          <!-- BLOC 4 : SQL (BASE DE DONNÉES) -->
+          <div class="portal-card card-sql" data-view="sql">
+            <div class="card-icon-wrap" style="background: linear-gradient(135deg, #7c3aed, #a855f7); color:#fff;">🗄️</div>
+            <h2 class="card-title">SQL</h2>
+            <p class="card-subtitle">
+              Annexe officielle conforme : 8 sections indispensables (Types de données, Contraintes d'intégrité, LDD, LMD, Fonctions date et agrégation) avec console SQL interactive.
+            </p>
+            <div class="card-badges">
+              <span class="pill-badge" style="color:#c084fc;">57 Notions & Commandes (8 sections)</span>
+              <span class="pill-badge" style="color:#a855f7;">📋 Fiche Officielle Bac STI</span>
+              <span class="pill-badge" style="color:#34d399;">🗄️ Console SQL en direct</span>
+            </div>
+            <div class="card-cta-btn" style="background: #8b5cf6; color: #fff;">
+              <span>Ouvrir l'annexe SQL & Simulateur</span>
+              <span>→</span>
+            </div>
+          </div>
+
+          <!-- BLOC 5 : COURS & SÉRIES PDF (PROFESSEUR) -->
           <div class="portal-card card-lessons" data-view="lessons">
             <div class="card-icon-wrap" style="background: linear-gradient(135deg, #7c3aed, #a855f7);">📚</div>
             <h2 class="card-title">Cours & Séries PDF</h2>
@@ -138,6 +157,7 @@
             <button class="nav-btn" data-view="html" onclick="switchView('html')">🌐 Voir HTML5</button>
             <button class="nav-btn" data-view="css" onclick="switchView('css')">🎨 Voir CSS3</button>
             <button class="nav-btn" data-view="js" onclick="switchView('js')">⚡ Voir JavaScript</button>
+            <button class="nav-btn" data-view="sql" onclick="switchView('sql')" style="color:#c084fc;">🗄️ Voir SQL</button>
             <button class="nav-btn" data-view="lessons" onclick="switchView('lessons')">📚 Cours & Séries PDF</button>
             <button class="nav-btn" data-view="admin" onclick="switchView('admin')" style="color:#34d399; border:1px dashed #059669;">🔒 Accès Enseignant (/admin)</button>
           </div>
@@ -554,6 +574,7 @@
           <div style="display: flex; gap: 10px; flex-wrap: wrap;">
             <button class="nav-btn" data-view="css" onclick="switchView('css')">🎨 Passer à CSS3 →</button>
             <button class="nav-btn" data-view="js" onclick="switchView('js')">⚡ Passer à JavaScript →</button>
+            <button class="nav-btn" data-view="sql" onclick="switchView('sql')" style="color:#c084fc;">🗄️ Passer à SQL →</button>
           </div>
         </div>
       </div>
@@ -965,6 +986,7 @@
           <div style="display: flex; gap: 10px; flex-wrap: wrap;">
             <button class="nav-btn" data-view="html" onclick="switchView('html')">🌐 Voir HTML5</button>
             <button class="nav-btn" data-view="js" onclick="switchView('js')">⚡ Passer à JavaScript →</button>
+            <button class="nav-btn" data-view="sql" onclick="switchView('sql')" style="color:#c084fc;">🗄️ Passer à SQL →</button>
           </div>
         </div>
       </div>
@@ -1517,8 +1539,432 @@
           <div style="display: flex; gap: 10px; flex-wrap: wrap;">
             <button class="nav-btn" data-view="html" onclick="switchView('html')">🌐 Voir HTML5</button>
             <button class="nav-btn" data-view="css" onclick="switchView('css')">🎨 Voir CSS3</button>
+            <button class="nav-btn" data-view="sql" onclick="switchView('sql')" style="color:#c084fc;">🗄️ Passer à SQL →</button>
             <button class="nav-btn" data-view="lessons" onclick="switchView('lessons')">📚 Cours & Séries PDF</button>
             <button class="nav-btn" data-view="admin" onclick="switchView('admin')" style="color:#34d399; border:1px dashed #059669;">🔒 Accès Enseignant</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VUE 4 : PAGE DÉDIÉE SQL (BASE DE DONNÉES)
+         ========================================== -->
+    <section id="view-sql" class="view-section">
+      <div class="page-header-banner" style="background: linear-gradient(135deg, rgba(124, 58, 237, 0.16), rgba(80, 140, 50, 0.12)); border-bottom: 1px solid rgba(168, 85, 247, 0.3);">
+        <div class="container">
+          <div class="breadcrumb">
+            <a onclick="switchView('home')">Accueil</a>
+            <span>/</span>
+            <span style="color: #c084fc; font-weight: 600;">SQL (Bases de Données Relationnelles)</span>
+          </div>
+          <div class="subpage-title-row" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+            <div>
+              <h2 class="subpage-title" style="margin:0; font-size:1.6rem; color:#f8fafc;">
+                <span style="color: #c084fc;">🗄️</span> Annexe Officielle SQL (Bac STI)
+              </h2>
+              <p style="font-size:0.88rem; color:var(--text-secondary); margin:6px 0 0 0;">
+                Les 8 sections indispensables du programme tunisien (Types de données, Contraintes d'intégrité, LDD, LMD, Fonctions date et agrégation) avec console SQL interactive !
+              </p>
+            </div>
+            <button class="back-to-home-btn" onclick="switchView('home')">
+              <span>←</span>
+              <span>Retour à l'accueil</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        
+        <!-- Onglets de bascule d'affichage -->
+        <div class="view-tabs-bar">
+          <button id="tabBtnSqlDoc" class="view-mode-tab active" onclick="switchSqlTab('doc')">
+            <span>📄</span>
+            <span>Tableau Officiel Annexe SQL (Réplique Conforme)</span>
+          </button>
+          <button id="tabBtnSqlCards" class="view-mode-tab" onclick="switchSqlTab('cards')">
+            <span>🎴</span>
+            <span>Fiches Détaillées & Recherche (57 commandes)</span>
+          </button>
+        </div>
+
+        <!-- ==========================================
+             1. VUE TABLEAU OFFICIEL (RÉPLIQUE 8 SECTIONS DE LA FICHE)
+             ========================================== -->
+        <div class="annexe-doc-container" id="sqlOfficialDocView">
+          <div class="annexe-doc-header">
+            <div class="annexe-title-wrap">
+              <div class="annexe-logo-shield" style="background: linear-gradient(135deg, #4d7c0f, #65a30d); border-color: #84cc16;">
+                <span style="font-size:0.65rem; font-weight:bold;">SQL</span>
+                <span style="font-size:1.1rem; font-weight:900; line-height:1;">DB</span>
+              </div>
+              <div>
+                <h2 class="annexe-title-text">Annexe SQL</h2>
+                <span style="font-size:0.85rem; color:var(--text-secondary);">Baccalauréat STI - Sciences & Technologies de l'Informatique</span>
+              </div>
+            </div>
+            <div class="annexe-doc-tip">
+              <span>👆</span>
+              <span><strong>Interactif :</strong> Cliquez sur n'importe quelle commande pour ouvrir le simulateur SQL en direct !</span>
+            </div>
+          </div>
+
+          <!-- GRILLE PRINCIPALE CONFORME À LA FICHE UPLOADÉE (2 COLONNES) -->
+          <div class="sql-sheet-grid">
+            
+            <!-- COLONNE GAUCHE -->
+            <div class="sql-sheet-col">
+              
+              <!-- 1. Type de données -->
+              <div class="annexe-box" style="border-color: #65a30d; margin-bottom: 20px;">
+                <div class="annexe-box-header green-sheet">Type de données</div>
+                <table class="annexe-table">
+                  <tr onclick="openSqlModalById('sql-type-int')" title="Cliquer pour voir la fiche INT">
+                    <td class="syntax-col" style="font-weight:800; color:#c084fc;">INT</td>
+                    <td class="desc-col">Entier</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-type-decimal')" title="Cliquer pour voir la fiche DECIMAL">
+                    <td class="syntax-col" style="font-weight:800; color:#c084fc;">DECIMAL</td>
+                    <td class="desc-col">Réel</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-type-char')" title="Cliquer pour voir la fiche CHAR">
+                    <td class="syntax-col" style="font-weight:800; color:#c084fc;">CHAR</td>
+                    <td class="desc-col">Chaîne de caractères de longueur fixe.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-type-varchar')" title="Cliquer pour voir la fiche VARCHAR">
+                    <td class="syntax-col" style="font-weight:800; color:#c084fc;">VARCHAR</td>
+                    <td class="desc-col">Chaîne de caractères de longueur variable dont la longueur maximale fixée.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-type-text')" title="Cliquer pour voir la fiche TEXT">
+                    <td class="syntax-col" style="font-weight:800; color:#c084fc;">TEXT</td>
+                    <td class="desc-col">Chaîne de caractères de longueur variable.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-type-date')" title="Cliquer pour voir la fiche DATE">
+                    <td class="syntax-col" style="font-weight:800; color:#c084fc;">DATE</td>
+                    <td class="desc-col">Date.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-type-time')" title="Cliquer pour voir la fiche TIME">
+                    <td class="syntax-col" style="font-weight:800; color:#c084fc;">TIME</td>
+                    <td class="desc-col">Temps.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-type-datetime')" title="Cliquer pour voir la fiche DATETIME">
+                    <td class="syntax-col" style="font-weight:800; color:#c084fc;">DATETIME</td>
+                    <td class="desc-col">Date et Heure.</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- 2. Opérateurs de comparaison -->
+              <div class="annexe-box" style="border-color: #65a30d; margin-bottom: 20px;">
+                <div class="annexe-box-header green-sheet">Opérateurs de comparaison</div>
+                <table class="annexe-table">
+                  <tr onclick="openSqlModalById('sql-op-equal')" title="Cliquer pour voir l'opérateur =">
+                    <td class="syntax-col" style="font-weight:800; color:#38bdf8;">=</td>
+                    <td class="desc-col">Égale à</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-op-diff')" title="Cliquer pour voir l'opérateur <>">
+                    <td class="syntax-col" style="font-weight:800; color:#38bdf8;">&lt;&gt;</td>
+                    <td class="desc-col">Différent de</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-op-gt')" title="Cliquer pour voir l'opérateur >">
+                    <td class="syntax-col" style="font-weight:800; color:#38bdf8;">&gt;</td>
+                    <td class="desc-col">Supérieur à</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-op-lt')" title="Cliquer pour voir l'opérateur <">
+                    <td class="syntax-col" style="font-weight:800; color:#38bdf8;">&lt;</td>
+                    <td class="desc-col">Inférieur à</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-op-gte')" title="Cliquer pour voir l'opérateur >=">
+                    <td class="syntax-col" style="font-weight:800; color:#38bdf8;">&gt;=</td>
+                    <td class="desc-col">Supérieur ou égale à</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-op-lte')" title="Cliquer pour voir l'opérateur <=">
+                    <td class="syntax-col" style="font-weight:800; color:#38bdf8;">&lt;=</td>
+                    <td class="desc-col">Inférieur ou égale à</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-op-in')" title="Cliquer pour voir IN">
+                    <td class="syntax-col" style="font-weight:800; color:#facc15;">IN</td>
+                    <td class="desc-col">Dans</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-op-between')" title="Cliquer pour voir BETWEEN">
+                    <td class="syntax-col" style="font-weight:800; color:#facc15;">BETWEEN</td>
+                    <td class="desc-col">Entre deux valeurs d'un intervalle.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-op-like')" title="Cliquer pour voir LIKE">
+                    <td class="syntax-col" style="font-weight:800; color:#facc15;">LIKE</td>
+                    <td class="desc-col">Recherche de motif/valeur.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-op-is')" title="Cliquer pour voir IS NULL">
+                    <td class="syntax-col" style="font-weight:800; color:#facc15;">IS</td>
+                    <td class="desc-col">Filtre les résultats contenant la valeur NULL.</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- 3. Opérateurs logiques -->
+              <div class="annexe-box" style="border-color: #65a30d; margin-bottom: 20px;">
+                <div class="annexe-box-header green-sheet">Opérateurs logiques</div>
+                <table class="annexe-table">
+                  <tr onclick="openSqlModalById('sql-op-and')" title="Cliquer pour voir AND">
+                    <td class="syntax-col" style="font-weight:800; color:#10b981;">AND</td>
+                    <td class="desc-col">ET</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-op-or')" title="Cliquer pour voir OR">
+                    <td class="syntax-col" style="font-weight:800; color:#10b981;">OR</td>
+                    <td class="desc-col">OU</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-op-not')" title="Cliquer pour voir NOT">
+                    <td class="syntax-col" style="font-weight:800; color:#10b981;">NOT</td>
+                    <td class="desc-col">NON</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- 4. Fonctions définies sur le type date -->
+              <div class="annexe-box" style="border-color: #65a30d; margin-bottom: 20px;">
+                <div class="annexe-box-header green-sheet">Fonctions définies sur le type date</div>
+                <table class="annexe-table">
+                  <tr onclick="openSqlModalById('sql-fn-date')" title="Cliquer pour voir DATE()">
+                    <td class="syntax-col" style="font-weight:800; color:#38bdf8;">DATE()</td>
+                    <td class="desc-col">Retourne une date extraite à partir d'une chaîne contenant une valeur au format DATE ou DATETIME.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-fn-day')" title="Cliquer pour voir DAY()">
+                    <td class="syntax-col" style="font-weight:800; color:#38bdf8;">DAY ( )</td>
+                    <td class="desc-col">Retourne le jour.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-fn-month')" title="Cliquer pour voir MONTH()">
+                    <td class="syntax-col" style="font-weight:800; color:#38bdf8;">MONTH ( )</td>
+                    <td class="desc-col">Retourne le mois.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-fn-year')" title="Cliquer pour voir YEAR()">
+                    <td class="syntax-col" style="font-weight:800; color:#38bdf8;">YEAR ( )</td>
+                    <td class="desc-col">Retourne l'année.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-fn-now')" title="Cliquer pour voir NOW()">
+                    <td class="syntax-col" style="font-weight:800; color:#38bdf8;">NOW ( )</td>
+                    <td class="desc-col">Retourne la date et l'heure courantes.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-fn-adddate')" title="Cliquer pour voir ADDDATE()">
+                    <td class="syntax-col" style="font-weight:800; color:#38bdf8;">ADDDATE()</td>
+                    <td class="desc-col">Ajoute un nombre de jours ou un intervalle de temps à une date.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-fn-datediff')" title="Cliquer pour voir DATEDIFF()">
+                    <td class="syntax-col" style="font-weight:800; color:#38bdf8;">DATEDIFF()</td>
+                    <td class="desc-col">Retourne la différence entre deux dates en jours.</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- 5. Fonctions d'agrégation -->
+              <div class="annexe-box" style="border-color: #65a30d; margin-bottom: 20px;">
+                <div class="annexe-box-header green-sheet">Fonctions d'agrégation</div>
+                <table class="annexe-table">
+                  <tr onclick="openSqlModalById('sql-fn-avg')" title="Cliquer pour voir AVG()">
+                    <td class="syntax-col" style="font-weight:800; color:#fb923c;">AVG ( )</td>
+                    <td class="desc-col">Retourne la moyenne.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-fn-count')" title="Cliquer pour voir COUNT()">
+                    <td class="syntax-col" style="font-weight:800; color:#fb923c;">COUNT ( )</td>
+                    <td class="desc-col">Retourne le nombre d'enregistrements.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-fn-max')" title="Cliquer pour voir MAX()">
+                    <td class="syntax-col" style="font-weight:800; color:#fb923c;">MAX ( )</td>
+                    <td class="desc-col">Retourne le maximum.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-fn-min')" title="Cliquer pour voir MIN()">
+                    <td class="syntax-col" style="font-weight:800; color:#fb923c;">MIN ( )</td>
+                    <td class="desc-col">Retourne le minimum.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-fn-sum')" title="Cliquer pour voir SUM()">
+                    <td class="syntax-col" style="font-weight:800; color:#fb923c;">SUM ( )</td>
+                    <td class="desc-col">Retourne la somme.</td>
+                  </tr>
+                </table>
+              </div>
+
+            </div>
+
+            <!-- COLONNE DROITE -->
+            <div class="sql-sheet-col">
+              
+              <!-- 6. Contraintes d'intégrité -->
+              <div class="annexe-box" style="border-color: #65a30d; margin-bottom: 20px;">
+                <div class="annexe-box-header green-sheet">Contraintes d'intégrité</div>
+                <table class="annexe-table">
+                  <tr onclick="openSqlModalById('sql-constraint-not-null')" title="Cliquer pour voir NOT NULL">
+                    <td class="syntax-col" style="font-weight:800; color:#ec4899;">NOT NULL</td>
+                    <td class="desc-col">Interdit une valeur nulle.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-constraint-default')" title="Cliquer pour voir DEFAULT">
+                    <td class="syntax-col" style="font-weight:800; color:#ec4899;">DEFAULT</td>
+                    <td class="desc-col">Attribut une valeur par défaut.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-constraint-check')" title="Cliquer pour voir CHECK">
+                    <td class="syntax-col" style="font-weight:800; color:#ec4899;">CHECK</td>
+                    <td class="desc-col">Spécifie que les valeurs de la colonne doivent respecter une condition.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-constraint-primary-key')" title="Cliquer pour voir PRIMARY KEY">
+                    <td class="syntax-col" style="font-weight:800; color:#ec4899;">PRIMARY KEY</td>
+                    <td class="desc-col">Définit une clé primaire.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-constraint-unique')" title="Cliquer pour voir UNIQUE">
+                    <td class="syntax-col" style="font-weight:800; color:#ec4899;">UNIQUE</td>
+                    <td class="desc-col">Spécifie l'unicité des valeurs d'une colonne.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-constraint-foreign-key')" title="Cliquer pour voir FOREIGN KEY">
+                    <td class="syntax-col" style="font-weight:800; color:#ec4899;">FOREIGN KEY</td>
+                    <td class="desc-col">Définit une clé étrangère.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-constraint-references')" title="Cliquer pour voir REFERENCES">
+                    <td class="syntax-col" style="font-weight:800; color:#ec4899;">REFERENCES</td>
+                    <td class="desc-col">Fait référence à une clé primaire d'une autre table.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-constraint-on-update-cascade')" title="Cliquer pour voir ON UPDATE CASCADE">
+                    <td class="syntax-col" style="font-weight:800; color:#ec4899;">ON UPDATE CASCADE</td>
+                    <td class="desc-col">Met à jour la clé étrangère en cas de mise à jour de la clé primaire.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-constraint-on-delete-cascade')" title="Cliquer pour voir ON DELETE CASCADE">
+                    <td class="syntax-col" style="font-weight:800; color:#ec4899;">ON DELETE CASCADE</td>
+                    <td class="desc-col">Supprime automatiquement tous les enregistrements de la table fille suite à la suppression de l'enregistrement correspondant de la table mère.</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- 7. Définition des données (LDD) -->
+              <div class="annexe-box" style="border-color: #65a30d; margin-bottom: 20px;">
+                <div class="annexe-box-header green-sheet">Définition des données</div>
+                <table class="annexe-table">
+                  <tr onclick="openSqlModalById('sql-ldd-create-db')" title="Cliquer pour voir CREATE DATABASE">
+                    <td class="syntax-col" style="font-weight:800; color:#a855f7;">CREATE DATABASE nom</td>
+                    <td class="desc-col">Crée une base de données.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-ldd-drop-db')" title="Cliquer pour voir DROP DATABASE">
+                    <td class="syntax-col" style="font-weight:800; color:#a855f7;">DROP DATABASE nom</td>
+                    <td class="desc-col">Supprime une base de données.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-ldd-create-table')" title="Cliquer pour voir CREATE TABLE">
+                    <td class="syntax-col" style="font-weight:800; color:#a855f7;">CREATE TABLE table1 (...)</td>
+                    <td class="desc-col">Crée une table.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-ldd-alter-add')" title="Cliquer pour voir ALTER TABLE ADD">
+                    <td class="syntax-col" style="font-weight:800; color:#a855f7;">ALTER TABLE table1 ADD colonne type [contrainte]</td>
+                    <td class="desc-col">Ajoute une colonne à une table.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-ldd-alter-drop')" title="Cliquer pour voir ALTER TABLE DROP">
+                    <td class="syntax-col" style="font-weight:800; color:#a855f7;">ALTER TABLE table1 DROP colonne</td>
+                    <td class="desc-col">Supprime une colonne.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-ldd-alter-modify')" title="Cliquer pour voir ALTER / MODIFY">
+                    <td class="syntax-col" style="font-weight:800; color:#a855f7;">ALTER TABLE table1 ALTER* colonne type</td>
+                    <td class="desc-col">Modifie le type d'une colonne.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-ldd-alter-rename')" title="Cliquer pour voir RENAME / CHANGE">
+                    <td class="syntax-col" style="font-weight:800; color:#a855f7;">ALTER TABLE table1 RENAME** nom1 TO nom2</td>
+                    <td class="desc-col">Modifie le nom d'une colonne.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-ldd-alter-add-constraint')" title="Cliquer pour voir ADD CONSTRAINT">
+                    <td class="syntax-col" style="font-weight:800; color:#a855f7;">ALTER TABLE table1 ADD CONSTRAINT [nom] contrainte</td>
+                    <td class="desc-col">Ajoute une contrainte sur une colonne d'une table.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-ldd-alter-drop-constraint')" title="Cliquer pour voir DROP CONSTRAINT">
+                    <td class="syntax-col" style="font-weight:800; color:#a855f7;">ALTER TABLE table1 DROP CONSTRAINT nom</td>
+                    <td class="desc-col">Supprime une contrainte.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-ldd-alter-enable-disable')" title="Cliquer pour voir ENABLE/DISABLE">
+                    <td class="syntax-col" style="font-weight:800; color:#a855f7;">ALTER TABLE table1 ENABLE/ DISABLE CONSTRAINT nom</td>
+                    <td class="desc-col">Active/Désactive une contrainte.</td>
+                  </tr>
+                  <tr onclick="openSqlModalById('sql-ldd-drop-table')" title="Cliquer pour voir DROP TABLE">
+                    <td class="syntax-col" style="font-weight:800; color:#a855f7;">DROP TABLE table1</td>
+                    <td class="desc-col">Supprime une table.</td>
+                  </tr>
+                </table>
+                <div class="annexe-box-footer" style="font-size:0.8rem; color:var(--text-secondary);">
+                  * on peut utiliser <strong>MODIFY</strong> au lieu de ALTER.<br>
+                  ** on peut utiliser <strong>CHANGE</strong> au lieu de RENAME.
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- SECTION PLEINE LARGEUR (BAS DE FICHE) : MANIPULATION DES DONNÉES (LMD) -->
+          <div style="margin-top: 20px;">
+            <div class="annexe-box" style="border-color: #65a30d;">
+              <div class="annexe-box-header green-sheet">Manipulation des données</div>
+              <table class="annexe-table">
+                <tr onclick="openSqlModalById('sql-lmd-select')" title="Cliquer pour voir la commande SELECT complète">
+                  <td class="syntax-col" style="font-weight:800; color:#10b981; font-size:0.85rem; line-height:1.5;">
+                    SELECT [DISTINCT] expression [, col, ... ou *] [[AS] alias]<br>
+                    FROM table1 [[AS] alias] [, table2, ...]<br>
+                    [WHERE condition]<br>
+                    [GROUP BY critère]<br>
+                    [HAVING condition]<br>
+                    [ORDER BY expression [ASC/DESC]]
+                  </td>
+                  <td class="desc-col">
+                    • Spécification des colonnes du résultat.<br>
+                    • Spécification des tables.<br>
+                    • Condition.<br>
+                    • Organisation du résultat en groupes.<br>
+                    • Application d'un filtre.<br>
+                    • Tri du résultat.
+                  </td>
+                </tr>
+                <tr onclick="openSqlModalById('sql-lmd-insert')" title="Cliquer pour voir INSERT INTO">
+                  <td class="syntax-col" style="font-weight:800; color:#10b981;">INSERT INTO table [(liste colonnes)] VALUES (liste valeurs)</td>
+                  <td class="desc-col">Insertion des données dans une table.</td>
+                </tr>
+                <tr onclick="openSqlModalById('sql-lmd-update')" title="Cliquer pour voir UPDATE">
+                  <td class="syntax-col" style="font-weight:800; color:#10b981;">UPDATE table1 SET colonne = expression [WHERE condition]</td>
+                  <td class="desc-col">Modification des valeurs d'une colonne.</td>
+                </tr>
+                <tr onclick="openSqlModalById('sql-lmd-delete')" title="Cliquer pour voir DELETE FROM">
+                  <td class="syntax-col" style="font-weight:800; color:#10b981;">DELETE FROM table1 [WHERE condition]</td>
+                  <td class="desc-col">Suppression des enregistrements d'une table.</td>
+                </tr>
+              </table>
+              <div class="annexe-box-footer" onclick="openSqlModalById('sql-lmd-select')" style="cursor:pointer; background:rgba(16, 185, 129, 0.12); color:#e2e8f0;" title="Ouvrir la fiche SELECT">
+                💡 <strong>Astuce Bac STI :</strong> Pour interroger la base, respectez scrupuleusement l'ordre : <code>SELECT ... FROM ... WHERE ... GROUP BY ... HAVING ... ORDER BY</code>. 👆
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ==========================================
+             2. VUE CARTES & RECHERCHE SQL
+             ========================================== -->
+        <div id="sqlCardsGridView" style="display:none;">
+          <div class="filter-search-bar">
+            <div class="search-box-wrap">
+              <span class="search-icon-inside">🔍</span>
+              <input type="text" id="sqlSearchInput" class="search-input" placeholder="Rechercher une commande, contrainte, fonction SQL (ex: SELECT, AVG, DATE, PRIMARY KEY, LIKE, BETWEEN...)" oninput="handleSqlSearch(this.value)">
+            </div>
+            <div class="categories-bar" id="sqlCategoriesBar">
+              <!-- Rempli dynamiquement par JS -->
+            </div>
+          </div>
+
+          <div class="items-grid" id="sqlItemsGrid">
+            <!-- Rempli dynamiquement par JS -->
+          </div>
+        </div>
+
+        <!-- Navigation bas de page SQL -->
+        <div class="bottom-nav-box" style="margin-top: 40px; padding: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+          <button class="back-to-home-btn" onclick="switchView('home')">
+            <span>←</span>
+            <span>Retour à l'accueil</span>
+          </button>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="nav-btn" data-view="html" onclick="switchView('html')">🌐 Voir HTML5</button>
+            <button class="nav-btn" data-view="css" onclick="switchView('css')">🎨 Voir CSS3</button>
+            <button class="nav-btn" data-view="js" onclick="switchView('js')">⚡ Voir JavaScript</button>
+            <button class="nav-btn" data-view="lessons" onclick="switchView('lessons')">📚 Cours & Séries PDF →</button>
           </div>
         </div>
 

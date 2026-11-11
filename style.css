@@ -26,6 +26,10 @@
   --js-light: rgba(250, 204, 21, 0.15);
   --js-glow: rgba(250, 204, 21, 0.4);
 
+  --sql-primary: #a855f7;
+  --sql-light: rgba(168, 85, 247, 0.15);
+  --sql-glow: rgba(168, 85, 247, 0.4);
+
   --hover-badge-bg: #854d0e;
   --hover-badge-text: #fef08a;
 
@@ -287,6 +291,7 @@ body {
 .portal-card.card-html::before { background: linear-gradient(90deg, #e44d26, #f16529); }
 .portal-card.card-css::before { background: linear-gradient(90deg, #264de4, #2965f1); }
 .portal-card.card-js::before { background: linear-gradient(90deg, #f59e0b, #eab308); }
+.portal-card.card-sql::before { background: linear-gradient(90deg, #7c3aed, #a855f7); }
 
 .portal-card:hover {
   transform: translateY(-8px);
@@ -308,6 +313,11 @@ body {
   border-color: var(--js-primary);
 }
 
+.portal-card.card-sql:hover {
+  box-shadow: 0 20px 35px rgba(168, 85, 247, 0.25);
+  border-color: #a855f7;
+}
+
 .card-icon-wrap {
   width: 72px;
   height: 72px;
@@ -322,6 +332,7 @@ body {
 .card-html .card-icon-wrap { background: var(--html-light); color: var(--html-primary); }
 .card-css .card-icon-wrap { background: var(--css-light); color: var(--css-primary); }
 .card-js .card-icon-wrap { background: var(--js-light); color: var(--js-primary); }
+.card-sql .card-icon-wrap { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
 
 .card-title {
   font-size: 1.8rem;
@@ -374,8 +385,11 @@ body {
 .card-js .card-cta-btn { background: #eab308; color: #000; }
 .card-js .card-cta-btn:hover { background: #ca8a04; }
 
+.card-sql .card-cta-btn { background: #8b5cf6; color: #fff; }
+.card-sql .card-cta-btn:hover { background: #7c3aed; }
+
 /* ===================================================================
-   VUE SOUS-PAGES (HTML5 & CSS3 & JS)
+   VUE SOUS-PAGES (HTML5, CSS3, JS & SQL)
    =================================================================== */
 
 .page-header-banner {
@@ -3118,6 +3132,146 @@ input, select, textarea {
     flex-wrap: nowrap;
     padding-bottom: 6px;
   }
+}
+
+/* ===================================================================
+   STYLES SPÉCIFIQUES : MYSQL / SQL (BAC STI)
+   =================================================================== */
+
+/* En-tête vert fidèle à la fiche officielle de révision */
+.annexe-box-header.green-sheet {
+  background: linear-gradient(135deg, #4d7c0f, #65a30d) !important;
+  color: #ffffff !important;
+  font-weight: 800;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+/* Grille 2 colonnes reproduisant exactement la disposition de la feuille */
+.sql-sheet-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .sql-sheet-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Modal titrage violet pour SQL */
+.modal-section-title.purple {
+  color: #c084fc;
+}
+
+/* Simulateur MySQL & Playground */
+.sql-sim-container {
+  background: var(--bg-canvas);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-top: 14px;
+}
+
+.sql-query-editor {
+  width: 100%;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 0.95rem;
+  padding: 10px 14px;
+  background-color: var(--bg-input) !important;
+  color: #38bdf8 !important;
+  border: 1px solid var(--border-input) !important;
+  border-radius: 6px;
+  outline: none;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.sql-query-editor:focus {
+  border-color: #a855f7 !important;
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.25) !important;
+}
+
+/* Tableau de résultat style phpMyAdmin / MySQL */
+.sql-result-table-wrap {
+  overflow-x: auto;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  margin-top: 12px;
+}
+
+.sql-result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  text-align: left;
+}
+
+.sql-result-table th {
+  background: #1e293b;
+  color: #f8fafc;
+  padding: 10px 14px;
+  font-weight: 700;
+  border-bottom: 2px solid #334155;
+  white-space: nowrap;
+}
+
+[data-theme="light"] .sql-result-table th {
+  background: #e2e8f0;
+  color: #0f172a;
+  border-bottom: 2px solid #cbd5e1;
+}
+
+.sql-result-table td {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.sql-result-table tr:hover td {
+  background: rgba(168, 85, 247, 0.08);
+}
+
+.sql-status-banner {
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.sql-status-banner.success {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.sql-status-banner.info {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+.sql-quick-btn {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sql-quick-btn:hover {
+  background: rgba(168, 85, 247, 0.15);
+  border-color: #a855f7;
+  color: #c084fc;
 }
 
 
