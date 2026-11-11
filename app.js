@@ -1163,6 +1163,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderHtmlCards();
   renderCssCards();
   renderJsCards();
+  initLessonsModule();
 });
 
 // -------------------------------------------------------------
@@ -1235,15 +1236,46 @@ function switchView(viewName) {
     document.getElementById('htmlSearchInput').value = '';
     renderHtmlCategories();
     renderHtmlCards();
+    history.replaceState(null, '', '#html');
   } else if (viewName === 'css') {
     document.getElementById('cssSearchInput').value = '';
     renderCssCategories();
     renderCssCards();
+    history.replaceState(null, '', '#css');
   } else if (viewName === 'js') {
     const jsInput = document.getElementById('jsSearchInput');
     if (jsInput) jsInput.value = '';
     renderJsCategories();
     renderJsCards();
+    history.replaceState(null, '', '#js');
+  } else if (viewName === 'lessons') {
+    const lInput = document.getElementById('lessonSearchInput');
+    if (lInput) lInput.value = '';
+    currentLessonSubject = 'all';
+    currentLessonType = 'all';
+    currentLessonSearch = '';
+    renderLessons();
+    history.replaceState(null, '', '#lessons');
+  } else if (viewName === 'admin') {
+    if (isAdminLoggedIn) {
+      const loginCard = document.getElementById('adminLoginCard');
+      const dash = document.getElementById('adminDashboard');
+      if (loginCard) loginCard.style.display = 'none';
+      if (dash) dash.style.display = 'block';
+      renderAdminLessonsTable();
+    } else {
+      const loginCard = document.getElementById('adminLoginCard');
+      const dash = document.getElementById('adminDashboard');
+      if (loginCard) loginCard.style.display = 'block';
+      if (dash) dash.style.display = 'none';
+      setTimeout(() => {
+        const pw = document.getElementById('adminPasswordInput');
+        if (pw) pw.focus();
+      }, 100);
+    }
+    history.replaceState(null, '', '#admin');
+  } else if (viewName === 'home') {
+    history.replaceState(null, '', window.location.pathname.replace(/\/admin|\/lessons|\/cours/gi, '') || '/');
   }
 }
 
@@ -3830,4 +3862,686 @@ function openHtmlModalById(id) {
 function openCssModalById(id) {
   const item = DATA.css.find(c => c.id === id);
   if (item) openCssModal(item);
+}
+
+
+
+// =============================================================
+// MODULE COURS & SÉRIES PDF + ESPACE ENSEIGNANT (/admin)
+// Conforme au Programme Officiel Baccalauréat STI Tunisie
+// =============================================================
+
+let allLessons = [];
+let currentLessonSubject = 'all';
+let currentLessonType = 'all';
+let currentLessonSearch = '';
+let isAdminLoggedIn = false;
+let selectedAdminFile = null;
+let adminFilterSubject = 'all';
+
+// -------------------------------------------------------------
+// Base de données IndexedDB (Zéro limite Vercel / Stockage local)
+// -------------------------------------------------------------
+const STILessonsDB = {
+  dbName: 'STILessonsDatabase',
+  version: 1,
+  storeName: 'custom_lessons',
+  db: null,
+
+  init() {
+    return new Promise((resolve) => {
+      if (!window.indexedDB) {
+        console.warn("IndexedDB non disponible sur ce navigateur.");
+        return resolve(false);
+      }
+      const request = indexedDB.open(this.dbName, this.version);
+      request.onupgradeneeded = (e) => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains(this.storeName)) {
+          db.createObjectStore(this.storeName, { keyPath: 'id' });
+        }
+      };
+      request.onsuccess = (e) => {
+        this.db = e.target.result;
+        resolve(true);
+      };
+      request.onerror = () => {
+        resolve(false);
+      };
+    });
+  },
+
+  getAll() {
+    return new Promise((resolve) => {
+      if (!this.db) return resolve([]);
+      try {
+        const tx = this.db.transaction(this.storeName, 'readonly');
+        const store = tx.objectStore(this.storeName);
+        const req = store.getAll();
+        req.onsuccess = () => resolve(req.result || []);
+        req.onerror = () => resolve([]);
+      } catch (e) {
+        resolve([]);
+      }
+    });
+  },
+
+  save(lesson) {
+    return new Promise((resolve) => {
+      if (!this.db) return resolve(false);
+      try {
+        const tx = this.db.transaction(this.storeName, 'readwrite');
+        const store = tx.objectStore(this.storeName);
+        store.put(lesson);
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = () => resolve(false);
+      } catch (e) {
+        resolve(false);
+      }
+    });
+  },
+
+  delete(id) {
+    return new Promise((resolve) => {
+      if (!this.db) return resolve(false);
+      try {
+        const tx = this.db.transaction(this.storeName, 'readwrite');
+        const store = tx.objectStore(this.storeName);
+        store.delete(id);
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = () => resolve(false);
+      } catch (e) {
+        resolve(false);
+      }
+    });
+  },
+
+  clear() {
+    return new Promise((resolve) => {
+      if (!this.db) return resolve(false);
+      try {
+        const tx = this.db.transaction(this.storeName, 'readwrite');
+        const store = tx.objectStore(this.storeName);
+        store.clear();
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = () => resolve(false);
+      } catch (e) {
+        resolve(false);
+      }
+    });
+  }
+};
+
+// -------------------------------------------------------------
+// Initialisation du Module Leçons & Vérification Routage URL
+// -------------------------------------------------------------
+async function initLessonsModule() {
+  await STILessonsDB.init();
+  const customLessons = await STILessonsDB.getAll();
+
+  const defaultLessons = (DATA && DATA.lessons) ? DATA.lessons : [];
+  allLessons = [...customLessons, ...defaultLessons];
+
+  renderLessons();
+
+  // Écoute des changements d'URL hash
+  window.addEventListener('hashchange', checkUrlRouting);
+  checkUrlRouting();
+}
+
+function checkUrlRouting() {
+  const hash = window.location.hash.toLowerCase();
+  const path = window.location.pathname.toLowerCase();
+
+  if (hash === '#admin' || path.endsWith('/admin')) {
+    switchView('admin');
+  } else if (hash === '#lessons' || path.endsWith('/lessons') || path.endsWith('/cours')) {
+    switchView('lessons');
+  } else if (hash === '#html') {
+    switchView('html');
+  } else if (hash === '#css') {
+    switchView('css');
+  } else if (hash === '#js') {
+    switchView('js');
+  }
+}
+
+// -------------------------------------------------------------
+// Rendu & Filtres des Leçons Élèves
+// -------------------------------------------------------------
+function renderLessons() {
+  const grid = document.getElementById('lessonsGrid');
+  const counterBadge = document.getElementById('lessonsCounterBadge');
+  if (!grid) return;
+
+  const filtered = allLessons.filter(lesson => {
+    const matchSubject = (currentLessonSubject === 'all' || lesson.subject === currentLessonSubject);
+    const matchType = (currentLessonType === 'all' || lesson.type === currentLessonType);
+    const q = currentLessonSearch.toLowerCase().trim();
+    const matchSearch = !q ||
+      lesson.title.toLowerCase().includes(q) ||
+      (lesson.description && lesson.description.toLowerCase().includes(q)) ||
+      (lesson.subjectLabel && lesson.subjectLabel.toLowerCase().includes(q)) ||
+      (lesson.tags && lesson.tags.some(t => t.toLowerCase().includes(q)));
+    return matchSubject && matchType && matchSearch;
+  });
+
+  if (counterBadge) {
+    counterBadge.textContent = `${filtered.length} Document${filtered.length > 1 ? 's' : ''} Disponible${filtered.length > 1 ? 's' : ''}`;
+  }
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 50px 20px; background: var(--bg-card); border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
+        <span style="font-size: 2.4rem; display: block; margin-bottom: 10px;">🔍</span>
+        <h4 style="color: #cbd5e1; font-size: 1.1rem; margin-bottom: 6px;">Aucun document ne correspond à vos critères</h4>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">
+          Modifiez vos filtres ou effectuez une autre recherche par mot-clé (ex: HTML, CSS, JS, SQL, LDD, verif...).
+        </p>
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(lesson => {
+    const subjClass = lesson.subject || 'html';
+    return `
+      <div class="lesson-card ${subjClass}">
+        <div>
+          <div class="lesson-card-header">
+            <span class="subject-badge ${subjClass}">${escapeHtml(lesson.subjectLabel || lesson.subject.toUpperCase())}</span>
+            <span style="background: rgba(255,255,255,0.08); font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; color: #cbd5e1; font-weight: 600;">
+              ${escapeHtml(lesson.typeLabel || lesson.type)}
+            </span>
+          </div>
+
+          <h3 class="lesson-card-title">${escapeHtml(lesson.title)}</h3>
+          <p class="lesson-card-desc">${escapeHtml(lesson.description || lesson.summary || 'Document de cours officiel Bac STI.')}</p>
+        </div>
+
+        <div>
+          <div class="lesson-card-meta">
+            <span>📅 ${escapeHtml(lesson.date || '2025')} • ${escapeHtml(lesson.fileSize || 'PDF')}</span>
+            <span style="font-style: italic;">${escapeHtml(lesson.author || 'Enseignant')}</span>
+          </div>
+
+          <div class="lesson-card-actions">
+            <button class="lesson-btn-view" onclick="openPdfModal('${lesson.id}')">
+              <span>👁️</span>
+              <span>Consulter le PDF</span>
+            </button>
+            <button class="lesson-btn-download" onclick="downloadLessonPdf('${lesson.id}')" title="Télécharger le fichier PDF sur votre appareil">
+              <span>⬇️</span>
+              <span>Télécharger</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function filterLessonsBySubject(subj) {
+  currentLessonSubject = subj;
+  document.querySelectorAll('.subject-tab').forEach(btn => {
+    if (btn.getAttribute('data-subject') === subj) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+  renderLessons();
+}
+
+function filterLessonsByType(type) {
+  currentLessonType = type;
+  document.querySelectorAll('#lessonTypeFilterBar .cat-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  if (event && event.target) {
+    event.target.classList.add('active');
+  }
+  renderLessons();
+}
+
+function handleLessonSearch(query) {
+  currentLessonSearch = query;
+  renderLessons();
+}
+
+// -------------------------------------------------------------
+// Lecteur PDF Interactif & Modale
+// -------------------------------------------------------------
+function openPdfModal(lessonId) {
+  const lesson = allLessons.find(l => l.id === lessonId);
+  if (!lesson) return;
+
+  const modal = document.getElementById('pdfViewerModal');
+  const title = document.getElementById('pdfModalTitle');
+  const cat = document.getElementById('pdfModalCategory');
+  const body = document.getElementById('pdfModalBody');
+  const downloadBtn = document.getElementById('pdfModalDownloadBtn');
+
+  if (title) title.textContent = lesson.title;
+  if (cat) {
+    cat.textContent = `PDF • ${lesson.subjectLabel} • ${lesson.typeLabel}`;
+    cat.className = `category-label ${lesson.subject}`;
+  }
+  if (downloadBtn) {
+    downloadBtn.onclick = () => downloadLessonPdf(lesson.id);
+  }
+
+  // Si c'est un fichier PDF réel téléversé par le prof (data URL ou blob ou lien externe)
+  if (lesson.fileData) {
+    body.innerHTML = `
+      <iframe src="${lesson.fileData}" class="pdf-reader-frame" style="width:100%; height:100%; border:none;"></iframe>
+    `;
+  } else if (lesson.pdfUrl) {
+    body.innerHTML = `
+      <iframe src="${lesson.pdfUrl}" class="pdf-reader-frame" style="width:100%; height:100%; border:none;"></iframe>
+    `;
+  } else {
+    // Rendu haute fidélité format document d'examen imprimable
+    body.innerHTML = `
+      <div style="flex: 1; overflow-y: auto; padding: 24px; background: #0f172a;">
+        <div class="pdf-print-sheet">
+          <div style="border-bottom: 2px solid #0f172a; padding-bottom: 14px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div>
+              <div style="font-size: 0.78rem; text-transform: uppercase; font-weight: 800; color: #475569;">République Tunisienne • Ministère de l'Éducation</div>
+              <div style="font-size: 1.15rem; font-weight: 900; color: #0f172a;">BACCALAURÉAT SECTION SCIENCES & TECHNOLOGIES DE L'INFORMATIQUE (STI)</div>
+              <div style="font-size: 0.85rem; color: #64748b; font-weight: 600;">Matière : ${escapeHtml(lesson.subjectLabel)} • Document : ${escapeHtml(lesson.typeLabel)}</div>
+            </div>
+            <div style="text-align: right;">
+              <span style="background: #0f172a; color: #fff; padding: 4px 10px; border-radius: 4px; font-weight: 800; font-size: 0.78rem;">BAC STI</span>
+              <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">Session 2025</div>
+            </div>
+          </div>
+
+          <h2 style="color: #1e3a8a; font-size: 1.4rem; margin-bottom: 12px; font-weight: 800;">${escapeHtml(lesson.title)}</h2>
+          
+          <div style="background: #f8fafc; border-left: 4px solid #2563eb; padding: 14px 16px; border-radius: 4px; margin-bottom: 22px; font-size: 0.95rem; color: #334155; line-height: 1.6;">
+            <strong>Résumé du cours :</strong> ${escapeHtml(lesson.summary || lesson.description)}
+          </div>
+
+          <div style="margin-bottom: 24px;">
+            <h3 style="color: #0f172a; font-size: 1.1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 12px;">1. Objectifs & Notions Clés du Programme STI</h3>
+            <ul style="padding-left: 20px; line-height: 1.7; color: #334155;">
+              <li>Mémoriser la syntaxe exacte exigée aux épreuves officielles.</li>
+              <li>Savoir appliquer les règles de validation et de structuration sans aucune dépendance externe.</li>
+              <li>Respecter scrupuleusement les consignes et identifiants du sujet d'examen.</li>
+            </ul>
+          </div>
+
+          <div style="margin-bottom: 24px;">
+            <h3 style="color: #0f172a; font-size: 1.1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 12px;">2. Consignes & Recommandations de l'Enseignant</h3>
+            <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 14px; font-size: 0.92rem; color: #1e40af; line-height: 1.6;">
+              ${escapeHtml(lesson.description || "Ce document constitue un support officiel de révision pour le Bac STI. Traitez les exercices étape par étape.")}
+            </div>
+          </div>
+
+          <div style="margin-top: 32px; padding-top: 14px; border-top: 1px dashed #cbd5e1; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #64748b;">
+            <span>Auteur : ${escapeHtml(lesson.author || 'Professeur')} • Date : ${escapeHtml(lesson.date)}</span>
+            <span>Document imprimable en PDF • STI de A à Z</span>
+          </div>
+
+          <div style="margin-top: 24px; text-align: center;" class="no-print">
+            <button onclick="window.print()" style="background: #2563eb; color: #fff; border: none; padding: 10px 22px; border-radius: 6px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+              <span>🖨️</span>
+              <span>Imprimer ou Enregistrer en PDF (Ctrl + P)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  if (modal) modal.classList.add('active');
+}
+
+function closePdfModal() {
+  const modal = document.getElementById('pdfViewerModal');
+  if (modal) modal.classList.remove('active');
+  const body = document.getElementById('pdfModalBody');
+  if (body) body.innerHTML = '';
+}
+
+function downloadLessonPdf(lessonId) {
+  const lesson = allLessons.find(l => l.id === lessonId);
+  if (!lesson) return;
+
+  const fileName = lesson.downloadName || `BacSTI_${lesson.subject}_${lesson.id}.pdf`;
+
+  // Si c'est un fichier réel téléversé par le prof
+  if (lesson.fileData) {
+    const a = document.createElement('a');
+    a.href = lesson.fileData;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    return;
+  }
+
+  if (lesson.pdfUrl) {
+    window.open(lesson.pdfUrl, '_blank');
+    return;
+  }
+
+  // Génération d'un fichier HTML / PDF téléchargeable pour les leçons pré-intégrées
+  const printHtml = `
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+      <meta charset="UTF-8">
+      <title>${lesson.title} - Bac STI Tunisie</title>
+      <style>
+        body { font-family: Arial, sans-serif; padding: 30px; color: #111; line-height: 1.6; }
+        .header { border-bottom: 2px solid #111; padding-bottom: 10px; margin-bottom: 20px; }
+        .title { font-size: 18pt; font-weight: bold; color: #1e3a8a; }
+        .box { background: #f1f5f9; padding: 12px; border-left: 4px solid #2563eb; margin: 15px 0; }
+        footer { margin-top: 40px; font-size: 9pt; color: #666; border-top: 1px solid #ccc; padding-top: 8px; }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <strong>RÉPUBLIQUE TUNISIENNE • MINISTÈRE DE L'ÉDUCATION</strong><br>
+        BACCALAURÉAT STI • ${lesson.subjectLabel} (${lesson.typeLabel})
+      </div>
+      <h1 class="title">${lesson.title}</h1>
+      <div class="box">${lesson.description || lesson.summary}</div>
+      <p>Auteur : ${lesson.author} • Date de publication : ${lesson.date}</p>
+      <footer>Document pédagogique officiel - Portail STI de A à Z</footer>
+      <script>window.print();</script>
+    </body>
+    </html>
+  `;
+
+  const blob = new Blob([printHtml], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const win = window.open(url, '_blank');
+  if (!win) {
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${lesson.title}.html`;
+    a.click();
+  }
+}
+
+// -------------------------------------------------------------
+// ESPACE ENSEIGNANT (/admin) : Authentification & Téléversement
+// -------------------------------------------------------------
+function handleAdminLogin(e) {
+  if (e) e.preventDefault();
+  const input = document.getElementById('adminPasswordInput');
+  const errorBox = document.getElementById('adminLoginError');
+  const loginCard = document.getElementById('adminLoginCard');
+  const dash = document.getElementById('adminDashboard');
+
+  const correctPw = localStorage.getItem('sti_admin_pw') || 'sti2025';
+
+  if (input && input.value === correctPw) {
+    isAdminLoggedIn = true;
+    if (errorBox) errorBox.style.display = 'none';
+    if (loginCard) loginCard.style.display = 'none';
+    if (dash) dash.style.display = 'block';
+    renderAdminLessonsTable();
+    input.value = '';
+  } else {
+    if (errorBox) {
+      errorBox.style.display = 'block';
+      errorBox.textContent = "⚠️ Mot de passe incorrect. (Par défaut : sti2025)";
+    }
+  }
+}
+
+function handleAdminLogout() {
+  isAdminLoggedIn = false;
+  const loginCard = document.getElementById('adminLoginCard');
+  const dash = document.getElementById('adminDashboard');
+  if (loginCard) loginCard.style.display = 'block';
+  if (dash) dash.style.display = 'none';
+}
+
+function toggleAdminPdfMode(mode) {
+  const fileWrap = document.getElementById('adminPdfFileWrap');
+  const linkWrap = document.getElementById('adminPdfLinkWrap');
+  if (mode === 'file') {
+    if (fileWrap) fileWrap.style.display = 'block';
+    if (linkWrap) linkWrap.style.display = 'none';
+  } else {
+    if (fileWrap) fileWrap.style.display = 'none';
+    if (linkWrap) linkWrap.style.display = 'block';
+  }
+}
+
+function handleAdminFileSelected(e) {
+  const file = e.target.files[0];
+  const label = document.getElementById('adminSelectedFileName');
+  if (file) {
+    selectedAdminFile = file;
+    const sizeMo = (file.size / (1024 * 1024)).toFixed(2);
+    if (label) {
+      label.style.display = 'block';
+      label.textContent = `✓ Fichier sélectionné : ${file.name} (${sizeMo} Mo)`;
+    }
+  } else {
+    selectedAdminFile = null;
+    if (label) label.style.display = 'none';
+  }
+}
+
+async function handleUploadLesson(e) {
+  if (e) e.preventDefault();
+
+  const titleInput = document.getElementById('adminLessonTitle');
+  const subjectSelect = document.getElementById('adminLessonSubject');
+  const typeSelect = document.getElementById('adminLessonType');
+  const authorInput = document.getElementById('adminLessonAuthor');
+  const descInput = document.getElementById('adminLessonDesc');
+  const linkInput = document.getElementById('adminPdfLinkInput');
+  const modeRadios = document.getElementsByName('adminPdfMode');
+
+  const title = titleInput.value.trim();
+  const subject = subjectSelect.value;
+  const type = typeSelect.value;
+  const author = authorInput.value.trim() || "Professeur d'Informatique (Bac STI)";
+  const desc = descInput.value.trim();
+
+  let isFileMode = true;
+  for (let r of modeRadios) {
+    if (r.checked && r.value === 'link') isFileMode = false;
+  }
+
+  let fileData = null;
+  let fileSize = "1 Mo";
+  let pdfUrl = null;
+
+  if (isFileMode) {
+    if (!selectedAdminFile) {
+      alert("Veuillez sélectionner un fichier PDF local à téléverser !");
+      return;
+    }
+    // Lecture du fichier en Data URL (stockable en IndexedDB sans limite Vercel)
+    fileSize = `${(selectedAdminFile.size / (1024 * 1024)).toFixed(2)} Mo`;
+    fileData = await readFileAsDataUrl(selectedAdminFile);
+  } else {
+    pdfUrl = linkInput.value.trim();
+    if (!pdfUrl) {
+      alert("Veuillez saisir le lien vers le document PDF (Google Drive ou lien web) !");
+      return;
+    }
+    fileSize = "Lien Cloud";
+  }
+
+  const subjectLabels = {
+    html: "HTML5",
+    css: "CSS3",
+    js: "JavaScript",
+    sql: "SQL (Bases de Données)"
+  };
+
+  const typeLabels = {
+    cours: "📖 Cours",
+    serie: "📝 Série d'exercices",
+    devoir: "📑 Devoir de Contrôle",
+    corrige: "🎯 Corrigé Type",
+    resume: "📌 Fiche Résumé"
+  };
+
+  const newLesson = {
+    id: `custom-lesson-${Date.now()}`,
+    title: title,
+    subject: subject,
+    subjectLabel: subjectLabels[subject] || subject.toUpperCase(),
+    type: type,
+    typeLabel: typeLabels[type] || type,
+    date: new Date().toISOString().split('T')[0],
+    author: author,
+    fileSize: fileSize,
+    description: desc || "Document PDF déposé par l'enseignant pour les révisions du Bac STI.",
+    summary: desc,
+    fileData: fileData,
+    pdfUrl: pdfUrl,
+    downloadName: selectedAdminFile ? selectedAdminFile.name : `${title}.pdf`,
+    isCustom: true
+  };
+
+  // Enregistrement dans IndexedDB
+  await STILessonsDB.save(newLesson);
+
+  // Ajout en tête de liste
+  allLessons.unshift(newLesson);
+
+  // Réinitialisation du formulaire
+  titleInput.value = '';
+  descInput.value = '';
+  if (linkInput) linkInput.value = '';
+  const fileInput = document.getElementById('adminPdfFileInput');
+  if (fileInput) fileInput.value = '';
+  const label = document.getElementById('adminSelectedFileName');
+  if (label) label.style.display = 'none';
+  selectedAdminFile = null;
+
+  alert(`✓ Leçon "${title}" publiée avec succès ! Elle est maintenant disponible pour les élèves.`);
+
+  renderAdminLessonsTable();
+  renderLessons();
+}
+
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
+function filterAdminTable(subj) {
+  adminFilterSubject = subj;
+  document.querySelectorAll('#adminSubjectFilterWrap .cat-btn').forEach(b => b.classList.remove('active'));
+  if (event && event.target) event.target.classList.add('active');
+  renderAdminLessonsTable();
+}
+
+function renderAdminLessonsTable() {
+  const tbody = document.getElementById('adminLessonsTableBody');
+  if (!tbody) return;
+
+  const filtered = allLessons.filter(l => adminFilterSubject === 'all' || l.subject === adminFilterSubject);
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align:center; padding:20px; color:#94a3b8;">
+          Aucun document trouvé pour la matière sélectionnée.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(l => {
+    return `
+      <tr>
+        <td style="padding:10px 12px;">
+          <span class="subject-badge ${l.subject}">${escapeHtml(l.subjectLabel || l.subject)}</span>
+        </td>
+        <td style="padding:10px 12px; font-weight:600; color:#f8fafc;">
+          ${escapeHtml(l.title)}
+        </td>
+        <td style="padding:10px 12px; color:#cbd5e1;">
+          ${escapeHtml(l.typeLabel || l.type)}
+        </td>
+        <td style="padding:10px 12px; font-size:0.8rem; color:#94a3b8;">
+          ${escapeHtml(l.fileSize || 'PDF')}
+        </td>
+        <td style="padding:10px 12px; text-align:right;">
+          <button class="admin-action-btn view" onclick="openPdfModal('${l.id}')">👁️ Aperçu</button>
+          <button class="admin-action-btn view" onclick="downloadLessonPdf('${l.id}')">⬇️ Télécharger</button>
+          ${l.isCustom ? `<button class="admin-action-btn del" onclick="deleteLesson('${l.id}')">🗑️ Supprimer</button>` : ''}
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+async function deleteLesson(id) {
+  if (!confirm("Voulez-vous vraiment supprimer ce document ?")) return;
+
+  await STILessonsDB.delete(id);
+  allLessons = allLessons.filter(l => l.id !== id);
+
+  renderAdminLessonsTable();
+  renderLessons();
+  alert("✓ Document supprimé avec succès.");
+}
+
+async function exportAllLessonsBackup() {
+  const custom = await STILessonsDB.getAll();
+  const backup = {
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    customLessons: custom
+  };
+
+  const str = JSON.stringify(backup, null, 2);
+  const blob = new Blob([str], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Sauvegarde_Cours_STI_${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importLessonsBackup(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = async () => {
+    try {
+      const data = JSON.parse(reader.result);
+      if (data && Array.isArray(data.customLessons)) {
+        for (let l of data.customLessons) {
+          await STILessonsDB.save(l);
+        }
+        await initLessonsModule();
+        alert(`✓ Sauvegarde importée avec succès (${data.customLessons.length} documents restaurés) !`);
+      } else {
+        alert("Fichier de sauvegarde invalide.");
+      }
+    } catch (err) {
+      alert("Erreur lors de la lecture du fichier de sauvegarde : " + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+async function resetToDefaultLessons() {
+  if (!confirm("Voulez-vous réinitialiser et recharger les 10 leçons officielles de référence ?")) return;
+  await STILessonsDB.clear();
+  await initLessonsModule();
+  alert("✓ Documents réinitialisés au programme officiel.");
 }

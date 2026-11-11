@@ -2683,6 +2683,319 @@ body {
   }
 }
 
+/* =============================================================
+   SECTION COURS & SÉRIES PDF + ESPACE ENSEIGNANT (/admin)
+   ============================================================= */
+
+/* Carte Portail Cours & Séries PDF */
+.portal-card.card-lessons::before {
+  background: linear-gradient(90deg, #7c3aed, #a855f7);
+}
+
+.portal-card.card-lessons:hover {
+  border-color: rgba(168, 85, 247, 0.5);
+  box-shadow: 0 12px 30px rgba(124, 58, 237, 0.22);
+}
+
+.card-lessons .card-icon-wrap {
+  background: rgba(124, 58, 237, 0.15);
+  color: #c084fc;
+}
+
+.card-lessons .card-cta-btn {
+  background: #a855f7;
+  color: #fff;
+}
+
+.card-lessons .card-cta-btn:hover {
+  background: #9333ea;
+}
+
+/* Boutons Onglets Matières (Subject Tabs) */
+.subject-tabs-bar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.subject-tab {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+}
+
+.subject-tab:hover {
+  border-color: #a855f7;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.subject-tab.active {
+  background: #7c3aed;
+  border-color: #a855f7;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+}
+
+.subject-tab.html.active {
+  background: #ea580c;
+  border-color: #f97316;
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
+}
+
+.subject-tab.css.active {
+  background: #0284c7;
+  border-color: #38bdf8;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+}
+
+.subject-tab.js.active {
+  background: #ca8a04;
+  border-color: #facc15;
+  color: #000;
+  box-shadow: 0 4px 14px rgba(202, 138, 4, 0.35);
+}
+
+.subject-tab.sql.active {
+  background: #9333ea;
+  border-color: #c084fc;
+  box-shadow: 0 4px 14px rgba(147, 51, 234, 0.35);
+}
+
+/* Badges de Matières */
+.subject-badge {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.subject-badge.html {
+  background: rgba(249, 115, 22, 0.15);
+  color: #fb923c;
+  border: 1px solid rgba(249, 115, 22, 0.4);
+}
+
+.subject-badge.css {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+}
+
+.subject-badge.js {
+  background: rgba(250, 204, 21, 0.15);
+  color: #facc15;
+  border: 1px solid rgba(250, 204, 21, 0.4);
+}
+
+.subject-badge.sql {
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.4);
+}
+
+/* Cartes de Leçons PDF */
+.lesson-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.lesson-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: #7c3aed;
+  transition: height 0.3s ease;
+}
+
+.lesson-card.html::before { background: #f97316; }
+.lesson-card.css::before { background: #38bdf8; }
+.lesson-card.js::before { background: #facc15; }
+.lesson-card.sql::before { background: #a855f7; }
+
+.lesson-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(168, 85, 247, 0.45);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+}
+
+.lesson-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.lesson-card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #f8fafc;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.lesson-card-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-bottom: 16px;
+  flex: 1;
+}
+
+.lesson-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 12px;
+  margin-bottom: 16px;
+}
+
+.lesson-card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.lesson-btn-view {
+  flex: 1;
+  background: #7c3aed;
+  color: #fff;
+  border: none;
+  padding: 9px 14px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.lesson-btn-view:hover {
+  background: #6d28d9;
+  box-shadow: 0 4px 10px rgba(124, 58, 237, 0.4);
+}
+
+.lesson-btn-download {
+  background: #1e293b;
+  color: #38bdf8;
+  border: 1px solid #0284c7;
+  padding: 9px 14px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.lesson-btn-download:hover {
+  background: #0284c7;
+  color: #fff;
+}
+
+/* Tableau d'administration */
+.admin-table tr {
+  border-bottom: 1px solid var(--border-color);
+  transition: background 0.2s ease;
+}
+
+.admin-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.admin-action-btn {
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  margin-left: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.admin-action-btn.view {
+  background: rgba(124, 58, 237, 0.15);
+  color: #c084fc;
+  border: 1px solid #7c3aed;
+}
+
+.admin-action-btn.del {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid #ef4444;
+}
+
+.admin-action-btn:hover {
+  filter: brightness(1.25);
+}
+
+/* Lecteur PDF intégré */
+.pdf-reader-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #1e293b;
+}
+
+.pdf-print-sheet {
+  background: #fff;
+  color: #0f172a;
+  padding: 40px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6;
+  max-width: 850px;
+  margin: 0 auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .lesson-card-actions {
+    flex-direction: column;
+  }
+  .subject-tabs-bar {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 6px;
+  }
+}
+
+
 
 
 

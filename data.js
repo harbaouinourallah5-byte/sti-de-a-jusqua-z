@@ -2919,5 +2919,230 @@ const DATA = {
     "code": "function testmail(mail) {\n  let pArobase = mail.indexOf(\"@\");\n  let pPoint = mail.lastIndexOf(\".\");\n  return (pArobase > 0 && pPoint > pArobase + 1 && pPoint < mail.length - 1);\n}",
     "runnableCode": "function testmail(mail) {\n  let pArobase = mail.indexOf(\"@\");\n  let pPoint = mail.lastIndexOf(\".\");\n  return (pArobase > 0 && pPoint > pArobase + 1 && pPoint < mail.length - 1);\n}\nconsole.log(\"testmail('eleve@domaine.tn') : \" + testmail('eleve@domaine.tn')); // true\nconsole.log(\"testmail('invalide.sans.arobase') : \" + testmail('invalide.sans.arobase')); // false\nconsole.log(\"testmail('@debut.com') : \" + testmail('@debut.com')); // false\nconsole.log(\"testmail('eleve@pointfinal.') : \" + testmail('eleve@pointfinal.')); // false"
   }
+],
+  "lessons": [
+  {
+    "id": "lesson-html-01",
+    "title": "Cours Officiel : Structuration Web Sémantique & Balises HTML5",
+    "subject": "html",
+    "subjectLabel": "HTML5",
+    "type": "cours",
+    "typeLabel": "📖 Cours",
+    "date": "2025-01-10",
+    "author": "Professeur d'Informatique (Bac STI)",
+    "fileSize": "1.2 Mo",
+    "description": "Guide complet sur la hiérarchie du document HTML5 au Bac STI : <header>, <nav>, <main>, <section>, <article>, <aside> et <footer>. Règles de sémantique et bonnes pratiques d'examen.",
+    "summary": "Ce document présente les éléments structurants officiels de l'annexe HTML5. Il détaille la place de chaque balise dans le document (DOCTYPE, html, head, body) et illustre une maquette de page web complète conforme aux épreuves pratiques et théoriques du Baccalauréat STI.",
+    "downloadName": "Cours_HTML5_Structuration_Semantique_BacSTI.pdf",
+    "tags": [
+      "HTML5",
+      "Structuration",
+      "Sémantique",
+      "header",
+      "nav",
+      "section",
+      "footer"
+    ]
+  },
+  {
+    "id": "lesson-html-02",
+    "title": "Série N°1 : Tableaux, Médias & Formulaires HTML5",
+    "subject": "html",
+    "subjectLabel": "HTML5",
+    "type": "serie",
+    "typeLabel": "📝 Série d'exercices",
+    "date": "2025-01-18",
+    "author": "Professeur d'Informatique (Bac STI)",
+    "fileSize": "850 Ko",
+    "description": "Série d'entraînement pratique : création d'un formulaire d'inscription complet avec tous les contrôles autorisés (type text, password, date, radio, select, textarea) et intégration de tableaux structurés.",
+    "summary": "Exercice 1 : Réalisation d'un tableau d'emploi du temps avec fusion de cellules (rowspan et colspan) et légende <caption>. Exercice 2 : Intégration d'un formulaire de commande avec <fieldset>, <legend>, boutons radio et menu déroulant.",
+    "downloadName": "Serie_01_HTML5_Tableaux_Formulaires_BacSTI.pdf",
+    "tags": [
+      "HTML5",
+      "Formulaires",
+      "Tableaux",
+      "input",
+      "select",
+      "fieldset"
+    ]
+  },
+  {
+    "id": "lesson-css-01",
+    "title": "Cours Officiel : Modèle de Boîtes (Box Model), Positionnement & Sélecteurs CSS3",
+    "subject": "css",
+    "subjectLabel": "CSS3",
+    "type": "cours",
+    "typeLabel": "📖 Cours",
+    "date": "2025-01-22",
+    "author": "Professeur d'Informatique (Bac STI)",
+    "fileSize": "1.5 Mo",
+    "description": "Étude approfondie du Box Model : margin, padding, border, dimensionnement (width, height), gestion du flux (float, position: static, relative, absolute, fixed) et application des 12 sélecteurs avec la règle :hover.",
+    "summary": "Analyse détaillée des marges intérieures (padding) vs extérieures (margin), comportement du flottement (float: left / right) et règles de survol dynamique indispensables pour l'évaluation pratique du Baccalauréat.",
+    "downloadName": "Cours_CSS3_BoxModel_Selecteurs_BacSTI.pdf",
+    "tags": [
+      "CSS3",
+      "Box Model",
+      "margin",
+      "padding",
+      "float",
+      "position",
+      ":hover"
+    ]
+  },
+  {
+    "id": "lesson-css-02",
+    "title": "Série N°2 : Transitions, Transformations & Animations @keyframes",
+    "subject": "css",
+    "subjectLabel": "CSS3",
+    "type": "serie",
+    "typeLabel": "📝 Série d'exercices",
+    "date": "2025-02-02",
+    "author": "Professeur d'Informatique (Bac STI)",
+    "fileSize": "920 Ko",
+    "description": "Exercices d'application sur les propriétés dynamiques du CSS3 : transition-duration, transition-timing-function, transform: rotate/scale, et déclaration d'animations avec @keyframes.",
+    "summary": "Mise en pratique progressive : création d'un bouton animé avec effet de zoom au survol, rotation d'une icône à 360°, et boucle d'animation continue (animation-iteration-count: infinite).",
+    "downloadName": "Serie_02_CSS3_Animations_Transitions_BacSTI.pdf",
+    "tags": [
+      "CSS3",
+      "Animation",
+      "@keyframes",
+      "transform",
+      "transition"
+    ]
+  },
+  {
+    "id": "lesson-js-01",
+    "title": "Cours Officiel : Contrôles de Saisie & Validation de Formulaire (function verif)",
+    "subject": "js",
+    "subjectLabel": "JavaScript",
+    "type": "cours",
+    "typeLabel": "📖 Cours",
+    "date": "2025-02-12",
+    "author": "Professeur d'Informatique (Bac STI)",
+    "fileSize": "1.8 Mo",
+    "description": "Les 10 règles d'or de la fonction maîtresse verif() : vérification de la civilité, nom, téléphone à 8 chiffres, format mail, mot de passe avec confirmation en rouge, adresse avec espace, ville et code postal.",
+    "summary": "Polycopié de référence détaillant chaque étape de la fonction verif(), l'utilisation de document.getElementById() et getElementsByName(), ainsi que les fonctions auxiliaires alpha(ch), isnum(ch), testtel(ch) et testmail(ch).",
+    "downloadName": "Cours_JS_Validation_Formulaire_verif_BacSTI.pdf",
+    "tags": [
+      "JavaScript",
+      "verif()",
+      "Formulaire",
+      "Validation",
+      "alpha",
+      "isnum",
+      "DOM"
+    ]
+  },
+  {
+    "id": "lesson-js-02",
+    "title": "Série N°3 : Dates (validage), Sécurité Captcha, Majuscules & Structure switch",
+    "subject": "js",
+    "subjectLabel": "JavaScript",
+    "type": "serie",
+    "typeLabel": "📝 Série d'exercices",
+    "date": "2025-02-20",
+    "author": "Professeur d'Informatique (Bac STI)",
+    "fileSize": "1.1 Mo",
+    "description": "Sujets d'examen récents : calcul de l'âge avec l'objet Date (ac - ap), génération aléatoire de code Captcha alphanumérique (10 caractères), comptage de majuscules et structure switch (saisons).",
+    "summary": "Exercice 1 : Fonction validage() pour vérifier si un candidat a entre 15 et 30 ans. Exercice 2 : Module de sécurité Captcha() et contrôle nbmajus(). Exercice 3 : Structure conditionnelle switch (mois) avec cas groupés et clause default.",
+    "downloadName": "Serie_03_JS_Dates_Captcha_Switch_BacSTI.pdf",
+    "tags": [
+      "JavaScript",
+      "validage()",
+      "Date",
+      "Captcha()",
+      "nbmajus()",
+      "switch"
+    ]
+  },
+  {
+    "id": "lesson-sql-01",
+    "title": "Cours Officiel : Langage de Définition de Données (LDD : CREATE, ALTER, DROP)",
+    "subject": "sql",
+    "subjectLabel": "SQL (Bases de Données)",
+    "type": "cours",
+    "typeLabel": "📖 Cours",
+    "date": "2025-02-28",
+    "author": "Professeur d'Informatique (Bac STI)",
+    "fileSize": "1.4 Mo",
+    "description": "Création de tables relationnelles (CREATE TABLE), types de données SQL (INT, VARCHAR, DATE, DECIMAL), contraintes d'intégrité (PRIMARY KEY, FOREIGN KEY / REFERENCES, NOT NULL, UNIQUE, CHECK).",
+    "summary": "Ce cours couvre l'intégralité du programme officiel de Base de Données du Bac STI Tunisie pour le volet LDD : définition des colonnes, spécification des clés primaires simples et composées, et établissement des relations avec clés étrangères (FOREIGN KEY).",
+    "downloadName": "Cours_SQL_LDD_Create_Alter_Table_BacSTI.pdf",
+    "tags": [
+      "SQL",
+      "LDD",
+      "CREATE TABLE",
+      "PRIMARY KEY",
+      "FOREIGN KEY",
+      "ALTER TABLE"
+    ]
+  },
+  {
+    "id": "lesson-sql-02",
+    "title": "Cours Officiel : Langage de Manipulation de Données (LMD : SELECT, INSERT, UPDATE, DELETE)",
+    "subject": "sql",
+    "subjectLabel": "SQL (Bases de Données)",
+    "type": "cours",
+    "typeLabel": "📖 Cours",
+    "date": "2025-03-05",
+    "author": "Professeur d'Informatique (Bac STI)",
+    "fileSize": "1.6 Mo",
+    "description": "Guide complet des requêtes SQL d'interrogation et de mise à jour : SELECT avec clauses WHERE, LIKE, BETWEEN, IN, ORDER BY. Opérations d'insertion (INSERT INTO), modification (UPDATE) et suppression (DELETE).",
+    "summary": "Manuel méthodique pour formuler des requêtes d'interrogation précises. Syntaxe des opérateurs de comparaison (=, !=, <, >, <=, >=), opérateurs logiques (AND, OR, NOT), recherche par motif (LIKE '%mot%') et tri des résultats (ORDER BY col ASC/DESC).",
+    "downloadName": "Cours_SQL_LMD_Select_Insert_Update_Delete_BacSTI.pdf",
+    "tags": [
+      "SQL",
+      "LMD",
+      "SELECT",
+      "INSERT INTO",
+      "UPDATE",
+      "DELETE",
+      "WHERE"
+    ]
+  },
+  {
+    "id": "lesson-sql-03",
+    "title": "Série N°4 : Requêtes Complexes, Jointures (INNER JOIN) & Fonctions d'Agrégation",
+    "subject": "sql",
+    "subjectLabel": "SQL (Bases de Données)",
+    "type": "serie",
+    "typeLabel": "📝 Série d'exercices",
+    "date": "2025-03-15",
+    "author": "Professeur d'Informatique (Bac STI)",
+    "fileSize": "1.3 Mo",
+    "description": "Entraînement intensif au Bac STI : jointures entre plusieurs tables (INNER JOIN ... ON), fonctions de calculs statistiques (COUNT, SUM, AVG, MIN, MAX), regroupement GROUP BY et condition de groupe HAVING.",
+    "summary": "15 requêtes progressives issues d'anciennes sessions du Baccalauréat STI tunisien : extraction des données croisées, calcul du chiffre d'affaires, moyenne des notes par filière, et sélection des groupes avec HAVING COUNT(*) > 5.",
+    "downloadName": "Serie_04_SQL_Jointures_Agregation_GroupBy_BacSTI.pdf",
+    "tags": [
+      "SQL",
+      "INNER JOIN",
+      "GROUP BY",
+      "HAVING",
+      "COUNT",
+      "SUM",
+      "AVG"
+    ]
+  },
+  {
+    "id": "lesson-sql-04",
+    "title": "Devoir de Synthèse Type Bac STI : Base de Données Relationnelle & Requêtes SQL",
+    "subject": "sql",
+    "subjectLabel": "SQL (Bases de Données)",
+    "type": "devoir",
+    "typeLabel": "📑 Devoir de Synthèse",
+    "date": "2025-03-25",
+    "author": "Professeur d'Informatique (Bac STI)",
+    "fileSize": "1.9 Mo",
+    "description": "Épreuve complète simulant l'examen national du Bac STI : analyse d'un schéma relationnel, écriture des ordres de création LDD, et résolution de 8 requêtes SQL d'examen avec barème de notation officiel.",
+    "summary": "Sujet de synthèse complet avec corrigé indicatif : modélisation d'une base de gestion de commandes en ligne (Clients, Produits, Commandes, LignesCommandes), contrôle de cohérence, et requêtes d'évaluation.",
+    "downloadName": "Devoir_Synthese_SQL_Base_Donnees_BacSTI.pdf",
+    "tags": [
+      "SQL",
+      "Devoir de Synthèse",
+      "Bac STI",
+      "Examen",
+      "Schéma Relationnel"
+    ]
+  }
 ]
 };
