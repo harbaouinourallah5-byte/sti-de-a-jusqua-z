@@ -260,7 +260,7 @@ body {
 /* Les 3 Grands Blocs Principaux de la 1ère page */
 .portal-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 28px;
   margin-top: 20px;
 }
@@ -3272,6 +3272,18 @@ input, select, textarea {
   background: rgba(168, 85, 247, 0.15);
   border-color: #a855f7;
   color: #c084fc;
+}
+
+/* =============================================================
+   SECTION COURS & SÉRIES PDF TEMPORAIREMENT MASQUÉE
+   (À démasquer dès que l'utilisateur en donne l'instruction)
+   ============================================================= */
+[data-view="lessons"],
+.card-lessons,
+#view-lessons,
+.nav-admin-btn,
+.bottom-nav-box button[data-view="admin"] {
+  display: none !important;
 }
 
 

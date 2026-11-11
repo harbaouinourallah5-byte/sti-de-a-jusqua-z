@@ -1235,6 +1235,10 @@ function setupNavigation() {
 
 function switchView(viewName) {
   if (!viewName) return;
+  // Section cours masquée temporairement sur demande de l'utilisateur
+  if (viewName === 'lessons') {
+    viewName = 'home';
+  }
   currentView = viewName;
   currentCategory = 'all';
   currentSearch = '';
@@ -4712,7 +4716,8 @@ function checkUrlRouting() {
   if (hash === '#admin' || path.endsWith('/admin')) {
     switchView('admin');
   } else if (hash === '#lessons' || path.endsWith('/lessons') || path.endsWith('/cours')) {
-    switchView('lessons');
+    // Section cours masquée temporairement sur demande de l'utilisateur
+    switchView('home');
   } else if (hash === '#html') {
     switchView('html');
   } else if (hash === '#css') {
