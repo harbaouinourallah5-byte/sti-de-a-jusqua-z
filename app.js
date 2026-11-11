@@ -1006,29 +1006,6 @@ const VARIETIES_CONFIG = {
       }
     ]
   },
-  "tag-button": {
-    "title": "Choisir un type de bouton <button> :",
-    "options": [
-      {
-        "label": "type='submit' (Envoi du formulaire)",
-        "value": "submit",
-        "previewHtml": "<button type=\"submit\" style=\"background:#10b981; color:#fff; padding:10px 20px; font-weight:bold; border:none; border-radius:6px; cursor:pointer;\">📨 Valider (submit)</button>",
-        "code": "<button type=\"submit\" id=\"btnValider\">Valider</button>"
-      },
-      {
-        "label": "type='reset' (Remise à zéro)",
-        "value": "reset",
-        "previewHtml": "<button type=\"reset\" style=\"background:#ef4444; color:#fff; padding:10px 20px; font-weight:bold; border:none; border-radius:6px; cursor:pointer;\">🔄 Effacer (reset)</button>",
-        "code": "<button type=\"reset\" id=\"btnEffacer\">Effacer</button>"
-      },
-      {
-        "label": "type='button' (Bouton JS personnalisé)",
-        "value": "button",
-        "previewHtml": "<button type=\"button\" onclick=\"alert('Action JS !')\" style=\"background:#38bdf8; color:#0f172a; padding:10px 20px; font-weight:bold; border:none; border-radius:6px; cursor:pointer;\">⚡ Action JS (button)</button>",
-        "code": "<button type=\"button\" id=\"btnCalculer\" onclick=\"calculer()\">Calculer</button>"
-      }
-    ]
-  },
   "tag-select-datalist-option": {
     "title": "Tester les menus déroulants et options :",
     "options": [

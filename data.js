@@ -41,15 +41,15 @@ const DATA = {
       "category": "Éléments d'en-tête",
       "tag": "<link>",
       "name": "Liaison externe",
-      "summary": "Définit la relation entre le document actuel et une ressource externe (CSS, favicon).",
-      "howToUse": "Balise orpheline (auto-fermante). 'href' indique le chemin vers le fichier, 'rel' indique la nature du lien (ex: rel=\"stylesheet\").",
+      "summary": "Définit la relation entre le document actuel et une ressource externe (feuille de style CSS).",
+      "howToUse": "Balise orpheline (auto-fermante) placée dans la section <head>. L'attribut 'href' indique le chemin vers le fichier CSS (ex: style.css), 'rel=\"stylesheet\"' indique qu'il s'agit d'une feuille de style, et 'type=\"text/css\"' indique son type MIME.",
       "attributes": [
-        "href (adresse du fichier)",
-        "rel (stylesheet, icon)",
+        "href (adresse du fichier CSS)",
+        "rel (stylesheet)",
         "type (text/css)"
       ],
-      "code": "<link rel=\"stylesheet\" href=\"style.css\" type=\"text/css\">\n<link rel=\"icon\" href=\"favicon.ico\" type=\"image/x-icon\">",
-      "previewHtml": "<div style=\"background:#eff6ff; border-left:4px solid #3b82f6; padding:12px; border-radius:4px; font-size:13px; color:#1e40af;\">\n        ✓ <strong>Fichier CSS connecté :</strong> Les couleurs, polices et marges sont appliquées au document !\n      </div>"
+      "code": "<!-- Liaison officielle avec la feuille de style CSS externe (Bac STI) -->\n<link rel=\"stylesheet\" href=\"style.css\" type=\"text/css\">",
+      "previewHtml": "<div style=\"background:#eff6ff; border-left:4px solid #3b82f6; padding:12px; border-radius:4px; font-size:13px; color:#1e40af;\">\n        ✓ <strong>Feuille de style CSS connectée :</strong> Le fichier <code>style.css</code> est relié au document HTML !\n      </div>"
     },
     {
       "id": "tag-meta",
@@ -338,20 +338,6 @@ const DATA = {
       "attributes": [],
       "code": "<address>\n  Contact : <a href=\"mailto:eleve@sti.tn\">eleve@sti.tn</a><br>\n  Tunisie\n</address>",
       "previewHtml": "<address style=\"font-style:italic; font-size:13px; color:#475569; border-left:3px solid #64748b; padding-left:10px;\">\n        Contact : <a href=\"#\" style=\"color:#0284c7;\">eleve@sti.tn</a><br>Tunisie\n      </address>"
-    },
-    {
-      "id": "tag-output",
-      "category": "Texte et Médias",
-      "tag": "<output>",
-      "name": "Résultat d'un calcul",
-      "summary": "Définit le résultat d'un calcul ou de l'exécution d'un script.",
-      "howToUse": "Souvent couplé à un formulaire ou un événement JavaScript oninput pour afficher le résultat en temps réel.",
-      "attributes": [
-        "for",
-        "name"
-      ],
-      "code": "<form oninput=\"resultat.value = parseInt(a.value) + parseInt(b.value)\">\n  <input type=\"number\" id=\"a\" value=\"10\"> +\n  <input type=\"number\" id=\"b\" value=\"5\"> =\n  <output name=\"resultat\">15</output>\n</form>",
-      "previewHtml": "<div style=\"display:flex; align-items:center; gap:8px; font-size:13px;\">\n        <span style=\"padding:4px 8px; background:#f1f5f9; border-radius:4px;\">10</span> +\n        <span style=\"padding:4px 8px; background:#f1f5f9; border-radius:4px;\">5</span> =\n        <output style=\"background:#dcfce7; color:#15803d; font-weight:bold; padding:4px 8px; border-radius:4px;\">15</output>\n      </div>"
     },
     {
       "id": "tag-mark",
