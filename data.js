@@ -1432,16 +1432,16 @@ const DATA = {
       "category": "Propriétés des boîtes",
       "property": "padding",
       "name": "padding - Marge intérieure",
-      "summary": "Propriété abrégée qui définit la marge intérieure d'un élément des 4 cotés.",
-      "howToUse": "Crée un espace entre le texte et la bordure de la boîte (ex: padding: 15px;).",
+      "summary": "Marge INTÉRIEURE : espace de respiration interne entre le contenu (texte) et la bordure.",
+      "howToUse": "Crée un espace d'aération interne entre le contenu texte (#contenu) et la bordure extérieure de la boîte (#boite). Ne repousse pas les voisins extérieurs.",
       "code": "/* Marge intérieure de 15px autour du texte de #boite */\n#boite {\n  padding: 15px;\n}",
       "hoverNote": "💡 Note Bac : Pour augmenter la marge intérieure au survol : #boite:hover { padding: 25px; }.",
       "videoSimType": "boxmodel-sim",
-      "description": "La propriété padding définit la marge intérieure, c'est-à-dire l'espace vide entre le contenu (texte ou image) et la bordure de la boîte. Elle donne de l'air et évite que le texte ne soit collé contre le bord du cadre.",
+      "description": "La propriété padding définit la marge INTÉRIEURE située DEDANS la boîte, entre le contenu (texte, bouton ou image) et la bordure (border). Elle apporte du confort de lecture et de l'aération en évitant que les lettres ne touchent les bords du cadre. Contrairement à margin (qui repousse les voisins dehors), padding gonfle la boîte de l'intérieur.",
       "values": [
-        "1 valeur (les 4 côtés : ex 15px)",
-        "2 valeurs (Haut/Bas et Gauche/Droite : ex 10px 20px)",
-        "4 valeurs (Haut Droite Bas Gauche)"
+        "1 valeur (ex: 15px pour les 4 côtés)",
+        "2 valeurs (ex: 10px 20px : Haut/Bas puis Gauche/Droite)",
+        "4 valeurs (Haut Droite Bas Gauche dans le sens des aiguilles d'une montre)"
       ]
     },
     {
@@ -1449,16 +1449,16 @@ const DATA = {
       "category": "Propriétés des boîtes",
       "property": "margin",
       "name": "margin - Marge extérieure",
-      "summary": "Définit les marges d'un élément (espace extérieur autour de la boîte).",
-      "howToUse": "Écarte la boîte des autres éléments. 'margin: auto;' centre la boîte horizontalement.",
-      "code": "/* Marge extérieure de 20px et centrage */\n#boite {\n  margin: 20px auto;\n}",
-      "hoverNote": "💡 Note Bac : Au survol de la souris : #boite:hover { margin-top: 10px; }.",
+      "summary": "Marge EXTÉRIEURE : espace situé en dehors de la boîte qui repousse les éléments voisins.",
+      "howToUse": "Repousse les éléments voisins en dehors de la boîte. 'margin: 20px auto;' permet d'espacer de 20px en haut/bas et de centrer horizontalement l'élément dans son conteneur.",
+      "code": "/* Marge extérieure de 20px et centrage horizontal */\n#boite {\n  margin: 20px auto;\n}",
+      "hoverNote": "💡 Note Bac : Au survol de la souris pour créer un décalage externe : #boite:hover { margin-top: 10px; }.",
       "videoSimType": "boxmodel-sim",
-      "description": "La propriété margin définit la marge extérieure, c'est-à-dire l'espace vide situé tout autour de la boîte pour la séparer des autres éléments voisins. 'margin: auto;' ou 'margin: 0 auto;' permet de centrer horizontalement un bloc dans la page.",
+      "description": "La propriété margin définit la marge EXTÉRIEURE située HORS du cadre de l'élément (#boite). Contrairement au padding (qui agit à l'intérieur), margin repousse physiquement les autres éléments frères ou les bords du conteneur parent. L'écriture 'margin: auto;' ou 'margin: 0 auto;' est la technique officielle au Baccalauréat STI pour centrer parfaitement un bloc (<div id=\"boite\">, <table id=\"tab\">) sur la page.",
       "values": [
         "valeur en px (ex: 20px)",
-        "0 auto (centrage horizontal)",
-        "4 valeurs (Haut Droite Bas Gauche)"
+        "0 auto ou auto (centrage horizontal automatique)",
+        "4 valeurs (Haut Droite Bas Gauche dans le sens des aiguilles d'une montre)"
       ]
     },
     {
