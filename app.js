@@ -1823,6 +1823,19 @@ function openCssModal(item) {
           </div>
           <span class="video-hd-badge">1080p HD LIVE</span>
         </div>
+
+        <!-- Bannière de Comparaison AVANT / APRÈS en Direct -->
+        <div class="video-phase-banner" id="videoPhaseBanner">
+          <div class="phase-pill phase-before active" id="phaseBeforePill" onclick="forceVideoPhase(0)" title="Cliquer pour voir l'état AVANT sans CSS">
+            <span class="phase-dot">🔴</span>
+            <span class="phase-label">ÉTAT 1 : AVANT (Sans CSS)</span>
+          </div>
+          <div class="phase-arrow">➔</div>
+          <div class="phase-pill phase-after" id="phaseAfterPill" onclick="forceVideoPhase(1)" title="Cliquer pour voir l'état APRÈS avec CSS">
+            <span class="phase-dot">🟢</span>
+            <span class="phase-label" id="phaseAfterLabel">ÉTAT 2 : APRÈS (CSS Appliqué)</span>
+          </div>
+        </div>
         
         <div class="video-stage" id="videoStage">
           <!-- Élément animé selon le type de vidéo -->
@@ -1833,6 +1846,9 @@ function openCssModal(item) {
           <button class="video-btn" id="playPauseVideoBtn" title="Play / Pause" onclick="toggleVideoPlay('${item.id}')">⏸</button>
           <button class="video-btn" title="Rejouer cette vidéo" onclick="replayVideo('${item.id}')">🔄</button>
           
+          <button type="button" class="video-phase-btn before-btn" onclick="forceVideoPhase(0)" title="Geler sur l'état AVANT">🔴 AVANT</button>
+          <button type="button" class="video-phase-btn after-btn" onclick="forceVideoPhase(1)" title="Geler sur l'état APRÈS">🟢 APRÈS</button>
+
           <div class="video-timeline-wrap">
             <div class="video-progress-fill" id="videoProgress"></div>
           </div>
@@ -1840,7 +1856,7 @@ function openCssModal(item) {
           <span class="video-current-badge" id="videoCurrentBadge">${escapeHtml(initialBadgeVal)}</span>
 
           <button class="video-hover-toggle-btn" title="Tester avec :hover" onclick="enableHoverStageTest()">
-            🖱️ Tester avec :hover
+            🖱️ Tester :hover
           </button>
         </div>
       </div>
@@ -2015,6 +2031,192 @@ function closeModal() {
   if (activeVideoTimer) clearInterval(activeVideoTimer);
 }
 
+// Forcer l'affichage de l'état AVANT (phase 0) ou APRÈS (phase 1)
+function forceVideoPhase(phase) {
+  if (activeVideoTimer) clearInterval(activeVideoTimer);
+  isVideoPlaying = false;
+  const playBtn = document.getElementById('playPauseVideoBtn');
+  if (playBtn) playBtn.textContent = '▶';
+  const stage = document.getElementById('videoStage');
+  const box = stage ? (stage.querySelector('#boite') || stage.querySelector('.demo-box') || stage.querySelector('#h1') || stage.querySelector('#tab') || stage.querySelector('#img1') || stage.querySelector('#liste') || stage.firstElementChild) : null;
+  applyVideoFrame(currentVideoItemId, box, phase, currentVideoVariantIdx);
+}
+
+// Scène interactive dédiée pour les 12 Sélecteurs CSS (Document HTML & Démonstration Avant/Après)
+function buildSelectorsStage(itemId) {
+  if (itemId === 'css-sel-universal') {
+    return `<div class="selector-doc-container">
+      <div class="selector-doc-bar">
+        <div class="selector-doc-dots"><span class="doc-dot red"></span><span class="doc-dot yellow"></span><span class="doc-dot green"></span></div>
+        <span>page_web.html (Document complet)</span>
+        <span style="font-family:monospace; color:#38bdf8;">*</span>
+      </div>
+      <div class="selector-doc-content" id="selDocContent">
+        <div class="selector-target-item" data-sel-match="all">&lt;h1 id="titre"&gt;Titre du document&lt;/h1&gt;<span class="selector-badge-target">🎯 CIBLÉ (*)</span></div>
+        <div class="selector-target-item" data-sel-match="all">&lt;p class="texte"&gt;Premier paragraphe&lt;/p&gt;<span class="selector-badge-target">🎯 CIBLÉ (*)</span></div>
+        <div class="selector-target-item" data-sel-match="all">&lt;div id="boite"&gt;Boîte de division &lt;div&gt;&lt;/div&gt;<span class="selector-badge-target">🎯 CIBLÉ (*)</span></div>
+        <div class="selector-target-item" data-sel-match="all">&lt;a id="lien" href="#"&gt;Lien hypertexte &lt;a&gt;&lt;/a&gt;<span class="selector-badge-target">🎯 CIBLÉ (*)</span></div>
+      </div>
+      <div class="selector-banner-status" id="selBannerStatus">🔴 AVANT : Aucun élément ciblé (Style HTML brut)</div>
+    </div>`;
+  }
+
+  if (itemId === 'css-sel-element') {
+    return `<div class="selector-doc-container">
+      <div class="selector-doc-bar">
+        <div class="selector-doc-dots"><span class="doc-dot red"></span><span class="doc-dot yellow"></span><span class="doc-dot green"></span></div>
+        <span>page_web.html</span>
+        <span style="font-family:monospace; color:#38bdf8;">Sélecteur : p</span>
+      </div>
+      <div class="selector-doc-content" id="selDocContent">
+        <div class="selector-target-item" data-sel-match="no">&lt;h1&gt;Titre principal (&lt;h1&gt;)&lt;/h1&gt;<span class="selector-badge-target">❌ Ignoré</span></div>
+        <div class="selector-target-item" data-sel-match="yes">&lt;p&gt;Paragraphe 1 de contenu (&lt;p&gt;)&lt;/p&gt;<span class="selector-badge-target">🎯 CIBLÉ (p)</span></div>
+        <div class="selector-target-item" data-sel-match="no">&lt;div id="boite"&gt;Boîte de division (&lt;div&gt;)&lt;/div&gt;<span class="selector-badge-target">❌ Ignoré</span></div>
+        <div class="selector-target-item" data-sel-match="yes">&lt;p&gt;Paragraphe 2 de contenu (&lt;p&gt;)&lt;/p&gt;<span class="selector-badge-target">🎯 CIBLÉ (p)</span></div>
+      </div>
+      <div class="selector-banner-status" id="selBannerStatus">🔴 AVANT : Aucun élément ciblé (Style HTML brut)</div>
+    </div>`;
+  }
+
+  if (itemId === 'css-sel-id') {
+    return `<div class="selector-doc-container">
+      <div class="selector-doc-bar">
+        <div class="selector-doc-dots"><span class="doc-dot red"></span><span class="doc-dot yellow"></span><span class="doc-dot green"></span></div>
+        <span>page_web.html</span>
+        <span style="font-family:monospace; color:#38bdf8;">Sélecteur : #boite</span>
+      </div>
+      <div class="selector-doc-content" id="selDocContent">
+        <div class="selector-target-item" data-sel-match="no">&lt;div id="menu"&gt;Menu supérieur (id="menu")&lt;/div&gt;<span class="selector-badge-target">❌ Ignoré</span></div>
+        <div class="selector-target-item" data-sel-match="yes">&lt;div id="boite"&gt;Boîte centrale unique (id="boite")&lt;/div&gt;<span class="selector-badge-target">🎯 CIBLÉ (#boite)</span></div>
+        <div class="selector-target-item" data-sel-match="no">&lt;div id="footer"&gt;Pied de page (id="footer")&lt;/div&gt;<span class="selector-badge-target">❌ Ignoré</span></div>
+      </div>
+      <div class="selector-banner-status" id="selBannerStatus">🔴 AVANT : Aucun élément ciblé (Style HTML brut)</div>
+    </div>`;
+  }
+
+  if (itemId === 'css-sel-class') {
+    return `<div class="selector-doc-container">
+      <div class="selector-doc-bar">
+        <div class="selector-doc-dots"><span class="doc-dot red"></span><span class="doc-dot yellow"></span><span class="doc-dot green"></span></div>
+        <span>page_web.html</span>
+        <span style="font-family:monospace; color:#38bdf8;">Sélecteur : .important</span>
+      </div>
+      <div class="selector-doc-content" id="selDocContent">
+        <div class="selector-target-item" data-sel-match="yes">&lt;h2 class="important"&gt;Titre marqué .important&lt;/h2&gt;<span class="selector-badge-target">🎯 CIBLÉ (.important)</span></div>
+        <div class="selector-target-item" data-sel-match="no">&lt;p&gt;Paragraphe ordinaire sans classe&lt;/p&gt;<span class="selector-badge-target">❌ Ignoré</span></div>
+        <div class="selector-target-item" data-sel-match="yes">&lt;p class="important"&gt;Paragraphe urgent marqué .important&lt;/p&gt;<span class="selector-badge-target">🎯 CIBLÉ (.important)</span></div>
+        <div class="selector-target-item" data-sel-match="no">&lt;div&gt;Bloc sans classe&lt;/div&gt;<span class="selector-badge-target">❌ Ignoré</span></div>
+      </div>
+      <div class="selector-banner-status" id="selBannerStatus">🔴 AVANT : Aucun élément ciblé (Style HTML brut)</div>
+    </div>`;
+  }
+
+  if (itemId === 'css-sel-element-attr') {
+    return `<div class="selector-doc-container">
+      <div class="selector-doc-bar">
+        <div class="selector-doc-dots"><span class="doc-dot red"></span><span class="doc-dot yellow"></span><span class="doc-dot green"></span></div>
+        <span>formulaire.html</span>
+        <span style="font-family:monospace; color:#38bdf8;">Sélecteur : input[required]</span>
+      </div>
+      <div class="selector-doc-content" id="selDocContent">
+        <div class="selector-target-item" data-sel-match="no">&lt;input type="text" placeholder="Prénom (facultatif)"&gt;<span class="selector-badge-target">❌ Ignoré (Pas required)</span></div>
+        <div class="selector-target-item" data-sel-match="yes">&lt;input type="email" required placeholder="Email (obligatoire)"&gt;<span class="selector-badge-target">🎯 CIBLÉ [required]</span></div>
+        <div class="selector-target-item" data-sel-match="yes">&lt;input type="password" required placeholder="Mot de passe"&gt;<span class="selector-badge-target">🎯 CIBLÉ [required]</span></div>
+      </div>
+      <div class="selector-banner-status" id="selBannerStatus">🔴 AVANT : Aucun élément ciblé (Champs de formulaire bruts)</div>
+    </div>`;
+  }
+
+  if (itemId === 'css-sel-element-attr-val') {
+    return `<div class="selector-doc-container">
+      <div class="selector-doc-bar">
+        <div class="selector-doc-dots"><span class="doc-dot red"></span><span class="doc-dot yellow"></span><span class="doc-dot green"></span></div>
+        <span>formulaire.html</span>
+        <span style="font-family:monospace; color:#38bdf8;">Sélecteur : input[type="submit"]</span>
+      </div>
+      <div class="selector-doc-content" id="selDocContent">
+        <div class="selector-target-item" data-sel-match="no">&lt;input type="text" value="Ali"&gt;<span class="selector-badge-target">❌ Ignoré (type="text")</span></div>
+        <div class="selector-target-item" data-sel-match="yes">&lt;input type="submit" value="Envoyer le formulaire"&gt;<span class="selector-badge-target">🎯 CIBLÉ [type="submit"]</span></div>
+        <div class="selector-target-item" data-sel-match="no">&lt;input type="reset" value="Annuler"&gt;<span class="selector-badge-target">❌ Ignoré (type="reset")</span></div>
+      </div>
+      <div class="selector-banner-status" id="selBannerStatus">🔴 AVANT : Aucun élément ciblé (Champs bruts)</div>
+    </div>`;
+  }
+
+  if (itemId === 'css-sel-element-class') {
+    return `<div class="selector-doc-container">
+      <div class="selector-doc-bar">
+        <div class="selector-doc-dots"><span class="doc-dot red"></span><span class="doc-dot yellow"></span><span class="doc-dot green"></span></div>
+        <span>page_web.html</span>
+        <span style="font-family:monospace; color:#38bdf8;">Sélecteur : p.important</span>
+      </div>
+      <div class="selector-doc-content" id="selDocContent">
+        <div class="selector-target-item" data-sel-match="no">&lt;h1 class="important"&gt;Titre marqué .important&lt;/h1&gt;<span class="selector-badge-target">❌ Ignoré (Ce n'est pas un &lt;p&gt;)</span></div>
+        <div class="selector-target-item" data-sel-match="yes">&lt;p class="important"&gt;Paragraphe AVEC classe .important&lt;/p&gt;<span class="selector-badge-target">🎯 CIBLÉ (p.important)</span></div>
+        <div class="selector-target-item" data-sel-match="no">&lt;p&gt;Paragraphe ordinaire sans classe&lt;/p&gt;<span class="selector-badge-target">❌ Ignoré (Pas de classe)</span></div>
+      </div>
+      <div class="selector-banner-status" id="selBannerStatus">🔴 AVANT : Aucun élément ciblé (Style HTML brut)</div>
+    </div>`;
+  }
+
+  if (itemId === 'css-sel-grouped') {
+    return `<div class="selector-doc-container">
+      <div class="selector-doc-bar">
+        <div class="selector-doc-dots"><span class="doc-dot red"></span><span class="doc-dot yellow"></span><span class="doc-dot green"></span></div>
+        <span>page_web.html</span>
+        <span style="font-family:monospace; color:#38bdf8;">Sélecteurs groupés : h1, p</span>
+      </div>
+      <div class="selector-doc-content" id="selDocContent">
+        <div class="selector-target-item" data-sel-match="yes">&lt;h1 id="titre"&gt;Titre du document (&lt;h1&gt;)&lt;/h1&gt;<span class="selector-badge-target">🎯 CIBLÉ (h1)</span></div>
+        <div class="selector-target-item" data-sel-match="yes">&lt;p&gt;Paragraphe de texte (&lt;p&gt;)&lt;/p&gt;<span class="selector-badge-target">🎯 CIBLÉ (p)</span></div>
+        <div class="selector-target-item" data-sel-match="no">&lt;div id="boite"&gt;Boîte de division (&lt;div&gt;)&lt;/div&gt;<span class="selector-badge-target">❌ Ignoré (Non listé dans h1, p)</span></div>
+      </div>
+      <div class="selector-banner-status" id="selBannerStatus">🔴 AVANT : Aucun élément ciblé (Style HTML brut)</div>
+    </div>`;
+  }
+
+  if (itemId === 'css-sel-hover') {
+    return `<div style="position:relative; width:95%; height:190px; display:flex; align-items:center; justify-content:center;">
+      <div id="virtualCursor" class="virtual-mouse-cursor" style="top:20px; right:40px;">🖱️</div>
+      <div id="boite" class="demo-box" style="padding:18px 26px; border:2px solid #334155; background:#1e293b; color:#94a3b8; transition:all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);">
+        <span>&lt;div id="boite"&gt; • <strong>Survolez-moi !</strong></span>
+        <div id="hoverStatusText" style="font-size:0.75rem; margin-top:5px; color:#64748b;">Curseur éloigné (Repos)</div>
+      </div>
+    </div>`;
+  }
+
+  if (itemId === 'css-sel-active') {
+    return `<div style="position:relative; width:95%; height:190px; display:flex; align-items:center; justify-content:center;">
+      <div id="virtualCursor" class="virtual-mouse-cursor" style="top:25px; right:45px;">🖱️</div>
+      <div id="boite" class="demo-box" style="padding:16px 28px; border:2px solid #38bdf8; background:#0284c7; color:#fff; cursor:pointer; transition:all 0.25s ease;">
+        <span>🔘 &lt;button id="boite"&gt; • <strong>Cliquez-moi !</strong></span>
+        <div id="activeStatusText" style="font-size:0.75rem; margin-top:5px; color:#bae6fd;">Bouton relâché (Repos)</div>
+      </div>
+    </div>`;
+  }
+
+  if (itemId === 'css-sel-link' || itemId === 'css-sel-visited') {
+    const isVisited = itemId === 'css-sel-visited';
+    return `<div style="text-align:center; padding:20px;">
+      <div style="font-size:0.8rem; color:#94a3b8; margin-bottom:12px;">État du lien hypertexte &lt;a id="lien"&gt; :</div>
+      <a id="lien" href="javascript:void(0)" style="font-size:1.2rem; transition:all 0.4s ease; text-decoration:underline; color:#60a5fa;">
+        🔗 ${isVisited ? 'Lien Déjà Visité (Historique consulté)' : 'Lien Neuf Non Visité (a:link)'}
+      </a>
+      <div id="linkStatusText" style="margin-top:12px; font-size:0.8rem; color:#64748b;">🔴 AVANT : Style de lien brut par défaut du navigateur</div>
+    </div>`;
+  }
+
+  // Fallback sélecteurs
+  return `<div class="selector-doc-container">
+    <div class="selector-doc-bar"><span>page_web.html</span><span style="color:#38bdf8;">Sélecteur CSS</span></div>
+    <div class="selector-doc-content" id="selDocContent">
+      <div class="selector-target-item" data-sel-match="yes">&lt;div id="boite"&gt;Élément ciblé&lt;/div&gt;<span class="selector-badge-target">🎯 CIBLÉ</span></div>
+      <div class="selector-target-item" data-sel-match="no">&lt;div id="autre"&gt;Élément non ciblé&lt;/div&gt;<span class="selector-badge-target">❌ Ignoré</span></div>
+    </div>
+    <div class="selector-banner-status" id="selBannerStatus">🔴 AVANT : Style brut</div>
+  </div>`;
+}
+
 // -------------------------------------------------------------
 // 7. MOTEUR DU SIMULATEUR VIDÉO POUR CSS3 (CONVENTION BAC STI)
 // -------------------------------------------------------------
@@ -2022,6 +2224,11 @@ function buildVideoStageElement(item) {
   const cat = item.category || '';
   const prop = item.property || '';
   const itemId = item.id || '';
+
+  // 0. Sélecteurs CSS
+  if (itemId.startsWith('css-sel-')) {
+    return buildSelectorsStage(itemId);
+  }
 
   // 1. Marge extérieure (margin) - Repousse les voisins hors de la boîte
   if (itemId === 'css-margin' || prop === 'margin') {
@@ -2098,16 +2305,6 @@ function buildVideoStageElement(item) {
       <div id="elem1" class="display-elem">#elem1</div>
       <div id="boite" class="display-elem highlight" style="display:inline-block; width:130px;">#boite (Mon Élément)</div>
       <div id="elem3" class="display-elem">#elem3</div>
-    </div>`;
-  }
-
-  // 7. Sélecteurs CSS
-  if (itemId.startsWith('css-sel-')) {
-    return `<div id="parentConteneur" class="selectors-stage-container">
-      <div id="selH1" class="selector-item">&lt;h1 id="titre"&gt;Titre du document&lt;/h1&gt;</div>
-      <div id="selP" class="selector-item selected">&lt;p class="important"&gt;Paragraphe important&lt;/p&gt;</div>
-      <div id="selBoite" class="selector-item">&lt;div id="boite"&gt;Boîte de contenu&lt;/div&gt;</div>
-      <div id="selLien" class="selector-item">&lt;a id="lien" href="#"&gt;Lien hypertexte&lt;/a&gt;</div>
     </div>`;
   }
 
@@ -2329,56 +2526,170 @@ function startVideoSimulation(itemId, variantIdx = 0) {
   }, 100);
 }
 
-// Rendu des images d'animation : 1 VIDÉO INDÉPENDANTE PAR VALEUR
+// Rendu des images d'animation : 1 VIDÉO INDÉPENDANTE PAR VALEUR AVEC DÉMONSTRATION AVANT / APRÈS
 function applyVideoFrame(itemId, box, step, variantIdx = 0) {
   if (!box) return;
   const config = VARIETIES_CONFIG[itemId];
   const opt = (config && config.options && config.options[variantIdx]) ? config.options[variantIdx] : null;
 
+  // Synchronisation des voyants AVANT / APRÈS
+  const beforePill = document.getElementById('phaseBeforePill');
+  const afterPill = document.getElementById('phaseAfterPill');
+  if (beforePill) beforePill.classList.toggle('active', step === 0);
+  if (afterPill) afterPill.classList.toggle('active', step === 1);
+
+  // 0. SÉLECTEURS CSS (DÉMONSTRATION COMPARATIVE AVANT vs APRÈS)
+  if (itemId.startsWith('css-sel-')) {
+    const items = document.querySelectorAll('.selector-target-item');
+    const banner = document.getElementById('selBannerStatus');
+
+    if (itemId === 'css-sel-hover') {
+      const cursor = document.getElementById('virtualCursor');
+      const txt = document.getElementById('hoverStatusText');
+      if (step === 0) {
+        if (cursor) { cursor.style.top = '15px'; cursor.style.right = '40px'; cursor.style.left = 'auto'; cursor.style.transform = 'scale(1)'; }
+        box.style.transform = 'scale(1) translateY(0)';
+        box.style.boxShadow = 'none';
+        box.style.borderColor = '#334155';
+        box.style.background = '#1e293b';
+        box.style.color = '#94a3b8';
+        if (txt) txt.innerHTML = '🔴 AVANT : Curseur éloigné de la boîte (État normal au repos)';
+      } else {
+        if (cursor) { cursor.style.top = '80px'; cursor.style.right = 'auto'; cursor.style.left = '50%'; cursor.style.transform = 'translate(-50%, -50%) scale(1.15)'; }
+        box.style.transform = 'scale(1.14) translateY(-4px)';
+        box.style.boxShadow = '0 0 30px rgba(250, 204, 21, 0.85)';
+        box.style.borderColor = '#facc15';
+        box.style.background = '#854d0e';
+        box.style.color = '#fef08a';
+        if (txt) txt.innerHTML = '🟢 APRÈS (:hover) : Curseur SUR la boîte ➔ Zoom & Halo néon appliqués !';
+      }
+      return;
+    }
+
+    if (itemId === 'css-sel-active') {
+      const cursor = document.getElementById('virtualCursor');
+      const txt = document.getElementById('activeStatusText');
+      if (step === 0) {
+        if (cursor) { cursor.style.top = '15px'; cursor.style.right = '45px'; cursor.style.left = 'auto'; cursor.style.transform = 'scale(1)'; }
+        box.style.transform = 'scale(1) translateY(0)';
+        box.style.boxShadow = '0 4px 10px rgba(0,0,0,0.3)';
+        box.style.background = '#0284c7';
+        if (txt) txt.innerHTML = '🔴 AVANT : Bouton relâché au repos (Pas de clic)';
+      } else {
+        if (cursor) { cursor.style.top = '85px'; cursor.style.right = 'auto'; cursor.style.left = '50%'; cursor.style.transform = 'translate(-50%, -50%) scale(0.9)'; }
+        box.style.transform = 'scale(0.92) translateY(5px)';
+        box.style.boxShadow = 'inset 0 4px 10px rgba(0,0,0,0.7)';
+        box.style.background = '#0369a1';
+        if (txt) txt.innerHTML = '🟢 APRÈS (:active) : Pression du clic maintenue enfoncée !';
+      }
+      return;
+    }
+
+    if (itemId === 'css-sel-link' || itemId === 'css-sel-visited') {
+      const isVisited = itemId === 'css-sel-visited';
+      const link = document.getElementById('lien');
+      const txt = document.getElementById('linkStatusText');
+      if (step === 0) {
+        if (link) { link.style.color = '#60a5fa'; link.style.textDecoration = 'underline'; link.style.fontWeight = 'normal'; }
+        if (txt) txt.innerHTML = '🔴 AVANT : Style de lien brut par défaut du navigateur';
+      } else {
+        if (link) {
+          if (isVisited) {
+            link.style.color = '#c084fc'; link.style.textDecoration = 'line-through'; link.style.fontWeight = 'bold';
+            if (txt) txt.innerHTML = '🟢 APRÈS (a:visited) : Lien violet déjà visité par l\'utilisateur';
+          } else {
+            link.style.color = '#38bdf8'; link.style.textDecoration = 'none'; link.style.borderBottom = '2px solid #38bdf8'; link.style.fontWeight = 'bold';
+            if (txt) txt.innerHTML = '🟢 APRÈS (a:link) : Lien neuf non visité sans soulignement';
+          }
+        }
+      }
+      return;
+    }
+
+    // Sélecteurs sur document HTML mocké (*, element, #id, .class, [attr], [attr=val], element.class, grouped)
+    if (step === 0) {
+      // 🔴 AVANT : TOUS les éléments sont au repos neutre
+      items.forEach(it => {
+        it.classList.remove('matched', 'ignored');
+      });
+      if (banner) {
+        banner.innerHTML = '🔴 ÉTAT 1 : AVANT ➔ Aucun élément ciblé (Style HTML brut par défaut du navigateur)';
+        banner.style.color = '#f87171';
+      }
+    } else {
+      // 🟢 APRÈS : SEULS les éléments qui matchent s'illuminent
+      items.forEach(it => {
+        const match = it.getAttribute('data-sel-match');
+        if (match === 'all' || match === 'yes') {
+          it.classList.add('matched');
+          it.classList.remove('ignored');
+        } else {
+          it.classList.remove('matched');
+          it.classList.add('ignored');
+        }
+      });
+      if (banner) {
+        let msg = '🟢 ÉTAT 2 : APRÈS ➔ Règle CSS appliquée aux éléments ciblés !';
+        if (itemId === 'css-sel-universal') msg = '🟢 APRÈS : L\'étoile (*) applique la règle à ABSOLUMENT TOUS les éléments du document !';
+        else if (itemId === 'css-sel-element') msg = '🟢 APRÈS : Seules les balises &lt;p&gt; sont sélectionnées (les autres balises sont ignorées) !';
+        else if (itemId === 'css-sel-id') msg = '🟢 APRÈS : Seul l\'élément UNIQUE avec id="boite" est ciblé (les autres id sont ignorés) !';
+        else if (itemId === 'css-sel-class') msg = '🟢 APRÈS : TOUS les éléments portant la classe .important sont ciblés (réutilisable) !';
+        else if (itemId === 'css-sel-element-attr') msg = '🟢 APRÈS : Seuls les champs ayant l\'attribut [required] sont ciblés !';
+        else if (itemId === 'css-sel-element-attr-val') msg = '🟢 APRÈS : Seul l\'input avec type="submit" exact est ciblé !';
+        else if (itemId === 'css-sel-element-class') msg = '🟢 APRÈS : Seul le &lt;p&gt; qui possède AUSSI la classe .important est ciblé !';
+        else if (itemId === 'css-sel-grouped') msg = '🟢 APRÈS : &lt;h1&gt; ET &lt;p&gt; sont ciblés simultanément grâce à la virgule (,) !';
+        banner.innerHTML = msg;
+        banner.style.color = '#4ade80';
+      }
+    }
+    return;
+  }
+
   // 1. STYLE DE BORDURE (BORDER-STYLE) - 1 VIDÉO DÉDIÉE PAR VALEUR
   if (itemId === 'css-border-style' || itemId.includes('border-style')) {
     box.style.padding = '18px 24px';
-    box.style.background = 'rgba(15, 23, 42, 0.85)';
-    box.style.color = '#fff';
     box.style.transition = 'all 0.4s ease';
 
-    if (variantIdx === 0) {
-      // VIDÉO 1 : SOLID (Trait plein continu)
-      box.style.border = step === 1 ? '5px solid #38bdf8' : '3px solid #38bdf8';
-      box.style.boxShadow = step === 1 ? '0 0 20px rgba(56, 189, 248, 0.6)' : 'none';
-      box.style.transform = step === 1 ? 'scale(1.05)' : 'scale(1)';
-      box.innerHTML = `<span>#boite • <strong>border-style: solid</strong><br><small style="color:#38bdf8; font-size:0.75rem;">Ligne pleine continue sans coupure</small></span>`;
-    } else if (variantIdx === 1) {
-      // VIDÉO 2 : DOTTED (Pointillés réguliers)
-      box.style.border = step === 1 ? '6px dotted #facc15' : '3px dotted #facc15';
-      box.style.boxShadow = step === 1 ? '0 0 20px rgba(250, 204, 21, 0.6)' : 'none';
-      box.style.transform = step === 1 ? 'scale(1.05)' : 'scale(1)';
-      box.innerHTML = `<span>#boite • <strong>border-style: dotted</strong><br><small style="color:#facc15; font-size:0.75rem;">Série de points ronds espacés</small></span>`;
-    } else if (variantIdx === 2) {
-      // VIDÉO 3 : DASHED (Tirets rectangulaires)
-      box.style.border = step === 1 ? '6px dashed #f43f5e' : '3px dashed #f43f5e';
-      box.style.boxShadow = step === 1 ? '0 0 20px rgba(244, 63, 94, 0.6)' : 'none';
-      box.style.transform = step === 1 ? 'scale(1.05)' : 'scale(1)';
-      box.innerHTML = `<span>#boite • <strong>border-style: dashed</strong><br><small style="color:#f43f5e; font-size:0.75rem;">Série de tirets espacés</small></span>`;
-    } else if (variantIdx === 3) {
-      // VIDÉO 4 : DOUBLE (Double trait parallèle)
-      box.style.border = step === 1 ? '8px double #10b981' : '5px double #10b981';
-      box.style.boxShadow = step === 1 ? '0 0 20px rgba(16, 185, 129, 0.6)' : 'none';
-      box.style.transform = step === 1 ? 'scale(1.05)' : 'scale(1)';
-      box.innerHTML = `<span>#boite • <strong>border-style: double</strong><br><small style="color:#10b981; font-size:0.75rem;">Deux bordures parallèles concentriques</small></span>`;
-    } else if (variantIdx === 4) {
-      // VIDÉO 5 : GROOVE (Rainure en relief 3D)
-      box.style.border = step === 1 ? '8px groove #ec4899' : '5px groove #ec4899';
-      box.style.boxShadow = step === 1 ? '0 0 20px rgba(236, 72, 153, 0.6)' : 'none';
-      box.style.transform = step === 1 ? 'scale(1.05)' : 'scale(1)';
-      box.innerHTML = `<span>#boite • <strong>border-style: groove</strong><br><small style="color:#ec4899; font-size:0.75rem;">Effet de rainure sculptée en relief 3D</small></span>`;
+    if (step === 0) {
+      // 🔴 AVANT : Élément brut sans bordure
+      box.style.border = '0px none transparent';
+      box.style.outline = '1px dashed rgba(255, 255, 255, 0.2)';
+      box.style.background = 'rgba(15, 23, 42, 0.6)';
+      box.style.boxShadow = 'none';
+      box.style.transform = 'scale(1)';
+      box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Sans bordure / Élément brut)</small></span>`;
     } else {
-      // VIDÉO 6 : NONE (Aucune bordure)
-      box.style.border = 'none';
-      box.style.outline = step === 1 ? '2px dashed rgba(255,255,255,0.45)' : '1px dashed rgba(255,255,255,0.15)';
-      box.style.background = step === 1 ? 'rgba(56, 189, 248, 0.25)' : 'rgba(56, 189, 248, 0.1)';
-      box.style.transform = step === 1 ? 'scale(1.03)' : 'scale(1)';
-      box.innerHTML = `<span>#boite • <strong>border-style: none</strong><br><small style="color:#94a3b8; font-size:0.75rem;">Bordure désactivée (Invisible)</small></span>`;
+      // 🟢 APRÈS : Bordure de la vidéo choisie
+      box.style.outline = 'none';
+      box.style.background = 'rgba(15, 23, 42, 0.85)';
+      box.style.color = '#fff';
+      box.style.transform = 'scale(1.04)';
+
+      if (variantIdx === 0) {
+        box.style.border = '5px solid #38bdf8';
+        box.style.boxShadow = '0 0 22px rgba(56, 189, 248, 0.65)';
+        box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border: solid (Ligne continue)</small></span>`;
+      } else if (variantIdx === 1) {
+        box.style.border = '6px dotted #facc15';
+        box.style.boxShadow = '0 0 22px rgba(250, 204, 21, 0.65)';
+        box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border: dotted (Pointillés ronds)</small></span>`;
+      } else if (variantIdx === 2) {
+        box.style.border = '6px dashed #f43f5e';
+        box.style.boxShadow = '0 0 22px rgba(244, 63, 94, 0.65)';
+        box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border: dashed (Tirets espacés)</small></span>`;
+      } else if (variantIdx === 3) {
+        box.style.border = '8px double #10b981';
+        box.style.boxShadow = '0 0 22px rgba(16, 185, 129, 0.65)';
+        box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border: double (Double trait parallèle)</small></span>`;
+      } else if (variantIdx === 4) {
+        box.style.border = '8px groove #ec4899';
+        box.style.boxShadow = '0 0 22px rgba(236, 72, 153, 0.65)';
+        box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border: groove (Rainure sculptée 3D)</small></span>`;
+      } else {
+        box.style.border = 'none';
+        box.style.background = 'rgba(56, 189, 248, 0.25)';
+        box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border: none (Bordure supprimée)</small></span>`;
+      }
     }
     return;
   }
@@ -2386,28 +2697,31 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
   // 2. BORDER SHORTHAND (border: largeur style couleur)
   if (itemId === 'css-border-shorthand') {
     box.style.padding = '18px 24px';
-    box.style.background = 'rgba(15, 23, 42, 0.85)';
-    box.style.color = '#fff';
     box.style.transition = 'all 0.4s ease';
 
-    if (variantIdx === 0) {
-      box.style.border = step === 1 ? '5px solid #38bdf8' : '3px solid #38bdf8';
-      box.style.boxShadow = step === 1 ? '0 0 16px rgba(56,189,248,0.5)' : 'none';
-      box.innerHTML = `<span>#boite • <strong>border: 3px solid #38bdf8</strong></span>`;
-    } else if (variantIdx === 1) {
-      box.style.border = step === 1 ? '6px dotted #facc15' : '4px dotted #facc15';
-      box.style.boxShadow = step === 1 ? '0 0 16px rgba(250,204,21,0.5)' : 'none';
-      box.innerHTML = `<span>#boite • <strong>border: 4px dotted #facc15</strong></span>`;
-    } else if (variantIdx === 2) {
-      box.style.border = step === 1 ? '6px dashed #ef4444' : '3px dashed #ef4444';
-      box.style.boxShadow = step === 1 ? '0 0 16px rgba(239,68,68,0.5)' : 'none';
-      box.innerHTML = `<span>#boite • <strong>border: 3px dashed #ef4444</strong></span>`;
+    if (step === 0) {
+      box.style.border = '0px none transparent';
+      box.style.outline = '1px dashed rgba(255, 255, 255, 0.2)';
+      box.style.boxShadow = 'none';
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Sans bordure)</small></span>`;
     } else {
-      box.style.border = step === 1 ? '9px double #10b981' : '6px double #10b981';
-      box.style.boxShadow = step === 1 ? '0 0 16px rgba(16,185,129,0.5)' : 'none';
-      box.innerHTML = `<span>#boite • <strong>border: 6px double #10b981</strong></span>`;
+      box.style.outline = 'none';
+      box.style.transform = 'scale(1.04)';
+      if (variantIdx === 0) {
+        box.style.border = '4px solid #38bdf8';
+        box.style.boxShadow = '0 0 18px rgba(56,189,248,0.55)';
+      } else if (variantIdx === 1) {
+        box.style.border = '5px dotted #facc15';
+        box.style.boxShadow = '0 0 18px rgba(250,204,21,0.55)';
+      } else if (variantIdx === 2) {
+        box.style.border = '5px dashed #ef4444';
+        box.style.boxShadow = '0 0 18px rgba(239,68,68,0.55)';
+      } else {
+        box.style.border = '8px double #10b981';
+        box.style.boxShadow = '0 0 18px rgba(16,185,129,0.55)';
+      }
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (border: ${opt ? opt.value : 'appliquée'} !)</small></span>`;
     }
-    box.style.transform = step === 1 ? 'scale(1.04)' : 'scale(1)';
     return;
   }
 
@@ -2418,41 +2732,22 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     const vBas = document.getElementById('voisinBas');
     const txt = document.getElementById('marginIndicatorText');
     if (boite) {
-      boite.style.transition = 'all 0.5s ease';
-      if (variantIdx === 0) {
-        // VIDÉO 1 : 0px (Collé aux voisins)
+      boite.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+      if (step === 0) {
+        // 🔴 AVANT : margin nulle (0px) ➔ Éléments étouffés
         boite.style.margin = '0px auto';
-        if (vHaut) { vHaut.style.transform = step === 1 ? 'translateY(2px)' : 'translateY(0)'; vHaut.style.borderColor = step === 1 ? '#ef4444' : '#475569'; }
-        if (vBas) { vBas.style.transform = step === 1 ? 'translateY(-2px)' : 'translateY(0)'; vBas.style.borderColor = step === 1 ? '#ef4444' : '#475569'; }
-        boite.style.borderColor = step === 1 ? '#ef4444' : '#38bdf8';
-        if (txt) txt.textContent = 'margin: 0px (Éléments directement en contact, sans espacement)';
-      } else if (variantIdx === 1) {
-        // VIDÉO 2 : 15px (Marge normale)
-        boite.style.margin = '15px auto';
-        if (vHaut) { vHaut.style.transform = step === 1 ? 'translateY(-6px)' : 'translateY(0)'; vHaut.style.borderColor = '#475569'; }
-        if (vBas) { vBas.style.transform = step === 1 ? 'translateY(6px)' : 'translateY(0)'; vBas.style.borderColor = '#475569'; }
-        boite.style.borderColor = '#38bdf8';
-        if (txt) txt.textContent = 'margin: 15px auto (Espacement standard régulier)';
-      } else if (variantIdx === 2) {
-        // VIDÉO 3 : 30px (Grande séparation)
-        boite.style.margin = '35px auto';
-        if (vHaut) { vHaut.style.transform = step === 1 ? 'translateY(-16px)' : 'translateY(-8px)'; vHaut.style.borderColor = '#f97316'; }
-        if (vBas) { vBas.style.transform = step === 1 ? 'translateY(16px)' : 'translateY(8px)'; vBas.style.borderColor = '#f97316'; }
-        boite.style.borderColor = '#f97316';
-        if (txt) txt.textContent = 'margin: 30px auto (Voisins fortement repoussés)';
-      } else if (variantIdx === 3) {
-        // VIDÉO 4 : 10px 40px (Asymétrique)
-        boite.style.margin = '10px 40px';
-        boite.style.transform = step === 1 ? 'scale(1.03)' : 'scale(1)';
-        boite.style.borderColor = '#38bdf8';
-        if (vHaut) vHaut.style.transform = 'translateY(0)';
-        if (vBas) vBas.style.transform = 'translateY(0)';
-        if (txt) txt.textContent = 'margin: 10px 40px (Haut/Bas 10px • Gauche/Droite 40px)';
+        if (vHaut) { vHaut.style.transform = 'translateY(2px)'; vHaut.style.borderColor = '#ef4444'; }
+        if (vBas) { vBas.style.transform = 'translateY(-2px)'; vBas.style.borderColor = '#ef4444'; }
+        boite.style.borderColor = '#ef4444';
+        if (txt) txt.textContent = '🔴 ÉTAT 1 : AVANT ➔ margin: 0px (Éléments collés sans séparation)';
       } else {
-        // VIDÉO 5 : auto (Centrage horizontal)
-        boite.style.margin = step === 1 ? '10px auto' : '10px 25% 10px 5%';
+        // 🟢 APRÈS : margin appliquée
+        const mVal = opt ? opt.value : '15px';
+        boite.style.margin = mVal === 'auto' ? '15px auto' : (mVal.includes(' ') ? mVal : `${mVal} auto`);
+        if (vHaut) { vHaut.style.transform = mVal === '30px' ? 'translateY(-16px)' : 'translateY(-8px)'; vHaut.style.borderColor = '#475569'; }
+        if (vBas) { vBas.style.transform = mVal === '30px' ? 'translateY(16px)' : 'translateY(8px)'; vBas.style.borderColor = '#475569'; }
         boite.style.borderColor = '#10b981';
-        if (txt) txt.textContent = step === 1 ? 'margin: 10px auto (Centrage horizontal parfait dans le parent !)' : 'Sans auto (Bloc décalé à gauche)';
+        if (txt) txt.textContent = `🟢 ÉTAT 2 : APRÈS ➔ margin: ${mVal} (Voisins repoussés avec succès !)`;
       }
     }
     return;
@@ -2463,28 +2758,18 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     const boite = document.getElementById('boite');
     const txt = document.getElementById('paddingIndicatorText');
     if (boite) {
-      boite.style.transition = 'all 0.5s ease';
-      if (variantIdx === 0) {
-        // VIDÉO 1 : 0px
+      boite.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+      if (step === 0) {
+        // 🔴 AVANT : padding 0px ➔ Texte collé aux bords
         boite.style.padding = '0px';
-        boite.style.borderColor = step === 1 ? '#ef4444' : '#38bdf8';
-        if (txt) txt.textContent = 'padding: 0px (Texte comprimé contre la bordure)';
-      } else if (variantIdx === 1) {
-        // VIDÉO 2 : 12px
-        boite.style.padding = '12px';
-        boite.style.borderColor = '#38bdf8';
-        boite.style.transform = step === 1 ? 'scale(1.02)' : 'scale(1)';
-        if (txt) txt.textContent = 'padding: 12px (Aération intérieure confortable)';
-      } else if (variantIdx === 2) {
-        // VIDÉO 3 : 25px
-        boite.style.padding = step === 1 ? '28px' : '22px';
-        boite.style.borderColor = '#10b981';
-        if (txt) txt.textContent = 'padding: 25px (Intérieur très spacieux qui dilate le bloc)';
+        boite.style.borderColor = '#ef4444';
+        if (txt) txt.textContent = '🔴 ÉTAT 1 : AVANT ➔ padding: 0px (Texte comprimé directement contre la bordure)';
       } else {
-        // VIDÉO 4 : 5px 30px
-        boite.style.padding = '5px 30px';
-        boite.style.borderColor = '#facc15';
-        if (txt) txt.textContent = 'padding: 5px 30px (Haut/Bas 5px • Côtés 30px)';
+        // 🟢 APRÈS : padding appliqué
+        const pVal = opt ? opt.value : '15px';
+        boite.style.padding = pVal;
+        boite.style.borderColor = '#10b981';
+        if (txt) txt.textContent = `🟢 ÉTAT 2 : APRÈS ➔ padding: ${pVal} (Espace intérieur aéré créé avec succès !)`;
       }
     }
     return;
@@ -2496,302 +2781,245 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     const lbl = document.getElementById('floatLabel');
     if (boite) {
       boite.style.transition = 'all 0.5s ease';
-      if (variantIdx === 0) {
-        // VIDÉO 1 : none
+      if (step === 0) {
+        // 🔴 AVANT : float: none ➔ Texte renvoyé en bas
         boite.style.float = 'none';
         boite.style.margin = '0 auto 10px auto';
-        if (lbl) lbl.textContent = 'float: none; (Flux standard, texte dessous)';
-      } else if (variantIdx === 1) {
-        // VIDÉO 2 : left
-        boite.style.float = 'left';
-        boite.style.margin = '4px 14px 6px 0';
-        boite.style.transform = step === 1 ? 'scale(1.04)' : 'scale(1)';
-        if (lbl) lbl.textContent = 'float: left; (Boîte à gauche, texte enroulé à droite)';
+        if (lbl) lbl.textContent = '🔴 ÉTAT 1 : AVANT (float: none; ➔ Flux normal : texte renvoyé en-dessous)';
       } else {
-        // VIDÉO 3 : right
-        boite.style.float = 'right';
-        boite.style.margin = '4px 0 6px 14px';
-        boite.style.transform = step === 1 ? 'scale(1.04)' : 'scale(1)';
-        if (lbl) lbl.textContent = 'float: right; (Boîte à droite, texte enroulé à gauche)';
+        // 🟢 APRÈS : float appliqué
+        const fVal = opt ? opt.value : 'left';
+        boite.style.float = fVal;
+        boite.style.margin = fVal === 'left' ? '4px 14px 6px 0' : (fVal === 'right' ? '4px 0 6px 14px' : '0 auto 10px auto');
+        if (lbl) lbl.textContent = `🟢 ÉTAT 2 : APRÈS (float: ${fVal}; ➔ Le texte s'enroule harmonieusement autour !)`;
       }
     }
     return;
   }
 
   // 6. POSITIONNEMENT (POSITION) - 1 VIDÉO DÉDIÉE PAR VALEUR
-  if (itemId === 'css-position') {
+  if (itemId === 'css-position' || itemId === 'css-coords-top-bottom-left-right') {
     const boite = document.getElementById('boite');
     const badge = document.getElementById('posBadge');
     if (boite) {
-      boite.style.transition = 'all 0.5s ease';
-      if (variantIdx === 0) {
-        // VIDÉO 1 : static
+      boite.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+      if (step === 0) {
+        // 🔴 AVANT : position: static à l'origine
         boite.style.position = 'static';
         boite.style.top = 'auto';
         boite.style.left = 'auto';
-        if (badge) badge.textContent = 'position: static; (Position par défaut dans le flux)';
-      } else if (variantIdx === 1) {
-        // VIDÉO 2 : relative
-        boite.style.position = 'relative';
-        boite.style.top = step === 1 ? '35px' : '20px';
-        boite.style.left = step === 1 ? '55px' : '30px';
-        if (badge) badge.textContent = 'position: relative; (Décalé par rapport à l\'emplacement fantôme)';
-      } else if (variantIdx === 2) {
-        // VIDÉO 3 : absolute
-        boite.style.position = 'absolute';
-        boite.style.top = step === 1 ? '20px' : '10px';
-        boite.style.right = step === 1 ? '25px' : '10px';
-        boite.style.left = 'auto';
-        if (badge) badge.textContent = 'position: absolute; (Placé au coin supérieur droit du parent)';
+        boite.style.right = 'auto';
+        boite.style.bottom = 'auto';
+        if (badge) badge.textContent = '🔴 ÉTAT 1 : AVANT (position: static ➔ Emplacement naturel d\'origine)';
       } else {
-        // VIDÉO 4 : fixed
-        boite.style.position = 'absolute';
-        boite.style.bottom = '15px';
-        boite.style.right = '15px';
-        boite.style.top = 'auto';
-        boite.style.left = 'auto';
-        boite.style.transform = step === 1 ? 'scale(1.05)' : 'scale(1)';
-        if (badge) badge.textContent = 'position: fixed; (Verrouillé dans la fenêtre du navigateur)';
+        // 🟢 APRÈS : position et coordonnées
+        if (opt && opt.css) {
+          boite.style.cssText += opt.css;
+        } else {
+          boite.style.position = 'relative';
+          boite.style.top = '30px';
+          boite.style.left = '50px';
+        }
+        if (badge) badge.textContent = `🟢 ÉTAT 2 : APRÈS (${opt ? opt.label : 'Décalé'})`;
       }
     }
     return;
   }
 
-  // 7. COORDONNÉES TOP / BOTTOM / LEFT / RIGHT
-  if (itemId === 'css-coords-top-bottom-left-right') {
-    const boite = document.getElementById('boite');
-    const badge = document.getElementById('posBadge');
-    if (boite) {
-      boite.style.position = 'relative';
-      boite.style.transition = 'all 0.5s ease';
-      if (variantIdx === 0) {
-        boite.style.top = '0px'; boite.style.left = '0px';
-        if (badge) badge.textContent = 'top: 0px; left: 0px; (Origine)';
-      } else if (variantIdx === 1) {
-        boite.style.top = step === 1 ? '40px' : '25px';
-        boite.style.left = step === 1 ? '90px' : '65px';
-        if (badge) badge.textContent = 'top: 35px; left: 85px; (Décalage Bas/Droite)';
-      } else if (variantIdx === 2) {
-        boite.style.top = '10px'; boite.style.right = '20px'; boite.style.left = 'auto';
-        if (badge) badge.textContent = 'top: 10px; right: 20px; (Haut/Droite)';
-      } else {
-        boite.style.bottom = '15px'; boite.style.left = '40px'; boite.style.top = 'auto';
-        if (badge) badge.textContent = 'bottom: 15px; left: 40px; (Bas/Gauche)';
-      }
-    }
-    return;
-  }
-
-  // 8. DÉBORDEMENT (OVERFLOW) - 1 VIDÉO DÉDIÉE PAR VALEUR
+  // 7. DÉBORDEMENT (OVERFLOW) - 1 VIDÉO DÉDIÉE PAR VALEUR
   if (itemId === 'css-overflow') {
     const boite = document.getElementById('boite');
     const badge = document.getElementById('overflowBadge');
     if (boite) {
       boite.style.height = '85px';
-      if (variantIdx === 0) {
-        // VIDÉO 1 : visible
+      if (step === 0) {
+        // 🔴 AVANT : Débordement libre
         boite.style.overflow = 'visible';
-        boite.style.borderColor = step === 1 ? '#ef4444' : '#38bdf8';
-        if (badge) badge.textContent = 'overflow: visible; (Le texte s\'échappe hors du cadre)';
-      } else if (variantIdx === 1) {
-        // VIDÉO 2 : hidden
-        boite.style.overflow = 'hidden';
-        boite.style.borderColor = '#10b981';
-        if (badge) badge.textContent = 'overflow: hidden; (Le débordement est masqué et coupé net)';
-      } else if (variantIdx === 2) {
-        // VIDÉO 3 : scroll
-        boite.style.overflow = 'scroll';
-        boite.style.borderColor = '#38bdf8';
-        boite.scrollTop = step === 1 ? 40 : 0;
-        if (badge) badge.textContent = 'overflow: scroll; (Barres de défilement toujours visibles)';
+        boite.style.borderColor = '#ef4444';
+        if (badge) badge.textContent = '🔴 ÉTAT 1 : AVANT (overflow: visible ➔ Le texte déborde et brise le cadre)';
       } else {
-        // VIDÉO 4 : auto
-        boite.style.overflow = 'auto';
-        boite.style.borderColor = '#facc15';
-        boite.scrollTop = step === 1 ? 30 : 0;
-        if (badge) badge.textContent = 'overflow: auto; (Barre de défilement automatique si besoin)';
+        // 🟢 APRÈS : Débordement géré
+        const oVal = opt ? opt.value : 'hidden';
+        boite.style.overflow = oVal;
+        boite.style.borderColor = '#10b981';
+        if (oVal === 'scroll' || oVal === 'auto') boite.scrollTop = 35;
+        if (badge) badge.textContent = `🟢 ÉTAT 2 : APRÈS (overflow: ${oVal}; ➔ Débordement maîtrisé proprement)`;
       }
     }
     return;
   }
 
-  // 9. AFFICHAGE (DISPLAY) - 1 VIDÉO DÉDIÉE PAR VALEUR
+  // 8. AFFICHAGE (DISPLAY) - 1 VIDÉO DÉDIÉE PAR VALEUR
   if (itemId === 'css-display') {
     const boite = document.getElementById('boite');
     if (boite) {
-      if (variantIdx === 0) {
-        // VIDÉO 1 : block
+      if (step === 0) {
+        // 🔴 AVANT : affichage normal
         boite.style.display = 'block';
         boite.style.width = '100%';
-        boite.style.transform = step === 1 ? 'scale(1.02)' : 'scale(1)';
-      } else if (variantIdx === 1) {
-        // VIDÉO 2 : inline
-        boite.style.display = 'inline';
-        boite.style.width = 'auto';
-        boite.style.transform = 'none';
-      } else if (variantIdx === 2) {
-        // VIDÉO 3 : inline-block
-        boite.style.display = 'inline-block';
-        boite.style.width = '130px';
-        boite.style.transform = step === 1 ? 'scale(1.04)' : 'scale(1)';
       } else {
-        // VIDÉO 4 : none
-        boite.style.display = step === 1 ? 'none' : 'inline-block';
+        // 🟢 APRÈS : affichage choisi
+        if (opt && opt.css) boite.style.cssText += opt.css;
       }
     }
     return;
   }
 
-  // 10. ARRONDIS DES COINS (BORDER-RADIUS)
+  // 9. ARRONDIS DES COINS (BORDER-RADIUS)
   if (itemId === 'css-border-radius') {
-    box.style.transition = 'all 0.5s ease';
-    if (variantIdx === 0) {
+    box.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    if (step === 0) {
       box.style.borderRadius = '0px';
-      box.style.transform = step === 1 ? 'scale(1.04)' : 'scale(1)';
-    } else if (variantIdx === 1) {
-      box.style.borderRadius = step === 1 ? '12px' : '8px';
-    } else if (variantIdx === 2) {
-      box.style.borderRadius = step === 1 ? '25px' : '20px';
+      box.innerHTML = `<span>#boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Coins stricts à 90°)</small></span>`;
     } else {
-      box.style.borderRadius = '50%';
-      box.style.transform = step === 1 ? 'scale(1.08)' : 'scale(1)';
+      const rVal = opt ? opt.value : '15px';
+      box.style.borderRadius = rVal;
+      box.innerHTML = `<span>#boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (border-radius: ${rVal} !)</small></span>`;
     }
     return;
   }
 
-  // 11. OMBRE PORTÉE (BOX-SHADOW)
+  // 10. OMBRE PORTÉE (BOX-SHADOW)
   if (itemId === 'css-box-shadow') {
     box.style.transition = 'all 0.4s ease';
-    if (variantIdx === 0) {
+    if (step === 0) {
       box.style.boxShadow = 'none';
       box.style.transform = 'translateY(0)';
-    } else if (variantIdx === 1) {
-      box.style.boxShadow = step === 1 ? '0 12px 24px rgba(0,0,0,0.6)' : '0 4px 12px rgba(0,0,0,0.3)';
-      box.style.transform = step === 1 ? 'translateY(-4px)' : 'translateY(0)';
-    } else if (variantIdx === 2) {
-      box.style.boxShadow = step === 1 ? '0 0 28px #38bdf8, 0 0 50px rgba(56,189,248,0.5)' : '0 0 12px #38bdf8';
-      box.style.transform = step === 1 ? 'scale(1.04)' : 'scale(1)';
-    } else if (variantIdx === 3) {
-      box.style.boxShadow = step === 1 ? '8px 8px 0 #ef4444' : '4px 4px 0 #ef4444';
-      box.style.transform = step === 1 ? 'translate(-4px, -4px)' : 'translate(0, 0)';
+      box.innerHTML = `<span>#boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Boîte 2D plate sans ombre)</small></span>`;
     } else {
-      box.style.boxShadow = step === 1 ? 'inset 0 0 22px #38bdf8' : 'inset 0 0 8px #38bdf8';
+      if (opt && opt.css) box.style.cssText += opt.css;
+      box.style.transform = 'translateY(-4px)';
+      box.innerHTML = `<span>#boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (box-shadow: ${opt ? opt.value : 'appliquée'} !)</small></span>`;
     }
     return;
   }
 
-  // 12. ALIGNEMENT DU TEXTE (TEXT-ALIGN)
+  // 11. ALIGNEMENT DU TEXTE (TEXT-ALIGN)
   if (itemId === 'css-text-align') {
-    if (variantIdx === 0) box.style.textAlign = 'left';
-    else if (variantIdx === 1) box.style.textAlign = 'center';
-    else if (variantIdx === 2) box.style.textAlign = 'right';
-    else box.style.textAlign = 'justify';
-    box.style.transform = step === 1 ? 'scale(1.02)' : 'scale(1)';
+    if (step === 0) {
+      box.style.textAlign = 'left';
+      box.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Aligné à gauche par défaut)</small></span>`;
+    } else {
+      const aVal = opt ? opt.value : 'center';
+      box.style.textAlign = aVal;
+      box.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (text-align: ${aVal} !)</small></span>`;
+    }
     return;
   }
 
-  // 13. POLICE DE CARACTÈRES (FONT-FAMILY)
+  // 12. POLICE DE CARACTÈRES (FONT-FAMILY)
   if (itemId === 'css-font-family') {
-    if (variantIdx === 0) box.style.fontFamily = 'Arial, sans-serif';
-    else if (variantIdx === 1) box.style.fontFamily = "'Times New Roman', serif";
-    else if (variantIdx === 2) box.style.fontFamily = "'Courier New', monospace";
-    else box.style.fontFamily = "'Comic Sans MS', cursive";
-    box.style.transform = step === 1 ? 'scale(1.04)' : 'scale(1)';
+    if (step === 0) {
+      box.style.fontFamily = 'serif';
+      box.innerHTML = `<span>Texte de démo<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Police système standard)</small></span>`;
+    } else {
+      const fVal = opt ? opt.value : 'Arial, sans-serif';
+      box.style.fontFamily = fVal;
+      box.innerHTML = `<span>Texte de démo<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (font-family: ${fVal})</small></span>`;
+    }
     return;
   }
 
-  // 14. CASSE DU TEXTE (TEXT-TRANSFORM)
+  // 13. CASSE DU TEXTE (TEXT-TRANSFORM)
   if (itemId === 'css-text-transform') {
     const txt = document.getElementById('h1Text') || box;
-    if (variantIdx === 0) txt.style.textTransform = 'uppercase';
-    else if (variantIdx === 1) txt.style.textTransform = 'lowercase';
-    else if (variantIdx === 2) txt.style.textTransform = 'capitalize';
-    else txt.style.textTransform = 'none';
-    box.style.transform = step === 1 ? 'scale(1.03)' : 'scale(1)';
+    if (step === 0) {
+      txt.style.textTransform = 'none';
+      txt.innerHTML = `<span>Texte original<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Casse normale sans modification)</small></span>`;
+    } else {
+      const tVal = opt ? opt.value : 'uppercase';
+      txt.style.textTransform = tVal;
+      txt.innerHTML = `<span>Texte transformé<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (text-transform: ${tVal})</small></span>`;
+    }
     return;
   }
 
-  // 15. TRANSFORMATIONS (TRANSFORM)
+  // 14. TRANSFORMATIONS (TRANSFORM)
   if (itemId === 'css-transform') {
     box.style.transition = 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
-    if (variantIdx === 0) box.style.transform = step === 1 ? 'rotate(25deg)' : 'rotate(0deg)';
-    else if (variantIdx === 1) box.style.transform = step === 1 ? 'scale(1.28)' : 'scale(1)';
-    else if (variantIdx === 2) box.style.transform = step === 1 ? 'translate(30px, -15px)' : 'translate(0, 0)';
-    else box.style.transform = step === 1 ? 'skewX(-20deg)' : 'skewX(0deg)';
+    if (step === 0) {
+      box.style.transform = 'rotate(0deg) scale(1) translate(0, 0)';
+      box.innerHTML = `<span>#boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Position et taille originales)</small></span>`;
+    } else {
+      const trVal = opt ? opt.value : 'rotate(20deg)';
+      box.style.transform = trVal;
+      box.innerHTML = `<span>#boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (transform: ${trVal})</small></span>`;
+    }
     return;
   }
 
-  // 16. FILTRES GRAPHIQUES (FILTER)
+  // 15. FILTRES GRAPHIQUES (FILTER)
   if (itemId === 'css-filter') {
     box.style.transition = 'filter 0.5s ease';
-    if (variantIdx === 0) box.style.filter = 'none';
-    else if (variantIdx === 1) box.style.filter = step === 1 ? 'grayscale(100%)' : 'grayscale(20%)';
-    else if (variantIdx === 2) box.style.filter = step === 1 ? 'blur(4px)' : 'blur(1px)';
-    else if (variantIdx === 3) box.style.filter = step === 1 ? 'invert(100%)' : 'invert(0%)';
-    else box.style.filter = step === 1 ? 'sepia(100%)' : 'sepia(15%)';
+    if (step === 0) {
+      box.style.filter = 'none';
+      box.innerHTML = `<span>&lt;img id="img1"&gt;<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Image originale brute)</small></span>`;
+    } else {
+      const flVal = opt ? opt.value : 'grayscale(100%)';
+      box.style.filter = flVal;
+      box.innerHTML = `<span>&lt;img id="img1"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (filter: ${flVal})</small></span>`;
+    }
+    return;
+  }
+
+  // 16. TABLEAUX (BORDER-COLLAPSE & TABLE-LAYOUT)
+  if (itemId === 'css-border-collapse') {
+    box.style.borderCollapse = step === 1 ? (opt ? opt.value : 'collapse') : 'separate';
+    box.style.backgroundColor = step === 1 ? 'rgba(56, 189, 248, 0.2)' : 'transparent';
+    return;
+  }
+  if (itemId === 'css-table-layout') {
+    box.style.tableLayout = step === 1 ? (opt ? opt.value : 'fixed') : 'auto';
     return;
   }
 
   // 17. LISTES (LIST-STYLE-TYPE)
   if (itemId === 'css-list-style-type') {
-    if (variantIdx === 0) box.style.listStyleType = 'circle';
-    else if (variantIdx === 1) box.style.listStyleType = 'square';
-    else if (variantIdx === 2) box.style.listStyleType = 'disc';
-    else if (variantIdx === 3) box.style.listStyleType = 'decimal';
-    else box.style.listStyleType = 'none';
-    box.style.transform = step === 1 ? 'scale(1.03)' : 'scale(1)';
+    box.style.listStyleType = step === 1 ? (opt ? opt.value : 'circle') : 'disc';
     return;
   }
 
-  // 18. TABLEAUX (BORDER-COLLAPSE & TABLE-LAYOUT)
-  if (itemId === 'css-border-collapse') {
-    box.style.borderCollapse = variantIdx === 1 ? 'collapse' : 'separate';
-    box.style.backgroundColor = step === 1 ? 'rgba(56, 189, 248, 0.15)' : 'transparent';
-    return;
-  }
-  if (itemId === 'css-table-layout') {
-    box.style.tableLayout = variantIdx === 1 ? 'fixed' : 'auto';
-    box.style.transform = step === 1 ? 'scale(1.02)' : 'scale(1)';
-    return;
-  }
-
-  // 19. SÉLECTEURS
-  if (itemId.startsWith('css-sel-')) {
-    const items = document.querySelectorAll('.selector-item');
-    items.forEach((it, idx) => {
-      it.classList.toggle('selected', step === 1 ? (idx === 1 || idx === 2) : (idx === 0));
-    });
-    return;
-  }
-
-  // 20. TOUT AUTRE ÉLÉMENT AVEC VARIANTES DANS VARIETIES_CONFIG
+  // 18. TOUT AUTRE ÉLÉMENT AVEC VARIANTES DANS VARIETIES_CONFIG
   if (opt && opt.css) {
-    box.style.cssText += opt.css;
-    box.style.transform = step === 1 ? 'scale(1.06)' : 'scale(1)';
+    if (step === 0) {
+      box.style.cssText = '';
+      box.style.transform = 'scale(1)';
+    } else {
+      box.style.cssText += opt.css;
+      box.style.transform = 'scale(1.06)';
+    }
     return;
   }
 
-  // 21. ANIMATION PAR DÉFAUT POUR LES PROPRIÉTÉS SANS VARIANTES
-  if (itemId.includes('transform')) {
-    box.style.transform = step === 1 ? 'rotate(15deg) scale(1.2)' : 'rotate(0deg) scale(1)';
-  } else if (itemId.includes('color') && !itemId.includes('background') && !itemId.includes('border')) {
-    box.style.color = step === 1 ? '#ef4444' : '#38bdf8';
-  } else if (itemId.includes('background-color') || (itemId.includes('background') && !itemId.includes('repeat') && !itemId.includes('size'))) {
-    box.style.backgroundColor = step === 1 ? '#991b1b' : '#1e3a8a';
-  } else if (itemId.includes('font-size')) {
-    box.style.fontSize = step === 1 ? '28px' : '18px';
-  } else if (itemId.includes('font-weight')) {
-    box.style.fontWeight = step === 1 ? '900' : '400';
-  } else if (itemId.includes('font-style')) {
-    box.style.fontStyle = step === 1 ? 'italic' : 'normal';
-  } else if (itemId.includes('opacity')) {
-    box.style.opacity = step === 1 ? '0.3' : '1.0';
-  } else if (itemId.includes('width')) {
-    box.style.width = step === 1 ? '260px' : '130px';
-  } else if (itemId.includes('height')) {
-    box.style.height = step === 1 ? '120px' : '60px';
+  // 19. ANIMATION PAR DÉFAUT POUR LES PROPRIÉTÉS SANS VARIANTES
+  if (step === 0) {
+    box.style.transform = 'scale(1)';
+    box.style.opacity = '1.0';
+    box.style.color = '';
+    box.style.backgroundColor = '';
   } else {
-    box.style.transform = step === 1 ? 'scale(1.08)' : 'scale(1)';
+    if (itemId.includes('transform')) {
+      box.style.transform = 'rotate(15deg) scale(1.2)';
+    } else if (itemId.includes('color') && !itemId.includes('background') && !itemId.includes('border')) {
+      box.style.color = '#ef4444';
+    } else if (itemId.includes('background-color') || (itemId.includes('background') && !itemId.includes('repeat') && !itemId.includes('size'))) {
+      box.style.backgroundColor = '#991b1b';
+      box.style.color = '#fff';
+    } else if (itemId.includes('font-size')) {
+      box.style.fontSize = '28px';
+    } else if (itemId.includes('font-weight')) {
+      box.style.fontWeight = '900';
+    } else if (itemId.includes('font-style')) {
+      box.style.fontStyle = 'italic';
+    } else if (itemId.includes('opacity')) {
+      box.style.opacity = '0.3';
+    } else if (itemId.includes('width')) {
+      box.style.width = '260px';
+    } else if (itemId.includes('height')) {
+      box.style.height = '120px';
+    } else {
+      box.style.transform = 'scale(1.08)';
+    }
   }
 }
 
