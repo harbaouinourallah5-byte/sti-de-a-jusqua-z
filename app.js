@@ -123,28 +123,28 @@ const VARIETIES_CONFIG = {
     "title": "Tester les coordonnées de décalage :",
     "options": [
       {
-        "label": "top: 0px; left: 0px (Origine)",
-        "value": "0,0",
+        "label": "top: 25px; left: 25px (Origine décalée)",
+        "value": "top: 25px; left: 25px",
         "css": "top: 25px !important; left: 25px !important; right: auto !important; bottom: auto !important;",
-        "code": "#boite {\n  top: 0px;\n  left: 0px;\n}"
+        "code": "#boite {\n  top: 25px;\n  left: 25px;\n}"
       },
       {
-        "label": "top: 35px; left: 85px (Bas / Droite)",
-        "value": "35,85",
+        "label": "top: 60px; left: 110px (Vers le bas et la droite)",
+        "value": "top: 60px; left: 110px",
         "css": "top: 60px !important; left: 110px !important; right: auto !important; bottom: auto !important;",
-        "code": "#boite {\n  top: 35px;\n  left: 85px;\n}"
+        "code": "#boite {\n  top: 60px;\n  left: 110px;\n}"
       },
       {
-        "label": "top: 10px; right: 20px (Haut / Droite)",
-        "value": "10,20",
+        "label": "top: 15px; right: 20px (En haut à droite)",
+        "value": "top: 15px; right: 20px",
         "css": "top: 15px !important; right: 20px !important; left: auto !important; bottom: auto !important;",
-        "code": "#boite {\n  top: 10px;\n  right: 20px;\n}"
+        "code": "#boite {\n  top: 15px;\n  right: 20px;\n}"
       },
       {
-        "label": "bottom: 15px; left: 40px (Bas / Gauche)",
-        "value": "15,40",
+        "label": "bottom: 15px; left: 65px (En bas à gauche)",
+        "value": "bottom: 15px; left: 65px",
         "css": "bottom: 15px !important; left: 65px !important; top: auto !important; right: auto !important;",
-        "code": "#boite {\n  bottom: 15px;\n  left: 40px;\n}"
+        "code": "#boite {\n  bottom: 15px;\n  left: 65px;\n}"
       }
     ]
   },
@@ -268,28 +268,28 @@ const VARIETIES_CONFIG = {
         "code": "#boite {\n  box-shadow: none;\n}"
       },
       {
-        "label": "0 4px 12px rgba(0,0,0,0.4) (Ombre douce)",
-        "value": "soft",
-        "css": "box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important; transform: translateY(-2px);",
-        "code": "#boite {\n  box-shadow: 0 4px 12px rgba(0,0,0,0.4);\n}"
+        "label": "0 4px 14px rgba(0,0,0,0.5) (Ombre portée naturelle)",
+        "value": "0 4px 14px rgba(0,0,0,0.5)",
+        "css": "box-shadow: 0 4px 14px rgba(0,0,0,0.5) !important; transform: translateY(-3px);",
+        "code": "#boite {\n  box-shadow: 0 4px 14px rgba(0,0,0,0.5);\n}"
       },
       {
-        "label": "0 0 20px #38bdf8 (Halo néon bleu)",
-        "value": "neon",
-        "css": "box-shadow: 0 0 20px #38bdf8, 0 0 35px #0284c7 !important; transform: translateY(-4px);",
-        "code": "#boite {\n  box-shadow: 0 0 20px #38bdf8;\n}"
+        "label": "0 0 22px #38bdf8 (Halo néon cyan)",
+        "value": "0 0 22px #38bdf8",
+        "css": "box-shadow: 0 0 22px #38bdf8, 0 0 35px #0284c7 !important; transform: translateY(-4px);",
+        "code": "#boite {\n  box-shadow: 0 0 22px #38bdf8;\n}"
       },
       {
-        "label": "6px 6px 0 #ef4444 (Effet 3D décalé)",
-        "value": "3d",
+        "label": "6px 6px 0 #ef4444 (Effet relief 3D)",
+        "value": "6px 6px 0 #ef4444",
         "css": "box-shadow: 6px 6px 0 #ef4444 !important; transform: translateY(-2px);",
         "code": "#boite {\n  box-shadow: 6px 6px 0 #ef4444;\n}"
       },
       {
-        "label": "inset 0 0 14px #38bdf8 (Ombre intérieure)",
-        "value": "inset",
-        "css": "box-shadow: inset 0 0 14px #38bdf8 !important;",
-        "code": "#boite {\n  box-shadow: inset 0 0 14px #38bdf8;\n}"
+        "label": "inset 0 0 16px #38bdf8 (Ombre intérieure inset)",
+        "value": "inset 0 0 16px #38bdf8",
+        "css": "box-shadow: inset 0 0 16px #38bdf8 !important;",
+        "code": "#boite {\n  box-shadow: inset 0 0 16px #38bdf8;\n}"
       }
     ]
   },
@@ -425,28 +425,28 @@ const VARIETIES_CONFIG = {
     "title": "Choisir une épaisseur border-width :",
     "options": [
       {
-        "label": "thin (Fine ~1px)",
-        "value": "thin",
-        "css": "border-width: thin !important; border-style: solid; border-color: #38bdf8;",
-        "code": "#boite {\n  border-width: thin;\n}"
+        "label": "1px (Bordure fine)",
+        "value": "1px",
+        "css": "border-width: 1px !important; border-style: solid; border-color: #38bdf8;",
+        "code": "#boite {\n  border-style: solid;\n  border-width: 1px;\n  border-color: #38bdf8;\n}"
       },
       {
-        "label": "medium (Moyenne ~3px)",
-        "value": "medium",
-        "css": "border-width: medium !important; border-style: solid; border-color: #38bdf8;",
-        "code": "#boite {\n  border-width: medium;\n}"
+        "label": "4px (Bordure standard)",
+        "value": "4px",
+        "css": "border-width: 4px !important; border-style: solid; border-color: #38bdf8;",
+        "code": "#boite {\n  border-style: solid;\n  border-width: 4px;\n  border-color: #38bdf8;\n}"
       },
       {
-        "label": "thick (Épaisse ~5px)",
-        "value": "thick",
-        "css": "border-width: thick !important; border-style: solid; border-color: #38bdf8;",
-        "code": "#boite {\n  border-width: thick;\n}"
+        "label": "8px (Bordure épaisse)",
+        "value": "8px",
+        "css": "border-width: 8px !important; border-style: solid; border-color: #38bdf8;",
+        "code": "#boite {\n  border-style: solid;\n  border-width: 8px;\n  border-color: #38bdf8;\n}"
       },
       {
-        "label": "10px (Très épaisse)",
-        "value": "10px",
-        "css": "border-width: 10px !important; border-style: solid; border-color: #38bdf8;",
-        "code": "#boite {\n  border-width: 10px;\n}"
+        "label": "14px (Bordure très épaisse)",
+        "value": "14px",
+        "css": "border-width: 14px !important; border-style: solid; border-color: #38bdf8;",
+        "code": "#boite {\n  border-style: solid;\n  border-width: 14px;\n  border-color: #38bdf8;\n}"
       }
     ]
   },
@@ -457,25 +457,25 @@ const VARIETIES_CONFIG = {
         "label": "#38bdf8 (Cyan vif)",
         "value": "#38bdf8",
         "css": "border-color: #38bdf8 !important; border-style: solid; border-width: 4px;",
-        "code": "#boite {\n  border-color: #38bdf8;\n}"
+        "code": "#boite {\n  border-style: solid;\n  border-width: 4px;\n  border-color: #38bdf8;\n}"
       },
       {
         "label": "#ef4444 (Rouge alerte)",
         "value": "#ef4444",
         "css": "border-color: #ef4444 !important; border-style: solid; border-width: 4px;",
-        "code": "#boite {\n  border-color: #ef4444;\n}"
+        "code": "#boite {\n  border-style: solid;\n  border-width: 4px;\n  border-color: #ef4444;\n}"
       },
       {
         "label": "#10b981 (Vert succès)",
         "value": "#10b981",
         "css": "border-color: #10b981 !important; border-style: solid; border-width: 4px;",
-        "code": "#boite {\n  border-color: #10b981;\n}"
+        "code": "#boite {\n  border-style: solid;\n  border-width: 4px;\n  border-color: #10b981;\n}"
       },
       {
         "label": "#facc15 (Jaune or)",
         "value": "#facc15",
         "css": "border-color: #facc15 !important; border-style: solid; border-width: 4px;",
-        "code": "#boite {\n  border-color: #facc15;\n}"
+        "code": "#boite {\n  border-style: solid;\n  border-width: 4px;\n  border-color: #facc15;\n}"
       }
     ]
   },
@@ -484,25 +484,25 @@ const VARIETIES_CONFIG = {
     "options": [
       {
         "label": "Arial, sans-serif (Linéaire moderne)",
-        "value": "Arial",
+        "value": "Arial, sans-serif",
         "css": "font-family: Arial, sans-serif !important;",
         "code": "#h1 {\n  font-family: Arial, sans-serif;\n}"
       },
       {
-        "label": "'Times New Roman', serif (Empattements)",
-        "value": "Times",
+        "label": "'Times New Roman', serif (Empattements classiques)",
+        "value": "'Times New Roman', serif",
         "css": "font-family: 'Times New Roman', serif !important;",
         "code": "#h1 {\n  font-family: 'Times New Roman', serif;\n}"
       },
       {
-        "label": "'Courier New', monospace (Code)",
-        "value": "Courier",
+        "label": "'Courier New', monospace (Chasse fixe code)",
+        "value": "'Courier New', monospace",
         "css": "font-family: 'Courier New', monospace !important;",
         "code": "#h1 {\n  font-family: 'Courier New', monospace;\n}"
       },
       {
         "label": "'Comic Sans MS', cursive (Manuscrite)",
-        "value": "Comic",
+        "value": "'Comic Sans MS', cursive",
         "css": "font-family: 'Comic Sans MS', cursive !important;",
         "code": "#h1 {\n  font-family: 'Comic Sans MS', cursive;\n}"
       }
@@ -645,22 +645,28 @@ const VARIETIES_CONFIG = {
         "code": "#h1 {\n  text-shadow: none;\n}"
       },
       {
-        "label": "2px 2px 4px #000 (Ombre discrète)",
-        "value": "soft",
+        "label": "2px 2px 4px rgba(0,0,0,0.8) (Ombre sombre naturelle)",
+        "value": "2px 2px 4px rgba(0,0,0,0.8)",
         "css": "text-shadow: 2px 2px 4px rgba(0,0,0,0.8) !important;",
-        "code": "#h1 {\n  text-shadow: 2px 2px 4px #000000;\n}"
+        "code": "#h1 {\n  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);\n}"
       },
       {
-        "label": "0 0 12px #38bdf8 (Halo néon)",
-        "value": "neon",
-        "css": "text-shadow: 0 0 12px #38bdf8, 0 0 20px #0284c7 !important;",
-        "code": "#h1 {\n  text-shadow: 0 0 12px #38bdf8;\n}"
+        "label": "0 0 16px #38bdf8 (Halo néon cyan)",
+        "value": "0 0 16px #38bdf8",
+        "css": "text-shadow: 0 0 16px #38bdf8, 0 0 24px #0284c7 !important; color: #ffffff !important;",
+        "code": "#h1 {\n  color: #ffffff;\n  text-shadow: 0 0 16px #38bdf8;\n}"
       },
       {
-        "label": "3px 3px 0 #ef4444 (Effet 3D)",
-        "value": "3d",
+        "label": "3px 3px 0 #ef4444 (Effet 3D décalé rouge)",
+        "value": "3px 3px 0 #ef4444",
         "css": "text-shadow: 3px 3px 0 #ef4444 !important;",
         "code": "#h1 {\n  text-shadow: 3px 3px 0 #ef4444;\n}"
+      },
+      {
+        "label": "0 0 18px #facc15 (Lueur dorée éclatante)",
+        "value": "0 0 18px #facc15",
+        "css": "text-shadow: 0 0 18px #facc15 !important;",
+        "code": "#h1 {\n  text-shadow: 0 0 18px #facc15;\n}"
       }
     ]
   },
@@ -715,10 +721,10 @@ const VARIETIES_CONFIG = {
         "code": "#boite {\n  background-color: #991b1b;\n}"
       },
       {
-        "label": "Dégradé 135deg",
-        "value": "gradient",
-        "css": "background: linear-gradient(135deg, #8b5cf6, #ec4899) !important; color: #ffffff !important;",
-        "code": "#boite {\n  background: linear-gradient(135deg, #8b5cf6, #ec4899);\n}"
+        "label": "#f59e0b (Orange ambré)",
+        "value": "#f59e0b",
+        "css": "background-color: #f59e0b !important; color: #ffffff !important;",
+        "code": "#boite {\n  background-color: #f59e0b;\n}"
       }
     ]
   },
@@ -752,66 +758,96 @@ const VARIETIES_CONFIG = {
     ]
   },
   "css-transform": {
-    "title": "Tester la transformation 2D transform :",
+    "title": "Tester la transformation 2D transform (rotate, scale, translate, skew) :",
     "options": [
       {
-        "label": "rotate(20deg) (Rotation de 20°)",
-        "value": "rotate",
-        "css": "transform: rotate(20deg) !important;",
-        "code": "#boite {\n  transform: rotate(20deg);\n}"
+        "label": "rotate(25deg) (Rotation horaire de 25°)",
+        "value": "rotate(25deg)",
+        "css": "transform: rotate(25deg) !important;",
+        "code": "/* Tourne l'élément de 25 degrés dans le sens horaire */\n#boite {\n  transform: rotate(25deg);\n}"
       },
       {
-        "label": "scale(1.25) (Agrandissement 25%)",
-        "value": "scale",
-        "css": "transform: scale(1.25) !important;",
-        "code": "#boite {\n  transform: scale(1.25);\n}"
+        "label": "scale(1.35) (Zoom avant / Agrandissement 135%)",
+        "value": "scale(1.35)",
+        "css": "transform: scale(1.35) !important;",
+        "code": "/* Agrandit l'élément de 35% */\n#boite {\n  transform: scale(1.35);\n}"
       },
       {
-        "label": "translate(30px, -15px) (Translation)",
-        "value": "translate",
-        "css": "transform: translate(30px, -15px) !important;",
-        "code": "#boite {\n  transform: translate(30px, -15px);\n}"
+        "label": "scale(0.65) (Zoom arrière / Rétrécissement 65%)",
+        "value": "scale(0.65)",
+        "css": "transform: scale(0.65) !important;",
+        "code": "/* Rétrécit l'élément à 65% de sa taille */\n#boite {\n  transform: scale(0.65);\n}"
       },
       {
-        "label": "skewX(-15deg) (Inclinaison horizontale)",
-        "value": "skew",
-        "css": "transform: skewX(-15deg) !important;",
-        "code": "#boite {\n  transform: skewX(-15deg);\n}"
+        "label": "translate(40px, -20px) (Translation X et Y)",
+        "value": "translate(40px, -20px)",
+        "css": "transform: translate(40px, -20px) !important;",
+        "code": "/* Déplace de 40px vers la droite et 20px vers le haut */\n#boite {\n  transform: translate(40px, -20px);\n}"
+      },
+      {
+        "label": "skewX(-20deg) (Inclinaison horizontale skewX)",
+        "value": "skewX(-20deg)",
+        "css": "transform: skewX(-20deg) !important;",
+        "code": "/* Incline l'élément horizontalement de -20 degrés */\n#boite {\n  transform: skewX(-20deg);\n}"
+      },
+      {
+        "label": "skewY(15deg) (Inclinaison verticale skewY)",
+        "value": "skewY(15deg)",
+        "css": "transform: skewY(15deg) !important;",
+        "code": "/* Incline l'élément verticalement de 15 degrés */\n#boite {\n  transform: skewY(15deg);\n}"
+      },
+      {
+        "label": "rotate(15deg) scale(1.2) (Combinaison Rotation + Zoom)",
+        "value": "rotate(15deg) scale(1.2)",
+        "css": "transform: rotate(15deg) scale(1.2) !important;",
+        "code": "/* Combinaison classique Bac STI pour effet :hover */\n#boite {\n  transform: rotate(15deg) scale(1.2);\n}"
       }
     ]
   },
   "css-filter": {
-    "title": "Tester les filtres visuels filter :",
+    "title": "Tester les filtres visuels filter (grayscale, blur, invert, sepia, brightness, contrast) :",
     "options": [
       {
-        "label": "none (Image originale)",
+        "label": "none (Image brute originale)",
         "value": "none",
         "css": "filter: none !important;",
-        "code": "#img1 {\n  filter: none;\n}"
+        "code": "/* Image brute sans aucun filtre */\n#img1 {\n  filter: none;\n}"
       },
       {
-        "label": "grayscale(100%) (Noir et blanc)",
-        "value": "grayscale",
+        "label": "grayscale(100%) (Noir et blanc total)",
+        "value": "grayscale(100%)",
         "css": "filter: grayscale(100%) !important;",
-        "code": "#img1 {\n  filter: grayscale(100%);\n}"
+        "code": "/* Convertit l'image en noir et blanc */\n#img1 {\n  filter: grayscale(100%);\n}"
       },
       {
-        "label": "blur(3px) (Flou artistique)",
-        "value": "blur",
-        "css": "filter: blur(3px) !important;",
-        "code": "#img1 {\n  filter: blur(3px);\n}"
+        "label": "blur(4px) (Flou artistique)",
+        "value": "blur(4px)",
+        "css": "filter: blur(4px) !important;",
+        "code": "/* Applique un flou gaussien de 4px */\n#img1 {\n  filter: blur(4px);\n}"
       },
       {
-        "label": "invert(100%) (Inversion des couleurs)",
-        "value": "invert",
+        "label": "invert(100%) (Négatif / Inversion des couleurs)",
+        "value": "invert(100%)",
         "css": "filter: invert(100%) !important;",
-        "code": "#img1 {\n  filter: invert(100%);\n}"
+        "code": "/* Inverse toutes les couleurs de l'image */\n#img1 {\n  filter: invert(100%);\n}"
       },
       {
-        "label": "sepia(100%) (Effet rétro)",
-        "value": "sepia",
+        "label": "sepia(100%) (Effet rétro sépia)",
+        "value": "sepia(100%)",
         "css": "filter: sepia(100%) !important;",
-        "code": "#img1 {\n  filter: sepia(100%);\n}"
+        "code": "/* Teinte sépia vintage à 100% */\n#img1 {\n  filter: sepia(100%);\n}"
+      },
+      {
+        "label": "brightness(160%) (Luminosité boostée)",
+        "value": "brightness(160%)",
+        "css": "filter: brightness(160%) !important;",
+        "code": "/* Augmente la luminosité de 60% */\n#img1 {\n  filter: brightness(160%);\n}"
+      },
+      {
+        "label": "contrast(200%) (Contraste doublé)",
+        "value": "contrast(200%)",
+        "css": "filter: contrast(200%) !important;",
+        "code": "/* Double le contraste des couleurs */\n#img1 {\n  filter: contrast(200%);\n}"
       }
     ]
   },
@@ -1245,76 +1281,6 @@ const VARIETIES_CONFIG = {
         "label": "normal 16px Arial, sans-serif",
         "value": "normal 16px Arial, sans-serif",
         "code": "#h1 {\n  font: normal 16px Arial, sans-serif;\n}"
-      }
-    ]
-  },
-  "css-text-shadow": {
-    "title": "Tester text-shadow (Ombre portée du texte) :",
-    "options": [
-      {
-        "label": "2px 2px 4px rgba(0,0,0,0.8) (Ombre portée naturelle)",
-        "value": "2px 2px 4px rgba(0,0,0,0.8)",
-        "code": "#h1 {\n  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);\n}"
-      },
-      {
-        "label": "0 0 16px #38bdf8 (Effet néon lumineux)",
-        "value": "0 0 16px #38bdf8",
-        "code": "#h1 {\n  color: #ffffff;\n  text-shadow: 0 0 16px #38bdf8;\n}"
-      },
-      {
-        "label": "none (Sans ombre)",
-        "value": "none",
-        "code": "#h1 {\n  text-shadow: none;\n}"
-      }
-    ]
-  },
-  "css-border-color": {
-    "title": "Tester border-color :",
-    "options": [
-      {
-        "label": "#38bdf8 (Bleu cyan)",
-        "value": "#38bdf8",
-        "code": "#boite {\n  border-style: solid;\n  border-width: 4px;\n  border-color: #38bdf8;\n}"
-      },
-      {
-        "label": "#f43f5e (Rouge vif)",
-        "value": "#f43f5e",
-        "code": "#boite {\n  border-style: solid;\n  border-width: 4px;\n  border-color: #f43f5e;\n}"
-      },
-      {
-        "label": "#10b981 (Vert émeraude)",
-        "value": "#10b981",
-        "code": "#boite {\n  border-style: solid;\n  border-width: 4px;\n  border-color: #10b981;\n}"
-      },
-      {
-        "label": "#facc15 (Jaune d'or)",
-        "value": "#facc15",
-        "code": "#boite {\n  border-style: solid;\n  border-width: 4px;\n  border-color: #facc15;\n}"
-      }
-    ]
-  },
-  "css-border-width": {
-    "title": "Tester border-width (Épaisseur de bordure) :",
-    "options": [
-      {
-        "label": "1px (Bordure fine)",
-        "value": "1px",
-        "code": "#boite {\n  border-style: solid;\n  border-width: 1px;\n  border-color: #38bdf8;\n}"
-      },
-      {
-        "label": "4px (Bordure standard)",
-        "value": "4px",
-        "code": "#boite {\n  border-style: solid;\n  border-width: 4px;\n  border-color: #38bdf8;\n}"
-      },
-      {
-        "label": "8px (Bordure épaisse)",
-        "value": "8px",
-        "code": "#boite {\n  border-style: solid;\n  border-width: 8px;\n  border-color: #38bdf8;\n}"
-      },
-      {
-        "label": "14px (Bordure très épaisse)",
-        "value": "14px",
-        "code": "#boite {\n  border-style: solid;\n  border-width: 14px;\n  border-color: #38bdf8;\n}"
       }
     ]
   },
@@ -4036,6 +4002,19 @@ function buildVideoStageElement(item) {
     </div>`;
   }
 
+  // 0.6 Transformations géométriques (transform: rotate, scale, translate, skew)
+  if (itemId === 'css-transform' || prop === 'transform') {
+    return `<div style="position:relative; width:100%; height:200px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+      <div style="position:absolute; width:160px; height:80px; border:2px dashed rgba(239, 68, 68, 0.45); border-radius:8px; display:flex; align-items:center; justify-content:center; color:#ef4444; font-size:10px; font-weight:bold; pointer-events:none; background:rgba(239, 68, 68, 0.05);">
+        👻 Position d'origine (Repos)
+      </div>
+      <div id="boite" class="demo-box" style="position:relative; z-index:2; width:160px; height:80px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; font-size:14px; background:#1e293b; border:2px solid #38bdf8; border-radius:8px; color:#fff; box-shadow:0 8px 24px rgba(0,0,0,0.4); transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.6s ease, border-color 0.6s ease;">
+        <span>📦 &lt;div id="boite"&gt;</span>
+        <small id="transformStageBadge" style="font-size:0.75rem; color:#38bdf8; margin-top:3px; font-weight:normal;">transform: none</small>
+      </div>
+    </div>`;
+  }
+
   // 1. Marge extérieure (margin) - Repousse les voisins hors de la boîte
   if (itemId === 'css-margin' || prop === 'margin') {
     return `<div id="parentConteneur" class="box-model-container">
@@ -4137,8 +4116,25 @@ function buildVideoStageElement(item) {
 
   // 10. Images & Filtres
   if (cat === 'Propriétés des images' || prop.includes('filter')) {
-    return `<div id="img1" style="width:150px; height:90px; background:linear-gradient(135deg, #f97316, #ef4444); border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:bold; transition:all 0.8s ease; box-shadow:0 4px 10px rgba(0,0,0,0.3); font-size:13px;">
-      &lt;img id="img1"&gt;
+    return `<div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+      <div id="img1" style="width:210px; height:120px; border-radius:10px; overflow:hidden; border:2px solid #38bdf8; box-shadow:0 8px 24px rgba(0,0,0,0.5); transition:filter 0.5s ease, border-color 0.5s ease; position:relative;">
+        <svg viewBox="0 0 210 120" width="100%" height="100%" style="display:block;">
+          <defs>
+            <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#0284c7"/>
+              <stop offset="50%" stop-color="#f59e0b"/>
+              <stop offset="100%" stop-color="#ef4444"/>
+            </linearGradient>
+          </defs>
+          <rect width="210" height="120" fill="url(#skyGrad)"/>
+          <circle cx="160" cy="38" r="20" fill="#fef08a"/>
+          <polygon points="10,120 70,50 130,120" fill="#1e293b"/>
+          <polygon points="85,120 150,42 205,120" fill="#0f172a"/>
+          <rect y="96" width="210" height="24" fill="#0369a1" opacity="0.85"/>
+          <text x="105" y="112" font-size="11" font-weight="bold" fill="#fff" text-anchor="middle">&lt;img id="img1"&gt;</text>
+        </svg>
+      </div>
+      <div id="filterStageBadge" style="font-size:0.8rem; text-align:center;"></div>
     </div>`;
   }
 
@@ -4265,8 +4261,26 @@ function buildMiniStage(itemId, idx, opt) {
     return `<div style="width:80%; height:30px; display:flex; align-items:center; justify-content:center; font-size:9px; color:#38bdf8; font-weight:bold; background:rgba(255,255,255,0.05); border-radius:4px;">• ${escapeHtml(opt.value)}</div>`;
   }
 
+  // Transformations (transform)
+  if (itemId === 'css-transform') {
+    const tr = opt.value || 'rotate(25deg)';
+    let icon = '🔄';
+    if (tr.includes('scale(1.')) icon = '🔍➕';
+    else if (tr.includes('scale(0.')) icon = '🔍➖';
+    else if (tr.includes('translate')) icon = '↗️';
+    else if (tr.includes('skew')) icon = '▰';
+    else if (tr.includes('scale') && tr.includes('rotate')) icon = '💫';
+    return `<div style="width:75%; height:32px; display:flex; align-items:center; justify-content:center; font-size:10px; border-radius:4px; background:linear-gradient(135deg, rgba(56,189,248,0.3), rgba(37,99,235,0.3)); border:1px solid #38bdf8; color:#fff; font-weight:bold; transform:${tr}; transition:transform 0.4s ease;">${icon} ${escapeHtml(tr.split('(')[0])}</div>`;
+  }
+
+  // Filtres (filter)
+  if (itemId === 'css-filter') {
+    const fl = opt.value || 'none';
+    return `<div style="width:75%; height:32px; border-radius:4px; overflow:hidden; border:1px solid #38bdf8; filter:${fl}; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg, #f59e0b, #ef4444); color:#fff; font-weight:bold; font-size:9px;">${escapeHtml(fl.split('(')[0])}</div>`;
+  }
+
   // Rendu par défaut dynamique avec opt.css
-  return `<div style="width:80%; height:32px; display:flex; align-items:center; justify-content:center; font-size:10px; border-radius:4px; background:linear-gradient(135deg, rgba(56,189,248,0.25), rgba(37,99,235,0.25)); color:#fff; font-weight:bold; ${opt.css};">#boite</div>`;
+  return `<div style="width:80%; height:32px; display:flex; align-items:center; justify-content:center; font-size:10px; border-radius:4px; background:linear-gradient(135deg, rgba(56,189,248,0.25), rgba(37,99,235,0.25)); color:#fff; font-weight:bold; ${opt.css || ''};">#boite</div>`;
 }
 
 // Lancer une vidéo spécifique pour une propriété (1 vidéo par valeur/variante)
@@ -4940,11 +4954,12 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     if (step === 0) {
       box.style.boxShadow = 'none';
       box.style.transform = 'translateY(0)';
-      box.innerHTML = `<span>#boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Boîte 2D plate sans ombre)</small></span>`;
+      box.innerHTML = `<span>#boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (box-shadow: none / Boîte plate)</small></span>`;
     } else {
-      if (opt && opt.css) box.style.cssText += opt.css;
-      box.style.transform = 'translateY(-4px)';
-      box.innerHTML = `<span>#boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (box-shadow: ${opt ? opt.value : 'appliquée'} !)</small></span>`;
+      const shVal = (opt && opt.value) ? opt.value : '0 4px 14px rgba(0,0,0,0.5)';
+      box.style.boxShadow = shVal;
+      box.style.transform = shVal.includes('inset') ? 'none' : 'translateY(-4px)';
+      box.innerHTML = `<span>#boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (box-shadow: ${shVal} !)</small></span>`;
     }
     return;
   }
@@ -4966,7 +4981,7 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
   if (itemId === 'css-font-family') {
     if (step === 0) {
       box.style.fontFamily = 'serif';
-      box.innerHTML = `<span>Texte de démo<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Police système standard)</small></span>`;
+      box.innerHTML = `<span>Texte de démo<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Police serif brute standard)</small></span>`;
     } else {
       const fVal = opt ? opt.value : 'Arial, sans-serif';
       box.style.fontFamily = fVal;
@@ -4989,30 +5004,38 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     return;
   }
 
-  // 14. TRANSFORMATIONS (TRANSFORM)
+  // 14. TRANSFORMATIONS GÉOMÉTRIQUES (TRANSFORM: rotate, scale, translate, skew)
   if (itemId === 'css-transform') {
-    box.style.transition = 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    box.style.transition = 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.6s ease, border-color 0.6s ease';
     if (step === 0) {
-      box.style.transform = 'rotate(0deg) scale(1) translate(0, 0)';
-      box.innerHTML = `<span>#boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Position et taille originales)</small></span>`;
+      box.style.transform = 'none';
+      box.style.boxShadow = '0 8px 24px rgba(0,0,0,0.4)';
+      box.style.borderColor = '#ef4444';
+      box.innerHTML = `<span>📦 &lt;div id="boite"&gt;</span><small id="transformStageBadge" style="font-size:0.75rem; color:#ef4444; margin-top:3px; font-weight:bold;">🔴 ÉTAT 1 : AVANT (transform: none / Au repos)</small>`;
     } else {
-      const trVal = opt ? opt.value : 'rotate(20deg)';
+      const trVal = (opt && opt.value) ? opt.value : 'rotate(25deg)';
       box.style.transform = trVal;
-      box.innerHTML = `<span>#boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (transform: ${trVal})</small></span>`;
+      box.style.boxShadow = '0 12px 30px rgba(56, 189, 248, 0.45)';
+      box.style.borderColor = '#10b981';
+      box.innerHTML = `<span>📦 &lt;div id="boite"&gt;</span><small id="transformStageBadge" style="font-size:0.75rem; color:#4ade80; margin-top:3px; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (transform: ${trVal})</small>`;
     }
     return;
   }
 
   // 15. FILTRES GRAPHIQUES (FILTER)
   if (itemId === 'css-filter') {
-    box.style.transition = 'filter 0.5s ease';
+    const img = document.getElementById('img1') || box;
+    const badge = document.getElementById('filterStageBadge');
+    img.style.transition = 'filter 0.5s ease, border-color 0.5s ease';
     if (step === 0) {
-      box.style.filter = 'none';
-      box.innerHTML = `<span>&lt;img id="img1"&gt;<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Image originale brute)</small></span>`;
+      img.style.filter = 'none';
+      img.style.borderColor = '#ef4444';
+      if (badge) badge.innerHTML = `<small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (filter: none / Image brute)</small>`;
     } else {
-      const flVal = opt ? opt.value : 'grayscale(100%)';
-      box.style.filter = flVal;
-      box.innerHTML = `<span>&lt;img id="img1"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (filter: ${flVal})</small></span>`;
+      const flVal = (opt && opt.value) ? opt.value : 'grayscale(100%)';
+      img.style.filter = flVal;
+      img.style.borderColor = '#10b981';
+      if (badge) badge.innerHTML = `<small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (filter: ${flVal})</small>`;
     }
     return;
   }
