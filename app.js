@@ -953,6 +953,371 @@ const VARIETIES_CONFIG = {
       }
     ]
   },
+  "css-keyframes": {
+    "title": "Tester les étapes clés de @keyframes avec pourcentages (%) :",
+    "options": [
+      {
+        "label": "0% ➔ 50% ➔ 100% (Couleurs & Zoom progressif)",
+        "value": "0%, 50%, 100%",
+        "code": "/* Animation à 3 étapes clés en pourcentages % */\n@keyframes animCouleur {\n  0% {\n    background-color: #ef4444; /* Rouge au départ (0%) */\n    transform: scale(1);\n  }\n  50% {\n    background-color: #f59e0b; /* Orange & zoom à mi-parcours (50%) */\n    transform: scale(1.22) rotate(6deg);\n  }\n  100% {\n    background-color: #10b981; /* Vert à l'arrivée (100%) */\n    transform: scale(1);\n  }\n}\n\n#boite {\n  animation: animCouleur 3s infinite alternate;\n}"
+      },
+      {
+        "label": "0% ➔ 25% ➔ 50% ➔ 75% ➔ 100% (Trajet des 4 coins)",
+        "value": "0%, 25%, 50%, 75%, 100%",
+        "code": "/* Parcours rectangulaire aux 4 coins en 5 étapes % */\n@keyframes animCoins {\n  0%   { transform: translate(0px, 0px); background-color: #38bdf8; }\n  25%  { transform: translate(80px, 0px); background-color: #a855f7; }\n  50%  { transform: translate(80px, 35px); background-color: #f43f5e; }\n  75%  { transform: translate(0px, 35px); background-color: #facc15; }\n  100% { transform: translate(0px, 0px); background-color: #38bdf8; }\n}\n\n#boite {\n  animation: animCoins 4s infinite linear;\n}"
+      },
+      {
+        "label": "0% ➔ 100% (Rotation continue 360°)",
+        "value": "0% -> 100% (360deg)",
+        "code": "/* Rotation complète d'un tour (0% à 100%) */\n@keyframes animTourne {\n  0% {\n    transform: rotate(0deg);\n    background-color: #6366f1;\n  }\n  100% {\n    transform: rotate(360deg);\n    background-color: #ec4899;\n  }\n}\n\n#boite {\n  animation: animTourne 2s infinite linear;\n}"
+      },
+      {
+        "label": "from ➔ to (Équivalent à 0% et 100%)",
+        "value": "from -> to",
+        "code": "/* Déclaration avec from (0%) et to (100%) */\n@keyframes animFromTo {\n  from {\n    opacity: 0.25;\n    transform: scale(0.85);\n  }\n  to {\n    opacity: 1;\n    transform: scale(1.15);\n  }\n}\n\n#boite {\n  animation: animFromTo 2s infinite alternate;\n}"
+      }
+    ]
+  },
+  "css-animation-name": {
+    "title": "Tester animation-name (Lier un scénario @keyframes au bloc) :",
+    "options": [
+      {
+        "label": "animCouleur (Associe le scénario de couleur)",
+        "value": "animCouleur",
+        "code": "/* Relie le @keyframes animCouleur à #boite */\n#boite {\n  animation-name: animCouleur;\n  animation-duration: 2.5s;\n  animation-iteration-count: infinite;\n}"
+      },
+      {
+        "label": "animTourne (Associe le scénario de rotation)",
+        "value": "animTourne",
+        "code": "/* Relie le @keyframes animTourne à #boite */\n#boite {\n  animation-name: animTourne;\n  animation-duration: 2s;\n  animation-iteration-count: infinite;\n}"
+      },
+      {
+        "label": "none (Aucune animation)",
+        "value": "none",
+        "code": "#boite {\n  animation-name: none;\n}"
+      }
+    ]
+  },
+  "css-animation-duration": {
+    "title": "Tester animation-duration (Durée d'un cycle complet) :",
+    "options": [
+      {
+        "label": "1s (Animation rapide et dynamique)",
+        "value": "1s",
+        "code": "/* Vitesse rapide : 1 seconde par cycle */\n#boite {\n  animation-name: animCouleur;\n  animation-duration: 1s;\n  animation-iteration-count: infinite;\n}"
+      },
+      {
+        "label": "3s (Animation modérée et fluide)",
+        "value": "3s",
+        "code": "/* Vitesse modérée : 3 secondes par cycle */\n#boite {\n  animation-name: animCouleur;\n  animation-duration: 3s;\n  animation-iteration-count: infinite;\n}"
+      },
+      {
+        "label": "6s (Animation lente démonstrative)",
+        "value": "6s",
+        "code": "/* Vitesse lente : 6 secondes par cycle */\n#boite {\n  animation-name: animCouleur;\n  animation-duration: 6s;\n  animation-iteration-count: infinite;\n}"
+      }
+    ]
+  },
+  "css-animation-delay": {
+    "title": "Tester animation-delay (Attente avant départ) :",
+    "options": [
+      {
+        "label": "0s (Départ immédiat sans attente)",
+        "value": "0s",
+        "code": "/* Démarrage direct dès le chargement */\n#boite {\n  animation-name: animCouleur;\n  animation-duration: 2s;\n  animation-delay: 0s;\n}"
+      },
+      {
+        "label": "2s (Attend 2 secondes avant de démarrer)",
+        "value": "2s",
+        "code": "/* Pause initiale de 2 secondes */\n#boite {\n  animation-name: animCouleur;\n  animation-duration: 2s;\n  animation-delay: 2s;\n}"
+      },
+      {
+        "label": "4s (Longue attente de 4 secondes)",
+        "value": "4s",
+        "code": "/* Pause initiale de 4 secondes */\n#boite {\n  animation-name: animCouleur;\n  animation-duration: 2s;\n  animation-delay: 4s;\n}"
+      }
+    ]
+  },
+  "css-animation-shorthand": {
+    "title": "Tester la formule condensée animation (Formule Bac STI) :",
+    "options": [
+      {
+        "label": "animCouleur 2s infinite alternate",
+        "value": "animCouleur 2s infinite alternate",
+        "code": "/* Formule classique : nom durée répétition direction */\n#boite {\n  animation: animCouleur 2s infinite alternate;\n}"
+      },
+      {
+        "label": "animTourne 1.5s linear infinite",
+        "value": "animTourne 1.5s linear infinite",
+        "code": "/* Rotation continue sans fin */\n#boite {\n  animation: animTourne 1.5s linear infinite;\n}"
+      },
+      {
+        "label": "animCouleur 3s ease 1s 2 alternate",
+        "value": "animCouleur 3s ease 1s 2 alternate",
+        "code": "/* Nom, durée, timing, délai 1s, 2 fois, alternate */\n#boite {\n  animation: animCouleur 3s ease 1s 2 alternate;\n}"
+      }
+    ]
+  },
+  "css-transition-property": {
+    "title": "Tester transition-property (Propriété ciblée par la transition) :",
+    "options": [
+      {
+        "label": "all (Toutes les propriétés changent en douceur)",
+        "value": "all",
+        "code": "#boite {\n  transition-property: all;\n  transition-duration: 0.8s;\n}\n#boite:hover {\n  background-color: #10b981;\n  transform: scale(1.2);\n}"
+      },
+      {
+        "label": "background-color (Seule la couleur transitionne)",
+        "value": "background-color",
+        "code": "/* La couleur est fluide, la taille change immédiatement */\n#boite {\n  transition-property: background-color;\n  transition-duration: 0.8s;\n}\n#boite:hover {\n  background-color: #10b981;\n  transform: scale(1.2);\n}"
+      },
+      {
+        "label": "transform (Seul le zoom transitionne)",
+        "value": "transform",
+        "code": "/* Le zoom est fluide, la couleur change immédiatement */\n#boite {\n  transition-property: transform;\n  transition-duration: 0.8s;\n}\n#boite:hover {\n  background-color: #10b981;\n  transform: scale(1.2);\n}"
+      }
+    ]
+  },
+  "css-transition-delay": {
+    "title": "Tester transition-delay (Délai avant déclenchement au survol) :",
+    "options": [
+      {
+        "label": "0s (Réaction instantanée au survol)",
+        "value": "0s",
+        "code": "#boite {\n  transition: all 0.6s ease;\n  transition-delay: 0s;\n}\n#boite:hover {\n  transform: scale(1.2);\n}"
+      },
+      {
+        "label": "1s (Attend 1 seconde de survol avant de réagir)",
+        "value": "1s",
+        "code": "/* Attend 1 seconde après le survol avant de démarrer */\n#boite {\n  transition: all 0.6s ease;\n  transition-delay: 1s;\n}\n#boite:hover {\n  transform: scale(1.2);\n}"
+      },
+      {
+        "label": "2s (Long délai de 2 secondes)",
+        "value": "2s",
+        "code": "#boite {\n  transition: all 0.6s ease;\n  transition-delay: 2s;\n}\n#boite:hover {\n  transform: scale(1.2);\n}"
+      }
+    ]
+  },
+  "css-transition-shorthand": {
+    "title": "Tester la syntaxe raccourcie transition :",
+    "options": [
+      {
+        "label": "all 0.5s ease (Standard Bac STI)",
+        "value": "all 0.5s ease",
+        "code": "#boite {\n  transition: all 0.5s ease;\n}\n#boite:hover {\n  background-color: #10b981;\n  transform: translateY(-8px);\n}"
+      },
+      {
+        "label": "transform 1s ease-in-out",
+        "value": "transform 1s ease-in-out",
+        "code": "#boite {\n  transition: transform 1s ease-in-out;\n}\n#boite:hover {\n  transform: rotate(20deg) scale(1.15);\n}"
+      },
+      {
+        "label": "background-color 0.8s 0.2s",
+        "value": "background-color 0.8s 0.2s",
+        "code": "#boite {\n  transition: background-color 0.8s 0.2s;\n}\n#boite:hover {\n  background-color: #f43f5e;\n}"
+      }
+    ]
+  },
+  "css-background-image": {
+    "title": "Tester background-image :",
+    "options": [
+      {
+        "label": "linear-gradient(135deg, #0284c7, #38bdf8) (Dégradé cyan)",
+        "value": "linear-gradient(135deg, #0284c7, #38bdf8)",
+        "code": "#boite {\n  background-image: linear-gradient(135deg, #0284c7, #38bdf8);\n}"
+      },
+      {
+        "label": "radial-gradient(circle, #f59e0b, #ef4444) (Dégradé radial chaud)",
+        "value": "radial-gradient(circle, #f59e0b, #ef4444)",
+        "code": "#boite {\n  background-image: radial-gradient(circle, #f59e0b, #ef4444);\n}"
+      },
+      {
+        "label": "none (Aucune image / fond uni)",
+        "value": "none",
+        "code": "#boite {\n  background-image: none;\n}"
+      }
+    ]
+  },
+  "css-background-size": {
+    "title": "Tester background-size :",
+    "options": [
+      {
+        "label": "cover (Couvre tout l'espace sans déformer)",
+        "value": "cover",
+        "code": "#boite {\n  background-image: linear-gradient(135deg, #0284c7, #38bdf8);\n  background-size: cover;\n}"
+      },
+      {
+        "label": "contain (Image entière contenue dans le cadre)",
+        "value": "contain",
+        "code": "#boite {\n  background-image: linear-gradient(135deg, #0284c7, #38bdf8);\n  background-size: contain;\n}"
+      },
+      {
+        "label": "50% 50% (Dimensions en pourcentages)",
+        "value": "50% 50%",
+        "code": "#boite {\n  background-image: linear-gradient(135deg, #0284c7, #38bdf8);\n  background-size: 50% 50%;\n}"
+      },
+      {
+        "label": "auto (Taille d'origine)",
+        "value": "auto",
+        "code": "#boite {\n  background-image: linear-gradient(135deg, #0284c7, #38bdf8);\n  background-size: auto;\n}"
+      }
+    ]
+  },
+  "css-background-shorthand": {
+    "title": "Tester la super-propriété background :",
+    "options": [
+      {
+        "label": "#0284c7 linear-gradient(...) (Couleur & Dégradé)",
+        "value": "#0284c7 linear-gradient",
+        "code": "#boite {\n  background: #0284c7 linear-gradient(135deg, #0284c7, #38bdf8) no-repeat center;\n}"
+      },
+      {
+        "label": "#1e293b (Couleur unie sans motif)",
+        "value": "#1e293b",
+        "code": "#boite {\n  background: #1e293b;\n}"
+      }
+    ]
+  },
+  "css-list-style-position": {
+    "title": "Tester list-style-position :",
+    "options": [
+      {
+        "label": "outside (Puces en marge extérieure)",
+        "value": "outside",
+        "code": "/* Puces rejetées en marge externe (défaut) */\n#liste {\n  list-style-position: outside;\n}"
+      },
+      {
+        "label": "inside (Puces alignées dans le texte)",
+        "value": "inside",
+        "code": "/* Puces intégrées dans le texte */\n#liste {\n  list-style-position: inside;\n}"
+      }
+    ]
+  },
+  "css-list-style-image": {
+    "title": "Tester list-style-image (Puces avec icône personnalisée) :",
+    "options": [
+      {
+        "label": "url('etoile.svg') (Étoile dorée comme puce)",
+        "value": "url('etoile.svg')",
+        "code": "#liste {\n  list-style-image: url('etoile.svg');\n}"
+      },
+      {
+        "label": "none (Puce classique)",
+        "value": "none",
+        "code": "#liste {\n  list-style-image: none;\n}"
+      }
+    ]
+  },
+  "css-list-style-shorthand": {
+    "title": "Tester la formule condensée list-style :",
+    "options": [
+      {
+        "label": "square inside (Puces carrées à l'intérieur)",
+        "value": "square inside",
+        "code": "#liste {\n  list-style: square inside;\n}"
+      },
+      {
+        "label": "circle outside (Cercles à l'extérieur)",
+        "value": "circle outside",
+        "code": "#liste {\n  list-style: circle outside;\n}"
+      },
+      {
+        "label": "none (Supprime totalement les puces)",
+        "value": "none",
+        "code": "/* Menu de navigation propre sans puces */\n#liste {\n  list-style: none;\n}"
+      }
+    ]
+  },
+  "css-font-shorthand": {
+    "title": "Tester la super-propriété font :",
+    "options": [
+      {
+        "label": "italic bold 22px 'Segoe UI', sans-serif",
+        "value": "italic bold 22px 'Segoe UI', sans-serif",
+        "code": "#h1 {\n  font: italic bold 22px 'Segoe UI', sans-serif;\n}"
+      },
+      {
+        "label": "bold 26px 'Courier New', monospace",
+        "value": "bold 26px 'Courier New', monospace",
+        "code": "#h1 {\n  font: bold 26px 'Courier New', monospace;\n}"
+      },
+      {
+        "label": "normal 16px Arial, sans-serif",
+        "value": "normal 16px Arial, sans-serif",
+        "code": "#h1 {\n  font: normal 16px Arial, sans-serif;\n}"
+      }
+    ]
+  },
+  "css-text-shadow": {
+    "title": "Tester text-shadow (Ombre portée du texte) :",
+    "options": [
+      {
+        "label": "2px 2px 4px rgba(0,0,0,0.8) (Ombre portée naturelle)",
+        "value": "2px 2px 4px rgba(0,0,0,0.8)",
+        "code": "#h1 {\n  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);\n}"
+      },
+      {
+        "label": "0 0 16px #38bdf8 (Effet néon lumineux)",
+        "value": "0 0 16px #38bdf8",
+        "code": "#h1 {\n  color: #ffffff;\n  text-shadow: 0 0 16px #38bdf8;\n}"
+      },
+      {
+        "label": "none (Sans ombre)",
+        "value": "none",
+        "code": "#h1 {\n  text-shadow: none;\n}"
+      }
+    ]
+  },
+  "css-border-color": {
+    "title": "Tester border-color :",
+    "options": [
+      {
+        "label": "#38bdf8 (Bleu cyan)",
+        "value": "#38bdf8",
+        "code": "#boite {\n  border-style: solid;\n  border-width: 4px;\n  border-color: #38bdf8;\n}"
+      },
+      {
+        "label": "#f43f5e (Rouge vif)",
+        "value": "#f43f5e",
+        "code": "#boite {\n  border-style: solid;\n  border-width: 4px;\n  border-color: #f43f5e;\n}"
+      },
+      {
+        "label": "#10b981 (Vert émeraude)",
+        "value": "#10b981",
+        "code": "#boite {\n  border-style: solid;\n  border-width: 4px;\n  border-color: #10b981;\n}"
+      },
+      {
+        "label": "#facc15 (Jaune d'or)",
+        "value": "#facc15",
+        "code": "#boite {\n  border-style: solid;\n  border-width: 4px;\n  border-color: #facc15;\n}"
+      }
+    ]
+  },
+  "css-border-width": {
+    "title": "Tester border-width (Épaisseur de bordure) :",
+    "options": [
+      {
+        "label": "1px (Bordure fine)",
+        "value": "1px",
+        "code": "#boite {\n  border-style: solid;\n  border-width: 1px;\n  border-color: #38bdf8;\n}"
+      },
+      {
+        "label": "4px (Bordure standard)",
+        "value": "4px",
+        "code": "#boite {\n  border-style: solid;\n  border-width: 4px;\n  border-color: #38bdf8;\n}"
+      },
+      {
+        "label": "8px (Bordure épaisse)",
+        "value": "8px",
+        "code": "#boite {\n  border-style: solid;\n  border-width: 8px;\n  border-color: #38bdf8;\n}"
+      },
+      {
+        "label": "14px (Bordure très épaisse)",
+        "value": "14px",
+        "code": "#boite {\n  border-style: solid;\n  border-width: 14px;\n  border-color: #38bdf8;\n}"
+      }
+    ]
+  },
   "tag-input": {
     "title": "Choisir un type d'input HTML5 (Boutons Radio) :",
     "options": [
@@ -3596,6 +3961,81 @@ function buildVideoStageElement(item) {
     return buildSelectorsStage(itemId);
   }
 
+  // 0.1 Animation: @keyframes et propriétés animation-*
+  if (itemId === 'css-keyframes' || itemId.startsWith('css-animation')) {
+    return `<div id="keyframesStageContainer" class="keyframes-stage-container">
+      <div class="keyframes-timeline-bar">
+        <div class="kf-step-marker step-0 active" id="kfMarker0">
+          <span class="kf-pct">0%</span>
+          <span class="kf-desc">Départ</span>
+        </div>
+        <div class="kf-connector" id="kfConn1"></div>
+        <div class="kf-step-marker step-50" id="kfMarker50">
+          <span class="kf-pct">50%</span>
+          <span class="kf-desc">Milieu</span>
+        </div>
+        <div class="kf-connector" id="kfConn2"></div>
+        <div class="kf-step-marker step-100" id="kfMarker100">
+          <span class="kf-pct">100%</span>
+          <span class="kf-desc">Arrivée</span>
+        </div>
+      </div>
+
+      <div class="keyframes-arena">
+        <div id="boite" class="keyframes-animated-box">
+          <span id="kfBoxIcon" style="font-size:1.4rem; display:block; margin-bottom:4px;">✨</span>
+          <div id="kfBoxLabel" style="font-weight:800; font-size:1.05rem;">#boite</div>
+          <div id="kfBoxSub" style="font-size:0.75rem; opacity:0.85;">@keyframes en cours</div>
+        </div>
+      </div>
+
+      <div id="keyframesLiveStatus" class="keyframes-live-status">
+        <span class="kf-live-dot">●</span>
+        <span id="keyframesStatusText">ÉTAT : 0% (Départ de l'animation)</span>
+      </div>
+    </div>`;
+  }
+
+  // 0.2 Transitions: transition-*
+  if (itemId.startsWith('css-transition')) {
+    return `<div class="transition-stage-container" style="display:flex; flex-direction:column; align-items:center; gap:12px; width:100%;">
+      <div style="font-size:0.82rem; color:var(--text-secondary); background:rgba(56,189,248,0.08); padding:6px 14px; border-radius:20px; border:1px solid rgba(56,189,248,0.25);">
+        🖱️ Survolez la boîte ou cliquez sur AVANT / APRÈS pour observer la transition fluide
+      </div>
+      <div id="boite" class="demo-box" style="min-width:180px; padding:22px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:15px; background:#1e293b; border:2px solid #38bdf8; border-radius:10px; cursor:pointer;">
+        <span>📦 &lt;div id="boite"&gt;</span>
+        <small id="transitionStageBadge" style="font-size:0.75rem; color:#38bdf8; margin-top:4px;">transition: all 0.5s ease</small>
+      </div>
+    </div>`;
+  }
+
+  // 0.3 Dimensions & Opacité (width, height, opacity)
+  if (itemId === 'css-width' || itemId === 'css-height' || itemId === 'css-opacity') {
+    return `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:190px;">
+      <div id="boite" class="demo-box" style="transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); width:150px; height:80px; padding:10px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:14px; background:#1e293b; border:2px solid #38bdf8; border-radius:8px;">
+        <span>📦 &lt;div id="boite"&gt;</span>
+      </div>
+    </div>`;
+  }
+
+  // 0.4 Bordures (couleur & épaisseur)
+  if (itemId === 'css-border-color' || itemId === 'css-border-width') {
+    return `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:190px;">
+      <div id="boite" class="demo-box" style="transition: all 0.5s ease; width:220px; height:100px; padding:12px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:14px; background:#1e293b; border:3px solid #38bdf8; border-radius:8px;">
+        <span>📦 &lt;div id="boite"&gt;</span>
+      </div>
+    </div>`;
+  }
+
+  // 0.5 Arrière-plans (background-*)
+  if (itemId.startsWith('css-background')) {
+    return `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:190px;">
+      <div id="boite" class="demo-box" style="transition: all 0.6s ease; width:250px; height:120px; padding:14px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:14px; background-color:#1e293b; border:2px solid #38bdf8; border-radius:8px; color:#fff;">
+        <span>📦 &lt;div id="boite"&gt;</span>
+      </div>
+    </div>`;
+  }
+
   // 1. Marge extérieure (margin) - Repousse les voisins hors de la boîte
   if (itemId === 'css-margin' || prop === 'margin') {
     return `<div id="parentConteneur" class="box-model-container">
@@ -3785,6 +4225,46 @@ function buildMiniStage(itemId, idx, opt) {
     return `<div style="width:70%; height:28px; background:#1e293b; border:1px solid #38bdf8; border-radius:4px; box-shadow:${sh}; display:flex; align-items:center; justify-content:center; color:#fff; font-size:9px; font-weight:bold;">${escapeHtml(opt.value)}</div>`;
   }
 
+  // @keyframes (Étapes en pourcentages %)
+  if (itemId === 'css-keyframes') {
+    return `<div style="display:flex; gap:3px; align-items:center; justify-content:center; width:90%; height:32px; background:rgba(15,23,42,0.8); border:1px solid rgba(56,189,248,0.3); border-radius:4px; font-size:8px;">
+      <span style="background:#ef4444; color:#fff; padding:2px 4px; border-radius:3px; font-weight:bold;">0%</span>
+      <span style="color:#38bdf8; font-size:7px;">➔</span>
+      <span style="background:#f59e0b; color:#fff; padding:2px 4px; border-radius:3px; font-weight:bold;">50%</span>
+      <span style="color:#38bdf8; font-size:7px;">➔</span>
+      <span style="background:#10b981; color:#fff; padding:2px 4px; border-radius:3px; font-weight:bold;">100%</span>
+    </div>`;
+  }
+
+  // Animation & Transition
+  if (itemId.startsWith('css-animation') || itemId.startsWith('css-transition')) {
+    return `<div style="width:75%; height:30px; background:linear-gradient(135deg, #7c3aed, #0ea5e9); border-radius:4px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:9px; font-weight:bold; box-shadow:0 2px 8px rgba(124,58,237,0.4);">⚡ ${escapeHtml(opt.value)}</div>`;
+  }
+
+  // Couleur de bordure & Épaisseur
+  if (itemId === 'css-border-color') {
+    return `<div style="width:75%; height:30px; border:4px solid ${opt.value}; background:rgba(0,0,0,0.3); border-radius:4px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:9px; font-weight:bold;">${escapeHtml(opt.value)}</div>`;
+  }
+  if (itemId === 'css-border-width') {
+    return `<div style="width:75%; height:30px; border:${opt.value} solid #38bdf8; background:rgba(0,0,0,0.3); border-radius:4px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:9px; font-weight:bold;">${escapeHtml(opt.value)}</div>`;
+  }
+
+  // Arrière-plan
+  if (itemId.startsWith('css-background')) {
+    const bgStyle = opt.value.includes('gradient') ? `background-image:${opt.value};` : `background:${opt.value};`;
+    return `<div style="width:75%; height:30px; ${bgStyle} border-radius:4px; border:1px solid rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; color:#fff; font-size:8px; font-weight:bold; text-shadow:0 1px 2px #000;">${escapeHtml(opt.value.substring(0, 15))}</div>`;
+  }
+
+  // Text Shadow
+  if (itemId === 'css-text-shadow') {
+    return `<div style="width:75%; height:30px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; color:#fff; text-shadow:${opt.value};">Abc</div>`;
+  }
+
+  // Listes
+  if (itemId.startsWith('css-list-style')) {
+    return `<div style="width:80%; height:30px; display:flex; align-items:center; justify-content:center; font-size:9px; color:#38bdf8; font-weight:bold; background:rgba(255,255,255,0.05); border-radius:4px;">• ${escapeHtml(opt.value)}</div>`;
+  }
+
   // Rendu par défaut dynamique avec opt.css
   return `<div style="width:80%; height:32px; display:flex; align-items:center; justify-content:center; font-size:10px; border-radius:4px; background:linear-gradient(135deg, rgba(56,189,248,0.25), rgba(37,99,235,0.25)); color:#fff; font-weight:bold; ${opt.css};">#boite</div>`;
 }
@@ -3859,6 +4339,208 @@ function playSpecificVideo(itemId, variantIdx) {
   startVideoSimulation(itemId, variantIdx);
 }
 
+// Moteur d'interpolation en pourcentage (0% à 100%) pour @keyframes et animation-*
+function applyKeyframesProgress(box, progressVal, variantIdx = 0, itemId = 'css-keyframes') {
+  if (!box) return;
+
+  const config = VARIETIES_CONFIG[itemId];
+  const opt = (config && config.options && config.options[variantIdx]) ? config.options[variantIdx] : null;
+
+  // Repères temporels de la timeline (0%, 50%, 100%)
+  const m0 = document.getElementById('kfMarker0');
+  const m50 = document.getElementById('kfMarker50');
+  const m100 = document.getElementById('kfMarker100');
+  const c1 = document.getElementById('kfConn1');
+  const c2 = document.getElementById('kfConn2');
+  const statusTxt = document.getElementById('keyframesStatusText');
+  const lbl = document.getElementById('kfBoxLabel');
+  const sub = document.getElementById('kfBoxSub');
+  const icon = document.getElementById('kfBoxIcon');
+
+  const beforePill = document.getElementById('phaseBeforePill');
+  const afterPill = document.getElementById('phaseAfterPill');
+  if (beforePill) beforePill.classList.toggle('active', progressVal < 50);
+  if (afterPill) afterPill.classList.toggle('active', progressVal >= 50);
+
+  // Activation dynamique des marqueurs de la timeline
+  if (m0) m0.classList.toggle('active', progressVal < 35);
+  if (c1) c1.classList.toggle('active', progressVal >= 25 && progressVal < 60);
+  if (m50) m50.classList.toggle('active', progressVal >= 35 && progressVal <= 65);
+  if (c2) c2.classList.toggle('active', progressVal >= 60);
+  if (m100) m100.classList.toggle('active', progressVal > 65);
+
+  // 1. @KEYFRAMES AVEC ÉTATS EN POURCENTAGES (%)
+  if (itemId === 'css-keyframes') {
+    if (variantIdx === 0) {
+      // 0% ➔ 50% ➔ 100%
+      if (progressVal <= 50) {
+        const t = progressVal / 50;
+        const scale = (1 + 0.25 * t).toFixed(2);
+        const r = Math.round(56 + (245 - 56) * t);
+        const g = Math.round(189 + (158 - 189) * t);
+        const b = Math.round(248 + (11 - 248) * t);
+        box.style.transform = `scale(${scale}) translateY(-${(14 * t).toFixed(1)}px)`;
+        box.style.background = `rgb(${r}, ${g}, ${b})`;
+        box.style.boxShadow = `0 ${Math.round(8 + 12 * t)}px ${Math.round(18 + 14 * t)}px rgba(${r}, ${g}, ${b}, 0.5)`;
+        if (lbl) lbl.textContent = `#boite (${progressVal}%)`;
+        if (sub) sub.textContent = `0% ➔ 50% : scale(${scale})`;
+        if (statusTxt) statusTxt.innerHTML = `<strong>ÉTAT : ${progressVal}%</strong> — Phase 0% ➔ 50% (La boîte grandit et vire à l'orange)`;
+      } else {
+        const t = (progressVal - 50) / 50;
+        const scale = (1.25 - 0.25 * t).toFixed(2);
+        const r = Math.round(245 + (16 - 245) * t);
+        const g = Math.round(158 + (185 - 158) * t);
+        const b = Math.round(11 + (129 - 11) * t);
+        box.style.transform = `scale(${scale}) translateY(-${(14 * (1 - t)).toFixed(1)}px)`;
+        box.style.background = `rgb(${r}, ${g}, ${b})`;
+        box.style.boxShadow = `0 ${Math.round(20 - 12 * t)}px ${Math.round(32 - 14 * t)}px rgba(${r}, ${g}, ${b}, 0.5)`;
+        if (lbl) lbl.textContent = `#boite (${progressVal}%)`;
+        if (sub) sub.textContent = `50% ➔ 100% : scale(${scale})`;
+        if (statusTxt) statusTxt.innerHTML = `<strong>ÉTAT : ${progressVal}%</strong> — Phase 50% ➔ 100% (Retour à l'échelle normale & couleur finale émeraude)`;
+      }
+    } else if (variantIdx === 1) {
+      // 0% ➔ 25% ➔ 50% ➔ 75% ➔ 100% (4 coins)
+      let x = 0, y = 0, color = '#38bdf8', corner = 'Coin 1 (Départ 0%)';
+      if (progressVal < 25) {
+        const t = progressVal / 25;
+        x = Math.round(60 * t); y = 0;
+        color = '#38bdf8'; corner = '0% ➔ 25% (Vers la droite)';
+      } else if (progressVal < 50) {
+        const t = (progressVal - 25) / 25;
+        x = 60; y = Math.round(35 * t);
+        color = '#818cf8'; corner = '25% ➔ 50% (Vers le bas)';
+      } else if (progressVal < 75) {
+        const t = (progressVal - 50) / 25;
+        x = Math.round(60 * (1 - t)); y = 35;
+        color = '#ec4899'; corner = '50% ➔ 75% (Vers la gauche)';
+      } else {
+        const t = (progressVal - 75) / 25;
+        x = 0; y = Math.round(35 * (1 - t));
+        color = '#10b981'; corner = '75% ➔ 100% (Retour au point de départ)';
+      }
+      box.style.transform = `translate(${x}px, ${y}px)`;
+      box.style.background = color;
+      box.style.boxShadow = `0 8px 24px ${color}88`;
+      if (lbl) lbl.textContent = `#boite (${progressVal}%)`;
+      if (sub) sub.textContent = `translate(${x}px, ${y}px)`;
+      if (statusTxt) statusTxt.innerHTML = `<strong>ÉTAT : ${progressVal}%</strong> — ${corner}`;
+    } else if (variantIdx === 2) {
+      // 0% ➔ 100% (Rotation 360°)
+      const deg = Math.round(3.6 * progressVal);
+      box.style.transform = `rotate(${deg}deg)`;
+      box.style.background = `hsl(${Math.round(200 + deg * 0.4)}, 85%, 55%)`;
+      if (lbl) lbl.textContent = `#boite (${deg}°)`;
+      if (sub) sub.textContent = `rotate(${deg}deg)`;
+      if (statusTxt) statusTxt.innerHTML = `<strong>ÉTAT : ${progressVal}%</strong> — Rotation 0% ➔ 100% (${deg}° sur 360°)`;
+    } else {
+      // from ➔ to
+      const t = progressVal / 100;
+      const op = (0.2 + 0.8 * t).toFixed(2);
+      const sc = (0.7 + 0.45 * t).toFixed(2);
+      box.style.opacity = op;
+      box.style.transform = `scale(${sc})`;
+      box.style.background = t < 0.5 ? '#ef4444' : '#10b981';
+      if (lbl) lbl.textContent = `#boite (${progressVal}%)`;
+      if (sub) sub.textContent = `opacity: ${op}; scale(${sc})`;
+      if (statusTxt) statusTxt.innerHTML = `<strong>ÉTAT : ${progressVal}%</strong> — Progression from (0%) vers to (100%)`;
+    }
+    return;
+  }
+
+  // 2. ANIMATION-NAME
+  if (itemId === 'css-animation-name') {
+    if (variantIdx === 0) {
+      // animCouleur
+      const hue = Math.round(190 + 170 * (progressVal / 100));
+      box.style.background = `hsl(${hue}, 85%, 55%)`;
+      box.style.transform = `scale(1.08)`;
+      if (statusTxt) statusTxt.innerHTML = `<strong>animation-name: animCouleur</strong> — ÉTAT : ${progressVal}% (Cycle de teinte)`;
+    } else if (variantIdx === 1) {
+      // animTourne
+      const deg = Math.round(3.6 * progressVal);
+      box.style.transform = `rotate(${deg}deg)`;
+      box.style.background = '#6366f1';
+      if (statusTxt) statusTxt.innerHTML = `<strong>animation-name: animTourne</strong> — ÉTAT : ${progressVal}% (Rotation : ${deg}°)`;
+    } else {
+      // none
+      box.style.transform = 'scale(1) rotate(0deg)';
+      box.style.background = '#475569';
+      box.style.opacity = '0.7';
+      if (statusTxt) statusTxt.innerHTML = `<strong>animation-name: none</strong> — Aucune animation appliquée (Élément figé)`;
+    }
+    return;
+  }
+
+  // 3. ANIMATION-DURATION
+  if (itemId === 'css-animation-duration') {
+    const durLabel = opt ? opt.value : '3s';
+    const cycleSpeed = variantIdx === 0 ? 3 : (variantIdx === 1 ? 1.5 : 0.6);
+    const pulse = Math.abs(Math.sin((progressVal * cycleSpeed * Math.PI) / 50));
+    box.style.transform = `scale(${(1 + 0.22 * pulse).toFixed(2)})`;
+    box.style.background = pulse > 0.5 ? '#38bdf8' : '#0284c7';
+    if (statusTxt) statusTxt.innerHTML = `<strong>animation-duration: ${durLabel}</strong> — Vitesse d'exécution : ${variantIdx === 0 ? 'Rapide (1s)' : (variantIdx === 1 ? 'Moyenne (3s)' : 'Lente (6s)')}`;
+    return;
+  }
+
+  // 4. ANIMATION-DELAY
+  if (itemId === 'css-animation-delay') {
+    const delayThreshold = variantIdx === 0 ? 0 : (variantIdx === 1 ? 40 : 65);
+    if (progressVal < delayThreshold) {
+      box.style.transform = 'scale(1)';
+      box.style.background = '#334155';
+      box.style.border = '2px dashed #f59e0b';
+      if (icon) icon.textContent = '⏳';
+      if (sub) sub.textContent = `En attente (${opt ? opt.value : ''})...`;
+      if (statusTxt) statusTxt.innerHTML = `<strong>⏳ DÉLAI D'ATTENTE (${opt ? opt.value : ''})</strong> — L'animation ne démarre pas encore !`;
+    } else {
+      const activeT = (progressVal - delayThreshold) / (100 - delayThreshold);
+      const pulse = Math.abs(Math.sin(activeT * Math.PI));
+      box.style.transform = `scale(${(1 + 0.25 * pulse).toFixed(2)})`;
+      box.style.background = '#10b981';
+      box.style.border = '2px solid #10b981';
+      if (icon) icon.textContent = '🚀';
+      if (sub) sub.textContent = `Animation active !`;
+      if (statusTxt) statusTxt.innerHTML = `<strong>🚀 ANIMATION DÉMARRÉE</strong> — Le délai de ${opt ? opt.value : ''} est écoulé !`;
+    }
+    return;
+  }
+
+  // 5. ANIMATION-ITERATION-COUNT
+  if (itemId === 'css-animation-iteration-count') {
+    const countVal = opt ? opt.value : 'infinite';
+    const pulse = Math.abs(Math.sin((progressVal * Math.PI) / 25));
+    box.style.transform = `scale(${(1 + 0.2 * pulse).toFixed(2)})`;
+    box.style.background = '#818cf8';
+    if (statusTxt) statusTxt.innerHTML = `<strong>animation-iteration-count: ${countVal}</strong> — ${countVal === 'infinite' ? 'Répétition infinie sans arrêt ♾️' : `S'exécute exactement ${countVal} fois puis s'arrête`}`;
+    return;
+  }
+
+  // 6. ANIMATION-DIRECTION
+  if (itemId === 'css-animation-direction') {
+    const dir = opt ? opt.value : 'normal';
+    let t = progressVal / 100;
+    if (dir === 'reverse') t = 1 - t;
+    else if (dir === 'alternate') t = progressVal <= 50 ? (progressVal / 50) : (1 - (progressVal - 50) / 50);
+    else if (dir === 'alternate-reverse') t = progressVal <= 50 ? (1 - progressVal / 50) : ((progressVal - 50) / 50);
+    const x = Math.round(70 * t - 35);
+    box.style.transform = `translateX(${x}px)`;
+    box.style.background = t > 0.5 ? '#10b981' : '#38bdf8';
+    if (statusTxt) statusTxt.innerHTML = `<strong>animation-direction: ${dir}</strong> — Déplacement : ${dir} (x: ${x}px)`;
+    return;
+  }
+
+  // 7. ANIMATION-SHORTHAND
+  if (itemId === 'css-animation-shorthand') {
+    const t = progressVal / 100;
+    const pulse = Math.abs(Math.sin(t * Math.PI * 2));
+    const deg = Math.round(360 * t);
+    box.style.transform = `scale(${(1 + 0.2 * pulse).toFixed(2)}) rotate(${deg}deg)`;
+    box.style.background = `hsl(${Math.round(200 + 120 * t)}, 80%, 55%)`;
+    if (statusTxt) statusTxt.innerHTML = `<strong>animation: ${opt ? opt.value : ''}</strong> — ÉTAT : ${progressVal}%`;
+    return;
+  }
+}
+
 // Moteur du lecteur vidéo (Timer et boucle temporelle 1080p)
 function startVideoSimulation(itemId, variantIdx = 0) {
   if (activeVideoTimer) clearInterval(activeVideoTimer);
@@ -3876,7 +4558,11 @@ function startVideoSimulation(itemId, variantIdx = 0) {
   let progressVal = 0;
 
   // Appliquer immédiatement la première image de cette vidéo
-  applyVideoFrame(itemId, box, 0, variantIdx);
+  if (itemId === 'css-keyframes' || itemId.startsWith('css-animation')) {
+    applyKeyframesProgress(box, 0, variantIdx, itemId);
+  } else {
+    applyVideoFrame(itemId, box, 0, variantIdx);
+  }
 
   activeVideoTimer = setInterval(() => {
     if (!isVideoPlaying) return;
@@ -3884,8 +4570,11 @@ function startVideoSimulation(itemId, variantIdx = 0) {
     progressVal = (progressVal + 2) % 100;
     if (progress) progress.style.width = `${progressVal}%`;
 
-    // À 0% et 50%, alterner l'animation de la vidéo active
-    if (progressVal === 0 || progressVal === 50) {
+    // Mode continu fluide pour @keyframes et animation-*
+    if (itemId === 'css-keyframes' || itemId.startsWith('css-animation')) {
+      applyKeyframesProgress(box, progressVal, currentVideoVariantIdx, itemId);
+    } else if (progressVal === 0 || progressVal === 50) {
+      // À 0% et 50%, alterner l'animation de la vidéo active
       step = step === 0 ? 1 : 0;
       applyVideoFrame(itemId, box, step, currentVideoVariantIdx);
     }
@@ -4339,53 +5028,353 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     return;
   }
 
-  // 17. LISTES (LIST-STYLE-TYPE)
+  // 17. LISTES (LIST-STYLE-TYPE, POSITION, IMAGE, SHORTHAND)
   if (itemId === 'css-list-style-type') {
     box.style.listStyleType = step === 1 ? (opt ? opt.value : 'circle') : 'disc';
+    box.style.border = step === 1 ? '1px solid #38bdf8' : '1px dashed rgba(255,255,255,0.2)';
+    return;
+  }
+  if (itemId === 'css-list-style-position') {
+    box.style.listStylePosition = step === 1 ? (opt ? opt.value : 'inside') : 'outside';
+    box.style.border = step === 1 ? '2px solid #10b981' : '2px dashed #ef4444';
+    return;
+  }
+  if (itemId === 'css-list-style-image') {
+    if (step === 0) {
+      box.style.listStyleImage = 'none';
+      box.style.listStyleType = 'disc';
+    } else {
+      if (opt && opt.value && opt.value.includes('url')) {
+        box.style.listStyleImage = 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23facc15\' width=\'16px\' height=\'16px\'%3E%3Cpath d=\'M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z\'/%3E%3C/svg%3E")';
+      } else {
+        box.style.listStyleImage = 'none';
+        box.style.listStyleType = 'disc';
+      }
+    }
+    return;
+  }
+  if (itemId === 'css-list-style-shorthand') {
+    if (step === 0) {
+      box.style.listStyle = 'disc outside none';
+    } else {
+      const sVal = opt ? opt.value : 'square inside';
+      box.style.listStyle = sVal;
+    }
     return;
   }
 
-  // 18. TOUT AUTRE ÉLÉMENT AVEC VARIANTES DANS VARIETIES_CONFIG
+  // 18. ANIMATIONS & KEYFRAMES EN POURCENTAGES
+  if (itemId === 'css-keyframes' || itemId.startsWith('css-animation')) {
+    applyKeyframesProgress(box, step === 0 ? 0 : 100, variantIdx, itemId);
+    return;
+  }
+
+  // 19. TRANSITIONS (TRANSITION-PROPERTY, DURATION, DELAY, SHORTHAND)
+  if (itemId === 'css-transition-property') {
+    box.style.transition = 'all 0.6s ease';
+    if (step === 0) {
+      box.style.transform = 'scale(1) rotate(0deg)';
+      box.style.background = '#1e293b';
+      box.style.borderColor = '#38bdf8';
+      box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Au repos)</small></span>`;
+    } else {
+      const pVal = opt ? opt.value : 'all';
+      if (pVal === 'all') {
+        box.style.transform = 'scale(1.15) rotate(5deg)';
+        box.style.background = '#0284c7';
+        box.style.borderColor = '#38bdf8';
+      } else if (pVal === 'background-color') {
+        box.style.background = '#10b981';
+      } else if (pVal === 'transform') {
+        box.style.transform = 'scale(1.18) rotate(-6deg)';
+      }
+      box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (transition-property: ${pVal})</small></span>`;
+    }
+    return;
+  }
+
+  if (itemId === 'css-transition-duration') {
+    const dVal = opt ? opt.value : '1s';
+    box.style.transition = `all ${dVal} ease`;
+    if (step === 0) {
+      box.style.transform = 'scale(1)';
+      box.style.background = '#1e293b';
+      box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Au repos)</small></span>`;
+    } else {
+      box.style.transform = 'scale(1.16)';
+      box.style.background = '#0ea5e9';
+      box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (transition-duration: ${dVal})</small></span>`;
+    }
+    return;
+  }
+
+  if (itemId === 'css-transition-delay') {
+    const delVal = opt ? opt.value : '1s';
+    box.style.transition = `all 0.6s ease ${delVal}`;
+    if (step === 0) {
+      box.style.transform = 'scale(1)';
+      box.style.background = '#1e293b';
+      box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Au repos)</small></span>`;
+    } else {
+      box.style.transform = 'scale(1.16)';
+      box.style.background = '#f59e0b';
+      box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (transition-delay: ${delVal})</small></span>`;
+    }
+    return;
+  }
+
+  if (itemId === 'css-transition-shorthand') {
+    const sVal = opt ? opt.value : 'all 0.5s ease';
+    box.style.transition = sVal;
+    if (step === 0) {
+      box.style.transform = 'scale(1) rotate(0deg)';
+      box.style.background = '#1e293b';
+      box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Au repos)</small></span>`;
+    } else {
+      box.style.transform = 'scale(1.18) rotate(4deg)';
+      box.style.background = '#ec4899';
+      box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (transition: ${sVal})</small></span>`;
+    }
+    return;
+  }
+
+  // 20. ARRIÈRE-PLANS (BACKGROUND-*)
+  if (itemId === 'css-background-color') {
+    box.style.transition = 'all 0.5s ease';
+    if (step === 0) {
+      box.style.backgroundColor = 'transparent';
+      box.style.border = '2px dashed #64748b';
+      box.style.color = '#94a3b8';
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (background-color: transparent)</small></span>`;
+    } else {
+      const bgVal = opt ? opt.value : '#38bdf8';
+      box.style.backgroundColor = bgVal;
+      box.style.border = '2px solid transparent';
+      box.style.color = '#fff';
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (background-color: ${bgVal})</small></span>`;
+    }
+    return;
+  }
+
+  if (itemId === 'css-background-image') {
+    box.style.transition = 'all 0.5s ease';
+    if (step === 0) {
+      box.style.backgroundImage = 'none';
+      box.style.backgroundColor = '#1e293b';
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Sans image de fond)</small></span>`;
+    } else {
+      const imgVal = opt ? opt.value : 'linear-gradient(135deg, #6366f1, #ec4899)';
+      box.style.backgroundImage = imgVal;
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (background-image: ${imgVal})</small></span>`;
+    }
+    return;
+  }
+
+  if (itemId === 'css-background-repeat') {
+    box.style.transition = 'all 0.5s ease';
+    box.style.backgroundImage = 'radial-gradient(#38bdf8 3px, transparent 3px)';
+    box.style.backgroundSize = '24px 24px';
+    if (step === 0) {
+      box.style.backgroundRepeat = 'repeat';
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (repeat : Répétition totale en mosaïque)</small></span>`;
+    } else {
+      const repVal = opt ? opt.value : 'no-repeat';
+      box.style.backgroundRepeat = repVal;
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (background-repeat: ${repVal})</small></span>`;
+    }
+    return;
+  }
+
+  if (itemId === 'css-background-size') {
+    box.style.transition = 'all 0.5s ease';
+    box.style.backgroundImage = 'linear-gradient(135deg, #0284c7, #6366f1)';
+    if (step === 0) {
+      box.style.backgroundSize = 'auto';
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (background-size: auto)</small></span>`;
+    } else {
+      const szVal = opt ? opt.value : 'cover';
+      box.style.backgroundSize = szVal;
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (background-size: ${szVal})</small></span>`;
+    }
+    return;
+  }
+
+  if (itemId === 'css-background-shorthand') {
+    box.style.transition = 'all 0.5s ease';
+    if (step === 0) {
+      box.style.background = '#1e293b';
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Fond uni standard)</small></span>`;
+    } else {
+      if (opt && opt.css) box.style.cssText += opt.css;
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (background: ${opt ? opt.value : 'appliqué'})</small></span>`;
+    }
+    return;
+  }
+
+  // 21. BORDURES (BORDER-COLOR & BORDER-WIDTH)
+  if (itemId === 'css-border-color') {
+    box.style.transition = 'all 0.4s ease';
+    if (step === 0) {
+      box.style.border = '4px solid #334155';
+      box.style.boxShadow = 'none';
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Bordure grise neutre)</small></span>`;
+    } else {
+      const cVal = opt ? opt.value : '#38bdf8';
+      box.style.border = `4px solid ${cVal}`;
+      box.style.boxShadow = `0 0 16px ${cVal}88`;
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (border-color: ${cVal})</small></span>`;
+    }
+    return;
+  }
+
+  if (itemId === 'css-border-width') {
+    box.style.transition = 'all 0.4s ease';
+    if (step === 0) {
+      box.style.border = '1px solid #38bdf8';
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Épaisseur 1px fine)</small></span>`;
+    } else {
+      const wVal = opt ? opt.value : '6px';
+      box.style.border = `${wVal} solid #38bdf8`;
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (border-width: ${wVal})</small></span>`;
+    }
+    return;
+  }
+
+  // 22. TYPOGRAPHIE & TEXTE (FONT-WEIGHT, FONT-STYLE, FONT-SIZE, FONT-SHORTHAND, COLOR, TEXT-SHADOW)
+  if (itemId === 'css-font-weight') {
+    const txt = document.getElementById('h1Text') || box;
+    if (step === 0) {
+      box.style.fontWeight = 'normal';
+      txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (font-weight: normal / 400)</small></span>`;
+    } else {
+      const wVal = opt ? opt.value : 'bold';
+      box.style.fontWeight = wVal;
+      txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (font-weight: ${wVal})</small></span>`;
+    }
+    return;
+  }
+
+  if (itemId === 'css-font-style') {
+    const txt = document.getElementById('h1Text') || box;
+    if (step === 0) {
+      box.style.fontStyle = 'normal';
+      txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (font-style: normal / Droit)</small></span>`;
+    } else {
+      const sVal = opt ? opt.value : 'italic';
+      box.style.fontStyle = sVal;
+      txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (font-style: ${sVal})</small></span>`;
+    }
+    return;
+  }
+
+  if (itemId === 'css-font-size') {
+    const txt = document.getElementById('h1Text') || box;
+    if (step === 0) {
+      box.style.fontSize = '16px';
+      txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (font-size: 16px standard)</small></span>`;
+    } else {
+      const szVal = opt ? opt.value : '26px';
+      box.style.fontSize = szVal;
+      txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (font-size: ${szVal})</small></span>`;
+    }
+    return;
+  }
+
+  if (itemId === 'css-font-shorthand') {
+    const txt = document.getElementById('h1Text') || box;
+    if (step === 0) {
+      box.style.font = 'normal normal 16px serif';
+      txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Police par défaut serif brute)</small></span>`;
+    } else {
+      const fVal = opt ? opt.value : 'italic bold 22px Arial, sans-serif';
+      box.style.font = fVal;
+      txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (font: ${fVal})</small></span>`;
+    }
+    return;
+  }
+
+  if (itemId === 'css-color') {
+    const txt = document.getElementById('h1Text') || box;
+    if (step === 0) {
+      box.style.color = '#94a3b8';
+      txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (color: #94a3b8 gris neutre)</small></span>`;
+    } else {
+      const cVal = opt ? opt.value : '#38bdf8';
+      box.style.color = cVal;
+      txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (color: ${cVal})</small></span>`;
+    }
+    return;
+  }
+
+  if (itemId === 'css-text-shadow') {
+    const txt = document.getElementById('h1Text') || box;
+    if (step === 0) {
+      box.style.textShadow = 'none';
+      txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Sans ombre de texte)</small></span>`;
+    } else {
+      const shVal = opt ? opt.value : '2px 2px 6px #38bdf8';
+      box.style.textShadow = shVal;
+      txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (text-shadow: ${shVal})</small></span>`;
+    }
+    return;
+  }
+
+  // 23. DIMENSIONS & OPACITÉ (WIDTH, HEIGHT, OPACITY)
+  if (itemId === 'css-width') {
+    box.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    if (step === 0) {
+      box.style.width = '120px';
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (width: 120px)</small></span>`;
+    } else {
+      const wVal = opt ? opt.value : '260px';
+      box.style.width = wVal;
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (width: ${wVal})</small></span>`;
+    }
+    return;
+  }
+
+  if (itemId === 'css-height') {
+    box.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    if (step === 0) {
+      box.style.height = '60px';
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (height: 60px)</small></span>`;
+    } else {
+      const hVal = opt ? opt.value : '130px';
+      box.style.height = hVal;
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (height: ${hVal})</small></span>`;
+    }
+    return;
+  }
+
+  if (itemId === 'css-opacity') {
+    box.style.transition = 'all 0.5s ease';
+    if (step === 0) {
+      box.style.opacity = '1.0';
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (opacity: 1.0 ➔ Opaque)</small></span>`;
+    } else {
+      const opVal = opt ? opt.value : '0.35';
+      box.style.opacity = opVal;
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (opacity: ${opVal} ➔ Transparent)</small></span>`;
+    }
+    return;
+  }
+
+  // 24. TOUT AUTRE ÉLÉMENT AVEC VARIANTES DANS VARIETIES_CONFIG
   if (opt && opt.css) {
     if (step === 0) {
-      box.style.cssText = '';
       box.style.transform = 'scale(1)';
     } else {
       box.style.cssText += opt.css;
-      box.style.transform = 'scale(1.06)';
+      box.style.transform = 'scale(1.05)';
     }
     return;
   }
 
-  // 19. ANIMATION PAR DÉFAUT POUR LES PROPRIÉTÉS SANS VARIANTES
+  // 25. ANIMATION PAR DÉFAUT
   if (step === 0) {
     box.style.transform = 'scale(1)';
-    box.style.opacity = '1.0';
-    box.style.color = '';
-    box.style.backgroundColor = '';
   } else {
-    if (itemId.includes('transform')) {
-      box.style.transform = 'rotate(15deg) scale(1.2)';
-    } else if (itemId.includes('color') && !itemId.includes('background') && !itemId.includes('border')) {
-      box.style.color = '#ef4444';
-    } else if (itemId.includes('background-color') || (itemId.includes('background') && !itemId.includes('repeat') && !itemId.includes('size'))) {
-      box.style.backgroundColor = '#991b1b';
-      box.style.color = '#fff';
-    } else if (itemId.includes('font-size')) {
-      box.style.fontSize = '28px';
-    } else if (itemId.includes('font-weight')) {
-      box.style.fontWeight = '900';
-    } else if (itemId.includes('font-style')) {
-      box.style.fontStyle = 'italic';
-    } else if (itemId.includes('opacity')) {
-      box.style.opacity = '0.3';
-    } else if (itemId.includes('width')) {
-      box.style.width = '260px';
-    } else if (itemId.includes('height')) {
-      box.style.height = '120px';
-    } else {
-      box.style.transform = 'scale(1.08)';
-    }
+    box.style.transform = 'scale(1.08)';
   }
 }
 

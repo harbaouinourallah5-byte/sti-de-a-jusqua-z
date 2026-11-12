@@ -1686,15 +1686,19 @@ const DATA = {
       "category": "Animation",
       "property": "@keyframes",
       "name": "@keyframes - États clés de l'animation",
-      "summary": "Spécifie les états clés de l'animation (étapes de 0% à 100%, ou from / to).",
-      "howToUse": "Définit le scénario de l'animation avec son nom (ex: anim1).",
-      "code": "/* Déclare les étapes de l'animation anim1 */\n@keyframes anim1 {\n  from {\n    background-color: red;\n  }\n  to {\n    background-color: yellow;\n  }\n}",
+      "summary": "Spécifie les étapes clés de l'animation en pourcentages (0%, 50%, 100%) ou avec from / to.",
+      "howToUse": "Définit le scénario de l'animation avec son nom et ses étapes en pourcentages %.",
+      "code": "/* Déclaration des étapes clés avec pourcentages (%) */\n@keyframes animCouleur {\n  0% {\n    background-color: #ef4444;\n    transform: scale(1);\n  }\n  50% {\n    background-color: #f59e0b;\n    transform: scale(1.2) rotate(6deg);\n  }\n  100% {\n    background-color: #10b981;\n    transform: scale(1);\n  }\n}\n\n#boite {\n  animation: animCouleur 3s infinite alternate;\n}",
       "hoverNote": "💡 Note Bac : Une animation déclarée avec @keyframes peut ensuite être déclenchée sur #boite ou #boite:hover.",
       "videoSimType": "animation-sim",
-      "description": "La règle @keyframes définit le scénario complet d'une animation personnalisée sans aucun code JavaScript. On lui donne un nom (ex: anim1), puis on décrit les étapes clés intermédiaires soit avec 'from' (départ 0%) et 'to' (arrivée 100%), soit avec des pourcentages (0%, 50%, 100%) en y modifiant les couleurs, dimensions ou positions.",
+      "description": "La règle @keyframes définit les étapes intermédiaires d'une animation en utilisant des pourcentages (%) : 0% (début), 50% (milieu), 100% (fin), ou from / to. À chaque pourcentage, vous définissez les styles CSS (couleurs, positions, rotations, dimensions) que le navigateur anime de manière fluide et continue.",
       "values": [
-        "from / to (début et fin)",
-        "pourcentages : 0%, 50%, 100%"
+        "0% (début de l'animation)",
+        "50% (étape intermédiaire à mi-parcours)",
+        "100% (fin de l'animation)",
+        "25%, 75% (étapes clés supplémentaires)",
+        "from (équivalent à 0%)",
+        "to (équivalent à 100%)"
       ]
     },
     {

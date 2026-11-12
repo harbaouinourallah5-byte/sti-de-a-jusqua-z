@@ -3275,6 +3275,140 @@ input, select, textarea {
 }
 
 /* =============================================================
+   MOTEUR VIDÉO & SIMULATEUR @KEYFRAMES AVEC POURCENTAGES (%)
+   ============================================================= */
+.keyframes-stage-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 0;
+}
+
+.keyframes-timeline-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  max-width: 460px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 30px;
+  padding: 8px 16px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.kf-step-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid transparent;
+  transition: all 0.35s ease;
+  cursor: pointer;
+}
+
+.kf-step-marker .kf-pct {
+  font-family: Consolas, Monaco, monospace;
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: var(--text-muted);
+}
+
+.kf-step-marker .kf-desc {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.kf-step-marker.active {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+  transform: scale(1.1);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.6);
+}
+
+.kf-step-marker.step-0.active {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: #ef4444;
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.6);
+}
+.kf-step-marker.step-0.active .kf-pct { color: #f87171; }
+
+.kf-step-marker.step-50.active {
+  background: rgba(245, 158, 11, 0.25);
+  border-color: #f59e0b;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.6);
+}
+.kf-step-marker.step-50.active .kf-pct { color: #fbbf24; }
+
+.kf-step-marker.step-100.active {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: #10b981;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.6);
+}
+.kf-step-marker.step-100.active .kf-pct { color: #34d399; }
+
+.kf-connector {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  margin: 0 8px;
+  transition: all 0.35s ease;
+}
+
+.kf-connector.active {
+  background: linear-gradient(90deg, #38bdf8, #a855f7);
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.8);
+}
+
+.keyframes-arena {
+  width: 100%;
+  min-height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.06) 0%, transparent 70%);
+}
+
+.keyframes-animated-box {
+  min-width: 160px;
+  padding: 16px 22px;
+  border-radius: 12px;
+  border: 2px solid #38bdf8;
+  background: rgba(15, 23, 42, 0.85);
+  color: #fff;
+  text-align: center;
+  font-weight: 700;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+
+.keyframes-live-status {
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #38bdf8;
+}
+
+.kf-live-dot {
+  color: #38bdf8;
+  animation: pulseDot 1s infinite alternate;
+}
+
+/* =============================================================
    SECTION COURS & SÉRIES PDF TEMPORAIREMENT MASQUÉE
    (À démasquer dès que l'utilisateur en donne l'instruction)
    ============================================================= */
