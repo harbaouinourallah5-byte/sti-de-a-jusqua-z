@@ -2650,17 +2650,38 @@ input, select, textarea {
 }
 
 /* Overflow simulation */
+.overflow-stage-wrapper {
+  overflow: visible !important;
+}
+
 .overflow-stage-box {
-  width: 230px;
+  width: 250px;
   height: 85px;
   border: 2px solid #38bdf8;
   background: rgba(15, 23, 42, 0.95);
   color: #e2e8f0;
   border-radius: 6px;
-  padding: 8px;
+  padding: 8px 10px;
   font-size: 0.8rem;
   line-height: 1.45;
-  transition: all 0.5s ease;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+  scrollbar-width: thin;
+  scrollbar-color: #38bdf8 rgba(15, 23, 42, 0.9);
+}
+
+.overflow-stage-box::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+.overflow-stage-box::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.9);
+  border-radius: 4px;
+}
+
+.overflow-stage-box::-webkit-scrollbar-thumb {
+  background: #38bdf8;
+  border-radius: 4px;
 }
 
 /* Display simulation */

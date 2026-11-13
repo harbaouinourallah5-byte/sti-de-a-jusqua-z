@@ -3984,10 +3984,19 @@ function buildVideoStageElement(item) {
     </div>`;
   }
 
-  // 0.4 Bordures (couleur & épaisseur)
-  if (itemId === 'css-border-color' || itemId === 'css-border-width') {
+  // 0.4 Bordures (couleur, épaisseur, tracé, raccourci)
+  if (itemId === 'css-border-color' || itemId === 'css-border-width' || itemId === 'css-border-style' || itemId === 'css-border-shorthand') {
     return `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:190px;">
       <div id="boite" class="demo-box" style="transition: all 0.5s ease; width:220px; height:100px; padding:12px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:14px; background:#1e293b; border:3px solid #38bdf8; border-radius:8px;">
+        <span>📦 &lt;div id="boite"&gt;</span>
+      </div>
+    </div>`;
+  }
+
+  // 0.41 Rayon des coins (border-radius) : Carré pour illustrer la transformation géométrique
+  if (itemId === 'css-border-radius') {
+    return `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:190px;">
+      <div id="boite" class="demo-box" style="transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); width:120px; height:120px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:13px; background:linear-gradient(135deg, #1e293b, #0f172a); border:3px solid #38bdf8; border-radius:0px; box-shadow:0 8px 24px rgba(0,0,0,0.4);">
         <span>📦 &lt;div id="boite"&gt;</span>
       </div>
     </div>`;
@@ -4074,12 +4083,38 @@ function buildVideoStageElement(item) {
     </div>`;
   }
 
-  // 5. Débordement (overflow)
+  // 5. Débordement (overflow) : Cadre fixe 85px avec témoin de limite et contenu abondant
   if (itemId === 'css-overflow' || prop === 'overflow') {
-    return `<div id="boite" class="overflow-stage-box" style="overflow: visible;">
-      <strong id="overflowBadge" style="color:#38bdf8; display:block; margin-bottom:4px;">overflow: visible;</strong>
-      Texte très long dans &lt;div id="boite"&gt; qui dépasse de la hauteur de 85px.
-      Au Bac STI, <strong>overflow</strong> permet de masquer (hidden), d'afficher (visible) ou de créer des barres de défilement (scroll ou auto).
+    return `<div class="overflow-stage-wrapper" style="display:flex; flex-direction:column; align-items:center; width:100%; max-width:320px; position:relative; overflow:visible;">
+      <div style="font-size:0.75rem; color:#94a3b8; margin-bottom:8px; display:flex; justify-content:space-between; width:100%; padding:0 4px;">
+        <span>📦 Cadre fixe (Hauteur : 85px)</span>
+        <span id="overflowBadge" style="font-weight:bold; color:#38bdf8;">overflow: visible</span>
+      </div>
+      <div style="position:relative; width:100%; overflow:visible;">
+        <div id="boite" class="overflow-stage-box" style="width:100%; height:85px; border:2px solid #38bdf8; background:rgba(15,23,42,0.95); border-radius:8px; padding:10px 12px; font-size:12px; line-height:1.5; color:#f1f5f9; box-sizing:border-box; transition:border-color 0.4s ease, box-shadow 0.4s ease;">
+          <div style="font-weight:bold; color:#38bdf8; margin-bottom:4px; font-size:11px;">📄 &lt;div id="boite"&gt; (Contenu long ~180px) :</div>
+          <div style="padding:4px 8px; background:rgba(16,185,129,0.15); border-left:3px solid #10b981; margin-bottom:6px; border-radius:2px;">
+            ✅ Ligne 1 : Contenu dans la limite des 85px
+          </div>
+          <div style="padding:4px 8px; background:rgba(245,158,11,0.15); border-left:3px solid #f59e0b; margin-bottom:6px; border-radius:2px;">
+            ⚠️ Ligne 2 : Hauteur limite atteinte !
+          </div>
+          <div style="padding:4px 8px; background:rgba(239,68,68,0.25); border-left:3px solid #ef4444; margin-bottom:6px; border-radius:2px; font-weight:bold; color:#fca5a5;">
+            🚨 Ligne 3 : Ce texte DÉBORDE hors du cadre !
+          </div>
+          <div style="padding:4px 8px; background:rgba(168,85,247,0.2); border-left:3px solid #a855f7; margin-bottom:6px; border-radius:2px; color:#d8b4fe;">
+            📦 Ligne 4 : Paragraphe supplémentaire très long
+          </div>
+          <div style="padding:4px 8px; background:rgba(56,189,248,0.2); border-left:3px solid #38bdf8; border-radius:2px; color:#bae6fd;">
+            🏁 Ligne 5 : Fin du contenu au Bac STI
+          </div>
+        </div>
+        <!-- Ligne témoin de la limite 85px -->
+        <div id="overflowLimitGuide" style="position:absolute; bottom:0; left:0; width:100%; border-bottom:2px dashed #ef4444; pointer-events:none; display:flex; justify-content:flex-end;">
+          <span style="font-size:9px; background:#ef4444; color:#fff; padding:1px 6px; border-radius:3px; transform:translateY(50%); font-weight:bold;">Limite 85px</span>
+        </div>
+      </div>
+      <div id="overflowStatusText" style="margin-top:10px; font-size:0.78rem; text-align:center; min-height:22px; font-weight:600;"></div>
     </div>`;
   }
 
@@ -4100,18 +4135,30 @@ function buildVideoStageElement(item) {
     </div>`;
   }
 
-  // 9. Tableaux (table)
+  // 9. Tableaux (table) : Disposition asymétrique pour table-layout et border-collapse
   if (cat === 'Propriétés des tableaux' || prop.includes('table') || prop.includes('collapse')) {
-    return `<table id="tab" style="width:85%; border-collapse:separate; border:2px solid #38bdf8; background:rgba(255,255,255,0.06); color:#fff; transition:all 0.8s ease; font-size:13px;">
-      <tr>
-        <td style="padding:10px; border:1px solid #38bdf8; text-align:center;">&lt;table id="tab"&gt;</td>
-        <td style="padding:10px; border:1px solid #38bdf8; text-align:center;">Ligne 1 - Col 2</td>
-      </tr>
-      <tr>
-        <td style="padding:10px; border:1px solid #38bdf8; text-align:center;">Ligne 2 - Col 1</td>
-        <td style="padding:10px; border:1px solid #38bdf8; text-align:center;">Ligne 2 - Col 2</td>
-      </tr>
-    </table>`;
+    const isLayout = itemId === 'css-table-layout';
+    return `<div style="display:flex; flex-direction:column; align-items:center; width:100%;">
+      <div id="tableStatusText" style="font-size:0.78rem; text-align:center; margin-bottom:8px; font-weight:600; min-height:20px;"></div>
+      <table id="tab" style="width:90%; border-collapse:${itemId === 'css-border-collapse' ? 'separate' : 'collapse'}; border-spacing:${itemId === 'css-border-collapse' ? '8px' : '0'}; border:2px solid #38bdf8; background:rgba(255,255,255,0.06); color:#fff; transition:all 0.5s ease; font-size:12px; table-layout:${isLayout ? 'auto' : 'auto'};">
+        <thead>
+          <tr style="background:rgba(56,189,248,0.2);">
+            <th style="padding:10px; border:2px solid #38bdf8; text-align:center;">Colonne 1 ${isLayout ? '(Texte long)' : ''}</th>
+            <th style="padding:10px; border:2px solid #38bdf8; text-align:center;">Colonne 2 (Court)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="cellLong" style="padding:10px; border:2px solid #38bdf8; text-align:center; overflow:hidden; word-break:break-all;">
+              ${isLayout ? 'Anticonstitutionnellement_BacSTI_Informatique' : 'Cellule 1 - Ligne 1'}
+            </td>
+            <td style="padding:10px; border:2px solid #38bdf8; text-align:center; white-space:nowrap;">
+              ${isLayout ? 'Court (OK)' : 'Cellule 2 - Ligne 1'}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>`;
   }
 
   // 10. Images & Filtres
@@ -4161,7 +4208,7 @@ function buildVideoStageElement(item) {
 
 // Construction de la scène miniature pour les cartes de comparaison vidéo
 function buildMiniStage(itemId, idx, opt) {
-  // Bordure
+  // Bordure (border-style, border-shorthand)
   if (itemId === 'css-border-style' || itemId === 'css-border-shorthand') {
     const val = opt.value;
     if (val === 'none') {
@@ -4170,6 +4217,23 @@ function buildMiniStage(itemId, idx, opt) {
     const width = (val === 'double' || val === 'groove') ? '5px' : '3px';
     const color = val === 'dotted' ? '#facc15' : (val === 'dashed' ? '#f43f5e' : (val === 'double' ? '#10b981' : (val === 'groove' ? '#ec4899' : '#38bdf8')));
     return `<div style="width:80%; height:36px; border:${width} ${val} ${color}; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:11px; color:#fff; font-weight:bold; background:rgba(0,0,0,0.3);">${escapeHtml(val)}</div>`;
+  }
+
+  // Débordement (overflow)
+  if (itemId === 'css-overflow') {
+    const val = opt.value;
+    if (val === 'visible') {
+      return `<div style="position:relative; width:75%; height:32px; border:2px solid #ef4444; border-radius:4px; font-size:8px; color:#ef4444; font-weight:bold; padding:2px; background:rgba(0,0,0,0.3); overflow:visible;"><div style="position:absolute; top:2px; left:2px; width:115%; background:rgba(239,68,68,0.3); color:#fca5a5; padding:2px; border-radius:2px; border-left:2px solid #ef4444;">🚨 Dépasse !</div></div>`;
+    }
+    if (val === 'hidden') {
+      return `<div style="width:75%; height:32px; border:2px solid #10b981; border-radius:4px; font-size:8px; color:#10b981; font-weight:bold; padding:2px; overflow:hidden; background:rgba(0,0,0,0.3);"><div style="background:rgba(16,185,129,0.25); padding:2px;">✂️ Coupé net</div></div>`;
+    }
+    if (val === 'scroll') {
+      return `<div style="width:75%; height:32px; border:2px solid #38bdf8; border-radius:4px; font-size:8px; color:#38bdf8; font-weight:bold; padding:2px 4px; display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3);"><span>📜 Scroll</span><div style="width:5px; height:80%; background:#38bdf8; border-radius:2px;"></div></div>`;
+    }
+    if (val === 'auto') {
+      return `<div style="width:75%; height:32px; border:2px solid #a855f7; border-radius:4px; font-size:8px; color:#a855f7; font-weight:bold; padding:2px 4px; display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3);"><span>⚙️ Auto</span><div style="width:5px; height:80%; background:#a855f7; border-radius:2px;"></div></div>`;
+    }
   }
 
   // Marge extérieure (margin)
@@ -4212,13 +4276,48 @@ function buildMiniStage(itemId, idx, opt) {
 
   // Arrondi (border-radius)
   if (itemId === 'css-border-radius') {
-    return `<div style="width:70%; height:32px; background:linear-gradient(135deg,#38bdf8,#2563eb); border-radius:${opt.value}; display:flex; align-items:center; justify-content:center; color:#fff; font-size:9px; font-weight:bold;">${escapeHtml(opt.value)}</div>`;
+    const isCircle = opt.value === '50%';
+    const shapeStyle = isCircle ? 'width:32px; height:32px; border-radius:50%;' : `width:70%; height:32px; border-radius:${opt.value};`;
+    return `<div style="display:flex; justify-content:center; width:100%;"><div style="${shapeStyle} background:linear-gradient(135deg,#38bdf8,#2563eb); display:flex; align-items:center; justify-content:center; color:#fff; font-size:9px; font-weight:bold; box-shadow:0 2px 8px rgba(0,0,0,0.3);">${escapeHtml(opt.value)}</div></div>`;
   }
 
   // Ombre (box-shadow)
   if (itemId === 'css-box-shadow') {
-    const sh = opt.value === 'none' ? 'none' : (opt.value === 'soft' ? '0 4px 8px rgba(0,0,0,0.5)' : (opt.value === 'neon' ? '0 0 10px #38bdf8' : (opt.value === '3d' ? '4px 4px 0 #ef4444' : 'inset 0 0 6px #38bdf8')));
-    return `<div style="width:70%; height:28px; background:#1e293b; border:1px solid #38bdf8; border-radius:4px; box-shadow:${sh}; display:flex; align-items:center; justify-content:center; color:#fff; font-size:9px; font-weight:bold;">${escapeHtml(opt.value)}</div>`;
+    const sh = opt.value === 'none' ? 'none' : opt.value;
+    return `<div style="width:70%; height:28px; background:#1e293b; border:1px solid #38bdf8; border-radius:4px; box-shadow:${sh}; display:flex; align-items:center; justify-content:center; color:#fff; font-size:9px; font-weight:bold;">${escapeHtml(opt.value.substring(0, 16))}</div>`;
+  }
+
+  // Tableaux (table-layout & border-collapse)
+  if (itemId === 'css-table-layout') {
+    if (opt.value === 'auto') {
+      return `<div style="display:flex; width:85%; height:28px; border:1px solid #38bdf8; border-radius:3px; overflow:hidden;"><div style="width:75%; background:rgba(56,189,248,0.35); font-size:8px; display:flex; align-items:center; justify-content:center; border-right:1px solid #38bdf8; color:#fff; font-weight:bold;">75% Long</div><div style="width:25%; font-size:8px; display:flex; align-items:center; justify-content:center; color:#94a3b8;">25%</div></div>`;
+    } else {
+      return `<div style="display:flex; width:85%; height:28px; border:1px solid #10b981; border-radius:3px; overflow:hidden;"><div style="width:50%; background:rgba(16,185,129,0.35); font-size:8px; display:flex; align-items:center; justify-content:center; border-right:1px solid #10b981; color:#fff; font-weight:bold;">50%</div><div style="width:50%; background:rgba(16,185,129,0.35); font-size:8px; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:bold;">50%</div></div>`;
+    }
+  }
+
+  if (itemId === 'css-border-collapse') {
+    if (opt.value === 'separate') {
+      return `<div style="display:flex; gap:5px; width:80%; height:28px; align-items:center; justify-content:center;"><div style="border:2px solid #38bdf8; padding:2px 6px; font-size:8px; border-radius:2px; color:#fff; font-weight:bold;">C1</div><div style="border:2px solid #38bdf8; padding:2px 6px; font-size:8px; border-radius:2px; color:#fff; font-weight:bold;">C2</div></div>`;
+    } else {
+      return `<div style="display:flex; width:80%; height:28px; align-items:center; justify-content:center;"><div style="border:2px solid #10b981; padding:2px 6px; font-size:8px; border-right:none; color:#fff; font-weight:bold;">C1</div><div style="border:2px solid #10b981; padding:2px 6px; font-size:8px; color:#fff; font-weight:bold;">C2</div></div>`;
+    }
+  }
+
+  // Mode d'affichage (display)
+  if (itemId === 'css-display') {
+    if (opt.value === 'none') {
+      return `<div style="width:75%; height:28px; border:1px dashed #ef4444; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:9px; color:#ef4444; font-weight:bold;">🚫 none</div>`;
+    }
+    if (opt.value === 'block') {
+      return `<div style="width:90%; height:26px; background:#38bdf8; border-radius:3px; display:flex; align-items:center; justify-content:center; color:#0f172a; font-size:9px; font-weight:bold;">100% block</div>`;
+    }
+    if (opt.value === 'inline') {
+      return `<div style="display:flex; gap:3px; align-items:center; width:85%;"><span style="background:rgba(255,255,255,0.2); padding:2px 4px; font-size:8px; border-radius:2px;">mot</span><span style="background:#38bdf8; color:#0f172a; font-weight:bold; padding:2px 5px; font-size:8px; border-radius:2px;">inline</span><span style="background:rgba(255,255,255,0.2); padding:2px 4px; font-size:8px; border-radius:2px;">suite</span></div>`;
+    }
+    if (opt.value === 'inline-block') {
+      return `<div style="width:65%; height:26px; background:#10b981; border-radius:3px; display:flex; align-items:center; justify-content:center; color:#0f172a; font-size:8px; font-weight:bold;">inline-block</div>`;
+    }
   }
 
   // @keyframes (Étapes en pourcentages %)
@@ -4283,7 +4382,6 @@ function buildMiniStage(itemId, idx, opt) {
   return `<div style="width:80%; height:32px; display:flex; align-items:center; justify-content:center; font-size:10px; border-radius:4px; background:linear-gradient(135deg, rgba(56,189,248,0.25), rgba(37,99,235,0.25)); color:#fff; font-weight:bold; ${opt.css || ''};">#boite</div>`;
 }
 
-// Lancer une vidéo spécifique pour une propriété (1 vidéo par valeur/variante)
 function playSpecificVideo(itemId, variantIdx) {
   currentVideoItemId = itemId;
   currentVideoVariantIdx = variantIdx;
@@ -4587,15 +4685,38 @@ function startVideoSimulation(itemId, variantIdx = 0) {
     // Mode continu fluide pour @keyframes et animation-*
     if (itemId === 'css-keyframes' || itemId.startsWith('css-animation')) {
       applyKeyframesProgress(box, progressVal, currentVideoVariantIdx, itemId);
-    } else if (progressVal === 0 || progressVal === 50) {
-      // À 0% et 50%, alterner l'animation de la vidéo active
-      step = step === 0 ? 1 : 0;
-      applyVideoFrame(itemId, box, step, currentVideoVariantIdx);
+    } else {
+      if (progressVal === 0) {
+        step = 0;
+        applyVideoFrame(itemId, box, 0, currentVideoVariantIdx);
+      } else if (progressVal === 50) {
+        step = 1;
+        applyVideoFrame(itemId, box, 1, currentVideoVariantIdx);
+      }
+
+      // Animation dynamique de défilement fluide pour overflow: scroll et overflow: auto pendant step 1 (APRÈS)
+      if (itemId === 'css-overflow' && box) {
+        const config = VARIETIES_CONFIG['css-overflow'];
+        const opt = (config && config.options) ? config.options[currentVideoVariantIdx] : null;
+        if (opt && (opt.value === 'scroll' || opt.value === 'auto')) {
+          if (step === 1) {
+            const maxScroll = box.scrollHeight - box.clientHeight;
+            if (maxScroll > 0) {
+              // progressVal va de 50 à 98 pendant step 1
+              const phase = (progressVal - 50) / 48; // 0..1
+              const scrollRatio = 0.5 - 0.5 * Math.cos(phase * 2 * Math.PI);
+              box.scrollTop = scrollRatio * maxScroll;
+            }
+          } else {
+            box.scrollTop = 0;
+          }
+        }
+      }
     }
   }, 100);
 }
 
-// Rendu des images d'animation : 1 VIDÉO INDÉPENDANTE PAR VALEUR AVEC DÉMONSTRATION AVANT / APRÈS
+// Rendu des images d'animation : 1 VIDÉO INDÉPENDANTE PAR VALEUR AVEC DÉMONSTRATION AVANT / APRÈS DISTINCTE
 function applyVideoFrame(itemId, box, step, variantIdx = 0) {
   if (!box) return;
   const config = VARIETIES_CONFIG[itemId];
@@ -4656,7 +4777,7 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
 
     if (itemId === 'css-sel-link' || itemId === 'css-sel-visited') {
       const isVisited = itemId === 'css-sel-visited';
-      const link = document.getElementById('lien');
+      const link = document.getElementById('lien') || box;
       const txt = document.getElementById('linkStatusText');
       if (step === 0) {
         if (link) { link.style.color = '#60a5fa'; link.style.textDecoration = 'underline'; link.style.fontWeight = 'normal'; }
@@ -4677,7 +4798,6 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
 
     // Sélecteurs sur document HTML mocké (*, element, #id, .class, [attr], [attr=val], element.class, grouped)
     if (step === 0) {
-      // 🔴 AVANT : TOUS les éléments sont au repos neutre
       items.forEach(it => {
         it.classList.remove('matched', 'ignored');
       });
@@ -4686,7 +4806,6 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
         banner.style.color = '#f87171';
       }
     } else {
-      // 🟢 APRÈS : SEULS les éléments qui matchent s'illuminent
       items.forEach(it => {
         const match = it.getAttribute('data-sel-match');
         if (match === 'all' || match === 'yes') {
@@ -4714,13 +4833,30 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     return;
   }
 
-  // 1. STYLE DE BORDURE (BORDER-STYLE) - 1 VIDÉO DÉDIÉE PAR VALEUR
+  // 1. STYLE DE BORDURE (BORDER-STYLE)
   if (itemId === 'css-border-style' || itemId.includes('border-style')) {
     box.style.padding = '18px 24px';
     box.style.transition = 'all 0.4s ease';
 
+    if (variantIdx === 5 || (opt && opt.value === 'none')) {
+      // Pour border-style: none, l'état AVANT doit avoir une bordure existante bien visible
+      if (step === 0) {
+        box.style.border = '5px solid #38bdf8';
+        box.style.boxShadow = '0 0 22px rgba(56, 189, 248, 0.65)';
+        box.style.background = 'rgba(15, 23, 42, 0.85)';
+        box.style.outline = 'none';
+        box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT ➔ Une bordure bleue existe sur l'élément</small></span>`;
+      } else {
+        box.style.border = 'none';
+        box.style.boxShadow = 'none';
+        box.style.outline = '1px dashed rgba(255, 255, 255, 0.25)';
+        box.style.background = 'rgba(56, 189, 248, 0.15)';
+        box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border-style: none (Bordure totalement supprimée !)</small></span>`;
+      }
+      return;
+    }
+
     if (step === 0) {
-      // 🔴 AVANT : Élément brut sans bordure
       box.style.border = '0px none transparent';
       box.style.outline = '1px dashed rgba(255, 255, 255, 0.2)';
       box.style.background = 'rgba(15, 23, 42, 0.6)';
@@ -4728,7 +4864,6 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
       box.style.transform = 'scale(1)';
       box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Sans bordure / Élément brut)</small></span>`;
     } else {
-      // 🟢 APRÈS : Bordure de la vidéo choisie
       box.style.outline = 'none';
       box.style.background = 'rgba(15, 23, 42, 0.85)';
       box.style.color = '#fff';
@@ -4754,10 +4889,6 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
         box.style.border = '8px groove #ec4899';
         box.style.boxShadow = '0 0 22px rgba(236, 72, 153, 0.65)';
         box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border: groove (Rainure sculptée 3D)</small></span>`;
-      } else {
-        box.style.border = 'none';
-        box.style.background = 'rgba(56, 189, 248, 0.25)';
-        box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border: none (Bordure supprimée)</small></span>`;
       }
     }
     return;
@@ -4770,9 +4901,9 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
 
     if (step === 0) {
       box.style.border = '0px none transparent';
-      box.style.outline = '1px dashed rgba(255, 255, 255, 0.2)';
+      box.style.outline = '1px dashed rgba(255, 255, 255, 0.25)';
       box.style.boxShadow = 'none';
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Sans bordure)</small></span>`;
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Sans bordure / Contour nu)</small></span>`;
     } else {
       box.style.outline = 'none';
       box.style.transform = 'scale(1.04)';
@@ -4794,141 +4925,274 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     return;
   }
 
-  // 3. MARGE EXTÉRIEURE (MARGIN) - 1 VIDÉO DÉDIÉE PAR VALEUR
+  // 3. MARGE EXTÉRIEURE (MARGIN)
   if (itemId === 'css-margin') {
-    const boite = document.getElementById('boite');
+    const boite = document.getElementById('boite') || box;
     const vHaut = document.getElementById('voisinHaut');
     const vBas = document.getElementById('voisinBas');
     const txt = document.getElementById('marginIndicatorText');
     if (boite) {
       boite.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
-      if (step === 0) {
-        // 🔴 AVANT : margin nulle (0px) ➔ Éléments étouffés
-        boite.style.margin = '0px auto';
-        if (vHaut) { vHaut.style.transform = 'translateY(2px)'; vHaut.style.borderColor = '#ef4444'; }
-        if (vBas) { vBas.style.transform = 'translateY(-2px)'; vBas.style.borderColor = '#ef4444'; }
-        boite.style.borderColor = '#ef4444';
-        if (txt) txt.textContent = '🔴 ÉTAT 1 : AVANT ➔ margin: 0px (Éléments collés sans séparation)';
+      const mVal = opt ? opt.value : '15px';
+
+      if (mVal === '0px') {
+        if (step === 0) {
+          boite.style.margin = '28px auto';
+          if (vHaut) { vHaut.style.transform = 'translateY(-16px)'; vHaut.style.borderColor = '#38bdf8'; }
+          if (vBas) { vBas.style.transform = 'translateY(16px)'; vBas.style.borderColor = '#38bdf8'; }
+          boite.style.borderColor = '#38bdf8';
+          if (txt) txt.textContent = '🔴 ÉTAT 1 : AVANT ➔ margin: 28px (Voisins largement espacés)';
+        } else {
+          boite.style.margin = '0px auto';
+          if (vHaut) { vHaut.style.transform = 'translateY(2px)'; vHaut.style.borderColor = '#ef4444'; }
+          if (vBas) { vBas.style.transform = 'translateY(-2px)'; vBas.style.borderColor = '#ef4444'; }
+          boite.style.borderColor = '#ef4444';
+          if (txt) txt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ margin: 0px (Marge annulée : éléments collés bord à bord !)';
+        }
       } else {
-        // 🟢 APRÈS : margin appliquée
-        const mVal = opt ? opt.value : '15px';
-        boite.style.margin = mVal === 'auto' ? '15px auto' : (mVal.includes(' ') ? mVal : `${mVal} auto`);
-        if (vHaut) { vHaut.style.transform = mVal === '30px' ? 'translateY(-16px)' : 'translateY(-8px)'; vHaut.style.borderColor = '#475569'; }
-        if (vBas) { vBas.style.transform = mVal === '30px' ? 'translateY(16px)' : 'translateY(8px)'; vBas.style.borderColor = '#475569'; }
-        boite.style.borderColor = '#10b981';
-        if (txt) txt.textContent = `🟢 ÉTAT 2 : APRÈS ➔ margin: ${mVal} (Voisins repoussés avec succès !)`;
+        if (step === 0) {
+          boite.style.margin = '0px auto';
+          if (vHaut) { vHaut.style.transform = 'translateY(2px)'; vHaut.style.borderColor = '#ef4444'; }
+          if (vBas) { vBas.style.transform = 'translateY(-2px)'; vBas.style.borderColor = '#ef4444'; }
+          boite.style.borderColor = '#ef4444';
+          if (txt) txt.textContent = '🔴 ÉTAT 1 : AVANT ➔ margin: 0px (Éléments étouffés sans aucune séparation)';
+        } else {
+          boite.style.margin = mVal === 'auto' ? '15px auto' : (mVal.includes(' ') ? mVal : `${mVal} auto`);
+          if (vHaut) { vHaut.style.transform = mVal === '30px' ? 'translateY(-18px)' : 'translateY(-10px)'; vHaut.style.borderColor = '#475569'; }
+          if (vBas) { vBas.style.transform = mVal === '30px' ? 'translateY(18px)' : 'translateY(10px)'; vBas.style.borderColor = '#475569'; }
+          boite.style.borderColor = '#10b981';
+          if (txt) txt.textContent = `🟢 ÉTAT 2 : APRÈS ➔ margin: ${mVal} (Voisins repoussés avec succès !)`;
+        }
       }
     }
     return;
   }
 
-  // 4. MARGE INTÉRIEURE (PADDING) - 1 VIDÉO DÉDIÉE PAR VALEUR
+  // 4. MARGE INTÉRIEURE (PADDING)
   if (itemId === 'css-padding') {
-    const boite = document.getElementById('boite');
+    const boite = document.getElementById('boite') || box;
     const txt = document.getElementById('paddingIndicatorText');
     if (boite) {
       boite.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
-      if (step === 0) {
-        // 🔴 AVANT : padding 0px ➔ Texte collé aux bords
-        boite.style.padding = '0px';
-        boite.style.borderColor = '#ef4444';
-        if (txt) txt.textContent = '🔴 ÉTAT 1 : AVANT ➔ padding: 0px (Texte comprimé directement contre la bordure)';
+      const pVal = opt ? opt.value : '15px';
+
+      if (pVal === '0px') {
+        if (step === 0) {
+          boite.style.padding = '22px';
+          boite.style.borderColor = '#38bdf8';
+          if (txt) txt.textContent = '🔴 ÉTAT 1 : AVANT ➔ padding: 22px (Texte aéré avec espace intérieur)';
+        } else {
+          boite.style.padding = '0px';
+          boite.style.borderColor = '#ef4444';
+          if (txt) txt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ padding: 0px (Marge interne annulée : texte comprimé contre les bords !)';
+        }
       } else {
-        // 🟢 APRÈS : padding appliqué
-        const pVal = opt ? opt.value : '15px';
-        boite.style.padding = pVal;
-        boite.style.borderColor = '#10b981';
-        if (txt) txt.textContent = `🟢 ÉTAT 2 : APRÈS ➔ padding: ${pVal} (Espace intérieur aéré créé avec succès !)`;
+        if (step === 0) {
+          boite.style.padding = '0px';
+          boite.style.borderColor = '#ef4444';
+          if (txt) txt.textContent = '🔴 ÉTAT 1 : AVANT ➔ padding: 0px (Texte collé directement contre la bordure)';
+        } else {
+          boite.style.padding = pVal;
+          boite.style.borderColor = '#10b981';
+          if (txt) txt.textContent = `🟢 ÉTAT 2 : APRÈS ➔ padding: ${pVal} (Espace de respiration intérieur créé avec succès !)`;
+        }
       }
     }
     return;
   }
 
-  // 5. FLOTTEMENT (FLOAT) - 1 VIDÉO DÉDIÉE PAR VALEUR
+  // 5. FLOTTEMENT (FLOAT)
   if (itemId === 'css-float') {
-    const boite = document.getElementById('boite');
+    const boite = document.getElementById('boite') || box;
     const lbl = document.getElementById('floatLabel');
     if (boite) {
       boite.style.transition = 'all 0.5s ease';
-      if (step === 0) {
-        // 🔴 AVANT : float: none ➔ Texte renvoyé en bas
-        boite.style.float = 'none';
-        boite.style.margin = '0 auto 10px auto';
-        if (lbl) lbl.textContent = '🔴 ÉTAT 1 : AVANT (float: none; ➔ Flux normal : texte renvoyé en-dessous)';
+      const fVal = opt ? opt.value : 'left';
+
+      if (fVal === 'none') {
+        if (step === 0) {
+          boite.style.float = 'left';
+          boite.style.margin = '4px 14px 6px 0';
+          if (lbl) lbl.textContent = '🔴 ÉTAT 1 : AVANT (float: left ➔ Le bloc flotte et le texte s\'enroule)';
+        } else {
+          boite.style.float = 'none';
+          boite.style.margin = '0 auto 10px auto';
+          if (lbl) lbl.textContent = '🟢 ÉTAT 2 : APRÈS (float: none ➔ Flux normal rétabli : texte renvoyé en-dessous !)';
+        }
       } else {
-        // 🟢 APRÈS : float appliqué
-        const fVal = opt ? opt.value : 'left';
-        boite.style.float = fVal;
-        boite.style.margin = fVal === 'left' ? '4px 14px 6px 0' : (fVal === 'right' ? '4px 0 6px 14px' : '0 auto 10px auto');
-        if (lbl) lbl.textContent = `🟢 ÉTAT 2 : APRÈS (float: ${fVal}; ➔ Le texte s'enroule harmonieusement autour !)`;
+        if (step === 0) {
+          boite.style.float = 'none';
+          boite.style.margin = '0 auto 10px auto';
+          if (lbl) lbl.textContent = '🔴 ÉTAT 1 : AVANT (float: none ➔ Flux normal : texte bloqué en-dessous)';
+        } else {
+          boite.style.float = fVal;
+          boite.style.margin = fVal === 'left' ? '4px 14px 6px 0' : (fVal === 'right' ? '4px 0 6px 14px' : '0 auto 10px auto');
+          if (lbl) lbl.textContent = `🟢 ÉTAT 2 : APRÈS (float: ${fVal} ➔ Le texte s'enroule harmonieusement autour du bloc !)`;
+        }
       }
     }
     return;
   }
 
-  // 6. POSITIONNEMENT (POSITION) - 1 VIDÉO DÉDIÉE PAR VALEUR
+  // 6. POSITIONNEMENT (POSITION & COORDONNÉES)
   if (itemId === 'css-position' || itemId === 'css-coords-top-bottom-left-right') {
-    const boite = document.getElementById('boite');
+    const boite = document.getElementById('boite') || box;
     const badge = document.getElementById('posBadge');
     if (boite) {
       boite.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
-      if (step === 0) {
-        // 🔴 AVANT : position: static à l'origine
-        boite.style.position = 'static';
-        boite.style.top = 'auto';
-        boite.style.left = 'auto';
-        boite.style.right = 'auto';
-        boite.style.bottom = 'auto';
-        if (badge) badge.textContent = '🔴 ÉTAT 1 : AVANT (position: static ➔ Emplacement naturel d\'origine)';
-      } else {
-        // 🟢 APRÈS : position et coordonnées
-        if (opt && opt.css) {
-          boite.style.cssText += opt.css;
-        } else {
+      const pVal = opt ? opt.value : 'relative';
+
+      if (itemId === 'css-position' && pVal === 'static') {
+        if (step === 0) {
           boite.style.position = 'relative';
           boite.style.top = '30px';
           boite.style.left = '50px';
+          boite.style.borderColor = '#ef4444';
+          if (badge) badge.textContent = '🔴 ÉTAT 1 : AVANT (Décalé hors de son flux par top:30px/left:50px)';
+        } else {
+          boite.style.position = 'static';
+          boite.style.top = 'auto';
+          boite.style.left = 'auto';
+          boite.style.borderColor = '#10b981';
+          if (badge) badge.textContent = '🟢 ÉTAT 2 : APRÈS (position: static ➔ Retour à l\'emplacement d\'origine dans le flux !)';
         }
-        if (badge) badge.textContent = `🟢 ÉTAT 2 : APRÈS (${opt ? opt.label : 'Décalé'})`;
+      } else {
+        if (step === 0) {
+          boite.style.position = 'static';
+          boite.style.top = 'auto';
+          boite.style.left = 'auto';
+          boite.style.right = 'auto';
+          boite.style.bottom = 'auto';
+          boite.style.borderColor = '#ef4444';
+          if (badge) badge.textContent = '🔴 ÉTAT 1 : AVANT (position: static ➔ Emplacement naturel d\'origine non décalé)';
+        } else {
+          if (opt && opt.css) {
+            boite.style.cssText += opt.css;
+          } else {
+            boite.style.position = 'relative';
+            boite.style.top = '30px';
+            boite.style.left = '50px';
+          }
+          boite.style.borderColor = '#10b981';
+          if (badge) badge.textContent = `🟢 ÉTAT 2 : APRÈS (${opt ? opt.label : 'Décalé'})`;
+        }
       }
     }
     return;
   }
 
-  // 7. DÉBORDEMENT (OVERFLOW) - 1 VIDÉO DÉDIÉE PAR VALEUR
+  // 7. DÉBORDEMENT (OVERFLOW)
   if (itemId === 'css-overflow') {
-    const boite = document.getElementById('boite');
+    const targetBox = document.getElementById('boite') || box;
     const badge = document.getElementById('overflowBadge');
-    if (boite) {
-      boite.style.height = '85px';
-      if (step === 0) {
-        // 🔴 AVANT : Débordement libre
-        boite.style.overflow = 'visible';
-        boite.style.borderColor = '#ef4444';
-        if (badge) badge.textContent = '🔴 ÉTAT 1 : AVANT (overflow: visible ➔ Le texte déborde et brise le cadre)';
+    const statusTxt = document.getElementById('overflowStatusText');
+    const oVal = opt ? opt.value : 'hidden';
+
+    if (targetBox) {
+      targetBox.style.height = '85px';
+
+      if (oVal === 'visible') {
+        if (step === 0) {
+          targetBox.style.overflow = 'hidden';
+          targetBox.style.borderColor = '#ef4444';
+          targetBox.scrollTop = 0;
+          if (badge) badge.textContent = '🔴 AVANT : overflow: hidden;';
+          if (statusTxt) { statusTxt.textContent = '🔴 ÉTAT 1 : AVANT ➔ Le texte qui dépasse 85px est masqué et invisible'; statusTxt.style.color = '#f87171'; }
+        } else {
+          targetBox.style.overflow = 'visible';
+          targetBox.style.borderColor = '#10b981';
+          if (badge) badge.textContent = '🟢 APRÈS : overflow: visible;';
+          if (statusTxt) { statusTxt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ Le contenu DÉBORDE complètement hors du cadre en rouge vif !'; statusTxt.style.color = '#4ade80'; }
+        }
+      } else if (oVal === 'hidden') {
+        if (step === 0) {
+          targetBox.style.overflow = 'visible';
+          targetBox.style.borderColor = '#ef4444';
+          targetBox.scrollTop = 0;
+          if (badge) badge.textContent = '🔴 AVANT : overflow: visible;';
+          if (statusTxt) { statusTxt.textContent = '🔴 ÉTAT 1 : AVANT ➔ Le texte dépasse anarchiquement et brise le cadre !'; statusTxt.style.color = '#f87171'; }
+        } else {
+          targetBox.style.overflow = 'hidden';
+          targetBox.style.borderColor = '#10b981';
+          if (badge) badge.textContent = '🟢 APRÈS : overflow: hidden;';
+          if (statusTxt) { statusTxt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ Tout ce qui dépasse de 85px est proprement coupé et masqué !'; statusTxt.style.color = '#4ade80'; }
+        }
+      } else if (oVal === 'scroll') {
+        if (step === 0) {
+          targetBox.style.overflow = 'hidden';
+          targetBox.style.borderColor = '#ef4444';
+          targetBox.scrollTop = 0;
+          if (badge) badge.textContent = '🔴 AVANT : Sans ascenseur';
+          if (statusTxt) { statusTxt.textContent = '🔴 ÉTAT 1 : AVANT ➔ Texte coupé et inaccessible sans barre de défilement'; statusTxt.style.color = '#f87171'; }
+        } else {
+          targetBox.style.overflow = 'scroll';
+          targetBox.style.borderColor = '#10b981';
+          if (badge) badge.textContent = '🟢 APRÈS : overflow: scroll;';
+          if (statusTxt) { statusTxt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ Barres de défilement toujours visibles pour explorer le texte !'; statusTxt.style.color = '#4ade80'; }
+        }
       } else {
-        // 🟢 APRÈS : Débordement géré
-        const oVal = opt ? opt.value : 'hidden';
-        boite.style.overflow = oVal;
-        boite.style.borderColor = '#10b981';
-        if (oVal === 'scroll' || oVal === 'auto') boite.scrollTop = 35;
-        if (badge) badge.textContent = `🟢 ÉTAT 2 : APRÈS (overflow: ${oVal}; ➔ Débordement maîtrisé proprement)`;
+        // auto
+        if (step === 0) {
+          targetBox.style.overflow = 'visible';
+          targetBox.style.borderColor = '#ef4444';
+          targetBox.scrollTop = 0;
+          if (badge) badge.textContent = '🔴 AVANT : overflow: visible;';
+          if (statusTxt) { statusTxt.textContent = '🔴 ÉTAT 1 : AVANT ➔ Débordement libre sans barre de défilement'; statusTxt.style.color = '#f87171'; }
+        } else {
+          targetBox.style.overflow = 'auto';
+          targetBox.style.borderColor = '#10b981';
+          if (badge) badge.textContent = '🟢 APRÈS : overflow: auto;';
+          if (statusTxt) { statusTxt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ Barre de défilement ajoutée automatiquement car le texte dépasse !'; statusTxt.style.color = '#4ade80'; }
+        }
       }
     }
     return;
   }
 
-  // 8. AFFICHAGE (DISPLAY) - 1 VIDÉO DÉDIÉE PAR VALEUR
+  // 8. AFFICHAGE (DISPLAY)
   if (itemId === 'css-display') {
-    const boite = document.getElementById('boite');
+    const boite = document.getElementById('boite') || box;
     if (boite) {
-      if (step === 0) {
-        // 🔴 AVANT : affichage normal
-        boite.style.display = 'block';
-        boite.style.width = '100%';
+      const dVal = opt ? opt.value : 'block';
+      if (dVal === 'block') {
+        if (step === 0) {
+          boite.style.display = 'inline';
+          boite.style.width = 'auto';
+          boite.textContent = '#boite (display: inline)';
+        } else {
+          boite.style.display = 'block';
+          boite.style.width = '100%';
+          boite.textContent = '#boite (display: block ➔ Pleine largeur !) ';
+        }
+      } else if (dVal === 'inline') {
+        if (step === 0) {
+          boite.style.display = 'block';
+          boite.style.width = '100%';
+          boite.textContent = '#boite (display: block)';
+        } else {
+          boite.style.display = 'inline';
+          boite.style.width = 'auto';
+          boite.textContent = '#boite (display: inline ➔ En ligne avec les autres !)';
+        }
+      } else if (dVal === 'inline-block') {
+        if (step === 0) {
+          boite.style.display = 'inline';
+          boite.style.width = 'auto';
+          boite.textContent = '#boite (display: inline)';
+        } else {
+          boite.style.display = 'inline-block';
+          boite.style.width = '140px';
+          boite.textContent = '#boite (display: inline-block ➔ En ligne + largeur 140px !)';
+        }
       } else {
-        // 🟢 APRÈS : affichage choisi
-        if (opt && opt.css) boite.style.cssText += opt.css;
+        // none
+        if (step === 0) {
+          boite.style.display = 'inline-block';
+          boite.style.opacity = '1';
+          boite.textContent = '#boite (Élément présent)';
+        } else {
+          boite.style.display = 'none';
+        }
       }
     }
     return;
@@ -4937,13 +5201,46 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
   // 9. ARRONDIS DES COINS (BORDER-RADIUS)
   if (itemId === 'css-border-radius') {
     box.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
-    if (step === 0) {
-      box.style.borderRadius = '0px';
-      box.innerHTML = `<span>#boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Coins stricts à 90°)</small></span>`;
+    box.style.width = '120px';
+    box.style.height = '120px';
+    box.style.display = 'flex';
+    box.style.alignItems = 'center';
+    box.style.justifyContent = 'center';
+    box.style.textAlign = 'center';
+
+    const rVal = opt ? opt.value : '15px';
+    if (rVal === '0px') {
+      if (step === 0) {
+        box.style.borderRadius = '24px';
+        box.style.borderColor = '#ef4444';
+        box.innerHTML = `<span>#boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Coins arrondis 24px)</small></span>`;
+      } else {
+        box.style.borderRadius = '0px';
+        box.style.borderColor = '#10b981';
+        box.innerHTML = `<span>#boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border-radius: 0px (Angles droits stricts à 90° rétablis !)</small></span>`;
+      }
+    } else if (rVal === '50%') {
+      if (step === 0) {
+        box.style.borderRadius = '0px';
+        box.style.borderColor = '#ef4444';
+        box.style.boxShadow = 'none';
+        box.innerHTML = `<span>#boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Carré strict 120px × 120px)</small></span>`;
+      } else {
+        box.style.borderRadius = '50%';
+        box.style.borderColor = '#10b981';
+        box.style.boxShadow = '0 0 24px rgba(16,185,129,0.5)';
+        box.innerHTML = `<span>#boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border-radius: 50% (Transformation en CERCLE parfait !)</small></span>`;
+      }
     } else {
-      const rVal = opt ? opt.value : '15px';
-      box.style.borderRadius = rVal;
-      box.innerHTML = `<span>#boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (border-radius: ${rVal} !)</small></span>`;
+      if (step === 0) {
+        box.style.borderRadius = '0px';
+        box.style.borderColor = '#ef4444';
+        box.innerHTML = `<span>#boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Coins carrés stricts 0px)</small></span>`;
+      } else {
+        box.style.borderRadius = rVal;
+        box.style.borderColor = '#10b981';
+        box.innerHTML = `<span>#boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border-radius: ${rVal} (Coins arrondis !)</small></span>`;
+      }
     }
     return;
   }
@@ -4951,41 +5248,74 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
   // 10. OMBRE PORTÉE (BOX-SHADOW)
   if (itemId === 'css-box-shadow') {
     box.style.transition = 'all 0.4s ease';
-    if (step === 0) {
-      box.style.boxShadow = 'none';
-      box.style.transform = 'translateY(0)';
-      box.innerHTML = `<span>#boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (box-shadow: none / Boîte plate)</small></span>`;
+    const shVal = (opt && opt.value) ? opt.value : '0 4px 14px rgba(0,0,0,0.5)';
+
+    if (shVal === 'none') {
+      if (step === 0) {
+        box.style.boxShadow = '0 0 24px #38bdf8';
+        box.style.transform = 'translateY(-4px)';
+        box.innerHTML = `<span>#boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Ombre lumineuse active)</small></span>`;
+      } else {
+        box.style.boxShadow = 'none';
+        box.style.transform = 'translateY(0)';
+        box.innerHTML = `<span>#boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ box-shadow: none (Ombre retirée, boîte plate !)</small></span>`;
+      }
     } else {
-      const shVal = (opt && opt.value) ? opt.value : '0 4px 14px rgba(0,0,0,0.5)';
-      box.style.boxShadow = shVal;
-      box.style.transform = shVal.includes('inset') ? 'none' : 'translateY(-4px)';
-      box.innerHTML = `<span>#boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (box-shadow: ${shVal} !)</small></span>`;
+      if (step === 0) {
+        box.style.boxShadow = 'none';
+        box.style.transform = 'translateY(0)';
+        box.innerHTML = `<span>#boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (box-shadow: none / Boîte plate)</small></span>`;
+      } else {
+        box.style.boxShadow = shVal;
+        box.style.transform = shVal.includes('inset') ? 'none' : 'translateY(-4px)';
+        box.innerHTML = `<span>#boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (box-shadow: ${shVal} !)</small></span>`;
+      }
     }
     return;
   }
 
   // 11. ALIGNEMENT DU TEXTE (TEXT-ALIGN)
   if (itemId === 'css-text-align') {
-    if (step === 0) {
-      box.style.textAlign = 'left';
-      box.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Aligné à gauche par défaut)</small></span>`;
+    const aVal = opt ? opt.value : 'center';
+    if (aVal === 'left') {
+      if (step === 0) {
+        box.style.textAlign = 'right';
+        box.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Aligné à droite)</small></span>`;
+      } else {
+        box.style.textAlign = 'left';
+        box.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ text-align: left (Aligné à gauche !)</small></span>`;
+      }
     } else {
-      const aVal = opt ? opt.value : 'center';
-      box.style.textAlign = aVal;
-      box.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (text-align: ${aVal} !)</small></span>`;
+      if (step === 0) {
+        box.style.textAlign = 'left';
+        box.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Aligné à gauche par défaut)</small></span>`;
+      } else {
+        box.style.textAlign = aVal;
+        box.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (text-align: ${aVal} !)</small></span>`;
+      }
     }
     return;
   }
 
   // 12. POLICE DE CARACTÈRES (FONT-FAMILY)
   if (itemId === 'css-font-family') {
-    if (step === 0) {
-      box.style.fontFamily = 'serif';
-      box.innerHTML = `<span>Texte de démo<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Police serif brute standard)</small></span>`;
+    const fVal = opt ? opt.value : 'Arial, sans-serif';
+    if (fVal.includes('Arial')) {
+      if (step === 0) {
+        box.style.fontFamily = "'Times New Roman', serif";
+        box.innerHTML = `<span>Texte de démo<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Police serif avec empattements)</small></span>`;
+      } else {
+        box.style.fontFamily = fVal;
+        box.innerHTML = `<span>Texte de démo<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (font-family: ${fVal})</small></span>`;
+      }
     } else {
-      const fVal = opt ? opt.value : 'Arial, sans-serif';
-      box.style.fontFamily = fVal;
-      box.innerHTML = `<span>Texte de démo<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (font-family: ${fVal})</small></span>`;
+      if (step === 0) {
+        box.style.fontFamily = "Arial, sans-serif";
+        box.innerHTML = `<span>Texte de démo<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Police Arial sans empattement)</small></span>`;
+      } else {
+        box.style.fontFamily = fVal;
+        box.innerHTML = `<span>Texte de démo<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (font-family: ${fVal})</small></span>`;
+      }
     }
     return;
   }
@@ -4993,13 +5323,48 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
   // 13. CASSE DU TEXTE (TEXT-TRANSFORM)
   if (itemId === 'css-text-transform') {
     const txt = document.getElementById('h1Text') || box;
-    if (step === 0) {
-      txt.style.textTransform = 'none';
-      txt.innerHTML = `<span>Texte original<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Casse normale sans modification)</small></span>`;
-    } else {
-      const tVal = opt ? opt.value : 'uppercase';
-      txt.style.textTransform = tVal;
-      txt.innerHTML = `<span>Texte transformé<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (text-transform: ${tVal})</small></span>`;
+    const tVal = opt ? opt.value : 'uppercase';
+
+    if (tVal === 'none') {
+      if (step === 0) {
+        box.style.textTransform = 'uppercase';
+        txt.style.textTransform = 'uppercase';
+        box.innerHTML = `<span>TEXTE EN MAJUSCULES<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Forcé en MAJUSCULES)</small></span>`;
+      } else {
+        box.style.textTransform = 'none';
+        txt.style.textTransform = 'none';
+        box.innerHTML = `<span>Texte de Démonstration<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ text-transform: none (Casse naturelle restituée !)</small></span>`;
+      }
+    } else if (tVal === 'uppercase') {
+      if (step === 0) {
+        box.style.textTransform = 'none';
+        txt.style.textTransform = 'none';
+        box.innerHTML = `<span>texte en minuscules<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Casse normale minuscule)</small></span>`;
+      } else {
+        box.style.textTransform = 'uppercase';
+        txt.style.textTransform = 'uppercase';
+        box.innerHTML = `<span>TEXTE EN MINUSCULES<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ text-transform: uppercase !</small></span>`;
+      }
+    } else if (tVal === 'lowercase') {
+      if (step === 0) {
+        box.style.textTransform = 'none';
+        txt.style.textTransform = 'none';
+        box.innerHTML = `<span>TEXTE EN MAJUSCULES<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Casse normale majuscule)</small></span>`;
+      } else {
+        box.style.textTransform = 'lowercase';
+        txt.style.textTransform = 'lowercase';
+        box.innerHTML = `<span>texte en majuscules<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ text-transform: lowercase !</small></span>`;
+      }
+    } else if (tVal === 'capitalize') {
+      if (step === 0) {
+        box.style.textTransform = 'none';
+        txt.style.textTransform = 'none';
+        box.innerHTML = `<span>bac technique informatique<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Sans majuscules initiales)</small></span>`;
+      } else {
+        box.style.textTransform = 'capitalize';
+        txt.style.textTransform = 'capitalize';
+        box.innerHTML = `<span>Bac Technique Informatique<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ text-transform: capitalize !</small></span>`;
+      }
     }
     return;
   }
@@ -5027,61 +5392,169 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     const img = document.getElementById('img1') || box;
     const badge = document.getElementById('filterStageBadge');
     img.style.transition = 'filter 0.5s ease, border-color 0.5s ease';
-    if (step === 0) {
-      img.style.filter = 'none';
-      img.style.borderColor = '#ef4444';
-      if (badge) badge.innerHTML = `<small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (filter: none / Image brute)</small>`;
+    box.style.transition = 'filter 0.5s ease, border-color 0.5s ease';
+    const flVal = (opt && opt.value) ? opt.value : 'grayscale(100%)';
+
+    if (flVal === 'none') {
+      if (step === 0) {
+        img.style.filter = 'grayscale(100%)';
+        img.style.borderColor = '#ef4444';
+        box.style.filter = 'grayscale(100%)';
+        box.style.borderColor = '#ef4444';
+        if (badge) badge.innerHTML = '<small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Filtre noir et blanc grayscale 100%)</small>';
+      } else {
+        img.style.filter = 'none';
+        img.style.borderColor = '#10b981';
+        box.style.filter = 'none';
+        box.style.borderColor = '#10b981';
+        if (badge) badge.innerHTML = '<small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ filter: none (Couleurs d\'origine restaurées !)</small>';
+      }
     } else {
-      const flVal = (opt && opt.value) ? opt.value : 'grayscale(100%)';
-      img.style.filter = flVal;
-      img.style.borderColor = '#10b981';
-      if (badge) badge.innerHTML = `<small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (filter: ${flVal})</small>`;
+      if (step === 0) {
+        img.style.filter = 'none';
+        img.style.borderColor = '#ef4444';
+        box.style.filter = 'none';
+        box.style.borderColor = '#ef4444';
+        if (badge) badge.innerHTML = '<small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (filter: none / Image brute)</small>';
+      } else {
+        img.style.filter = flVal;
+        img.style.borderColor = '#10b981';
+        box.style.filter = flVal;
+        box.style.borderColor = '#10b981';
+        if (badge) badge.innerHTML = `<small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ filter: ${flVal} !</small>`;
+      }
     }
     return;
   }
 
   // 16. TABLEAUX (BORDER-COLLAPSE & TABLE-LAYOUT)
   if (itemId === 'css-border-collapse') {
-    box.style.borderCollapse = step === 1 ? (opt ? opt.value : 'collapse') : 'separate';
-    box.style.backgroundColor = step === 1 ? 'rgba(56, 189, 248, 0.2)' : 'transparent';
+    const table = document.getElementById('tab') || box;
+    const statusTxt = document.getElementById('tableStatusText');
+    const cVal = opt ? opt.value : 'collapse';
+
+    if (cVal === 'separate') {
+      if (step === 0) {
+        table.style.borderCollapse = 'collapse';
+        table.style.borderSpacing = '0px';
+        box.style.borderCollapse = 'collapse';
+        box.style.borderSpacing = '0px';
+        if (statusTxt) { statusTxt.textContent = '🔴 ÉTAT 1 : AVANT ➔ border-collapse: collapse (Bordures fusionnées en un seul trait)'; statusTxt.style.color = '#f87171'; }
+      } else {
+        table.style.borderCollapse = 'separate';
+        table.style.borderSpacing = '10px';
+        box.style.borderCollapse = 'separate';
+        box.style.borderSpacing = '10px';
+        if (statusTxt) { statusTxt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ border-collapse: separate (Bordures séparées avec espacement visible entre cellules !)'; statusTxt.style.color = '#4ade80'; }
+      }
+    } else {
+      if (step === 0) {
+        table.style.borderCollapse = 'separate';
+        table.style.borderSpacing = '10px';
+        box.style.borderCollapse = 'separate';
+        box.style.borderSpacing = '10px';
+        if (statusTxt) { statusTxt.textContent = '🔴 ÉTAT 1 : AVANT ➔ border-collapse: separate (Bordures disjointes espacées)'; statusTxt.style.color = '#f87171'; }
+      } else {
+        table.style.borderCollapse = 'collapse';
+        table.style.borderSpacing = '0px';
+        box.style.borderCollapse = 'collapse';
+        box.style.borderSpacing = '0px';
+        if (statusTxt) { statusTxt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ border-collapse: collapse (Bordures fusionnées en un trait unique !)'; statusTxt.style.color = '#4ade80'; }
+      }
+    }
     return;
   }
+
   if (itemId === 'css-table-layout') {
-    box.style.tableLayout = step === 1 ? (opt ? opt.value : 'fixed') : 'auto';
+    const table = document.getElementById('tab') || box;
+    const statusTxt = document.getElementById('tableStatusText');
+    const lVal = opt ? opt.value : 'fixed';
+
+    if (lVal === 'auto') {
+      if (step === 0) {
+        table.style.tableLayout = 'fixed';
+        box.style.tableLayout = 'fixed';
+        if (statusTxt) { statusTxt.textContent = '🔴 ÉTAT 1 : AVANT ➔ table-layout: fixed (Colonnes figées à 50%/50%, texte long tronqué)'; statusTxt.style.color = '#f87171'; }
+      } else {
+        table.style.tableLayout = 'auto';
+        box.style.tableLayout = 'auto';
+        if (statusTxt) { statusTxt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ table-layout: auto (La colonne 1 s\'élargit naturellement pour le mot entier !)'; statusTxt.style.color = '#4ade80'; }
+      }
+    } else {
+      if (step === 0) {
+        table.style.tableLayout = 'auto';
+        box.style.tableLayout = 'auto';
+        if (statusTxt) { statusTxt.textContent = '🔴 ÉTAT 1 : AVANT ➔ table-layout: auto (La colonne 1 envahit 80% de l\'espace du tableau)'; statusTxt.style.color = '#f87171'; }
+      } else {
+        table.style.tableLayout = 'fixed';
+        box.style.tableLayout = 'fixed';
+        if (statusTxt) { statusTxt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ table-layout: fixed (Colonnes strictement égales 50% / 50% !)'; statusTxt.style.color = '#4ade80'; }
+      }
+    }
     return;
   }
 
   // 17. LISTES (LIST-STYLE-TYPE, POSITION, IMAGE, SHORTHAND)
   if (itemId === 'css-list-style-type') {
-    box.style.listStyleType = step === 1 ? (opt ? opt.value : 'circle') : 'disc';
-    box.style.border = step === 1 ? '1px solid #38bdf8' : '1px dashed rgba(255,255,255,0.2)';
-    return;
-  }
-  if (itemId === 'css-list-style-position') {
-    box.style.listStylePosition = step === 1 ? (opt ? opt.value : 'inside') : 'outside';
-    box.style.border = step === 1 ? '2px solid #10b981' : '2px dashed #ef4444';
-    return;
-  }
-  if (itemId === 'css-list-style-image') {
+    const tVal = opt ? opt.value : 'disc';
     if (step === 0) {
-      box.style.listStyleImage = 'none';
-      box.style.listStyleType = 'disc';
+      box.style.listStyleType = tVal === 'disc' ? 'circle' : 'disc';
+      box.style.border = '1px dashed rgba(255,255,255,0.2)';
     } else {
-      if (opt && opt.value && opt.value.includes('url')) {
-        box.style.listStyleImage = 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23facc15\' width=\'16px\' height=\'16px\'%3E%3Cpath d=\'M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z\'/%3E%3C/svg%3E")';
+      box.style.listStyleType = tVal;
+      box.style.border = '1px solid #38bdf8';
+    }
+    return;
+  }
+
+  if (itemId === 'css-list-style-position') {
+    const pVal = opt ? opt.value : 'outside';
+    if (step === 0) {
+      box.style.listStylePosition = pVal === 'outside' ? 'inside' : 'outside';
+      box.style.border = '2px dashed #ef4444';
+    } else {
+      box.style.listStylePosition = pVal;
+      box.style.border = '2px solid #10b981';
+    }
+    return;
+  }
+
+  if (itemId === 'css-list-style-image') {
+    const starUrl = 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23facc15\' width=\'16px\' height=\'16px\'%3E%3Cpath d=\'M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z\'/></svg>")';
+    const isNone = opt && opt.value === 'none';
+
+    if (isNone) {
+      if (step === 0) {
+        box.style.listStyleImage = starUrl;
       } else {
         box.style.listStyleImage = 'none';
         box.style.listStyleType = 'disc';
       }
+    } else {
+      if (step === 0) {
+        box.style.listStyleImage = 'none';
+        box.style.listStyleType = 'disc';
+      } else {
+        box.style.listStyleImage = starUrl;
+      }
     }
     return;
   }
+
   if (itemId === 'css-list-style-shorthand') {
-    if (step === 0) {
-      box.style.listStyle = 'disc outside none';
+    const sVal = opt ? opt.value : 'square inside';
+    if (sVal === 'none') {
+      if (step === 0) {
+        box.style.listStyle = 'square inside';
+      } else {
+        box.style.listStyle = 'none';
+      }
     } else {
-      const sVal = opt ? opt.value : 'square inside';
-      box.style.listStyle = sVal;
+      if (step === 0) {
+        box.style.listStyle = 'disc outside none';
+      } else {
+        box.style.listStyle = sVal;
+      }
     }
     return;
   }
@@ -5181,14 +5654,27 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
 
   if (itemId === 'css-background-image') {
     box.style.transition = 'all 0.5s ease';
-    if (step === 0) {
-      box.style.backgroundImage = 'none';
-      box.style.backgroundColor = '#1e293b';
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Sans image de fond)</small></span>`;
+    const isNone = opt && opt.value === 'none';
+
+    if (isNone) {
+      if (step === 0) {
+        box.style.backgroundImage = 'linear-gradient(135deg, #0284c7, #38bdf8)';
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Image dégradée active)</small></span>`;
+      } else {
+        box.style.backgroundImage = 'none';
+        box.style.backgroundColor = '#1e293b';
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (background-image: none / Supprimée !)</small></span>`;
+      }
     } else {
-      const imgVal = opt ? opt.value : 'linear-gradient(135deg, #6366f1, #ec4899)';
-      box.style.backgroundImage = imgVal;
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (background-image: ${imgVal})</small></span>`;
+      if (step === 0) {
+        box.style.backgroundImage = 'none';
+        box.style.backgroundColor = '#1e293b';
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Sans image de fond)</small></span>`;
+      } else {
+        const imgVal = opt ? opt.value : 'linear-gradient(135deg, #6366f1, #ec4899)';
+        box.style.backgroundImage = imgVal;
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (background-image: ${imgVal})</small></span>`;
+      }
     }
     return;
   }
@@ -5197,13 +5683,24 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     box.style.transition = 'all 0.5s ease';
     box.style.backgroundImage = 'radial-gradient(#38bdf8 3px, transparent 3px)';
     box.style.backgroundSize = '24px 24px';
-    if (step === 0) {
-      box.style.backgroundRepeat = 'repeat';
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (repeat : Répétition totale en mosaïque)</small></span>`;
+    const repVal = opt ? opt.value : 'no-repeat';
+
+    if (repVal === 'repeat') {
+      if (step === 0) {
+        box.style.backgroundRepeat = 'no-repeat';
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (no-repeat : Motif unique isolé)</small></span>`;
+      } else {
+        box.style.backgroundRepeat = 'repeat';
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (repeat : Mosaïque continue !)</small></span>`;
+      }
     } else {
-      const repVal = opt ? opt.value : 'no-repeat';
-      box.style.backgroundRepeat = repVal;
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (background-repeat: ${repVal})</small></span>`;
+      if (step === 0) {
+        box.style.backgroundRepeat = 'repeat';
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (repeat : Répétition totale)</small></span>`;
+      } else {
+        box.style.backgroundRepeat = repVal;
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (background-repeat: ${repVal})</small></span>`;
+      }
     }
     return;
   }
@@ -5211,13 +5708,24 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
   if (itemId === 'css-background-size') {
     box.style.transition = 'all 0.5s ease';
     box.style.backgroundImage = 'linear-gradient(135deg, #0284c7, #6366f1)';
-    if (step === 0) {
-      box.style.backgroundSize = 'auto';
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (background-size: auto)</small></span>`;
+    const szVal = opt ? opt.value : 'cover';
+
+    if (szVal === 'auto') {
+      if (step === 0) {
+        box.style.backgroundSize = 'cover';
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (background-size: cover étiré)</small></span>`;
+      } else {
+        box.style.backgroundSize = 'auto';
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (background-size: auto naturel !)</small></span>`;
+      }
     } else {
-      const szVal = opt ? opt.value : 'cover';
-      box.style.backgroundSize = szVal;
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (background-size: ${szVal})</small></span>`;
+      if (step === 0) {
+        box.style.backgroundSize = 'auto';
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (background-size: auto)</small></span>`;
+      } else {
+        box.style.backgroundSize = szVal;
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (background-size: ${szVal})</small></span>`;
+      }
     }
     return;
   }
@@ -5240,11 +5748,11 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     if (step === 0) {
       box.style.border = '4px solid #334155';
       box.style.boxShadow = 'none';
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Bordure grise neutre)</small></span>`;
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Bordure grise neutre sans couleur)</small></span>`;
     } else {
       const cVal = opt ? opt.value : '#38bdf8';
       box.style.border = `4px solid ${cVal}`;
-      box.style.boxShadow = `0 0 16px ${cVal}88`;
+      box.style.boxShadow = `0 0 20px ${cVal}88`;
       box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (border-color: ${cVal})</small></span>`;
     }
     return;
@@ -5252,53 +5760,91 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
 
   if (itemId === 'css-border-width') {
     box.style.transition = 'all 0.4s ease';
+    const wVal = opt ? opt.value : '4px';
+
     if (step === 0) {
-      box.style.border = '1px solid #38bdf8';
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Épaisseur 1px fine)</small></span>`;
+      box.style.border = '0px solid transparent';
+      box.style.outline = '1px dashed rgba(255, 255, 255, 0.25)';
+      box.style.boxShadow = 'none';
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT ➔ border-width: 0px (Aucune épaisseur de bordure)</small></span>`;
     } else {
-      const wVal = opt ? opt.value : '6px';
+      box.style.outline = 'none';
       box.style.border = `${wVal} solid #38bdf8`;
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (border-width: ${wVal})</small></span>`;
+      box.style.boxShadow = '0 0 16px rgba(56, 189, 248, 0.5)';
+      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border-width: ${wVal} (Épaisseur nette appliquée !)</small></span>`;
     }
     return;
   }
 
-  // 22. TYPOGRAPHIE & TEXTE (FONT-WEIGHT, FONT-STYLE, FONT-SIZE, FONT-SHORTHAND, COLOR, TEXT-SHADOW)
+  // 22. TYPOGRAPHIE & TEXTE
   if (itemId === 'css-font-weight') {
     const txt = document.getElementById('h1Text') || box;
-    if (step === 0) {
-      box.style.fontWeight = 'normal';
-      txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (font-weight: normal / 400)</small></span>`;
+    const wVal = opt ? opt.value : 'bold';
+
+    if (wVal === 'normal') {
+      if (step === 0) {
+        box.style.fontWeight = 'bold';
+        txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (font-weight: bold / Gras 700)</small></span>`;
+      } else {
+        box.style.fontWeight = 'normal';
+        txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ font-weight: normal (Graisse 400 normale !)</small></span>`;
+      }
     } else {
-      const wVal = opt ? opt.value : 'bold';
-      box.style.fontWeight = wVal;
-      txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (font-weight: ${wVal})</small></span>`;
+      if (step === 0) {
+        box.style.fontWeight = 'normal';
+        txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (font-weight: normal / 400)</small></span>`;
+      } else {
+        box.style.fontWeight = wVal;
+        txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (font-weight: ${wVal} !)</small></span>`;
+      }
     }
     return;
   }
 
   if (itemId === 'css-font-style') {
     const txt = document.getElementById('h1Text') || box;
-    if (step === 0) {
-      box.style.fontStyle = 'normal';
-      txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (font-style: normal / Droit)</small></span>`;
+    const sVal = opt ? opt.value : 'italic';
+
+    if (sVal === 'normal') {
+      if (step === 0) {
+        box.style.fontStyle = 'italic';
+        txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (font-style: italic / Penché)</small></span>`;
+      } else {
+        box.style.fontStyle = 'normal';
+        txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ font-style: normal (Droit normal !)</small></span>`;
+      }
     } else {
-      const sVal = opt ? opt.value : 'italic';
-      box.style.fontStyle = sVal;
-      txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (font-style: ${sVal})</small></span>`;
+      if (step === 0) {
+        box.style.fontStyle = 'normal';
+        txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (font-style: normal / Droit)</small></span>`;
+      } else {
+        box.style.fontStyle = 'italic';
+        txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ font-style: italic (Incliné en italique !)</small></span>`;
+      }
     }
     return;
   }
 
   if (itemId === 'css-font-size') {
     const txt = document.getElementById('h1Text') || box;
-    if (step === 0) {
-      box.style.fontSize = '16px';
-      txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (font-size: 16px standard)</small></span>`;
+    const szVal = opt ? opt.value : '26px';
+
+    if (szVal === '14px') {
+      if (step === 0) {
+        box.style.fontSize = '32px';
+        txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (font-size: 32px Grande taille)</small></span>`;
+      } else {
+        box.style.fontSize = '14px';
+        txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ font-size: 14px (Petite taille fine !)</small></span>`;
+      }
     } else {
-      const szVal = opt ? opt.value : '26px';
-      box.style.fontSize = szVal;
-      txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (font-size: ${szVal})</small></span>`;
+      if (step === 0) {
+        box.style.fontSize = '14px';
+        txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (font-size: 14px Petite taille)</small></span>`;
+      } else {
+        box.style.fontSize = szVal;
+        txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (font-size: ${szVal} !)</small></span>`;
+      }
     }
     return;
   }
@@ -5306,8 +5852,8 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
   if (itemId === 'css-font-shorthand') {
     const txt = document.getElementById('h1Text') || box;
     if (step === 0) {
-      box.style.font = 'normal normal 16px serif';
-      txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Police par défaut serif brute)</small></span>`;
+      box.style.font = 'normal normal 16px Arial, sans-serif';
+      txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Police normale 16px Arial)</small></span>`;
     } else {
       const fVal = opt ? opt.value : 'italic bold 22px Arial, sans-serif';
       box.style.font = fVal;
@@ -5331,53 +5877,97 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
 
   if (itemId === 'css-text-shadow') {
     const txt = document.getElementById('h1Text') || box;
-    if (step === 0) {
-      box.style.textShadow = 'none';
-      txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Sans ombre de texte)</small></span>`;
+    const shVal = opt ? opt.value : '2px 2px 6px #38bdf8';
+
+    if (shVal === 'none') {
+      if (step === 0) {
+        box.style.textShadow = '0 0 16px #38bdf8';
+        txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Ombre lumineuse active)</small></span>`;
+      } else {
+        box.style.textShadow = 'none';
+        txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ text-shadow: none (Ombre retirée !)</small></span>`;
+      }
     } else {
-      const shVal = opt ? opt.value : '2px 2px 6px #38bdf8';
-      box.style.textShadow = shVal;
-      txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (text-shadow: ${shVal})</small></span>`;
+      if (step === 0) {
+        box.style.textShadow = 'none';
+        txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Sans ombre de texte)</small></span>`;
+      } else {
+        box.style.textShadow = shVal;
+        txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (text-shadow: ${shVal} !)</small></span>`;
+      }
     }
     return;
   }
 
-  // 23. DIMENSIONS & OPACITÉ (WIDTH, HEIGHT, OPACITY)
+  // 23. DIMENSIONS & OPACITÉ
   if (itemId === 'css-width') {
     box.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
-    if (step === 0) {
-      box.style.width = '120px';
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (width: 120px)</small></span>`;
+    const wVal = opt ? opt.value : '260px';
+
+    if (wVal === '120px') {
+      if (step === 0) {
+        box.style.width = '280px';
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (width: 280px grande largeur)</small></span>`;
+      } else {
+        box.style.width = '120px';
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ width: 120px (Rétrécie à 120px !)</small></span>`;
+      }
     } else {
-      const wVal = opt ? opt.value : '260px';
-      box.style.width = wVal;
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (width: ${wVal})</small></span>`;
+      if (step === 0) {
+        box.style.width = '100px';
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (width: 100px)</small></span>`;
+      } else {
+        box.style.width = wVal;
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (width: ${wVal} !)</small></span>`;
+      }
     }
     return;
   }
 
   if (itemId === 'css-height') {
     box.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
-    if (step === 0) {
-      box.style.height = '60px';
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (height: 60px)</small></span>`;
+    const hVal = opt ? opt.value : '130px';
+
+    if (hVal === '50px') {
+      if (step === 0) {
+        box.style.height = '130px';
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (height: 130px haute)</small></span>`;
+      } else {
+        box.style.height = '50px';
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ height: 50px (Petite hauteur !)</small></span>`;
+      }
     } else {
-      const hVal = opt ? opt.value : '130px';
-      box.style.height = hVal;
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (height: ${hVal})</small></span>`;
+      if (step === 0) {
+        box.style.height = '50px';
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (height: 50px)</small></span>`;
+      } else {
+        box.style.height = hVal;
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (height: ${hVal} !)</small></span>`;
+      }
     }
     return;
   }
 
   if (itemId === 'css-opacity') {
     box.style.transition = 'all 0.5s ease';
-    if (step === 0) {
-      box.style.opacity = '1.0';
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (opacity: 1.0 ➔ Opaque)</small></span>`;
+    const opVal = opt ? opt.value : '0.35';
+
+    if (opVal === '1.0' || opVal === '1') {
+      if (step === 0) {
+        box.style.opacity = '0.2';
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (opacity: 0.2 ➔ Fortement transparent)</small></span>`;
+      } else {
+        box.style.opacity = '1.0';
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ opacity: 1.0 (100% Opaque et solide !)</small></span>`;
+      }
     } else {
-      const opVal = opt ? opt.value : '0.35';
-      box.style.opacity = opVal;
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (opacity: ${opVal} ➔ Transparent)</small></span>`;
+      if (step === 0) {
+        box.style.opacity = '1.0';
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (opacity: 1.0 ➔ Opaque)</small></span>`;
+      } else {
+        box.style.opacity = opVal;
+        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (opacity: ${opVal} ➔ Transparence appliquée !)</small></span>`;
+      }
     }
     return;
   }
