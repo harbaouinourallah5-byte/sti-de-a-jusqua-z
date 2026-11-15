@@ -1510,6 +1510,7 @@ let virtualSqlDb = JSON.parse(JSON.stringify(SQL_DATABASE_INIT));
 document.addEventListener('DOMContentLoaded', () => {
   setupNavigation();
   setupThemeToggle();
+  initModuleSwitcher();
   renderHtmlCategories();
   renderCssCategories();
   renderJsCategories();
@@ -1639,6 +1640,25 @@ function switchView(viewName) {
       }, 100);
     }
     history.replaceState(null, '', '#admin');
+  } else if (viewName === 'algo-home') {
+    history.replaceState(null, '', '#algo-home');
+  } else if (viewName === 'algo-pratique') {
+    const input = document.getElementById('algoPratiqueSearchInput');
+    if (input) input.value = '';
+    currentAlgoPratiqueCategory = 'all';
+    currentAlgoPratiqueSearch = '';
+    renderAlgoPratiqueCategories();
+    renderAlgoPratiqueCards();
+    initQtTranslator();
+    history.replaceState(null, '', '#algo-pratique');
+  } else if (viewName === 'algo-theorique') {
+    const input = document.getElementById('algoTheoriqueSearchInput');
+    if (input) input.value = '';
+    currentAlgoTheoriqueCategory = 'all';
+    currentAlgoTheoriqueSearch = '';
+    renderAlgoTheoriqueCategories();
+    renderAlgoTheoriqueCards();
+    history.replaceState(null, '', '#algo-theorique');
   } else if (viewName === 'home') {
     history.replaceState(null, '', window.location.pathname.replace(/\/admin|\/lessons|\/cours/gi, '') || '/');
   }
@@ -6328,6 +6348,15 @@ function checkUrlRouting() {
     switchView('js');
   } else if (hash === '#sql') {
     switchView('sql');
+  } else if (hash === '#algo-home' || hash === '#algo') {
+    switchModule('algo', true);
+    switchView('algo-home');
+  } else if (hash === '#algo-pratique' || hash === '#pratique') {
+    switchModule('algo', true);
+    switchView('algo-pratique');
+  } else if (hash === '#algo-theorique' || hash === '#theorique') {
+    switchModule('algo', true);
+    switchView('algo-theorique');
   }
 }
 
@@ -6869,4 +6898,740 @@ async function resetToDefaultLessons() {
   await STILessonsDB.clear();
   await initLessonsModule();
   alert("✓ Documents réinitialisés au programme officiel.");
+}
+
+
+// ===================================================================
+// MODULE ALGORITHME & PROGRAMMATION (BAC TUNISIE)
+// Épreuve Pratique (Qt Designer & Thonny) + Épreuve Théorique
+// ===================================================================
+
+let currentModule = localStorage.getItem('sti_current_module') || 'sti';
+let audioCtx = null;
+
+let currentAlgoPratiqueCategory = 'all';
+let currentAlgoPratiqueSearch = '';
+let currentAlgoTheoriqueCategory = 'all';
+let currentAlgoTheoriqueSearch = '';
+
+// -------------------------------------------------------------
+// 1. Synthétiseur de Clic Mécanique Tactile (Web Audio API)
+// -------------------------------------------------------------
+function playKeyClickSound() {
+  try {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+    if (!audioCtx) audioCtx = new AudioContextClass();
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+
+    const t = audioCtx.currentTime;
+
+    // 1. Snap mécanique aigu (contact)
+    const osc1 = audioCtx.createOscillator();
+    const gain1 = audioCtx.createGain();
+    osc1.type = 'triangle';
+    osc1.frequency.setValueAtTime(1500, t);
+    osc1.frequency.exponentialRampToValueAtTime(300, t + 0.022);
+    gain1.gain.setValueAtTime(0.35, t);
+    gain1.gain.exponentialRampToValueAtTime(0.001, t + 0.022);
+    osc1.connect(gain1);
+    gain1.connect(audioCtx.destination);
+    osc1.start(t);
+    osc1.stop(t + 0.023);
+
+    // 2. Butée mécanique grave (bottom-out)
+    const osc2 = audioCtx.createOscillator();
+    const gain2 = audioCtx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(130, t);
+    osc2.frequency.exponentialRampToValueAtTime(45, t + 0.035);
+    gain2.gain.setValueAtTime(0.4, t);
+    gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.035);
+    osc2.connect(gain2);
+    gain2.connect(audioCtx.destination);
+    osc2.start(t);
+    osc2.stop(t + 0.036);
+  } catch (e) {
+    // Mode silencieux si non supporté ou bloqué
+  }
+}
+
+// -------------------------------------------------------------
+// 2. Gestion de la Bascule de Module (STI vs ALGORITHME)
+// -------------------------------------------------------------
+function initModuleSwitcher() {
+  switchModule(currentModule, true);
+}
+
+function switchModule(moduleName, skipViewSwitch = false) {
+  if (moduleName !== 'sti' && moduleName !== 'algo') return;
+  
+  if (!skipViewSwitch) {
+    playKeyClickSound();
+  }
+  
+  currentModule = moduleName;
+  localStorage.setItem('sti_current_module', moduleName);
+
+  const btnSti = document.getElementById('keycap-sti');
+  const btnAlgo = document.getElementById('keycap-algo');
+  const brandTitle = document.getElementById('brandTitle');
+  const brandBadge = document.getElementById('brandBadge');
+  const brandIcon = document.getElementById('brandIcon');
+
+  const stiNavItems = document.querySelectorAll('.nav-sti-item');
+  const algoNavItems = document.querySelectorAll('.nav-algo-item');
+
+  if (moduleName === 'algo') {
+    if (btnSti) {
+      btnSti.classList.remove('active');
+      btnSti.setAttribute('aria-selected', 'false');
+    }
+    if (btnAlgo) {
+      btnAlgo.classList.add('active');
+      btnAlgo.setAttribute('aria-selected', 'true');
+    }
+    if (brandTitle) brandTitle.textContent = "ALGO & THONNY";
+    if (brandBadge) brandBadge.textContent = "Bac Informatique";
+    if (brandIcon) {
+      brandIcon.textContent = "🐍";
+      brandIcon.style.background = "linear-gradient(135deg, #059669, #10b981)";
+    }
+
+    // Afficher nav Algo, masquer nav STI
+    stiNavItems.forEach(el => el.style.display = 'none');
+    algoNavItems.forEach(el => el.style.display = 'inline-flex');
+
+    if (!skipViewSwitch && !['algo-home', 'algo-pratique', 'algo-theorique'].includes(currentView)) {
+      switchView('algo-home');
+    }
+  } else {
+    if (btnSti) {
+      btnSti.classList.add('active');
+      btnSti.setAttribute('aria-selected', 'true');
+    }
+    if (btnAlgo) {
+      btnAlgo.classList.remove('active');
+      btnAlgo.setAttribute('aria-selected', 'false');
+    }
+    if (brandTitle) brandTitle.textContent = "STI de A à Z";
+    if (brandBadge) brandBadge.textContent = "Révision Web";
+    if (brandIcon) {
+      brandIcon.textContent = "STI";
+      brandIcon.style.background = "linear-gradient(135deg, #0284c7, #38bdf8)";
+    }
+
+    // Afficher nav STI, masquer nav Algo
+    stiNavItems.forEach(el => {
+      // Respecter le masquage de la section cours PDF
+      if (el.getAttribute('data-view') === 'lessons' || el.classList.contains('nav-admin-btn')) {
+        el.style.display = 'none';
+      } else {
+        el.style.display = 'inline-flex';
+      }
+    });
+    algoNavItems.forEach(el => el.style.display = 'none');
+
+    if (!skipViewSwitch && ['algo-home', 'algo-pratique', 'algo-theorique'].includes(currentView)) {
+      switchView('home');
+    }
+  }
+}
+
+function handleLogoClick() {
+  if (currentModule === 'algo') {
+    switchView('algo-home');
+  } else {
+    switchView('home');
+  }
+}
+
+// -------------------------------------------------------------
+// 3. Utilitaires de Copie de Code avec Feedback Visuel
+// -------------------------------------------------------------
+function copyCodeText(text, btn) {
+  if (!navigator.clipboard) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  } else {
+    navigator.clipboard.writeText(text);
+  }
+
+  if (btn) {
+    const originalText = btn.innerHTML;
+    btn.innerHTML = "✓ Copié !";
+    btn.style.background = "#10b981";
+    btn.style.color = "#000";
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.style.background = "";
+      btn.style.color = "";
+    }, 1800);
+  }
+}
+
+function copyStarterTemplate() {
+  const codeEl = document.getElementById('starterTemplateCode');
+  const btn = event ? event.target : null;
+  if (codeEl) {
+    copyCodeText(codeEl.innerText, btn);
+  }
+}
+
+function copyTranslatorCode() {
+  const codeEl = document.getElementById('translatorOutputCode');
+  const btn = event ? event.target : null;
+  if (codeEl) {
+    copyCodeText(codeEl.innerText, btn);
+  }
+}
+
+// -------------------------------------------------------------
+// 4. Moteur du Traducteur Interactif Live (Qt Designer ➔ Thonny)
+// -------------------------------------------------------------
+const QT_TRANSLATOR_CONFIG = {
+  QLineEdit: [
+    {
+      id: "read_text",
+      name: "Lire le texte saisi (.text())",
+      code: (obj) => `${obj.replace(/^(txt_|line_|le_)?/i, '') || 'valeur'} = windows.${obj}.text()`,
+      tip: "💡 <strong>Astuce Bac :</strong> Toujours tester si la variable est vide : <code>if nom == '': ...</code>"
+    },
+    {
+      id: "read_int",
+      name: "Convertir la saisie en Entier (int)",
+      code: (obj) => `# Convertir en entier pour les calculs
+${obj.replace(/^(txt_|line_|le_)?/i, '') || 'n'} = int(windows.${obj}.text())`,
+      tip: "⚠️ <strong>Anti-Crash Bac :</strong> Valider d'abord avec <code>.isdigit()</code> ou un bloc <code>try / except</code> pour éviter que le programme plante si la case est vide ou contient des lettres !"
+    },
+    {
+      id: "read_float",
+      name: "Convertir la saisie en Réel / Décimal (float)",
+      code: (obj) => `# Convertir en nombre à virgule (ex: moyenne, prix)
+${obj.replace(/^(txt_|line_|le_)?/i, '') || 'montant'} = float(windows.${obj}.text())`,
+      tip: "💡 <strong>Astuce Bac :</strong> Remplacer les virgules par des points si l'élève tape '14,5' : <code>float(ch.replace(',', '.'))</code>."
+    },
+    {
+      id: "set_text",
+      name: "Écrire ou modifier le texte (.setText)",
+      code: (obj) => `windows.${obj}.setText("Nouvelle valeur")`,
+      tip: "💡 Remplace le texte affiché par la chaîne fournie."
+    },
+    {
+      id: "clear",
+      name: "Vider le champ (.clear())",
+      code: (obj) => `windows.${obj}.clear()`,
+      tip: "💡 Indispensable dans le bouton 'Annuler' ou 'Nouveau' pour réinitialiser le formulaire."
+    },
+    {
+      id: "focus",
+      name: "Donner le focus au champ (.setFocus())",
+      code: (obj) => `windows.${obj}.setFocus()`,
+      tip: "💡 Place directement le curseur dans la case après une erreur <code>QMessageBox.critical</code> pour que l'utilisateur n'ait pas à cliquer."
+    },
+    {
+      id: "read_only",
+      name: "Verrouiller le champ en lecture seule (.setReadOnly)",
+      code: (obj) => `windows.${obj}.setReadOnly(True)`,
+      tip: "💡 Utile pour afficher un résultat ou un identifiant calculé sans que l'élève puisse le modifier."
+    }
+  ],
+  QPushButton: [
+    {
+      id: "connect_click",
+      name: "Associer au clic de bouton (.clicked.connect)",
+      code: (obj) => `# ATTENTION BAC : Ne JAMAIS mettre de parenthèses à la fin du nom de la fonction !
+windows.${obj}.clicked.connect(ma_fonction)`,
+      tip: "🚨 <strong>PIÈGE BAC MAJEUR :</strong> Écrire <code>ma_fonction()</code> avec parenthèses exécute la fonction au démarrage au lieu d'attendre le clic !"
+    },
+    {
+      id: "set_enabled",
+      name: "Activer ou Désactiver le bouton (.setEnabled)",
+      code: (obj) => `# Désactiver le bouton :
+windows.${obj}.setEnabled(False)
+
+# Réactiver le bouton :
+windows.${obj}.setEnabled(True)`,
+      tip: "💡 Pratique pour griser un bouton tant qu'une case obligatoire n'est pas remplie."
+    },
+    {
+      id: "set_text",
+      name: "Changer le libellé du bouton (.setText)",
+      code: (obj) => `windows.${obj}.setText("Enregistrer")`,
+      tip: "💡 Modifie dynamiquement le texte affiché sur le bouton."
+    }
+  ],
+  QRadioButton: [
+    {
+      id: "is_checked",
+      name: "Tester si le bouton radio est sélectionné (.isChecked())",
+      code: (obj) => `if windows.${obj}.isChecked():
+    choix = "Oui"
+else:
+    choix = "Non"`,
+      tip: "💡 Au Bac, pour tester le Genre : <code>if windows.rb_h.isChecked(): genre = 'Homme' else: genre = 'Femme'</code>"
+    },
+    {
+      id: "set_checked",
+      name: "Cocher ce bouton radio (.setChecked(True))",
+      code: (obj) => `windows.${obj}.setChecked(True)`,
+      tip: "💡 Coche automatiquement l'option radio."
+    }
+  ],
+  QCheckBox: [
+    {
+      id: "is_checked",
+      name: "Tester si la case est cochée (.isChecked())",
+      code: (obj) => `if windows.${obj}.isChecked():
+    accepte = True
+else:
+    accepte = False`,
+      tip: "💡 Retourne un booléen pur (True ou False)."
+    },
+    {
+      id: "set_checked",
+      name: "Cocher ou Décocher (.setChecked)",
+      code: (obj) => `windows.${obj}.setChecked(True)   # Pour cocher
+windows.${obj}.setChecked(False)  # Pour décocher`,
+      tip: "💡 À utiliser lors de la réinitialisation de l'interface."
+    }
+  ],
+  QComboBox: [
+    {
+      id: "current_text",
+      name: "Lire l'option sélectionnée (.currentText())",
+      code: (obj) => `valeur_choisie = windows.${obj}.currentText()
+if valeur_choisie == "" or valeur_choisie == "--- Choisir ---":
+    QMessageBox.critical(windows, "Erreur", "Veuillez sélectionner une option !")
+    return`,
+      tip: "💡 Au Bac, la première ligne est souvent une consigne ('--- Choisir ---'). Toujours la bloquer !"
+    },
+    {
+      id: "current_index",
+      name: "Lire l'indice sélectionné (.currentIndex())",
+      code: (obj) => `idx = windows.${obj}.currentIndex()
+if idx <= 0:
+    QMessageBox.critical(windows, "Erreur", "Veuillez choisir un élément !")
+    return`,
+      tip: "💡 L'indice commence à 0 pour le tout premier élément."
+    },
+    {
+      id: "add_item",
+      name: "Ajouter un élément dans la liste (.addItem)",
+      code: (obj) => `windows.${obj}.addItem("Tunis")`,
+      tip: "💡 Utilisé dans une boucle pour remplir la liste depuis une base de données ou un tableau."
+    },
+    {
+      id: "clear",
+      name: "Vider toute la liste (.clear())",
+      code: (obj) => `windows.${obj}.clear()`,
+      tip: "💡 À appeler avant de re-remplir la ComboBox pour éviter les doublons."
+    }
+  ],
+  QSpinBox: [
+    {
+      id: "get_value",
+      name: "Lire la valeur entière (.value())",
+      code: (obj) => `age = windows.${obj}.value()  # Renvoie directement un entier int garanti !`,
+      tip: "💡 Inutile d'ajouter <code>int()</code> ! <code>.value()</code> garantit déjà un entier."
+    },
+    {
+      id: "set_value",
+      name: "Modifier la valeur (.setValue)",
+      code: (obj) => `windows.${obj}.setValue(18)`,
+      tip: "💡 Règle la valeur numérique affichée."
+    }
+  ],
+  QDateEdit: [
+    {
+      id: "get_str",
+      name: "Lire la date en texte formaté ISO (yyyy-MM-dd)",
+      code: (obj) => `date_str = windows.${obj}.date().toString("yyyy-MM-dd")`,
+      tip: "💡 Ce format est 100% compatible avec les bases de données MySQL et le type DATE !"
+    },
+    {
+      id: "get_year",
+      name: "Extraire l'année pour calcul de l'âge",
+      code: (obj) => `annee_naissance = windows.${obj}.date().year()
+age = 2026 - annee_naissance
+if age < 18:
+    QMessageBox.critical(windows, "Erreur", "Vous devez être majeur !")
+    return`,
+      tip: "💡 Idéal pour vérifier la condition d'âge requise dans l'énoncé du Bac."
+    }
+  ],
+  QLabel: [
+    {
+      id: "set_text",
+      name: "Afficher un résultat ou un message (.setText)",
+      code: (obj) => `windows.${obj}.setText(f"Résultat : {resultat}")`,
+      tip: "💡 Veillez à convertir toute variable numérique en chaîne : <code>str(valeur)</code> ou f-string."
+    },
+    {
+      id: "clear",
+      name: "Effacer l'affichage (.clear())",
+      code: (obj) => `windows.${obj}.clear()`,
+      tip: "💡 Efface le contenu de l'étiquette."
+    }
+  ],
+  QTableWidget: [
+    {
+      id: "set_row_count",
+      name: "Fixer le nombre de lignes (.setRowCount)",
+      code: (obj) => `windows.${obj}.setRowCount(len(mes_lignes))`,
+      tip: "💡 Indispensable AVANT d'insérer des éléments avec <code>setItem</code>."
+    },
+    {
+      id: "set_item",
+      name: "Remplir une cellule (row, col)",
+      code: (obj) => `from PyQt5.QtWidgets import QTableWidgetItem
+
+# Insérer dans la cellule (ligne r, colonne c) :
+windows.${obj}.setItem(r, c, QTableWidgetItem(str(valeur)))`,
+      tip: "⚠️ <strong>Obligatoire :</strong> La valeur doit TOUJOURS être de type <code>str</code> !"
+    },
+    {
+      id: "clear_table",
+      name: "Vider entièrement le tableau",
+      code: (obj) => `windows.${obj}.setRowCount(0)`,
+      tip: "💡 L'astuce la plus rapide pour effacer toutes les lignes au Bac."
+    }
+  ],
+  QMessageBox: [
+    {
+      id: "critical",
+      name: "Boîte d'Erreur Bloquante (QMessageBox.critical)",
+      code: (obj) => `QMessageBox.critical(windows, "Erreur de saisie", "Veuillez remplir tous les champs obligatoires !")
+return  # INDISPENSABLE pour stopper l'exécution du reste de la fonction !`,
+      tip: "🚨 <strong>RÈGLE D'OR AU BAC :</strong> Ne JAMAIS oublier l'instruction <code>return</code> après une alerte critique !"
+    },
+    {
+      id: "information",
+      name: "Boîte de Confirmation / Succès (QMessageBox.information)",
+      code: (obj) => `QMessageBox.information(windows, "Succès", "Données enregistrées avec succès dans la base !")`,
+      tip: "💡 Informe le candidat que l'opération a abouti avec succès."
+    },
+    {
+      id: "warning",
+      name: "Boîte d'Avertissement (QMessageBox.warning)",
+      code: (obj) => `QMessageBox.warning(windows, "Attention", "Vérifiez vos paramètres avant de continuer.")`,
+      tip: "💡 Message préventif sans blocage strict."
+    }
+  ]
+};
+
+function initQtTranslator() {
+  const widgetSelect = document.getElementById('translatorWidgetSelect');
+  if (!widgetSelect) return;
+  handleTranslatorWidgetChange();
+}
+
+function handleTranslatorWidgetChange() {
+  const widgetSelect = document.getElementById('translatorWidgetSelect');
+  const actionSelect = document.getElementById('translatorActionSelect');
+  const objInput = document.getElementById('translatorObjectNameInput');
+  if (!widgetSelect || !actionSelect) return;
+
+  const widget = widgetSelect.value;
+  const actions = QT_TRANSLATOR_CONFIG[widget] || [];
+
+  // Ajuster le placeholder par défaut selon le composant
+  if (objInput) {
+    if (widget === 'QLineEdit') objInput.value = 'txt_nom';
+    else if (widget === 'QPushButton') objInput.value = 'btn_valider';
+    else if (widget === 'QRadioButton') objInput.value = 'rb_homme';
+    else if (widget === 'QCheckBox') objInput.value = 'chk_fumeur';
+    else if (widget === 'QComboBox') objInput.value = 'cmb_ville';
+    else if (widget === 'QSpinBox') objInput.value = 'sp_age';
+    else if (widget === 'QDateEdit') objInput.value = 'date_naiss';
+    else if (widget === 'QLabel') objInput.value = 'lbl_resultat';
+    else if (widget === 'QTableWidget') objInput.value = 'table_clients';
+    else if (widget === 'QMessageBox') objInput.value = 'msg_box';
+  }
+
+  // Remplir les options d'actions
+  actionSelect.innerHTML = actions.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
+
+  updateTranslatorOutput();
+}
+
+function updateTranslatorOutput() {
+  const widgetSelect = document.getElementById('translatorWidgetSelect');
+  const actionSelect = document.getElementById('translatorActionSelect');
+  const objInput = document.getElementById('translatorObjectNameInput');
+  const codeEl = document.getElementById('translatorOutputCode');
+  const tipEl = document.getElementById('translatorTipBox');
+
+  if (!widgetSelect || !actionSelect || !codeEl) return;
+
+  const widget = widgetSelect.value;
+  const actionId = actionSelect.value;
+  const objName = (objInput && objInput.value.trim()) ? objInput.value.trim() : 'mon_objet';
+
+  const actions = QT_TRANSLATOR_CONFIG[widget] || [];
+  const action = actions.find(a => a.id === actionId) || actions[0];
+
+  if (action) {
+    codeEl.innerText = action.code(objName);
+    if (tipEl) {
+      tipEl.innerHTML = action.tip;
+    }
+  }
+}
+
+// -------------------------------------------------------------
+// 5. Rendu & Filtres de la Section Pratique (Qt ➔ Thonny)
+// -------------------------------------------------------------
+function renderAlgoPratiqueCategories() {
+  const bar = document.getElementById('algoPratiqueCategories');
+  if (!bar) return;
+
+  const items = (typeof DATA !== 'undefined' && DATA && DATA.algo_pratique) ? DATA.algo_pratique : [];
+  const categories = ['all', ...new Set(items.map(x => x.category))];
+
+  bar.innerHTML = categories.map(cat => {
+    const isAct = cat === currentAlgoPratiqueCategory;
+    const label = cat === 'all' ? '✨ Tout afficher' : cat;
+    return `<button class="cat-pill ${isAct ? 'active' : ''}" onclick="setAlgoPratiqueCategory('${cat}')">${label}</button>`;
+  }).join('');
+}
+
+function setAlgoPratiqueCategory(cat) {
+  currentAlgoPratiqueCategory = cat;
+  renderAlgoPratiqueCategories();
+  renderAlgoPratiqueCards();
+}
+
+function handleAlgoPratiqueSearch(val) {
+  currentAlgoPratiqueSearch = val.trim().toLowerCase();
+  renderAlgoPratiqueCards();
+}
+
+function renderAlgoPratiqueCards() {
+  const grid = document.getElementById('algoPratiqueGrid');
+  if (!grid) return;
+
+  const items = (typeof DATA !== 'undefined' && DATA && DATA.algo_pratique) ? DATA.algo_pratique : [];
+
+  const filtered = items.filter(item => {
+    const matchCat = (currentAlgoPratiqueCategory === 'all' || item.category === currentAlgoPratiqueCategory);
+    const matchSearch = (!currentAlgoPratiqueSearch || 
+      item.name.toLowerCase().includes(currentAlgoPratiqueSearch) ||
+      (item.qtWidget && item.qtWidget.toLowerCase().includes(currentAlgoPratiqueSearch)) ||
+      (item.summary && item.summary.toLowerCase().includes(currentAlgoPratiqueSearch)) ||
+      (item.description && item.description.toLowerCase().includes(currentAlgoPratiqueSearch)) ||
+      (item.thonnyCode && item.thonnyCode.toLowerCase().includes(currentAlgoPratiqueSearch))
+    );
+    return matchCat && matchSearch;
+  });
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: var(--bg-card); border-radius: var(--radius-md);">
+        <p style="font-size: 1.1rem; color: var(--text-secondary);">🔍 Aucun composant Qt ou méthode ne correspond à votre recherche.</p>
+        <button class="nav-btn" onclick="setAlgoPratiqueCategory('all')" style="margin-top: 10px;">Réinitialiser les filtres</button>
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(item => {
+    const escapedThonny = item.thonnyCode.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const rawThonnyJson = JSON.stringify(item.thonnyCode);
+
+    return `
+      <div class="algo-card algo-card-pratique" id="${item.id}">
+        <div class="algo-card-header">
+          <div>
+            <span class="algo-card-cat">${item.category}</span>
+            <h3 class="algo-card-title">${item.name}</h3>
+          </div>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+            <span class="algo-badge-qt">${item.qtWidget}</span>
+            ${item.qtProperty ? `<span class="algo-badge-prop">${item.qtProperty}</span>` : ''}
+          </div>
+        </div>
+
+        <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; margin: 0;">
+          ${item.description || item.summary}
+        </p>
+
+        ${item.howToUse ? `
+          <div class="algo-qt-box">
+            <strong style="color: #38bdf8; display: block; margin-bottom: 6px; font-size: 0.85rem;">
+              🛠️ Dans Qt Designer :
+            </strong>
+            <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+              ${item.howToUse}
+            </p>
+          </div>
+        ` : ''}
+
+        <div class="algo-thonny-box">
+          <div class="algo-thonny-box-header">
+            <span>🐍 Code Python dans Thonny</span>
+            <button class="copy-btn" onclick='copyCodeText(${rawThonnyJson}, this)' style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer;">
+              📋 Copier
+            </button>
+          </div>
+          <pre style="margin: 0; background: transparent; padding: 0;"><code>${escapedThonny}</code></pre>
+        </div>
+
+        ${item.bacTips ? `
+          <div class="algo-bac-tips">
+            <strong>⚠️ Piège fréquent au Bac :</strong> ${item.bacTips}
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+// -------------------------------------------------------------
+// 6. Rendu & Filtres de la Section Théorique (Algorithmique Bac)
+// -------------------------------------------------------------
+function renderAlgoTheoriqueCategories() {
+  const bar = document.getElementById('algoTheoriqueCategories');
+  if (!bar) return;
+
+  const items = (typeof DATA !== 'undefined' && DATA && DATA.algo_theorique) ? DATA.algo_theorique : [];
+  const categories = ['all', ...new Set(items.map(x => x.category))];
+
+  bar.innerHTML = categories.map(cat => {
+    const isAct = cat === currentAlgoTheoriqueCategory;
+    const label = cat === 'all' ? '✨ Tout afficher' : cat;
+    return `<button class="cat-pill ${isAct ? 'active' : ''}" onclick="setAlgoTheoriqueCategory('${cat}')">${label}</button>`;
+  }).join('');
+}
+
+function setAlgoTheoriqueCategory(cat) {
+  currentAlgoTheoriqueCategory = cat;
+  renderAlgoTheoriqueCategories();
+  renderAlgoTheoriqueCards();
+}
+
+function handleAlgoTheoriqueSearch(val) {
+  currentAlgoTheoriqueSearch = val.trim().toLowerCase();
+  renderAlgoTheoriqueCards();
+}
+
+function renderAlgoTheoriqueCards() {
+  const grid = document.getElementById('algoTheoriqueGrid');
+  if (!grid) return;
+
+  const items = (typeof DATA !== 'undefined' && DATA && DATA.algo_theorique) ? DATA.algo_theorique : [];
+
+  const filtered = items.filter(item => {
+    const matchCat = (currentAlgoTheoriqueCategory === 'all' || item.category === currentAlgoTheoriqueCategory);
+    const matchSearch = (!currentAlgoTheoriqueSearch || 
+      item.name.toLowerCase().includes(currentAlgoTheoriqueSearch) ||
+      (item.summary && item.summary.toLowerCase().includes(currentAlgoTheoriqueSearch)) ||
+      (item.description && item.description.toLowerCase().includes(currentAlgoTheoriqueSearch)) ||
+      (item.pseudoCode && item.pseudoCode.toLowerCase().includes(currentAlgoTheoriqueSearch)) ||
+      (item.pythonCode && item.pythonCode.toLowerCase().includes(currentAlgoTheoriqueSearch))
+    );
+    return matchCat && matchSearch;
+  });
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: var(--bg-card); border-radius: var(--radius-md);">
+        <p style="font-size: 1.1rem; color: var(--text-secondary);">🔍 Aucun algorithme ne correspond à votre recherche.</p>
+        <button class="nav-btn" onclick="setAlgoTheoriqueCategory('all')" style="margin-top: 10px;">Réinitialiser les filtres</button>
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(item => {
+    const escapedPseudo = item.pseudoCode.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const escapedPython = item.pythonCode.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const rawPseudoJson = JSON.stringify(item.pseudoCode);
+    const rawPythonJson = JSON.stringify(item.pythonCode);
+
+    // Formatage du TDO si présent
+    let tdoHtml = '';
+    if (item.tdo && Array.isArray(item.tdo) && item.tdo.length > 0) {
+      tdoHtml = `
+        <div style="margin-top: 8px;">
+          <strong style="color: #38bdf8; font-size: 0.85rem; display: block; margin-bottom: 4px;">
+            📋 T.D.O (Tableau de Déclaration des Objets) :
+          </strong>
+          <table class="algo-tdo-table">
+            <thead>
+              <tr>
+                <th style="width: 35%;">Objet</th>
+                <th>Type / Nature</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${item.tdo.map(row => `
+                <tr>
+                  <td style="color: #34d399; font-weight: 700;">${row.objet}</td>
+                  <td style="color: #94a3b8;">${row.type}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="algo-card algo-card-theorique" id="${item.id}">
+        <div class="algo-card-header">
+          <div>
+            <span class="algo-card-cat" style="color: #f59e0b;">${item.category}</span>
+            <h3 class="algo-card-title">${item.name}</h3>
+          </div>
+          <span class="pill-badge" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35);">
+            Bac Officiel
+          </span>
+        </div>
+
+        <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; margin: 0;">
+          ${item.description || item.summary}
+        </p>
+
+        <!-- DOUBLE COLONNE PSEUDO-CODE & PYTHON -->
+        <div class="algo-dual-code">
+          <!-- COLONNE 1 : PSEUDO-CODE OFFICIEL -->
+          <div class="algo-pseudo-box">
+            <div class="algo-pseudo-box-header">
+              <span>📋 Pseudo-Code Bac</span>
+              <button class="copy-btn" onclick='copyCodeText(${rawPseudoJson}, this)' style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer;">
+                📋 Copier
+              </button>
+            </div>
+            <pre style="margin: 0; background: transparent; padding: 0;"><code>${escapedPseudo}</code></pre>
+          </div>
+
+          <!-- COLONNE 2 : CODE PYTHON THONNY -->
+          <div class="algo-thonny-box">
+            <div class="algo-thonny-box-header">
+              <span>🐍 Équivalent Python Thonny</span>
+              <button class="copy-btn" onclick='copyCodeText(${rawPythonJson}, this)' style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer;">
+                📋 Copier
+              </button>
+            </div>
+            <pre style="margin: 0; background: transparent; padding: 0;"><code>${escapedPython}</code></pre>
+          </div>
+        </div>
+
+        ${tdoHtml}
+
+        ${item.bacTips ? `
+          <div class="algo-bac-tips">
+            <strong>🎯 Conseils pour l'écrit :</strong> ${item.bacTips}
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }).join('');
 }

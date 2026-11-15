@@ -13,23 +13,51 @@
        ========================================== -->
   <header class="site-header">
     <div class="container nav-inner">
-      <div class="brand-logo" onclick="switchView('home')">
-        <div class="brand-icon">STI</div>
+      <div class="brand-logo" onclick="handleLogoClick()">
+        <div class="brand-icon" id="brandIcon">STI</div>
         <div>
-          <span>STI de A à Z</span>
-          <span class="brand-badge">Révision Web</span>
+          <span id="brandTitle">STI de A à Z</span>
+          <span class="brand-badge" id="brandBadge">Révision Web</span>
+        </div>
+      </div>
+
+      <!-- SÉLECTEUR TACTILE DOUBLE TOUCHE CLAVIER (STI vs ALGO) -->
+      <div class="keyboard-switch-container">
+        <div class="keyboard-switch-base" role="tablist" aria-label="Bascule de module d'examen">
+          <button class="keycap-btn active" id="keycap-sti" onclick="switchModule('sti')" role="tab" aria-selected="true" title="Module STI : HTML5, CSS3, JavaScript, SQL">
+            <span class="keycap-led"></span>
+            <span class="keycap-body">
+              <span class="keycap-icon">⌨️</span>
+              <span class="keycap-text">STI</span>
+              <span class="keycap-sub">WEB &amp; BD</span>
+            </span>
+          </button>
+          <button class="keycap-btn" id="keycap-algo" onclick="switchModule('algo')" role="tab" aria-selected="false" title="Module Algorithme : Qt Designer &amp; Thonny Python">
+            <span class="keycap-led"></span>
+            <span class="keycap-body">
+              <span class="keycap-icon">🐍</span>
+              <span class="keycap-text">ALGO</span>
+              <span class="keycap-sub">QT &amp; THONNY</span>
+            </span>
+          </button>
         </div>
       </div>
 
       <div class="nav-actions">
-        <button class="nav-btn active" data-view="home">🏠 Accueil</button>
-        <button class="nav-btn" data-view="html" style="color: #f97316;">🌐 HTML5</button>
-        <button class="nav-btn" data-view="css" style="color: #38bdf8;">🎨 CSS3</button>
-        <button class="nav-btn" data-view="js" style="color: #facc15;">⚡ JavaScript</button>
-        <button class="nav-btn" data-view="sql" style="color: #c084fc;">🗄️ SQL</button>
-        <button class="nav-btn" data-view="lessons" style="color: #a855f7;">📚 Cours & Séries PDF</button>
-        <button class="nav-btn nav-admin-btn" data-view="admin" style="color: #34d399; border: 1px dashed rgba(16, 185, 129, 0.45); padding: 6px 12px; border-radius: 6px; font-weight: 700;">🔒 Espace Enseignant</button>
+        <!-- NAVIGATION MODULE STI -->
+        <button class="nav-btn nav-sti-item active" data-view="home">🏠 Accueil</button>
+        <button class="nav-btn nav-sti-item" data-view="html" style="color: #f97316;">🌐 HTML5</button>
+        <button class="nav-btn nav-sti-item" data-view="css" style="color: #38bdf8;">🎨 CSS3</button>
+        <button class="nav-btn nav-sti-item" data-view="js" style="color: #facc15;">⚡ JavaScript</button>
+        <button class="nav-btn nav-sti-item" data-view="sql" style="color: #c084fc;">🗄️ SQL</button>
+        <button class="nav-btn nav-sti-item" data-view="lessons" style="color: #a855f7;">📚 Cours & Séries PDF</button>
+        <button class="nav-btn nav-sti-item nav-admin-btn" data-view="admin" style="color: #34d399; border: 1px dashed rgba(16, 185, 129, 0.45); padding: 6px 12px; border-radius: 6px; font-weight: 700;">🔒 Espace Enseignant</button>
         
+        <!-- NAVIGATION MODULE ALGORITHME & PROGRAMMATION -->
+        <button class="nav-btn nav-algo-item" data-view="algo-home" style="display:none; color: #38bdf8;">🏠 Accueil Algo</button>
+        <button class="nav-btn nav-algo-item" data-view="algo-pratique" style="display:none; color: #10b981;">🛠️ Pratique (Qt ➔ Thonny)</button>
+        <button class="nav-btn nav-algo-item" data-view="algo-theorique" style="display:none; color: #f59e0b;">📖 Théorique (Bac Info)</button>
+
         <button class="theme-toggle-btn" id="themeToggleBtn" title="Basculer thème sombre / clair">☀️</button>
       </div>
     </div>
@@ -2349,7 +2377,324 @@
       </div>
     </section>
 
-  </main>
+    <!-- ==========================================
+         VUE ALGO 1 : PAGE D'ACCUEIL ALGORITHME & PROGRAMMATION
+         ========================================== -->
+    <section id="view-algo-home" class="view-section">
+      <div class="container">
+        
+        <div class="hero">
+          <span class="hero-tag" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);">
+            🐍 Baccalauréat Tunisie • Section Informatique &amp; Épreuves Officielles
+          </span>
+          <h1 class="hero-title" style="background: linear-gradient(135deg, #38bdf8, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            Algorithme &amp; Programmation de A à Z
+          </h1>
+          <p class="hero-desc">
+            Le portail tout-en-un pour préparer l'<strong>Épreuve Pratique</strong> (conception graphique sous Qt Designer &amp; programmation Python sous Thonny) et l'<strong>Épreuve Théorique</strong> (algorithmes officiels, déclarations T.D.O / T.D.N.T, structures de contrôle et sous-programmes).
+          </p>
+        </div>
+
+        <!-- LES 2 GRANDS BLOCS ALGORITHME (PRATIQUE & THÉORIQUE) -->
+        <div class="portal-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
+          
+          <!-- BLOC 1 : PRATIQUE (QT DESIGNER ➔ THONNY) -->
+          <div class="portal-card card-algo-pratique" onclick="switchView('algo-pratique')">
+            <div class="card-icon-wrap" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff;">🛠️</div>
+            <h2 class="card-title">Épreuve Pratique (Qt Designer ➔ Thonny)</h2>
+            <p class="card-subtitle">
+              La boîte à outils indispensable du Bac pratique : charger une interface <code>.ui</code>, lire les <code>QLineEdit</code>, détecter les clics <code>QPushButton</code>, gérer les <code>QRadioButton</code> et <code>QCheckBox</code>, remplir <code>QComboBox</code> et <code>QTableWidget</code>, et déclencher les alertes <code>QMessageBox</code> sans aucun plantage.
+            </p>
+            <div class="card-badges">
+              <span class="pill-badge" style="color: #34d399;">19 Fiches &amp; Composants Qt</span>
+              <span class="pill-badge" style="color: #38bdf8;">🎛️ Traducteur Live Qt ➔ Thonny</span>
+              <span class="pill-badge" style="color: #facc15;">🛡️ Règles Anti-Plantage Bac</span>
+            </div>
+            <div class="card-cta-btn" style="background: #10b981; color: #000; font-weight: 800;">
+              <span>Ouvrir l'Espace Pratique Qt ➔ Thonny</span>
+              <span>→</span>
+            </div>
+          </div>
+
+          <!-- BLOC 2 : THÉORIQUE (ALGORITHMIQUE BAC TUNISIE) -->
+          <div class="portal-card card-algo-theorique" onclick="switchView('algo-theorique')">
+            <div class="card-icon-wrap" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #fff;">📖</div>
+            <h2 class="card-title">Épreuve Théorique (Algorithmique Bac)</h2>
+            <p class="card-subtitle">
+              Tous les algorithmes officiels du programme tunisien : conventions d'écriture, tableaux d'objets (T.D.O &amp; T.D.N.T), structures conditionnelles et itératives (Pour, Répéter, Tant que), fonctions et procédures avec passage de paramètres, tris, arithmétique et récursivité avec syntaxe officielle et équivalent Python.
+            </p>
+            <div class="card-badges">
+              <span class="pill-badge" style="color: #fbbf24;">18 Algorithmes Clés</span>
+              <span class="pill-badge" style="color: #38bdf8;">📋 T.D.O &amp; T.D.N.T Officiels</span>
+              <span class="pill-badge" style="color: #34d399;">⚡ Pseudo-Code &amp; Python Côte à Côte</span>
+            </div>
+            <div class="card-cta-btn" style="background: #f59e0b; color: #000; font-weight: 800;">
+              <span>Ouvrir l'Espace Algorithmes Théoriques</span>
+              <span>→</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- TIMELINE DU WORKFLOW DE L'ÉPREUVE PRATIQUE BAC -->
+        <div class="workflow-box" style="margin-top: 40px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 26px;">
+          <h3 style="display: flex; align-items: center; gap: 10px; font-size: 1.15rem; margin-bottom: 16px; color: #38bdf8;">
+            <span>⏱️</span>
+            <span>Le Workflow Gagnant de l'Épreuve Pratique du Bac (2 Heures)</span>
+          </h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
+            <div style="background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border-left: 3px solid #38bdf8;">
+              <strong style="color: #38bdf8; font-size: 0.95rem;">1. Qt Designer (15-20 min)</strong>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 6px; line-height: 1.5;">
+                Créer la fenêtre <code>Main Window</code> ou <code>Widget</code>, poser les composants, définir soigneusement les <code>objectName</code> (ex: <code>txt_cin</code>, <code>btn_ajouter</code>) et enregistrer le fichier sous <code>interface.ui</code> dans votre dossier de travail.
+              </p>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border-left: 3px solid #10b981;">
+              <strong style="color: #34d399; font-size: 0.95rem;">2. Thonny Python (10 min)</strong>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 6px; line-height: 1.5;">
+                Créer un fichier <code>.py</code> dans le même dossier, importer <code>loadUi</code> et <code>QApplication</code>, charger la fenêtre avec <code>windows = loadUi("interface.ui")</code> et connecter les boutons aux fonctions d'écoute.
+              </p>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border-left: 3px solid #f59e0b;">
+              <strong style="color: #fbbf24; font-size: 0.95rem;">3. Contrôles de Saisie (40 min)</strong>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 6px; line-height: 1.5;">
+                Valider rigoureusement chaque champ (longueur, chiffres uniquement, sélection obligatoire) et afficher une boîte <code>QMessageBox.critical</code> suivie immédiatement de <code>return</code> pour bloquer l'enregistrement si erreur.
+              </p>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border-left: 3px solid #a855f7;">
+              <strong style="color: #c084fc; font-size: 0.95rem;">4. Traitement &amp; Résultat (40 min)</strong>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 6px; line-height: 1.5;">
+                Exécuter les calculs ou requêtes SQL (ou manipulation de fichiers), afficher le résultat dans un <code>QLabel</code> ou <code>QTableWidget</code>, puis confirmer avec <code>QMessageBox.information</code>.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Astuce pour les révisions -->
+        <div class="bottom-nav-box" style="margin-top: 30px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+          <div>
+            <h4 style="font-size: 1rem; margin-bottom: 4px; color: #34d399;">💡 Passerelle d'étude :</h4>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin: 0;">
+              Vous pouvez basculer à tout moment entre le module <strong>STI (Web &amp; BD)</strong> et le module <strong>Algorithme</strong> grâce aux deux touches mécaniques situées dans la barre supérieure.
+            </p>
+          </div>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="nav-btn" onclick="switchView('algo-pratique')" style="color: #10b981; border: 1px solid rgba(16, 185, 129, 0.4);">🛠️ Voir la Pratique Qt</button>
+            <button class="nav-btn" onclick="switchView('algo-theorique')" style="color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4);">📖 Voir le Théorique</button>
+            <button class="nav-btn" onclick="switchModule('sti')" style="color: #38bdf8;">⌨️ Revenir au module STI</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VUE ALGO 2 : ÉPREUVE PRATIQUE (QT DESIGNER ➔ THONNY PYTHON)
+         ========================================== -->
+    <section id="view-algo-pratique" class="view-section">
+      <div class="container">
+        
+        <div class="page-header-banner" style="margin-bottom: 24px; padding: 24px 0 10px 0;">
+          <div class="annexe-title-wrap">
+            <div class="annexe-logo-shield" style="background: linear-gradient(135deg, #059669, #10b981); width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+              🛠️
+            </div>
+            <div>
+              <h2 class="annexe-title-text" style="font-size: 1.6rem; color: #34d399;">Épreuve Pratique : Qt Designer ➔ Thonny Python</h2>
+              <span style="font-size: 0.9rem; color: var(--text-secondary);">Baccalauréat Tunisie • Traduction directe composant graphique ➔ code Python Thonny</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- STARTER TEMPLATE ACCORDION / BOX -->
+        <div class="algo-template-box" style="background: var(--bg-card); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: var(--radius-lg); padding: 22px; margin-bottom: 26px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 14px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1.4rem;">📋</span>
+              <h3 style="font-size: 1.1rem; color: #34d399; margin: 0;">Le Starter Template Officiel Bac (À mémoriser &amp; coller dans Thonny)</h3>
+            </div>
+            <button class="copy-btn" onclick="copyStarterTemplate()" style="background: #10b981; color: #000; font-weight: 700; border: none; padding: 7px 16px; border-radius: 6px; cursor: pointer;">
+              📋 Copier le Starter Template
+            </button>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.5;">
+            Ce script minimaliste est le point de départ de 100% des examens pratiques. Il charge votre fichier <code>interface.ui</code> et initialise l'application Qt sans aucune erreur :
+          </p>
+          <div class="code-box" style="position: relative;">
+            <pre><code id="starterTemplateCode">from PyQt5.uic import loadUi
+from PyQt5.QtWidgets import QApplication, QMessageBox
+
+# 1. Définition des fonctions de traitement
+def valider():
+    # Récupération de la saisie
+    nom = windows.txt_nom.text()
+    if nom == "":
+        QMessageBox.critical(windows, "Erreur", "Veuillez remplir votre nom !")
+        return
+    
+    # Traitement réussi
+    windows.lbl_resultat.setText(f"Bienvenue, {nom} !")
+    QMessageBox.information(windows, "Succès", "Validation effectuée avec succès !")
+
+# 2. Initialisation de l'application Qt
+app = QApplication([])
+windows = loadUi("interface.ui")
+
+# 3. Association des événements (SANS parenthèses !)
+windows.btn_valider.clicked.connect(valider)
+
+# 4. Affichage et boucle d'exécution
+windows.show()
+app.exec_()</code></pre>
+          </div>
+        </div>
+
+        <!-- TRADUCTEUR INTERACTIF EN DIRECT QT DESIGNER ➔ THONNY -->
+        <div class="qt-translator-card" style="background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.8)); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 18px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1.5rem;">🎛️</span>
+              <div>
+                <h3 style="font-size: 1.2rem; color: #38bdf8; margin: 0;">Traducteur Interactif Live : Qt Designer ➔ Thonny Python</h3>
+                <span style="font-size: 0.85rem; color: var(--text-secondary);">Sélectionnez un composant Qt, entrez son objectName, choisissez l'action et obtenez le code Python exact</span>
+              </div>
+            </div>
+            <span class="pill-badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35); font-weight: 700;">
+              ⚡ Génération Instantanée
+            </span>
+          </div>
+
+          <!-- CONTRÔLES DU TRADUCTEUR -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 18px;">
+            <div>
+              <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px;">
+                1. Composant Qt Designer (Widget) :
+              </label>
+              <select id="translatorWidgetSelect" class="search-input" onchange="handleTranslatorWidgetChange()" style="width: 100%; padding: 10px 14px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px;">
+                <option value="QLineEdit">QLineEdit (Zone de texte)</option>
+                <option value="QPushButton">QPushButton (Bouton d'action)</option>
+                <option value="QRadioButton">QRadioButton (Bouton d'option radio)</option>
+                <option value="QCheckBox">QCheckBox (Case à cocher)</option>
+                <option value="QComboBox">QComboBox (Liste déroulante)</option>
+                <option value="QSpinBox">QSpinBox (Compteur numérique)</option>
+                <option value="QDateEdit">QDateEdit (Sélecteur de date)</option>
+                <option value="QLabel">QLabel (Étiquette de texte)</option>
+                <option value="QTableWidget">QTableWidget (Tableau de données)</option>
+                <option value="QMessageBox">QMessageBox (Boîte d'alerte / dialogue)</option>
+              </select>
+            </div>
+
+            <div>
+              <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px;">
+                2. Nom dans Qt Designer (objectName) :
+              </label>
+              <input type="text" id="translatorObjectNameInput" value="txt_nom" class="search-input" oninput="updateTranslatorOutput()" placeholder="ex: txt_nom, btn_calculer, rb_h..." style="width: 100%; padding: 10px 14px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px;">
+            </div>
+
+            <div>
+              <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px;">
+                3. Action / Opération souhaitée :
+              </label>
+              <select id="translatorActionSelect" class="search-input" onchange="updateTranslatorOutput()" style="width: 100%; padding: 10px 14px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px;">
+                <!-- Rempli dynamiquement selon le widget -->
+              </select>
+            </div>
+          </div>
+
+          <!-- RÉSULTAT DU TRADUCTEUR -->
+          <div style="background: rgba(11, 17, 32, 0.95); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 10px; padding: 18px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span style="font-size: 0.85rem; font-weight: 700; color: #38bdf8;">🐍 Code Python (Thonny) généré :</span>
+              <button class="copy-btn" onclick="copyTranslatorCode()" style="background: #0284c7; color: #fff; border: none; padding: 5px 12px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; font-weight: 700;">
+                📋 Copier ce code
+              </button>
+            </div>
+            <pre style="margin: 0; background: transparent; padding: 0;"><code id="translatorOutputCode" style="color: #38bdf8; font-family: monospace; font-size: 0.92rem; line-height: 1.5;">nom = windows.txt_nom.text()</code></pre>
+            <div id="translatorTipBox" style="margin-top: 12px; padding: 10px 14px; background: rgba(245, 158, 11, 0.12); border-left: 3px solid #f59e0b; border-radius: 4px; font-size: 0.83rem; color: #fde68a;">
+              💡 <strong>Astuce Bac :</strong> Toujours tester si la chaîne est vide avant de faire un traitement.
+            </div>
+          </div>
+        </div>
+
+        <!-- BARRE DE RECHERCHE & CATÉGORIES -->
+        <div class="filter-search-bar" style="margin-bottom: 24px;">
+          <div class="search-box-wrap">
+            <span class="search-icon-inside">🔍</span>
+            <input type="text" id="algoPratiqueSearchInput" class="search-input" placeholder="Rechercher un widget Qt, une méthode Python (ex: text, clicked, isChecked, QMessageBox, loadUi, table...)" oninput="handleAlgoPratiqueSearch(this.value)">
+          </div>
+          <div class="categories-bar" id="algoPratiqueCategories">
+            <!-- Rempli dynamiquement par JS -->
+          </div>
+        </div>
+
+        <!-- GRILLE DES FICHES PRATIQUE -->
+        <div class="items-grid" id="algoPratiqueGrid">
+          <!-- Rempli dynamiquement par JS -->
+        </div>
+
+        <!-- Navigation bas de page Pratique -->
+        <div class="bottom-nav-box" style="margin-top: 40px; padding: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+          <button class="back-to-home-btn" onclick="switchView('algo-home')">
+            <span>←</span>
+            <span>Retour à l'accueil Algo</span>
+          </button>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="nav-btn" onclick="switchView('algo-theorique')" style="color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4);">📖 Voir le Théorique (Algorithmique Bac) →</button>
+            <button class="nav-btn" onclick="switchModule('sti')" style="color: #38bdf8;">⌨️ Revenir au module STI</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VUE ALGO 3 : ÉPREUVE THÉORIQUE (ALGORITHMIQUE BAC TUNISIE)
+         ========================================== -->
+    <section id="view-algo-theorique" class="view-section">
+      <div class="container">
+        
+        <div class="page-header-banner" style="margin-bottom: 24px; padding: 24px 0 10px 0;">
+          <div class="annexe-title-wrap">
+            <div class="annexe-logo-shield" style="background: linear-gradient(135deg, #d97706, #f59e0b); width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+              📖
+            </div>
+            <div>
+              <h2 class="annexe-title-text" style="font-size: 1.6rem; color: #fbbf24;">Épreuve Théorique : Algorithmique Bac Tunisie</h2>
+              <span style="font-size: 0.9rem; color: var(--text-secondary);">Programme officiel • T.D.O &amp; T.D.N.T • Pseudo-code normalisé &amp; Python Thonny</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- BARRE DE RECHERCHE & CATÉGORIES THÉORIQUES -->
+        <div class="filter-search-bar" style="margin-bottom: 24px;">
+          <div class="search-box-wrap">
+            <span class="search-icon-inside">🔍</span>
+            <input type="text" id="algoTheoriqueSearchInput" class="search-input" placeholder="Rechercher un algorithme, structure, fonction (ex: TDO, Tri bulles, PGCD, Premier, Répéter, Pour, Fonction...)" oninput="handleAlgoTheoriqueSearch(this.value)">
+          </div>
+          <div class="categories-bar" id="algoTheoriqueCategories">
+            <!-- Rempli dynamiquement par JS -->
+          </div>
+        </div>
+
+        <!-- GRILLE DES FICHES THÉORIQUES (DOUBLE COLONNE PSEUDO-CODE & PYTHON + TDO) -->
+        <div class="items-grid" id="algoTheoriqueGrid">
+          <!-- Rempli dynamiquement par JS -->
+        </div>
+
+        <!-- Navigation bas de page Théorique -->
+        <div class="bottom-nav-box" style="margin-top: 40px; padding: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+          <button class="back-to-home-btn" onclick="switchView('algo-home')">
+            <span>←</span>
+            <span>Retour à l'accueil Algo</span>
+          </button>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="nav-btn" onclick="switchView('algo-pratique')" style="color: #10b981; border: 1px solid rgba(16, 185, 129, 0.4);">🛠️ Voir la Pratique Qt ➔ Thonny</button>
+            <button class="nav-btn" onclick="switchModule('sti')" style="color: #38bdf8;">⌨️ Revenir au module STI</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
 
   <!-- ==========================================
        MODALE UNIVERSELLE DE DÉTAILS

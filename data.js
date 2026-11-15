@@ -4248,5 +4248,805 @@ const DATA = {
     "simTable": "Eleve",
     "simDescription": "Suppression ciblée de lignes dans une table (DELETE FROM ... WHERE)."
   }
+],
+  algo_pratique: [
+  {
+    "id": "qt-starter-template",
+    "category": "Démarrage & Architecture",
+    "name": "Squelette officiel Thonny / PyQt5 (loadUi)",
+    "qtWidget": "Fichier interface.ui",
+    "qtProperty": "Nom de fichier : interface.ui",
+    "thonnyCode": "from PyQt5.uic import loadUi\nfrom PyQt5.QtWidgets import QApplication\n\n# 1. Initialiser l'application Qt\napp = QApplication([])\n\n# 2. Charger le fichier .ui créé avec Qt Designer\nwindows = loadUi(\"interface.ui\")\n\n# 3. Lier les boutons aux fonctions de traitement\n# windows.btn_valider.clicked.connect(traiter)\n\n# 4. Afficher la fenêtre et lancer la boucle d'événements\nwindows.show()\napp.exec_()",
+    "summary": "Code indispensable à connaître par cœur pour lancer n'importe quelle interface Qt Designer dans Thonny.",
+    "description": "Au Bac Pratique tunisien, l'épreuve commence par la création de l'interface graphique sous Qt Designer enregistrée sous le nom 'interface.ui' dans le dossier de travail. Dans Thonny, ce code minimal permet de charger l'interface et de démarrer l'application.",
+    "howToUse": "1. Enregistrer le fichier .ui dans le MÊME dossier que votre script Python (.py) dans Thonny.\n2. Écrire ce squelette au tout début du fichier.\n3. Créer vos fonctions de traitement AVANT l'instruction windows.show().",
+    "examples": [
+      {
+        "label": "Chargement direct",
+        "code": "windows = loadUi('interface.ui')"
+      },
+      {
+        "label": "Connexion d'un bouton",
+        "code": "windows.btn_calculer.clicked.connect(calculer)"
+      },
+      {
+        "label": "Lancement",
+        "code": "windows.show()\napp.exec_()"
+      }
+    ],
+    "bacTips": "🚨 PIÈGE FRÉQUENT : Si Thonny affiche 'FileNotFoundError: [Errno 2] No such file or directory: interface.ui', c'est que votre script Python n'est pas enregistré dans le même dossier que le fichier .ui !"
+  },
+  {
+    "id": "qt-lineedit",
+    "category": "Widgets de Saisie",
+    "name": "QLineEdit (Zone de saisie de texte)",
+    "qtWidget": "QLineEdit",
+    "qtProperty": "objectName (ex: le_nom, le_age)",
+    "thonnyCode": "# 1. Lire la valeur saisie (toujours renvoyée sous forme de str)\ntexte = windows.le_nom.text()\n\n# 2. Convertir en nombre si nécessaire\nage = int(windows.le_age.text())\nmoyenne = float(windows.le_moy.text())\n\n# 3. Écrire ou modifier le texte par code\nwindows.le_resultat.setText(\"Admis\")\n\n# 4. Vider le champ\nwindows.le_nom.clear()\n\n# 5. Donner le focus au curseur\nwindows.le_nom.setFocus()",
+    "summary": "Permet à l'utilisateur de saisir une ligne de texte ou un nombre.",
+    "description": "Le QLineEdit est le widget de saisie le plus utilisé dans les examens pratiques du Bac. La méthode .text() renvoie TOUJOURS une chaîne de caractères (str). Pour effectuer des calculs arithmétiques, il est indispensable de convertir la valeur avec int() ou float().",
+    "howToUse": "Dans Qt Designer : glisser 'Line Edit', lui donner un objectName clair (ex: le_nom, le_note). Dans Thonny : windows.objectName.text() pour lire, windows.objectName.setText('...') pour écrire.",
+    "examples": [
+      {
+        "label": "Lecture de chaîne",
+        "code": "nom = windows.le_nom.text()"
+      },
+      {
+        "label": "Lecture d'entier",
+        "code": "n = int(windows.le_n.text())"
+      },
+      {
+        "label": "Affichage de résultat",
+        "code": "windows.le_res.setText(str(total))"
+      },
+      {
+        "label": "Vider le champ",
+        "code": "windows.le_nom.clear()"
+      }
+    ],
+    "bacTips": "⚠️ Attention : windows.le_nom.text() renvoie une chaîne vide \"\" si l'élève n'a rien saisi. Toujours tester `if nom == \"\":` avant d'appliquer int() pour éviter le plantage ValueError !"
+  },
+  {
+    "id": "qt-pushbutton",
+    "category": "Widgets d'Action & Affichage",
+    "name": "QPushButton (Bouton d'action / Clic)",
+    "qtWidget": "QPushButton",
+    "qtProperty": "objectName (ex: btn_valider, btn_quitter)",
+    "thonnyCode": "# Définir la fonction exécutée lors du clic\ndef valider():\n    nom = windows.le_nom.text()\n    if nom == \"\":\n        QMessageBox.critical(windows, \"Erreur\", \"Veuillez remplir le nom !\")\n        return\n    windows.lbl_res.setText(\"Bienvenue \" + nom)\n\n# Lier le signal 'clicked' du bouton à la fonction (SANS parenthèses !)\nwindows.btn_valider.clicked.connect(valider)\n\n# Activer ou désactiver le bouton\nwindows.btn_valider.setEnabled(True)   # Activé\nwindows.btn_valider.setEnabled(False)  # Grisé/Désactivé",
+    "summary": "Déclenche l'exécution d'une fonction Python quand le candidat clique dessus.",
+    "description": "Le QPushButton déclenche le signal .clicked. Dans Thonny, on connecte ce signal à notre fonction avec .connect(nom_fonction). C'est le cœur de l'interactivité au Bac Pratique.",
+    "howToUse": "Dans Qt Designer : glisser 'Push Button', régler objectName='btn_valider' et le texte 'Valider'. Dans Thonny : windows.btn_valider.clicked.connect(ma_fonction).",
+    "examples": [
+      {
+        "label": "Connexion",
+        "code": "windows.btn_calculer.clicked.connect(calculer)"
+      },
+      {
+        "label": "Désactiver bouton",
+        "code": "windows.btn_valider.setEnabled(False)"
+      },
+      {
+        "label": "Quitter l'application",
+        "code": "windows.btn_quitter.clicked.connect(windows.close)"
+      }
+    ],
+    "bacTips": "🚨 ERREUR CLASSIQUE DU BAC : Ne JAMAIS mettre de parenthèses lors du connect ! Écrire `windows.btn.clicked.connect(calculer)` et SURTOUT PAS `connect(calculer())` sinon la fonction s'exécute au lancement !"
+  },
+  {
+    "id": "qt-radiobutton",
+    "category": "Widgets de Choix & Sélection",
+    "name": "QRadioButton (Bouton radio - Choix exclusif unique)",
+    "qtWidget": "QRadioButton",
+    "qtProperty": "objectName (ex: rb_homme, rb_femme)",
+    "thonnyCode": "# 1. Tester quel bouton radio est coché\nif windows.rb_homme.isChecked():\n    genre = \"Masculin\"\nelif windows.rb_femme.isChecked():\n    genre = \"Féminin\"\nelse:\n    QMessageBox.warning(windows, \"Attention\", \"Veuillez sélectionner un genre !\")\n    return\n\n# 2. Cocher un bouton radio par programmation\nwindows.rb_homme.setChecked(True)",
+    "summary": "Permet de sélectionner UNE SEULE option parmi un groupe d'options exclusives.",
+    "description": "Utilisé pour le genre (Homme/Femme), le type d'opération (Cryptage/Décryptage), ou le mode de calcul. Pour que les boutons soient exclusifs, placez-les dans un même conteneur (QGroupBox) dans Qt Designer.",
+    "howToUse": "Dans Qt Designer : glisser 'Radio Button' dans une 'Group Box'. Dans Thonny : utiliser la méthode .isChecked() qui retourne True ou False.",
+    "examples": [
+      {
+        "label": "Vérifier si coché",
+        "code": "if windows.rb_facile.isChecked(): niveau = 1"
+      },
+      {
+        "label": "Cocher par défaut",
+        "code": "windows.rb_homme.setChecked(True)"
+      }
+    ],
+    "bacTips": "💡 Pensez toujours à vérifier si aucun bouton n'est coché en affichant une alerte QMessageBox si les deux renvoient False !"
+  },
+  {
+    "id": "qt-checkbox",
+    "category": "Widgets de Choix & Sélection",
+    "name": "QCheckBox (Case à cocher - Choix multiples)",
+    "qtWidget": "QCheckBox",
+    "qtProperty": "objectName (ex: cb_sport, cb_musique)",
+    "thonnyCode": "# Récupérer l'état de plusieurs cases indépendantes\ninterets = []\n\nif windows.cb_sport.isChecked():\n    interets.append(\"Sport\")\n\nif windows.cb_musique.isChecked():\n    interets.append(\"Musique\")\n\nif windows.cb_lecture.isChecked():\n    interets.append(\"Lecture\")\n\n# Forcer une case à être cochée ou décochée\nwindows.cb_sport.setChecked(False)",
+    "summary": "Permet de cocher zéro, une ou plusieurs options indépendantes.",
+    "description": "Contrairement aux radio buttons, les cases à cocher QCheckBox ne sont pas exclusives. L'élève peut en cocher plusieurs simultanément. Chaque case possède sa méthode .isChecked().",
+    "howToUse": "Dans Qt Designer : glisser 'Check Box'. Dans Thonny : tester `if windows.cb_nom.isChecked():` pour chaque case.",
+    "examples": [
+      {
+        "label": "Test d'une case",
+        "code": "if windows.cb_accepter.isChecked(): autoriser()"
+      },
+      {
+        "label": "Décocher",
+        "code": "windows.cb_option.setChecked(False)"
+      }
+    ],
+    "bacTips": "Au Bac, souvent utilisé pour les critères de filtre ou les options facultatives (ex: ajouter une remise de 10%)."
+  },
+  {
+    "id": "qt-combobox",
+    "category": "Widgets de Choix & Sélection",
+    "name": "QComboBox (Menu déroulant / Liste de sélection)",
+    "qtWidget": "QComboBox",
+    "qtProperty": "objectName (ex: combo_ville, combo_classe)",
+    "thonnyCode": "# 1. Récupérer le texte de l'élément sélectionné\nville = windows.combo_ville.currentText()\n\n# 2. Récupérer l'indice de l'élément sélectionné (0 pour le 1er, 1 pour le 2ème...)\nidx = windows.combo_ville.currentIndex()\n\n# 3. Vérifier qu'un choix a bien été fait (si le 1er élément est '-- Choisir --')\nif windows.combo_ville.currentIndex() == 0:\n    QMessageBox.critical(windows, \"Erreur\", \"Veuillez choisir une ville !\")\n    return\n\n# 4. Ajouter des éléments dynamiquement par code\nwindows.combo_ville.addItem(\"Sousse\")\nwindows.combo_ville.addItem(\"Sfax\")\n\n# 5. Vider le menu déroulant\nwindows.combo_ville.clear()",
+    "summary": "Affiche une liste déroulante où le candidat choisit une option parmi plusieurs.",
+    "description": "Dans Qt Designer, double-cliquez sur le QComboBox pour ajouter des éléments par défaut (ex: '-- Choisir --', 'Tunis', 'Sousse', 'Sfax'). Dans Thonny, .currentText() donne la chaîne et .currentIndex() donne la position numérique (commence à 0).",
+    "howToUse": "Dans Qt Designer : double-clic sur la ComboBox pour saisir les choix. Dans Thonny : windows.combo.currentText() pour lire le texte choisi.",
+    "examples": [
+      {
+        "label": "Lire le texte",
+        "code": "choix = windows.combo_pays.currentText()"
+      },
+      {
+        "label": "Lire l'indice",
+        "code": "position = windows.combo_pays.currentIndex()"
+      },
+      {
+        "label": "Ajouter un item",
+        "code": "windows.combo_pays.addItem('Tunisie')"
+      }
+    ],
+    "bacTips": "⭐ ASTUCE BAC : Si vous mettez '-- Sélectionner --' en premier élément dans Qt Designer, vérifiez toujours `if windows.combo.currentIndex() == 0:` pour forcer l'utilisateur à faire un vrai choix !"
+  },
+  {
+    "id": "qt-label",
+    "category": "Widgets d'Action & Affichage",
+    "name": "QLabel (Texte d'affichage / Résultat)",
+    "qtWidget": "QLabel",
+    "qtProperty": "objectName (ex: lbl_titre, lbl_resultat)",
+    "thonnyCode": "# 1. Afficher un texte simple ou un message\nwindows.lbl_resultat.setText(\"Le nombre 17 est Premier !\")\n\n# 2. Afficher une variable numérique (toujours convertir en str)\ntotal = 145.5\nwindows.lbl_resultat.setText(\"Total : \" + str(total) + \" DT\")\n\n# 3. Formater avec des f-strings en Python 3\nwindows.lbl_resultat.setText(f\"Moyenne : {moyenne:.2f} / 20\")\n\n# 4. Effacer le texte du label\nwindows.lbl_resultat.setText(\"\")",
+    "summary": "Utilisé pour afficher des titres, des instructions ou le résultat final d'un algorithme.",
+    "description": "Le QLabel est un widget passif d'affichage. Contrairement au QLineEdit, l'utilisateur ne peut pas modifier son contenu à la souris. La méthode .setText() attend obligatoirement une chaîne de caractères (str).",
+    "howToUse": "Dans Qt Designer : placer un 'Label', vider son texte par défaut si c'est un résultat, et lui donner un objectName='lbl_res'. Dans Thonny : windows.lbl_res.setText(str(valeur)).",
+    "examples": [
+      {
+        "label": "Texte simple",
+        "code": "windows.lbl_msg.setText('Opération réussie')"
+      },
+      {
+        "label": "Nombre converti",
+        "code": "windows.lbl_res.setText(str(pgcd_val))"
+      }
+    ],
+    "bacTips": "🚨 TypeError : Ne passez jamais un entier directement à setText ! `setText(42)` déclenche une erreur ; écrivez toujours `setText(str(42))`."
+  },
+  {
+    "id": "qt-spinbox",
+    "category": "Widgets de Saisie",
+    "name": "QSpinBox / QDoubleSpinBox (Compteur numérique)",
+    "qtWidget": "QSpinBox / QDoubleSpinBox",
+    "qtProperty": "minimum, maximum, value, objectName",
+    "thonnyCode": "# 1. Lire la valeur numérique (renvoie directement un int ou float, pas de str !)\nquantite = windows.sb_quantite.value()       # int pour QSpinBox\nprix = windows.dsb_prix.value()             # float pour QDoubleSpinBox\n\n# 2. Modifier la valeur par code\nwindows.sb_quantite.setValue(10)\n\n# 3. Calcul direct sans conversion str !\ntotal = quantite * prix\nwindows.lbl_total.setText(str(total) + \" DT\")",
+    "summary": "Champ de saisie numérique avec flèches haut/bas garantissant une valeur valide sans risque d'erreur de frappe.",
+    "description": "QSpinBox gère les entiers et QDoubleSpinBox gère les réels avec virgule. Le gros avantage est que la méthode .value() renvoie directement un int ou float, sans conversion nécessaire.",
+    "howToUse": "Dans Qt Designer : régler 'minimum' (ex: 1) et 'maximum' (ex: 100). Dans Thonny : `val = windows.sb_nb.value()`.",
+    "examples": [
+      {
+        "label": "Lire un entier",
+        "code": "n = windows.sb_n.value()"
+      },
+      {
+        "label": "Modifier la valeur",
+        "code": "windows.sb_n.setValue(25)"
+      }
+    ],
+    "bacTips": "Pratique pour les notes (0 à 20) ou les effectifs (N élèves entre 5 et 30) car il empêche automatiquement la saisie de texte !"
+  },
+  {
+    "id": "qt-dateedit",
+    "category": "Widgets de Saisie",
+    "name": "QDateEdit (Sélecteur de date)",
+    "qtWidget": "QDateEdit",
+    "qtProperty": "displayFormat, calendarPopup, objectName",
+    "thonnyCode": "# 1. Récupérer la date sous forme de texte formaté\ndate_str = windows.date_naiss.date().toString(\"yyyy-MM-dd\")  # Ex: '2006-05-14'\n\n# 2. Récupérer l'année, le mois ou le jour séparément\nannee = windows.date_naiss.date().year()\nmois = windows.date_naiss.date().month()\njour = windows.date_naiss.date().day()\n\n# 3. Calculer l'âge\nage = 2026 - annee\nif age < 18:\n    QMessageBox.critical(windows, \"Erreur\", \"Candidat mineur non autorisé !\")",
+    "summary": "Permet la saisie et la sélection d'une date via un calendrier ou des flèches.",
+    "description": "Le QDateEdit évite les erreurs de format de date. Dans Qt Designer, activez la case 'calendarPopup' pour afficher un calendrier déroulant. Dans Thonny, .date().toString('dd/MM/yyyy') extrait la date formatée.",
+    "howToUse": "Dans Qt Designer : cocher calendarPopup=True. Dans Thonny : `d = windows.date_widget.date().toString('yyyy-MM-dd')`.",
+    "examples": [
+      {
+        "label": "Format SQL standard",
+        "code": "d = windows.date_box.date().toString('yyyy-MM-dd')"
+      },
+      {
+        "label": "Extraire l'année",
+        "code": "annee = windows.date_box.date().year()"
+      }
+    ],
+    "bacTips": "Pour les bases de données SQL du Bac, utilisez le format 'yyyy-MM-dd' pour l'insérer directement dans une colonne de type DATE."
+  },
+  {
+    "id": "qt-msgbox-critical",
+    "category": "Boîtes de Dialogue (QMessageBox)",
+    "name": "QMessageBox.critical (Alerte d'erreur bloquante)",
+    "qtWidget": "QMessageBox",
+    "qtProperty": "Import : from PyQt5.QtWidgets import QMessageBox",
+    "thonnyCode": "from PyQt5.QtWidgets import QMessageBox\n\n# Afficher une boîte modale d'erreur bloquante avec icône rouge (X)\nQMessageBox.critical(\n    windows,           # Fenêtre parente\n    \"Erreur de saisie\",# Titre de la boîte de dialogue\n    \"Le code élève doit comporter exactement 8 chiffres !\" # Message\n)\n\n# Toujours arrêter la fonction après l'erreur :\nreturn",
+    "summary": "Ouvre une fenêtre pop-up d'erreur critique avec icône rouge et son d'alerte pour bloquer une saisie invalide.",
+    "description": "C'est l'instruction reine du contrôle de saisie au Bac Pratique. Dès qu'une condition n'est pas remplie (champ vide, valeur hors limites, longueur incorrecte), on affiche cette boîte et on stoppe le traitement avec 'return'.",
+    "howToUse": "Syntaxe : `QMessageBox.critical(windows, 'Titre', 'Texte de l\\'erreur')`.",
+    "examples": [
+      {
+        "label": "Champ obligatoire",
+        "code": "if nom == '':\n    QMessageBox.critical(windows, 'Erreur', 'Nom obligatoire !')\n    return"
+      },
+      {
+        "label": "Nombre hors limite",
+        "code": "if not (1 <= n <= 100):\n    QMessageBox.critical(windows, 'Erreur', 'N doit être entre 1 et 100 !')\n    return"
+      }
+    ],
+    "bacTips": "⭐ BARÈME DU BAC : Un point entier est souvent attribué au contrôle de saisie avec QMessageBox. N'oubliez jamais d'ajouter `return` immédiatement après le message pour ne pas continuer le calcul avec des données erronées !"
+  },
+  {
+    "id": "qt-msgbox-info",
+    "category": "Boîtes de Dialogue (QMessageBox)",
+    "name": "QMessageBox.information (Message de succès / Info)",
+    "qtWidget": "QMessageBox",
+    "qtProperty": "Import : from PyQt5.QtWidgets import QMessageBox",
+    "thonnyCode": "from PyQt5.QtWidgets import QMessageBox\n\n# Afficher un message d'information ou de succès avec icône bleue (i)\nQMessageBox.information(\n    windows,\n    \"Succès de l'enregistrement\",\n    f\"L'élève {nom} a été enregistré avec succès dans la base !\"\n)",
+    "summary": "Affiche une boîte d'information avec icône bleue pour confirmer la réussite d'un calcul ou d'une sauvegarde.",
+    "description": "Utilisé pour annoncer le résultat positif d'un traitement : enregistrement réussi dans un fichier/base, nombre premier validé, ou fin de traitement.",
+    "howToUse": "Syntaxe : `QMessageBox.information(windows, 'Titre', 'Message')`.",
+    "examples": [
+      {
+        "label": "Succès du traitement",
+        "code": "QMessageBox.information(windows, 'Bravo', 'Calcul terminé avec succès !')"
+      }
+    ],
+    "bacTips": "L'icône bleue rassure le correcteur et indique clairement que le scénario normal s'est déroulé jusqu'au bout."
+  },
+  {
+    "id": "qt-msgbox-warning",
+    "category": "Boîtes de Dialogue (QMessageBox)",
+    "name": "QMessageBox.warning (Boîte d'avertissement jaune)",
+    "qtWidget": "QMessageBox",
+    "qtProperty": "Import : from PyQt5.QtWidgets import QMessageBox",
+    "thonnyCode": "from PyQt5.QtWidgets import QMessageBox\n\n# Afficher un avertissement avec icône jaune triangulaire (!)\nQMessageBox.warning(\n    windows,\n    \"Attention\",\n    \"Attention : le tableau est déjà plein (N maximum atteint) !\"\n)",
+    "summary": "Affiche une boîte d'avertissement avec triangle jaune pour signaler une situation anormale non bloquante.",
+    "description": "Parfaite pour avertir l'utilisateur d'un doublon, d'une capacité maximale atteinte ou d'une confirmation requise.",
+    "howToUse": "Syntaxe : `QMessageBox.warning(windows, 'Titre', 'Message')`.",
+    "examples": [
+      {
+        "label": "Avertissement capacité",
+        "code": "QMessageBox.warning(windows, 'Attention', 'Nombre maximum atteint')"
+      }
+    ],
+    "bacTips": "Très appréciée dans les sujets demandant de vérifier si un élément existe déjà dans un tableau."
+  },
+  {
+    "id": "qt-tablewidget",
+    "category": "Widgets d'Action & Affichage",
+    "name": "QTableWidget (Grille / Tableau de données)",
+    "qtWidget": "QTableWidget",
+    "qtProperty": "objectName (ex: table_res)",
+    "thonnyCode": "from PyQt5.QtWidgets import QTableWidgetItem\n\n# 1. Définir le nombre de colonnes et de lignes\nwindows.table_res.setColumnCount(3)\nwindows.table_res.setHorizontalHeaderLabels([\"ID\", \"Nom\", \"Moyenne\"])\nwindows.table_res.setRowCount(len(liste_eleves))\n\n# 2. Remplir le tableau cellule par cellule\nfor row, eleve in enumerate(liste_eleves):\n    windows.table_res.setItem(row, 0, QTableWidgetItem(str(eleve['id'])))\n    windows.table_res.setItem(row, 1, QTableWidgetItem(eleve['nom']))\n    windows.table_res.setItem(row, 2, QTableWidgetItem(str(eleve['moyenne'])))\n\n# 3. Vider le tableau\nwindows.table_res.clearContents()\nwindows.table_res.setRowCount(0)",
+    "summary": "Affiche des données tabulaires sous forme de grille avec lignes et colonnes.",
+    "description": "Fréquent dans les épreuves pratiques de synthèse : afficher les résultats d'un tri, les élèves admis, ou des enregistrements extraits d'une base de données ou d'un fichier.",
+    "howToUse": "1. Importer `QTableWidgetItem` depuis `PyQt5.QtWidgets`.\n2. Fixer `setRowCount(n)`.\n3. Remplir avec `setItem(ligne, colonne, QTableWidgetItem(str(val)))`.",
+    "examples": [
+      {
+        "label": "Remplir une cellule",
+        "code": "windows.table.setItem(0, 0, QTableWidgetItem('Valeur'))"
+      },
+      {
+        "label": "Vider le tableau",
+        "code": "windows.table.setRowCount(0)"
+      }
+    ],
+    "bacTips": "⚠️ Chaque cellule attend obligatoirement un objet `QTableWidgetItem(str)`. N'oubliez pas d'importer QTableWidgetItem !"
+  },
+  {
+    "id": "qt-valid-empty",
+    "category": "Contrôles de Saisie Bac",
+    "name": "Contrôle 1 : Vérification champ obligatoire non vide",
+    "qtWidget": "QLineEdit / QComboBox",
+    "qtProperty": "Vérification if ch == '':",
+    "thonnyCode": "def valider_formulaire():\n    nom = windows.le_nom.text().strip()\n    \n    # Test si la chaîne est vide ou composée uniquement d'espaces\n    if nom == \"\":\n        QMessageBox.critical(windows, \"Erreur\", \"Le champ Nom est obligatoire !\")\n        windows.le_nom.setFocus() # Remet le curseur dans le champ\n        return False\n        \n    return True",
+    "summary": "Vérifie qu'un champ requis a bien été renseigné par le candidat.",
+    "description": "La méthode `.strip()` supprime les espaces au début et à la fin. Si la chaîne résultante est égale à \"\", on affiche un message d'erreur et on remet le curseur avec `.setFocus()`.",
+    "howToUse": "Toujours placer ce contrôle en premier avant toute autre validation ou conversion.",
+    "examples": [
+      {
+        "label": "Contrôle champ vide",
+        "code": "if windows.le_saisie.text().strip() == '':\n    QMessageBox.critical(windows, 'Erreur', 'Champ vide !')\n    return"
+      }
+    ],
+    "bacTips": "L'utilisation de `.strip()` évite que l'élève tape simplement des espaces pour tromper le test !"
+  },
+  {
+    "id": "qt-valid-alpha",
+    "category": "Contrôles de Saisie Bac",
+    "name": "Contrôle 2 : Chaîne purement alphabétique",
+    "qtWidget": "QLineEdit",
+    "qtProperty": "Test nom.isalpha() ou test caractère par caractère",
+    "thonnyCode": "def est_alphabetique(chaine):\n    # Vérifier que la chaîne ne contient que des lettres et des espaces\n    if len(chaine) == 0:\n        return False\n    for c in chaine:\n        if not (('A' <= c <= 'Z') or ('a' <= c <= 'z') or c == ' '):\n            return False\n    return True\n\n# Utilisation dans le bouton valider :\nnom = windows.le_nom.text().strip()\nif not est_alphabetique(nom):\n    QMessageBox.critical(windows, \"Erreur\", \"Le nom doit contenir uniquement des lettres !\")\n    return",
+    "summary": "Vérifie qu'un prénom ou nom ne contient aucun chiffre ni caractère spécial.",
+    "description": "Au Bac STI tunisien, le correcteur teste souvent d'entrer 'Ali123' ou 'Mohamed@'. Deux méthodes sont acceptées : la boucle caractère par caractère (conforme au pseudo-code Bac) ou la fonction Python `ch.replace(' ', '').isalpha()`.",
+    "howToUse": "Appliquer la fonction de validation sur le texte récupéré du QLineEdit.",
+    "examples": [
+      {
+        "label": "Méthode boucle Bac",
+        "code": "valide = all(('a'<=c<='z' or 'A'<=c<='Z' or c==' ') for c in ch)"
+      },
+      {
+        "label": "Méthode isalpha",
+        "code": "valide = ch.replace(' ', '').isalpha()"
+      }
+    ],
+    "bacTips": "N'oubliez pas d'autoriser l'espace `c == ' '` pour les prénoms composés comme 'Mohamed Ali' !"
+  },
+  {
+    "id": "qt-valid-numeric",
+    "category": "Contrôles de Saisie Bac",
+    "name": "Contrôle 3 : Nombre entier valide dans un intervalle",
+    "qtWidget": "QLineEdit",
+    "qtProperty": "isnumeric() et encadrement (ex: 15 <= age <= 30)",
+    "thonnyCode": "def valider_age():\n    ch_age = windows.le_age.text().strip()\n    \n    # 1. Vérifier que c'est composé de chiffres uniquement\n    if not ch_age.isnumeric():\n        QMessageBox.critical(windows, \"Erreur\", \"L'âge doit être un nombre entier !\")\n        return False\n        \n    # 2. Convertir et vérifier l'intervalle officiel\n    age = int(ch_age)\n    if not (15 <= age <= 30):\n        QMessageBox.critical(windows, \"Erreur\", \"L'âge doit être compris entre 15 et 30 ans !\")\n        return False\n        \n    return True",
+    "summary": "Vérifie qu'une saisie est un entier valide puis qu'il respecte l'intervalle demandé (ex: note entre 0 et 20, âge entre 15 et 30).",
+    "description": "Le test `.isnumeric()` empêche le plantage sur des lettres. Une fois le test réussi, on peut convertir sans risque avec `int()` et tester les bornes.",
+    "howToUse": "Test `.isnumeric()` d'abord, puis `int()`, puis test d'encadrement `min <= n <= max`.",
+    "examples": [
+      {
+        "label": "Note 0 à 20",
+        "code": "if not (0 <= float(note) <= 20): alerte()"
+      }
+    ],
+    "bacTips": "⭐ Formule favorite des épreuves pratiques : 'L'âge doit être un entier compris entre 15 et 30'."
+  },
+  {
+    "id": "qt-valid-length",
+    "category": "Contrôles de Saisie Bac",
+    "name": "Contrôle 4 : Longueur fixe (CIN 8 chiffres, Tél)",
+    "qtWidget": "QLineEdit",
+    "qtProperty": "len(cin) == 8 and cin.isnumeric()",
+    "thonnyCode": "def valider_cin():\n    cin = windows.le_cin.text().strip()\n    \n    # Le CIN tunisien doit comporter exactement 8 chiffres numériques\n    if len(cin) != 8 or not cin.isnumeric():\n        QMessageBox.critical(\n            windows, \n            \"Erreur CIN\", \n            \"Le Numéro de CIN doit comporter exactement 8 chiffres !\"\n        )\n        return False\n        \n    return True",
+    "summary": "Vérifie qu'un identifiant respecte une longueur fixe stricte (ex: Numéro CIN 8 chiffres, Numéro Téléphone 8 chiffres).",
+    "description": "Classique absolu des examens du Bac : tester `len(ch) == 8` combiné avec `ch.isnumeric()` pour s'assurer que le candidat a saisi exactement 8 chiffres.",
+    "howToUse": "Combiner `len(ch) == 8` et `ch.isnumeric()` avec un opérateur `and`.",
+    "examples": [
+      {
+        "label": "Test CIN",
+        "code": "if len(cin) != 8 or not cin.isnumeric(): QMessageBox.critical(...)"
+      }
+    ],
+    "bacTips": "Attention à bien utiliser `!= 8` pour bloquer si c'est plus court OU plus long !"
+  },
+  {
+    "id": "qt-clear-reset",
+    "category": "Widgets d'Action & Affichage",
+    "name": "Réinitialisation complète de l'interface (Vider)",
+    "qtWidget": "QPushButton 'Annuler / Nouveau'",
+    "qtProperty": "Remise à zéro des champs",
+    "thonnyCode": "def reinitialiser():\n    # Vider les zones de texte\n    windows.le_nom.clear()\n    windows.le_cin.clear()\n    windows.le_note.clear()\n    \n    # Décocher les boutons radio et cases\n    windows.rb_homme.setChecked(False)\n    windows.rb_femme.setChecked(False)\n    windows.cb_sport.setChecked(False)\n    \n    # Remettre la liste déroulante au premier choix\n    windows.combo_ville.setCurrentIndex(0)\n    \n    # Effacer le résultat affiché\n    windows.lbl_resultat.setText(\"\")\n    \n    # Replacer le curseur dans le premier champ\n    windows.le_nom.setFocus()\n\nwindows.btn_annuler.clicked.connect(reinitialiser)",
+    "summary": "Fonction liée au bouton Annuler/Nouveau qui remet tous les composants de l'interface à leur état initial.",
+    "description": "Très souvent demandée comme dernière question d'un sujet pratique : un bouton 'Annuler' ou 'Nouveau' qui efface toutes les saisies et repositionne le curseur dans le premier champ.",
+    "howToUse": "Appeler `.clear()` sur les QLineEdit, `.setChecked(False)` sur les radios/cases, et `.setCurrentIndex(0)` sur la ComboBox.",
+    "examples": [
+      {
+        "label": "Remise à zéro",
+        "code": "windows.btn_reset.clicked.connect(reinitialiser)"
+      }
+    ],
+    "bacTips": "Ajouter `windows.le_premier_champ.setFocus()` apporte une touche de finition très appréciée des correcteurs !"
+  },
+  {
+    "id": "qt-bac-workflow",
+    "category": "Modèles Types d'Examen",
+    "name": "Structure type complète d'un sujet pratique Bac (4 Étapes)",
+    "qtWidget": "Architecture de projet",
+    "qtProperty": "Qt Designer + Thonny Python",
+    "thonnyCode": "# ========================================================\n# ÉPREUVE PRATIQUE DU BACCALAURÉAT - ALGORITHMIQUE & PYTHON\n# ========================================================\nfrom PyQt5.uic import loadUi\nfrom PyQt5.QtWidgets import QApplication, QMessageBox\n\n# --- ÉTAPE 1 : FONCTIONS ALGORITHMIQUES PURES ---\ndef est_premier(n):\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\n# --- ÉTAPE 2 : FONCTION DE TRAITEMENT DU FORMULAIRE ---\ndef traiter():\n    # 2.1 Récupération des données\n    ch_n = windows.le_nombre.text().strip()\n    \n    # 2.2 Contrôles de validité avec QMessageBox\n    if ch_n == \"\" or not ch_n.isnumeric():\n        QMessageBox.critical(windows, \"Erreur\", \"Veuillez entrer un entier valide !\")\n        return\n    \n    n = int(ch_n)\n    if not (1 <= n <= 1000):\n        QMessageBox.critical(windows, \"Erreur\", \"Le nombre doit être entre 1 et 1000 !\")\n        return\n        \n    # 2.3 Appel de l'algorithme\n    if est_premier(n):\n        msg = f\"Le nombre {n} EST un nombre premier !\"\n        windows.lbl_res.setStyleSheet(\"color: #10b981; font-weight: bold;\")\n    else:\n        msg = f\"Le nombre {n} N'EST PAS premier.\"\n        windows.lbl_res.setStyleSheet(\"color: #ef4444; font-weight: bold;\")\n        \n    # 2.4 Affichage du résultat\n    windows.lbl_res.setText(msg)\n\n# --- ÉTAPE 3 : INITIALISATION DE L'INTERFACE ---\napp = QApplication([])\nwindows = loadUi(\"interface.ui\")\n\n# --- ÉTAPE 4 : CONNEXION DES SIGNAUX & LANCEMENT ---\nwindows.btn_verifier.clicked.connect(traiter)\nwindows.btn_quitter.clicked.connect(windows.close)\n\nwindows.show()\napp.exec_()",
+    "summary": "Le patron de conception universel qui garantit 20/20 à l'épreuve pratique en séparant l'algorithme, le contrôle de saisie et l'interface.",
+    "description": "Ce modèle structure proprement votre code en 4 étapes claires : 1. Fonctions de calcul 2. Contrôle et traitement 3. Initialisation 4. Événements et démarrage.",
+    "howToUse": "Copiez cette structure comme base de départ pour tous vos TPs et examens pratiques.",
+    "examples": [
+      {
+        "label": "Patron complet",
+        "code": "# Suivre les 4 étapes numérotées"
+      }
+    ],
+    "bacTips": "⭐ La séparation entre les fonctions algorithmiques pures et la fonction liée à Qt Designer est la marque des excellents candidats !"
+  }
+],
+  algo_theorique: [
+  {
+    "id": "algo-structure-base",
+    "category": "Conventions & Structure",
+    "name": "Structure générale d'un Algorithme Bac",
+    "summary": "Squelette officiel d'écriture d'un algorithme au Baccalauréat tunisien.",
+    "description": "Tout algorithme principal commence par le mot-clé 'Algorithme' suivi d'un identificateur significatif, et se termine par 'Fin Nom_Algorithme'. Les déclarations sont formalisées dans le Tableau de Déclaration des Objets (T.D.O).",
+    "pseudoCode": "Algorithme Somme_Entiers\n// Début du traitement\nDébut\n  Ecrire(\"Donner un entier N : \")\n  Lire(n)\n  s <-- 0\n  Pour i de 1 à n Faire\n    s <-- s + i\n  Fin Pour\n  Ecrire(\"La somme vaut : \", s)\nFin Somme_Entiers",
+    "pythonCode": "# Équivalent Python dans Thonny\nn = int(input(\"Donner un entier N : \"))\ns = 0\nfor i in range(1, n + 1):\n    s = s + i\nprint(\"La somme vaut :\", s)",
+    "tdo": [
+      {
+        "objet": "n, s, i",
+        "type": "Entier",
+        "role": "Nombre limite, somme cumulée, compteur de boucle"
+      }
+    ],
+    "bacTips": "N'oubliez jamais de préciser le nom du programme après 'Fin' : ex `Fin Somme_Entiers`."
+  },
+  {
+    "id": "algo-tdo",
+    "category": "Conventions & Structure",
+    "name": "T.D.O (Tableau de Déclaration des Objets Globaux)",
+    "summary": "Tableau officiel obligatoire pour déclarer les variables et constantes d'un programme.",
+    "description": "Dans l'épreuve théorique, tout objet manipulé dans l'algorithme principal doit obligatoirement figurer dans le T.D.O avec son Objet (nom), son Type ou Nature (Entier, Réel, etc.), et son Rôle.",
+    "pseudoCode": "T.D.O (Tableau de Déclaration des Objets Globaux) :\n+---------+-------------------+--------------------------------+\n|  Objet  |   Type / Nature   |             Rôle               |\n+---------+-------------------+--------------------------------+\n|    n    |      Entier       | Taille du tableau ou saisie    |\n|    t    | Tableau de 50 Ent | Tableau de stockage            |\n|   moy   |       Réel        | Moyenne calculée               |\n|   max   | Constante = 100   | Borne supérieure               |\n+---------+-------------------+--------------------------------+",
+    "pythonCode": "# En Python Thonny, le typage est dynamique mais les variables doivent être initialisées :\nn = 0\nt = [0] * 50\nmoy = 0.0\nMAX = 100",
+    "tdo": [
+      {
+        "objet": "Objet",
+        "type": "Type / Nature",
+        "role": "Description du rôle dans l'algorithme"
+      }
+    ],
+    "bacTips": "⭐ Au barème, 1.5 à 2 points sont généralement réservés au T.D.O ! Toute variable utilisée dans l'algorithme qui n'est pas déclarée dans le T.D.O entraîne une pénalité."
+  },
+  {
+    "id": "algo-chaines-fonctions",
+    "category": "Types de Données & Primitives",
+    "name": "Chaînes de caractères : Primitives officielles Bac",
+    "summary": "Les 6 fonctions standards sur les chaînes à maîtriser impérativement.",
+    "description": "Le programme tunisien utilise un jeu de primitives officielles pour manipuler les chaînes : Long, Sous_Chaine, Pos, Majus, ConvCh, Valeur.",
+    "pseudoCode": "// 1. Longueur de la chaîne\nl <-- Long(ch)\n\n// 2. Extraction d'une sous-chaîne de l'indice d à f inclus\ns <-- Sous_Chaine(ch, d, f)\n\n// 3. Position d'une sous-chaîne (renvoie 0 si non trouvée)\np <-- Pos(motif, ch)\n\n// 4. Mettre en majuscules\nm <-- Majus(ch)\n\n// 5. Convertir un nombre en chaîne\nch <-- ConvCh(123)\n\n// 6. Convertir une chaîne en nombre\nValeur(\"456\", n, e) // e = 0 si succès",
+    "pythonCode": "# Équivalents stricts en Python Thonny :\n# 1. Longueur\nl = len(ch)\n\n# 2. Sous-chaîne (attention aux tranches [d:f+1])\ns = ch[d:f+1]\n\n# 3. Position (renvoie -1 si non trouvée en Python)\np = ch.find(motif)\n\n# 4. Majuscules\nm = ch.upper()\n\n# 5. Nombre vers chaîne\nch = str(123)\n\n# 6. Chaîne vers nombre\nn = int(\"456\")",
+    "tdo": [
+      {
+        "objet": "ch, s, motif, m",
+        "type": "Chaîne de caractères",
+        "role": "Chaînes manipulées"
+      },
+      {
+        "objet": "l, p, n, e, d, f",
+        "type": "Entier",
+        "role": "Longueurs, indices, valeurs numériques"
+      }
+    ],
+    "bacTips": "🚨 ATTENTION AUX INDICES : En pseudo-code Bac tunisien, les chaînes commencent à l'indice 1 ! En Python Thonny, les chaînes commencent à l'indice 0 !"
+  },
+  {
+    "id": "algo-cond-si",
+    "category": "Structures de Contrôle",
+    "name": "Structure Conditionnelle (Si ... Alors ... Sinon)",
+    "summary": "Exécute un bloc d'instructions selon la valeur booléenne d'une condition.",
+    "description": "Permet d'aiguiller le déroulement du programme selon qu'une condition logique est Vraie ou Fausse.",
+    "pseudoCode": "// Forme complète :\nSi (note >= 10) Alors\n  decision <-- \"Admis\"\n  admis <-- Vrai\nSinon\n  decision <-- \"Ajourné\"\n  admis <-- Faux\nFin Si\n\n// Forme imbriquée :\nSi (moy >= 16) Alors\n  mention <-- \"Très Bien\"\nSinon Si (moy >= 14) Alors\n  mention <-- \"Bien\"\nSinon\n  mention <-- \"Passable\"\nFin Si",
+    "pythonCode": "# Équivalent Python dans Thonny :\nif note >= 10:\n    decision = \"Admis\"\n    admis = True\nelse:\n    decision = \"Ajourné\"\n    admis = False\n\n# Forme imbriquée elif :\nif moy >= 16:\n    mention = \"Très Bien\"\nelif moy >= 14:\n    mention = \"Bien\"\nelse:\n    mention = \"Passable\"",
+    "tdo": [
+      {
+        "objet": "note, moy",
+        "type": "Réel",
+        "role": "Notes de l'élève"
+      },
+      {
+        "objet": "decision, mention",
+        "type": "Chaîne",
+        "role": "Décision du jury"
+      },
+      {
+        "objet": "admis",
+        "type": "Booléen",
+        "role": "Indicateur d'admission"
+      }
+    ],
+    "bacTips": "N'oubliez pas d'indiquer 'Fin Si' pour chaque 'Si' ouvert."
+  },
+  {
+    "id": "algo-cond-selon",
+    "category": "Structures de Contrôle",
+    "name": "Choix Multiple (Selon variable Faire)",
+    "summary": "Sélectionne une branche parmi plusieurs selon la valeur d'une variable scalaire.",
+    "description": "Remplace avantageusement une longue suite de 'Si ... Sinon Si' quand une même variable prend différentes valeurs discrètes (entiers ou caractères).",
+    "pseudoCode": "Selon mois Faire\n  12, 1, 2 : saison <-- \"Hiver\"\n  3, 4, 5   : saison <-- \"Printemps\"\n  6, 7, 8   : saison <-- \"Été\"\n  9, 10, 11 : saison <-- \"Automne\"\n  Autre     : saison <-- \"Mois Invalide\"\nFin Selon",
+    "pythonCode": "# En Python 3.10+ (match/case) ou if/elif/else dans Thonny :\nif mois in (12, 1, 2):\n    saison = \"Hiver\"\nelif mois in (3, 4, 5):\n    saison = \"Printemps\"\nelif mois in (6, 7, 8):\n    saison = \"Été\"\nelif mois in (9, 10, 11):\n    saison = \"Automne\"\nelse:\n    saison = \"Mois Invalide\"",
+    "tdo": [
+      {
+        "objet": "mois",
+        "type": "Entier",
+        "role": "Numéro du mois (1 à 12)"
+      },
+      {
+        "objet": "saison",
+        "type": "Chaîne",
+        "role": "Nom de la saison"
+      }
+    ],
+    "bacTips": "La branche 'Autre' est indispensable pour traiter les cas hors limites."
+  },
+  {
+    "id": "algo-boucle-pour",
+    "category": "Structures de Contrôle",
+    "name": "Boucle Pour (Pour compteur de début à fin Faire)",
+    "summary": "Boucle à compteur déterminée quand le nombre d'itérations est connu à l'avance.",
+    "description": "S'utilise obligatoirement lorsque le nombre de répétitions est connu avant d'entrer dans la boucle (ex: parcourir un tableau de N éléments, calculer une somme de 1 à N).",
+    "pseudoCode": "s <-- 0\nPour i de 1 à n Faire\n  s <-- s + t[i]\nFin Pour\n\n// Avec pas négatif (décroissant) :\nPour i de n à 1 (Pas = -1) Faire\n  Ecrire(t[i])\nFin Pour",
+    "pythonCode": "# En Python Thonny :\ns = 0\nfor i in range(1, n + 1):\n    s += t[i]\n\n# Pas négatif décroissant :\nfor i in range(n, 0, -1):\n    print(t[i])",
+    "tdo": [
+      {
+        "objet": "i, n, s",
+        "type": "Entier",
+        "role": "Compteur, taille, somme"
+      },
+      {
+        "objet": "t",
+        "type": "Tableau de 100 Entiers",
+        "role": "Tableau d'entiers"
+      }
+    ],
+    "bacTips": "En pseudo-code Bac, la borne de fin est INCLUSE (de 1 à n s'arrête à n). En Python, range(1, n) s'arrête à n-1, il faut donc écrire range(1, n + 1) !"
+  },
+  {
+    "id": "algo-boucle-repeter",
+    "category": "Structures de Contrôle",
+    "name": "Boucle Répéter ... Jusqu'à (Condition d'arrêt)",
+    "summary": "Boucle exécutée au moins une fois, qui s'arrête dès que la condition devient VRAIE.",
+    "description": "La structure 'Répéter ... Jusqu'à' teste sa condition à la FIN. Les instructions sont exécutées au moins une fois. La boucle s'arrête quand la condition est VRAIE (condition de sortie). C'est la structure reine des contrôles de saisie.",
+    "pseudoCode": "// Contrôle de saisie officiel d'un entier N entre 5 et 30\nRépéter\n  Ecrire(\"Donner N (entre 5 et 30) : \")\n  Lire(n)\nJusqu'à (n >= 5 ET n <= 30)",
+    "pythonCode": "# En Python Thonny (simulation avec while True et break) :\nwhile True:\n    n = int(input(\"Donner N (entre 5 et 30) : \"))\n    if 5 <= n <= 30:\n        break",
+    "tdo": [
+      {
+        "objet": "n",
+        "type": "Entier",
+        "role": "Nombre d'éléments saisi et validé"
+      }
+    ],
+    "bacTips": "🚨 PIÈGE MAJEUR : Dans 'Jusqu'à (condition)', on met la condition pour SORTIR (quand c'est bon), alors que dans 'Tant que', on met la condition pour CONTINUER !"
+  },
+  {
+    "id": "algo-boucle-tantque",
+    "category": "Structures de Contrôle",
+    "name": "Boucle Tant que ... Faire (Condition de continuation)",
+    "summary": "Boucle avec test au début : s'exécute TANT QUE la condition est VRAIE.",
+    "description": "Si la condition est fausse dès le départ, le corps de la boucle n'est JAMAIS exécuté (0 fois). S'utilise quand on ne connaît pas le nombre de tours à l'avance et qu'on ne veut exécuter que si une condition est vérifiée.",
+    "pseudoCode": "// Division euclidienne par soustractions successives\nq <-- 0\nr <-- a\nTant que (r >= b) Faire\n  r <-- r - b\n  q <-- q + 1\nFin Tant que",
+    "pythonCode": "# En Python Thonny :\nq = 0\nr = a\nwhile r >= b:\n    r = r - b\n    q = q + 1",
+    "tdo": [
+      {
+        "objet": "a, b, q, r",
+        "type": "Entier",
+        "role": "Dividende, diviseur, quotient, reste"
+      }
+    ],
+    "bacTips": "Pensez toujours à modifier à l'intérieur de la boucle la variable testée (ici r) pour éviter une boucle infinie !"
+  },
+  {
+    "id": "algo-fonctions",
+    "category": "Sous-Programmes (Fonctions & Procédures)",
+    "name": "Sous-programme : Fonction (Déclaration & Retour)",
+    "summary": "Sous-programme qui calcule et RETOURNE une seule valeur scalaire via son nom.",
+    "description": "Une fonction reçoit zéro, un ou plusieurs paramètres et retourne OBLIGATOIREMENT une valeur unique d'un type déterminé (Entier, Réel, Chaîne, Booléen). Elle s'utilise à l'intérieur d'une expression ou d'une affectation.",
+    "pseudoCode": "// Définition de la fonction\nFonction Est_Pair(n : Entier) : Booléen\nDébut\n  Retourner (n MOD 2 = 0)\nFin Est_Pair\n\n// Appel dans le programme principal :\nSi (Est_Pair(x)) Alors\n  Ecrire(x, \" est pair\")\nFin Si",
+    "pythonCode": "# En Python Thonny :\ndef est_pair(n):\n    return n % 2 == 0\n\n# Appel :\nif est_pair(x):\n    print(x, \"est pair\")",
+    "tdo": [
+      {
+        "objet": "Est_Pair",
+        "type": "Fonction (Booléen)",
+        "role": "Teste la parité d'un entier"
+      },
+      {
+        "objet": "n, x",
+        "type": "Entier",
+        "role": "Nombre à tester"
+      }
+    ],
+    "bacTips": "Une fonction ne doit JAMAIS contenir d'affichage `Ecrire()` ou de `Lire()`, elle doit simplement calculer et faire `Retourner résultat`."
+  },
+  {
+    "id": "algo-procedures",
+    "category": "Sous-Programmes (Fonctions & Procédures)",
+    "name": "Sous-programme : Procédure (Action sans retour direct)",
+    "summary": "Sous-programme qui accomplit une action (affichage, remplissage, tri, modification).",
+    "description": "Une procédure n'a pas de type de retour. Elle communique avec le programme appelant via ses paramètres d'entrée/sortie (passés par variable avec le mot-clé 'var' ou '@').",
+    "pseudoCode": "// Procédure d'échange de deux valeurs (passage par variable obligatoire)\nProcédure Echanger(var a : Entier, var b : Entier)\nDébut\n  aux <-- a\n  a <-- b\n  b <-- aux\nFin Echanger\n\n// Appel dans le programme principal :\nEchanger(x, y)",
+    "pythonCode": "# En Python Thonny (les entiers sont immuables, l'échange se fait par tuple) :\ndef echanger(t, i, j):\n    # Échange dans une liste/tableau mutable\n    t[i], t[j] = t[j], t[i]",
+    "tdo": [
+      {
+        "objet": "Echanger",
+        "type": "Procédure",
+        "role": "Permute les contenus de deux variables"
+      },
+      {
+        "objet": "aux",
+        "type": "Entier (Local)",
+        "role": "Variable auxiliaire de temporisation"
+      }
+    ],
+    "bacTips": "Au Bac théorique, si une procédure doit modifier une variable pour que le programme principal voie la nouvelle valeur, n'oubliez JAMAIS le mot-clé 'var' ou '@' devant le paramètre !"
+  },
+  {
+    "id": "algo-arith-premier",
+    "category": "Algorithmes Arithmétiques",
+    "name": "Nombre Premier (Test de primalité optimisé)",
+    "summary": "Vérifie si un entier N > 1 admet pour seuls diviseurs 1 et lui-même.",
+    "description": "Un entier N est premier s'il n'est divisible par aucun entier compris entre 2 et la racine carrée de N. C'est l'un des algorithmes les plus récurrents au Bac STI.",
+    "pseudoCode": "Fonction Premier(n : Entier) : Booléen\nDébut\n  Si (n < 2) Alors\n    Retourner Faux\n  Fin Si\n  \n  i <-- 2\n  prem <-- Vrai\n  Tant que (i <= Racine(n) ET prem = Vrai) Faire\n    Si (n MOD i = 0) Alors\n      prem <-- Faux\n    Sinon\n      i <-- i + 1\n    Fin Si\n  Fin Tant que\n  \n  Retourner prem\nFin Premier",
+    "pythonCode": "# En Python Thonny :\ndef premier(n):\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True",
+    "tdo": [
+      {
+        "objet": "Premier",
+        "type": "Fonction (Booléen)",
+        "role": "Teste si n est un nombre premier"
+      },
+      {
+        "objet": "i",
+        "type": "Entier (Local)",
+        "role": "Diviseur potentiel testé"
+      },
+      {
+        "objet": "prem",
+        "type": "Booléen (Local)",
+        "role": "Indicateur de primalité"
+      }
+    ],
+    "bacTips": "L'optimisation jusqu'à Racine(n) permet d'obtenir la note maximale de complexité aux examens !"
+  },
+  {
+    "id": "algo-arith-pgcd",
+    "category": "Algorithmes Arithmétiques",
+    "name": "PGCD (Plus Grand Commun Diviseur - Euclide)",
+    "summary": "Calcule le PGCD de deux entiers strictement positifs avec l'algorithme d'Euclide.",
+    "description": "L'algorithme d'Euclide utilise les divisions successives : PGCD(a, b) = PGCD(b, a MOD b) jusqu'à ce que le reste soit nul.",
+    "pseudoCode": "Fonction PGCD(a : Entier, b : Entier) : Entier\nDébut\n  Tant que (b <> 0) Faire\n    r <-- a MOD b\n    a <-- b\n    b <-- r\n  Fin Tant que\n  Retourner a\nFin PGCD",
+    "pythonCode": "# En Python Thonny :\ndef pgcd(a, b):\n    while b != 0:\n        a, b = b, a % b\n    return a",
+    "tdo": [
+      {
+        "objet": "PGCD",
+        "type": "Fonction (Entier)",
+        "role": "Calcule le PGCD de a et b"
+      },
+      {
+        "objet": "r",
+        "type": "Entier (Local)",
+        "role": "Reste de la division euclidienne"
+      }
+    ],
+    "bacTips": "La méthode d'Euclide par modulo est beaucoup plus rapide et élégante que la méthode par soustractions successives."
+  },
+  {
+    "id": "algo-tri-bulles",
+    "category": "Algorithmes de Tri & Recherche",
+    "name": "Tri à Bulles (Bubble Sort optimisé avec arrêt)",
+    "summary": "Trie un tableau par comparaisons successives d'éléments adjacents avec arrêt anticipé.",
+    "description": "On compare chaque élément avec son voisin et on les échange s'ils sont désordonnés. On utilise une variable booléenne 'permut' qui s'arrête dès que le tableau est trié.",
+    "pseudoCode": "Procédure Tri_Bulles(var t : Tab, n : Entier)\nDébut\n  Répéter\n    permut <-- Faux\n    Pour i de 1 à n - 1 Faire\n      Si (t[i] > t[i + 1]) Alors\n        // Échange\n        aux <-- t[i]\n        t[i] <-- t[i + 1]\n        t[i + 1] <-- aux\n        permut <-- Vrai\n      Fin Si\n    Fin Pour\n  Jusqu'à (permut = Faux)\nFin Tri_Bulles",
+    "pythonCode": "# En Python Thonny :\ndef tri_bulles(t):\n    n = len(t)\n    while True:\n        permut = False\n        for i in range(n - 1):\n            if t[i] > t[i + 1]:\n                t[i], t[i + 1] = t[i + 1], t[i]\n                permut = True\n        if not permut:\n            break",
+    "tdo": [
+      {
+        "objet": "Tri_Bulles",
+        "type": "Procédure",
+        "role": "Trie le tableau en ordre croissant"
+      },
+      {
+        "objet": "i, aux",
+        "type": "Entier (Local)",
+        "role": "Compteur et variable temporaire d'échange"
+      },
+      {
+        "objet": "permut",
+        "type": "Booléen (Local)",
+        "role": "Indicateur d'au moins une permutation"
+      }
+    ],
+    "bacTips": "Le drapeau booléen 'permut' est obligatoire au Bac pour éviter les tours de boucle inutiles quand le tableau est déjà trié."
+  },
+  {
+    "id": "algo-tri-selection",
+    "category": "Algorithmes de Tri & Recherche",
+    "name": "Tri par Sélection (Selection Sort)",
+    "summary": "Trouve le plus petit élément du tableau et le place en première position, puis recommence.",
+    "description": "À chaque passage i, on recherche l'indice du minimum dans le sous-tableau de i à n, puis on permute t[i] avec ce minimum.",
+    "pseudoCode": "Procédure Tri_Selection(var t : Tab, n : Entier)\nDébut\n  Pour i de 1 à n - 1 Faire\n    pos_min <-- i\n    Pour j de i + 1 à n Faire\n      Si (t[j] < t[pos_min]) Alors\n        pos_min <-- j\n      Fin Si\n    Fin Pour\n    Si (pos_min <> i) Alors\n      aux <-- t[i]\n      t[i] <-- t[pos_min]\n      t[pos_min] <-- aux\n    Fin Si\n  Fin Pour\nFin Tri_Selection",
+    "pythonCode": "# En Python Thonny :\ndef tri_selection(t):\n    n = len(t)\n    for i in range(n - 1):\n        pos_min = i\n        for j in range(i + 1, n):\n            if t[j] < t[pos_min]:\n                pos_min = j\n        if pos_min != i:\n            t[i], t[pos_min] = t[pos_min], t[i]",
+    "tdo": [
+      {
+        "objet": "Tri_Selection",
+        "type": "Procédure",
+        "role": "Trie le tableau par sélection du minimum"
+      },
+      {
+        "objet": "i, j, pos_min, aux",
+        "type": "Entier (Local)",
+        "role": "Compteurs, position du minimum et variable d'échange"
+      }
+    ],
+    "bacTips": "Avantage du tri par sélection : il effectue exactement N - 1 échanges au total, ce qui minimise les écritures mémoire."
+  },
+  {
+    "id": "algo-recherche-dicho",
+    "category": "Algorithmes de Tri & Recherche",
+    "name": "Recherche Dichotomique (Tableau préalablement trié)",
+    "summary": "Recherche ultra-rapide par division successive de l'intervalle par 2.",
+    "description": "Condition obligatoire : LE TABLEAU DOIT ÊTRE TRIÉ. À chaque étape, on compare l'élément recherché avec le milieu. Si la valeur est plus petite, on cherche dans la moitié gauche, sinon dans la moitié droite.",
+    "pseudoCode": "Fonction Recherche_Dicho(t : Tab, n : Entier, val : Entier) : Entier\nDébut\n  deb <-- 1\n  fin <-- n\n  pos <-- 0\n  \n  Tant que (deb <= fin ET pos = 0) Faire\n    mil <-- (deb + fin) DIV 2\n    Si (t[mil] = val) Alors\n      pos <-- mil\n    Sinon Si (val < t[mil]) Alors\n      fin <-- mil - 1\n    Sinon\n      deb <-- mil + 1\n    Fin Si\n  Fin Tant que\n  \n  Retourner pos // 0 si non trouvé\nFin Recherche_Dicho",
+    "pythonCode": "# En Python Thonny :\ndef recherche_dicho(t, val):\n    deb = 0\n    fin = len(t) - 1\n    while deb <= fin:\n        mil = (deb + fin) // 2\n        if t[mil] == val:\n            return mil\n        elif val < t[mil]:\n            fin = mil - 1\n        else:\n            deb = mil + 1\n    return -1",
+    "tdo": [
+      {
+        "objet": "Recherche_Dicho",
+        "type": "Fonction (Entier)",
+        "role": "Renvoie la position de la valeur ou 0"
+      },
+      {
+        "objet": "deb, fin, mil, pos",
+        "type": "Entier (Local)",
+        "role": "Bornes, indice médian et position trouvée"
+      }
+    ],
+    "bacTips": "🚨 CONDITION D'EXAMEN : Ne jamais appliquer la recherche dichotomique sur un tableau non trié ! Si le sujet ne dit pas qu'il est trié, triez-le d'abord."
+  },
+  {
+    "id": "algo-palindrome",
+    "category": "Algorithmes Arithmétiques",
+    "name": "Palindrome (Chaîne ou Entier symétrique)",
+    "summary": "Vérifie si un mot ou un nombre se lit de la même façon de gauche à droite et de droite à gauche.",
+    "description": "Exemples : 'RADAR', 'KAYAK', '12321'. On compare les caractères opposés deux à deux en partant des extrémités vers le centre.",
+    "pseudoCode": "Fonction Palindrome(ch : Chaîne) : Booléen\nDébut\n  i <-- 1\n  j <-- Long(ch)\n  pal <-- Vrai\n  \n  Tant que (i < j ET pal = Vrai) Faire\n    Si (ch[i] <> ch[j]) Alors\n      pal <-- Faux\n    Sinon\n      i <-- i + 1\n      j <-- j - 1\n    Fin Si\n  Fin Tant que\n  \n  Retourner pal\nFin Palindrome",
+    "pythonCode": "# En Python Thonny :\ndef palindrome(ch):\n    # Méthode avec boucle Bac :\n    i = 0\n    j = len(ch) - 1\n    while i < j:\n        if ch[i] != ch[j]:\n            return False\n        i += 1\n        j -= 1\n    return True\n\n# Astuce Python en une ligne :\n# return ch == ch[::-1]",
+    "tdo": [
+      {
+        "objet": "Palindrome",
+        "type": "Fonction (Booléen)",
+        "role": "Teste la symétrie de la chaîne"
+      },
+      {
+        "objet": "i, j",
+        "type": "Entier (Local)",
+        "role": "Pointeurs de début et de fin"
+      },
+      {
+        "objet": "pal",
+        "type": "Booléen (Local)",
+        "role": "Indicateur booléen"
+      }
+    ],
+    "bacTips": "Pensez à convertir en minuscules ou majuscules avec `ch.upper()` avant de tester pour que 'Radar' soit bien reconnu comme palindrome !"
+  },
+  {
+    "id": "algo-recursivite-factorielle",
+    "category": "Récursivité",
+    "name": "Factorielle Récursive (Exemple fondamental)",
+    "summary": "Calcul de N! = N * (N-1)! avec N! = 1 pour N = 0.",
+    "description": "La récursivité repose sur deux piliers obligatoires : 1. Le cas de base (condition d'arrêt où le calcul est immédiat : N=0 => 1) 2. Le cas général récursif qui rappelle la fonction avec un problème de taille réduite (N * Fact(N-1)).",
+    "pseudoCode": "Fonction Factorielle(n : Entier) : Entier\nDébut\n  // Cas de base (Arrêt)\n  Si (n = 0 OU n = 1) Alors\n    Retourner 1\n  // Cas récursif (Appel avec paramètre réduit)\n  Sinon\n    Retourner n * Factorielle(n - 1)\n  Fin Si\nFin Factorielle",
+    "pythonCode": "# En Python Thonny :\ndef factorielle(n):\n    if n <= 1:\n        return 1\n    return n * factorielle(n - 1)",
+    "tdo": [
+      {
+        "objet": "Factorielle",
+        "type": "Fonction (Entier)",
+        "role": "Calcule récursivement n!"
+      }
+    ],
+    "bacTips": "Au Bac, la question type est : 'Identifier le cas de base et le cas général de la fonction récursive'."
+  },
+  {
+    "id": "algo-recursivite-fibonacci",
+    "category": "Récursivité",
+    "name": "Suite de Fibonacci Récursive",
+    "summary": "F(0) = 0, F(1) = 1, et F(n) = F(n-1) + F(n-2) pour n >= 2.",
+    "description": "Modèle de récursivité double : chaque terme est la somme des deux termes précédents. Deux cas de base sont nécessaires (n=0 et n=1).",
+    "pseudoCode": "Fonction Fibo(n : Entier) : Entier\nDébut\n  Si (n = 0) Alors\n    Retourner 0\n  Sinon Si (n = 1) Alors\n    Retourner 1\n  Sinon\n    Retourner Fibo(n - 1) + Fibo(n - 2)\n  Fin Si\nFin Fibo",
+    "pythonCode": "# En Python Thonny :\ndef fibo(n):\n    if n == 0:\n        return 0\n    if n == 1:\n        return 1\n    return fibo(n - 1) + fibo(n - 2)",
+    "tdo": [
+      {
+        "objet": "Fibo",
+        "type": "Fonction (Entier)",
+        "role": "Calcule le n-ième terme de Fibonacci"
+      }
+    ],
+    "bacTips": "Attention à bien traiter les deux cas de base séparément pour n=0 et n=1."
+  }
 ]
 };

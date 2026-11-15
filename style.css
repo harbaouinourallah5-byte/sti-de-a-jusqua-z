@@ -3441,6 +3441,336 @@ input, select, textarea {
   display: none !important;
 }
 
+/* =============================================================
+   SWITCHER TACTILE CLAVIER MÉCANIQUE (STI vs ALGORITHME)
+   ============================================================= */
+.keyboard-switch-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 12px;
+}
+
+.keyboard-switch-base {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  background: #070d18;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.7), 0 2px 6px rgba(255, 255, 255, 0.05);
+}
+
+.keycap-btn {
+  position: relative;
+  border: none;
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  border-top: 1px solid #334155;
+  border-radius: 8px;
+  padding: 7px 14px;
+  cursor: pointer;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 0 #050811, 0 6px 12px rgba(0, 0, 0, 0.5);
+  transform: translateY(0);
+  transition: transform 0.08s cubic-bezier(0.4, 0, 0.2, 1), 
+              box-shadow 0.08s cubic-bezier(0.4, 0, 0.2, 1), 
+              background 0.15s ease;
+  user-select: none;
+  outline: none;
+}
+
+.keycap-btn:hover {
+  background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
+}
+
+.keycap-btn:active {
+  transform: translateY(4px) !important;
+  box-shadow: 0 0px 0 #050811, 0 2px 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+.keycap-btn.active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #050811, 0 2px 5px rgba(0, 0, 0, 0.6);
+  background: linear-gradient(180deg, #0f172a 0%, #090e1a 100%);
+  border-top: 1px solid #475569;
+}
+
+.keycap-led {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #334155;
+  display: inline-block;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+#keycap-sti.active .keycap-led {
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8, 0 0 14px rgba(56, 189, 248, 0.8);
+}
+
+#keycap-algo.active .keycap-led {
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981, 0 0 14px rgba(16, 185, 129, 0.8);
+}
+
+.keycap-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.keycap-icon {
+  display: none; /* Remplacé par le libellé épuré */
+}
+
+.keycap-text {
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  line-height: 1.1;
+}
+
+.keycap-sub {
+  font-size: 0.62rem;
+  color: var(--text-secondary);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  line-height: 1.1;
+  margin-top: 2px;
+}
+
+#keycap-sti.active .keycap-text {
+  color: #38bdf8;
+}
+
+#keycap-algo.active .keycap-text {
+  color: #34d399;
+}
+
+/* Version thème clair pour les touches du clavier */
+[data-theme="light"] .keyboard-switch-base {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.05);
+}
+
+[data-theme="light"] .keycap-btn {
+  background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+  border-top-color: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 4px 0 #94a3b8, 0 6px 10px rgba(0,0,0,0.15);
+}
+
+[data-theme="light"] .keycap-btn.active {
+  background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 100%);
+  box-shadow: 0 1px 0 #94a3b8, 0 2px 4px rgba(0,0,0,0.15);
+  border-top-color: #cbd5e1;
+}
+
+[data-theme="light"] .keycap-led {
+  background: #94a3b8;
+}
+
+/* =============================================================
+   STYLES SPÉCIFIQUES AUX FICHES ALGORITHME (PRATIQUE & THÉORIQUE)
+   ============================================================= */
+.algo-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+.algo-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(56, 189, 248, 0.45);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+}
+
+.algo-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.algo-card-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.algo-card-cat {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #38bdf8;
+}
+
+.algo-badge-qt {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #34d399;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.algo-badge-prop {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #38bdf8;
+  font-size: 0.8rem;
+  font-family: monospace;
+}
+
+.algo-thonny-box {
+  background: #090d16;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 14px;
+  position: relative;
+  font-family: "Fira Code", Consolas, Monaco, monospace;
+  font-size: 0.88rem;
+  color: #e2e8f0;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+.algo-thonny-box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.78rem;
+  color: #34d399;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.algo-pseudo-box {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 14px;
+  font-family: "Fira Code", Consolas, Monaco, monospace;
+  font-size: 0.88rem;
+  color: #fbbf24;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+.algo-pseudo-box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.78rem;
+  color: #fbbf24;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.algo-dual-code {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 860px) {
+  .algo-dual-code {
+    grid-template-columns: 1fr;
+  }
+}
+
+.algo-tdo-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 0.85rem;
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #334155;
+}
+
+.algo-tdo-table th {
+  background: rgba(30, 41, 59, 0.9);
+  color: #38bdf8;
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid #334155;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.algo-tdo-table td {
+  padding: 7px 12px;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+  font-family: "Fira Code", Consolas, Monaco, monospace;
+  font-size: 0.82rem;
+}
+
+.algo-tdo-table tr:last-child td {
+  border-bottom: none;
+}
+
+.algo-bac-tips {
+  background: rgba(245, 158, 11, 0.1);
+  border-left: 3px solid #f59e0b;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 0.84rem;
+  color: #fde68a;
+  line-height: 1.5;
+}
+
+.algo-steps-list {
+  padding-left: 20px;
+  margin: 6px 0;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .keyboard-switch-container {
+    order: 3;
+    width: 100%;
+    margin: 8px 0;
+  }
+  .keyboard-switch-base {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 
 
 
