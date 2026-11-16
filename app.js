@@ -7720,8 +7720,12 @@ function renderAlgoTheoriqueCategories() {
 
   bar.innerHTML = categories.map(cat => {
     const isAct = cat === currentAlgoTheoriqueCategory;
+    const count = cat === 'all' ? items.length : items.filter(x => x.category === cat).length;
     const label = cat === 'all' ? '✨ Tout afficher' : cat;
-    return `<button class="cat-pill ${isAct ? 'active' : ''}" onclick="setAlgoTheoriqueCategory('${cat}')">${label}</button>`;
+    return `<button type="button" class="cat-pill ${isAct ? 'active' : ''}" onclick="setAlgoTheoriqueCategory('${cat}')">
+      <span>${label}</span>
+      <span class="cat-pill-count">${count}</span>
+    </button>`;
   }).join('');
 }
 
@@ -7737,118 +7741,173 @@ function handleAlgoTheoriqueSearch(val) {
 }
 
 function renderAlgoTheoriqueCards() {
-  const grid = document.getElementById('algoTheoriqueGrid');
-  if (!grid) return;
+  const container = document.getElementById('algoTheoriqueGrid');
+  if (!container) return;
+  container.innerHTML = '';
 
   const items = (typeof DATA !== 'undefined' && DATA && DATA.algo_theorique) ? DATA.algo_theorique : [];
 
   const filtered = items.filter(item => {
     const matchCat = (currentAlgoTheoriqueCategory === 'all' || item.category === currentAlgoTheoriqueCategory);
-    const matchSearch = (!currentAlgoTheoriqueSearch || 
-      item.name.toLowerCase().includes(currentAlgoTheoriqueSearch) ||
-      (item.summary && item.summary.toLowerCase().includes(currentAlgoTheoriqueSearch)) ||
-      (item.description && item.description.toLowerCase().includes(currentAlgoTheoriqueSearch)) ||
-      (item.pseudoCode && item.pseudoCode.toLowerCase().includes(currentAlgoTheoriqueSearch)) ||
-      (item.pythonCode && item.pythonCode.toLowerCase().includes(currentAlgoTheoriqueSearch))
+    const q = currentAlgoTheoriqueSearch.toLowerCase();
+    const matchSearch = (!q || 
+      item.name.toLowerCase().includes(q) ||
+      (item.summary && item.summary.toLowerCase().includes(q)) ||
+      (item.description && item.description.toLowerCase().includes(q)) ||
+      (item.pseudoCode && item.pseudoCode.toLowerCase().includes(q))
     );
     return matchCat && matchSearch;
   });
 
   if (filtered.length === 0) {
-    grid.innerHTML = `
-      <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: var(--bg-card); border-radius: var(--radius-md);">
-        <p style="font-size: 1.1rem; color: var(--text-secondary);">🔍 Aucun algorithme ne correspond à votre recherche.</p>
-        <button class="nav-btn" onclick="setAlgoTheoriqueCategory('all')" style="margin-top: 10px;">Réinitialiser les filtres</button>
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); background: var(--bg-card); border-radius: var(--radius-md);">
+        🔍 Aucun sous-programme ou algorithme ne correspond à votre recherche.
       </div>
     `;
     return;
   }
 
-  grid.innerHTML = filtered.map(item => {
-    const escapedPseudo = item.pseudoCode.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    const escapedPython = item.pythonCode.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    const rawPseudoJson = JSON.stringify(item.pseudoCode);
-    const rawPythonJson = JSON.stringify(item.pythonCode);
+  filtered.forEach(item => {
+    const isProcedure = item.name.toLowerCase().startsWith('procédure') || item.type === 'procedure';
+    const typeLabel = isProcedure ? 'Procédure' : 'Fonction';
+    const typeBadgeColor = isProcedure ? '#38bdf8' : '#f59e0b';
+    const typeBadgeBg = isProcedure ? 'rgba(56, 189, 248, 0.15)' : 'rgba(245, 158, 11, 0.15)';
+    const typeBadgeBorder = isProcedure ? 'rgba(56, 189, 248, 0.35)' : 'rgba(245, 158, 11, 0.35)';
 
-    // Formatage du TDO si présent
-    let tdoHtml = '';
-    if (item.tdo && Array.isArray(item.tdo) && item.tdo.length > 0) {
-      tdoHtml = `
-        <div style="margin-top: 8px;">
-          <strong style="color: #38bdf8; font-size: 0.85rem; display: block; margin-bottom: 4px;">
-            📋 T.D.O (Tableau de Déclaration des Objets) :
-          </strong>
-          <table class="algo-tdo-table">
-            <thead>
-              <tr>
-                <th style="width: 35%;">Objet</th>
-                <th>Type / Nature</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${item.tdo.map(row => `
-                <tr>
-                  <td style="color: #34d399; font-weight: 700;">${row.objet}</td>
-                  <td style="color: #94a3b8;">${row.type}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
-      `;
-    }
-
-    return `
-      <div class="algo-card algo-card-theorique" id="${item.id}">
-        <div class="algo-card-header">
-          <div>
-            <span class="algo-card-cat" style="color: #f59e0b;">${item.category}</span>
-            <h3 class="algo-card-title">${item.name}</h3>
-          </div>
-          <span class="pill-badge" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35);">
-            Bac Officiel
-          </span>
-        </div>
-
-        <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; margin: 0;">
-          ${item.description || item.summary}
-        </p>
-
-        <!-- DOUBLE COLONNE PSEUDO-CODE & PYTHON -->
-        <div class="algo-dual-code">
-          <!-- COLONNE 1 : PSEUDO-CODE OFFICIEL -->
-          <div class="algo-pseudo-box">
-            <div class="algo-pseudo-box-header">
-              <span>📋 Pseudo-Code Bac</span>
-              <button class="copy-btn" onclick='copyCodeText(${rawPseudoJson}, this)' style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer;">
-                📋 Copier
-              </button>
-            </div>
-            <pre style="margin: 0; background: transparent; padding: 0;"><code>${escapedPseudo}</code></pre>
-          </div>
-
-          <!-- COLONNE 2 : CODE PYTHON THONNY -->
-          <div class="algo-thonny-box">
-            <div class="algo-thonny-box-header">
-              <span>🐍 Équivalent Python Thonny</span>
-              <button class="copy-btn" onclick='copyCodeText(${rawPythonJson}, this)' style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer;">
-                📋 Copier
-              </button>
-            </div>
-            <pre style="margin: 0; background: transparent; padding: 0;"><code>${escapedPython}</code></pre>
-          </div>
-        </div>
-
-        ${tdoHtml}
-
-        ${item.bacTips ? `
-          <div class="algo-bac-tips">
-            <strong>🎯 Conseils pour l'écrit :</strong> ${item.bacTips}
-          </div>
-        ` : ''}
+    const card = document.createElement('div');
+    card.className = 'item-card card-theorique';
+    card.style.cursor = 'pointer';
+    card.innerHTML = `
+      <div class="card-cat-badge" style="color: #f59e0b;">${escapeHtml(item.category)}</div>
+      <div class="item-card-title">
+        <span>${escapeHtml(item.name)}</span>
+        <span class="item-card-tag" style="color: ${typeBadgeColor}; background: ${typeBadgeBg}; border-color: ${typeBadgeBorder}; font-size: 0.8rem; font-weight: 700;">
+          ${typeLabel}
+        </span>
+      </div>
+      <p class="item-card-desc">${escapeHtml(item.description || item.summary)}</p>
+      <div class="card-action-bar">
+        <span style="color: #f59e0b;">⚡ Voir l'Algorithme, TDO & Python</span>
+        <span>→</span>
       </div>
     `;
-  }).join('');
+    card.addEventListener('click', () => openAlgoTheoriqueModal(item));
+    container.appendChild(card);
+  });
+}
+
+function openAlgoTheoriqueModal(item) {
+  const modal = document.getElementById('detailsModal');
+  const body = document.getElementById('modalDynamicBody');
+  const title = document.getElementById('modalTitle');
+  const cat = document.getElementById('modalCategory');
+
+  if (!modal || !body) return;
+
+  cat.textContent = `ALGORITHMIQUE THÉORIQUE • ${item.category}`;
+  cat.style.color = '#f59e0b';
+  title.textContent = item.name;
+
+  const rawPseudoJson = JSON.stringify(item.pseudoCode || '');
+  const rawPythonJson = JSON.stringify(item.pythonCode || '');
+  const highlightedPython = (typeof highlightPythonCode === 'function')
+    ? highlightPythonCode(item.pythonCode || '')
+    : escapeHtml(item.pythonCode || '');
+
+  let tdoHtml = '';
+  if (item.tdo && Array.isArray(item.tdo) && item.tdo.length > 0) {
+    tdoHtml = `
+      <div class="modal-section">
+        <div class="modal-section-title green" style="color: #38bdf8;">
+          <span>📋</span>
+          <span>Tableau de Déclaration des Objets (T.D.O)</span>
+        </div>
+        <table class="algo-tdo-table" style="width: 100%; border-collapse: collapse; margin-top: 8px;">
+          <thead>
+            <tr style="background: rgba(15, 23, 42, 0.9); border-bottom: 2px solid rgba(56, 189, 248, 0.4);">
+              <th style="padding: 10px 14px; text-align: left; color: #38bdf8; width: 35%;">Objet</th>
+              <th style="padding: 10px 14px; text-align: left; color: #38bdf8;">Type / Nature</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${item.tdo.map(row => `
+              <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.06);">
+                <td style="padding: 10px 14px; color: #34d399; font-weight: 700; font-family: monospace;">${escapeHtml(row.objet)}</td>
+                <td style="padding: 10px 14px; color: #cbd5e1; font-family: monospace;">${escapeHtml(row.type)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  body.innerHTML = `
+    <!-- 1. Description & Principe de l'Algorithme -->
+    <div class="modal-section">
+      <div class="modal-section-title green" style="color: #fbbf24;">
+        <span>📖</span>
+        <span>Rôle & Principe Algorithmique (Bac STI)</span>
+      </div>
+      <p class="modal-text" style="font-size: 1.02rem; line-height: 1.65; color: #e2e8f0;">
+        ${item.description || item.summary}
+      </p>
+    </div>
+
+    <!-- 2. PSEUDO-CODE OFFICIEL BAC TUNISIEN -->
+    <div class="modal-section">
+      <div class="modal-section-title green" style="color: #fbbf24;">
+        <span>📜</span>
+        <span>Algorithme Officiel en Pseudo-Code Bac</span>
+      </div>
+      <div class="annexe-code-container" style="border-color: rgba(245, 158, 11, 0.35);">
+        <div class="annexe-code-header" style="background: rgba(245, 158, 11, 0.1);">
+          <span style="color: #fbbf24; font-weight: 800;">ALGORITHME_OFFICIEL.TXT</span>
+          <button type="button" class="annexe-copy-btn" onclick='copyCodeText(${rawPseudoJson}, this)' style="background: rgba(245, 158, 11, 0.25); color: #fbbf24; border-color: rgba(245, 158, 11, 0.45);">
+            📋 Copier le Pseudo-Code
+          </button>
+        </div>
+        <pre class="annexe-code-pre" style="white-space: pre-wrap; word-break: break-word;"><code style="color: #fef08a;">${escapeHtml(item.pseudoCode || '')}</code></pre>
+      </div>
+    </div>
+
+    <!-- 3. TABLEAU DE DÉCLARATION DES OBJETS (TDO) -->
+    ${tdoHtml}
+
+    <!-- 4. TRADUCTION PYTHON THONNY ÉQUIVALENTE -->
+    ${item.pythonCode ? `
+      <div class="modal-section">
+        <div class="modal-section-title green" style="color: #34d399;">
+          <span>🐍</span>
+          <span>Traduction Équivalente en Python (Thonny)</span>
+        </div>
+        <div class="annexe-code-container" style="border-color: rgba(16, 185, 129, 0.35);">
+          <div class="annexe-code-header">
+            <span>script_python.py</span>
+            <button type="button" class="annexe-copy-btn" onclick='copyCodeText(${rawPythonJson}, this)'>
+              📋 Copier le Code Python
+            </button>
+          </div>
+          <pre class="annexe-code-pre" style="white-space: pre-wrap; word-break: break-word;"><code class="python-syntax-view">${highlightedPython}</code></pre>
+        </div>
+      </div>
+    ` : ''}
+
+    ${item.exampleTrace ? `
+      <div class="modal-section">
+        <div class="modal-section-title green" style="color: #38bdf8;">
+          <span>🔍</span>
+          <span>Trace d'Exécution & Exemple Chiffré</span>
+        </div>
+        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 8px; padding: 14px; color: #cbd5e1; font-family: monospace; font-size: 0.9rem; white-space: pre-wrap;">
+          ${escapeHtml(item.exampleTrace)}
+        </div>
+      </div>
+    ` : ''}
+  `;
+
+  modal.classList.add('active');
 }
 
 
