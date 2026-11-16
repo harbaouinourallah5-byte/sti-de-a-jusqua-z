@@ -4685,390 +4685,709 @@ const DATA = {
 ],
   algo_theorique: [
   {
-    "id": "algo-structure-base",
-    "category": "Conventions & Structure",
-    "name": "Structure générale d'un Algorithme Bac",
-    "summary": "Squelette officiel d'écriture d'un algorithme au Baccalauréat tunisien.",
-    "description": "Tout algorithme principal commence par le mot-clé 'Algorithme' suivi d'un identificateur significatif, et se termine par 'Fin Nom_Algorithme'. Les déclarations sont formalisées dans le Tableau de Déclaration des Objets (T.D.O).",
-    "pseudoCode": "Algorithme Somme_Entiers\n// Début du traitement\nDébut\n  Ecrire(\"Donner un entier N : \")\n  Lire(n)\n  s <-- 0\n  Pour i de 1 à n Faire\n    s <-- s + i\n  Fin Pour\n  Ecrire(\"La somme vaut : \", s)\nFin Somme_Entiers",
-    "pythonCode": "# Équivalent Python dans Thonny\nn = int(input(\"Donner un entier N : \"))\ns = 0\nfor i in range(1, n + 1):\n    s = s + i\nprint(\"La somme vaut :\", s)",
+    "id": "algo-bin2oct",
+    "category": "Conversions de Bases",
+    "type": "fonction",
+    "name": "bin2oct(ch)",
+    "syntax": "fonction bin2oct(ch: chaîne): entier",
+    "summary": "Convertit un nombre binaire (base 2) en octal (base 8) par paquets de 3 bits.",
+    "description": "Complète la chaîne binaire avec des '0' à gauche pour atteindre une longueur multiple de 3. Découpe ensuite par tranches successives de 3 bits (valeur = b[0]*4 + b[1]*2 + b[2]) et concatène chaque chiffre octal obtenu.",
+    "pseudoCode": "0) fonction bin2oct(ch: chaîne): entier\n1) res <-- \"\"\n2) tant que (long(ch) mod 3 ≠ 0) faire\n     ch <-- \"0\" + ch\n   fin_tant_que\n3) tant que ch ≠ \"\" faire\n     b <-- sous_chaîne(ch, 0, 3)\n     ch <-- sous_chaîne(ch, 3, long(ch) - 1)\n     val <-- valeur(b[0]) * 4 + valeur(b[1]) * 2 + valeur(b[2])\n     res <-- res + convch(val)\n   fin_tant_que\n4) retourner valeur(res)\n5) fin",
     "tdo": [
       {
-        "objet": "n, s, i",
-        "type": "Entier",
-        "role": "Nombre limite, somme cumulée, compteur de boucle"
-      }
-    ],
-    "bacTips": "N'oubliez jamais de préciser le nom du programme après 'Fin' : ex `Fin Somme_Entiers`."
-  },
-  {
-    "id": "algo-tdo",
-    "category": "Conventions & Structure",
-    "name": "T.D.O (Tableau de Déclaration des Objets Globaux)",
-    "summary": "Tableau officiel obligatoire pour déclarer les variables et constantes d'un programme.",
-    "description": "Dans l'épreuve théorique, tout objet manipulé dans l'algorithme principal doit obligatoirement figurer dans le T.D.O avec son Objet (nom), son Type ou Nature (Entier, Réel, etc.), et son Rôle.",
-    "pseudoCode": "T.D.O (Tableau de Déclaration des Objets Globaux) :\n+---------+-------------------+--------------------------------+\n|  Objet  |   Type / Nature   |             Rôle               |\n+---------+-------------------+--------------------------------+\n|    n    |      Entier       | Taille du tableau ou saisie    |\n|    t    | Tableau de 50 Ent | Tableau de stockage            |\n|   moy   |       Réel        | Moyenne calculée               |\n|   max   | Constante = 100   | Borne supérieure               |\n+---------+-------------------+--------------------------------+",
-    "pythonCode": "# En Python Thonny, le typage est dynamique mais les variables doivent être initialisées :\nn = 0\nt = [0] * 50\nmoy = 0.0\nMAX = 100",
-    "tdo": [
-      {
-        "objet": "Objet",
-        "type": "Type / Nature",
-        "role": "Description du rôle dans l'algorithme"
-      }
-    ],
-    "bacTips": "⭐ Au barème, 1.5 à 2 points sont généralement réservés au T.D.O ! Toute variable utilisée dans l'algorithme qui n'est pas déclarée dans le T.D.O entraîne une pénalité."
-  },
-  {
-    "id": "algo-chaines-fonctions",
-    "category": "Types de Données & Primitives",
-    "name": "Chaînes de caractères : Primitives officielles Bac",
-    "summary": "Les 6 fonctions standards sur les chaînes à maîtriser impérativement.",
-    "description": "Le programme tunisien utilise un jeu de primitives officielles pour manipuler les chaînes : Long, Sous_Chaine, Pos, Majus, ConvCh, Valeur.",
-    "pseudoCode": "// 1. Longueur de la chaîne\nl <-- Long(ch)\n\n// 2. Extraction d'une sous-chaîne de l'indice d à f inclus\ns <-- Sous_Chaine(ch, d, f)\n\n// 3. Position d'une sous-chaîne (renvoie 0 si non trouvée)\np <-- Pos(motif, ch)\n\n// 4. Mettre en majuscules\nm <-- Majus(ch)\n\n// 5. Convertir un nombre en chaîne\nch <-- ConvCh(123)\n\n// 6. Convertir une chaîne en nombre\nValeur(\"456\", n, e) // e = 0 si succès",
-    "pythonCode": "# Équivalents stricts en Python Thonny :\n# 1. Longueur\nl = len(ch)\n\n# 2. Sous-chaîne (attention aux tranches [d:f+1])\ns = ch[d:f+1]\n\n# 3. Position (renvoie -1 si non trouvée en Python)\np = ch.find(motif)\n\n# 4. Majuscules\nm = ch.upper()\n\n# 5. Nombre vers chaîne\nch = str(123)\n\n# 6. Chaîne vers nombre\nn = int(\"456\")",
-    "tdo": [
-      {
-        "objet": "ch, s, motif, m",
-        "type": "Chaîne de caractères",
-        "role": "Chaînes manipulées"
+        "objet": "res, b",
+        "type": "chaîne"
       },
       {
-        "objet": "l, p, n, e, d, f",
-        "type": "Entier",
-        "role": "Longueurs, indices, valeurs numériques"
+        "objet": "val",
+        "type": "entier"
       }
     ],
-    "bacTips": "🚨 ATTENTION AUX INDICES : En pseudo-code Bac tunisien, les chaînes commencent à l'indice 1 ! En Python Thonny, les chaînes commencent à l'indice 0 !"
+    "pythonCode": "def bin2oct(ch: str) -> int:\n    while len(ch) % 3 != 0:\n        ch = \"0\" + ch\n    \n    res = \"\"\n    while ch != \"\":\n        b = ch[0:3]\n        ch = ch[3:]\n        val = int(b[0]) * 4 + int(b[1]) * 2 + int(b[2])\n        res += str(val)\n        \n    return int(res)",
+    "example": "bin2oct(\"1011011\") → 133"
   },
   {
-    "id": "algo-cond-si",
-    "category": "Structures de Contrôle",
-    "name": "Structure Conditionnelle (Si ... Alors ... Sinon)",
-    "summary": "Exécute un bloc d'instructions selon la valeur booléenne d'une condition.",
-    "description": "Permet d'aiguiller le déroulement du programme selon qu'une condition logique est Vraie ou Fausse.",
-    "pseudoCode": "// Forme complète :\nSi (note >= 10) Alors\n  decision <-- \"Admis\"\n  admis <-- Vrai\nSinon\n  decision <-- \"Ajourné\"\n  admis <-- Faux\nFin Si\n\n// Forme imbriquée :\nSi (moy >= 16) Alors\n  mention <-- \"Très Bien\"\nSinon Si (moy >= 14) Alors\n  mention <-- \"Bien\"\nSinon\n  mention <-- \"Passable\"\nFin Si",
-    "pythonCode": "# Équivalent Python dans Thonny :\nif note >= 10:\n    decision = \"Admis\"\n    admis = True\nelse:\n    decision = \"Ajourné\"\n    admis = False\n\n# Forme imbriquée elif :\nif moy >= 16:\n    mention = \"Très Bien\"\nelif moy >= 14:\n    mention = \"Bien\"\nelse:\n    mention = \"Passable\"",
+    "id": "algo-a2d",
+    "category": "Conversions de Bases",
+    "type": "fonction",
+    "name": "a2d(ch, bs)",
+    "syntax": "fonction a2d(ch: chaîne, bs: entier): entier",
+    "summary": "Convertit un nombre d'une base bs quelconque (2 à 16) vers la base 10 (décimale).",
+    "description": "Parcourt la chaîne de droite à gauche (poids faibles vers poids forts). Multiplie la valeur numérique de chaque symbole (0-9, A-F) par la puissance de base correspondante (p = bs^i) et accumule la somme.",
+    "pseudoCode": "0) fonction a2d(ch: chaîne, bs: entier): entier\n1) res <-- 0\n2) p <-- 1\n3) chh <-- \"0123456789ABCDEF\"\n4) pour i de long(ch) - 1 à 0 (pas = -1) faire\n     res <-- res + pos(ch[i], chh) * p\n     p <-- p * bs\n   fin_pour\n5) retourner res\n6) fin",
     "tdo": [
       {
-        "objet": "note, moy",
-        "type": "Réel",
-        "role": "Notes de l'élève"
+        "objet": "res, p, i",
+        "type": "entier"
       },
       {
-        "objet": "decision, mention",
-        "type": "Chaîne",
-        "role": "Décision du jury"
-      },
-      {
-        "objet": "admis",
-        "type": "Booléen",
-        "role": "Indicateur d'admission"
+        "objet": "chh",
+        "type": "chaîne"
       }
     ],
-    "bacTips": "N'oubliez pas d'indiquer 'Fin Si' pour chaque 'Si' ouvert."
+    "pythonCode": "def a2d(ch: str, bs: int) -> int:\n    chh = \"0123456789ABCDEF\"\n    res = 0\n    p = 1\n    for i in range(len(ch) - 1, -1, -1):\n        pos = chh.index(ch[i].upper())\n        res += pos * p\n        p *= bs\n    return res",
+    "example": "a2d(\"1A55F\", 16) → 107871"
   },
   {
-    "id": "algo-cond-selon",
-    "category": "Structures de Contrôle",
-    "name": "Choix Multiple (Selon variable Faire)",
-    "summary": "Sélectionne une branche parmi plusieurs selon la valeur d'une variable scalaire.",
-    "description": "Remplace avantageusement une longue suite de 'Si ... Sinon Si' quand une même variable prend différentes valeurs discrètes (entiers ou caractères).",
-    "pseudoCode": "Selon mois Faire\n  12, 1, 2 : saison <-- \"Hiver\"\n  3, 4, 5   : saison <-- \"Printemps\"\n  6, 7, 8   : saison <-- \"Été\"\n  9, 10, 11 : saison <-- \"Automne\"\n  Autre     : saison <-- \"Mois Invalide\"\nFin Selon",
-    "pythonCode": "# En Python 3.10+ (match/case) ou if/elif/else dans Thonny :\nif mois in (12, 1, 2):\n    saison = \"Hiver\"\nelif mois in (3, 4, 5):\n    saison = \"Printemps\"\nelif mois in (6, 7, 8):\n    saison = \"Été\"\nelif mois in (9, 10, 11):\n    saison = \"Automne\"\nelse:\n    saison = \"Mois Invalide\"",
+    "id": "algo-a2dr",
+    "category": "Conversions de Bases",
+    "type": "fonction",
+    "name": "a2dR(ch, bs, p)",
+    "syntax": "fonction a2dR(ch: chaîne, bs, p: entier): entier",
+    "summary": "Conversion récursive d'un nombre en base bs quelconque vers la base 10 (décimale).",
+    "description": "Cas de base : chaîne vide renvoie 0. Cas général : évalue le premier symbole pondéré par p, additionné au résultat de l'appel récursif sur le reste de la chaîne avec p*bs.",
+    "pseudoCode": "0) fonction a2dR(ch: chaîne, bs, p: entier): entier\n1) chh <-- \"0123456789ABCDEF\"\n2) si long(ch) = 0 alors\n     retourner 0\n   sinon\n     retourner pos(ch[0], chh) * p + a2dR(sous_chaîne(ch, 1, long(ch) - 1), bs, p * bs)\n   fin_si\n3) fin",
     "tdo": [
       {
-        "objet": "mois",
-        "type": "Entier",
-        "role": "Numéro du mois (1 à 12)"
-      },
-      {
-        "objet": "saison",
-        "type": "Chaîne",
-        "role": "Nom de la saison"
+        "objet": "chh",
+        "type": "chaîne"
       }
     ],
-    "bacTips": "La branche 'Autre' est indispensable pour traiter les cas hors limites."
+    "pythonCode": "def a2dR(ch: str, bs: int, p: int = 1) -> int:\n    chh = \"0123456789ABCDEF\"\n    if len(ch) == 0:\n        return 0\n    else:\n        return chh.index(ch[0].upper()) * p + a2dR(ch[1:], bs, p * bs)",
+    "example": "a2dR(\"1A55F\", 16, 1) → 107871"
   },
   {
-    "id": "algo-boucle-pour",
-    "category": "Structures de Contrôle",
-    "name": "Boucle Pour (Pour compteur de début à fin Faire)",
-    "summary": "Boucle à compteur déterminée quand le nombre d'itérations est connu à l'avance.",
-    "description": "S'utilise obligatoirement lorsque le nombre de répétitions est connu avant d'entrer dans la boucle (ex: parcourir un tableau de N éléments, calculer une somme de 1 à N).",
-    "pseudoCode": "s <-- 0\nPour i de 1 à n Faire\n  s <-- s + t[i]\nFin Pour\n\n// Avec pas négatif (décroissant) :\nPour i de n à 1 (Pas = -1) Faire\n  Ecrire(t[i])\nFin Pour",
-    "pythonCode": "# En Python Thonny :\ns = 0\nfor i in range(1, n + 1):\n    s += t[i]\n\n# Pas négatif décroissant :\nfor i in range(n, 0, -1):\n    print(t[i])",
+    "id": "algo-bin2hexa",
+    "category": "Conversions de Bases",
+    "type": "fonction",
+    "name": "bin2hexa(ch)",
+    "syntax": "fonction bin2hexa(ch: chaîne): chaîne",
+    "summary": "Convertit un nombre binaire (base 2) en hexadécimal (base 16) par blocs de 4 bits.",
+    "description": "Complète le binaire à gauche pour avoir une longueur multiple de 4. Découpe par paquets de 4 bits et traduit chaque quartet en son chiffre hexadécimal équivalent (b[0]*8 + b[1]*4 + b[2]*2 + b[3]).",
+    "pseudoCode": "0) fonction bin2hexa(ch: chaîne): chaîne\n1) res <-- \"\"\n2) chh <-- \"0123456789ABCDEF\"\n3) tant que (long(ch) mod 4 ≠ 0) faire\n     ch <-- \"0\" + ch\n   fin_tant_que\n4) tant que ch ≠ \"\" faire\n     b <-- sous_chaîne(ch, 0, 4)\n     ch <-- sous_chaîne(ch, 4, long(ch) - 1)\n     val <-- valeur(b[0])*8 + valeur(b[1])*4 + valeur(b[2])*2 + valeur(b[3])\n     res <-- res + chh[val]\n   fin_tant_que\n5) retourner res\n6) fin",
     "tdo": [
       {
-        "objet": "i, n, s",
-        "type": "Entier",
-        "role": "Compteur, taille, somme"
+        "objet": "res, b, chh",
+        "type": "chaîne"
       },
       {
-        "objet": "t",
-        "type": "Tableau de 100 Entiers",
-        "role": "Tableau d'entiers"
+        "objet": "val",
+        "type": "entier"
       }
     ],
-    "bacTips": "En pseudo-code Bac, la borne de fin est INCLUSE (de 1 à n s'arrête à n). En Python, range(1, n) s'arrête à n-1, il faut donc écrire range(1, n + 1) !"
+    "pythonCode": "def bin2hexa(ch: str) -> str:\n    chh = \"0123456789ABCDEF\"\n    while len(ch) % 4 != 0:\n        ch = \"0\" + ch\n    res = \"\"\n    while ch != \"\":\n        b = ch[0:4]\n        ch = ch[4:]\n        val = int(b[0])*8 + int(b[1])*4 + int(b[2])*2 + int(b[3])\n        res += chh[val]\n    return res",
+    "example": "bin2hexa(\"1011011\") → \"5B\""
   },
   {
-    "id": "algo-boucle-repeter",
-    "category": "Structures de Contrôle",
-    "name": "Boucle Répéter ... Jusqu'à (Condition d'arrêt)",
-    "summary": "Boucle exécutée au moins une fois, qui s'arrête dès que la condition devient VRAIE.",
-    "description": "La structure 'Répéter ... Jusqu'à' teste sa condition à la FIN. Les instructions sont exécutées au moins une fois. La boucle s'arrête quand la condition est VRAIE (condition de sortie). C'est la structure reine des contrôles de saisie.",
-    "pseudoCode": "// Contrôle de saisie officiel d'un entier N entre 5 et 30\nRépéter\n  Ecrire(\"Donner N (entre 5 et 30) : \")\n  Lire(n)\nJusqu'à (n >= 5 ET n <= 30)",
-    "pythonCode": "# En Python Thonny (simulation avec while True et break) :\nwhile True:\n    n = int(input(\"Donner N (entre 5 et 30) : \"))\n    if 5 <= n <= 30:\n        break",
+    "id": "algo-octal2bin",
+    "category": "Conversions de Bases",
+    "type": "fonction",
+    "name": "octal2bin(ch)",
+    "syntax": "fonction octal2bin(ch: chaîne): chaîne",
+    "summary": "Convertit un nombre octal en son écriture binaire directe sur 3 bits par chiffre.",
+    "description": "Pour chaque chiffre octal, utilise dec2any(c, 2) puis ajuste la longueur à exactement 3 bits en préfixant des 0 si nécessaire.",
+    "pseudoCode": "0) fonction octal2bin(ch: chaîne): chaîne\n1) res <-- \"\"\n2) pour i de 0 à long(ch) - 1 faire\n     c <-- valeur(ch[i])\n     b <-- dec2any(c, 2)\n     tant que long(b) < 3 faire\n       b <-- \"0\" + b\n     fin_tant_que\n     res <-- res + b\n   fin_pour\n3) retourner res\n4) fin",
+    "tdo": [
+      {
+        "objet": "res, b",
+        "type": "chaîne"
+      },
+      {
+        "objet": "c, i",
+        "type": "entier"
+      }
+    ],
+    "pythonCode": "def octal2bin(ch: str) -> str:\n    res = \"\"\n    for char in ch:\n        c = int(char)\n        b = dec2any(c, 2)\n        while len(b) < 3:\n            b = \"0\" + b\n        res += b\n    return res",
+    "example": "octal2bin(\"75401\") → \"111101100000001\""
+  },
+  {
+    "id": "algo-octal2hexa",
+    "category": "Conversions de Bases",
+    "type": "fonction",
+    "name": "octal2hexa(ch)",
+    "syntax": "fonction octal2hexa(ch: chaîne): chaîne",
+    "summary": "Convertit un nombre octal (base 8) en hexadécimal (base 16) via le binaire.",
+    "description": "Méthode directe sans division : transforme d'abord l'octal en binaire avec octal2bin, puis le binaire en hexadécimal avec bin2hexa.",
+    "pseudoCode": "0) fonction octal2hexa(ch: chaîne): chaîne\n1) b <-- octal2bin(ch)\n2) h <-- bin2hexa(b)\n3) retourner h\n4) fin",
+    "tdo": [
+      {
+        "objet": "b, h",
+        "type": "chaîne"
+      }
+    ],
+    "pythonCode": "def octal2hexa(ch: str) -> str:\n    b = octal2bin(ch)\n    h = bin2hexa(b)\n    return h",
+    "example": "octal2hexa(\"75401\") → \"7B01\""
+  },
+  {
+    "id": "algo-dec2any",
+    "category": "Conversions de Bases",
+    "type": "fonction",
+    "name": "dec2any(n, bd)",
+    "syntax": "fonction dec2any(n: entier, bd: entier): chaîne",
+    "summary": "Convertit un entier décimal (base 10) vers une base quelconque bd (2 à 16).",
+    "description": "Méthode des divisions successives par bd. Chaque reste correspond à un chiffre de la base cible (0-9, A-F) ajouté en tête du résultat.",
+    "pseudoCode": "0) fonction dec2any(n: entier, bd: entier): chaîne\n1) chh <-- \"0123456789ABCDEF\"\n2) res <-- \"\"\n3) tant que n ≠ 0 faire\n     res <-- chh[n mod bd] + res\n     n <-- n div bd\n   fin_tant_que\n4) si res = \"\" alors\n     res <-- \"0\"\n   fin_si\n5) retourner res\n6) fin",
+    "tdo": [
+      {
+        "objet": "res, chh",
+        "type": "chaîne"
+      }
+    ],
+    "pythonCode": "def dec2any(n: int, bd: int) -> str:\n    chh = \"0123456789ABCDEF\"\n    if n == 0:\n        return \"0\"\n    res = \"\"\n    while n != 0:\n        res = chh[n % bd] + res\n        n = n // bd\n    return res",
+    "example": "dec2any(2591, 16) → \"A1F\""
+  },
+  {
+    "id": "algo-dec2anyr",
+    "category": "Conversions de Bases",
+    "type": "fonction",
+    "name": "dec2anyR(n, bd)",
+    "syntax": "fonction dec2anyR(n: entier, bd: entier): chaîne",
+    "summary": "Conversion récursive d'un entier décimal vers une base destination bd.",
+    "description": "Cas d'arrêt : n = 0 renvoie la chaîne vide. Cas général : effectue la division entière (n div bd) récursivement et suffixe le reste (n mod bd).",
+    "pseudoCode": "0) fonction dec2anyR(n: entier, bd: entier): chaîne\n1) chh <-- \"0123456789ABCDEF\"\n2) si n = 0 alors\n     retourner \"\"\n   sinon\n     retourner dec2anyR(n div bd, bd) + chh[n mod bd]\n   fin_si\n3) fin",
+    "tdo": [
+      {
+        "objet": "chh",
+        "type": "chaîne"
+      }
+    ],
+    "pythonCode": "def dec2anyR(n: int, bd: int) -> str:\n    chh = \"0123456789ABCDEF\"\n    if n == 0:\n        return \"\"\n    return dec2anyR(n // bd, bd) + chh[n % bd]",
+    "example": "dec2anyR(46, 2) → \"101110\""
+  },
+  {
+    "id": "algo-hex2bin",
+    "category": "Conversions de Bases",
+    "type": "fonction",
+    "name": "hex2bin(ch)",
+    "syntax": "fonction hex2bin(ch: chaîne): chaîne",
+    "summary": "Convertit un nombre hexadécimal en binaire direct en remplaçant chaque digit par 4 bits.",
+    "description": "Pour chaque symbole hexadécimal, cherche sa position dans '0123456789ABCDEF', convertit en base 2 avec dec2any et remplit à 4 bits.",
+    "pseudoCode": "0) fonction hex2bin(ch: chaîne): chaîne\n1) res <-- \"\"\n2) chh <-- \"0123456789ABCDEF\"\n3) pour i de 0 à long(ch) - 1 faire\n     c <-- pos(ch[i], chh)\n     b <-- dec2any(c, 2)\n     tant que long(b) < 4 faire\n       b <-- \"0\" + b\n     fin_tant_que\n     res <-- res + b\n   fin_pour\n4) retourner res\n5) fin",
+    "tdo": [
+      {
+        "objet": "res, b, chh",
+        "type": "chaîne"
+      },
+      {
+        "objet": "c, i",
+        "type": "entier"
+      }
+    ],
+    "pythonCode": "def hex2bin(ch: str) -> str:\n    res = \"\"\n    chh = \"0123456789ABCDEF\"\n    for char in ch:\n        c = chh.index(char.upper())\n        b = dec2any(c, 2)\n        while len(b) < 4:\n            b = \"0\" + b\n        res += b\n    return res",
+    "example": "hex2bin(\"1F5A\") → \"0001111101011010\""
+  },
+  {
+    "id": "algo-hex2octal",
+    "category": "Conversions de Bases",
+    "type": "fonction",
+    "name": "hex2octal(ch)",
+    "syntax": "fonction hex2octal(ch: chaîne): chaîne",
+    "summary": "Convertit un nombre hexadécimal en octal en passant par le binaire intermédiaire.",
+    "description": "Combine hex2bin pour convertir en binaire, puis bin2oct pour regrouper les bits par 3 en octal. Simple, direct et sans perte de précision.",
+    "pseudoCode": "0) fonction hex2octal(ch: chaîne): chaîne\n1) b <-- hex2bin(ch)\n2) o <-- convch(bin2oct(b))\n3) retourner o\n4) fin",
+    "tdo": [
+      {
+        "objet": "b, o",
+        "type": "chaîne"
+      }
+    ],
+    "pythonCode": "def hex2octal(ch: str) -> str:\n    b = hex2bin(ch)\n    o = str(bin2oct(b))\n    return o",
+    "example": "hex2octal(\"1F5A\") → \"17532\""
+  },
+  {
+    "id": "algo-any2any",
+    "category": "Conversions de Bases",
+    "type": "fonction",
+    "name": "any2any(ch, bs, bd)",
+    "syntax": "fonction any2any(ch: chaîne, bs, bd: entier): chaîne",
+    "summary": "Convertit un nombre d'une base bs vers une base bd quelconque via la base 10.",
+    "description": "Méthode pivot officielle : convertit d'abord ch de la base source bs en entier décimal via a2d, puis convertit cet entier décimal vers la base destination bd via dec2any.",
+    "pseudoCode": "0) fonction any2any(ch: chaîne, bs, bd: entier): chaîne\n1) n <-- a2d(ch, bs)\n2) res <-- dec2any(n, bd)\n3) retourner res\n4) fin",
     "tdo": [
       {
         "objet": "n",
-        "type": "Entier",
-        "role": "Nombre d'éléments saisi et validé"
-      }
-    ],
-    "bacTips": "🚨 PIÈGE MAJEUR : Dans 'Jusqu'à (condition)', on met la condition pour SORTIR (quand c'est bon), alors que dans 'Tant que', on met la condition pour CONTINUER !"
-  },
-  {
-    "id": "algo-boucle-tantque",
-    "category": "Structures de Contrôle",
-    "name": "Boucle Tant que ... Faire (Condition de continuation)",
-    "summary": "Boucle avec test au début : s'exécute TANT QUE la condition est VRAIE.",
-    "description": "Si la condition est fausse dès le départ, le corps de la boucle n'est JAMAIS exécuté (0 fois). S'utilise quand on ne connaît pas le nombre de tours à l'avance et qu'on ne veut exécuter que si une condition est vérifiée.",
-    "pseudoCode": "// Division euclidienne par soustractions successives\nq <-- 0\nr <-- a\nTant que (r >= b) Faire\n  r <-- r - b\n  q <-- q + 1\nFin Tant que",
-    "pythonCode": "# En Python Thonny :\nq = 0\nr = a\nwhile r >= b:\n    r = r - b\n    q = q + 1",
-    "tdo": [
-      {
-        "objet": "a, b, q, r",
-        "type": "Entier",
-        "role": "Dividende, diviseur, quotient, reste"
-      }
-    ],
-    "bacTips": "Pensez toujours à modifier à l'intérieur de la boucle la variable testée (ici r) pour éviter une boucle infinie !"
-  },
-  {
-    "id": "algo-fonctions",
-    "category": "Sous-Programmes (Fonctions & Procédures)",
-    "name": "Sous-programme : Fonction (Déclaration & Retour)",
-    "summary": "Sous-programme qui calcule et RETOURNE une seule valeur scalaire via son nom.",
-    "description": "Une fonction reçoit zéro, un ou plusieurs paramètres et retourne OBLIGATOIREMENT une valeur unique d'un type déterminé (Entier, Réel, Chaîne, Booléen). Elle s'utilise à l'intérieur d'une expression ou d'une affectation.",
-    "pseudoCode": "// Définition de la fonction\nFonction Est_Pair(n : Entier) : Booléen\nDébut\n  Retourner (n MOD 2 = 0)\nFin Est_Pair\n\n// Appel dans le programme principal :\nSi (Est_Pair(x)) Alors\n  Ecrire(x, \" est pair\")\nFin Si",
-    "pythonCode": "# En Python Thonny :\ndef est_pair(n):\n    return n % 2 == 0\n\n# Appel :\nif est_pair(x):\n    print(x, \"est pair\")",
-    "tdo": [
-      {
-        "objet": "Est_Pair",
-        "type": "Fonction (Booléen)",
-        "role": "Teste la parité d'un entier"
+        "type": "entier"
       },
       {
-        "objet": "n, x",
-        "type": "Entier",
-        "role": "Nombre à tester"
+        "objet": "res",
+        "type": "chaîne"
       }
     ],
-    "bacTips": "Une fonction ne doit JAMAIS contenir d'affichage `Ecrire()` ou de `Lire()`, elle doit simplement calculer et faire `Retourner résultat`."
+    "pythonCode": "def any2any(ch: str, bs: int, bd: int) -> str:\n    n = a2d(ch, bs)\n    res = dec2any(n, bd)\n    return res",
+    "example": "any2any(\"1FA2\", 16, 8) → \"17642\""
   },
   {
-    "id": "algo-procedures",
-    "category": "Sous-Programmes (Fonctions & Procédures)",
-    "name": "Sous-programme : Procédure (Action sans retour direct)",
-    "summary": "Sous-programme qui accomplit une action (affichage, remplissage, tri, modification).",
-    "description": "Une procédure n'a pas de type de retour. Elle communique avec le programme appelant via ses paramètres d'entrée/sortie (passés par variable avec le mot-clé 'var' ou '@').",
-    "pseudoCode": "// Procédure d'échange de deux valeurs (passage par variable obligatoire)\nProcédure Echanger(var a : Entier, var b : Entier)\nDébut\n  aux <-- a\n  a <-- b\n  b <-- aux\nFin Echanger\n\n// Appel dans le programme principal :\nEchanger(x, y)",
-    "pythonCode": "# En Python Thonny (les entiers sont immuables, l'échange se fait par tuple) :\ndef echanger(t, i, j):\n    # Échange dans une liste/tableau mutable\n    t[i], t[j] = t[j], t[i]",
+    "id": "algo-aire-milieu",
+    "category": "Calcul d'Aires",
+    "type": "fonction",
+    "name": "aire_milieu(nb, a, b)",
+    "syntax": "fonction aire_milieu(nb: entier, a, b: réel): réel",
+    "summary": "Approximation de l'intégrale d'une fonction f par la méthode des rectangles au point médian.",
+    "description": "Découpe l'intervalle [a, b] en nb sous-intervalles de largeur h = |b - a| / nb. Évalue la fonction f(x) au centre de chaque intervalle x = a + h/2, puis somme les aires (f(x) * h).",
+    "pseudoCode": "0) fonction aire_milieu(nb: entier, a, b: réel): réel\n1) h <-- abs(b - a) / nb\n2) x <-- a + (h / 2)\n3) s <-- 0\n4) pour i de 0 à nb - 1 faire\n     s <-- s + (f(x) * h)\n     x <-- x + h\n   fin_pour\n5) retourner s\n6) fin",
     "tdo": [
       {
-        "objet": "Echanger",
-        "type": "Procédure",
-        "role": "Permute les contenus de deux variables"
-      },
-      {
-        "objet": "aux",
-        "type": "Entier (Local)",
-        "role": "Variable auxiliaire de temporisation"
-      }
-    ],
-    "bacTips": "Au Bac théorique, si une procédure doit modifier une variable pour que le programme principal voie la nouvelle valeur, n'oubliez JAMAIS le mot-clé 'var' ou '@' devant le paramètre !"
-  },
-  {
-    "id": "algo-arith-premier",
-    "category": "Algorithmes Arithmétiques",
-    "name": "Nombre Premier (Test de primalité optimisé)",
-    "summary": "Vérifie si un entier N > 1 admet pour seuls diviseurs 1 et lui-même.",
-    "description": "Un entier N est premier s'il n'est divisible par aucun entier compris entre 2 et la racine carrée de N. C'est l'un des algorithmes les plus récurrents au Bac STI.",
-    "pseudoCode": "Fonction Premier(n : Entier) : Booléen\nDébut\n  Si (n < 2) Alors\n    Retourner Faux\n  Fin Si\n  \n  i <-- 2\n  prem <-- Vrai\n  Tant que (i <= Racine(n) ET prem = Vrai) Faire\n    Si (n MOD i = 0) Alors\n      prem <-- Faux\n    Sinon\n      i <-- i + 1\n    Fin Si\n  Fin Tant que\n  \n  Retourner prem\nFin Premier",
-    "pythonCode": "# En Python Thonny :\ndef premier(n):\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True",
-    "tdo": [
-      {
-        "objet": "Premier",
-        "type": "Fonction (Booléen)",
-        "role": "Teste si n est un nombre premier"
+        "objet": "h, x, s",
+        "type": "réel"
       },
       {
         "objet": "i",
-        "type": "Entier (Local)",
-        "role": "Diviseur potentiel testé"
-      },
-      {
-        "objet": "prem",
-        "type": "Booléen (Local)",
-        "role": "Indicateur de primalité"
+        "type": "entier"
       }
     ],
-    "bacTips": "L'optimisation jusqu'à Racine(n) permet d'obtenir la note maximale de complexité aux examens !"
+    "pythonCode": "def f(x: float) -> float:\n    return x * x  # Exemple de fonction à intégrer\n\ndef aire_milieu(nb: int, a: float, b: float) -> float:\n    h = abs(b - a) / nb\n    x = a + (h / 2)\n    s = 0.0\n    for i in range(nb):\n        s += f(x) * h\n        x += h\n    return round(s, 6)",
+    "example": "aire_milieu(100, 0, 1) avec f(x)=x^2 → 0.333325"
   },
   {
-    "id": "algo-arith-pgcd",
-    "category": "Algorithmes Arithmétiques",
-    "name": "PGCD (Plus Grand Commun Diviseur - Euclide)",
-    "summary": "Calcule le PGCD de deux entiers strictement positifs avec l'algorithme d'Euclide.",
-    "description": "L'algorithme d'Euclide utilise les divisions successives : PGCD(a, b) = PGCD(b, a MOD b) jusqu'à ce que le reste soit nul.",
-    "pseudoCode": "Fonction PGCD(a : Entier, b : Entier) : Entier\nDébut\n  Tant que (b <> 0) Faire\n    r <-- a MOD b\n    a <-- b\n    b <-- r\n  Fin Tant que\n  Retourner a\nFin PGCD",
-    "pythonCode": "# En Python Thonny :\ndef pgcd(a, b):\n    while b != 0:\n        a, b = b, a % b\n    return a",
+    "id": "algo-aire-droite",
+    "category": "Calcul d'Aires",
+    "type": "fonction",
+    "name": "aire_droite(nb, a, b)",
+    "syntax": "fonction aire_droite(nb: entier, a, b: réel): réel",
+    "summary": "Approximation de l'intégrale par la méthode des rectangles avec la borne droite.",
+    "description": "Découpe en nb subdivisions de pas h. Le point de calcul démarre à x = a + h (extrémité droite du premier rectangle) et avance de h à chaque pas.",
+    "pseudoCode": "0) fonction aire_droite(nb: entier, a, b: réel): réel\n1) h <-- abs(b - a) / nb\n2) x <-- a + h\n3) s <-- 0\n4) pour i de 0 à nb - 1 faire\n     s <-- s + (f(x) * h)\n     x <-- x + h\n   fin_pour\n5) retourner s\n6) fin",
     "tdo": [
       {
-        "objet": "PGCD",
-        "type": "Fonction (Entier)",
-        "role": "Calcule le PGCD de a et b"
+        "objet": "h, x, s",
+        "type": "réel"
       },
       {
-        "objet": "r",
-        "type": "Entier (Local)",
-        "role": "Reste de la division euclidienne"
+        "objet": "i",
+        "type": "entier"
       }
     ],
-    "bacTips": "La méthode d'Euclide par modulo est beaucoup plus rapide et élégante que la méthode par soustractions successives."
+    "pythonCode": "def f(x: float) -> float:\n    return x * x\n\ndef aire_droite(nb: int, a: float, b: float) -> float:\n    h = abs(b - a) / nb\n    x = a + h\n    s = 0.0\n    for i in range(nb):\n        s += f(x) * h\n        x += h\n    return round(s, 6)",
+    "example": "aire_droite(100, 0, 1) avec f(x)=x^2 → 0.338350"
   },
   {
-    "id": "algo-tri-bulles",
-    "category": "Algorithmes de Tri & Recherche",
-    "name": "Tri à Bulles (Bubble Sort optimisé avec arrêt)",
-    "summary": "Trie un tableau par comparaisons successives d'éléments adjacents avec arrêt anticipé.",
-    "description": "On compare chaque élément avec son voisin et on les échange s'ils sont désordonnés. On utilise une variable booléenne 'permut' qui s'arrête dès que le tableau est trié.",
-    "pseudoCode": "Procédure Tri_Bulles(var t : Tab, n : Entier)\nDébut\n  Répéter\n    permut <-- Faux\n    Pour i de 1 à n - 1 Faire\n      Si (t[i] > t[i + 1]) Alors\n        // Échange\n        aux <-- t[i]\n        t[i] <-- t[i + 1]\n        t[i + 1] <-- aux\n        permut <-- Vrai\n      Fin Si\n    Fin Pour\n  Jusqu'à (permut = Faux)\nFin Tri_Bulles",
-    "pythonCode": "# En Python Thonny :\ndef tri_bulles(t):\n    n = len(t)\n    while True:\n        permut = False\n        for i in range(n - 1):\n            if t[i] > t[i + 1]:\n                t[i], t[i + 1] = t[i + 1], t[i]\n                permut = True\n        if not permut:\n            break",
+    "id": "algo-aire-gauche",
+    "category": "Calcul d'Aires",
+    "type": "fonction",
+    "name": "aire_gauche(nb, a, b)",
+    "syntax": "fonction aire_gauche(nb: entier, a, b: réel): réel",
+    "summary": "Approximation de l'intégrale par la méthode des rectangles avec la borne gauche.",
+    "description": "Démarre exactement à x = a (extrémité gauche du rectangle) et évalue f(x) avant d'incrémenter x de h à chaque itération.",
+    "pseudoCode": "0) fonction aire_gauche(nb: entier, a, b: réel): réel\n1) h <-- abs(b - a) / nb\n2) x <-- a\n3) s <-- 0\n4) pour i de 0 à nb - 1 faire\n     s <-- s + (f(x) * h)\n     x <-- x + h\n   fin_pour\n5) retourner s\n6) fin",
     "tdo": [
       {
-        "objet": "Tri_Bulles",
-        "type": "Procédure",
-        "role": "Trie le tableau en ordre croissant"
+        "objet": "h, x, s",
+        "type": "réel"
       },
       {
-        "objet": "i, aux",
-        "type": "Entier (Local)",
-        "role": "Compteur et variable temporaire d'échange"
-      },
-      {
-        "objet": "permut",
-        "type": "Booléen (Local)",
-        "role": "Indicateur d'au moins une permutation"
+        "objet": "i",
+        "type": "entier"
       }
     ],
-    "bacTips": "Le drapeau booléen 'permut' est obligatoire au Bac pour éviter les tours de boucle inutiles quand le tableau est déjà trié."
+    "pythonCode": "def f(x: float) -> float:\n    return x * x\n\ndef aire_gauche(nb: int, a: float, b: float) -> float:\n    h = abs(b - a) / nb\n    x = a\n    s = 0.0\n    for i in range(nb):\n        s += f(x) * h\n        x += h\n    return round(s, 6)",
+    "example": "aire_gauche(100, 0, 1) avec f(x)=x^2 → 0.328350"
   },
   {
-    "id": "algo-tri-selection",
-    "category": "Algorithmes de Tri & Recherche",
-    "name": "Tri par Sélection (Selection Sort)",
-    "summary": "Trouve le plus petit élément du tableau et le place en première position, puis recommence.",
-    "description": "À chaque passage i, on recherche l'indice du minimum dans le sous-tableau de i à n, puis on permute t[i] avec ce minimum.",
-    "pseudoCode": "Procédure Tri_Selection(var t : Tab, n : Entier)\nDébut\n  Pour i de 1 à n - 1 Faire\n    pos_min <-- i\n    Pour j de i + 1 à n Faire\n      Si (t[j] < t[pos_min]) Alors\n        pos_min <-- j\n      Fin Si\n    Fin Pour\n    Si (pos_min <> i) Alors\n      aux <-- t[i]\n      t[i] <-- t[pos_min]\n      t[pos_min] <-- aux\n    Fin Si\n  Fin Pour\nFin Tri_Selection",
-    "pythonCode": "# En Python Thonny :\ndef tri_selection(t):\n    n = len(t)\n    for i in range(n - 1):\n        pos_min = i\n        for j in range(i + 1, n):\n            if t[j] < t[pos_min]:\n                pos_min = j\n        if pos_min != i:\n            t[i], t[pos_min] = t[pos_min], t[i]",
+    "id": "algo-aire-trapezes",
+    "category": "Calcul d'Aires",
+    "type": "fonction",
+    "name": "aire_trapezes(nb, a, b)",
+    "syntax": "fonction aire_trapezes(nb: entier, a, b: réel): réel",
+    "summary": "Calcul d'aire approchée par la formule des trapèzes sur [a, b].",
+    "description": "Chaque tranche est approximée par un trapèze d'aire ((f(x) + f(x+h)) * h) / 2. Cette méthode donne une convergence nettement plus rapide et précise.",
+    "pseudoCode": "0) fonction aire_trapezes(nb: entier, a, b: réel): réel\n1) h <-- abs(b - a) / nb\n2) x <-- a\n3) s <-- 0\n4) pour i de 0 à nb - 1 faire\n     s <-- s + (((f(x) + f(x + h)) * h) / 2)\n     x <-- x + h\n   fin_pour\n5) retourner s\n6) fin",
     "tdo": [
       {
-        "objet": "Tri_Selection",
-        "type": "Procédure",
-        "role": "Trie le tableau par sélection du minimum"
+        "objet": "h, x, s",
+        "type": "réel"
       },
       {
-        "objet": "i, j, pos_min, aux",
-        "type": "Entier (Local)",
-        "role": "Compteurs, position du minimum et variable d'échange"
+        "objet": "i",
+        "type": "entier"
       }
     ],
-    "bacTips": "Avantage du tri par sélection : il effectue exactement N - 1 échanges au total, ce qui minimise les écritures mémoire."
+    "pythonCode": "def f(x: float) -> float:\n    return x * x\n\ndef aire_trapezes(nb: int, a: float, b: float) -> float:\n    h = abs(b - a) / nb\n    x = a\n    s = 0.0\n    for i in range(nb):\n        s += ((f(x) + f(x + h)) * h) / 2\n        x += h\n    return round(s, 6)",
+    "example": "aire_trapezes(100, 0, 1) avec f(x)=x^2 → 0.333350"
   },
   {
-    "id": "algo-recherche-dicho",
-    "category": "Algorithmes de Tri & Recherche",
-    "name": "Recherche Dichotomique (Tableau préalablement trié)",
-    "summary": "Recherche ultra-rapide par division successive de l'intervalle par 2.",
-    "description": "Condition obligatoire : LE TABLEAU DOIT ÊTRE TRIÉ. À chaque étape, on compare l'élément recherché avec le milieu. Si la valeur est plus petite, on cherche dans la moitié gauche, sinon dans la moitié droite.",
-    "pseudoCode": "Fonction Recherche_Dicho(t : Tab, n : Entier, val : Entier) : Entier\nDébut\n  deb <-- 1\n  fin <-- n\n  pos <-- 0\n  \n  Tant que (deb <= fin ET pos = 0) Faire\n    mil <-- (deb + fin) DIV 2\n    Si (t[mil] = val) Alors\n      pos <-- mil\n    Sinon Si (val < t[mil]) Alors\n      fin <-- mil - 1\n    Sinon\n      deb <-- mil + 1\n    Fin Si\n  Fin Tant que\n  \n  Retourner pos // 0 si non trouvé\nFin Recherche_Dicho",
-    "pythonCode": "# En Python Thonny :\ndef recherche_dicho(t, val):\n    deb = 0\n    fin = len(t) - 1\n    while deb <= fin:\n        mil = (deb + fin) // 2\n        if t[mil] == val:\n            return mil\n        elif val < t[mil]:\n            fin = mil - 1\n        else:\n            deb = mil + 1\n    return -1",
+    "id": "algo-premier",
+    "category": "Arithmétique & Nombres",
+    "type": "fonction",
+    "name": "premier(n)",
+    "syntax": "fonction premier(n: entier): booléen",
+    "summary": "Teste si un entier n est premier (optimisé jusqu'à n div 2).",
+    "description": "Initialise ok à (n > 1). Parcourt les diviseurs potentiels de 2 à n div 2. Dès qu'un diviseur strict est trouvé (n mod i = 0), ok devient faux.",
+    "pseudoCode": "0) fonction premier(n: entier): booléen\n1) ok <-- n > 1\n2) pour i de 2 à n div 2 faire\n     si n mod i = 0 alors\n       ok <-- faux\n     fin_si\n   fin_pour\n3) retourner ok\n4) fin",
     "tdo": [
       {
-        "objet": "Recherche_Dicho",
-        "type": "Fonction (Entier)",
-        "role": "Renvoie la position de la valeur ou 0"
+        "objet": "ok",
+        "type": "booléen"
       },
       {
-        "objet": "deb, fin, mil, pos",
-        "type": "Entier (Local)",
-        "role": "Bornes, indice médian et position trouvée"
+        "objet": "i",
+        "type": "entier"
       }
     ],
-    "bacTips": "🚨 CONDITION D'EXAMEN : Ne jamais appliquer la recherche dichotomique sur un tableau non trié ! Si le sujet ne dit pas qu'il est trié, triez-le d'abord."
+    "pythonCode": "def premier(n: int) -> bool:\n    if n <= 1:\n        return False\n    ok = True\n    for i in range(2, (n // 2) + 1):\n        if n % i == 0:\n            ok = False\n            break\n    return ok",
+    "example": "premier(17) → True, premier(21) → False"
+  },
+  {
+    "id": "algo-factorielle",
+    "category": "Arithmétique & Nombres",
+    "type": "fonction",
+    "name": "factorielle(N)",
+    "syntax": "fonction factorielle(N: entier): entier",
+    "summary": "Calcule le produit factoriel N! = 1 * 2 * ... * N.",
+    "description": "Initialise l'accumulateur f à 1, puis multiplie consécutivement par chaque entier i variant de 2 jusqu'à N.",
+    "pseudoCode": "0) fonction factorielle(N: entier): entier\n1) f <-- 1\n2) pour i de 2 à N faire\n     f <-- f * i\n   fin_pour\n3) retourner f\n4) fin",
+    "tdo": [
+      {
+        "objet": "f, i",
+        "type": "entier"
+      }
+    ],
+    "pythonCode": "def factorielle(N: int) -> int:\n    f = 1\n    for i in range(2, N + 1):\n        f *= i\n    return f",
+    "example": "factorielle(5) → 120"
+  },
+  {
+    "id": "algo-puissance",
+    "category": "Arithmétique & Nombres",
+    "type": "fonction",
+    "name": "puissance(x, n)",
+    "syntax": "fonction puissance(x: entier, n: entier): réel",
+    "summary": "Calcule la puissance x^n pour un exposant entier positif.",
+    "description": "Initialise p à 1, puis effectue n multiplications successives de la base x.",
+    "pseudoCode": "0) fonction puissance(x: entier, n: entier): réel\n1) p <-- 1\n2) pour i de 1 à n faire\n     p <-- p * x\n   fin_pour\n3) retourner p\n4) fin",
+    "tdo": [
+      {
+        "objet": "p",
+        "type": "réel"
+      },
+      {
+        "objet": "i",
+        "type": "entier"
+      }
+    ],
+    "pythonCode": "def puissance(x: int, n: int) -> float:\n    p = 1\n    for i in range(1, n + 1):\n        p *= x\n    return float(p)",
+    "example": "puissance(2, 5) → 32.0"
+  },
+  {
+    "id": "algo-puissance-va",
+    "category": "Arithmétique & Nombres",
+    "type": "fonction",
+    "name": "puissance_va(x, n)",
+    "syntax": "fonction puissance_va(x: entier, n: entier): réel",
+    "summary": "Calcule la puissance x^n pour n quelconque (positif, nul ou négatif).",
+    "description": "Calcule le produit sur abs(n) itérations. Si l'exposant n est strictement négatif, inverse la valeur finale p <-- 1 / p.",
+    "pseudoCode": "0) fonction puissance_va(x: entier, n: entier): réel\n1) p <-- 1\n2) pour i de 1 à abs(n) faire\n     p <-- p * x\n   fin_pour\n3) si n < 0 alors\n     p <-- 1 / p\n   fin_si\n4) retourner p\n5) fin",
+    "tdo": [
+      {
+        "objet": "p",
+        "type": "réel"
+      },
+      {
+        "objet": "i",
+        "type": "entier"
+      }
+    ],
+    "pythonCode": "def puissance_va(x: int, n: int) -> float:\n    p = 1.0\n    for i in range(1, abs(n) + 1):\n        p *= x\n    if n < 0:\n        p = 1.0 / p\n    return p",
+    "example": "puissance_va(2, -3) → 0.125"
+  },
+  {
+    "id": "algo-pgcd-ppcm",
+    "category": "Arithmétique & Nombres",
+    "type": "fonction",
+    "name": "pgcd_ppcm(a, b)",
+    "syntax": "fonction pgcd_ppcm(a, b: entier): entier",
+    "summary": "Méthode optimisée Bac pour déterminer le PPCM et le PGCD simultanément.",
+    "description": "Cherche le plus petit coefficient k ≥ 1 tel que (a * k) mod b = 0. Le PPCM vaut a * k, et le PGCD vaut b div k (car PGCD * PPCM = a * b).",
+    "pseudoCode": "0) fonction pgcd_ppcm(a, b: entier): entier\n1) k <-- 1\n2) tant que ((a * k) mod b ≠ 0) faire\n     k <-- k + 1\n   fin_tant_que\n3) // Pour obtenir le PPCM : retourner a * k\n4) // Pour obtenir le PGCD : retourner b div k\n5) retourner b div k\n6) fin",
+    "tdo": [
+      {
+        "objet": "k",
+        "type": "entier"
+      }
+    ],
+    "pythonCode": "def pgcd_ppcm(a: int, b: int) -> tuple[int, int]:\n    k = 1\n    while (a * k) % b != 0:\n        k += 1\n    ppcm = a * k\n    pgcd = b // k\n    return (pgcd, ppcm)",
+    "example": "pgcd_ppcm(12, 18) → (PGCD: 6, PPCM: 36)"
   },
   {
     "id": "algo-palindrome",
-    "category": "Algorithmes Arithmétiques",
-    "name": "Palindrome (Chaîne ou Entier symétrique)",
-    "summary": "Vérifie si un mot ou un nombre se lit de la même façon de gauche à droite et de droite à gauche.",
-    "description": "Exemples : 'RADAR', 'KAYAK', '12321'. On compare les caractères opposés deux à deux en partant des extrémités vers le centre.",
-    "pseudoCode": "Fonction Palindrome(ch : Chaîne) : Booléen\nDébut\n  i <-- 1\n  j <-- Long(ch)\n  pal <-- Vrai\n  \n  Tant que (i < j ET pal = Vrai) Faire\n    Si (ch[i] <> ch[j]) Alors\n      pal <-- Faux\n    Sinon\n      i <-- i + 1\n      j <-- j - 1\n    Fin Si\n  Fin Tant que\n  \n  Retourner pal\nFin Palindrome",
-    "pythonCode": "# En Python Thonny :\ndef palindrome(ch):\n    # Méthode avec boucle Bac :\n    i = 0\n    j = len(ch) - 1\n    while i < j:\n        if ch[i] != ch[j]:\n            return False\n        i += 1\n        j -= 1\n    return True\n\n# Astuce Python en une ligne :\n# return ch == ch[::-1]",
+    "category": "Traitement des Chaînes",
+    "type": "fonction",
+    "name": "palindrome(ch)",
+    "syntax": "fonction palindrome(ch: chaîne): booléen",
+    "summary": "Vérifie si une chaîne de caractères est symétrique (se lit de la même façon dans les deux sens).",
+    "description": "Compare chaque caractère ch[i] avec son symétrique ch[long(ch)-1-i] jusqu'au milieu long(ch) div 2. Renvoie faux au premier désaccord.",
+    "pseudoCode": "0) fonction palindrome(ch: chaîne): booléen\n1) res <-- vrai\n2) pour i de 0 à long(ch) div 2 faire\n     si ch[i] ≠ ch[long(ch) - 1 - i] alors\n       res <-- faux\n     fin_si\n   fin_pour\n3) retourner res\n4) fin",
     "tdo": [
       {
-        "objet": "Palindrome",
-        "type": "Fonction (Booléen)",
-        "role": "Teste la symétrie de la chaîne"
+        "objet": "res",
+        "type": "booléen"
       },
+      {
+        "objet": "i",
+        "type": "entier"
+      }
+    ],
+    "pythonCode": "def palindrome(ch: str) -> bool:\n    res = True\n    n = len(ch)\n    for i in range(n // 2):\n        if ch[i] != ch[n - 1 - i]:\n            res = False\n            break\n    return res",
+    "example": "palindrome(\"radar\") → True, palindrome(\"bac\") → False"
+  },
+  {
+    "id": "algo-lirech",
+    "category": "Traitement des Chaînes",
+    "type": "procédure",
+    "name": "lirech(@ch)",
+    "syntax": "procédure lirech(@ch: chaîne)",
+    "summary": "Saisie contrôlée d'une chaîne dont tous les caractères sont distincts (aucun doublon).",
+    "description": "Boucle de répétition demandant la saisie de ch tant que la chaîne contient au moins un caractère en double (testé via pos(ch[i], ch) ≠ i).",
+    "pseudoCode": "0) procédure lirech(@ch: chaîne)\n1) répéter\n     ok <-- vrai\n     lire(ch)\n     pour i de 1 à long(ch) - 1 faire\n       si (pos(ch[i], ch) ≠ i) alors\n         ok <-- faux\n       fin_si\n     fin_pour\n   jusqu'à ok = vrai\n2) fin",
+    "tdo": [
+      {
+        "objet": "ok",
+        "type": "booléen"
+      },
+      {
+        "objet": "i",
+        "type": "entier"
+      }
+    ],
+    "pythonCode": "def lirech() -> str:\n    while True:\n        ch = input(\"Entrez une chaîne à caractères distincts : \")\n        ok = True\n        for i in range(1, len(ch)):\n            if ch.index(ch[i]) != i:\n                ok = False\n                break\n        if ok and len(ch) > 0:\n            return ch\n        print(\"Erreur : la chaîne contient des caractères répétés !\")",
+    "example": "lirech() avec \"bac\" → valide, avec \"test\" (2 fois t) → rejeté"
+  },
+  {
+    "id": "algo-remplir",
+    "category": "Tableaux & Vecteurs",
+    "type": "procédure",
+    "name": "remplir(@t, N)",
+    "syntax": "procédure remplir(@t: tab, N: entier)",
+    "summary": "Saisie séquentielle des N éléments d'un tableau.",
+    "description": "Parcourt les indices de 0 à N-1 et invite l'utilisateur à saisir chaque valeur t[i]. Passage de t par variable (@) obligatoire.",
+    "pseudoCode": "0) procédure remplir(@t: tab, N: entier)\n1) pour i de 0 à N - 1 faire\n     écrire(\"Taper t[\", i, \"] : \")\n     lire(t[i])\n   fin_pour\n2) fin",
+    "tdo": [
+      {
+        "objet": "i",
+        "type": "entier"
+      }
+    ],
+    "pythonCode": "def remplir(t: list, N: int) -> None:\n    for i in range(N):\n        val = int(input(f\"Taper t[{i}] : \"))\n        t.append(val)",
+    "example": "remplir(t, 4) → t = [12, 45, 7, 88]"
+  },
+  {
+    "id": "algo-remplir-condition",
+    "category": "Tableaux & Vecteurs",
+    "type": "procédure",
+    "name": "remplir_condition(@t, N)",
+    "syntax": "procédure remplir_condition(@t: tab, N: entier)",
+    "summary": "Remplissage d'un tableau avec validation obligatoire de chaque élément saisi.",
+    "description": "Intègre une boucle Répéter ... Jusqu'à à l'intérieur de la boucle Pour pour s'assurer que chaque élément satisfait une condition stricte (ex: strictement positif ou intervalle valide).",
+    "pseudoCode": "0) procédure remplir_condition(@t: tab, N: entier)\n1) pour i de 0 à N - 1 faire\n     répéter\n       écrire(\"Taper t[\", i, \"] (> 0) : \")\n       lire(t[i])\n     jusqu'à (t[i] > 0)\n   fin_pour\n2) fin",
+    "tdo": [
+      {
+        "objet": "i",
+        "type": "entier"
+      }
+    ],
+    "pythonCode": "def remplir_condition(t: list, N: int) -> None:\n    for i in range(N):\n        while True:\n            val = int(input(f\"Taper t[{i}] (> 0) : \"))\n            if val > 0:\n                t.append(val)\n                break\n            print(\"Erreur : la valeur doit être strictement positive !\")",
+    "example": "Force la saisie de nombres strictement positifs pour chaque case"
+  },
+  {
+    "id": "algo-remplir-distinct",
+    "category": "Tableaux & Vecteurs",
+    "type": "procédure",
+    "name": "remplir_distinct(@t, n)",
+    "syntax": "procédure remplir_distinct(@t: tab, n: entier)",
+    "summary": "Remplissage d'un tableau à éléments tous uniques et distincts (sans doublon).",
+    "description": "S'appuie sur une fonction auxiliaire existe(t, i) qui vérifie si la valeur saisie en t[i] figure déjà dans les cases précédentes 0 à i-1.",
+    "pseudoCode": "0) fonction existe(t: tab, n: entier): booléen\n1) ok <-- faux\n2) pour i de 0 à n - 1 faire\n     si t[i] = t[n] alors\n       ok <-- vrai\n     fin_si\n   fin_pour\n3) retourner ok\n4) fin\n\n0) procédure remplir_distinct(@t: tab, n: entier)\n1) pour i de 0 à n - 1 faire\n     répéter\n       écrire(\"t[\", i, \"] = \")\n       lire(t[i])\n     jusqu'à (existe(t, i) = faux)\n   fin_pour\n2) fin",
+    "tdo": [
+      {
+        "objet": "i",
+        "type": "entier"
+      },
+      {
+        "objet": "existe",
+        "type": "fonction"
+      }
+    ],
+    "pythonCode": "def existe(t: list, n: int) -> bool:\n    for i in range(n):\n        if t[i] == t[n]:\n            return True\n    return False\n\ndef remplir_distinct(n: int) -> list:\n    t = []\n    for i in range(n):\n        while True:\n            val = int(input(f\"t[{i}] = \"))\n            if val not in t:\n                t.append(val)\n                break\n            print(\"Valeur déjà existante ! Entrez un nombre distinct.\")\n    return t",
+    "example": "Saisie t = [5, 12, 8, 99] (rejette tout doublon)"
+  },
+  {
+    "id": "algo-tri-bulle",
+    "category": "Algorithmes de Tri",
+    "type": "procédure",
+    "name": "tri_bulle(@t, n)",
+    "syntax": "procédure tri_bulle(@t: tab, n: entier)",
+    "summary": "Tri à bulles optimisé avec indicateur booléen de permutation et borne décroissante.",
+    "description": "Compare deux éléments consécutifs t[i] et t[i+1]. S'ils sont désordonnés, les permute et active le témoin p. Diminue n de 1 après chaque passage pour ne plus retester les éléments déjà triés.",
+    "pseudoCode": "0) procédure tri_bulle(@t: tab, n: entier)\n1) p <-- vrai\n2) tant que p faire\n     p <-- faux\n     pour i de 0 à n - 2 faire\n       si t[i] > t[i + 1] alors\n         aux <-- t[i]\n         t[i] <-- t[i + 1]\n         t[i + 1] <-- aux\n         p <-- vrai\n       fin_si\n     fin_pour\n     n <-- n - 1\n   fin_tant_que\n3) fin",
+    "tdo": [
+      {
+        "objet": "p",
+        "type": "booléen"
+      },
+      {
+        "objet": "i, aux",
+        "type": "entier"
+      }
+    ],
+    "pythonCode": "def tri_bulle(t: list, n: int) -> None:\n    p = True\n    while p:\n        p = False\n        for i in range(n - 1):\n            if t[i] > t[i + 1]:\n                t[i], t[i + 1] = t[i + 1], t[i]\n                p = True\n        n -= 1",
+    "example": "tri_bulle([64, 34, 25, 12, 22], 5) → [12, 22, 24, 34, 64]"
+  },
+  {
+    "id": "algo-tri-selection",
+    "category": "Algorithmes de Tri",
+    "type": "procédure",
+    "name": "tri_par_sélection(@T, N)",
+    "syntax": "procédure tri_par_sélection(@T: tab, N: entier)",
+    "summary": "Tri par sélection du minimum successif.",
+    "description": "À chaque étape i, cherche la position du plus petit élément restant pos_min entre i et N-1. Si pos_min ≠ i, permute T[i] et T[pos_min].",
+    "pseudoCode": "0) procédure tri_par_sélection(@T: tab, N: entier)\n1) pour i de 0 à N - 2 faire\n     // Recherche de la position du minimum\n     pos_min <-- i\n     pour j de i + 1 à N - 1 faire\n       si T[j] < T[pos_min] alors\n         pos_min <-- j\n       fin_si\n     fin_pour\n     // Permutation avec la case actuelle\n     si i ≠ pos_min alors\n       kes <-- T[i]\n       T[i] <-- T[pos_min]\n       T[pos_min] <-- kes\n     fin_si\n   fin_pour\n2) fin",
+    "tdo": [
+      {
+        "objet": "i, j, pos_min, kes",
+        "type": "entier"
+      }
+    ],
+    "pythonCode": "def tri_par_selection(T: list, N: int) -> None:\n    for i in range(N - 1):\n        pos_min = i\n        for j in range(i + 1, N):\n            if T[j] < T[pos_min]:\n                pos_min = j\n        if i != pos_min:\n            T[i], T[pos_min] = T[pos_min], T[i]",
+    "example": "tri_par_selection([29, 10, 14, 37, 13], 5) → [10, 13, 14, 29, 37]"
+  },
+  {
+    "id": "algo-tri-insertion",
+    "category": "Algorithmes de Tri",
+    "type": "procédure",
+    "name": "tri_par_insertion(@T, N)",
+    "syntax": "procédure tri_par_insertion(@T: tab, N: entier)",
+    "summary": "Tri par insertion progressive avec décalage vers la droite.",
+    "description": "Pour chaque élément T[i], sauvegarde sa valeur dans backup, décale vers la droite tous les éléments plus grands que backup, puis insère backup à sa position libre.",
+    "pseudoCode": "0) procédure tri_par_insertion(@T: tab, N: entier)\n1) pour i de 1 à N - 1 faire\n     // Sauvegarder la valeur à insérer\n     backup <-- T[i]\n     inLibre <-- i\n     // Décalage à droite et recherche de position\n     tant que ((inLibre > 0) et (T[inLibre - 1] > backup)) faire\n       T[inLibre] <-- T[inLibre - 1]\n       inLibre <-- inLibre - 1\n     fin_tant_que\n     // Insertion de backup\n     T[inLibre] <-- backup\n   fin_pour\n2) fin",
+    "tdo": [
+      {
+        "objet": "i, inLibre, backup",
+        "type": "entier"
+      }
+    ],
+    "pythonCode": "def tri_par_insertion(T: list, N: int) -> None:\n    for i in range(1, N):\n        backup = T[i]\n        inLibre = i\n        while inLibre > 0 and T[inLibre - 1] > backup:\n            T[inLibre] = T[inLibre - 1]\n            inLibre -= 1\n        T[inLibre] = backup",
+    "example": "tri_par_insertion([12, 11, 13, 5, 6], 5) → [5, 6, 11, 12, 13]"
+  },
+  {
+    "id": "algo-recherche-dicho",
+    "category": "Algorithmes de Tri",
+    "type": "fonction",
+    "name": "recherche_dichotomique(t, n, x)",
+    "syntax": "fonction recherche_dichotomique(t: tab, n, x: entier): entier",
+    "summary": "Recherche ultra-rapide par dichotomie dans un tableau préalablement trié.",
+    "description": "Divise par 2 l'espace de recherche à chaque itération en comparant x avec l'élément central t[milieu]. Renvoie l'indice trouvé ou -1 si absent.",
+    "pseudoCode": "0) fonction recherche_dichotomique(t: tab, n, x: entier): entier\n1) g <-- 0\n2) d <-- n - 1\n3) pos <-- -1\n4) tant que (g ≤ d) et (pos = -1) faire\n     m <-- (g + d) div 2\n     si t[m] = x alors\n       pos <-- m\n     sinon si t[m] < x alors\n       g <-- m + 1\n     sinon\n       d <-- m - 1\n     fin_si\n   fin_tant_que\n5) retourner pos\n6) fin",
+    "tdo": [
+      {
+        "objet": "g, d, m, pos",
+        "type": "entier"
+      }
+    ],
+    "pythonCode": "def recherche_dichotomique(t: list, n: int, x: int) -> int:\n    g = 0\n    d = n - 1\n    pos = -1\n    while g <= d and pos == -1:\n        m = (g + d) // 2\n        if t[m] == x:\n            pos = m\n        elif t[m] < x:\n            g = m + 1\n        else:\n            d = m - 1\n    return pos",
+    "example": "recherche_dichotomique([10, 20, 30, 40, 50], 5, 30) → 2"
+  },
+  {
+    "id": "algo-tri-mat-colonne",
+    "category": "Matrices & Patterns",
+    "type": "procédure",
+    "name": "tri_mat_colonne(@m, n)",
+    "syntax": "procédure tri_mat_colonne(@m: mat, n: entier)",
+    "summary": "Trie chaque colonne d'une matrice carrée de façon indépendante.",
+    "description": "Fixe l'indice de colonne j de 0 à n-1, puis applique un tri à bulles sur les éléments de la colonne m[i, j] pour i allant de 0 à n-2.",
+    "pseudoCode": "0) procédure tri_mat_colonne(@m: mat, n: entier)\n1) pour j de 0 à n - 1 faire\n     p <-- vrai\n     tant que p faire\n       p <-- faux\n       pour i de 0 à n - 2 faire\n         si m[i, j] > m[i + 1, j] alors\n           aux <-- m[i, j]\n           m[i, j] <-- m[i + 1, j]\n           m[i + 1, j] <-- aux\n           p <-- vrai\n         fin_si\n       fin_pour\n       n <-- n - 1\n     fin_tant_que\n   fin_pour\n2) fin",
+    "tdo": [
+      {
+        "objet": "i, j, aux",
+        "type": "entier"
+      },
+      {
+        "objet": "p",
+        "type": "booléen"
+      }
+    ],
+    "pythonCode": "def tri_mat_colonne(m: list[list[int]], n: int) -> None:\n    for j in range(n):\n        p = True\n        taille = n\n        while p:\n            p = False\n            for i in range(taille - 1):\n                if m[i][j] > m[i + 1][j]:\n                    m[i][j], m[i + 1][j] = m[i + 1][j], m[i][j]\n                    p = True\n            taille -= 1",
+    "example": "Chaque colonne de la matrice devient triée par ordre croissant"
+  },
+  {
+    "id": "algo-tri-mat-ligne",
+    "category": "Matrices & Patterns",
+    "type": "procédure",
+    "name": "tri_mat_ligne(@m, n)",
+    "syntax": "procédure tri_mat_ligne(@m: mat, n: entier)",
+    "summary": "Trie chaque ligne d'une matrice carrée de façon indépendante.",
+    "description": "Fixe l'indice de ligne i de 0 à n-1, puis applique un tri sur les éléments de la ligne m[i, j] pour j variant de 0 à n-2.",
+    "pseudoCode": "0) procédure tri_mat_ligne(@m: mat, n: entier)\n1) pour i de 0 à n - 1 faire\n     p <-- vrai\n     tant que p faire\n       p <-- faux\n       pour j de 0 à n - 2 faire\n         si m[i, j] > m[i, j + 1] alors\n           aux <-- m[i, j]\n           m[i, j] <-- m[i, j + 1]\n           m[i, j + 1] <-- aux\n           p <-- vrai\n         fin_si\n       fin_pour\n       n <-- n - 1\n     fin_tant_que\n   fin_pour\n2) fin",
+    "tdo": [
+      {
+        "objet": "i, j, aux",
+        "type": "entier"
+      },
+      {
+        "objet": "p",
+        "type": "booléen"
+      }
+    ],
+    "pythonCode": "def tri_mat_ligne(m: list[list[int]], n: int) -> None:\n    for i in range(n):\n        p = True\n        taille = n\n        while p:\n            p = False\n            for j in range(taille - 1):\n                if m[i][j] > m[i][j + 1]:\n                    m[i][j], m[i][j + 1] = m[i][j + 1], m[i][j]\n                    p = True\n            taille -= 1",
+    "example": "Chaque ligne de la matrice devient triée par ordre croissant"
+  },
+  {
+    "id": "algo-mat-parcours-bas-haut",
+    "category": "Matrices & Patterns",
+    "type": "procédure",
+    "name": "mat_parcours_bas_haut(m, L, C)",
+    "syntax": "procédure mat_parcours_bas_haut(m: mat, L, C: entier)",
+    "summary": "Parcours de matrice colonne par colonne, de bas en haut et de droite à gauche.",
+    "description": "Règle d'or Bac IKODE : la variable qui bouge le plus vite est dans la boucle interne. Ici, la colonne j va de C-1 à 0 et la ligne i monte de L-1 à 0.",
+    "pseudoCode": "0) procédure mat_parcours_bas_haut(m: mat, L, C: entier)\n1) pour j de C - 1 à 0 (pas = -1) faire\n     pour i de L - 1 à 0 (pas = -1) faire\n       // Traitement de la case m[i, j]\n       écrire(m[i, j])\n     fin_pour\n   fin_pour\n2) fin",
+    "tdo": [
       {
         "objet": "i, j",
-        "type": "Entier (Local)",
-        "role": "Pointeurs de début et de fin"
-      },
-      {
-        "objet": "pal",
-        "type": "Booléen (Local)",
-        "role": "Indicateur booléen"
+        "type": "entier"
       }
     ],
-    "bacTips": "Pensez à convertir en minuscules ou majuscules avec `ch.upper()` avant de tester pour que 'Radar' soit bien reconnu comme palindrome !"
+    "pythonCode": "def mat_parcours_bas_haut(m: list[list], L: int, C: int) -> None:\n    for j in range(C - 1, -1, -1):\n        for i in range(L - 1, -1, -1):\n            print(f\"Case [{i}, {j}] = {m[i][j]}\")",
+    "example": "Explore m[L-1, C-1], m[L-2, C-1], ..., m[0, 0]"
   },
   {
-    "id": "algo-recursivite-factorielle",
-    "category": "Récursivité",
-    "name": "Factorielle Récursive (Exemple fondamental)",
-    "summary": "Calcul de N! = N * (N-1)! avec N! = 1 pour N = 0.",
-    "description": "La récursivité repose sur deux piliers obligatoires : 1. Le cas de base (condition d'arrêt où le calcul est immédiat : N=0 => 1) 2. Le cas général récursif qui rappelle la fonction avec un problème de taille réduite (N * Fact(N-1)).",
-    "pseudoCode": "Fonction Factorielle(n : Entier) : Entier\nDébut\n  // Cas de base (Arrêt)\n  Si (n = 0 OU n = 1) Alors\n    Retourner 1\n  // Cas récursif (Appel avec paramètre réduit)\n  Sinon\n    Retourner n * Factorielle(n - 1)\n  Fin Si\nFin Factorielle",
-    "pythonCode": "# En Python Thonny :\ndef factorielle(n):\n    if n <= 1:\n        return 1\n    return n * factorielle(n - 1)",
+    "id": "algo-mat-parcours-ligne-inverse",
+    "category": "Matrices & Patterns",
+    "type": "procédure",
+    "name": "mat_parcours_ligne_inverse(m, L, C)",
+    "syntax": "procédure mat_parcours_ligne_inverse(m: mat, L, C: entier)",
+    "summary": "Parcours de matrice ligne par ligne, de droite à gauche et de bas en haut.",
+    "description": "La boucle externe gère les lignes i de L-1 à 0, et la boucle interne parcourt les colonnes j de C-1 à 0 à rebours.",
+    "pseudoCode": "0) procédure mat_parcours_ligne_inverse(m: mat, L, C: entier)\n1) pour i de L - 1 à 0 (pas = -1) faire\n     pour j de C - 1 à 0 (pas = -1) faire\n       // Traitement de la case m[i, j]\n       écrire(m[i, j])\n     fin_pour\n   fin_pour\n2) fin",
     "tdo": [
       {
-        "objet": "Factorielle",
-        "type": "Fonction (Entier)",
-        "role": "Calcule récursivement n!"
+        "objet": "i, j",
+        "type": "entier"
       }
     ],
-    "bacTips": "Au Bac, la question type est : 'Identifier le cas de base et le cas général de la fonction récursive'."
+    "pythonCode": "def mat_parcours_ligne_inverse(m: list[list], L: int, C: int) -> None:\n    for i in range(L - 1, -1, -1):\n        for j in range(C - 1, -1, -1):\n            print(f\"Case [{i}, {j}] = {m[i][j]}\")",
+    "example": "Lecture inversée ligne par ligne complète"
   },
   {
-    "id": "algo-recursivite-fibonacci",
-    "category": "Récursivité",
-    "name": "Suite de Fibonacci Récursive",
-    "summary": "F(0) = 0, F(1) = 1, et F(n) = F(n-1) + F(n-2) pour n >= 2.",
-    "description": "Modèle de récursivité double : chaque terme est la somme des deux termes précédents. Deux cas de base sont nécessaires (n=0 et n=1).",
-    "pseudoCode": "Fonction Fibo(n : Entier) : Entier\nDébut\n  Si (n = 0) Alors\n    Retourner 0\n  Sinon Si (n = 1) Alors\n    Retourner 1\n  Sinon\n    Retourner Fibo(n - 1) + Fibo(n - 2)\n  Fin Si\nFin Fibo",
-    "pythonCode": "# En Python Thonny :\ndef fibo(n):\n    if n == 0:\n        return 0\n    if n == 1:\n        return 1\n    return fibo(n - 1) + fibo(n - 2)",
+    "id": "algo-mat-pattern-sablier",
+    "category": "Matrices & Patterns",
+    "type": "procédure",
+    "name": "mat_pattern_sablier(m, L, C)",
+    "syntax": "procédure mat_pattern_sablier(m: mat, L, C: entier)",
+    "summary": "Parcours en motif sablier / triangle inversé avec bornes dynamiques d et f.",
+    "description": "Initialise d = 0 et f = C - 1. Pour chaque ligne i, la colonne j varie de d à f. À chaque changement de ligne, d s'incrémente de 1 et f se décrémente de 1.",
+    "pseudoCode": "0) procédure mat_pattern_sablier(m: mat, L, C: entier)\n1) d <-- 0\n2) f <-- C - 1\n3) pour i de 0 à L - 1 faire\n     pour j de d à f faire\n       // Traitement m[i, j]\n       écrire(m[i, j])\n     fin_pour\n     d <-- d + 1\n     f <-- f - 1\n   fin_pour\n4) fin",
     "tdo": [
       {
-        "objet": "Fibo",
-        "type": "Fonction (Entier)",
-        "role": "Calcule le n-ième terme de Fibonacci"
+        "objet": "i, j, d, f",
+        "type": "entier"
       }
     ],
-    "bacTips": "Attention à bien traiter les deux cas de base séparément pour n=0 et n=1."
+    "pythonCode": "def mat_pattern_sablier(m: list[list], L: int, C: int) -> None:\n    d = 0\n    f = C - 1\n    for i in range(L):\n        if d <= f:\n            for j in range(d, f + 1):\n                print(f\"[{i},{j}] = {m[i][j]}\", end=\" \")\n            print()\n            d += 1\n            f -= 1",
+    "example": "Parcours des étoiles * formant un entonnoir dans la matrice"
+  },
+  {
+    "id": "algo-mat-pattern-diagonales",
+    "category": "Matrices & Patterns",
+    "type": "procédure",
+    "name": "mat_pattern_diagonales(m, L)",
+    "syntax": "procédure mat_pattern_diagonales(m: mat, L: entier)",
+    "summary": "Parcours de toutes les diagonales montantes d'une matrice carrée en deux temps.",
+    "description": "Partie 1 (triangle supérieur gauche) : boucle d de 0 à L-1, i descend de d à 0 pendant que j augmente de 0 à d. Partie 2 (triangle inférieur droit) : boucle d de 1 à L-1, i descend de L-1 à d pendant que j monte.",
+    "pseudoCode": "0) procédure mat_pattern_diagonales(m: mat, L: entier)\n1) // Partie 1 : Diagonales de la moitié supérieure gauche\n2) pour d de 0 à L - 1 faire\n     j <-- 0\n     pour i de d à 0 (pas = -1) faire\n       écrire(m[i, j])\n       j <-- j + 1\n     fin_pour\n   fin_pour\n3) // Partie 2 : Diagonales de la moitié inférieure droite\n4) pour d de 1 à L - 1 faire\n     j <-- d\n     pour i de L - 1 à d (pas = -1) faire\n       écrire(m[i, j])\n       j <-- j + 1\n     fin_pour\n   fin_pour\n5) fin",
+    "tdo": [
+      {
+        "objet": "d, i, j",
+        "type": "entier"
+      }
+    ],
+    "pythonCode": "def mat_pattern_diagonales(m: list[list], L: int) -> None:\n    # Partie 1 : Moitié supérieure\n    for d in range(L):\n        j = 0\n        for i in range(d, -1, -1):\n            print(f\"[{i},{j}] = {m[i][j]}\", end=\" \")\n            j += 1\n        print()\n    \n    # Partie 2 : Moitié inférieure\n    for d in range(1, L):\n        j = d\n        for i in range(L - 1, d - 1, -1):\n            print(f\"[{i},{j}] = {m[i][j]}\", end=\" \")\n            j += 1\n        print()",
+    "example": "Balaye toute la matrice par diagonales orientées vers le haut"
   }
-]
-};
+]};
