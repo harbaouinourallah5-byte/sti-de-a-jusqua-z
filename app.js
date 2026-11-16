@@ -6162,22 +6162,15 @@ function renderLessons() {
   }
 
   // Si aucun document n'a été publié (tous les cours retirés)
+  // Si aucun document n'a été publié par le professeur
   if (allLessons.length === 0) {
     grid.innerHTML = `
-      <div style="grid-column: 1 / -1; text-align: center; padding: 48px 24px; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px dashed var(--border-color);">
-        <div style="font-size: 3rem; margin-bottom: 12px;">📚</div>
-        <h3 style="color: var(--text-primary); font-size: 1.25rem; margin-bottom: 8px;">Espace Cours & Séries PDF Prêt</h3>
-        <p style="color: var(--text-secondary); max-width: 620px; margin: 0 auto 16px auto; font-size: 0.92rem; line-height: 1.6;">
-          Tous les cours de test ont été retirés. Cet espace est configuré pour accueillir les documents officiels partagés par votre professeur pour <strong>Algorithme (Pratique & Théorique)</strong> et <strong>STI (HTML, CSS, JS, SQL)</strong> :
+      <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: #64748b;">
+        <span style="font-size: 2.5rem; display: block; margin-bottom: 10px; opacity: 0.6;">📁</span>
+        <h4 style="color: #94a3b8; font-size: 1.1rem; margin-bottom: 6px;">Aucun document disponible pour le moment</h4>
+        <p style="color: #64748b; font-size: 0.88rem; margin: 0;">
+          Les cours, devoirs et fiches PDF partagés par votre professeur apparaîtront ici dès leur publication.
         </p>
-        <div style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
-          <span class="subject-badge algo-pratique">🛠️ Algorithme Pratique</span>
-          <span class="subject-badge algo-theorique">📖 Algorithme Théorique</span>
-          <span class="subject-badge html">🌐 HTML5</span>
-          <span class="subject-badge css">🎨 CSS3</span>
-          <span class="subject-badge js">⚡ JavaScript</span>
-          <span class="subject-badge sql">🗄️ SQL</span>
-        </div>
       </div>
     `;
     return;
@@ -6188,9 +6181,9 @@ function renderLessons() {
     grid.innerHTML = `
       <div style="grid-column: 1 / -1; text-align: center; padding: 50px 20px; background: var(--bg-card); border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
         <span style="font-size: 2.4rem; display: block; margin-bottom: 10px;">🔍</span>
-        <h4 style="color: #cbd5e1; font-size: 1.1rem; margin-bottom: 6px;">Aucun document ne correspond à cette matière</h4>
+        <h4 style="color: #cbd5e1; font-size: 1.05rem; margin-bottom: 6px;">Aucun document ne correspond à cette matière</h4>
         <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0 0 16px 0;">
-          Aucun document n'a été publié pour cette sélection. Vous pouvez afficher tous les documents ou déposer un document dans cette matière depuis l'Espace Enseignant.
+          Aucun document n'a été publié pour cette sélection.
         </p>
         <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
           <button class="nav-btn" onclick="filterLessonsBySubject('all')">🌟 Voir tous les documents</button>
