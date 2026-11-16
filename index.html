@@ -2004,7 +2004,7 @@
          VUE 4 : PAGE DÉDIÉE COURS & SÉRIES PDF
          ========================================== -->
     <section id="view-lessons" class="view-section">
-      <div class="page-header-banner" id="lessonsHeaderBanner" style="background: linear-gradient(135deg, rgba(124, 58, 237, 0.18), rgba(168, 85, 247, 0.08)); border-bottom: 1px solid rgba(168, 85, 247, 0.3);">
+      <div class="page-header-banner" id="lessonsHeaderBanner" style="background: linear-gradient(135deg, rgba(124, 58, 237, 0.18), rgba(16, 185, 129, 0.12)); border-bottom: 1px solid rgba(168, 85, 247, 0.3);">
         <div class="container">
           <div class="breadcrumb">
             <a onclick="handleLogoClick()">Accueil</a>
@@ -2013,7 +2013,7 @@
           </div>
           <div class="subpage-title-row">
             <h2 class="subpage-title" id="lessonsPageTitle">
-              <span style="color: #a855f7;">📚</span> Cours, Séries & Devoirs PDF (Bac STI)
+              <span style="color: #a855f7;">📚</span> Cours, Séries & Documents PDF (STI & Algorithme)
             </h2>
             <div style="display:flex; gap:10px; flex-wrap:wrap;">
               <button class="nav-btn" onclick="switchView('admin')" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid #10b981; font-weight: 700;">
@@ -2031,43 +2031,95 @@
 
       <div class="container" style="padding-top: 24px; padding-bottom: 50px;">
         
-        <!-- BASCULEUR DE MODULE STI (4 MATIÈRES) vs ALGORITHME (2 MATIÈRES) -->
-        <div style="display: flex; justify-content: center; margin-bottom: 22px;">
-          <div class="lesson-module-switcher">
-            <button class="lesson-module-tab active sti" id="lessonTabSti" onclick="setLessonModule('sti')">
-              <span>🌐</span>
-              <span>Programme Bac STI (4 Matières : HTML, CSS, JS, SQL)</span>
-            </button>
-            <button class="lesson-module-tab algo" id="lessonTabAlgo" onclick="setLessonModule('algo')">
-              <span>🐍</span>
-              <span>Programme Algorithme (2 Matières : Pratique & Théorique)</span>
-            </button>
+        <!-- LES 2 GRANDES SECTIONS CLAIREMENT VISIBLES (ALGORITHME & STI) -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 24px;">
+          
+          <!-- BLOC 1 : MODULE ALGORITHME & PROGRAMMATION (BAC INFORMATIQUE) -->
+          <div style="background: linear-gradient(135deg, rgba(5, 150, 105, 0.14), rgba(16, 185, 129, 0.06)); border: 1px solid rgba(16, 185, 129, 0.35); border-left: 5px solid #10b981; border-radius: var(--radius-md); padding: 18px 20px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+              <span style="color: #34d399; font-weight: 800; font-size: 1.05rem; display: flex; align-items: center; gap: 8px;">
+                <span>🐍</span>
+                <span>Module Algorithme (Bac Informatique)</span>
+              </span>
+              <span class="pill-badge" style="color: #34d399; font-size: 0.75rem;">2 Matières</span>
+            </div>
+            <p style="font-size: 0.86rem; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.5;">
+              Supports et documents pour l'<strong>Épreuve Pratique</strong> (Qt Designer ➔ Thonny Python) et l'<strong>Épreuve Théorique</strong> (Algorithmes Bac, Bases, Aires, Matrices).
+            </p>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="cat-btn" onclick="filterLessonsBySubject('algo-pratique')" style="border-color: rgba(16, 185, 129, 0.5); color: #34d399; font-size: 0.82rem; padding: 6px 12px; font-weight:700;">
+                🛠️ Pratique (Qt ➔ Thonny)
+              </button>
+              <button class="cat-btn" onclick="filterLessonsBySubject('algo-theorique')" style="border-color: rgba(245, 158, 11, 0.5); color: #fbbf24; font-size: 0.82rem; padding: 6px 12px; font-weight:700;">
+                📖 Théorique (Bac Info)
+              </button>
+            </div>
           </div>
+
+          <!-- BLOC 2 : MODULE SCIENCES & TECH (BAC STI) -->
+          <div style="background: linear-gradient(135deg, rgba(124, 58, 237, 0.14), rgba(168, 85, 247, 0.06)); border: 1px solid rgba(168, 85, 247, 0.35); border-left: 5px solid #a855f7; border-radius: var(--radius-md); padding: 18px 20px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+              <span style="color: #c084fc; font-weight: 800; font-size: 1.05rem; display: flex; align-items: center; gap: 8px;">
+                <span>🌐</span>
+                <span>Module Web &amp; Données (Bac STI)</span>
+              </span>
+              <span class="pill-badge" style="color: #c084fc; font-size: 0.75rem;">4 Matières</span>
+            </div>
+            <p style="font-size: 0.86rem; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.5;">
+              Documents et cours pour les 4 matières clés du Bac STI : <strong>HTML5</strong>, <strong>CSS3</strong>, <strong>JavaScript</strong> et <strong>SQL (Bases de Données)</strong>.
+            </p>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="cat-btn" onclick="filterLessonsBySubject('html')" style="border-color: rgba(249, 115, 22, 0.4); color: #fb923c; font-size: 0.82rem; padding: 6px 12px;">🌐 HTML5</button>
+              <button class="cat-btn" onclick="filterLessonsBySubject('css')" style="border-color: rgba(56, 189, 248, 0.4); color: #38bdf8; font-size: 0.82rem; padding: 6px 12px;">🎨 CSS3</button>
+              <button class="cat-btn" onclick="filterLessonsBySubject('js')" style="border-color: rgba(250, 204, 21, 0.4); color: #facc15; font-size: 0.82rem; padding: 6px 12px;">⚡ JS</button>
+              <button class="cat-btn" onclick="filterLessonsBySubject('sql')" style="border-color: rgba(168, 85, 247, 0.4); color: #c084fc; font-size: 0.82rem; padding: 6px 12px;">🗄️ SQL</button>
+            </div>
+          </div>
+
         </div>
 
-        <!-- Bannière d'information & séparation par matières -->
-        <div id="lessonsBannerBox" style="background: linear-gradient(135deg, rgba(124, 58, 237, 0.12), rgba(168, 85, 247, 0.06)); border: 1px solid rgba(168, 85, 247, 0.35); border-left: 6px solid #a855f7; border-radius: var(--radius-md); padding: 18px 22px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
-          <div>
-            <h4 id="lessonsBannerTitle" style="color: #c084fc; font-size: 1.1rem; margin-bottom: 4px;">🎯 Espace d'Apprentissage & Téléchargement des Documents PDF</h4>
-            <p id="lessonsBannerDesc" style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;">
-              Retrouvez l'ensemble des leçons, séries d'exercices et devoirs partagés par votre professeur, classés selon les 4 matières clés du Bac STI : <strong>HTML5</strong>, <strong>CSS3</strong>, <strong>JavaScript</strong> et <strong>SQL (Bases de Données)</strong>.
-            </p>
+        <!-- FILTRES PAR MATIÈRE (LES 6 MATIÈRES RÉUNIES : ALGO PRATIQUE, ALGO THÉORIQUE, HTML, CSS, JS, SQL) -->
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+          <div class="subject-tabs-bar" id="lessonsSubjectTabsBar" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom: 0;">
+            <button class="subject-tab active" data-subject="all" onclick="filterLessonsBySubject('all')">
+              <span>🌟</span>
+              <span>Tous les documents</span>
+            </button>
+            <button class="subject-tab algo-pratique" data-subject="algo-pratique" onclick="filterLessonsBySubject('algo-pratique')">
+              <span>🛠️</span>
+              <span>Algo Pratique (Qt ➔ Thonny)</span>
+            </button>
+            <button class="subject-tab algo-theorique" data-subject="algo-theorique" onclick="filterLessonsBySubject('algo-theorique')">
+              <span>📖</span>
+              <span>Algo Théorique (Bac Info)</span>
+            </button>
+            <button class="subject-tab html" data-subject="html" onclick="filterLessonsBySubject('html')">
+              <span>🌐</span>
+              <span>HTML5</span>
+            </button>
+            <button class="subject-tab css" data-subject="css" onclick="filterLessonsBySubject('css')">
+              <span>🎨</span>
+              <span>CSS3</span>
+            </button>
+            <button class="subject-tab js" data-subject="js" onclick="filterLessonsBySubject('js')">
+              <span>⚡</span>
+              <span>JavaScript</span>
+            </button>
+            <button class="subject-tab sql" data-subject="sql" onclick="filterLessonsBySubject('sql')">
+              <span>🗄️</span>
+              <span>SQL (BDD)</span>
+            </button>
           </div>
           <span id="lessonsCounterBadge" style="background: #7c3aed; color: #fff; font-weight: 800; font-size: 0.82rem; padding: 6px 14px; border-radius: 20px; white-space: nowrap;">
-            10 Documents Disponibles
+            0 Document
           </span>
-        </div>
-
-        <!-- FILTRES PAR MATIÈRE (DYNAMIQUES : STI = 4 MATIÈRES / ALGO = 2 MATIÈRES) -->
-        <div class="subject-tabs-bar" id="lessonsSubjectTabsBar" style="display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap;">
-          <!-- Injecté dynamiquement par JS selon le module actif -->
         </div>
 
         <!-- BARRE DE RECHERCHE & FILTRE TYPE -->
         <div class="filter-search-bar" style="margin-bottom: 24px;">
           <div class="search-box-wrap" style="flex: 1; min-width: 260px;">
             <span class="search-icon-inside">🔍</span>
-            <input type="text" id="lessonSearchInput" class="search-input" placeholder="Rechercher un cours, série, devoir (ex: LDD, SQL, verif, box model, formulaires...)" oninput="handleLessonSearch(this.value)">
+            <input type="text" id="lessonSearchInput" class="search-input" placeholder="Rechercher un cours, série, devoir (ex: Qt, Thonny, Bases, Matrices, LDD, SQL, verif...)" oninput="handleLessonSearch(this.value)">
           </div>
           <div class="categories-bar" id="lessonTypeFilterBar" style="flex-wrap: wrap;">
             <button class="cat-btn active" onclick="filterLessonsByType('all')">Tous les types</button>
@@ -2364,18 +2416,21 @@
               </div>
             </div>
 
-            <!-- Outils de Sauvegarde -->
+            <!-- Outils de Sauvegarde & Actions Enseignant -->
             <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+              <button onclick="loadOfficialAlgoPdfPacks()" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid #10b981; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 700; cursor: pointer;">
+                📥 Charger les 4 cours officiels Algorithme Bac
+              </button>
+              <button onclick="clearAllLessonsFromDB()" style="background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid #ef4444; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 700; cursor: pointer;">
+                🗑️ Vider tous les documents
+              </button>
               <button onclick="exportAllLessonsBackup()" style="background: #1e293b; color: #38bdf8; border: 1px solid #0284c7; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 700; cursor: pointer;">
-                💾 Exporter Sauvegarde Complète (JSON)
+                💾 Exporter Sauvegarde (JSON)
               </button>
               <button onclick="document.getElementById('importBackupInput').click()" style="background: #1e293b; color: #a3e635; border: 1px solid #65a30d; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 700; cursor: pointer;">
                 📥 Importer une Sauvegarde
               </button>
               <input type="file" id="importBackupInput" accept=".json" onchange="importLessonsBackup(event)" style="display: none;">
-              <button onclick="resetToDefaultLessons()" style="background: #1e293b; color: #fca5a5; border: 1px solid #dc2626; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 700; cursor: pointer;">
-                🔄 Réinitialiser aux 10 cours officiels
-              </button>
             </div>
           </div>
 

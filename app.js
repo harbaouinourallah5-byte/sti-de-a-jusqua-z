@@ -1628,10 +1628,10 @@ function switchView(viewName) {
     currentLessonSubject = 'all';
     currentLessonType = 'all';
     currentLessonSearch = '';
-    if (typeof currentLessonModule === 'undefined' || !currentLessonModule) {
-      currentLessonModule = (typeof currentModule !== 'undefined' && currentModule === 'algo') ? 'algo' : 'sti';
-    }
-    updateLessonsModuleUI();
+    document.querySelectorAll('#lessonsSubjectTabsBar .subject-tab').forEach(btn => {
+      if (btn.getAttribute('data-subject') === 'all') btn.classList.add('active');
+      else btn.classList.remove('active');
+    });
     renderLessons();
     history.replaceState(null, '', '#lessons');
   } else if (viewName === 'admin') {
@@ -6091,7 +6091,6 @@ async function initLessonsModule() {
   const defaultLessons = (DATA && DATA.lessons) ? DATA.lessons : [];
   allLessons = [...customLessons, ...defaultLessons];
 
-  updateLessonsModuleUI();
   renderLessons();
 
   // Écoute des changements d'URL hash
@@ -6128,139 +6127,34 @@ function checkUrlRouting() {
 }
 
 // -------------------------------------------------------------
-// Gestion des Modules (STI vs ALGORITHME) pour les Leçons & Séries
+// Rendu & Filtres des Leçons Élèves (STI + ALGORITHME)
 // -------------------------------------------------------------
-function setLessonModule(mod) {
-  currentLessonModule = mod;
-  currentLessonSubject = 'all';
-  updateLessonsModuleUI();
-  renderLessons();
-}
-
-function openLessonsForModule(mod) {
-  currentLessonModule = mod;
-  currentLessonSubject = 'all';
-  switchView('lessons');
-  updateLessonsModuleUI();
-  renderLessons();
-}
-
-function updateLessonsModuleUI() {
-  const tabSti = document.getElementById('lessonTabSti');
-  const tabAlgo = document.getElementById('lessonTabAlgo');
-  const bannerBox = document.getElementById('lessonsBannerBox');
-  const bannerTitle = document.getElementById('lessonsBannerTitle');
-  const bannerDesc = document.getElementById('lessonsBannerDesc');
-  const pageTitle = document.getElementById('lessonsPageTitle');
-  const breadcrumbText = document.getElementById('lessonsBreadcrumbText');
-  const tabsBar = document.getElementById('lessonsSubjectTabsBar');
-
-  if (tabSti && tabAlgo) {
-    if (currentLessonModule === 'algo') {
-      tabSti.classList.remove('active');
-      tabAlgo.classList.add('active');
+function filterLessonsBySubject(subj) {
+  currentLessonSubject = subj;
+  document.querySelectorAll('#lessonsSubjectTabsBar .subject-tab').forEach(btn => {
+    if (btn.getAttribute('data-subject') === subj) {
+      btn.classList.add('active');
     } else {
-      tabSti.classList.add('active');
-      tabAlgo.classList.remove('active');
+      btn.classList.remove('active');
     }
-  }
-
-  if (currentLessonModule === 'algo') {
-    if (pageTitle) pageTitle.innerHTML = `<span style="color: #10b981;">📚</span> Supports, Fiches & Documents PDF (Algorithme & Programmation)`;
-    if (breadcrumbText) breadcrumbText.textContent = "Cours & Séries PDF (Algorithme)";
-    if (bannerBox) {
-      bannerBox.style.background = 'linear-gradient(135deg, rgba(5, 150, 105, 0.15), rgba(16, 185, 129, 0.08))';
-      bannerBox.style.borderColor = 'rgba(16, 185, 129, 0.4)';
-      bannerBox.style.borderLeftColor = '#10b981';
-    }
-    if (bannerTitle) {
-      bannerTitle.style.color = '#34d399';
-      bannerTitle.textContent = "🎯 Supports Officiels & Fiches de Révision Algorithme (Bac Informatique)";
-    }
-    if (bannerDesc) {
-      bannerDesc.innerHTML = "Retrouvez les fiches et supports conformes au programme officiel tunisien classés en 2 matières : <strong>Pratique (Qt Designer ➔ Thonny)</strong> et <strong>Théorique (Algorithmes types Bac, Bases, Aires, Matrices)</strong>.";
-    }
-
-    if (tabsBar) {
-      tabsBar.innerHTML = `
-        <button class="subject-tab ${currentLessonSubject === 'all' ? 'active' : ''}" data-subject="all" onclick="filterLessonsBySubject('all')">
-          <span>🌟</span>
-          <span>Tous les documents Algo</span>
-        </button>
-        <button class="subject-tab algo-pratique ${currentLessonSubject === 'algo-pratique' ? 'active' : ''}" data-subject="algo-pratique" onclick="filterLessonsBySubject('algo-pratique')">
-          <span>🛠️</span>
-          <span>Pratique (Qt ➔ Thonny)</span>
-        </button>
-        <button class="subject-tab algo-theorique ${currentLessonSubject === 'algo-theorique' ? 'active' : ''}" data-subject="algo-theorique" onclick="filterLessonsBySubject('algo-theorique')">
-          <span>📖</span>
-          <span>Théorique (Algorithme Bac)</span>
-        </button>
-      `;
-    }
-  } else {
-    if (pageTitle) pageTitle.innerHTML = `<span style="color: #a855f7;">📚</span> Cours, Séries & Devoirs PDF (Bac STI)`;
-    if (breadcrumbText) breadcrumbText.textContent = "Cours & Séries PDF (Bac STI)";
-    if (bannerBox) {
-      bannerBox.style.background = 'linear-gradient(135deg, rgba(124, 58, 237, 0.12), rgba(168, 85, 247, 0.06))';
-      bannerBox.style.borderColor = 'rgba(168, 85, 247, 0.35)';
-      bannerBox.style.borderLeftColor = '#a855f7';
-    }
-    if (bannerTitle) {
-      bannerTitle.style.color = '#c084fc';
-      bannerTitle.textContent = "🎯 Espace d'Apprentissage & Téléchargement des Documents PDF";
-    }
-    if (bannerDesc) {
-      bannerDesc.innerHTML = "Retrouvez l'ensemble des leçons, séries d'exercices et devoirs partagés par votre professeur, classés selon les 4 matières clés du Bac STI : <strong>HTML5</strong>, <strong>CSS3</strong>, <strong>JavaScript</strong> et <strong>SQL (Bases de Données)</strong>.";
-    }
-
-    if (tabsBar) {
-      tabsBar.innerHTML = `
-        <button class="subject-tab ${currentLessonSubject === 'all' ? 'active' : ''}" data-subject="all" onclick="filterLessonsBySubject('all')">
-          <span>🌟</span>
-          <span>Toutes les 4 matières STI</span>
-        </button>
-        <button class="subject-tab html ${currentLessonSubject === 'html' ? 'active' : ''}" data-subject="html" onclick="filterLessonsBySubject('html')">
-          <span>🌐</span>
-          <span>HTML5</span>
-        </button>
-        <button class="subject-tab css ${currentLessonSubject === 'css' ? 'active' : ''}" data-subject="css" onclick="filterLessonsBySubject('css')">
-          <span>🎨</span>
-          <span>CSS3</span>
-        </button>
-        <button class="subject-tab js ${currentLessonSubject === 'js' ? 'active' : ''}" data-subject="js" onclick="filterLessonsBySubject('js')">
-          <span>⚡</span>
-          <span>JavaScript</span>
-        </button>
-        <button class="subject-tab sql ${currentLessonSubject === 'sql' ? 'active' : ''}" data-subject="sql" onclick="filterLessonsBySubject('sql')">
-          <span>🗄️</span>
-          <span>SQL (Bases de Données)</span>
-        </button>
-      `;
-    }
-  }
+  });
+  renderLessons();
 }
 
-// -------------------------------------------------------------
-// Rendu & Filtres des Leçons Élèves
-// -------------------------------------------------------------
 function renderLessons() {
   const grid = document.getElementById('lessonsGrid');
   const counterBadge = document.getElementById('lessonsCounterBadge');
   if (!grid) return;
 
-  const stiSubjects = ['html', 'css', 'js', 'sql'];
-  const algoSubjects = ['algo-pratique', 'algo-theorique'];
-
   const filtered = allLessons.filter(lesson => {
-    // Filtrage selon le module actif (STI vs Algo)
-    if (currentLessonSubject === 'all') {
-      if (currentLessonModule === 'algo') {
-        if (!algoSubjects.includes(lesson.subject)) return false;
-      } else {
-        if (!stiSubjects.includes(lesson.subject)) return false;
+    if (currentLessonSubject !== 'all') {
+      if (currentLessonSubject === 'all-algo') {
+        if (!['algo-pratique', 'algo-theorique'].includes(lesson.subject)) return false;
+      } else if (currentLessonSubject === 'all-sti') {
+        if (!['html', 'css', 'js', 'sql'].includes(lesson.subject)) return false;
+      } else if (lesson.subject !== currentLessonSubject) {
+        return false;
       }
-    } else {
-      if (lesson.subject !== currentLessonSubject) return false;
     }
 
     const matchType = (currentLessonType === 'all' || lesson.type === currentLessonType);
@@ -6274,17 +6168,48 @@ function renderLessons() {
   });
 
   if (counterBadge) {
-    counterBadge.textContent = `${filtered.length} Document${filtered.length > 1 ? 's' : ''} Disponible${filtered.length > 1 ? 's' : ''}`;
+    counterBadge.textContent = `${filtered.length} Document${filtered.length > 1 ? 's' : ''}`;
   }
 
+  // Si aucun document n'a été publié (tous les cours retirés)
+  if (allLessons.length === 0) {
+    grid.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 48px 24px; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px dashed var(--border-color);">
+        <div style="font-size: 3rem; margin-bottom: 12px;">📚</div>
+        <h3 style="color: var(--text-primary); font-size: 1.25rem; margin-bottom: 8px;">Espace Cours & Séries PDF Prêt</h3>
+        <p style="color: var(--text-secondary); max-width: 620px; margin: 0 auto 16px auto; font-size: 0.92rem; line-height: 1.6;">
+          Tous les cours de test ont été retirés. Cet espace est configuré pour accueillir les documents officiels partagés par votre professeur pour <strong>Algorithme (Pratique & Théorique)</strong> et <strong>STI (HTML, CSS, JS, SQL)</strong> :
+        </p>
+        <div style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 24px;">
+          <span class="subject-badge algo-pratique">🛠️ Algorithme Pratique</span>
+          <span class="subject-badge algo-theorique">📖 Algorithme Théorique</span>
+          <span class="subject-badge html">🌐 HTML5</span>
+          <span class="subject-badge css">🎨 CSS3</span>
+          <span class="subject-badge js">⚡ JavaScript</span>
+          <span class="subject-badge sql">🗄️ SQL</span>
+        </div>
+        <button class="nav-btn" onclick="switchView('admin')" style="background: linear-gradient(135deg, #059669, #10b981); color: #000; font-weight: 800; padding: 10px 22px; border-radius: 6px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);">
+          <span>🔒</span>
+          <span>Déposer un cours dans l'Espace Enseignant (/admin)</span>
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  // Si des documents existent mais ne correspondent pas au filtre sélectionné
   if (filtered.length === 0) {
     grid.innerHTML = `
       <div style="grid-column: 1 / -1; text-align: center; padding: 50px 20px; background: var(--bg-card); border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
         <span style="font-size: 2.4rem; display: block; margin-bottom: 10px;">🔍</span>
-        <h4 style="color: #cbd5e1; font-size: 1.1rem; margin-bottom: 6px;">Aucun document ne correspond à vos critères</h4>
-        <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">
-          Modifiez vos filtres ou effectuez une autre recherche par mot-clé.
+        <h4 style="color: #cbd5e1; font-size: 1.1rem; margin-bottom: 6px;">Aucun document ne correspond à cette matière</h4>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0 0 16px 0;">
+          Aucun document n'a été publié pour cette sélection. Vous pouvez afficher tous les documents ou déposer un document dans cette matière depuis l'Espace Enseignant.
         </p>
+        <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+          <button class="nav-btn" onclick="filterLessonsBySubject('all')">🌟 Voir tous les documents</button>
+          <button class="nav-btn" onclick="switchView('admin')" style="color: #34d399; border-color: rgba(52, 211, 153, 0.4);">🔒 Espace Enseignant</button>
+        </div>
       </div>
     `;
     return;
@@ -6793,11 +6718,97 @@ function importLessonsBackup(e) {
   reader.readAsText(file);
 }
 
-async function resetToDefaultLessons() {
-  if (!confirm("Voulez-vous réinitialiser et recharger les 10 leçons officielles de référence ?")) return;
+async function clearAllLessonsFromDB() {
+  if (!confirm("Voulez-vous vraiment supprimer TOUS les documents de cours ?")) return;
   await STILessonsDB.clear();
+  allLessons = [];
+  renderAdminLessonsTable();
+  renderLessons();
+  alert("✓ Tous les documents ont été supprimés.");
+}
+
+async function loadOfficialAlgoPdfPacks() {
+  const packs = [
+    {
+      id: "lesson-algo-theo-01",
+      title: "Support Officiel : Conversion Entre Les Bases de Numération (Bases 2, 8, 10, 16)",
+      subject: "algo-theorique",
+      subjectLabel: "Théorique (Algorithme)",
+      type: "cours",
+      typeLabel: "📖 Support Officiel",
+      date: "2025-04-12",
+      author: "Inspection Générale de l'Informatique",
+      fileSize: "4.5 Mo",
+      pdfUrl: "pdf/Conversion_Bases_Numeration.pdf",
+      description: "Polycopié officiel d'arithmétique : méthode des divisions successives (décimal vers base B), méthode des puissances pondérées (base B vers décimal), et conversions directes rapides.",
+      summary: "Document de référence couvrant les chapitres d'arithmétique et de représentation de l'information : tableaux d'équivalence, démonstrations formelles, algorithmes types.",
+      downloadName: "Support_Officiel_Bases_Numeration_BacInfo.pdf",
+      isCustom: true
+    },
+    {
+      id: "lesson-algo-theo-02",
+      title: "Support Officiel : Calcul d'Aires & Intégration Numérique (Trapèzes & Rectangles)",
+      subject: "algo-theorique",
+      subjectLabel: "Théorique (Algorithme)",
+      type: "cours",
+      typeLabel: "📖 Support Officiel",
+      date: "2025-04-15",
+      author: "Inspection Générale de l'Informatique",
+      fileSize: "4.2 Mo",
+      pdfUrl: "pdf/Support_Calcul_Aires.pdf",
+      description: "Méthodes numériques d'approximation d'aires sous une courbe : discrétisation du pas h = (b - a) / n, méthode des rectangles et méthode des trapèzes.",
+      summary: "Cours théorique complet avec formalisation mathématique et algorithmique : formules de sommation, étude d'erreur et convergence, algorithme d'intégration par les trapèzes.",
+      downloadName: "Support_Officiel_Calcul_Aires_BacInfo.pdf",
+      isCustom: true
+    },
+    {
+      id: "lesson-algo-theo-03",
+      title: "Fichier de Révision : Algorithmes Types, TDO & Sous-programmes Bac",
+      subject: "algo-theorique",
+      subjectLabel: "Théorique (Algorithme)",
+      type: "serie",
+      typeLabel: "📝 Fichier de Révision",
+      date: "2025-04-18",
+      author: "Inspection Générale de l'Informatique",
+      fileSize: "2.8 Mo",
+      pdfUrl: "pdf/Fichier_Revision_Algorithme.pdf",
+      description: "Recueil de révision globale pour l'épreuve écrite du Bac : algorithmes de tri, recherche dichotomique, primalité, PGCD, palindromes et anagrammes.",
+      summary: "Fascicule officiel indispensable récapitulant les algorithmes types du Baccalauréat tunisien : syntaxe officielle du pseudo-code, T.D.O et sous-programmes.",
+      downloadName: "Fichier_Revision_Algorithme_BacInfo.pdf",
+      isCustom: true
+    },
+    {
+      id: "lesson-algo-theo-04",
+      title: "Support Officiel : Matrices & Patterns (Spirale, Zigzag, Diagonales, Sablier)",
+      subject: "algo-theorique",
+      subjectLabel: "Théorique (Algorithme)",
+      type: "cours",
+      typeLabel: "📖 Support Officiel",
+      date: "2025-04-20",
+      author: "Inspection Générale de l'Informatique",
+      fileSize: "1.2 Mo",
+      pdfUrl: "pdf/Matrice_Pattern.pdf",
+      description: "Étude avancée des tableaux à deux dimensions (matrices carrées et rectangulaires) et des tracés de motifs géométriques (spirale, zigzag, diagonales, sablier).",
+      summary: "Document officiel d'approfondissement : déclarations T.D.N.T (Tableau de N lignes et M colonnes), contrôles de symétrie, vérification de carré magique.",
+      downloadName: "Support_Officiel_Matrices_Patterns_BacInfo.pdf",
+      isCustom: true
+    }
+  ];
+
+  for (let l of packs) {
+    await STILessonsDB.save(l);
+  }
   await initLessonsModule();
-  alert("✓ Documents réinitialisés au programme officiel.");
+  alert("✓ Les 4 supports officiels d'Algorithme ont été chargés avec succès !");
+}
+
+async function resetToDefaultLessons() {
+  if (!confirm("Voulez-vous réinitialiser et vider la liste des documents ?")) return;
+  await STILessonsDB.clear();
+  allLessons = [];
+  renderAdminLessonsTable();
+  renderLessons();
+  alert("✓ Documents réinitialisés.");
 }
 
 
@@ -6905,8 +6916,6 @@ function switchModule(moduleName, skipViewSwitch = false) {
     algoNavItems.forEach(el => el.style.display = 'inline-flex');
 
     if (currentView === 'lessons') {
-      currentLessonModule = 'algo';
-      updateLessonsModuleUI();
       renderLessons();
     } else if (!skipViewSwitch && !['algo-home', 'algo-pratique', 'algo-theorique', 'admin'].includes(currentView)) {
       switchView('algo-home');
@@ -6932,8 +6941,6 @@ function switchModule(moduleName, skipViewSwitch = false) {
     algoNavItems.forEach(el => el.style.display = 'none');
 
     if (currentView === 'lessons') {
-      currentLessonModule = 'sti';
-      updateLessonsModuleUI();
       renderLessons();
     } else if (!skipViewSwitch && ['algo-home', 'algo-pratique', 'algo-theorique'].includes(currentView)) {
       switchView('home');

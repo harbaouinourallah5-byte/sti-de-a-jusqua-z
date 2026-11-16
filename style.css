@@ -3009,6 +3009,18 @@ input, select, textarea {
   border: 1px solid rgba(168, 85, 247, 0.4);
 }
 
+.subject-badge.algo-pratique {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.subject-badge.algo-theorique {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
 /* Cartes de Leçons PDF */
 .lesson-card {
   background: var(--bg-card);
@@ -3038,6 +3050,8 @@ input, select, textarea {
 .lesson-card.css::before { background: #38bdf8; }
 .lesson-card.js::before { background: #facc15; }
 .lesson-card.sql::before { background: #a855f7; }
+.lesson-card.algo-pratique::before { background: #10b981; }
+.lesson-card.algo-theorique::before { background: #f59e0b; }
 
 .lesson-card:hover {
   transform: translateY(-4px);
