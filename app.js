@@ -1821,6 +1821,7 @@ function renderCssCategories() {
 
 function renderCssCards() {
   const container = document.getElementById('cssItemsGrid');
+  if (!container) return;
   container.innerHTML = '';
 
   const filtered = DATA.css.filter(item => {
@@ -1838,28 +1839,107 @@ function renderCssCards() {
   }
 
   filtered.forEach(item => {
+    const cfg = typeof getCssExaggeratedConfig === 'function' ? getCssExaggeratedConfig(item) : {
+      propName: item.property,
+      beforeStyle: 'border: 1px dashed #475569; color: #94a3b8; background: #1e293b;',
+      afterStyle: 'border: 3px solid #38bdf8; color: #38bdf8; background: rgba(56, 189, 248, 0.25); box-shadow: 0 0 20px rgba(56, 189, 248, 0.6);',
+      innerHtml: `<span>${item.property}</span>`,
+      min: 0, max: 100, step: 5, defaultValue: 50,
+      valLabel: (v) => `${v}`,
+      applyDynamic: (v) => '',
+      highlightedLine: `${item.property}: ...;`,
+      snippet: item.code || `${item.property}: ...;`
+    };
+
     const card = document.createElement('div');
     card.className = 'item-card card-css';
+    card.id = `card_${item.id}`;
+
+    // Format snippet with highlighted line
+    let formattedSnippet = escapeHtml(cfg.snippet);
+    if (cfg.highlightedLine && cfg.snippet.includes(cfg.highlightedLine)) {
+      const parts = cfg.snippet.split(cfg.highlightedLine);
+      formattedSnippet = escapeHtml(parts[0]) + `<mark class="highlight-css-line">${escapeHtml(cfg.highlightedLine)}</mark>` + escapeHtml(parts.slice(1).join(cfg.highlightedLine));
+    } else if (cfg.highlightedLine) {
+      formattedSnippet = `<mark class="highlight-css-line">${escapeHtml(cfg.highlightedLine)}</mark>\n` + formattedSnippet;
+    }
+
     card.innerHTML = `
-      <div class="card-cat-badge">${item.category}</div>
-      <div class="item-card-title">
-        <span>${item.name}</span>
+      <div class="card-cat-badge">${escapeHtml(item.category)}</div>
+      <div class="item-card-title" onclick="openCssModalById('${item.id}')" style="cursor:pointer;" title="Cliquer pour ouvrir la démonstration complète">
+        <span>${escapeHtml(item.name)}</span>
         <span class="item-card-tag" style="font-size:0.85rem;">${escapeHtml(item.property)}</span>
       </div>
-      <p class="item-card-desc">${item.description || item.summary}</p>
+      <p class="item-card-desc">${escapeHtml(item.description || item.summary)}</p>
       
+      <!-- Arène Comparative AVANT (Défaut) vs APRÈS (Effet Exagéré) sur Grille Blueprint -->
+      <div class="css-compare-arena grid-backdrop">
+        <!-- Colonne AVANT -->
+        <div class="compare-col before-col">
+          <div class="compare-col-header">
+            <span class="col-dot red">●</span>
+            <span class="col-title">AVANT (Défaut)</span>
+          </div>
+          <div class="compare-stage-box">
+            <div class="css-demo-target target-before" style="${cfg.beforeStyle}">
+              ${cfg.innerHtml}
+            </div>
+          </div>
+        </div>
+
+        <div class="compare-vs-badge">VS</div>
+
+        <!-- Colonne APRÈS -->
+        <div class="compare-col after-col">
+          <div class="compare-col-header">
+            <span class="col-dot green">●</span>
+            <span class="col-title">APRÈS (Effet CSS)</span>
+            <span class="effect-live-badge active" id="badge_${item.id}">Effect: ON</span>
+          </div>
+          <div class="compare-stage-box">
+            <div class="css-demo-target target-after" id="targetAfter_${item.id}" style="${cfg.afterStyle}">
+              ${cfg.innerHtml}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contrôles Interactifs : Bouton Basculer + Curseur Slider en Direct -->
+      <div class="card-interactive-controls">
+        <div class="controls-top-row">
+          <button type="button" class="toggle-effect-btn active" id="toggleBtn_${item.id}" onclick="event.stopPropagation(); toggleCardCssEffect('${item.id}')">
+            ⚡ Basculer / Rejouer l'effet
+          </button>
+          <span class="slider-val-badge" id="sliderDisplay_${item.id}">Intensité : <strong>${cfg.valLabel(cfg.defaultValue)}</strong></span>
+        </div>
+        <div class="slider-control-row">
+          <label for="slider_${item.id}" class="slider-label">🎚️ Ajuster en direct :</label>
+          <input type="range" class="live-css-slider" id="slider_${item.id}" min="${cfg.min}" max="${cfg.max}" step="${cfg.step}" value="${cfg.defaultValue}" oninput="event.stopPropagation(); handleCardSliderInput('${item.id}', Number(this.value))" onclick="event.stopPropagation()">
+        </div>
+      </div>
+
+      <!-- Code officiel de l'Annexe avec ligne CSS clé surlignée -->
+      <div class="annexe-code-container">
+        <div class="annexe-code-header">
+          <span>📜 Extrait Annexe STI</span>
+          <button type="button" class="annexe-copy-btn" onclick="event.stopPropagation(); copyCardSnippet('${item.id}', this)" title="Copier ce code">📋 Copier</button>
+        </div>
+        <pre class="annexe-code-pre"><code>${formattedSnippet}</code></pre>
+      </div>
+
       <!-- Note :hover obligatoire sur chaque élément -->
       <div class="hover-note-badge">
         <span>💡</span>
         <span><strong>Au survol :</strong> ajoutez <code>:hover</code> pour déclencher à la souris.</span>
       </div>
 
-      <div class="card-action-bar">
-        <span style="color:#38bdf8;">🎬 Voir la vidéo & démonstration</span>
+      <!-- Barre d'Action vers la Vidéo Dédiée et Variantes -->
+      <div class="card-action-bar" onclick="openCssModalById('${item.id}')">
+        <span style="color:#38bdf8;">🎬 Voir les vidéos & variantes détaillées</span>
         <span>→</span>
       </div>
     `;
-    card.addEventListener('click', () => openCssModal(item));
+
     container.appendChild(card);
   });
 }
@@ -2234,6 +2314,12 @@ function openCssModal(item) {
       ${playlistSectionHtml}
 
       <div class="video-player-container">
+        <!-- Badge Live d'État de l'Effet (OFF / ON) synchronisé avec l'animation -->
+        <div class="video-live-status-pill off" id="modalVideoLiveStatusPill">
+          <span class="status-pulse-dot"></span>
+          <span id="modalVideoStatusText">Effect: OFF (Défaut)</span>
+        </div>
+
         <div class="video-player-header">
           <div class="video-header-title-wrap">
             <span class="video-header-dot">●</span>
@@ -2276,6 +2362,15 @@ function openCssModal(item) {
           <button class="video-hover-toggle-btn" title="Tester avec :hover" onclick="enableHoverStageTest()">
             🖱️ Tester :hover
           </button>
+        </div>
+
+        <!-- Extrait de Code Officiel Annexe avec Ligne Active Surlignée -->
+        <div class="annexe-code-container" style="margin: 14px 12px 12px 12px;">
+          <div class="annexe-code-header">
+            <span>📜 Extrait Annexe STI (Ligne active surlignée)</span>
+            <button type="button" class="annexe-copy-btn" id="modalAnnexeCopyBtn" onclick="copyModalAnnexeCode(this)" title="Copier ce code">📋 Copier</button>
+          </div>
+          <pre class="annexe-code-pre"><code id="modalAnnexeCodePre">${typeof buildModalHighlightedCode === 'function' ? buildModalHighlightedCode(item, 0) : escapeHtml(item.code || '')}</code></pre>
         </div>
       </div>
 
@@ -3987,11 +4082,11 @@ function buildVideoStageElement(item) {
   if (itemId.startsWith('css-transition')) {
     return `<div class="transition-stage-container" style="display:flex; flex-direction:column; align-items:center; gap:12px; width:100%;">
       <div style="font-size:0.82rem; color:var(--text-secondary); background:rgba(56,189,248,0.08); padding:6px 14px; border-radius:20px; border:1px solid rgba(56,189,248,0.25);">
-        🖱️ Survolez la boîte ou cliquez sur AVANT / APRÈS pour observer la transition fluide
+        🖱️ Survolez la boîte ou cliquez sur AVANT / APRÈS pour observer la transition fluide (1.5s)
       </div>
       <div id="boite" class="demo-box" style="min-width:180px; padding:22px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:15px; background:#1e293b; border:2px solid #38bdf8; border-radius:10px; cursor:pointer;">
         <span>📦 &lt;div id="boite"&gt;</span>
-        <small id="transitionStageBadge" style="font-size:0.75rem; color:#38bdf8; margin-top:4px;">transition: all 0.5s ease</small>
+        <small id="transitionStageBadge" style="font-size:0.75rem; color:#38bdf8; margin-top:4px;">transition: all 1.5s ease</small>
       </div>
     </div>`;
   }
@@ -3999,7 +4094,7 @@ function buildVideoStageElement(item) {
   // 0.3 Dimensions & Opacité (width, height, opacity)
   if (itemId === 'css-width' || itemId === 'css-height' || itemId === 'css-opacity') {
     return `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:190px;">
-      <div id="boite" class="demo-box" style="transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); width:150px; height:80px; padding:10px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:14px; background:#1e293b; border:2px solid #38bdf8; border-radius:8px;">
+      <div id="boite" class="demo-box" style="transition: all 1.5s cubic-bezier(0.34, 1.56, 0.64, 1); width:150px; height:80px; padding:10px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:14px; background:#1e293b; border:2px solid #38bdf8; border-radius:8px;">
         <span>📦 &lt;div id="boite"&gt;</span>
       </div>
     </div>`;
@@ -4008,7 +4103,7 @@ function buildVideoStageElement(item) {
   // 0.4 Bordures (couleur, épaisseur, tracé, raccourci)
   if (itemId === 'css-border-color' || itemId === 'css-border-width' || itemId === 'css-border-style' || itemId === 'css-border-shorthand') {
     return `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:190px;">
-      <div id="boite" class="demo-box" style="transition: all 0.5s ease; width:220px; height:100px; padding:12px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:14px; background:#1e293b; border:3px solid #38bdf8; border-radius:8px;">
+      <div id="boite" class="demo-box" style="transition: all 1.5s ease; width:220px; height:100px; padding:12px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:14px; background:#1e293b; border:3px solid #38bdf8; border-radius:8px;">
         <span>📦 &lt;div id="boite"&gt;</span>
       </div>
     </div>`;
@@ -4017,7 +4112,7 @@ function buildVideoStageElement(item) {
   // 0.41 Rayon des coins (border-radius) : Carré pour illustrer la transformation géométrique
   if (itemId === 'css-border-radius') {
     return `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:190px;">
-      <div id="boite" class="demo-box" style="transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); width:120px; height:120px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:13px; background:linear-gradient(135deg, #1e293b, #0f172a); border:3px solid #38bdf8; border-radius:0px; box-shadow:0 8px 24px rgba(0,0,0,0.4);">
+      <div id="boite" class="demo-box" style="transition: all 1.5s cubic-bezier(0.34, 1.56, 0.64, 1); width:120px; height:120px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:13px; background:linear-gradient(135deg, #1e293b, #0f172a); border:3px solid #38bdf8; border-radius:0px; box-shadow:0 8px 24px rgba(0,0,0,0.4);">
         <span>📦 &lt;div id="boite"&gt;</span>
       </div>
     </div>`;
@@ -4026,7 +4121,7 @@ function buildVideoStageElement(item) {
   // 0.5 Arrière-plans (background-*)
   if (itemId.startsWith('css-background')) {
     return `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:190px;">
-      <div id="boite" class="demo-box" style="transition: all 0.6s ease; width:250px; height:120px; padding:14px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:14px; background-color:#1e293b; border:2px solid #38bdf8; border-radius:8px; color:#fff;">
+      <div id="boite" class="demo-box" style="transition: all 1.5s ease; width:250px; height:120px; padding:14px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:14px; background-color:#1e293b; border:2px solid #38bdf8; border-radius:8px; color:#fff;">
         <span>📦 &lt;div id="boite"&gt;</span>
       </div>
     </div>`;
@@ -4038,7 +4133,7 @@ function buildVideoStageElement(item) {
       <div style="position:absolute; width:160px; height:80px; border:2px dashed rgba(239, 68, 68, 0.45); border-radius:8px; display:flex; align-items:center; justify-content:center; color:#ef4444; font-size:10px; font-weight:bold; pointer-events:none; background:rgba(239, 68, 68, 0.05);">
         👻 Position d'origine (Repos)
       </div>
-      <div id="boite" class="demo-box" style="position:relative; z-index:2; width:160px; height:80px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; font-size:14px; background:#1e293b; border:2px solid #38bdf8; border-radius:8px; color:#fff; box-shadow:0 8px 24px rgba(0,0,0,0.4); transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.6s ease, border-color 0.6s ease;">
+      <div id="boite" class="demo-box" style="position:relative; z-index:2; width:160px; height:80px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; font-size:14px; background:#1e293b; border:2px solid #38bdf8; border-radius:8px; color:#fff; box-shadow:0 8px 24px rgba(0,0,0,0.4); transition: transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 1.5s ease, border-color 1.5s ease;">
         <span>📦 &lt;div id="boite"&gt;</span>
         <small id="transformStageBadge" style="font-size:0.75rem; color:#38bdf8; margin-top:3px; font-weight:normal;">transform: none</small>
       </div>
@@ -4468,6 +4563,13 @@ function playSpecificVideo(itemId, variantIdx) {
     toast.innerHTML = `🎬 Vidéo active : <strong>${escapeHtml(opt.value)}</strong>`;
   }
 
+  // 6.1 Mettre à jour l'extrait de code officiel Annexe avec ligne active surlignée
+  const modalCodeEl = document.getElementById('modalAnnexeCodePre');
+  const curItem = DATA.css.find(c => c.id === itemId);
+  if (modalCodeEl && curItem && typeof buildModalHighlightedCode === 'function') {
+    modalCodeEl.innerHTML = buildModalHighlightedCode(curItem, variantIdx);
+  }
+
   // 7. Lancer le moteur d'animation pour cette vidéo dédiée
   startVideoSimulation(itemId, variantIdx);
 }
@@ -4494,6 +4596,19 @@ function applyKeyframesProgress(box, progressVal, variantIdx = 0, itemId = 'css-
   const afterPill = document.getElementById('phaseAfterPill');
   if (beforePill) beforePill.classList.toggle('active', progressVal < 50);
   if (afterPill) afterPill.classList.toggle('active', progressVal >= 50);
+
+  // Synchronisation du badge live OFF / ON pour keyframes
+  const statusPill = document.getElementById('modalVideoLiveStatusPill');
+  const statusText = document.getElementById('modalVideoStatusText');
+  if (statusPill && statusText) {
+    if (progressVal < 50) {
+      statusPill.className = 'video-live-status-pill off';
+      statusText.textContent = `Effect: OFF (${progressVal}%)`;
+    } else {
+      statusPill.className = 'video-live-status-pill on';
+      statusText.textContent = `Effect: ON (${progressVal}%)`;
+    }
+  }
 
   // Activation dynamique des marqueurs de la timeline
   if (m0) m0.classList.toggle('active', progressVal < 35);
@@ -4748,6 +4863,24 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
   const afterPill = document.getElementById('phaseAfterPill');
   if (beforePill) beforePill.classList.toggle('active', step === 0);
   if (afterPill) afterPill.classList.toggle('active', step === 1);
+
+  // Synchronisation du badge live OFF / ON
+  const statusPill = document.getElementById('modalVideoLiveStatusPill');
+  const statusText = document.getElementById('modalVideoStatusText');
+  if (statusPill && statusText) {
+    if (step === 0) {
+      statusPill.className = 'video-live-status-pill off';
+      statusText.textContent = 'Effect: OFF (Défaut)';
+    } else {
+      statusPill.className = 'video-live-status-pill on';
+      statusText.textContent = 'Effect: ON (CSS Appliqué)';
+    }
+  }
+
+  // Durée d'animation ralentie (1.5s) pour une étude facile du Bac
+  if (box && !itemId.startsWith('css-sel-')) {
+    box.style.transition = 'all 1.5s cubic-bezier(0.4, 0, 0.2, 1)';
+  }
 
   // 0. SÉLECTEURS CSS (DÉMONSTRATION COMPARATIVE AVANT vs APRÈS)
   if (itemId.startsWith('css-sel-')) {

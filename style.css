@@ -1015,6 +1015,7 @@ input, select, textarea {
    SIMULATEUR VIDÉO POUR CSS3 (EXIGENCE : UNE VIDÉO / DÉMO ANIMÉE PAR CODE)
    =================================================================== */
 .video-player-container {
+  position: relative;
   background: #090d16;
   border: 1px solid #334155;
   border-radius: var(--radius-md);
@@ -3990,4 +3991,348 @@ input, select, textarea {
   background: #fef3c7;
   color: #92400e;
   border-color: #fde68a;
+}
+
+/* ===================================================================
+   CSS CARDS UPGRADE: ARENA COMPARATIVE HAUT CONTRASTE (AVANT vs APRÈS)
+   =================================================================== */
+.item-card.card-css {
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 22px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.item-card.card-css:hover {
+  transform: translateY(-3px);
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+.card-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.css-compare-arena {
+  display: flex;
+  gap: 10px;
+  margin: 14px 0;
+  align-items: stretch;
+}
+
+@media (max-width: 600px) {
+  .css-compare-arena {
+    flex-direction: column;
+  }
+}
+
+.compare-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.compare-header {
+  padding: 8px 12px;
+  background: rgba(30, 41, 59, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.76rem;
+  font-weight: 800;
+  border-bottom: 1px solid var(--border-color);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.before-dot {
+  color: #ef4444;
+  margin-right: 4px;
+}
+
+.after-dot {
+  color: #10b981;
+  margin-right: 4px;
+}
+
+.compare-stage-box {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 12px;
+}
+
+/* Grille fond haut contraste */
+.grid-backdrop {
+  background-color: #070d18;
+  background-image: 
+    linear-gradient(rgba(56, 189, 248, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.12) 1px, transparent 1px);
+  background-size: 20px 20px;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+}
+
+[data-theme="light"] .grid-backdrop {
+  background-color: #f1f5f9;
+  background-image: 
+    linear-gradient(rgba(2, 132, 199, 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(2, 132, 199, 0.15) 1px, transparent 1px);
+  background-size: 20px 20px;
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.05);
+}
+
+.compare-vs-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #0f172a;
+  border: 1px solid #38bdf8;
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 0.72rem;
+  align-self: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+}
+
+.css-demo-target {
+  min-width: 90px;
+  min-height: 55px;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition: all 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.target-before {
+  background: #1e293b;
+  color: #94a3b8;
+  border: 1px dashed #475569;
+}
+
+[data-theme="light"] .target-before {
+  background: #e2e8f0;
+  color: #475569;
+  border-color: #94a3b8;
+}
+
+.compare-footer-tag {
+  padding: 5px 10px;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  background: rgba(15, 23, 42, 0.9);
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+  font-family: monospace;
+}
+
+.effect-val-tag {
+  color: #38bdf8;
+  font-weight: 700;
+}
+
+/* Badge Statut en Direct (Effect: ON / OFF) */
+.effect-live-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+
+.effect-live-badge.active {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.5);
+}
+
+.effect-live-badge.inactive {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.5);
+}
+
+/* Contrôles Interactifs Carte (Bouton Bascule & Slider) */
+.card-interactive-controls {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 10px 0;
+}
+
+.controls-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.toggle-effect-btn {
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #38bdf8;
+  font-weight: 700;
+  font-size: 0.78rem;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.toggle-effect-btn:hover {
+  background: #0284c7;
+  color: #fff;
+  transform: scale(1.02);
+}
+
+.slider-val-display {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.slider-val-display strong {
+  color: #38bdf8;
+  font-family: monospace;
+}
+
+.slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.slider-bound {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+.live-css-slider {
+  flex: 1;
+  accent-color: #38bdf8;
+  cursor: pointer;
+}
+
+/* Extrait de Code Annexe avec Ligne Surlignée */
+.annexe-code-container {
+  background: #090d16;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-top: 10px;
+  font-family: "Fira Code", Consolas, Monaco, monospace;
+  font-size: 0.8rem;
+  overflow-x: auto;
+}
+
+.annexe-code-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 0.74rem;
+  color: #38bdf8;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.annexe-code-pre {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  line-height: 1.5;
+  color: #cbd5e1;
+}
+
+.highlight-css-line {
+  background: rgba(56, 189, 248, 0.25);
+  color: #38bdf8;
+  font-weight: 800;
+  border-left: 3px solid #38bdf8;
+  padding: 2px 6px;
+  border-radius: 3px;
+  display: inline-block;
+  margin: 2px 0;
+}
+
+.card-action-bar {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.card-action-bar:hover {
+  color: #38bdf8;
+}
+
+/* Badge Vidéo Live dans le Player Modal */
+.video-live-status-pill {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 10;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(56, 189, 248, 0.5);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.video-live-status-pill.on {
+  border-color: #10b981;
+  color: #34d399;
+}
+
+.video-live-status-pill.off {
+  border-color: #ef4444;
+  color: #f87171;
+}
+
+.status-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulseDot 1s infinite alternate;
 }
