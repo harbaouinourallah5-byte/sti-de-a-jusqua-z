@@ -6100,17 +6100,173 @@ const STILessonsDB = {
   }
 };
 
+// =============================================================
+// CONFIGURATION DU CLOUD SUPABASE (Base de Données & Stockage PDF)
+// =============================================================
+const SUPABASE_CONFIG = {
+  url: 'https://yavjquffextddffuqfnk.supabase.co',
+  anonKey: 'sb_publishable_QaXlB_X70br83q_d5fqJ0w_XTiPFdeB',
+  bucket: 'lessons'
+};
+
+async function fetchLessonsFromSupabase() {
+  try {
+    const res = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/lessons?select=*&order=created_at.desc`, {
+      method: 'GET',
+      headers: {
+        'apikey': SUPABASE_CONFIG.anonKey,
+        'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`
+      }
+    });
+    if (!res.ok) {
+      console.warn('Erreur Supabase fetch:', res.status, res.statusText);
+      return null;
+    }
+    const data = await res.json();
+    if (!Array.isArray(data)) return null;
+
+    return data.map(item => ({
+      id: item.id,
+      title: item.title,
+      subject: (item.subject || 'html').trim().toLowerCase(),
+      subjectLabel: item.subject_label || item.subject,
+      tags: Array.isArray(item.tags) ? item.tags : [item.subject],
+      type: (item.type || 'cours').trim().toLowerCase(),
+      typeLabel: item.type_label || item.type,
+      date: item.date || new Date().toISOString().split('T')[0],
+      author: item.author || "Professeur d'Informatique (Bac STI)",
+      fileSize: item.file_size || 'PDF',
+      description: item.description || '',
+      summary: item.summary || item.description || '',
+      pdfUrl: item.pdf_url || '',
+      downloadName: `${(item.title || 'cours').replace(/[^a-zA-Z0-9_-]/g, '_')}.pdf`,
+      downloadCount: item.download_count || 0,
+      isCustom: true,
+      isCloud: true
+    }));
+  } catch (err) {
+    console.warn('Supabase offline ou inaccessible, utilisation du cache local:', err);
+    return null;
+  }
+}
+
+async function uploadPdfToSupabase(file, lessonId) {
+  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+  const filePath = `${lessonId}_${safeName}`;
+
+  const res = await fetch(`${SUPABASE_CONFIG.url}/storage/v1/object/${SUPABASE_CONFIG.bucket}/${filePath}`, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_CONFIG.anonKey,
+      'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`,
+      'Content-Type': file.type || 'application/pdf',
+      'x-upsert': 'true'
+    },
+    body: file
+  });
+
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Échec du téléversement vers le Cloud (${res.status}): ${errText}`);
+  }
+
+  return `${SUPABASE_CONFIG.url}/storage/v1/object/public/${SUPABASE_CONFIG.bucket}/${filePath}`;
+}
+
+async function saveLessonToSupabase(lesson) {
+  const payload = {
+    id: lesson.id,
+    title: lesson.title,
+    subject: lesson.subject,
+    subject_label: lesson.subjectLabel,
+    tags: lesson.tags,
+    type: lesson.type,
+    type_label: lesson.typeLabel,
+    date: lesson.date,
+    author: lesson.author,
+    file_size: lesson.fileSize,
+    description: lesson.description,
+    summary: lesson.summary,
+    pdf_url: lesson.pdfUrl,
+    download_count: 0
+  };
+
+  const res = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/lessons`, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_CONFIG.anonKey,
+      'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=minimal'
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Échec d'enregistrement en base Cloud: ${errText}`);
+  }
+  return true;
+}
+
+async function deleteLessonFromSupabase(id, pdfUrl) {
+  try {
+    await fetch(`${SUPABASE_CONFIG.url}/rest/v1/lessons?id=eq.${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+      headers: {
+        'apikey': SUPABASE_CONFIG.anonKey,
+        'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`
+      }
+    });
+
+    if (pdfUrl && pdfUrl.includes(`/storage/v1/object/public/${SUPABASE_CONFIG.bucket}/`)) {
+      const fileName = pdfUrl.split(`/storage/v1/object/public/${SUPABASE_CONFIG.bucket}/`)[1];
+      if (fileName) {
+        await fetch(`${SUPABASE_CONFIG.url}/storage/v1/object/${SUPABASE_CONFIG.bucket}`, {
+          method: 'DELETE',
+          headers: {
+            'apikey': SUPABASE_CONFIG.anonKey,
+            'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ prefixes: [fileName] })
+        });
+      }
+    }
+  } catch (err) {
+    console.error('Erreur suppression Supabase:', err);
+  }
+}
+
 // -------------------------------------------------------------
 // Initialisation du Module Leçons & Vérification Routage URL
 // -------------------------------------------------------------
 async function initLessonsModule() {
   await STILessonsDB.init();
-  const customLessons = await STILessonsDB.getAll();
 
+  let cloudLessons = null;
+  try {
+    cloudLessons = await fetchLessonsFromSupabase();
+  } catch (err) {
+    console.warn('Erreur chargement Supabase:', err);
+  }
+
+  const localCustom = await STILessonsDB.getAll();
   const defaultLessons = (DATA && DATA.lessons) ? DATA.lessons : [];
-  allLessons = [...customLessons, ...defaultLessons];
+
+  if (cloudLessons && Array.isArray(cloudLessons) && cloudLessons.length > 0) {
+    allLessons = cloudLessons;
+    for (const l of cloudLessons) {
+      await STILessonsDB.save(l);
+    }
+  } else if (localCustom && localCustom.length > 0) {
+    allLessons = localCustom;
+  } else {
+    allLessons = [...defaultLessons];
+  }
 
   renderLessons();
+  renderAdminLessonsTable();
   setupAdminDragAndDrop();
 
   // Écoute des changements d'URL hash
@@ -6669,6 +6825,7 @@ async function handleUploadLesson(e) {
   const descInput = document.getElementById('adminLessonDesc');
   const linkInput = document.getElementById('adminPdfLinkInput');
   const modeRadios = document.getElementsByName('adminPdfMode');
+  const submitBtn = document.getElementById('adminSubmitBtn');
 
   const title = titleInput.value.trim();
   const subject = (subjectSelect ? subjectSelect.value : '').trim().toLowerCase() || 'html';
@@ -6679,27 +6836,6 @@ async function handleUploadLesson(e) {
   let isFileMode = true;
   for (let r of modeRadios) {
     if (r.checked && r.value === 'link') isFileMode = false;
-  }
-
-  let fileData = null;
-  let fileSize = "1 Mo";
-  let pdfUrl = null;
-
-  if (isFileMode) {
-    if (!selectedAdminFile) {
-      alert("Veuillez sélectionner un fichier PDF local à téléverser !");
-      return;
-    }
-    // Lecture du fichier en Data URL (stockable en IndexedDB sans limite Vercel)
-    fileSize = `${(selectedAdminFile.size / (1024 * 1024)).toFixed(2)} Mo`;
-    fileData = await readFileAsDataUrl(selectedAdminFile);
-  } else {
-    pdfUrl = linkInput.value.trim();
-    if (!pdfUrl) {
-      alert("Veuillez saisir le lien vers le document PDF (Google Drive ou lien web) !");
-      return;
-    }
-    fileSize = "Lien Cloud";
   }
 
   const subjectLabels = {
@@ -6728,50 +6864,104 @@ async function handleUploadLesson(e) {
     resume: "📌 Fiche Résumé"
   };
 
-  let dlName = (selectedAdminFile && selectedAdminFile.name) ? selectedAdminFile.name : `${title}.pdf`;
-  if (!dlName.toLowerCase().endsWith('.pdf')) {
-    dlName += '.pdf';
+  const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '<span>🚀</span><span>Publier</span>';
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span>⏳</span><span>Publication Cloud en cours...</span>';
   }
 
-  const newLesson = {
-    id: `custom-lesson-${Date.now()}`,
-    title: title,
-    subject: subject,
-    subjectLabel: subjectLabels[subject] || subject.toUpperCase(),
-    tags: subjectTags[subject] || [subject],
-    type: type,
-    typeLabel: typeLabels[type] || type,
-    date: new Date().toISOString().split('T')[0],
-    author: author,
-    fileSize: fileSize,
-    description: desc || "Document PDF déposé par l'enseignant pour les révisions du Bac.",
-    summary: desc,
-    fileData: fileData,
-    pdfUrl: pdfUrl,
-    downloadName: dlName,
-    isCustom: true
-  };
+  try {
+    const lessonId = `lesson_${Date.now()}`;
+    let fileData = null;
+    let fileSize = "1 Mo";
+    let pdfUrl = null;
 
-  // Enregistrement dans IndexedDB
-  await STILessonsDB.save(newLesson);
+    if (isFileMode) {
+      if (!selectedAdminFile) {
+        alert("Veuillez sélectionner un fichier PDF local à téléverser !");
+        return;
+      }
+      fileSize = `${(selectedAdminFile.size / (1024 * 1024)).toFixed(2)} Mo`;
 
-  // Ajout en tête de liste
-  allLessons.unshift(newLesson);
+      try {
+        // 1. Téléversement dans Supabase Storage (Cloud)
+        pdfUrl = await uploadPdfToSupabase(selectedAdminFile, lessonId);
+      } catch (upErr) {
+        console.warn("Téléversement cloud direct non disponible, enregistrement local :", upErr);
+        fileData = await readFileAsDataUrl(selectedAdminFile);
+      }
+    } else {
+      pdfUrl = linkInput.value.trim();
+      if (!pdfUrl) {
+        alert("Veuillez saisir le lien vers le document PDF (Google Drive ou lien web) !");
+        return;
+      }
+      fileSize = "Lien Cloud";
+    }
 
-  // Réinitialisation du formulaire
-  titleInput.value = '';
-  descInput.value = '';
-  if (linkInput) linkInput.value = '';
-  const fileInput = document.getElementById('adminPdfFileInput');
-  if (fileInput) fileInput.value = '';
-  const label = document.getElementById('adminSelectedFileName');
-  if (label) label.style.display = 'none';
-  selectedAdminFile = null;
+    let dlName = (selectedAdminFile && selectedAdminFile.name) ? selectedAdminFile.name : `${title}.pdf`;
+    if (!dlName.toLowerCase().endsWith('.pdf')) {
+      dlName += '.pdf';
+    }
 
-  alert(`✓ Document "${title}" publié avec succès dans la catégorie "${subjectLabels[subject]}" !`);
+    const newLesson = {
+      id: lessonId,
+      title: title,
+      subject: subject,
+      subjectLabel: subjectLabels[subject] || subject.toUpperCase(),
+      tags: subjectTags[subject] || [subject],
+      type: type,
+      typeLabel: typeLabels[type] || type,
+      date: new Date().toISOString().split('T')[0],
+      author: author,
+      fileSize: fileSize,
+      description: desc || "Document PDF déposé par l'enseignant pour les révisions du Bac.",
+      summary: desc,
+      fileData: fileData,
+      pdfUrl: pdfUrl,
+      downloadName: dlName,
+      isCustom: true,
+      isCloud: !!pdfUrl
+    };
 
-  renderAdminLessonsTable();
-  renderLessons();
+    // 2. Enregistrement en base de données Cloud Supabase
+    if (pdfUrl) {
+      try {
+        await saveLessonToSupabase(newLesson);
+      } catch (dbErr) {
+        console.warn("Avertissement base cloud Supabase :", dbErr);
+      }
+    }
+
+    // 3. Sauvegarde dans le cache IndexedDB local
+    await STILessonsDB.save(newLesson);
+
+    // 4. Ajout immédiat en tête de liste pour l'affichage
+    allLessons.unshift(newLesson);
+
+    // 5. Réinitialisation du formulaire
+    titleInput.value = '';
+    descInput.value = '';
+    if (linkInput) linkInput.value = '';
+    const fileInput = document.getElementById('adminPdfFileInput');
+    if (fileInput) fileInput.value = '';
+    const label = document.getElementById('adminSelectedFileName');
+    if (label) label.style.display = 'none';
+    selectedAdminFile = null;
+
+    alert(`✓ Document "${title}" publié avec succès dans le Cloud Supabase (${subjectLabels[subject]}) !\nIl est immédiatement accessible par tous les élèves sans consommer d'espace sur Vercel.`);
+
+    renderAdminLessonsTable();
+    renderLessons();
+  } catch (err) {
+    console.error("Erreur de publication :", err);
+    alert("Erreur lors de la publication : " + err.message);
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnHtml;
+    }
+  }
 }
 
 function readFileAsDataUrl(file) {
@@ -6829,7 +7019,7 @@ function renderAdminLessonsTable() {
         <td style="padding:10px 12px; text-align:right;">
           <button class="admin-action-btn view" onclick="openPdfModal('${l.id}')">👁️ Aperçu</button>
           <button class="admin-action-btn view" onclick="downloadLessonPdf('${l.id}')">⬇️ Télécharger</button>
-          ${l.isCustom ? `<button class="admin-action-btn del" onclick="deleteLesson('${l.id}')">🗑️ Supprimer</button>` : ''}
+          ${(l.isCustom || l.isCloud) ? `<button class="admin-action-btn del" onclick="deleteLesson('${l.id}')">🗑️ Supprimer</button>` : ''}
         </td>
       </tr>
     `;
@@ -6839,6 +7029,10 @@ function renderAdminLessonsTable() {
 async function deleteLesson(id) {
   if (!confirm("Voulez-vous vraiment supprimer ce document ?")) return;
 
+  const target = allLessons.find(l => l.id === id);
+  if (target) {
+    await deleteLessonFromSupabase(id, target.pdfUrl);
+  }
   await STILessonsDB.delete(id);
   allLessons = allLessons.filter(l => l.id !== id);
 

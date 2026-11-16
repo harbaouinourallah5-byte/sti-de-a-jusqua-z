@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>STI de A à Z - Portail d'Étude Web (HTML5, CSS3, JS, SQL)</title>
-  <link rel="stylesheet" href="style.css?v=4.5">
+  <link rel="stylesheet" href="style.css?v=5.0">
 </head>
 <body>
 
@@ -2362,17 +2362,17 @@
               Sur Vercel, la limite de déploiement gratuit est de 100 Mo et les fonctions sans serveur sont éphémères. Ce portail applique une architecture intelligente pour ne <strong>jamais atteindre les limites de Vercel</strong> :
             </p>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-bottom: 16px; font-size: 0.84rem;">
-              <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px; border-left: 3px solid #10b981;">
-                <strong style="color: #34d399;">1. Base de données locale IndexedDB :</strong><br>
-                Les fichiers PDF téléversés sont stockés en Blobs binaires dans le navigateur (jusqu'à plusieurs centaines de Mo gratuits sans solliciter le serveur).
+              <div style="background: rgba(16, 185, 129, 0.1); padding: 12px; border-radius: 6px; border-left: 3px solid #10b981;">
+                <strong style="color: #34d399;">1. Cloud Supabase Connecté (Actif) :</strong><br>
+                Chaque fichier PDF est stocké directement dans votre Cloud Supabase dédié (1 Go gratuit, 0 Ko utilisé sur Vercel, synchronisation temps réel pour tous les élèves).
               </div>
               <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px; border-left: 3px solid #38bdf8;">
-                <strong style="color: #38bdf8;">2. Liens Web externes (Google Drive / Cloud) :</strong><br>
-                Vous pouvez déposer vos PDF sur Google Drive ou OneDrive et coller le lien. 0 Ko utilisé sur Vercel !
+                <strong style="color: #38bdf8;">2. Liens Web externes (Google Drive / OneDrive) :</strong><br>
+                Vous pouvez également coller directement un lien de partage Google Drive ou Cloud.
               </div>
               <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px; border-left: 3px solid #a855f7;">
-                <strong style="color: #c084fc;">3. Option Supabase / Firebase :</strong><br>
-                Pour un partage cloud universel entre tous les élèves en temps réel, Supabase offre 1 Go de stockage gratuit sans carte bancaire.
+                <strong style="color: #c084fc;">3. Cache local & Mode Hors-Ligne :</strong><br>
+                Une copie locale est conservée dans le navigateur (IndexedDB) pour un affichage ultra-rapide.
               </div>
             </div>
 
@@ -3151,9 +3151,9 @@ app.exec_()</code></pre>
   </div>
 
   <!-- Fichiers Scripts -->
-  <script src="data.js?v=4.5"></script>
-  <script src="css_engine.js?v=4.5"></script>
-  <script src="algo_pratique_engine.js?v=4.5"></script>
-  <script src="app.js?v=4.5"></script>
+  <script src="data.js?v=5.0"></script>
+  <script src="css_engine.js?v=5.0"></script>
+  <script src="algo_pratique_engine.js?v=5.0"></script>
+  <script src="app.js?v=5.0"></script>
 </body>
 </html>
