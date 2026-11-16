@@ -1579,10 +1579,6 @@ function setupNavigation() {
 
 function switchView(viewName) {
   if (!viewName) return;
-  // Section cours masquée temporairement sur demande de l'utilisateur
-  if (viewName === 'lessons') {
-    viewName = 'home';
-  }
   currentView = viewName;
   currentCategory = 'all';
   currentSearch = '';
@@ -1632,6 +1628,10 @@ function switchView(viewName) {
     currentLessonSubject = 'all';
     currentLessonType = 'all';
     currentLessonSearch = '';
+    if (typeof currentLessonModule === 'undefined' || !currentLessonModule) {
+      currentLessonModule = (typeof currentModule !== 'undefined' && currentModule === 'algo') ? 'algo' : 'sti';
+    }
+    updateLessonsModuleUI();
     renderLessons();
     history.replaceState(null, '', '#lessons');
   } else if (viewName === 'admin') {
@@ -5980,6 +5980,7 @@ function openCssModalById(id) {
 // =============================================================
 
 let allLessons = [];
+let currentLessonModule = 'sti';
 let currentLessonSubject = 'all';
 let currentLessonType = 'all';
 let currentLessonSearch = '';
@@ -6090,6 +6091,7 @@ async function initLessonsModule() {
   const defaultLessons = (DATA && DATA.lessons) ? DATA.lessons : [];
   allLessons = [...customLessons, ...defaultLessons];
 
+  updateLessonsModuleUI();
   renderLessons();
 
   // Écoute des changements d'URL hash
@@ -6104,8 +6106,7 @@ function checkUrlRouting() {
   if (hash === '#admin' || path.endsWith('/admin')) {
     switchView('admin');
   } else if (hash === '#lessons' || path.endsWith('/lessons') || path.endsWith('/cours')) {
-    // Section cours masquée temporairement sur demande de l'utilisateur
-    switchView('home');
+    switchView('lessons');
   } else if (hash === '#html') {
     switchView('html');
   } else if (hash === '#css') {
@@ -6127,6 +6128,119 @@ function checkUrlRouting() {
 }
 
 // -------------------------------------------------------------
+// Gestion des Modules (STI vs ALGORITHME) pour les Leçons & Séries
+// -------------------------------------------------------------
+function setLessonModule(mod) {
+  currentLessonModule = mod;
+  currentLessonSubject = 'all';
+  updateLessonsModuleUI();
+  renderLessons();
+}
+
+function openLessonsForModule(mod) {
+  currentLessonModule = mod;
+  currentLessonSubject = 'all';
+  switchView('lessons');
+  updateLessonsModuleUI();
+  renderLessons();
+}
+
+function updateLessonsModuleUI() {
+  const tabSti = document.getElementById('lessonTabSti');
+  const tabAlgo = document.getElementById('lessonTabAlgo');
+  const bannerBox = document.getElementById('lessonsBannerBox');
+  const bannerTitle = document.getElementById('lessonsBannerTitle');
+  const bannerDesc = document.getElementById('lessonsBannerDesc');
+  const pageTitle = document.getElementById('lessonsPageTitle');
+  const breadcrumbText = document.getElementById('lessonsBreadcrumbText');
+  const tabsBar = document.getElementById('lessonsSubjectTabsBar');
+
+  if (tabSti && tabAlgo) {
+    if (currentLessonModule === 'algo') {
+      tabSti.classList.remove('active');
+      tabAlgo.classList.add('active');
+    } else {
+      tabSti.classList.add('active');
+      tabAlgo.classList.remove('active');
+    }
+  }
+
+  if (currentLessonModule === 'algo') {
+    if (pageTitle) pageTitle.innerHTML = `<span style="color: #10b981;">📚</span> Supports, Fiches & Documents PDF (Algorithme & Programmation)`;
+    if (breadcrumbText) breadcrumbText.textContent = "Cours & Séries PDF (Algorithme)";
+    if (bannerBox) {
+      bannerBox.style.background = 'linear-gradient(135deg, rgba(5, 150, 105, 0.15), rgba(16, 185, 129, 0.08))';
+      bannerBox.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+      bannerBox.style.borderLeftColor = '#10b981';
+    }
+    if (bannerTitle) {
+      bannerTitle.style.color = '#34d399';
+      bannerTitle.textContent = "🎯 Supports Officiels & Fiches de Révision Algorithme (Bac Informatique)";
+    }
+    if (bannerDesc) {
+      bannerDesc.innerHTML = "Retrouvez les fiches et supports conformes au programme officiel tunisien classés en 2 matières : <strong>Pratique (Qt Designer ➔ Thonny)</strong> et <strong>Théorique (Algorithmes types Bac, Bases, Aires, Matrices)</strong>.";
+    }
+
+    if (tabsBar) {
+      tabsBar.innerHTML = `
+        <button class="subject-tab ${currentLessonSubject === 'all' ? 'active' : ''}" data-subject="all" onclick="filterLessonsBySubject('all')">
+          <span>🌟</span>
+          <span>Tous les documents Algo</span>
+        </button>
+        <button class="subject-tab algo-pratique ${currentLessonSubject === 'algo-pratique' ? 'active' : ''}" data-subject="algo-pratique" onclick="filterLessonsBySubject('algo-pratique')">
+          <span>🛠️</span>
+          <span>Pratique (Qt ➔ Thonny)</span>
+        </button>
+        <button class="subject-tab algo-theorique ${currentLessonSubject === 'algo-theorique' ? 'active' : ''}" data-subject="algo-theorique" onclick="filterLessonsBySubject('algo-theorique')">
+          <span>📖</span>
+          <span>Théorique (Algorithme Bac)</span>
+        </button>
+      `;
+    }
+  } else {
+    if (pageTitle) pageTitle.innerHTML = `<span style="color: #a855f7;">📚</span> Cours, Séries & Devoirs PDF (Bac STI)`;
+    if (breadcrumbText) breadcrumbText.textContent = "Cours & Séries PDF (Bac STI)";
+    if (bannerBox) {
+      bannerBox.style.background = 'linear-gradient(135deg, rgba(124, 58, 237, 0.12), rgba(168, 85, 247, 0.06))';
+      bannerBox.style.borderColor = 'rgba(168, 85, 247, 0.35)';
+      bannerBox.style.borderLeftColor = '#a855f7';
+    }
+    if (bannerTitle) {
+      bannerTitle.style.color = '#c084fc';
+      bannerTitle.textContent = "🎯 Espace d'Apprentissage & Téléchargement des Documents PDF";
+    }
+    if (bannerDesc) {
+      bannerDesc.innerHTML = "Retrouvez l'ensemble des leçons, séries d'exercices et devoirs partagés par votre professeur, classés selon les 4 matières clés du Bac STI : <strong>HTML5</strong>, <strong>CSS3</strong>, <strong>JavaScript</strong> et <strong>SQL (Bases de Données)</strong>.";
+    }
+
+    if (tabsBar) {
+      tabsBar.innerHTML = `
+        <button class="subject-tab ${currentLessonSubject === 'all' ? 'active' : ''}" data-subject="all" onclick="filterLessonsBySubject('all')">
+          <span>🌟</span>
+          <span>Toutes les 4 matières STI</span>
+        </button>
+        <button class="subject-tab html ${currentLessonSubject === 'html' ? 'active' : ''}" data-subject="html" onclick="filterLessonsBySubject('html')">
+          <span>🌐</span>
+          <span>HTML5</span>
+        </button>
+        <button class="subject-tab css ${currentLessonSubject === 'css' ? 'active' : ''}" data-subject="css" onclick="filterLessonsBySubject('css')">
+          <span>🎨</span>
+          <span>CSS3</span>
+        </button>
+        <button class="subject-tab js ${currentLessonSubject === 'js' ? 'active' : ''}" data-subject="js" onclick="filterLessonsBySubject('js')">
+          <span>⚡</span>
+          <span>JavaScript</span>
+        </button>
+        <button class="subject-tab sql ${currentLessonSubject === 'sql' ? 'active' : ''}" data-subject="sql" onclick="filterLessonsBySubject('sql')">
+          <span>🗄️</span>
+          <span>SQL (Bases de Données)</span>
+        </button>
+      `;
+    }
+  }
+}
+
+// -------------------------------------------------------------
 // Rendu & Filtres des Leçons Élèves
 // -------------------------------------------------------------
 function renderLessons() {
@@ -6134,8 +6248,21 @@ function renderLessons() {
   const counterBadge = document.getElementById('lessonsCounterBadge');
   if (!grid) return;
 
+  const stiSubjects = ['html', 'css', 'js', 'sql'];
+  const algoSubjects = ['algo-pratique', 'algo-theorique'];
+
   const filtered = allLessons.filter(lesson => {
-    const matchSubject = (currentLessonSubject === 'all' || lesson.subject === currentLessonSubject);
+    // Filtrage selon le module actif (STI vs Algo)
+    if (currentLessonSubject === 'all') {
+      if (currentLessonModule === 'algo') {
+        if (!algoSubjects.includes(lesson.subject)) return false;
+      } else {
+        if (!stiSubjects.includes(lesson.subject)) return false;
+      }
+    } else {
+      if (lesson.subject !== currentLessonSubject) return false;
+    }
+
     const matchType = (currentLessonType === 'all' || lesson.type === currentLessonType);
     const q = currentLessonSearch.toLowerCase().trim();
     const matchSearch = !q ||
@@ -6143,7 +6270,7 @@ function renderLessons() {
       (lesson.description && lesson.description.toLowerCase().includes(q)) ||
       (lesson.subjectLabel && lesson.subjectLabel.toLowerCase().includes(q)) ||
       (lesson.tags && lesson.tags.some(t => t.toLowerCase().includes(q)));
-    return matchSubject && matchType && matchSearch;
+    return matchType && matchSearch;
   });
 
   if (counterBadge) {
@@ -6156,7 +6283,7 @@ function renderLessons() {
         <span style="font-size: 2.4rem; display: block; margin-bottom: 10px;">🔍</span>
         <h4 style="color: #cbd5e1; font-size: 1.1rem; margin-bottom: 6px;">Aucun document ne correspond à vos critères</h4>
         <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">
-          Modifiez vos filtres ou effectuez une autre recherche par mot-clé (ex: HTML, CSS, JS, SQL, LDD, verif...).
+          Modifiez vos filtres ou effectuez une autre recherche par mot-clé.
         </p>
       </div>
     `;
@@ -6176,7 +6303,7 @@ function renderLessons() {
           </div>
 
           <h3 class="lesson-card-title">${escapeHtml(lesson.title)}</h3>
-          <p class="lesson-card-desc">${escapeHtml(lesson.description || lesson.summary || 'Document de cours officiel Bac STI.')}</p>
+          <p class="lesson-card-desc">${escapeHtml(lesson.description || lesson.summary || 'Document officiel de référence.')}</p>
         </div>
 
         <div>
@@ -6343,7 +6470,12 @@ function downloadLessonPdf(lessonId) {
   }
 
   if (lesson.pdfUrl) {
-    window.open(lesson.pdfUrl, '_blank');
+    const a = document.createElement('a');
+    a.href = lesson.pdfUrl;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
     return;
   }
 
@@ -6497,7 +6629,9 @@ async function handleUploadLesson(e) {
     html: "HTML5",
     css: "CSS3",
     js: "JavaScript",
-    sql: "SQL (Bases de Données)"
+    sql: "SQL (Bases de Données)",
+    "algo-pratique": "Pratique (Qt ➔ Thonny)",
+    "algo-theorique": "Théorique (Algorithme)"
   };
 
   const typeLabels = {
@@ -6770,7 +6904,11 @@ function switchModule(moduleName, skipViewSwitch = false) {
     stiNavItems.forEach(el => el.style.display = 'none');
     algoNavItems.forEach(el => el.style.display = 'inline-flex');
 
-    if (!skipViewSwitch && !['algo-home', 'algo-pratique', 'algo-theorique'].includes(currentView)) {
+    if (currentView === 'lessons') {
+      currentLessonModule = 'algo';
+      updateLessonsModuleUI();
+      renderLessons();
+    } else if (!skipViewSwitch && !['algo-home', 'algo-pratique', 'algo-theorique', 'admin'].includes(currentView)) {
       switchView('algo-home');
     }
   } else {
@@ -6790,17 +6928,14 @@ function switchModule(moduleName, skipViewSwitch = false) {
     }
 
     // Afficher nav STI, masquer nav Algo
-    stiNavItems.forEach(el => {
-      // Respecter le masquage de la section cours PDF
-      if (el.getAttribute('data-view') === 'lessons' || el.classList.contains('nav-admin-btn')) {
-        el.style.display = 'none';
-      } else {
-        el.style.display = 'inline-flex';
-      }
-    });
+    stiNavItems.forEach(el => el.style.display = 'inline-flex');
     algoNavItems.forEach(el => el.style.display = 'none');
 
-    if (!skipViewSwitch && ['algo-home', 'algo-pratique', 'algo-theorique'].includes(currentView)) {
+    if (currentView === 'lessons') {
+      currentLessonModule = 'sti';
+      updateLessonsModuleUI();
+      renderLessons();
+    } else if (!skipViewSwitch && ['algo-home', 'algo-pratique', 'algo-theorique'].includes(currentView)) {
       switchView('home');
     }
   }

@@ -3147,6 +3147,146 @@ const DATA = {
       "Examen",
       "Schéma Relationnel"
     ]
+  },
+  {
+    "id": "lesson-algo-prat-01",
+    "title": "Fiche Pratique : Workflow de l'Épreuve Pratique Qt Designer ➔ Thonny Python",
+    "subject": "algo-pratique",
+    "subjectLabel": "Pratique (Qt ➔ Thonny)",
+    "type": "cours",
+    "typeLabel": "📖 Fiche Pratique",
+    "date": "2025-04-02",
+    "author": "Commission Pédagogique Informatique Bac",
+    "fileSize": "1.2 Mo",
+    "description": "Méthodologie officielle en 4 étapes pour réussir les 2 heures de l'épreuve pratique : création du dossier candidat, conception .ui sous Qt Designer, liaison loadUi() sous Thonny, connexion des signaux/slots et gestion des exceptions.",
+    "summary": "Guide stratégique pas-à-pas pour l'épreuve pratique : nommage des objectName, récupération des valeurs (.text(), .toPlainText(), .value(), .currentText()), règles anti-crash avec QMessageBox, et checklist de vérification avant remise.",
+    "downloadName": "Fiche_Pratique_Workflow_Qt_Thonny_Bac.pdf",
+    "tags": [
+      "Algorithme",
+      "Pratique",
+      "Qt Designer",
+      "Thonny",
+      "loadUi",
+      "Bac Informatique"
+    ]
+  },
+  {
+    "id": "lesson-algo-prat-02",
+    "title": "Fiche Pratique : Mémento Officiel Qt Designer (Feuille d'Examen Bac)",
+    "subject": "algo-pratique",
+    "subjectLabel": "Pratique (Qt ➔ Thonny)",
+    "type": "resume",
+    "typeLabel": "📌 Mémento Bac",
+    "date": "2025-04-10",
+    "author": "Direction des Examens (Bac Tunisie)",
+    "fileSize": "950 Ko",
+    "description": "Synthèse exhaustive de l'annexe officielle distribuée aux candidats lors de l'épreuve pratique : méthodes autorisées pour QLabel, QLineEdit, QPushButton, QRadioButton, QCheckBox, QComboBox, QSpinBox, QTableWidget et QMessageBox.",
+    "summary": "Réplique conforme de la feuille d'examen : syntaxe exacte PyQt5, types de retour, paramètres requis et pièges à éviter lors de la programmation sous Thonny Python.",
+    "downloadName": "Annexe_Officielle_QtDesigner_Bac.pdf",
+    "tags": [
+      "Algorithme",
+      "Pratique",
+      "Annexe Qt",
+      "PyQt5",
+      "QLineEdit",
+      "QPushButton",
+      "QMessageBox"
+    ]
+  },
+  {
+    "id": "lesson-algo-theo-01",
+    "title": "Support Officiel : Conversion Entre Les Bases de Numération (Bases 2, 8, 10, 16)",
+    "subject": "algo-theorique",
+    "subjectLabel": "Théorique (Algorithme)",
+    "type": "cours",
+    "typeLabel": "📖 Support Officiel",
+    "date": "2025-04-12",
+    "author": "Inspection Générale de l'Informatique",
+    "fileSize": "4.5 Mo",
+    "pdfUrl": "pdf/Conversion_Bases_Numeration.pdf",
+    "description": "Polycopié officiel d'arithmétique : méthode des divisions successives (décimal vers base B), méthode des puissances pondérées (base B vers décimal), et conversions directes rapides binaire ↔ octal (paquets de 3 bits) et binaire ↔ hexadécimal (paquets de 4 bits).",
+    "summary": "Document de référence couvrant les chapitres d'arithmétique et de représentation de l'information : tableaux d'équivalence, démonstrations formelles, algorithmes types (dec_to_bin, bin_to_dec, hex_to_dec) avec déclarations TDO et T.D.N.T.",
+    "downloadName": "Support_Officiel_Bases_Numeration_BacInfo.pdf",
+    "tags": [
+      "Algorithme",
+      "Théorique",
+      "Bases de numération",
+      "Binaire",
+      "Hexadécimal",
+      "Octal",
+      "Arithmétique"
+    ]
+  },
+  {
+    "id": "lesson-algo-theo-02",
+    "title": "Support Officiel : Calcul d'Aires & Intégration Numérique (Trapèzes & Rectangles)",
+    "subject": "algo-theorique",
+    "subjectLabel": "Théorique (Algorithme)",
+    "type": "cours",
+    "typeLabel": "📖 Support Officiel",
+    "date": "2025-04-15",
+    "author": "Inspection Générale de l'Informatique",
+    "fileSize": "4.2 Mo",
+    "pdfUrl": "pdf/Support_Calcul_Aires.pdf",
+    "description": "Méthodes numériques d'approximation d'aires sous une courbe : discrétisation de l'intervalle [a, b] en n sous-intervalles de pas h = (b - a) / n, méthode des rectangles (points gauches, médians, droits) et méthode des trapèzes.",
+    "summary": "Cours théorique complet avec formalisation mathématique et algorithmique : formules de sommation, étude d'erreur et convergence, algorithme d'intégration par les trapèzes avec sous-programmes et tableau de déclaration des objets (T.D.O).",
+    "downloadName": "Support_Officiel_Calcul_Aires_BacInfo.pdf",
+    "tags": [
+      "Algorithme",
+      "Théorique",
+      "Calcul d'aires",
+      "Intégration numérique",
+      "Trapèzes",
+      "Rectangles"
+    ]
+  },
+  {
+    "id": "lesson-algo-theo-03",
+    "title": "Fichier de Révision : Algorithmes Types, TDO & Sous-programmes Bac",
+    "subject": "algo-theorique",
+    "subjectLabel": "Théorique (Algorithme)",
+    "type": "serie",
+    "typeLabel": "📝 Fichier de Révision",
+    "date": "2025-04-18",
+    "author": "Inspection Générale de l'Informatique",
+    "fileSize": "2.8 Mo",
+    "pdfUrl": "pdf/Fichier_Revision_Algorithme.pdf",
+    "description": "Recueil de révision globale pour l'épreuve écrite du Bac : algorithmes de tri (sélection, bulles, insertion), recherche séquentielle et dichotomique, PGCD / PPCM, factorielle, nombres premiers, parfaits et amis, palindromes et anagrammes.",
+    "summary": "Fascicule officiel indispensable récapitulant les 25 algorithmes types du Baccalauréat tunisien : syntaxe officielle du pseudo-code, formalisme rigoureux des T.D.O (locaux et globaux), distinctions fonction vs procédure, et passage par valeur vs par variable.",
+    "downloadName": "Fichier_Revision_Algorithme_BacInfo.pdf",
+    "tags": [
+      "Algorithme",
+      "Théorique",
+      "Révision Bac",
+      "Tris",
+      "Recherche",
+      "TDO",
+      "Sous-programmes"
+    ]
+  },
+  {
+    "id": "lesson-algo-theo-04",
+    "title": "Support Officiel : Matrices & Patterns (Spirale, Zigzag, Diagonales, Sablier)",
+    "subject": "algo-theorique",
+    "subjectLabel": "Théorique (Algorithme)",
+    "type": "cours",
+    "typeLabel": "📖 Support Officiel",
+    "date": "2025-04-20",
+    "author": "Inspection Générale de l'Informatique",
+    "fileSize": "1.2 Mo",
+    "pdfUrl": "pdf/Matrice_Pattern.pdf",
+    "description": "Étude avancée des tableaux à deux dimensions (matrices carrées et rectangulaires) et des tracés de motifs géométriques : parcours en spirale, remplissage zigzag, extraction des diagonales, triangles supérieur/inférieur et motif en sablier.",
+    "summary": "Document officiel d'approfondissement : déclarations de types T.D.N.T (Type Mat = Tableau de N lignes et M colonnes), contrôle de symétrie, vérification de carré magique, et algorithmes d'imbrication itérative Pour i et Pour j.",
+    "downloadName": "Support_Officiel_Matrices_Patterns_BacInfo.pdf",
+    "tags": [
+      "Algorithme",
+      "Théorique",
+      "Matrices",
+      "Patterns",
+      "Spirale",
+      "Diagonales",
+      "TDNT"
+    ]
   }
 ],
   "sql": [

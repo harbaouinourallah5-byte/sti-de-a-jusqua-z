@@ -3473,15 +3473,82 @@ input, select, textarea {
 }
 
 /* =============================================================
-   SECTION COURS & SÉRIES PDF TEMPORAIREMENT MASQUÉE
-   (À démasquer dès que l'utilisateur en donne l'instruction)
+   SECTION COURS & SÉRIES PDF ACTIVAÉE (STI + ALGORITHME)
    ============================================================= */
-[data-view="lessons"],
-.card-lessons,
-#view-lessons,
-.nav-admin-btn,
-.bottom-nav-box button[data-view="admin"] {
-  display: none !important;
+.card-algo-lessons::before {
+  background: linear-gradient(90deg, #059669, #10b981);
+}
+
+.card-algo-lessons:hover {
+  border-color: rgba(16, 185, 129, 0.5);
+  box-shadow: 0 12px 30px rgba(16, 185, 129, 0.22);
+}
+
+.card-algo-lessons .card-icon-wrap {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+.lesson-module-switcher {
+  display: inline-flex;
+  background: rgba(15, 23, 42, 0.8);
+  padding: 5px;
+  border-radius: 9999px;
+  border: 1px solid var(--border-color);
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.lesson-module-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lesson-module-tab:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.lesson-module-tab.active.sti {
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(168, 85, 247, 0.4);
+}
+
+.lesson-module-tab.active.algo {
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4);
+}
+
+.subject-tab.algo-pratique {
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #34d399;
+}
+
+.subject-tab.algo-pratique.active {
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: #fff;
+}
+
+.subject-tab.algo-theorique {
+  border-color: rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
+}
+
+.subject-tab.algo-theorique.active {
+  background: linear-gradient(135deg, #d97706, #f59e0b);
+  color: #000;
 }
 
 /* =============================================================
