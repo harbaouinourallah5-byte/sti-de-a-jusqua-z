@@ -6092,6 +6092,7 @@ async function initLessonsModule() {
   allLessons = [...customLessons, ...defaultLessons];
 
   renderLessons();
+  setupAdminDragAndDrop();
 
   // Écoute des changements d'URL hash
   window.addEventListener('hashchange', checkUrlRouting);
@@ -6282,8 +6283,30 @@ function handleLessonSearch(query) {
 }
 
 // -------------------------------------------------------------
-// Lecteur PDF Interactif & Modale
 // -------------------------------------------------------------
+// Lecteur PDF Interactif & Modale & Téléchargement Sécurisé
+// -------------------------------------------------------------
+let currentActivePdfBlobUrl = null;
+
+function dataUrlToBlob(dataUrl) {
+  try {
+    const parts = dataUrl.split(',');
+    const mimeMatch = parts[0].match(/:(.*?);/);
+    const mime = (mimeMatch && mimeMatch[1]) ? mimeMatch[1] : 'application/pdf';
+    const atobFn = (typeof window !== 'undefined' && window.atob) ? window.atob.bind(window) : (typeof atob !== 'undefined' ? atob : (b64 => Buffer.from(b64, 'base64').toString('binary')));
+    const bstr = atobFn(parts[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], { type: mime });
+  } catch (err) {
+    console.error("dataUrlToBlob error:", err);
+    return null;
+  }
+}
+
 function openPdfModal(lessonId) {
   const lesson = allLessons.find(l => l.id === lessonId);
   if (!lesson) return;
@@ -6296,21 +6319,65 @@ function openPdfModal(lessonId) {
 
   if (title) title.textContent = lesson.title;
   if (cat) {
-    cat.textContent = `PDF • ${lesson.subjectLabel} • ${lesson.typeLabel}`;
+    cat.textContent = `PDF • ${lesson.subjectLabel || lesson.subject} • ${lesson.typeLabel || lesson.type}`;
     cat.className = `category-label ${lesson.subject}`;
   }
   if (downloadBtn) {
     downloadBtn.onclick = () => downloadLessonPdf(lesson.id);
   }
 
-  // Si c'est un fichier PDF réel téléversé par le prof (data URL ou blob ou lien externe)
+  // Nettoyage de l'éventuel Blob URL précédent pour libérer la mémoire
+  if (currentActivePdfBlobUrl) {
+    try { URL.revokeObjectURL(currentActivePdfBlobUrl); } catch (e) {}
+    currentActivePdfBlobUrl = null;
+  }
+
+  // 1. Si c'est un fichier PDF réel téléversé par le prof (data URL base64)
   if (lesson.fileData) {
+    let pdfSrc = lesson.fileData;
+    if (lesson.fileData.startsWith('data:')) {
+      const blob = dataUrlToBlob(lesson.fileData);
+      if (blob) {
+        currentActivePdfBlobUrl = URL.createObjectURL(blob);
+        pdfSrc = currentActivePdfBlobUrl;
+      }
+    }
     body.innerHTML = `
-      <iframe src="${lesson.fileData}" class="pdf-reader-frame" style="width:100%; height:100%; border:none;"></iframe>
+      <div style="background: #1e293b; padding: 10px 18px; border-bottom: 1px solid #334155; display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; color: #94a3b8; flex-wrap: wrap; gap: 10px;">
+        <span style="display:flex; align-items:center; gap:6px;">
+          <span>📄</span>
+          <strong style="color:#f8fafc;">${escapeHtml(lesson.title)}</strong>
+          <span style="color:#64748b;">(${escapeHtml(lesson.fileSize || 'PDF')})</span>
+        </span>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <a href="${pdfSrc}" target="_blank" style="color: #38bdf8; text-decoration: none; font-weight: 700; padding: 5px 12px; background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.3); border-radius: 4px; display: inline-flex; align-items: center; gap: 6px;">
+            <span>🗗</span> Plein écran
+          </a>
+          <button onclick="downloadLessonPdf('${lesson.id}')" style="background: #10b981; color: #000; font-weight: 700; padding: 5px 14px; border-radius: 4px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+            <span>⬇️</span> Télécharger PDF
+          </button>
+        </div>
+      </div>
+      <iframe src="${pdfSrc}" class="pdf-reader-frame" style="width:100%; height:calc(100% - 46px); border:none;" title="${escapeHtml(lesson.title)}"></iframe>
     `;
   } else if (lesson.pdfUrl) {
     body.innerHTML = `
-      <iframe src="${lesson.pdfUrl}" class="pdf-reader-frame" style="width:100%; height:100%; border:none;"></iframe>
+      <div style="background: #1e293b; padding: 10px 18px; border-bottom: 1px solid #334155; display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; color: #94a3b8; flex-wrap: wrap; gap: 10px;">
+        <span style="display:flex; align-items:center; gap:6px;">
+          <span>🌐</span>
+          <strong style="color:#f8fafc;">${escapeHtml(lesson.title)}</strong>
+          <span style="color:#64748b;">(${escapeHtml(lesson.fileSize || 'Lien Web')})</span>
+        </span>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <a href="${lesson.pdfUrl}" target="_blank" style="color: #38bdf8; text-decoration: none; font-weight: 700; padding: 5px 12px; background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.3); border-radius: 4px; display: inline-flex; align-items: center; gap: 6px;">
+            <span>🗗</span> Plein écran
+          </a>
+          <button onclick="downloadLessonPdf('${lesson.id}')" style="background: #10b981; color: #000; font-weight: 700; padding: 5px 14px; border-radius: 4px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+            <span>⬇️</span> Télécharger
+          </button>
+        </div>
+      </div>
+      <iframe src="${lesson.pdfUrl}" class="pdf-reader-frame" style="width:100%; height:calc(100% - 46px); border:none;" title="${escapeHtml(lesson.title)}"></iframe>
     `;
   } else {
     // Rendu haute fidélité format document d'examen imprimable
@@ -6375,36 +6442,90 @@ function closePdfModal() {
   if (modal) modal.classList.remove('active');
   const body = document.getElementById('pdfModalBody');
   if (body) body.innerHTML = '';
+  if (currentActivePdfBlobUrl) {
+    try { URL.revokeObjectURL(currentActivePdfBlobUrl); } catch (e) {}
+    currentActivePdfBlobUrl = null;
+  }
 }
 
 function downloadLessonPdf(lessonId) {
   const lesson = allLessons.find(l => l.id === lessonId);
   if (!lesson) return;
 
-  const fileName = lesson.downloadName || `BacSTI_${lesson.subject}_${lesson.id}.pdf`;
+  let fileName = lesson.downloadName || `BacSTI_${lesson.subject}_${lesson.id}.pdf`;
+  if (!fileName.toLowerCase().endsWith('.pdf')) {
+    fileName += '.pdf';
+  }
 
-  // Si c'est un fichier réel téléversé par le prof
+  // 1. Si c'est un fichier réel téléversé par le prof (data URL base64)
   if (lesson.fileData) {
+    if (lesson.fileData.startsWith('data:')) {
+      const blob = dataUrlToBlob(lesson.fileData);
+      if (blob) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+          if (a.parentNode) a.parentNode.removeChild(a);
+          URL.revokeObjectURL(url);
+        }, 2000);
+        return;
+      }
+    }
+    // Fallback standard
     const a = document.createElement('a');
+    a.style.display = 'none';
     a.href = lesson.fileData;
     a.download = fileName;
     document.body.appendChild(a);
     a.click();
-    document.body.removeChild(a);
+    setTimeout(() => {
+      if (a.parentNode) a.parentNode.removeChild(a);
+    }, 2000);
     return;
   }
 
+  // 2. Si c'est un lien URL (ex: pdf/Conversion_Bases_Numeration.pdf ou web)
   if (lesson.pdfUrl) {
-    const a = document.createElement('a');
-    a.href = lesson.pdfUrl;
-    a.download = fileName;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    fetch(lesson.pdfUrl)
+      .then(res => {
+        if (!res.ok) throw new Error("HTTP error " + res.status);
+        return res.blob();
+      })
+      .then(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+          if (a.parentNode) a.parentNode.removeChild(a);
+          URL.revokeObjectURL(url);
+        }, 2000);
+      })
+      .catch(() => {
+        // Fallback si fetch bloqué (CORS ou drive direct)
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = lesson.pdfUrl;
+        a.target = '_blank';
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+          if (a.parentNode) a.parentNode.removeChild(a);
+        }, 2000);
+      });
     return;
   }
 
-  // Génération d'un fichier HTML / PDF téléchargeable pour les leçons pré-intégrées
+  // 3. Fallback pour leçons synthétiques imprimables en HTML/PDF
   const printHtml = `
     <!DOCTYPE html>
     <html lang="fr">
@@ -6491,10 +6612,59 @@ function toggleAdminPdfMode(mode) {
   }
 }
 
+function setupAdminDragAndDrop() {
+  const dropZone = document.getElementById('adminPdfFileWrap');
+  if (!dropZone || dropZone.dataset.dndInit === 'true') return;
+  dropZone.dataset.dndInit = 'true';
+
+  ['dragenter', 'dragover'].forEach(eventName => {
+    dropZone.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropZone.style.borderColor = '#34d399';
+      dropZone.style.background = 'rgba(16, 185, 129, 0.14)';
+    }, false);
+  });
+
+  ['dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropZone.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+      dropZone.style.background = 'rgba(16, 185, 129, 0.04)';
+    }, false);
+  });
+
+  dropZone.addEventListener('drop', (e) => {
+    const dt = e.dataTransfer;
+    if (dt && dt.files && dt.files.length > 0) {
+      const file = dt.files[0];
+      if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+        selectedAdminFile = file;
+        const label = document.getElementById('adminSelectedFileName');
+        if (label) {
+          const sizeMo = (file.size / (1024 * 1024)).toFixed(2);
+          label.style.display = 'block';
+          label.textContent = `✓ Fichier glissé : ${file.name} (${sizeMo} Mo)`;
+        }
+      } else {
+        alert("Veuillez déposer un document au format PDF (.pdf).");
+      }
+    }
+  }, false);
+}
+
 function handleAdminFileSelected(e) {
   const file = e.target.files[0];
   const label = document.getElementById('adminSelectedFileName');
   if (file) {
+    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+      alert("Attention : Le fichier sélectionné doit être un document PDF (.pdf) !");
+      e.target.value = '';
+      selectedAdminFile = null;
+      if (label) label.style.display = 'none';
+      return;
+    }
     selectedAdminFile = file;
     const sizeMo = (file.size / (1024 * 1024)).toFixed(2);
     if (label) {
@@ -6567,6 +6737,11 @@ async function handleUploadLesson(e) {
     resume: "📌 Fiche Résumé"
   };
 
+  let dlName = (selectedAdminFile && selectedAdminFile.name) ? selectedAdminFile.name : `${title}.pdf`;
+  if (!dlName.toLowerCase().endsWith('.pdf')) {
+    dlName += '.pdf';
+  }
+
   const newLesson = {
     id: `custom-lesson-${Date.now()}`,
     title: title,
@@ -6581,7 +6756,7 @@ async function handleUploadLesson(e) {
     summary: desc,
     fileData: fileData,
     pdfUrl: pdfUrl,
-    downloadName: selectedAdminFile ? selectedAdminFile.name : `${title}.pdf`,
+    downloadName: dlName,
     isCustom: true
   };
 
