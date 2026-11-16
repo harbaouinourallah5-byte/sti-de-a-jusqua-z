@@ -51,14 +51,12 @@
         <button class="nav-btn nav-sti-item" data-view="js" style="color: #facc15;">⚡ JavaScript</button>
         <button class="nav-btn nav-sti-item" data-view="sql" style="color: #c084fc;">🗄️ SQL</button>
         <button class="nav-btn nav-sti-item" data-view="lessons" style="color: #a855f7;">📚 Cours & Séries PDF</button>
-        <button class="nav-btn nav-sti-item nav-admin-btn" data-view="admin" style="color: #34d399; border: 1px dashed rgba(16, 185, 129, 0.45); padding: 6px 12px; border-radius: 6px; font-weight: 700;">🔒 Espace Enseignant</button>
         
         <!-- NAVIGATION MODULE ALGORITHME & PROGRAMMATION -->
         <button class="nav-btn nav-algo-item" data-view="algo-home" style="display:none; color: #38bdf8;">🏠 Accueil Algo</button>
         <button class="nav-btn nav-algo-item" data-view="algo-pratique" style="display:none; color: #10b981;">🛠️ Pratique (Qt ➔ Thonny)</button>
         <button class="nav-btn nav-algo-item" data-view="algo-theorique" style="display:none; color: #f59e0b;">📖 Théorique (Bac Info)</button>
         <button class="nav-btn nav-algo-item" data-view="lessons" style="display:none; color: #a855f7;">📚 Cours & Séries PDF</button>
-        <button class="nav-btn nav-algo-item nav-admin-btn" data-view="admin" style="display:none; color: #34d399; border: 1px dashed rgba(16, 185, 129, 0.45); padding: 6px 12px; border-radius: 6px; font-weight: 700;">🔒 Espace Enseignant</button>
 
         <button class="theme-toggle-btn" id="themeToggleBtn" title="Basculer thème sombre / clair">☀️</button>
       </div>
@@ -165,7 +163,6 @@
             <div class="card-badges">
               <span class="pill-badge" style="color:#c084fc;">4 Matières (HTML, CSS, JS, SQL)</span>
               <span class="pill-badge" style="color:#a855f7;">📑 Téléchargement & Aperçu PDF</span>
-              <span class="pill-badge" style="color:#34d399;">🔒 Espace Enseignant /admin</span>
             </div>
             <div class="card-cta-btn" style="background: #a855f7; color: #fff;">
               <span>Consulter les Leçons PDF</span>
@@ -189,7 +186,6 @@
             <button class="nav-btn" data-view="js" onclick="switchView('js')">⚡ Voir JavaScript</button>
             <button class="nav-btn" data-view="sql" onclick="switchView('sql')" style="color:#c084fc;">🗄️ Voir SQL</button>
             <button class="nav-btn" data-view="lessons" onclick="switchView('lessons')">📚 Cours & Séries PDF</button>
-            <button class="nav-btn" data-view="admin" onclick="switchView('admin')" style="color:#34d399; border:1px dashed #059669;">🔒 Accès Enseignant (/admin)</button>
           </div>
         </div>
 
@@ -1570,7 +1566,6 @@
             <button class="nav-btn" data-view="css" onclick="switchView('css')">🎨 Voir CSS3</button>
             <button class="nav-btn" data-view="sql" onclick="switchView('sql')" style="color:#c084fc;">🗄️ Passer à SQL →</button>
             <button class="nav-btn" data-view="lessons" onclick="switchView('lessons')">📚 Cours & Séries PDF</button>
-            <button class="nav-btn" data-view="admin" onclick="switchView('admin')" style="color:#34d399; border:1px dashed #059669;">🔒 Accès Enseignant</button>
           </div>
         </div>
 
@@ -2016,10 +2011,6 @@
               <span style="color: #a855f7;">📚</span> Cours, Séries & Documents PDF (STI & Algorithme)
             </h2>
             <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <button class="nav-btn" onclick="switchView('admin')" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid #10b981; font-weight: 700;">
-                <span>🔒</span>
-                <span>Espace Enseignant (/admin)</span>
-              </button>
               <button class="back-to-home-btn" onclick="handleLogoClick()">
                 <span>←</span>
                 <span>Retour à l'accueil</span>
@@ -2148,7 +2139,6 @@
             <button class="nav-btn" data-view="sql" onclick="switchView('sql')">🗄️ Voir SQL</button>
             <button class="nav-btn" onclick="switchView('algo-pratique')" style="color: #34d399; border-color: rgba(52, 211, 153, 0.4);">🛠️ Pratique (Qt)</button>
             <button class="nav-btn" onclick="switchView('algo-theorique')" style="color: #fbbf24; border-color: rgba(251, 191, 36, 0.4);">📖 Théorique (Bac)</button>
-            <button class="nav-btn" data-view="admin" onclick="switchView('admin')" style="color:#34d399; border:1px dashed #059669;">🔒 Accès Enseignant</button>
           </div>
         </div>
 
@@ -2168,7 +2158,7 @@
           </div>
           <div class="subpage-title-row">
             <h2 class="subpage-title">
-              <span style="color: #10b981;">🔒</span> Espace Enseignant — Dépôt des Leçons & Séries PDF
+              <span style="color: #10b981;">⚙️</span> Espace Enseignant — Dépôt des Leçons & Séries PDF
             </h2>
             <div style="display:flex; gap:10px; flex-wrap:wrap;">
               <button class="nav-btn" onclick="switchView('lessons')" style="color: #c084fc; border: 1px solid #7c3aed;">
@@ -2186,54 +2176,24 @@
 
       <div class="container" style="padding-top: 28px; padding-bottom: 50px;">
         
-        <!-- ÉCRAN 1 : CONNEXION ENSEIGNANT (Si non authentifié) -->
-        <div id="adminLoginCard" class="admin-auth-card" style="max-width: 480px; margin: 40px auto; background: var(--bg-card); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: var(--radius-lg); padding: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center;">
-          <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 2rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px auto; border: 1px solid rgba(16, 185, 129, 0.4);">
-            🔒
-          </div>
-          <h3 style="font-size: 1.35rem; color: #f8fafc; margin-bottom: 8px;">Authentification Enseignant</h3>
-          <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.5;">
-            Veuillez entrer le mot de passe enseignant pour déposer et gérer les leçons PDF pour les élèves du Bac STI.
-          </p>
-
-          <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
-            <div style="margin-bottom: 18px; text-align: left;">
-              <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px;">Mot de passe Enseignant :</label>
-              <input type="password" id="adminPasswordInput" class="sti-input" placeholder="Entrez le mot de passe (défaut : sti2025)" style="width: 100%; padding: 12px 14px; font-size: 1rem;" required autofocus>
-            </div>
-            
-            <div id="adminLoginError" style="display: none; background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid #ef4444; border-radius: 6px; padding: 10px; font-size: 0.85rem; margin-bottom: 16px;">
-              ⚠️ Mot de passe incorrect.
-            </div>
-
-            <button type="submit" style="width: 100%; background: linear-gradient(135deg, #059669, #10b981); color: #000; border: none; padding: 12px; border-radius: 6px; font-weight: 800; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);">
-              🔓 Se connecter au tableau de bord
-            </button>
-          </form>
-
-          <div style="margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border-color); font-size: 0.82rem; color: var(--text-muted);">
-            💡 <em>Indication initiale :</em> Le mot de passe par défaut est <code style="color:#34d399; font-weight:bold;">sti2025</code>.
-          </div>
-        </div>
-
-        <!-- ÉCRAN 2 : TABLEAU DE BORD ENSEIGNANT (Si authentifié) -->
-        <div id="adminDashboard" style="display: none;">
+        <!-- TABLEAU DE BORD ENSEIGNANT (Accès direct sans mot de passe) -->
+        <div id="adminDashboard" style="display: block;">
           
           <!-- Barre d'état enseignant -->
           <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px 20px; margin-bottom: 26px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
             <div style="display: flex; align-items: center; gap: 12px;">
               <span style="font-size: 1.6rem;">👨‍🏫</span>
               <div>
-                <h4 style="margin: 0; color: #f8fafc; font-size: 1.05rem;">Connecté en tant que Professeur d'Informatique</h4>
-                <span style="font-size: 0.82rem; color: #34d399; font-weight: 600;">Session active • Baccalauréat STI</span>
+                <h4 style="margin: 0; color: #f8fafc; font-size: 1.05rem;">Espace de Gestion Enseignant (Accès Direct)</h4>
+                <span style="font-size: 0.82rem; color: #34d399; font-weight: 600;">Dépôt & Distribution de Documents • Baccalauréat STI & Algorithme</span>
               </div>
             </div>
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
               <button onclick="switchView('lessons')" style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid #a855f7; padding: 7px 14px; border-radius: 6px; font-size: 0.85rem; font-weight: 700; cursor: pointer;">
                 👁️ Voir l'espace Élèves
               </button>
-              <button onclick="handleAdminLogout()" style="background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid #ef4444; padding: 7px 14px; border-radius: 6px; font-size: 0.85rem; font-weight: 700; cursor: pointer;">
-                🚪 Déconnexion
+              <button onclick="switchView('home')" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid #38bdf8; padding: 7px 14px; border-radius: 6px; font-size: 0.85rem; font-weight: 700; cursor: pointer;">
+                🏠 Accueil
               </button>
             </div>
           </div>

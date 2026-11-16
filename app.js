@@ -1635,23 +1635,12 @@ function switchView(viewName) {
     renderLessons();
     history.replaceState(null, '', '#lessons');
   } else if (viewName === 'admin') {
-    if (isAdminLoggedIn) {
-      const loginCard = document.getElementById('adminLoginCard');
-      const dash = document.getElementById('adminDashboard');
-      if (loginCard) loginCard.style.display = 'none';
-      if (dash) dash.style.display = 'block';
-      renderAdminLessonsTable();
-    } else {
-      const loginCard = document.getElementById('adminLoginCard');
-      const dash = document.getElementById('adminDashboard');
-      if (loginCard) loginCard.style.display = 'block';
-      if (dash) dash.style.display = 'none';
-      setTimeout(() => {
-        const pw = document.getElementById('adminPasswordInput');
-        if (pw) pw.focus();
-      }, 100);
-    }
-    history.replaceState(null, '', '#admin');
+    isAdminLoggedIn = true;
+    const dash = document.getElementById('adminDashboard');
+    if (dash) dash.style.display = 'block';
+    renderAdminLessonsTable();
+    setupAdminDragAndDrop();
+    history.replaceState(null, '', '/admin');
   } else if (viewName === 'algo-home') {
     history.replaceState(null, '', '#algo-home');
   } else if (viewName === 'algo-pratique') {
@@ -5984,7 +5973,7 @@ let currentLessonModule = 'sti';
 let currentLessonSubject = 'all';
 let currentLessonType = 'all';
 let currentLessonSearch = '';
-let isAdminLoggedIn = false;
+let isAdminLoggedIn = true;
 let selectedAdminFile = null;
 let adminFilterSubject = 'all';
 
@@ -6103,7 +6092,7 @@ function checkUrlRouting() {
   const hash = window.location.hash.toLowerCase();
   const path = window.location.pathname.toLowerCase();
 
-  if (hash === '#admin' || path.endsWith('/admin')) {
+  if (hash === '#admin' || path.endsWith('/admin') || path.endsWith('/admin/') || path.includes('/admin')) {
     switchView('admin');
   } else if (hash === '#lessons' || path.endsWith('/lessons') || path.endsWith('/cours')) {
     switchView('lessons');
@@ -6181,7 +6170,7 @@ function renderLessons() {
         <p style="color: var(--text-secondary); max-width: 620px; margin: 0 auto 16px auto; font-size: 0.92rem; line-height: 1.6;">
           Tous les cours de test ont été retirés. Cet espace est configuré pour accueillir les documents officiels partagés par votre professeur pour <strong>Algorithme (Pratique & Théorique)</strong> et <strong>STI (HTML, CSS, JS, SQL)</strong> :
         </p>
-        <div style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 24px;">
+        <div style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
           <span class="subject-badge algo-pratique">🛠️ Algorithme Pratique</span>
           <span class="subject-badge algo-theorique">📖 Algorithme Théorique</span>
           <span class="subject-badge html">🌐 HTML5</span>
@@ -6189,10 +6178,6 @@ function renderLessons() {
           <span class="subject-badge js">⚡ JavaScript</span>
           <span class="subject-badge sql">🗄️ SQL</span>
         </div>
-        <button class="nav-btn" onclick="switchView('admin')" style="background: linear-gradient(135deg, #059669, #10b981); color: #000; font-weight: 800; padding: 10px 22px; border-radius: 6px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);">
-          <span>🔒</span>
-          <span>Déposer un cours dans l'Espace Enseignant (/admin)</span>
-        </button>
       </div>
     `;
     return;
@@ -6209,7 +6194,6 @@ function renderLessons() {
         </p>
         <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
           <button class="nav-btn" onclick="filterLessonsBySubject('all')">🌟 Voir tous les documents</button>
-          <button class="nav-btn" onclick="switchView('admin')" style="color: #34d399; border-color: rgba(52, 211, 153, 0.4);">🔒 Espace Enseignant</button>
         </div>
       </div>
     `;
@@ -6566,38 +6550,18 @@ function downloadLessonPdf(lessonId) {
 }
 
 // -------------------------------------------------------------
-// ESPACE ENSEIGNANT (/admin) : Authentification & Téléversement
+// ESPACE ENSEIGNANT (/admin) : Gestion & Téléversement Direct (Sans Mot de Passe)
 // -------------------------------------------------------------
 function handleAdminLogin(e) {
   if (e) e.preventDefault();
-  const input = document.getElementById('adminPasswordInput');
-  const errorBox = document.getElementById('adminLoginError');
-  const loginCard = document.getElementById('adminLoginCard');
+  isAdminLoggedIn = true;
   const dash = document.getElementById('adminDashboard');
-
-  const correctPw = localStorage.getItem('sti_admin_pw') || 'sti2025';
-
-  if (input && input.value === correctPw) {
-    isAdminLoggedIn = true;
-    if (errorBox) errorBox.style.display = 'none';
-    if (loginCard) loginCard.style.display = 'none';
-    if (dash) dash.style.display = 'block';
-    renderAdminLessonsTable();
-    input.value = '';
-  } else {
-    if (errorBox) {
-      errorBox.style.display = 'block';
-      errorBox.textContent = "⚠️ Mot de passe incorrect. (Par défaut : sti2025)";
-    }
-  }
+  if (dash) dash.style.display = 'block';
+  renderAdminLessonsTable();
 }
 
 function handleAdminLogout() {
-  isAdminLoggedIn = false;
-  const loginCard = document.getElementById('adminLoginCard');
-  const dash = document.getElementById('adminDashboard');
-  if (loginCard) loginCard.style.display = 'block';
-  if (dash) dash.style.display = 'none';
+  switchView('home');
 }
 
 function toggleAdminPdfMode(mode) {

@@ -1,9 +1,12 @@
 {
-  "cleanUrls": true,
   "rewrites": [
     {
       "source": "/admin",
-      "destination": "/index.html"
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/admin/(.*)",
+      "destination": "/admin/index.html"
     },
     {
       "source": "/lessons",
@@ -14,7 +17,7 @@
       "destination": "/index.html"
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!admin|pdf).*)/?",
       "destination": "/index.html"
     }
   ]
