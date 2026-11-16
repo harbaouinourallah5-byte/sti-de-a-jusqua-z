@@ -1,12 +1,23 @@
 {
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ],
   "rewrites": [
     {
       "source": "/admin",
-      "destination": "/admin/index.html"
+      "destination": "/index.html"
     },
     {
       "source": "/admin/(.*)",
-      "destination": "/admin/index.html"
+      "destination": "/index.html"
     },
     {
       "source": "/lessons",
@@ -17,7 +28,11 @@
       "destination": "/index.html"
     },
     {
-      "source": "/((?!admin|pdf).*)/?",
+      "source": "/algo",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]

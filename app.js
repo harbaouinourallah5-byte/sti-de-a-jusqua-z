@@ -6120,9 +6120,10 @@ function checkUrlRouting() {
 // Rendu & Filtres des Leçons Élèves (STI + ALGORITHME)
 // -------------------------------------------------------------
 function filterLessonsBySubject(subj) {
-  currentLessonSubject = subj;
+  currentLessonSubject = (subj || 'all').trim().toLowerCase();
   document.querySelectorAll('#lessonsSubjectTabsBar .subject-tab').forEach(btn => {
-    if (btn.getAttribute('data-subject') === subj) {
+    const btnSubj = (btn.getAttribute('data-subject') || '').trim().toLowerCase();
+    if (btnSubj === currentLessonSubject) {
       btn.classList.add('active');
     } else {
       btn.classList.remove('active');
@@ -6137,12 +6138,15 @@ function renderLessons() {
   if (!grid) return;
 
   const filtered = allLessons.filter(lesson => {
-    if (currentLessonSubject !== 'all') {
-      if (currentLessonSubject === 'all-algo') {
-        if (!['algo-pratique', 'algo-theorique'].includes(lesson.subject)) return false;
-      } else if (currentLessonSubject === 'all-sti') {
-        if (!['html', 'css', 'js', 'sql'].includes(lesson.subject)) return false;
-      } else if (lesson.subject !== currentLessonSubject) {
+    const lSubj = (lesson.subject || '').trim().toLowerCase();
+    const targetSubj = (currentLessonSubject || '').trim().toLowerCase();
+
+    if (targetSubj !== 'all') {
+      if (targetSubj === 'all-algo') {
+        if (!['algo-pratique', 'algo-theorique'].includes(lSubj)) return false;
+      } else if (targetSubj === 'all-sti') {
+        if (!['html', 'css', 'js', 'sql'].includes(lSubj)) return false;
+      } else if (lSubj !== targetSubj) {
         return false;
       }
     }
@@ -6231,17 +6235,7 @@ function renderLessons() {
   }).join('');
 }
 
-function filterLessonsBySubject(subj) {
-  currentLessonSubject = subj;
-  document.querySelectorAll('.subject-tab').forEach(btn => {
-    if (btn.getAttribute('data-subject') === subj) {
-      btn.classList.add('active');
-    } else {
-      btn.classList.remove('active');
-    }
-  });
-  renderLessons();
-}
+// [Duplicate filterLessonsBySubject removed - primary handler at line 6122]
 
 function filterLessonsByType(type) {
   currentLessonType = type;
@@ -6646,8 +6640,8 @@ async function handleUploadLesson(e) {
   const modeRadios = document.getElementsByName('adminPdfMode');
 
   const title = titleInput.value.trim();
-  const subject = subjectSelect.value;
-  const type = typeSelect.value;
+  const subject = (subjectSelect ? subjectSelect.value : '').trim().toLowerCase() || 'html';
+  const type = (typeSelect ? typeSelect.value : '').trim().toLowerCase() || 'cours';
   const author = authorInput.value.trim() || "Professeur d'Informatique (Bac STI)";
   const desc = descInput.value.trim();
 
@@ -6686,6 +6680,15 @@ async function handleUploadLesson(e) {
     "algo-theorique": "Théorique (Algorithme)"
   };
 
+  const subjectTags = {
+    html: ["html", "html5", "web", "balise", "formulaire"],
+    css: ["css", "css3", "style", "design", "animation"],
+    js: ["js", "javascript", "script", "controle", "validation"],
+    sql: ["sql", "bdd", "base", "table", "requete", "select"],
+    "algo-pratique": ["algo", "algorithme", "pratique", "qt", "designer", "thonny", "python", "interface"],
+    "algo-theorique": ["algo", "algorithme", "theorique", "bac", "tri", "matrice", "pattern", "bases", "recursivite"]
+  };
+
   const typeLabels = {
     cours: "📖 Cours",
     serie: "📝 Série d'exercices",
@@ -6704,12 +6707,13 @@ async function handleUploadLesson(e) {
     title: title,
     subject: subject,
     subjectLabel: subjectLabels[subject] || subject.toUpperCase(),
+    tags: subjectTags[subject] || [subject],
     type: type,
     typeLabel: typeLabels[type] || type,
     date: new Date().toISOString().split('T')[0],
     author: author,
     fileSize: fileSize,
-    description: desc || "Document PDF déposé par l'enseignant pour les révisions du Bac STI.",
+    description: desc || "Document PDF déposé par l'enseignant pour les révisions du Bac.",
     summary: desc,
     fileData: fileData,
     pdfUrl: pdfUrl,
@@ -6733,7 +6737,7 @@ async function handleUploadLesson(e) {
   if (label) label.style.display = 'none';
   selectedAdminFile = null;
 
-  alert(`✓ Leçon "${title}" publiée avec succès ! Elle est maintenant disponible pour les élèves.`);
+  alert(`✓ Document "${title}" publié avec succès dans la catégorie "${subjectLabels[subject]}" !`);
 
   renderAdminLessonsTable();
   renderLessons();
@@ -6749,9 +6753,9 @@ function readFileAsDataUrl(file) {
 }
 
 function filterAdminTable(subj) {
-  adminFilterSubject = subj;
+  adminFilterSubject = (subj || 'all').trim().toLowerCase();
   document.querySelectorAll('#adminSubjectFilterWrap .cat-btn').forEach(b => b.classList.remove('active'));
-  if (event && event.target) event.target.classList.add('active');
+  if (typeof event !== 'undefined' && event && event.target) event.target.classList.add('active');
   renderAdminLessonsTable();
 }
 
@@ -6759,7 +6763,11 @@ function renderAdminLessonsTable() {
   const tbody = document.getElementById('adminLessonsTableBody');
   if (!tbody) return;
 
-  const filtered = allLessons.filter(l => adminFilterSubject === 'all' || l.subject === adminFilterSubject);
+  const targetSubj = (adminFilterSubject || 'all').trim().toLowerCase();
+  const filtered = allLessons.filter(l => {
+    if (targetSubj === 'all') return true;
+    return (l.subject || '').trim().toLowerCase() === targetSubj;
+  });
 
   if (filtered.length === 0) {
     tbody.innerHTML = `
