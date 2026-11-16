@@ -1650,6 +1650,7 @@ function switchView(viewName) {
     renderAlgoPratiqueCategories();
     renderAlgoPratiqueCards();
     initQtTranslator();
+    switchAlgoPratiqueTab('doc');
     history.replaceState(null, '', '#algo-pratique');
   } else if (viewName === 'algo-theorique') {
     const input = document.getElementById('algoTheoriqueSearchInput');
@@ -7096,6 +7097,26 @@ function copyTranslatorCode() {
 // 4. Moteur du Traducteur Interactif Live (Qt Designer ➔ Thonny)
 // -------------------------------------------------------------
 const QT_TRANSLATOR_CONFIG = {
+  QTextEdit: [
+    {
+      id: "read_plain_text",
+      name: "Lire le texte multiligne (.toPlainText())",
+      code: (obj) => `${obj.replace(/^(txt_|text_|te_)?/i, '') || 'texte'} = W.${obj}.toPlainText()`,
+      tip: "🚨 <strong>PIÈGE BAC MAJEUR :</strong> Pour un <code>QTextEdit</code>, on utilise <code>.toPlainText()</code> et NON <code>.text()</code> !"
+    },
+    {
+      id: "set_text",
+      name: "Modifier le texte de la zone (.setText)",
+      code: (obj) => `W.${obj}.setText("Nouveau contenu multiligne...")`,
+      tip: "💡 Remplace tout le contenu de la zone de texte par la nouvelle chaîne fournie."
+    },
+    {
+      id: "clear",
+      name: "Vider la zone de texte (.clear())",
+      code: (obj) => `W.${obj}.clear()`,
+      tip: "💡 Réinitialise et efface tout le texte saisi dans la zone."
+    }
+  ],
   QLineEdit: [
     {
       id: "read_text",
@@ -7211,6 +7232,12 @@ if valeur_choisie == "" or valeur_choisie == "--- Choisir ---":
     QMessageBox.critical(windows, "Erreur", "Veuillez sélectionner une option !")
     return`,
       tip: "💡 Au Bac, la première ligne est souvent une consigne ('--- Choisir ---'). Toujours la bloquer !"
+    },
+    {
+      id: "set_current_index_minus_one",
+      name: "Aucun choix sélectionné (.setCurrentIndex(-1))",
+      code: (obj) => `# Aucun choix sélectionné (vider / réinitialiser la liste)\nW.${obj}.setCurrentIndex(-1)`,
+      tip: "💡 Permet de désélectionner tout élément par défaut dans la liste."
     },
     {
       id: "current_index",
@@ -7343,16 +7370,17 @@ function handleTranslatorWidgetChange() {
 
   // Ajuster le placeholder par défaut selon le composant
   if (objInput) {
-    if (widget === 'QLineEdit') objInput.value = 'txt_nom';
-    else if (widget === 'QPushButton') objInput.value = 'btn_valider';
-    else if (widget === 'QRadioButton') objInput.value = 'rb_homme';
-    else if (widget === 'QCheckBox') objInput.value = 'chk_fumeur';
-    else if (widget === 'QComboBox') objInput.value = 'cmb_ville';
-    else if (widget === 'QSpinBox') objInput.value = 'sp_age';
-    else if (widget === 'QDateEdit') objInput.value = 'date_naiss';
-    else if (widget === 'QLabel') objInput.value = 'lbl_resultat';
-    else if (widget === 'QTableWidget') objInput.value = 'table_clients';
-    else if (widget === 'QMessageBox') objInput.value = 'msg_box';
+    if (widget === 'QLineEdit') objInput.value = 'Nom_LineEdit';
+    else if (widget === 'QTextEdit') objInput.value = 'nomTextEdit';
+    else if (widget === 'QPushButton') objInput.value = 'nomPushButton';
+    else if (widget === 'QRadioButton') objInput.value = 'nomRadioButton';
+    else if (widget === 'QCheckBox') objInput.value = 'nomCheckBox';
+    else if (widget === 'QComboBox') objInput.value = 'nomComboBox';
+    else if (widget === 'QSpinBox') objInput.value = 'nomSpinBox';
+    else if (widget === 'QDateEdit') objInput.value = 'nomDateEdit';
+    else if (widget === 'QLabel') objInput.value = 'Nom_Label';
+    else if (widget === 'QTableWidget') objInput.value = 'nomTable';
+    else if (widget === 'QMessageBox') objInput.value = 'msg';
   }
 
   // Remplir les options d'actions
@@ -7634,4 +7662,128 @@ function renderAlgoTheoriqueCards() {
       </div>
     `;
   }).join('');
+}
+
+
+// -------------------------------------------------------------
+// 7. Fonctions de l'Annexe Officielle Qt Designer (Feuille Bac)
+// -------------------------------------------------------------
+function switchAlgoPratiqueTab(tabName) {
+  const tabDoc = document.getElementById('tabBtnAlgoDoc');
+  const tabInteractive = document.getElementById('tabBtnAlgoInteractive');
+  const tabCards = document.getElementById('tabBtnAlgoCards');
+
+  const viewDoc = document.getElementById('algoOfficialDocView');
+  const viewInteractive = document.getElementById('algoInteractiveView');
+  const viewCards = document.getElementById('algoCardsGridView');
+
+  if (!tabDoc || !viewDoc) return;
+
+  // Réinitialiser les boutons d'onglets
+  [tabDoc, tabInteractive, tabCards].forEach(btn => {
+    if (btn) btn.classList.remove('active');
+  });
+
+  // Masquer toutes les sous-vues
+  if (viewDoc) viewDoc.style.display = 'none';
+  if (viewInteractive) viewInteractive.style.display = 'none';
+  if (viewCards) viewCards.style.display = 'none';
+
+  if (tabName === 'doc') {
+    if (tabDoc) tabDoc.classList.add('active');
+    if (viewDoc) viewDoc.style.display = 'block';
+  } else if (tabName === 'interactive') {
+    if (tabInteractive) tabInteractive.classList.add('active');
+    if (viewInteractive) {
+      viewInteractive.style.display = 'block';
+      initQtTranslator();
+    }
+  } else if (tabName === 'cards') {
+    if (tabCards) tabCards.classList.add('active');
+    if (viewCards) {
+      viewCards.style.display = 'block';
+      renderAlgoPratiqueCategories();
+      renderAlgoPratiqueCards();
+    }
+  }
+}
+
+function loadIntoTranslator(widget, objName, action) {
+  switchAlgoPratiqueTab('interactive');
+  
+  const widgetSelect = document.getElementById('translatorWidgetSelect');
+  const objInput = document.getElementById('translatorObjectNameInput');
+  const actionSelect = document.getElementById('translatorActionSelect');
+  
+  if (widgetSelect) {
+    widgetSelect.value = widget;
+    handleTranslatorWidgetChange();
+  }
+  if (objInput && objName) {
+    objInput.value = objName;
+  }
+  if (actionSelect && action) {
+    actionSelect.value = action;
+  }
+  updateTranslatorOutput();
+
+  const translatorCard = document.querySelector('.qt-translator-card');
+  if (translatorCard) {
+    translatorCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    translatorCard.style.outline = '2px solid #10b981';
+    translatorCard.style.boxShadow = '0 0 25px rgba(16, 185, 129, 0.4)';
+    setTimeout(() => {
+      translatorCard.style.outline = '';
+      translatorCard.style.boxShadow = '';
+    }, 1200);
+  }
+}
+
+function filterAnnexeTable(query) {
+  const q = (query || '').trim().toLowerCase();
+  const rows = document.querySelectorAll('#qtAnnexeOfficialTable tbody tr.annexe-row');
+  
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    if (!q || text.includes(q)) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+
+  const subHeader = document.querySelector('.subtable-header-row');
+  if (subHeader) {
+    subHeader.style.display = (!q || 'compléments indispensables'.includes(q) || 'qmessagebox spinbox date table'.includes(q)) ? '' : 'none';
+  }
+}
+
+function copyEntireAnnexeTable() {
+  const summary = `ANNEXE OFFICIELLE - ÉPREUVE PRATIQUE BAC (QT DESIGNER ➔ THONNY PYTHON)
+========================================================================
+WIDGET        | SYNTAXE                                | RÔLE
+------------------------------------------------------------------------
+Label         | W.Nom_Label.setText(chaine)            | Modifier le texte de l’étiquette
+Line Edit     | W.Nom_LineEdit.text()                  | Récupérer le contenu de la zone de saisie
+Line Edit     | W.nom_LineEdit.setText(chaine)         | Modifier le contenu de la zone de texte
+Text Edit     | W.nomTextEdit.toPlainText()            | Récupérer le contenu de la zone de saisie
+Text Edit     | W.nomTextEdit.setText(chaine)          | Modifier le contenu de la zone de texte
+Push Button   | W.nomPushButton.clicked.connect(module)| Ordonner à l'ordinateur d'effectuer une action (suite au clic)
+Radio Button  | W.nomRadioButton.isChecked()           | Vérifier si le bouton est sélectionné (True/False)
+Check Box     | W.nomCheckBox.isChecked()              | Vérifier si la case est cochée (True/False)
+Combo Box     | W.nomComboBox.currentText()            | Récupérer le texte d’élément sélectionné
+Combo Box     | W.nomComboBox.currentIndex()           | Récupérer l’indice du choix
+Combo Box     | W.nomComboBox.setCurrentIndex(-1)      | Aucun choix sélectionné (vider / réinitialiser liste)
+------------------------------------------------------------------------
+COMPLÉMENTS INDISPENSABLES AU BAC :
+QMessageBox   | QMessageBox.critical(W, "Err", msg)    | Boîte d'erreur bloquante (suivie de return)
+QMessageBox   | QMessageBox.information(W, "Ok", msg)  | Boîte d'information ou confirmation de succès
+Spin Box      | W.nomSpinBox.value()                   | Récupérer la valeur entière (int)
+Date Edit     | W.nomDateEdit.date().toString("yyyy-MM-dd") | Récupérer la date formatée (compatible SQL)
+Table Widget  | W.nomTable.setRowCount(n)              | Fixer le nombre de lignes
+Table Widget  | W.nomTable.setItem(r, c, QTableWidgetItem(str(v))) | Remplir une cellule du tableau
+========================================================================`;
+
+  const btn = event ? event.target : null;
+  copyCodeText(summary, btn);
 }

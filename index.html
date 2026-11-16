@@ -2494,34 +2494,396 @@
     <section id="view-algo-pratique" class="view-section">
       <div class="container">
         
-        <div class="page-header-banner" style="margin-bottom: 24px; padding: 24px 0 10px 0;">
+                <div class="page-header-banner" style="margin-bottom: 24px; padding: 24px 0 10px 0;">
           <div class="annexe-title-wrap">
             <div class="annexe-logo-shield" style="background: linear-gradient(135deg, #059669, #10b981); width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
               🛠️
             </div>
             <div>
               <h2 class="annexe-title-text" style="font-size: 1.6rem; color: #34d399;">Épreuve Pratique : Qt Designer ➔ Thonny Python</h2>
-              <span style="font-size: 0.9rem; color: var(--text-secondary);">Baccalauréat Tunisie • Traduction directe composant graphique ➔ code Python Thonny</span>
+              <span style="font-size: 0.9rem; color: var(--text-secondary);">Baccalauréat Tunisie • Fiche Annexe Officielle &amp; Guide Complet de Manipulation</span>
             </div>
           </div>
         </div>
 
-        <!-- STARTER TEMPLATE ACCORDION / BOX -->
-        <div class="algo-template-box" style="background: var(--bg-card); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: var(--radius-lg); padding: 22px; margin-bottom: 26px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 14px;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <span style="font-size: 1.4rem;">📋</span>
-              <h3 style="font-size: 1.1rem; color: #34d399; margin: 0;">Le Starter Template Officiel Bac (À mémoriser &amp; coller dans Thonny)</h3>
+        <!-- Onglets de bascule d'affichage Épreuve Pratique -->
+        <div class="view-tabs-bar" style="margin-bottom: 24px;">
+          <button id="tabBtnAlgoDoc" class="view-mode-tab active green" onclick="switchAlgoPratiqueTab('doc')">
+            <span>📄</span>
+            <span>Tableau Officiel Annexe Qt (Feuille d'Examen Bac)</span>
+          </button>
+          <button id="tabBtnAlgoInteractive" class="view-mode-tab" onclick="switchAlgoPratiqueTab('interactive')">
+            <span>🎛️</span>
+            <span>Traducteur Live &amp; Template Bac</span>
+          </button>
+          <button id="tabBtnAlgoCards" class="view-mode-tab" onclick="switchAlgoPratiqueTab('cards')">
+            <span>🎴</span>
+            <span>Fiches Détaillées &amp; Recherche (20 Notions)</span>
+          </button>
+        </div>
+
+        <!-- ==========================================
+             1. VUE TABLEAU OFFICIEL ANNEXE QT (RÉPLIQUE EXACTE)
+             ========================================== -->
+        <div class="annexe-doc-container green-theme" id="algoOfficialDocView">
+          <div class="annexe-doc-header" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; padding: 18px 24px; border-bottom: 1px solid var(--border-color); background: rgba(15, 23, 42, 0.7);">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div class="annexe-logo-shield" style="background: linear-gradient(135deg, #059669, #10b981); width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                📋
+              </div>
+              <div>
+                <h2 style="font-size: 1.4rem; font-weight: 900; margin: 0; color: var(--text-primary); letter-spacing: -0.5px;">
+                  Annexe Officielle : Qt Designer ➔ Thonny Python
+                </h2>
+                <span style="font-size: 0.84rem; color: var(--text-secondary);">
+                  Réplique conforme de la feuille d'examen distribuée lors de l'épreuve pratique du Baccalauréat
+                </span>
+              </div>
             </div>
-            <button class="copy-btn" onclick="copyStarterTemplate()" style="background: #10b981; color: #000; font-weight: 700; border: none; padding: 7px 16px; border-radius: 6px; cursor: pointer;">
-              📋 Copier le Starter Template
-            </button>
+
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="nav-btn" onclick="copyEntireAnnexeTable()" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); font-size: 0.82rem; padding: 7px 14px; border-radius: 6px; font-weight: 700; cursor: pointer;">
+                📋 Copier tout le tableau
+              </button>
+            </div>
           </div>
-          <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.5;">
-            Ce script minimaliste est le point de départ de 100% des examens pratiques. Il charge votre fichier <code>interface.ui</code> et initialise l'application Qt sans aucune erreur :
-          </p>
-          <div class="code-box" style="position: relative;">
-            <pre><code id="starterTemplateCode">from PyQt5.uic import loadUi
+
+          <!-- BARRE D'ASTUCE INTERACTIVE & RECHERCHE INSTANTANÉE -->
+          <div class="annexe-doc-tip" style="margin: 16px 24px 10px 24px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+            <div style="display: flex; align-items: center; gap: 10px; font-size: 0.88rem; color: #a7f3d0;">
+              <span style="font-size: 1.2rem;">💡</span>
+              <span><strong>Révision Ultra-Fluide :</strong> Cliquez sur une icône 📋 pour copier la syntaxe, ou cliquez sur n'importe quelle ligne pour la charger et la tester dans le traducteur en direct !</span>
+            </div>
+            <div style="position: relative; min-width: 260px;">
+              <input type="text" id="annexeFilterInput" placeholder="Filtrer l'annexe (ex: text, setText, isChecked...)" oninput="filterAnnexeTable(this.value)" style="width: 100%; padding: 7px 14px 7px 32px; background: rgba(15, 23, 42, 0.85); border: 1px solid var(--border-color); border-radius: 6px; color: #fff; font-size: 0.82rem;">
+              <span style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 0.85rem; opacity: 0.6;">🔍</span>
+            </div>
+          </div>
+
+          <!-- TABLEAU OFFICIEL 3 COLONNES -->
+          <div style="padding: 12px 24px 24px 24px; overflow-x: auto;">
+            <table class="annexe-official-table" id="qtAnnexeOfficialTable">
+              <thead>
+                <tr>
+                  <th style="width: 22%; min-width: 160px;">Widget</th>
+                  <th style="width: 44%; min-width: 320px;">Syntaxe</th>
+                  <th style="width: 34%; min-width: 260px;">Rôle</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- 1. LABEL -->
+                <tr class="annexe-row" onclick="loadIntoTranslator('QLabel', 'Nom_Label', 'set_text')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="widget-cell" rowspan="1">
+                    <div class="widget-badge-wrap">
+                      <span class="widget-icon-box">🏷️</span>
+                      <span class="widget-name-label">Label</span>
+                    </div>
+                  </td>
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">W</span>.<span class="code-obj">Nom_Label</span>.<span class="code-method">setText</span>(<span class="code-param">chaine</span>)</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('W.Nom_Label.setText(chaine)', this)" title="Copier la syntaxe">📋</button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Modifier le texte de l’étiquette
+                  </td>
+                </tr>
+
+                <!-- 2. LINE EDIT (2 SYNTAXES) -->
+                <tr class="annexe-row" onclick="loadIntoTranslator('QLineEdit', 'Nom_LineEdit', 'read_text')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="widget-cell" rowspan="2">
+                    <div class="widget-badge-wrap">
+                      <span class="widget-icon-box">🔤</span>
+                      <span class="widget-name-label">Line Edit</span>
+                    </div>
+                  </td>
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">W</span>.<span class="code-obj">Nom_LineEdit</span>.<span class="code-method">text</span>()</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('W.Nom_LineEdit.text()', this)" title="Copier la syntaxe">📋</button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Récupérer le contenu de la zone de saisie
+                  </td>
+                </tr>
+                <tr class="annexe-row" onclick="loadIntoTranslator('QLineEdit', 'nom_LineEdit', 'set_text')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">W</span>.<span class="code-obj">nom_LineEdit</span>.<span class="code-method">setText</span>(<span class="code-param">chaine</span>)</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('W.nom_LineEdit.setText(chaine)', this)" title="Copier la syntaxe">📋</button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Modifier le contenu de la zone de texte
+                  </td>
+                </tr>
+
+                <!-- 3. TEXT EDIT (2 SYNTAXES) -->
+                <tr class="annexe-row" onclick="loadIntoTranslator('QTextEdit', 'nomTextEdit', 'read_plain_text')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="widget-cell" rowspan="2">
+                    <div class="widget-badge-wrap">
+                      <span class="widget-icon-box">📝</span>
+                      <span class="widget-name-label">Text Edit</span>
+                    </div>
+                  </td>
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">W</span>.<span class="code-obj">nomTextEdit</span>.<span class="code-method">toPlainText</span>()</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('W.nomTextEdit.toPlainText()', this)" title="Copier la syntaxe">📋</button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Récupérer le contenu de la zone de saisie
+                  </td>
+                </tr>
+                <tr class="annexe-row" onclick="loadIntoTranslator('QTextEdit', 'nomTextEdit', 'set_text')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">W</span>.<span class="code-obj">nomTextEdit</span>.<span class="code-method">setText</span>(<span class="code-param">chaine</span>)</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('W.nomTextEdit.setText(chaine)', this)" title="Copier la syntaxe">📋</button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Modifier le contenu de la zone de texte
+                  </td>
+                </tr>
+
+                <!-- 4. PUSH BUTTON -->
+                <tr class="annexe-row" onclick="loadIntoTranslator('QPushButton', 'nomPushButton', 'connect_click')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="widget-cell" rowspan="1">
+                    <div class="widget-badge-wrap">
+                      <span class="widget-icon-box">🔘</span>
+                      <span class="widget-name-label">Push Button</span>
+                    </div>
+                  </td>
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">W</span>.<span class="code-obj">nomPushButton</span>.<span class="code-method">clicked.connect</span>(<span class="code-param">nom_module</span>)</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('W.nomPushButton.clicked.connect(nom_module)', this)" title="Copier la syntaxe">📋</button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Ordonner à l'ordinateur d'effectuer une action (suite à un appui sur le bouton)
+                  </td>
+                </tr>
+
+                <!-- 5. RADIO BUTTON -->
+                <tr class="annexe-row" onclick="loadIntoTranslator('QRadioButton', 'nomRadioButton', 'is_checked')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="widget-cell" rowspan="1">
+                    <div class="widget-badge-wrap">
+                      <span class="widget-icon-box">🔘</span>
+                      <span class="widget-name-label">Radio Button</span>
+                    </div>
+                  </td>
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">W</span>.<span class="code-obj">nomRadioButton</span>.<span class="code-method">isChecked</span>()</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('W.nomRadioButton.isChecked()', this)" title="Copier la syntaxe">📋</button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Vérifier si le bouton est sélectionné
+                  </td>
+                </tr>
+
+                <!-- 6. CHECK BOX -->
+                <tr class="annexe-row" onclick="loadIntoTranslator('QCheckBox', 'nomCheckBox', 'is_checked')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="widget-cell" rowspan="1">
+                    <div class="widget-badge-wrap">
+                      <span class="widget-icon-box">☑️</span>
+                      <span class="widget-name-label">Check Box</span>
+                    </div>
+                  </td>
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">W</span>.<span class="code-obj">nomCheckBox</span>.<span class="code-method">isChecked</span>()</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('W.nomCheckBox.isChecked()', this)" title="Copier la syntaxe">📋</button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Vérifier si la case est cochée
+                  </td>
+                </tr>
+
+                <!-- 7. COMBO BOX (3 SYNTAXES) -->
+                <tr class="annexe-row" onclick="loadIntoTranslator('QComboBox', 'nomComboBox', 'current_text')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="widget-cell" rowspan="3">
+                    <div class="widget-badge-wrap">
+                      <span class="widget-icon-box">📑</span>
+                      <span class="widget-name-label">Combo Box</span>
+                    </div>
+                  </td>
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">W</span>.<span class="code-obj">nomComboBox</span>.<span class="code-method">currentText</span>()</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('W.nomComboBox.currentText()', this)" title="Copier la syntaxe">📋</button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Récupérer le texte d’élément sélectionné
+                  </td>
+                </tr>
+                <tr class="annexe-row" onclick="loadIntoTranslator('QComboBox', 'nomComboBox', 'current_index')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">W</span>.<span class="code-obj">nomComboBox</span>.<span class="code-method">currentIndex</span>()</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('W.nomComboBox.currentIndex()', this)" title="Copier la syntaxe">📋</button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Récupérer l’indice du choix
+                  </td>
+                </tr>
+                <tr class="annexe-row" onclick="loadIntoTranslator('QComboBox', 'nomComboBox', 'set_current_index_minus_one')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">W</span>.<span class="code-obj">nomComboBox</span>.<span class="code-method">setCurrentIndex</span>(-1)</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('W.nomComboBox.setCurrentIndex(-1)', this)" title="Copier la syntaxe">📋</button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Aucun choix sélectionné (vider_initialiser liste)
+                  </td>
+                </tr>
+
+                <!-- COMPLÉMENTS ESSENTIELS BAC -->
+                <tr class="subtable-header-row">
+                  <td colspan="3">
+                    ⭐ Compléments Indispensables pour l'Épreuve Pratique du Bac (Alertes, Nombres, Dates, Tableaux)
+                  </td>
+                </tr>
+
+                <tr class="annexe-row" onclick="loadIntoTranslator('QMessageBox', 'msg', 'critical')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="widget-cell">
+                    <div class="widget-badge-wrap">
+                      <span class="widget-icon-box" style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3);">🚨</span>
+                      <span class="widget-name-label">QMessageBox</span>
+                    </div>
+                  </td>
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-obj">QMessageBox</span>.<span class="code-method" style="color:#ef4444;">critical</span>(<span class="code-w">W</span>, <span class="code-param">"Erreur"</span>, <span class="code-param">"Message"</span>)</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('QMessageBox.critical(W, "Erreur", "Message")\nreturn', this)" title="Copier la syntaxe">📋</button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Afficher une boîte d'erreur bloquante (<strong>suivie obligatoirement de <code>return</code></strong>)
+                  </td>
+                </tr>
+
+                <tr class="annexe-row" onclick="loadIntoTranslator('QMessageBox', 'msg', 'information')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="widget-cell">
+                    <div class="widget-badge-wrap">
+                      <span class="widget-icon-box" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3);">ℹ️</span>
+                      <span class="widget-name-label">QMessageBox</span>
+                    </div>
+                  </td>
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-obj">QMessageBox</span>.<span class="code-method">information</span>(<span class="code-w">W</span>, <span class="code-param">"Succès"</span>, <span class="code-param">"Message"</span>)</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('QMessageBox.information(W, "Succès", "Message")', this)" title="Copier la syntaxe">📋</button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Afficher une boîte d'information ou de confirmation de succès
+                  </td>
+                </tr>
+
+                <tr class="annexe-row" onclick="loadIntoTranslator('QSpinBox', 'nomSpinBox', 'get_value')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="widget-cell">
+                    <div class="widget-badge-wrap">
+                      <span class="widget-icon-box">🔢</span>
+                      <span class="widget-name-label">Spin Box</span>
+                    </div>
+                  </td>
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">W</span>.<span class="code-obj">nomSpinBox</span>.<span class="code-method">value</span>()</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('W.nomSpinBox.value()', this)" title="Copier la syntaxe">📋</button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Récupérer la valeur numérique entière (renvoie directement un <code>int</code>)
+                  </td>
+                </tr>
+
+                <tr class="annexe-row" onclick="loadIntoTranslator('QDateEdit', 'nomDateEdit', 'get_str')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="widget-cell">
+                    <div class="widget-badge-wrap">
+                      <span class="widget-icon-box">📅</span>
+                      <span class="widget-name-label">Date Edit</span>
+                    </div>
+                  </td>
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">W</span>.<span class="code-obj">nomDateEdit</span>.<span class="code-method">date</span>().<span class="code-method">toString</span>(<span class="code-param">"yyyy-MM-dd"</span>)</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('W.nomDateEdit.date().toString("yyyy-MM-dd")', this)" title="Copier la syntaxe">📋</button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Récupérer la date sélectionnée au format texte ISO (compatible SQL DATE)
+                  </td>
+                </tr>
+
+                <tr class="annexe-row" onclick="loadIntoTranslator('QTableWidget', 'nomTable', 'set_item')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="widget-cell">
+                    <div class="widget-badge-wrap">
+                      <span class="widget-icon-box">📊</span>
+                      <span class="widget-name-label">Table Widget</span>
+                    </div>
+                  </td>
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">W</span>.<span class="code-obj">nomTable</span>.<span class="code-method">setItem</span>(<span class="code-param">r</span>, <span class="code-param">c</span>, <span class="code-obj">QTableWidgetItem</span>(<span class="code-param">str(v)</span>))</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('W.nomTable.setItem(r, c, QTableWidgetItem(str(v)))', this)" title="Copier la syntaxe">📋</button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Remplir la cellule située à la ligne <code>r</code> et colonne <code>c</code>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- LIENS DE SAUT RAPIDE AU BAS DE L'ANNEXE -->
+          <div style="padding: 14px 24px 20px 24px; border-top: 1px solid var(--border-color); background: rgba(15, 23, 42, 0.4); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+            <span style="font-size: 0.85rem; color: var(--text-secondary);">
+              Besoin de tester ou d'approfondir une notion avec du code complet ?
+            </span>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <button class="nav-btn" onclick="switchAlgoPratiqueTab('interactive')" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35); font-size: 0.84rem;">
+                🎛️ Ouvrir le Traducteur Live →
+              </button>
+              <button class="nav-btn" onclick="switchAlgoPratiqueTab('cards')" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); font-size: 0.84rem;">
+                🎴 Voir les 20 Fiches Détaillées →
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             2. VUE TRADUCTEUR LIVE & STARTER TEMPLATE BAC
+             ========================================== -->
+        <div id="algoInteractiveView" style="display: none;">
+          <!-- STARTER TEMPLATE ACCORDION / BOX -->
+          <div class="algo-template-box" style="background: var(--bg-card); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: var(--radius-lg); padding: 22px; margin-bottom: 26px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 14px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 1.4rem;">📋</span>
+                <h3 style="font-size: 1.1rem; color: #34d399; margin: 0;">Le Starter Template Officiel Bac (À mémoriser &amp; coller dans Thonny)</h3>
+              </div>
+              <button class="copy-btn" onclick="copyStarterTemplate()" style="background: #10b981; color: #000; font-weight: 700; border: none; padding: 7px 16px; border-radius: 6px; cursor: pointer;">
+                📋 Copier le Starter Template
+              </button>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.5;">
+              Ce script minimaliste est le point de départ de 100% des examens pratiques. Il charge votre fichier <code>interface.ui</code> et initialise l'application Qt sans aucune erreur :
+            </p>
+            <div class="code-box" style="position: relative;">
+              <pre><code id="starterTemplateCode">from PyQt5.uic import loadUi
 from PyQt5.QtWidgets import QApplication, QMessageBox
 
 # 1. Définition des fonctions de traitement
@@ -2546,90 +2908,97 @@ windows.btn_valider.clicked.connect(valider)
 # 4. Affichage et boucle d'exécution
 windows.show()
 app.exec_()</code></pre>
+            </div>
           </div>
-        </div>
 
-        <!-- TRADUCTEUR INTERACTIF EN DIRECT QT DESIGNER ➔ THONNY -->
-        <div class="qt-translator-card" style="background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.8)); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 18px;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <span style="font-size: 1.5rem;">🎛️</span>
+          <!-- TRADUCTEUR INTERACTIF EN DIRECT QT DESIGNER ➔ THONNY -->
+          <div class="qt-translator-card" style="background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.8)); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 18px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 1.5rem;">🎛️</span>
+                <div>
+                  <h3 style="font-size: 1.2rem; color: #38bdf8; margin: 0;">Traducteur Interactif Live : Qt Designer ➔ Thonny Python</h3>
+                  <span style="font-size: 0.85rem; color: var(--text-secondary);">Sélectionnez un composant Qt, entrez son objectName, choisissez l'action et obtenez le code Python exact</span>
+                </div>
+              </div>
+              <span class="pill-badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35); font-weight: 700;">
+                ⚡ Génération Instantanée
+              </span>
+            </div>
+
+            <!-- CONTRÔLES DU TRADUCTEUR -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 18px;">
               <div>
-                <h3 style="font-size: 1.2rem; color: #38bdf8; margin: 0;">Traducteur Interactif Live : Qt Designer ➔ Thonny Python</h3>
-                <span style="font-size: 0.85rem; color: var(--text-secondary);">Sélectionnez un composant Qt, entrez son objectName, choisissez l'action et obtenez le code Python exact</span>
+                <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px;">
+                  1. Composant Qt Designer (Widget) :
+                </label>
+                <select id="translatorWidgetSelect" class="search-input" onchange="handleTranslatorWidgetChange()" style="width: 100%; padding: 10px 14px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px;">
+                  <option value="QLineEdit">QLineEdit (Zone de texte)</option>
+                  <option value="QTextEdit">QTextEdit (Zone multiligne)</option>
+                  <option value="QPushButton">QPushButton (Bouton d'action)</option>
+                  <option value="QRadioButton">QRadioButton (Bouton d'option radio)</option>
+                  <option value="QCheckBox">QCheckBox (Case à cocher)</option>
+                  <option value="QComboBox">QComboBox (Liste déroulante)</option>
+                  <option value="QSpinBox">QSpinBox (Compteur numérique)</option>
+                  <option value="QDateEdit">QDateEdit (Sélecteur de date)</option>
+                  <option value="QLabel">QLabel (Étiquette de texte)</option>
+                  <option value="QTableWidget">QTableWidget (Tableau de données)</option>
+                  <option value="QMessageBox">QMessageBox (Boîte d'alerte / dialogue)</option>
+                </select>
+              </div>
+
+              <div>
+                <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px;">
+                  2. Nom dans Qt Designer (objectName) :
+                </label>
+                <input type="text" id="translatorObjectNameInput" value="txt_nom" class="search-input" oninput="updateTranslatorOutput()" placeholder="ex: txt_nom, btn_calculer, rb_h..." style="width: 100%; padding: 10px 14px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px;">
+              </div>
+
+              <div>
+                <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px;">
+                  3. Action / Opération souhaitée :
+                </label>
+                <select id="translatorActionSelect" class="search-input" onchange="updateTranslatorOutput()" style="width: 100%; padding: 10px 14px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px;">
+                  <!-- Rempli dynamiquement selon le widget -->
+                </select>
               </div>
             </div>
-            <span class="pill-badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35); font-weight: 700;">
-              ⚡ Génération Instantanée
-            </span>
-          </div>
 
-          <!-- CONTRÔLES DU TRADUCTEUR -->
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 18px;">
-            <div>
-              <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px;">
-                1. Composant Qt Designer (Widget) :
-              </label>
-              <select id="translatorWidgetSelect" class="search-input" onchange="handleTranslatorWidgetChange()" style="width: 100%; padding: 10px 14px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px;">
-                <option value="QLineEdit">QLineEdit (Zone de texte)</option>
-                <option value="QPushButton">QPushButton (Bouton d'action)</option>
-                <option value="QRadioButton">QRadioButton (Bouton d'option radio)</option>
-                <option value="QCheckBox">QCheckBox (Case à cocher)</option>
-                <option value="QComboBox">QComboBox (Liste déroulante)</option>
-                <option value="QSpinBox">QSpinBox (Compteur numérique)</option>
-                <option value="QDateEdit">QDateEdit (Sélecteur de date)</option>
-                <option value="QLabel">QLabel (Étiquette de texte)</option>
-                <option value="QTableWidget">QTableWidget (Tableau de données)</option>
-                <option value="QMessageBox">QMessageBox (Boîte d'alerte / dialogue)</option>
-              </select>
-            </div>
-
-            <div>
-              <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px;">
-                2. Nom dans Qt Designer (objectName) :
-              </label>
-              <input type="text" id="translatorObjectNameInput" value="txt_nom" class="search-input" oninput="updateTranslatorOutput()" placeholder="ex: txt_nom, btn_calculer, rb_h..." style="width: 100%; padding: 10px 14px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px;">
-            </div>
-
-            <div>
-              <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px;">
-                3. Action / Opération souhaitée :
-              </label>
-              <select id="translatorActionSelect" class="search-input" onchange="updateTranslatorOutput()" style="width: 100%; padding: 10px 14px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px;">
-                <!-- Rempli dynamiquement selon le widget -->
-              </select>
-            </div>
-          </div>
-
-          <!-- RÉSULTAT DU TRADUCTEUR -->
-          <div style="background: rgba(11, 17, 32, 0.95); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 10px; padding: 18px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-              <span style="font-size: 0.85rem; font-weight: 700; color: #38bdf8;">🐍 Code Python (Thonny) généré :</span>
-              <button class="copy-btn" onclick="copyTranslatorCode()" style="background: #0284c7; color: #fff; border: none; padding: 5px 12px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; font-weight: 700;">
-                📋 Copier ce code
-              </button>
-            </div>
-            <pre style="margin: 0; background: transparent; padding: 0;"><code id="translatorOutputCode" style="color: #38bdf8; font-family: monospace; font-size: 0.92rem; line-height: 1.5;">nom = windows.txt_nom.text()</code></pre>
-            <div id="translatorTipBox" style="margin-top: 12px; padding: 10px 14px; background: rgba(245, 158, 11, 0.12); border-left: 3px solid #f59e0b; border-radius: 4px; font-size: 0.83rem; color: #fde68a;">
-              💡 <strong>Astuce Bac :</strong> Toujours tester si la chaîne est vide avant de faire un traitement.
+            <!-- RÉSULTAT DU TRADUCTEUR -->
+            <div style="background: rgba(11, 17, 32, 0.95); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 10px; padding: 18px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <span style="font-size: 0.85rem; font-weight: 700; color: #38bdf8;">🐍 Code Python (Thonny) généré :</span>
+                <button class="copy-btn" onclick="copyTranslatorCode()" style="background: #0284c7; color: #fff; border: none; padding: 5px 12px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; font-weight: 700;">
+                  📋 Copier ce code
+                </button>
+              </div>
+              <pre style="margin: 0; background: transparent; padding: 0;"><code id="translatorOutputCode" style="color: #38bdf8; font-family: monospace; font-size: 0.92rem; line-height: 1.5;">nom = windows.txt_nom.text()</code></pre>
+              <div id="translatorTipBox" style="margin-top: 12px; padding: 10px 14px; background: rgba(245, 158, 11, 0.12); border-left: 3px solid #f59e0b; border-radius: 4px; font-size: 0.83rem; color: #fde68a;">
+                💡 <strong>Astuce Bac :</strong> Toujours tester si la chaîne est vide avant de faire un traitement.
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- BARRE DE RECHERCHE & CATÉGORIES -->
-        <div class="filter-search-bar" style="margin-bottom: 24px;">
-          <div class="search-box-wrap">
-            <span class="search-icon-inside">🔍</span>
-            <input type="text" id="algoPratiqueSearchInput" class="search-input" placeholder="Rechercher un widget Qt, une méthode Python (ex: text, clicked, isChecked, QMessageBox, loadUi, table...)" oninput="handleAlgoPratiqueSearch(this.value)">
+        <!-- ==========================================
+             3. VUE FICHES DÉTAILLÉES & RECHERCHE (20 NOTIONS)
+             ========================================== -->
+        <div id="algoCardsGridView" style="display: none;">
+          <!-- BARRE DE RECHERCHE & CATÉGORIES -->
+          <div class="filter-search-bar" style="margin-bottom: 24px;">
+            <div class="search-box-wrap">
+              <span class="search-icon-inside">🔍</span>
+              <input type="text" id="algoPratiqueSearchInput" class="search-input" placeholder="Rechercher un widget Qt, une méthode Python (ex: text, clicked, isChecked, QMessageBox, loadUi, table...)" oninput="handleAlgoPratiqueSearch(this.value)">
+            </div>
+            <div class="categories-bar" id="algoPratiqueCategories">
+              <!-- Rempli dynamiquement par JS -->
+            </div>
           </div>
-          <div class="categories-bar" id="algoPratiqueCategories">
+
+          <!-- GRILLE DES FICHES PRATIQUE -->
+          <div class="items-grid" id="algoPratiqueGrid">
             <!-- Rempli dynamiquement par JS -->
           </div>
-        </div>
-
-        <!-- GRILLE DES FICHES PRATIQUE -->
-        <div class="items-grid" id="algoPratiqueGrid">
-          <!-- Rempli dynamiquement par JS -->
         </div>
 
         <!-- Navigation bas de page Pratique -->

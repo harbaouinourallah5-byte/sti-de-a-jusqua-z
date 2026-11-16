@@ -4307,6 +4307,28 @@ const DATA = {
     "bacTips": "⚠️ Attention : windows.le_nom.text() renvoie une chaîne vide \"\" si l'élève n'a rien saisi. Toujours tester `if nom == \"\":` avant d'appliquer int() pour éviter le plantage ValueError !"
   },
   {
+    "id": "qt-textedit",
+    "category": "Widgets de Saisie",
+    "name": "Text Edit (QTextEdit - Zone de texte multilignes)",
+    "qtWidget": "QTextEdit",
+    "qtProperty": "toPlainText() / setText()",
+    "thonnyCode": "# 1. Récupérer le contenu de la zone de saisie (multiligne)\ntexte = W.nomTextEdit.toPlainText()\n\n# 2. Modifier le contenu de la zone de texte\nW.nomTextEdit.setText(\"Nouveau texte multiligne...\")\n\n# 3. Vider la zone de texte\nW.nomTextEdit.clear()",
+    "summary": "Zone de saisie de texte multiligne pour saisir ou afficher de longs paragraphes ou plusieurs lignes.",
+    "description": "Dans Qt Designer, glissez 'Text Edit' (QTextEdit). Dans Thonny Python, attention : on n'utilise PAS .text(), mais .toPlainText() pour extraire le texte saisi !",
+    "howToUse": "Dans Qt Designer : glisser 'Text Edit', nommer son objectName (ex: nomTextEdit). Dans Thonny : W.nomTextEdit.toPlainText() pour lire le contenu et W.nomTextEdit.setText(chaine) pour le modifier.",
+    "examples": [
+      {
+        "label": "Récupérer le texte",
+        "code": "contenu = W.nomTextEdit.toPlainText()"
+      },
+      {
+        "label": "Modifier le texte",
+        "code": "W.nomTextEdit.setText('Résultat : Validé')"
+      }
+    ],
+    "bacTips": "🚨 PIÈGE MAJEUR BAC : Pour un Line Edit c'est .text(), mais pour un Text Edit c'est .toPlainText() ! Si vous écrivez .text() sur un TextEdit, Python plantera avec une erreur AttributeError."
+  },
+  {
     "id": "qt-pushbutton",
     "category": "Widgets d'Action & Affichage",
     "name": "QPushButton (Bouton d'action / Clic)",
@@ -4382,7 +4404,7 @@ const DATA = {
     "name": "QComboBox (Menu déroulant / Liste de sélection)",
     "qtWidget": "QComboBox",
     "qtProperty": "objectName (ex: combo_ville, combo_classe)",
-    "thonnyCode": "# 1. Récupérer le texte de l'élément sélectionné\nville = windows.combo_ville.currentText()\n\n# 2. Récupérer l'indice de l'élément sélectionné (0 pour le 1er, 1 pour le 2ème...)\nidx = windows.combo_ville.currentIndex()\n\n# 3. Vérifier qu'un choix a bien été fait (si le 1er élément est '-- Choisir --')\nif windows.combo_ville.currentIndex() == 0:\n    QMessageBox.critical(windows, \"Erreur\", \"Veuillez choisir une ville !\")\n    return\n\n# 4. Ajouter des éléments dynamiquement par code\nwindows.combo_ville.addItem(\"Sousse\")\nwindows.combo_ville.addItem(\"Sfax\")\n\n# 5. Vider le menu déroulant\nwindows.combo_ville.clear()",
+    "thonnyCode": "# 1. Récupérer le texte de l'élément sélectionné\nville = windows.combo_ville.currentText()\n\n# 2. Récupérer l'indice de l'élément sélectionné (0 pour le 1er, 1 pour le 2ème...)\nidx = windows.combo_ville.currentIndex()\n\n# 3. Réinitialiser la sélection (aucun choix sélectionné / vider liste)\nwindows.combo_ville.setCurrentIndex(-1)\n\n# 3. Vérifier qu'un choix a bien été fait (si le 1er élément est '-- Choisir --')\nif windows.combo_ville.currentIndex() == 0:\n    QMessageBox.critical(windows, \"Erreur\", \"Veuillez choisir une ville !\")\n    return\n\n# 4. Ajouter des éléments dynamiquement par code\nwindows.combo_ville.addItem(\"Sousse\")\nwindows.combo_ville.addItem(\"Sfax\")\n\n# 5. Vider le menu déroulant\nwindows.combo_ville.clear()",
     "summary": "Affiche une liste déroulante où le candidat choisit une option parmi plusieurs.",
     "description": "Dans Qt Designer, double-cliquez sur le QComboBox pour ajouter des éléments par défaut (ex: '-- Choisir --', 'Tunis', 'Sousse', 'Sfax'). Dans Thonny, .currentText() donne la chaîne et .currentIndex() donne la position numérique (commence à 0).",
     "howToUse": "Dans Qt Designer : double-clic sur la ComboBox pour saisir les choix. Dans Thonny : windows.combo.currentText() pour lire le texte choisi.",
