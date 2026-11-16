@@ -1579,6 +1579,11 @@ function setupNavigation() {
 
 function switchView(viewName) {
   if (!viewName) return;
+  // Normaliser les alias éventuels (cours, cours-pdf, etc.)
+  if (viewName === 'cours' || viewName === 'cours-pdf' || viewName === 'cours-series') {
+    viewName = 'lessons';
+  }
+
   currentView = viewName;
   currentCategory = 'all';
   currentSearch = '';
@@ -1586,7 +1591,11 @@ function switchView(viewName) {
   // Mise à jour des vues
   document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
   const targetSection = document.getElementById(`view-${viewName}`);
-  if (targetSection) targetSection.classList.add('active');
+  if (targetSection) {
+    targetSection.classList.add('active');
+  } else {
+    console.warn(`Section view-${viewName} non trouvée.`);
+  }
 
   // Mise à jour de la navbar
   document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -1632,7 +1641,11 @@ function switchView(viewName) {
       if (btn.getAttribute('data-subject') === 'all') btn.classList.add('active');
       else btn.classList.remove('active');
     });
-    renderLessons();
+    try {
+      renderLessons();
+    } catch (err) {
+      console.error('Erreur lors du rendu des leçons:', err);
+    }
     history.replaceState(null, '', '#lessons');
   } else if (viewName === 'admin') {
     isAdminLoggedIn = true;
@@ -1664,6 +1677,23 @@ function switchView(viewName) {
   } else if (viewName === 'home') {
     history.replaceState(null, '', window.location.pathname.replace(/\/admin|\/lessons|\/cours/gi, '') || '/');
   }
+}
+
+// -------------------------------------------------------------
+// Ouverture directe de la section Cours & Séries avec filtre de module
+// -------------------------------------------------------------
+function openLessonsForModule(moduleName) {
+  switchView('lessons');
+  if (moduleName === 'algo') {
+    filterLessonsBySubject('all-algo');
+  } else if (moduleName === 'sti') {
+    filterLessonsBySubject('all-sti');
+  } else if (moduleName && moduleName !== 'all') {
+    filterLessonsBySubject(moduleName);
+  } else {
+    filterLessonsBySubject('all');
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // -------------------------------------------------------------
@@ -6138,6 +6168,7 @@ function renderLessons() {
   if (!grid) return;
 
   const filtered = allLessons.filter(lesson => {
+    if (!lesson) return false;
     const lSubj = (lesson.subject || '').trim().toLowerCase();
     const targetSubj = (currentLessonSubject || '').trim().toLowerCase();
 
@@ -6152,12 +6183,12 @@ function renderLessons() {
     }
 
     const matchType = (currentLessonType === 'all' || lesson.type === currentLessonType);
-    const q = currentLessonSearch.toLowerCase().trim();
+    const q = (currentLessonSearch || '').toLowerCase().trim();
     const matchSearch = !q ||
-      lesson.title.toLowerCase().includes(q) ||
-      (lesson.description && lesson.description.toLowerCase().includes(q)) ||
-      (lesson.subjectLabel && lesson.subjectLabel.toLowerCase().includes(q)) ||
-      (lesson.tags && lesson.tags.some(t => t.toLowerCase().includes(q)));
+      ((lesson.title || '').toLowerCase().includes(q)) ||
+      ((lesson.description || '').toLowerCase().includes(q)) ||
+      ((lesson.subjectLabel || '').toLowerCase().includes(q)) ||
+      (Array.isArray(lesson.tags) && lesson.tags.some(t => t && t.toLowerCase().includes(q)));
     return matchType && matchSearch;
   });
 
