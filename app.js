@@ -1650,7 +1650,7 @@ function switchView(viewName) {
     renderAlgoPratiqueCategories();
     renderAlgoPratiqueCards();
     initQtTranslator();
-    switchAlgoPratiqueTab('doc');
+    switchAlgoPratiqueTab('cards');
     history.replaceState(null, '', '#algo-pratique');
   } else if (viewName === 'algo-theorique') {
     const input = document.getElementById('algoTheoriqueSearchInput');
@@ -2314,17 +2314,18 @@ function openCssModal(item) {
       ${playlistSectionHtml}
 
       <div class="video-player-container">
-        <!-- Badge Live d'État de l'Effet (OFF / ON) synchronisé avec l'animation -->
-        <div class="video-live-status-pill off" id="modalVideoLiveStatusPill">
-          <span class="status-pulse-dot"></span>
-          <span id="modalVideoStatusText">Effect: OFF (Défaut)</span>
-        </div>
-
         <div class="video-player-header">
           <div class="video-header-title-wrap">
             <span class="video-header-dot">●</span>
             <span id="videoPlayerTitle">▶ ${escapeHtml(initialTitle)}</span>
           </div>
+
+          <!-- Badge Live d'État de l'Effet (OFF / ON) centré dans l'en-tête flexbox sans chevauchement -->
+          <div class="video-live-status-pill off" id="modalVideoLiveStatusPill">
+            <span class="status-pulse-dot"></span>
+            <span id="modalVideoStatusText">Effect: OFF (Défaut)</span>
+          </div>
+
           <span class="video-hd-badge">1080p HD LIVE</span>
         </div>
 
@@ -7587,122 +7588,68 @@ function renderAlgoPratiqueCards() {
 
   const filtered = items.filter(item => {
     const matchCat = (currentAlgoPratiqueCategory === 'all' || item.category === currentAlgoPratiqueCategory);
-    const matchSearch = (!currentAlgoPratiqueSearch || 
-      item.name.toLowerCase().includes(currentAlgoPratiqueSearch) ||
-      (item.qtWidget && item.qtWidget.toLowerCase().includes(currentAlgoPratiqueSearch)) ||
-      (item.summary && item.summary.toLowerCase().includes(currentAlgoPratiqueSearch)) ||
-      (item.description && item.description.toLowerCase().includes(currentAlgoPratiqueSearch)) ||
-      (item.thonnyCode && item.thonnyCode.toLowerCase().includes(currentAlgoPratiqueSearch))
+    const q = currentAlgoPratiqueSearch.toLowerCase();
+    const matchSearch = (!q || 
+      item.name.toLowerCase().includes(q) ||
+      (item.qtWidget && item.qtWidget.toLowerCase().includes(q)) ||
+      (item.qtProperty && item.qtProperty.toLowerCase().includes(q)) ||
+      (item.summary && item.summary.toLowerCase().includes(q)) ||
+      (item.description && item.description.toLowerCase().includes(q)) ||
+      (item.thonnyCode && item.thonnyCode.toLowerCase().includes(q))
     );
     return matchCat && matchSearch;
   });
 
   if (filtered.length === 0) {
     grid.innerHTML = `
-      <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: var(--bg-card); border-radius: var(--radius-md);">
-        <p style="font-size: 1.1rem; color: var(--text-secondary);">🔍 Aucun composant Qt ou méthode ne correspond à votre recherche.</p>
-        <button class="nav-btn" onclick="setAlgoPratiqueCategory('all')" style="margin-top: 10px;">Réinitialiser les filtres</button>
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: var(--bg-card); border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
+        <p style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 10px;">🔍 Aucun composant Qt ou méthode ne correspond à votre recherche.</p>
+        <button class="nav-btn" onclick="setAlgoPratiqueCategory('all')" style="color: #34d399; border-color: rgba(52, 211, 153, 0.4);">Réinitialiser les filtres</button>
       </div>
     `;
     return;
   }
 
+  const catColors = {
+    'Démarrage & Architecture': { color: '#38bdf8', bg: 'rgba(56, 189, 248, 0.12)', border: 'rgba(56, 189, 248, 0.3)' },
+    'Widgets de Saisie': { color: '#34d399', bg: 'rgba(52, 211, 153, 0.12)', border: 'rgba(52, 211, 153, 0.3)' },
+    "Widgets d'Action & Affichage": { color: '#60a5fa', bg: 'rgba(96, 165, 250, 0.12)', border: 'rgba(96, 165, 250, 0.3)' },
+    'Widgets de Choix & Sélection': { color: '#c084fc', bg: 'rgba(192, 132, 252, 0.12)', border: 'rgba(192, 132, 252, 0.3)' },
+    'Boîtes de Dialogue (QMessageBox)': { color: '#f43f5e', bg: 'rgba(244, 63, 94, 0.12)', border: 'rgba(244, 63, 94, 0.3)' },
+    'Contrôles de Saisie Bac': { color: '#fbbf24', bg: 'rgba(251, 191, 36, 0.12)', border: 'rgba(251, 191, 36, 0.3)' },
+    "Modèles Types d'Examen": { color: '#a78bfa', bg: 'rgba(167, 139, 250, 0.12)', border: 'rgba(167, 139, 250, 0.3)' }
+  };
+
   grid.innerHTML = filtered.map(item => {
-    const highlightedThonny = (typeof highlightPythonCode === 'function') 
-      ? highlightPythonCode(item.thonnyCode) 
-      : escapeHtml(item.thonnyCode);
-    const rawThonnyJson = JSON.stringify(item.thonnyCode);
-    const simStageHtml = (typeof buildQtDesignerSimStage === 'function')
-      ? buildQtDesignerSimStage(item)
-      : '';
+    const meta = catColors[item.category] || { color: '#34d399', bg: 'rgba(52, 211, 153, 0.12)', border: 'rgba(52, 211, 153, 0.3)' };
 
     return `
-      <div class="algo-card algo-card-pratique" id="${item.id}">
-        <!-- 1. En-tête de Carte -->
-        <div class="algo-card-header">
-          <div>
-            <span class="algo-card-cat">${item.category}</span>
-            <h3 class="algo-card-title" onclick="openAlgoModal('${item.id}')" style="cursor: pointer;" title="Cliquer pour agrandir en plein écran">
-              ${item.name}
-            </h3>
-          </div>
-          <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-            <span class="algo-badge-qt">⚙️ ${item.qtWidget}</span>
-            ${item.qtProperty ? `<span class="algo-badge-prop">${item.qtProperty}</span>` : ''}
-          </div>
+      <div class="item-card card-pratique" onclick="openAlgoModal('${item.id}')" title="Cliquer pour voir le code Thonny sans scroll et tester le simulateur Qt">
+        <div class="card-cat-badge" style="color: ${meta.color};">${escapeHtml(item.category)}</div>
+        
+        <div class="item-card-title">
+          <span>${escapeHtml(item.name)}</span>
+          <span class="item-card-tag" style="color: ${meta.color}; background: ${meta.bg}; border: 1px solid ${meta.border}; font-size: 0.8rem; font-weight: 700;">
+            ⚙️ ${escapeHtml(item.qtWidget)}
+          </span>
         </div>
 
-        <!-- 2. Rôle & Explication Théorique -->
-        <div style="background: rgba(15, 23, 42, 0.6); border-left: 3px solid #38bdf8; padding: 10px 14px; border-radius: 0 8px 8px 0;">
-          <div style="font-size: 0.76rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px;">
-            💡 Rôle & Explication au Bac STI :
-          </div>
-          <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.55; margin: 0;">
-            ${item.description || item.summary}
-          </p>
-        </div>
-
-        ${item.howToUse ? `
-          <div class="algo-qt-box" style="margin: 0; padding: 10px 14px; background: rgba(56, 189, 248, 0.06); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 8px;">
-            <strong style="color: #38bdf8; display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 0.82rem;">
-              <span>🛠️</span>
-              <span>Dans Qt Designer (Création de l'interface) :</span>
-            </strong>
-            <p style="margin: 0; font-size: 0.84rem; color: #cbd5e1; line-height: 1.5; white-space: pre-line;">
-              ${item.howToUse}
-            </p>
-          </div>
-        ` : ''}
-
-        <!-- 3. CODE PYTHON DANS THONNY SANS SCROLL + COLORATION SYNTAXIQUE -->
-        <div class="algo-thonny-full-box">
-          <div class="algo-thonny-header-bar">
-            <span class="code-badge-thonny">
-              <span>✍️</span>
-              <span>Ce que TU dois écrire dans Thonny</span>
+        ${item.qtProperty ? `
+          <div style="margin: 4px 0 10px 0;">
+            <span style="font-family: monospace; font-size: 0.78rem; padding: 2px 8px; border-radius: 4px; background: rgba(255, 255, 255, 0.06); color: #cbd5e1; border: 1px solid rgba(255, 255, 255, 0.12);">
+              ${escapeHtml(item.qtProperty)}
             </span>
-            <div class="code-actions-cluster">
-              <button type="button" class="action-btn-pill copy" onclick='copyCodeText(${rawThonnyJson}, this)' title="Copier ce code">
-                📋 Copier
-              </button>
-              <button type="button" class="action-btn-pill expand" onclick="openAlgoModal('${item.id}')" title="Agrandir en plein écran">
-                🔍 Plein écran
-              </button>
-            </div>
-          </div>
-          <pre style="margin: 0; background: transparent; padding: 0;"><code class="python-syntax-view">${highlightedThonny}</code></pre>
-        </div>
-
-        <!-- 4. LABORATOIRE INTERACTIF : QT DESIGNER + THONNY TERMINAL -->
-        <div class="qt-thonny-lab-container">
-          <div class="qt-thonny-lab-title">
-            <span>🔬 Testeur Interactif en Direct</span>
-            <span style="font-size: 0.72rem; color: #10b981;">● Connecté</span>
-          </div>
-          
-          <!-- Étape 1 : Fenêtre Qt Simulée -->
-          ${simStageHtml}
-
-          <!-- Étape 2 : Console Thonny Python -->
-          <div class="thonny-terminal-wrap">
-            <div class="thonny-terminal-header">
-              <span class="thonny-term-title">🐍 Thonny Shell • script_bac.py</span>
-              <button type="button" class="thonny-run-btn" onclick="runAlgoPratiqueSim('${item.id}')">
-                ▶ Exécuter dans Thonny (Run / F5)
-              </button>
-            </div>
-            <div class="thonny-terminal-screen" id="sim_terminal_${item.id}">
-              <div class="py-term-line prompt">>>> %Run script_bac.py</div>
-              <div class="py-term-line" style="color: #64748b;">Prêt. Modifiez l'interface Qt ci-dessus et cliquez sur 'Exécuter dans Thonny' pour voir le résultat.</div>
-            </div>
-          </div>
-        </div>
-
-        ${item.bacTips ? `
-          <div class="algo-bac-tips" style="margin: 0;">
-            <strong>⚠️ Piège fréquent au Bac :</strong> ${item.bacTips}
           </div>
         ` : ''}
+
+        <p class="item-card-desc">
+          ${escapeHtml(item.summary || item.description)}
+        </p>
+
+        <div class="card-action-bar">
+          <span style="color: ${meta.color}; font-weight: 700; font-size: 0.86rem;">⚡ Code Thonny & Simulateur Qt</span>
+          <span style="color: ${meta.color}; font-size: 1rem;">→</span>
+        </div>
       </div>
     `;
   }).join('');
