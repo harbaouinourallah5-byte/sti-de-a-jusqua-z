@@ -2787,31 +2787,45 @@ input, select, textarea {
 }
 
 .selector-target-item {
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 0.78rem;
-  border: 1px solid #334155;
-  background: #111827;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  border: 2px solid #475569;
+  background: #1e293b;
   color: #cbd5e1;
   display: flex;
   align-items: center;
   justify-content: space-between;
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   font-family: Consolas, monospace;
+  margin: 6px 0;
 }
 
 .selector-target-item.matched {
-  background: rgba(56, 189, 248, 0.22) !important;
-  border-color: #38bdf8 !important;
-  color: #38bdf8 !important;
-  box-shadow: 0 0 16px rgba(56, 189, 248, 0.45) !important;
-  transform: translateX(6px) scale(1.02);
-  font-weight: 700;
+  background: #0284c7 !important;
+  border: 3px solid #38bdf8 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.6) !important;
+  transform: scale(1.06) !important;
+  font-weight: 800 !important;
 }
 
 .selector-target-item.ignored {
-  opacity: 0.35;
-  filter: grayscale(80%);
+  opacity: 0.35 !important;
+  filter: grayscale(80%) !important;
+}
+
+.checkerboard-bg {
+  background-image: linear-gradient(45deg, #334155 25%, transparent 25%), linear-gradient(-45deg, #334155 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #334155 75%), linear-gradient(-45deg, transparent 75%, #334155 75%) !important;
+  background-size: 20px 20px !important;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px !important;
+  background-color: #0f172a !important;
+}
+
+.blueprint-grid-bg {
+  background-image: linear-gradient(rgba(56, 189, 248, 0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(56, 189, 248, 0.12) 1px, transparent 1px) !important;
+  background-size: 20px 20px !important;
+  background-color: #0f172a !important;
 }
 
 .selector-badge-target {

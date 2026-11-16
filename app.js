@@ -328,32 +328,38 @@ const VARIETIES_CONFIG = {
       {
         "label": "solid (Trait plein continu)",
         "value": "solid",
-        "css": "border-style: solid !important; border-width: 4px; border-color: #38bdf8;",
-        "code": "#boite {\n  border-style: solid;\n}"
+        "css": "border-style: solid !important; border-width: 8px; border-color: #38bdf8;",
+        "code": "#boite {\n  border-style: solid;\n  border-width: 8px;\n  border-color: #38bdf8;\n}"
       },
       {
         "label": "dotted (Pointillés réguliers)",
         "value": "dotted",
-        "css": "border-style: dotted !important; border-width: 4px; border-color: #38bdf8;",
-        "code": "#boite {\n  border-style: dotted;\n}"
+        "css": "border-style: dotted !important; border-width: 8px; border-color: #38bdf8;",
+        "code": "#boite {\n  border-style: dotted;\n  border-width: 8px;\n  border-color: #38bdf8;\n}"
       },
       {
         "label": "dashed (Tirets espacés)",
         "value": "dashed",
-        "css": "border-style: dashed !important; border-width: 4px; border-color: #38bdf8;",
-        "code": "#boite {\n  border-style: dashed;\n}"
+        "css": "border-style: dashed !important; border-width: 8px; border-color: #38bdf8;",
+        "code": "#boite {\n  border-style: dashed;\n  border-width: 8px;\n  border-color: #38bdf8;\n}"
       },
       {
-        "label": "double (Double trait)",
+        "label": "double (Double trait parallèle)",
         "value": "double",
-        "css": "border-style: double !important; border-width: 6px; border-color: #38bdf8;",
-        "code": "#boite {\n  border-style: double;\n}"
+        "css": "border-style: double !important; border-width: 8px; border-color: #38bdf8;",
+        "code": "#boite {\n  border-style: double;\n  border-width: 8px;\n  border-color: #38bdf8;\n}"
       },
       {
-        "label": "groove (Rainure effet 3D)",
+        "label": "groove (Rainure sculptée 3D)",
         "value": "groove",
-        "css": "border-style: groove !important; border-width: 6px; border-color: #38bdf8;",
-        "code": "#boite {\n  border-style: groove;\n}"
+        "css": "border-style: groove !important; border-width: 8px; border-color: #38bdf8;",
+        "code": "#boite {\n  border-style: groove;\n  border-width: 8px;\n  border-color: #38bdf8;\n}"
+      },
+      {
+        "label": "ridge (Crête relief 3D opposé)",
+        "value": "ridge",
+        "css": "border-style: ridge !important; border-width: 8px; border-color: #38bdf8;",
+        "code": "#boite {\n  border-style: ridge;\n  border-width: 8px;\n  border-color: #38bdf8;\n}"
       },
       {
         "label": "none (Aucune bordure)",
@@ -543,17 +549,23 @@ const VARIETIES_CONFIG = {
       {
         "label": "normal (Texte normal 400)",
         "value": "normal",
-        "css": "font-weight: normal !important;",
+        "css": "font-weight: 400 !important;",
         "code": "#h1 {\n  font-weight: normal;\n}"
       },
       {
         "label": "bold (Texte en gras 700)",
         "value": "bold",
-        "css": "font-weight: bold !important;",
+        "css": "font-weight: 700 !important;",
         "code": "#h1 {\n  font-weight: bold;\n}"
       },
       {
-        "label": "900 (Texte extra gras)",
+        "label": "lighter (Texte extra fin 100)",
+        "value": "lighter",
+        "css": "font-weight: 100 !important;",
+        "code": "#h1 {\n  font-weight: lighter;\n}"
+      },
+      {
+        "label": "900 (Texte ultra noir 900)",
         "value": "900",
         "css": "font-weight: 900 !important;",
         "code": "#h1 {\n  font-weight: 900;\n}"
@@ -3851,6 +3863,8 @@ function forceVideoPhase(phase) {
   isVideoPlaying = false;
   const playBtn = document.getElementById('playPauseVideoBtn');
   if (playBtn) playBtn.textContent = '▶';
+  const progress = document.getElementById('videoProgress');
+  if (progress) progress.style.width = phase === 0 ? '0%' : '100%';
   const stage = document.getElementById('videoStage');
   const box = stage ? (stage.querySelector('#boite') || stage.querySelector('.demo-box') || stage.querySelector('#h1') || stage.querySelector('#tab') || stage.querySelector('#img1') || stage.querySelector('#liste') || stage.firstElementChild) : null;
   applyVideoFrame(currentVideoItemId, box, phase, currentVideoVariantIdx);
@@ -4079,69 +4093,262 @@ function buildVideoStageElement(item) {
     </div>`;
   }
 
-  // 0.2 Transitions: transition-*
+  // 0.2 Transitions: transition-* (Piste double comparative)
   if (itemId.startsWith('css-transition')) {
-    return `<div class="transition-stage-container" style="display:flex; flex-direction:column; align-items:center; gap:12px; width:100%;">
-      <div style="font-size:0.82rem; color:var(--text-secondary); background:rgba(56,189,248,0.08); padding:6px 14px; border-radius:20px; border:1px solid rgba(56,189,248,0.25);">
-        🖱️ Survolez la boîte ou cliquez sur AVANT / APRÈS pour observer la transition fluide (1.5s)
+    return `<div class="transition-dual-track-container" style="width: 100%; max-width: 460px; display: flex; flex-direction: column; gap: 14px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #94a3b8;">
+        <span>⚡ Comparatif Direct : Saut Brutal (0s) vs Glissement Fluide (1.5s)</span>
+        <span id="trTimerLabel" style="font-weight: 800; color: #38bdf8; font-family: monospace;">T = 0.0s</span>
       </div>
-      <div id="boite" class="demo-box" style="min-width:180px; padding:22px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:15px; background:#1e293b; border:2px solid #38bdf8; border-radius:10px; cursor:pointer;">
-        <span>📦 &lt;div id="boite"&gt;</span>
-        <small id="transitionStageBadge" style="font-size:0.75rem; color:#38bdf8; margin-top:4px;">transition: all 1.5s ease</small>
+
+      <!-- Piste 1 : SANS TRANSITION (Saut brutal instantané) -->
+      <div class="tr-track-wrap" style="background: rgba(15,23,42,0.8); border: 1px dashed #ef4444; border-radius: 8px; padding: 10px 14px; position: relative;">
+        <div style="font-size: 0.72rem; color: #f87171; font-weight: bold; margin-bottom: 6px;">
+          🔴 Piste 1 (Sans transition - 0s) : Saut instantané brutal
+        </div>
+        <div class="tr-track-lane" style="position: relative; height: 42px; background: rgba(0,0,0,0.3); border-radius: 6px; overflow: hidden;">
+          <div id="trBoxRaw" style="position: absolute; left: 0px; top: 4px; width: 85px; height: 34px; background: #ef4444; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; color: #fff; transition: none !important;">
+            ⚡ 0s Saut
+          </div>
+        </div>
+      </div>
+
+      <!-- Piste 2 : AVEC TRANSITION CSS (Glissement fluide avec durée/délai) -->
+      <div class="tr-track-wrap" style="background: rgba(15,23,42,0.8); border: 1px solid #10b981; border-radius: 8px; padding: 10px 14px; position: relative;">
+        <div style="font-size: 0.72rem; color: #4ade80; font-weight: bold; margin-bottom: 6px; display: flex; justify-content: space-between;">
+          <span>🟢 Piste 2 (Avec transition) : Animation progressive ralentie</span>
+          <span id="trTrackBadge" style="color: #38bdf8;">transition: all 1.5s ease</span>
+        </div>
+        <div class="tr-track-lane" style="position: relative; height: 42px; background: rgba(0,0,0,0.3); border-radius: 6px; overflow: hidden;">
+          <div id="boite" style="position: absolute; left: 0px; top: 4px; width: 85px; height: 34px; background: #0284c7; border: 2px solid #38bdf8; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; color: #fff; transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);">
+            🚀 Fluide
+          </div>
+        </div>
       </div>
     </div>`;
   }
 
-  // 0.3 Dimensions & Opacité (width, height, opacity)
-  if (itemId === 'css-width' || itemId === 'css-height' || itemId === 'css-opacity') {
+  // 1. Text Align: container fixe 400px avec paragraphe multi-lignes
+  if (itemId === 'css-text-align') {
+    return `<div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+      <div style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 8px;">Cadre témoin (Largeur fixe 400px) :</div>
+      <div style="width: 400px; max-width: 95%; border: 2px dashed #64748b; padding: 14px 18px; background: rgba(15,23,42,0.85); border-radius: 8px;">
+        <div id="h1" style="font-size: 15px; line-height: 1.6; color: #f1f5f9; transition: text-align 0.5s ease; text-align: left;">
+          <span id="h1Text">L'épreuve pratique du Baccalauréat STI Informatique valide vos compétences en conception d'interfaces graphiques sous Qt Designer et en programmation d'algorithmes sous Python.</span>
+        </div>
+      </div>
+      <div id="textAlignBadge" style="margin-top: 10px; font-size: 0.82rem; font-weight: bold; color: #38bdf8;">text-align: left</div>
+    </div>`;
+  }
+
+  // 2. Text Transform: testeur casse avec texte d'entrée
+  if (itemId === 'css-text-transform') {
+    return `<div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+      <div style="font-size: 0.82rem; color: #94a3b8;">Texte brut saisi : <code style="color: #facc15; font-size: 0.95rem;">bAc inFoRmaTiQue tuniSie</code></div>
+      <div id="h1" style="font-size: 26px; font-weight: bold; padding: 14px 24px; background: #1e293b; border: 2px solid #38bdf8; border-radius: 8px; color: #ffffff; text-align: center; transition: all 0.5s ease;">
+        <span id="h1Text">bAc inFoRmaTiQue tuniSie</span>
+      </div>
+      <div id="textTransformBadge" style="font-size: 0.82rem; font-weight: bold;"></div>
+    </div>`;
+  }
+
+  // 3. Typographie - Police de caractères (font-family)
+  if (itemId === 'css-font-family') {
+    return `<div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+      <div id="fontFamilyBadge" style="font-size: 0.82rem; font-weight: 700; padding: 4px 12px; border-radius: 12px; background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3);">
+        Police active : Times New Roman (Serif)
+      </div>
+      <div id="h1" style="font-size: 26px; padding: 16px 28px; background: #1e293b; border: 2px solid #38bdf8; border-radius: 8px; color: #38bdf8; text-align: center; font-family: 'Times New Roman', serif; transition: all 0.5s ease;">
+        <span id="h1Text">Bac Informatique STI 2026</span>
+      </div>
+    </div>`;
+  }
+
+  // 4. Épaisseur (font-weight)
+  if (itemId === 'css-font-weight') {
+    return `<div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+      <div id="fontWeightBadge" style="font-size: 0.82rem; font-weight: 700; color: #facc15;"></div>
+      <div id="h1" style="font-size: 30px; padding: 14px 26px; background: #1e293b; border: 2px solid #475569; border-radius: 8px; color: #f8fafc; text-align: center; transition: all 0.5s ease;">
+        <span id="h1Text">Bac STI Informatique</span>
+      </div>
+    </div>`;
+  }
+
+  // 5. Style de police (font-style)
+  if (itemId === 'css-font-style') {
+    return `<div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+      <div id="fontStyleBadge" style="font-size: 0.82rem; font-weight: 700; color: #facc15;"></div>
+      <div id="h1" style="font-size: 32px; padding: 14px 26px; background: #1e293b; border: 2px solid #475569; border-radius: 8px; color: #ffffff; text-align: center; transition: all 0.5s ease;">
+        <span id="h1Text">Bac Informatique STI</span>
+      </div>
+    </div>`;
+  }
+
+  // 6. Taille de police (font-size)
+  if (itemId === 'css-font-size') {
+    return `<div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+      <div id="fontSizeBadge" style="font-size: 0.82rem; font-weight: 700; color: #38bdf8;"></div>
+      <div id="h1" style="padding: 12px 24px; background: #1e293b; border: 2px solid #38bdf8; border-radius: 8px; color: #ffffff; text-align: center; transition: all 0.5s ease; min-height: 80px; display: flex; align-items: center; justify-content: center;">
+        <span id="h1Text">Baccalauréat STI</span>
+      </div>
+    </div>`;
+  }
+
+  // 7. Raccourci police (font)
+  if (itemId === 'css-font-shorthand') {
+    return `<div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+      <div id="fontShorthandBadge" style="font-size: 0.82rem; font-weight: 700; color: #38bdf8;"></div>
+      <div id="h1" style="padding: 16px 28px; background: #1e293b; border: 2px solid #38bdf8; border-radius: 8px; color: #ffffff; text-align: center; transition: all 0.5s ease;">
+        <span id="h1Text">Bac Technique STI</span>
+      </div>
+    </div>`;
+  }
+
+  // 8. Couleur du texte (color)
+  if (itemId === 'css-color') {
+    return `<div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+      <div id="colorBadge" style="font-size: 0.82rem; font-weight: 700;"></div>
+      <div id="h1" style="font-size: 28px; font-weight: 800; padding: 16px 28px; background: #1e293b; border: 2px solid #475569; border-radius: 8px; text-align: center; transition: all 0.5s ease;">
+        <span id="h1Text">Bac STI Informatique</span>
+      </div>
+    </div>`;
+  }
+
+  // 9. Ombre du texte (text-shadow)
+  if (itemId === 'css-text-shadow') {
+    return `<div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+      <div id="textShadowBadge" style="font-size: 0.82rem; font-weight: 700; color: #38bdf8;"></div>
+      <div id="h1" style="font-size: 34px; font-weight: 900; padding: 18px 30px; background: #0f172a; border: 2px solid #334155; border-radius: 8px; color: #ffffff; text-align: center; transition: all 0.5s ease; letter-spacing: 1px;">
+        <span id="h1Text">BAC STI 2026</span>
+      </div>
+    </div>`;
+  }
+
+  // 10. Fallback texte
+  if (cat === 'Propriétés de mise en forme du texte' || prop.includes('font') || prop.includes('text') || prop === 'color') {
+    return `<div id="h1" style="font-size:24px; font-weight:bold; transition: all 0.8s ease; text-align:center; padding:16px 24px; background:#1e293b; border:2px solid #38bdf8; border-radius:8px; color:#fff; min-width:200px; max-width:85%;">
+      <span id="h1Text">Titre &lt;h1 id="h1"&gt;</span>
+    </div>`;
+  }
+
+  // 11. Tableaux
+  if (cat === 'Propriétés des tableaux' || prop.includes('table') || prop.includes('collapse')) {
+    const isLayout = itemId === 'css-table-layout';
+    return `<div style="display:flex; flex-direction:column; align-items:center; width:100%;">
+      <div id="tableStatusText" style="font-size:0.82rem; text-align:center; margin-bottom:10px; font-weight:700; min-height:22px;"></div>
+      <table id="tab" style="width:${isLayout ? '95%' : '90%'}; max-width:440px; border-collapse:${itemId === 'css-border-collapse' ? 'separate' : 'collapse'}; border-spacing:${itemId === 'css-border-collapse' ? '16px' : '0'}; border:3px solid #38bdf8; background:rgba(15,23,42,0.9); color:#fff; transition:all 0.5s ease; font-size:13px; table-layout:${isLayout ? 'auto' : 'auto'};">
+        <thead>
+          <tr style="background:rgba(56,189,248,0.2);">
+            <th id="thCol1" style="padding:10px; border:2px solid #38bdf8; text-align:center; width:${isLayout ? '50%' : 'auto'};">Colonne 1 ${isLayout ? '(Mot long)' : ''}</th>
+            <th id="thCol2" style="padding:10px; border:2px solid #38bdf8; text-align:center; width:${isLayout ? '50%' : 'auto'};">Colonne 2 (Court)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="cellLong" style="padding:10px; border:2px solid #38bdf8; text-align:center; overflow:hidden; ${isLayout ? 'word-break:normal; white-space:nowrap;' : ''}">
+              ${isLayout ? 'Anticonstitutionnellement_Bac_STI_2026' : 'Cellule 1 - Ligne 1'}
+            </td>
+            <td id="cellShort" style="padding:10px; border:2px solid #38bdf8; text-align:center; white-space:nowrap;">
+              ${isLayout ? 'Court (OK)' : 'Cellule 2 - Ligne 1'}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>`;
+  }
+
+  // 12. Listes
+  if (cat === 'Propriétés des listes' || prop.includes('list-style')) {
+    const isPos = itemId === 'css-list-style-position';
+    return `<div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+      <div id="listStatusText" style="font-size: 0.82rem; margin-bottom: 10px; font-weight: 700; color: #38bdf8;"></div>
+      <ul id="liste" style="background: rgba(15,23,42,0.85); border: 2px solid #334155; border-radius: 8px; padding: 16px 20px 16px 45px !important; color: #f8fafc; font-size: 15px; line-height: 1.8; transition: all 0.5s ease; min-width: 260px; max-width: 90%;">
+        <li style="${isPos ? 'border: 2px dashed #f59e0b; background: rgba(245,158,11,0.1); border-radius: 4px; margin: 8px 0; padding: 4px 8px;' : 'margin: 6px 0;'}">Baccalauréat STI</li>
+        <li style="${isPos ? 'border: 2px dashed #f59e0b; background: rgba(245,158,11,0.1); border-radius: 4px; margin: 8px 0; padding: 4px 8px;' : 'margin: 6px 0;'}">Informatique &amp; Algorithmique</li>
+        <li style="${isPos ? 'border: 2px dashed #f59e0b; background: rgba(245,158,11,0.1); border-radius: 4px; margin: 8px 0; padding: 4px 8px;' : 'margin: 6px 0;'}">Programmation Python &amp; Qt</li>
+      </ul>
+    </div>`;
+  }
+
+  // 13. Opacité avec damier
+  if (itemId === 'css-opacity') {
+    return `<div class="checkerboard-bg" style="width: 100%; max-width: 380px; height: 180px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; border: 2px solid #334155;">
+      <div id="boite" style="width: 220px; height: 90px; background: #0284c7; border: 2px solid #38bdf8; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; font-weight: bold; transition: opacity 0.6s ease; box-shadow: 0 8px 24px rgba(0,0,0,0.5);">
+        <span>📦 &lt;div id="boite"&gt;</span>
+        <small id="opacityBadge" style="font-size: 0.75rem; color: #e0f2fe; margin-top: 4px;">opacity: 1.0</small>
+      </div>
+    </div>`;
+  }
+
+  // 14. Dimensions width / height
+  if (itemId === 'css-width' || itemId === 'css-height') {
     return `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:190px;">
-      <div id="boite" class="demo-box" style="transition: all 1.5s cubic-bezier(0.34, 1.56, 0.64, 1); width:150px; height:80px; padding:10px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:14px; background:#1e293b; border:2px solid #38bdf8; border-radius:8px;">
+      <div id="dimBadge" style="font-size:0.8rem; font-weight:bold; margin-bottom:8px; color:#38bdf8;"></div>
+      <div id="boite" style="transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); width:150px; height:80px; padding:10px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:14px; background:#1e293b; border:2px solid #38bdf8; border-radius:8px; color:#fff; font-weight:bold;">
         <span>📦 &lt;div id="boite"&gt;</span>
       </div>
     </div>`;
   }
 
-  // 0.4 Bordures (couleur, épaisseur, tracé, raccourci)
-  if (itemId === 'css-border-color' || itemId === 'css-border-width' || itemId === 'css-border-style' || itemId === 'css-border-shorthand') {
+  // 15. Bordures (border-style, width, color, radius, shorthand)
+  if (itemId === 'css-border-style' || itemId === 'css-border-width' || itemId === 'css-border-color' || itemId === 'css-border-radius' || itemId === 'css-border-shorthand') {
+    const isRadius = itemId === 'css-border-radius';
     return `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:190px;">
-      <div id="boite" class="demo-box" style="transition: all 1.5s ease; width:220px; height:100px; padding:12px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:14px; background:#1e293b; border:3px solid #38bdf8; border-radius:8px;">
+      <div id="${itemId === 'css-border-style' ? 'borderStyleBadge' : (itemId === 'css-border-width' ? 'borderWidthBadge' : (itemId === 'css-border-color' ? 'borderColorBadge' : (isRadius ? 'borderRadiusBadge' : 'borderShBadge')))}" style="font-size:0.82rem; font-weight:bold; margin-bottom:8px;"></div>
+      <div id="boite" style="transition: all 0.6s ease; width:${isRadius ? '120px' : '220px'}; height:${isRadius ? '120px' : '100px'}; padding:12px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:14px; background:#1e293b; border:3px solid #38bdf8; border-radius:0px; color:#fff; font-weight:bold;">
         <span>📦 &lt;div id="boite"&gt;</span>
       </div>
     </div>`;
   }
 
-  // 0.41 Rayon des coins (border-radius) : Carré pour illustrer la transformation géométrique
-  if (itemId === 'css-border-radius') {
-    return `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:190px;">
-      <div id="boite" class="demo-box" style="transition: all 1.5s cubic-bezier(0.34, 1.56, 0.64, 1); width:120px; height:120px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:13px; background:linear-gradient(135deg, #1e293b, #0f172a); border:3px solid #38bdf8; border-radius:0px; box-shadow:0 8px 24px rgba(0,0,0,0.4);">
-        <span>📦 &lt;div id="boite"&gt;</span>
-      </div>
-    </div>`;
-  }
-
-  // 0.5 Arrière-plans (background-*)
+  // 16. Arrière-plans (background-repeat, size, color, image, shorthand)
   if (itemId.startsWith('css-background')) {
     return `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:190px;">
-      <div id="boite" class="demo-box" style="transition: all 1.5s ease; width:250px; height:120px; padding:14px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:14px; background-color:#1e293b; border:2px solid #38bdf8; border-radius:8px; color:#fff;">
+      <div id="${itemId === 'css-background-repeat' ? 'bgRepBadge' : (itemId === 'css-background-size' ? 'bgSzBadge' : (itemId === 'css-background-color' ? 'bgBadge' : (itemId === 'css-background-image' ? 'bgImgBadge' : 'bgShBadge')))}" style="font-size:0.82rem; font-weight:bold; margin-bottom:8px;"></div>
+      <div id="boite" style="transition: all 0.6s ease; width:260px; height:120px; padding:14px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:14px; background-color:#1e293b; border:2px solid #38bdf8; border-radius:8px; color:#fff; font-weight:bold;">
         <span>📦 &lt;div id="boite"&gt;</span>
       </div>
     </div>`;
   }
 
-  // 0.6 Transformations géométriques (transform: rotate, scale, translate, skew)
+  // 17. Transformations géométriques (transform)
   if (itemId === 'css-transform' || prop === 'transform') {
     return `<div style="position:relative; width:100%; height:200px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
-      <div style="position:absolute; width:160px; height:80px; border:2px dashed rgba(239, 68, 68, 0.45); border-radius:8px; display:flex; align-items:center; justify-content:center; color:#ef4444; font-size:10px; font-weight:bold; pointer-events:none; background:rgba(239, 68, 68, 0.05);">
+      <div style="position:absolute; width:160px; height:80px; border:2px dashed rgba(239, 68, 68, 0.5); border-radius:8px; display:flex; align-items:center; justify-content:center; color:#ef4444; font-size:10px; font-weight:bold; pointer-events:none; background:rgba(239, 68, 68, 0.05);">
         👻 Position d'origine (Repos)
       </div>
-      <div id="boite" class="demo-box" style="position:relative; z-index:2; width:160px; height:80px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; font-size:14px; background:#1e293b; border:2px solid #38bdf8; border-radius:8px; color:#fff; box-shadow:0 8px 24px rgba(0,0,0,0.4); transition: transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 1.5s ease, border-color 1.5s ease;">
+      <div id="boite" style="position:relative; z-index:2; width:160px; height:80px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; font-size:14px; background:#1e293b; border:2px solid #38bdf8; border-radius:8px; color:#fff; box-shadow:0 8px 24px rgba(0,0,0,0.4); transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.6s ease, border-color 0.6s ease; font-weight:bold;">
         <span>📦 &lt;div id="boite"&gt;</span>
         <small id="transformStageBadge" style="font-size:0.75rem; color:#38bdf8; margin-top:3px; font-weight:normal;">transform: none</small>
       </div>
     </div>`;
   }
 
-  // 1. Marge extérieure (margin) - Repousse les voisins hors de la boîte
+  // 18. Filtres graphiques (filter)
+  if (cat === 'Propriétés des images' || prop.includes('filter')) {
+    return `<div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+      <div id="img1" style="width:220px; height:125px; border-radius:10px; overflow:hidden; border:2px solid #38bdf8; box-shadow:0 8px 24px rgba(0,0,0,0.5); transition:filter 0.5s ease, border-color 0.5s ease; position:relative;">
+        <svg viewBox="0 0 220 125" width="100%" height="100%" style="display:block;">
+          <defs>
+            <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#0284c7"/>
+              <stop offset="50%" stop-color="#f59e0b"/>
+              <stop offset="100%" stop-color="#ef4444"/>
+            </linearGradient>
+          </defs>
+          <rect width="220" height="125" fill="url(#skyGrad)"/>
+          <circle cx="170" cy="38" r="22" fill="#fef08a"/>
+          <polygon points="10,125 75,50 140,125" fill="#1e293b"/>
+          <polygon points="90,125 160,42 220,125" fill="#0f172a"/>
+          <rect y="100" width="220" height="25" fill="#0369a1" opacity="0.85"/>
+          <text x="110" y="117" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">&lt;img id="img1"&gt;</text>
+        </svg>
+      </div>
+      <div id="filterStageBadge" style="font-size:0.82rem; text-align:center; font-weight:bold;"></div>
+    </div>`;
+  }
+
+  // 19. Marge extérieure (margin)
   if (itemId === 'css-margin' || prop === 'margin') {
     return `<div id="parentConteneur" class="box-model-container">
       <div class="box-model-legend">
@@ -4160,7 +4367,7 @@ function buildVideoStageElement(item) {
     </div>`;
   }
 
-  // 2. Marge intérieure (padding) - Espace de respiration entre texte et bordure
+  // 20. Marge intérieure (padding)
   if (itemId === 'css-padding' || prop === 'padding') {
     return `<div id="parentConteneur" class="box-model-container">
       <div class="box-model-legend">
@@ -4170,14 +4377,14 @@ function buildVideoStageElement(item) {
       </div>
       <div id="boite" class="padding-stage-target" style="padding: 15px; width:85%; transition:all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);">
         <div id="contenu" class="padding-stage-inner" style="width:100%;">
-          📄 &lt;span id="contenu"&gt;Texte & Contenu intérieur&lt;/span&gt;
+          📄 &lt;span id="contenu"&gt;Texte &amp; Contenu intérieur&lt;/span&gt;
           <div id="paddingIndicatorText" style="font-size:0.75rem; color:#86efac; margin-top:3px; font-weight:normal;">padding: 15px (Aéré)</div>
         </div>
       </div>
     </div>`;
   }
 
-  // 3. Flottement (float) - Enroulement du texte autour du bloc
+  // 21. Flottement (float)
   if (itemId === 'css-float' || prop === 'float') {
     return `<div id="parentConteneur" class="float-stage-container">
       <div id="boite" class="float-box" style="float: left; width: 110px; margin: 4px 14px 6px 0;">
@@ -4190,17 +4397,17 @@ function buildVideoStageElement(item) {
     </div>`;
   }
 
-  // 4. Positionnement (position & coordonnées top/left/right/bottom)
+  // 22. Positionnement (position & coordonnées)
   if (itemId === 'css-position' || itemId === 'css-coords-top-bottom-left-right' || prop === 'position' || prop.includes('top')) {
-    return `<div id="parentConteneur" class="position-stage-container">
-      <div class="position-ghost">👻 Emplacement d'origine dans le flux</div>
-      <div id="boite" class="position-target" style="position: relative; top: 25px; left: 45px;">
-        📍 &lt;div id="boite"&gt;<br><small id="posBadge" style="font-weight:normal; font-size:0.75rem;">position: relative (top: 25px, left: 45px)</small>
+    return `<div id="parentConteneur" class="position-stage-container blueprint-grid-bg">
+      <div class="position-ghost">👻 Repère d'origine (0, 0)</div>
+      <div id="boite" class="position-target" style="position: relative; top: 0px; left: 0px;">
+        📍 &lt;div id="boite"&gt;<br><small id="posBadge" style="font-weight:normal; font-size:0.75rem;">position: relative (top: 0px, left: 0px)</small>
       </div>
     </div>`;
   }
 
-  // 5. Débordement (overflow) : Cadre fixe 85px avec témoin de limite et contenu abondant
+  // 23. Débordement (overflow)
   if (itemId === 'css-overflow' || prop === 'overflow') {
     return `<div class="overflow-stage-wrapper" style="display:flex; flex-direction:column; align-items:center; width:100%; max-width:320px; position:relative; overflow:visible;">
       <div style="font-size:0.75rem; color:#94a3b8; margin-bottom:8px; display:flex; justify-content:space-between; width:100%; padding:0 4px;">
@@ -4226,7 +4433,6 @@ function buildVideoStageElement(item) {
             🏁 Ligne 5 : Fin du contenu au Bac STI
           </div>
         </div>
-        <!-- Ligne témoin de la limite 85px -->
         <div id="overflowLimitGuide" style="position:absolute; bottom:0; left:0; width:100%; border-bottom:2px dashed #ef4444; pointer-events:none; display:flex; justify-content:flex-end;">
           <span style="font-size:9px; background:#ef4444; color:#fff; padding:1px 6px; border-radius:3px; transform:translateY(50%); font-weight:bold;">Limite 85px</span>
         </div>
@@ -4235,7 +4441,7 @@ function buildVideoStageElement(item) {
     </div>`;
   }
 
-  // 6. Mode d'affichage (display)
+  // 24. Mode d'affichage (display)
   if (itemId === 'css-display' || prop === 'display') {
     return `<div id="parentConteneur" class="display-stage-container">
       <div style="font-size:0.75rem; color:#94a3b8; margin-bottom:8px;">Éléments adjacents dans le flux :</div>
@@ -4245,80 +4451,25 @@ function buildVideoStageElement(item) {
     </div>`;
   }
 
-  // 8. Typographie & Texte (h1)
-  if (cat === 'Propriétés de mise en forme du texte' || prop.includes('font') || prop.includes('text') || prop === 'color') {
-    return `<div id="h1" class="demo-box" style="font-size:22px; font-weight:bold; transition: all 0.8s ease; text-align:center; min-width:200px; max-width:85%;">
-      <span id="h1Text">Titre &lt;h1 id="h1"&gt;</span>
-    </div>`;
-  }
-
-  // 9. Tableaux (table) : Disposition asymétrique pour table-layout et border-collapse
-  if (cat === 'Propriétés des tableaux' || prop.includes('table') || prop.includes('collapse')) {
-    const isLayout = itemId === 'css-table-layout';
-    return `<div style="display:flex; flex-direction:column; align-items:center; width:100%;">
-      <div id="tableStatusText" style="font-size:0.78rem; text-align:center; margin-bottom:8px; font-weight:600; min-height:20px;"></div>
-      <table id="tab" style="width:90%; border-collapse:${itemId === 'css-border-collapse' ? 'separate' : 'collapse'}; border-spacing:${itemId === 'css-border-collapse' ? '8px' : '0'}; border:2px solid #38bdf8; background:rgba(255,255,255,0.06); color:#fff; transition:all 0.5s ease; font-size:12px; table-layout:${isLayout ? 'auto' : 'auto'};">
-        <thead>
-          <tr style="background:rgba(56,189,248,0.2);">
-            <th style="padding:10px; border:2px solid #38bdf8; text-align:center;">Colonne 1 ${isLayout ? '(Texte long)' : ''}</th>
-            <th style="padding:10px; border:2px solid #38bdf8; text-align:center;">Colonne 2 (Court)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td id="cellLong" style="padding:10px; border:2px solid #38bdf8; text-align:center; overflow:hidden; word-break:break-all;">
-              ${isLayout ? 'Anticonstitutionnellement_BacSTI_Informatique' : 'Cellule 1 - Ligne 1'}
-            </td>
-            <td style="padding:10px; border:2px solid #38bdf8; text-align:center; white-space:nowrap;">
-              ${isLayout ? 'Court (OK)' : 'Cellule 2 - Ligne 1'}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>`;
-  }
-
-  // 10. Images & Filtres
-  if (cat === 'Propriétés des images' || prop.includes('filter')) {
-    return `<div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
-      <div id="img1" style="width:210px; height:120px; border-radius:10px; overflow:hidden; border:2px solid #38bdf8; box-shadow:0 8px 24px rgba(0,0,0,0.5); transition:filter 0.5s ease, border-color 0.5s ease; position:relative;">
-        <svg viewBox="0 0 210 120" width="100%" height="100%" style="display:block;">
-          <defs>
-            <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#0284c7"/>
-              <stop offset="50%" stop-color="#f59e0b"/>
-              <stop offset="100%" stop-color="#ef4444"/>
-            </linearGradient>
-          </defs>
-          <rect width="210" height="120" fill="url(#skyGrad)"/>
-          <circle cx="160" cy="38" r="20" fill="#fef08a"/>
-          <polygon points="10,120 70,50 130,120" fill="#1e293b"/>
-          <polygon points="85,120 150,42 205,120" fill="#0f172a"/>
-          <rect y="96" width="210" height="24" fill="#0369a1" opacity="0.85"/>
-          <text x="105" y="112" font-size="11" font-weight="bold" fill="#fff" text-anchor="middle">&lt;img id="img1"&gt;</text>
-        </svg>
+  // 25. Ombre portée (box-shadow)
+  if (itemId === 'css-box-shadow') {
+    return `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:190px;">
+      <div id="shadowBadge" style="font-size:0.82rem; font-weight:bold; margin-bottom:8px;"></div>
+      <div id="boite" style="transition: all 0.5s ease; width:200px; height:90px; padding:14px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:14px; background:#1e293b; border:2px solid #38bdf8; border-radius:8px; color:#fff; font-weight:bold;">
+        <span>📦 &lt;div id="boite"&gt;</span>
       </div>
-      <div id="filterStageBadge" style="font-size:0.8rem; text-align:center;"></div>
     </div>`;
   }
 
-  // 11. Liens
+  // 26. Liens
   if (prop.includes('a:') || prop.includes('link') || prop.includes('visited') || prop.includes('active')) {
-    return `<a id="lien" href="javascript:void(0)" class="demo-box" style="text-decoration:none; transition:all 0.6s ease; font-size:16px;">
+    return `<a id="lien" href="javascript:void(0)" style="text-decoration:none; transition:all 0.6s ease; font-size:16px; padding:14px 24px; background:#1e293b; border:2px solid #38bdf8; border-radius:8px; color:#fff; font-weight:bold;">
       🔗 Lien &lt;a id="lien"&gt;
     </a>`;
   }
 
-  // 12. Listes
-  if (cat === 'Propriétés des listes' || prop.includes('list-style')) {
-    return `<ul id="liste" style="background:rgba(255,255,255,0.08); padding:12px 30px; border-radius:8px; color:#fff; list-style-type:circle; transition:all 0.8s ease; font-size:13px;">
-      <li>Élément liste 1 (#liste)</li>
-      <li>Élément liste 2 (#liste)</li>
-    </ul>`;
-  }
-
   // Boîte standard par défaut
-  return `<div id="boite" class="demo-box" style="transition: all 0.8s ease; min-width:170px; padding:18px; display:flex; align-items:center; justify-content:center; font-size:15px;">
+  return `<div id="boite" style="transition: all 0.8s ease; min-width:170px; padding:18px; display:flex; align-items:center; justify-content:center; font-size:15px; background:#1e293b; border:2px solid #38bdf8; border-radius:8px; color:#fff; font-weight:bold;">
     <span>Boîte &lt;div id="boite"&gt;</span>
   </div>`;
 }
@@ -4831,6 +4982,20 @@ function startVideoSimulation(itemId, variantIdx = 0) {
         applyVideoFrame(itemId, box, 1, currentVideoVariantIdx);
       }
 
+      // Synchronisation du chronometre en direct pour les transitions (0.0s -> 1.5s)
+      if (itemId.startsWith('css-transition')) {
+        const trTimer = document.getElementById('trTimerLabel');
+        if (trTimer) {
+          if (step === 0) {
+            trTimer.textContent = 'T = 0.0s (Repos)';
+          } else {
+            const curTime = (((progressVal - 50) / 48) * 1.5).toFixed(1);
+            trTimer.textContent = 'T = ' + Math.min(1.5, curTime) + 's / 1.5s';
+          }
+        }
+      }
+
+
       // Animation dynamique de défilement fluide pour overflow: scroll et overflow: auto pendant step 1 (APRÈS)
       if (itemId === 'css-overflow' && box) {
         const config = VARIETIES_CONFIG['css-overflow'];
@@ -4855,17 +5020,17 @@ function startVideoSimulation(itemId, variantIdx = 0) {
 
 // Rendu des images d'animation : 1 VIDÉO INDÉPENDANTE PAR VALEUR AVEC DÉMONSTRATION AVANT / APRÈS DISTINCTE
 function applyVideoFrame(itemId, box, step, variantIdx = 0) {
-  if (!box) return;
+  if (!itemId || !box) return;
   const config = VARIETIES_CONFIG[itemId];
   const opt = (config && config.options && config.options[variantIdx]) ? config.options[variantIdx] : null;
 
-  // Synchronisation des voyants AVANT / APRÈS
+  // 1. Synchronisation des voyants AVANT / APRÈS
   const beforePill = document.getElementById('phaseBeforePill');
   const afterPill = document.getElementById('phaseAfterPill');
   if (beforePill) beforePill.classList.toggle('active', step === 0);
   if (afterPill) afterPill.classList.toggle('active', step === 1);
 
-  // Synchronisation du badge live OFF / ON
+  // 2. Synchronisation du badge live OFF / ON
   const statusPill = document.getElementById('modalVideoLiveStatusPill');
   const statusText = document.getElementById('modalVideoStatusText');
   if (statusPill && statusText) {
@@ -4878,12 +5043,14 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     }
   }
 
-  // Durée d'animation ralentie (1.5s) pour une étude facile du Bac
+  // 3. Durée d'animation ralentie (1.5s) pour une étude facile du Bac STI
   if (box && !itemId.startsWith('css-sel-')) {
     box.style.transition = 'all 1.5s cubic-bezier(0.4, 0, 0.2, 1)';
   }
 
-  // 0. SÉLECTEURS CSS (DÉMONSTRATION COMPARATIVE AVANT vs APRÈS)
+  // =========================================================
+  // CATÉGORIE 1 : SÉLECTEURS CSS (12 ITEMS)
+  // =========================================================
   if (itemId.startsWith('css-sel-')) {
     const items = document.querySelectorAll('.selector-target-item');
     const banner = document.getElementById('selBannerStatus');
@@ -4895,18 +5062,18 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
         if (cursor) { cursor.style.top = '15px'; cursor.style.right = '40px'; cursor.style.left = 'auto'; cursor.style.transform = 'scale(1)'; }
         box.style.transform = 'scale(1) translateY(0)';
         box.style.boxShadow = 'none';
-        box.style.borderColor = '#334155';
+        box.style.borderColor = '#475569';
         box.style.background = '#1e293b';
         box.style.color = '#94a3b8';
-        if (txt) txt.innerHTML = '🔴 AVANT : Curseur éloigné de la boîte (État normal au repos)';
+        if (txt) { txt.innerHTML = '🔴 AVANT : Curseur éloigné de la boîte (État normal au repos)'; txt.style.color = '#f87171'; }
       } else {
         if (cursor) { cursor.style.top = '80px'; cursor.style.right = 'auto'; cursor.style.left = '50%'; cursor.style.transform = 'translate(-50%, -50%) scale(1.15)'; }
-        box.style.transform = 'scale(1.14) translateY(-4px)';
+        box.style.transform = 'scale(1.15) translateY(-4px)';
         box.style.boxShadow = '0 0 30px rgba(250, 204, 21, 0.85)';
         box.style.borderColor = '#facc15';
         box.style.background = '#854d0e';
         box.style.color = '#fef08a';
-        if (txt) txt.innerHTML = '🟢 APRÈS (:hover) : Curseur SUR la boîte ➔ Zoom & Halo néon appliqués !';
+        if (txt) { txt.innerHTML = '🟢 APRÈS (:hover) : Curseur SUR la boîte ➔ Zoom & Halo néon appliqués !'; txt.style.color = '#4ade80'; }
       }
       return;
     }
@@ -4919,13 +5086,13 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
         box.style.transform = 'scale(1) translateY(0)';
         box.style.boxShadow = '0 4px 10px rgba(0,0,0,0.3)';
         box.style.background = '#0284c7';
-        if (txt) txt.innerHTML = '🔴 AVANT : Bouton relâché au repos (Pas de clic)';
+        if (txt) { txt.innerHTML = '🔴 AVANT : Bouton relâché au repos (Pas de clic)'; txt.style.color = '#f87171'; }
       } else {
         if (cursor) { cursor.style.top = '85px'; cursor.style.right = 'auto'; cursor.style.left = '50%'; cursor.style.transform = 'translate(-50%, -50%) scale(0.9)'; }
         box.style.transform = 'scale(0.92) translateY(5px)';
         box.style.boxShadow = 'inset 0 4px 10px rgba(0,0,0,0.7)';
         box.style.background = '#0369a1';
-        if (txt) txt.innerHTML = '🟢 APRÈS (:active) : Pression du clic maintenue enfoncée !';
+        if (txt) { txt.innerHTML = '🟢 APRÈS (:active) : Pression du clic enfoncée !'; txt.style.color = '#4ade80'; }
       }
       return;
     }
@@ -4936,28 +5103,28 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
       const txt = document.getElementById('linkStatusText');
       if (step === 0) {
         if (link) { link.style.color = '#60a5fa'; link.style.textDecoration = 'underline'; link.style.fontWeight = 'normal'; }
-        if (txt) txt.innerHTML = '🔴 AVANT : Style de lien brut par défaut du navigateur';
+        if (txt) { txt.innerHTML = '🔴 AVANT : Style de lien brut par défaut du navigateur'; txt.style.color = '#f87171'; }
       } else {
         if (link) {
           if (isVisited) {
             link.style.color = '#c084fc'; link.style.textDecoration = 'line-through'; link.style.fontWeight = 'bold';
-            if (txt) txt.innerHTML = '🟢 APRÈS (a:visited) : Lien violet déjà visité par l\'utilisateur';
+            if (txt) { txt.innerHTML = '🟢 APRÈS (a:visited) : Lien violet déjà visité par l\'utilisateur'; txt.style.color = '#4ade80'; }
           } else {
             link.style.color = '#38bdf8'; link.style.textDecoration = 'none'; link.style.borderBottom = '2px solid #38bdf8'; link.style.fontWeight = 'bold';
-            if (txt) txt.innerHTML = '🟢 APRÈS (a:link) : Lien neuf non visité sans soulignement';
+            if (txt) { txt.innerHTML = '🟢 APRÈS (a:link) : Lien neuf non visité sans soulignement'; txt.style.color = '#4ade80'; }
           }
         }
       }
       return;
     }
 
-    // Sélecteurs sur document HTML mocké (*, element, #id, .class, [attr], [attr=val], element.class, grouped)
+    // Sélecteurs standard sur mini cartes HTML (*, element, #id, .class, [attr], [attr=val], element.class, grouped)
     if (step === 0) {
       items.forEach(it => {
         it.classList.remove('matched', 'ignored');
       });
       if (banner) {
-        banner.innerHTML = '🔴 ÉTAT 1 : AVANT ➔ Aucun élément ciblé (Style HTML brut par défaut du navigateur)';
+        banner.innerHTML = '🔴 ÉTAT 1 : AVANT ➔ Aucun élément ciblé (Style HTML brut neutre)';
         banner.style.color = '#f87171';
       }
     } else {
@@ -4972,13 +5139,13 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
         }
       });
       if (banner) {
-        let msg = '🟢 ÉTAT 2 : APRÈS ➔ Règle CSS appliquée aux éléments ciblés !';
+        let msg = '🟢 ÉTAT 2 : APRÈS ➔ Règle CSS appliquée avec éclat néon aux éléments ciblés !';
         if (itemId === 'css-sel-universal') msg = '🟢 APRÈS : L\'étoile (*) applique la règle à ABSOLUMENT TOUS les éléments du document !';
-        else if (itemId === 'css-sel-element') msg = '🟢 APRÈS : Seules les balises &lt;p&gt; sont sélectionnées (les autres balises sont ignorées) !';
-        else if (itemId === 'css-sel-id') msg = '🟢 APRÈS : Seul l\'élément UNIQUE avec id="boite" est ciblé (les autres id sont ignorés) !';
-        else if (itemId === 'css-sel-class') msg = '🟢 APRÈS : TOUS les éléments portant la classe .important sont ciblés (réutilisable) !';
-        else if (itemId === 'css-sel-element-attr') msg = '🟢 APRÈS : Seuls les champs ayant l\'attribut [required] sont ciblés !';
-        else if (itemId === 'css-sel-element-attr-val') msg = '🟢 APRÈS : Seul l\'input avec type="submit" exact est ciblé !';
+        else if (itemId === 'css-sel-element') msg = '🟢 APRÈS : Seules les balises &lt;p&gt; sont sélectionnées (les autres sont grisées à 35%) !';
+        else if (itemId === 'css-sel-id') msg = '🟢 APRÈS : Seul l\'élément UNIQUE avec id="boite" est illuminé en bleu néon !';
+        else if (itemId === 'css-sel-class') msg = '🟢 APRÈS : TOUS les éléments portant la classe .important s\'illuminent en néon !';
+        else if (itemId === 'css-sel-element-attr') msg = '🟢 APRÈS : Seuls les champs de formulaire avec l\'attribut [required] sont ciblés !';
+        else if (itemId === 'css-sel-element-attr-val') msg = '🟢 APRÈS : Seul l\'input avec type="submit" exact est sélectionné !';
         else if (itemId === 'css-sel-element-class') msg = '🟢 APRÈS : Seul le &lt;p&gt; qui possède AUSSI la classe .important est ciblé !';
         else if (itemId === 'css-sel-grouped') msg = '🟢 APRÈS : &lt;h1&gt; ET &lt;p&gt; sont ciblés simultanément grâce à la virgule (,) !';
         banner.innerHTML = msg;
@@ -4988,1161 +5155,625 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     return;
   }
 
-  // 1. STYLE DE BORDURE (BORDER-STYLE)
-  if (itemId === 'css-border-style' || itemId.includes('border-style')) {
-    box.style.padding = '18px 24px';
-    box.style.transition = 'all 0.4s ease';
-
-    if (variantIdx === 5 || (opt && opt.value === 'none')) {
-      // Pour border-style: none, l'état AVANT doit avoir une bordure existante bien visible
-      if (step === 0) {
-        box.style.border = '5px solid #38bdf8';
-        box.style.boxShadow = '0 0 22px rgba(56, 189, 248, 0.65)';
-        box.style.background = 'rgba(15, 23, 42, 0.85)';
-        box.style.outline = 'none';
-        box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT ➔ Une bordure bleue existe sur l'élément</small></span>`;
-      } else {
-        box.style.border = 'none';
-        box.style.boxShadow = 'none';
-        box.style.outline = '1px dashed rgba(255, 255, 255, 0.25)';
-        box.style.background = 'rgba(56, 189, 248, 0.15)';
-        box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border-style: none (Bordure totalement supprimée !)</small></span>`;
-      }
-      return;
-    }
-
-    if (step === 0) {
-      box.style.border = '0px none transparent';
-      box.style.outline = '1px dashed rgba(255, 255, 255, 0.2)';
-      box.style.background = 'rgba(15, 23, 42, 0.6)';
-      box.style.boxShadow = 'none';
-      box.style.transform = 'scale(1)';
-      box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Sans bordure / Élément brut)</small></span>`;
-    } else {
-      box.style.outline = 'none';
-      box.style.background = 'rgba(15, 23, 42, 0.85)';
-      box.style.color = '#fff';
-      box.style.transform = 'scale(1.04)';
-
-      if (variantIdx === 0) {
-        box.style.border = '5px solid #38bdf8';
-        box.style.boxShadow = '0 0 22px rgba(56, 189, 248, 0.65)';
-        box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border: solid (Ligne continue)</small></span>`;
-      } else if (variantIdx === 1) {
-        box.style.border = '6px dotted #facc15';
-        box.style.boxShadow = '0 0 22px rgba(250, 204, 21, 0.65)';
-        box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border: dotted (Pointillés ronds)</small></span>`;
-      } else if (variantIdx === 2) {
-        box.style.border = '6px dashed #f43f5e';
-        box.style.boxShadow = '0 0 22px rgba(244, 63, 94, 0.65)';
-        box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border: dashed (Tirets espacés)</small></span>`;
-      } else if (variantIdx === 3) {
-        box.style.border = '8px double #10b981';
-        box.style.boxShadow = '0 0 22px rgba(16, 185, 129, 0.65)';
-        box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border: double (Double trait parallèle)</small></span>`;
-      } else if (variantIdx === 4) {
-        box.style.border = '8px groove #ec4899';
-        box.style.boxShadow = '0 0 22px rgba(236, 72, 153, 0.65)';
-        box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border: groove (Rainure sculptée 3D)</small></span>`;
-      }
-    }
-    return;
-  }
-
-  // 2. BORDER SHORTHAND (border: largeur style couleur)
-  if (itemId === 'css-border-shorthand') {
-    box.style.padding = '18px 24px';
-    box.style.transition = 'all 0.4s ease';
-
-    if (step === 0) {
-      box.style.border = '0px none transparent';
-      box.style.outline = '1px dashed rgba(255, 255, 255, 0.25)';
-      box.style.boxShadow = 'none';
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Sans bordure / Contour nu)</small></span>`;
-    } else {
-      box.style.outline = 'none';
-      box.style.transform = 'scale(1.04)';
-      if (variantIdx === 0) {
-        box.style.border = '4px solid #38bdf8';
-        box.style.boxShadow = '0 0 18px rgba(56,189,248,0.55)';
-      } else if (variantIdx === 1) {
-        box.style.border = '5px dotted #facc15';
-        box.style.boxShadow = '0 0 18px rgba(250,204,21,0.55)';
-      } else if (variantIdx === 2) {
-        box.style.border = '5px dashed #ef4444';
-        box.style.boxShadow = '0 0 18px rgba(239,68,68,0.55)';
-      } else {
-        box.style.border = '8px double #10b981';
-        box.style.boxShadow = '0 0 18px rgba(16,185,129,0.55)';
-      }
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (border: ${opt ? opt.value : 'appliquée'} !)</small></span>`;
-    }
-    return;
-  }
-
-  // 3. MARGE EXTÉRIEURE (MARGIN)
-  if (itemId === 'css-margin') {
-    const boite = document.getElementById('boite') || box;
-    const vHaut = document.getElementById('voisinHaut');
-    const vBas = document.getElementById('voisinBas');
-    const txt = document.getElementById('marginIndicatorText');
-    if (boite) {
-      boite.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
-      const mVal = opt ? opt.value : '15px';
-
-      if (mVal === '0px') {
-        if (step === 0) {
-          boite.style.margin = '28px auto';
-          if (vHaut) { vHaut.style.transform = 'translateY(-16px)'; vHaut.style.borderColor = '#38bdf8'; }
-          if (vBas) { vBas.style.transform = 'translateY(16px)'; vBas.style.borderColor = '#38bdf8'; }
-          boite.style.borderColor = '#38bdf8';
-          if (txt) txt.textContent = '🔴 ÉTAT 1 : AVANT ➔ margin: 28px (Voisins largement espacés)';
-        } else {
-          boite.style.margin = '0px auto';
-          if (vHaut) { vHaut.style.transform = 'translateY(2px)'; vHaut.style.borderColor = '#ef4444'; }
-          if (vBas) { vBas.style.transform = 'translateY(-2px)'; vBas.style.borderColor = '#ef4444'; }
-          boite.style.borderColor = '#ef4444';
-          if (txt) txt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ margin: 0px (Marge annulée : éléments collés bord à bord !)';
-        }
-      } else {
-        if (step === 0) {
-          boite.style.margin = '0px auto';
-          if (vHaut) { vHaut.style.transform = 'translateY(2px)'; vHaut.style.borderColor = '#ef4444'; }
-          if (vBas) { vBas.style.transform = 'translateY(-2px)'; vBas.style.borderColor = '#ef4444'; }
-          boite.style.borderColor = '#ef4444';
-          if (txt) txt.textContent = '🔴 ÉTAT 1 : AVANT ➔ margin: 0px (Éléments étouffés sans aucune séparation)';
-        } else {
-          boite.style.margin = mVal === 'auto' ? '15px auto' : (mVal.includes(' ') ? mVal : `${mVal} auto`);
-          if (vHaut) { vHaut.style.transform = mVal === '30px' ? 'translateY(-18px)' : 'translateY(-10px)'; vHaut.style.borderColor = '#475569'; }
-          if (vBas) { vBas.style.transform = mVal === '30px' ? 'translateY(18px)' : 'translateY(10px)'; vBas.style.borderColor = '#475569'; }
-          boite.style.borderColor = '#10b981';
-          if (txt) txt.textContent = `🟢 ÉTAT 2 : APRÈS ➔ margin: ${mVal} (Voisins repoussés avec succès !)`;
-        }
-      }
-    }
-    return;
-  }
-
-  // 4. MARGE INTÉRIEURE (PADDING)
-  if (itemId === 'css-padding') {
-    const boite = document.getElementById('boite') || box;
-    const txt = document.getElementById('paddingIndicatorText');
-    if (boite) {
-      boite.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
-      const pVal = opt ? opt.value : '15px';
-
-      if (pVal === '0px') {
-        if (step === 0) {
-          boite.style.padding = '22px';
-          boite.style.borderColor = '#38bdf8';
-          if (txt) txt.textContent = '🔴 ÉTAT 1 : AVANT ➔ padding: 22px (Texte aéré avec espace intérieur)';
-        } else {
-          boite.style.padding = '0px';
-          boite.style.borderColor = '#ef4444';
-          if (txt) txt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ padding: 0px (Marge interne annulée : texte comprimé contre les bords !)';
-        }
-      } else {
-        if (step === 0) {
-          boite.style.padding = '0px';
-          boite.style.borderColor = '#ef4444';
-          if (txt) txt.textContent = '🔴 ÉTAT 1 : AVANT ➔ padding: 0px (Texte collé directement contre la bordure)';
-        } else {
-          boite.style.padding = pVal;
-          boite.style.borderColor = '#10b981';
-          if (txt) txt.textContent = `🟢 ÉTAT 2 : APRÈS ➔ padding: ${pVal} (Espace de respiration intérieur créé avec succès !)`;
-        }
-      }
-    }
-    return;
-  }
-
-  // 5. FLOTTEMENT (FLOAT)
-  if (itemId === 'css-float') {
-    const boite = document.getElementById('boite') || box;
-    const lbl = document.getElementById('floatLabel');
-    if (boite) {
-      boite.style.transition = 'all 0.5s ease';
-      const fVal = opt ? opt.value : 'left';
-
-      if (fVal === 'none') {
-        if (step === 0) {
-          boite.style.float = 'left';
-          boite.style.margin = '4px 14px 6px 0';
-          if (lbl) lbl.textContent = '🔴 ÉTAT 1 : AVANT (float: left ➔ Le bloc flotte et le texte s\'enroule)';
-        } else {
-          boite.style.float = 'none';
-          boite.style.margin = '0 auto 10px auto';
-          if (lbl) lbl.textContent = '🟢 ÉTAT 2 : APRÈS (float: none ➔ Flux normal rétabli : texte renvoyé en-dessous !)';
-        }
-      } else {
-        if (step === 0) {
-          boite.style.float = 'none';
-          boite.style.margin = '0 auto 10px auto';
-          if (lbl) lbl.textContent = '🔴 ÉTAT 1 : AVANT (float: none ➔ Flux normal : texte bloqué en-dessous)';
-        } else {
-          boite.style.float = fVal;
-          boite.style.margin = fVal === 'left' ? '4px 14px 6px 0' : (fVal === 'right' ? '4px 0 6px 14px' : '0 auto 10px auto');
-          if (lbl) lbl.textContent = `🟢 ÉTAT 2 : APRÈS (float: ${fVal} ➔ Le texte s'enroule harmonieusement autour du bloc !)`;
-        }
-      }
-    }
-    return;
-  }
-
-  // 6. POSITIONNEMENT (POSITION & COORDONNÉES)
-  if (itemId === 'css-position' || itemId === 'css-coords-top-bottom-left-right') {
-    const boite = document.getElementById('boite') || box;
-    const badge = document.getElementById('posBadge');
-    if (boite) {
-      boite.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
-      const pVal = opt ? opt.value : 'relative';
-
-      if (itemId === 'css-position' && pVal === 'static') {
-        if (step === 0) {
-          boite.style.position = 'relative';
-          boite.style.top = '30px';
-          boite.style.left = '50px';
-          boite.style.borderColor = '#ef4444';
-          if (badge) badge.textContent = '🔴 ÉTAT 1 : AVANT (Décalé hors de son flux par top:30px/left:50px)';
-        } else {
-          boite.style.position = 'static';
-          boite.style.top = 'auto';
-          boite.style.left = 'auto';
-          boite.style.borderColor = '#10b981';
-          if (badge) badge.textContent = '🟢 ÉTAT 2 : APRÈS (position: static ➔ Retour à l\'emplacement d\'origine dans le flux !)';
-        }
-      } else {
-        if (step === 0) {
-          boite.style.position = 'static';
-          boite.style.top = 'auto';
-          boite.style.left = 'auto';
-          boite.style.right = 'auto';
-          boite.style.bottom = 'auto';
-          boite.style.borderColor = '#ef4444';
-          if (badge) badge.textContent = '🔴 ÉTAT 1 : AVANT (position: static ➔ Emplacement naturel d\'origine non décalé)';
-        } else {
-          if (opt && opt.css) {
-            boite.style.cssText += opt.css;
-          } else {
-            boite.style.position = 'relative';
-            boite.style.top = '30px';
-            boite.style.left = '50px';
-          }
-          boite.style.borderColor = '#10b981';
-          if (badge) badge.textContent = `🟢 ÉTAT 2 : APRÈS (${opt ? opt.label : 'Décalé'})`;
-        }
-      }
-    }
-    return;
-  }
-
-  // 7. DÉBORDEMENT (OVERFLOW)
-  if (itemId === 'css-overflow') {
-    const targetBox = document.getElementById('boite') || box;
-    const badge = document.getElementById('overflowBadge');
-    const statusTxt = document.getElementById('overflowStatusText');
-    const oVal = opt ? opt.value : 'hidden';
-
-    if (targetBox) {
-      targetBox.style.height = '85px';
-
-      if (oVal === 'visible') {
-        if (step === 0) {
-          targetBox.style.overflow = 'hidden';
-          targetBox.style.borderColor = '#ef4444';
-          targetBox.scrollTop = 0;
-          if (badge) badge.textContent = '🔴 AVANT : overflow: hidden;';
-          if (statusTxt) { statusTxt.textContent = '🔴 ÉTAT 1 : AVANT ➔ Le texte qui dépasse 85px est masqué et invisible'; statusTxt.style.color = '#f87171'; }
-        } else {
-          targetBox.style.overflow = 'visible';
-          targetBox.style.borderColor = '#10b981';
-          if (badge) badge.textContent = '🟢 APRÈS : overflow: visible;';
-          if (statusTxt) { statusTxt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ Le contenu DÉBORDE complètement hors du cadre en rouge vif !'; statusTxt.style.color = '#4ade80'; }
-        }
-      } else if (oVal === 'hidden') {
-        if (step === 0) {
-          targetBox.style.overflow = 'visible';
-          targetBox.style.borderColor = '#ef4444';
-          targetBox.scrollTop = 0;
-          if (badge) badge.textContent = '🔴 AVANT : overflow: visible;';
-          if (statusTxt) { statusTxt.textContent = '🔴 ÉTAT 1 : AVANT ➔ Le texte dépasse anarchiquement et brise le cadre !'; statusTxt.style.color = '#f87171'; }
-        } else {
-          targetBox.style.overflow = 'hidden';
-          targetBox.style.borderColor = '#10b981';
-          if (badge) badge.textContent = '🟢 APRÈS : overflow: hidden;';
-          if (statusTxt) { statusTxt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ Tout ce qui dépasse de 85px est proprement coupé et masqué !'; statusTxt.style.color = '#4ade80'; }
-        }
-      } else if (oVal === 'scroll') {
-        if (step === 0) {
-          targetBox.style.overflow = 'hidden';
-          targetBox.style.borderColor = '#ef4444';
-          targetBox.scrollTop = 0;
-          if (badge) badge.textContent = '🔴 AVANT : Sans ascenseur';
-          if (statusTxt) { statusTxt.textContent = '🔴 ÉTAT 1 : AVANT ➔ Texte coupé et inaccessible sans barre de défilement'; statusTxt.style.color = '#f87171'; }
-        } else {
-          targetBox.style.overflow = 'scroll';
-          targetBox.style.borderColor = '#10b981';
-          if (badge) badge.textContent = '🟢 APRÈS : overflow: scroll;';
-          if (statusTxt) { statusTxt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ Barres de défilement toujours visibles pour explorer le texte !'; statusTxt.style.color = '#4ade80'; }
-        }
-      } else {
-        // auto
-        if (step === 0) {
-          targetBox.style.overflow = 'visible';
-          targetBox.style.borderColor = '#ef4444';
-          targetBox.scrollTop = 0;
-          if (badge) badge.textContent = '🔴 AVANT : overflow: visible;';
-          if (statusTxt) { statusTxt.textContent = '🔴 ÉTAT 1 : AVANT ➔ Débordement libre sans barre de défilement'; statusTxt.style.color = '#f87171'; }
-        } else {
-          targetBox.style.overflow = 'auto';
-          targetBox.style.borderColor = '#10b981';
-          if (badge) badge.textContent = '🟢 APRÈS : overflow: auto;';
-          if (statusTxt) { statusTxt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ Barre de défilement ajoutée automatiquement car le texte dépasse !'; statusTxt.style.color = '#4ade80'; }
-        }
-      }
-    }
-    return;
-  }
-
-  // 8. AFFICHAGE (DISPLAY)
-  if (itemId === 'css-display') {
-    const boite = document.getElementById('boite') || box;
-    if (boite) {
-      const dVal = opt ? opt.value : 'block';
-      if (dVal === 'block') {
-        if (step === 0) {
-          boite.style.display = 'inline';
-          boite.style.width = 'auto';
-          boite.textContent = '#boite (display: inline)';
-        } else {
-          boite.style.display = 'block';
-          boite.style.width = '100%';
-          boite.textContent = '#boite (display: block ➔ Pleine largeur !) ';
-        }
-      } else if (dVal === 'inline') {
-        if (step === 0) {
-          boite.style.display = 'block';
-          boite.style.width = '100%';
-          boite.textContent = '#boite (display: block)';
-        } else {
-          boite.style.display = 'inline';
-          boite.style.width = 'auto';
-          boite.textContent = '#boite (display: inline ➔ En ligne avec les autres !)';
-        }
-      } else if (dVal === 'inline-block') {
-        if (step === 0) {
-          boite.style.display = 'inline';
-          boite.style.width = 'auto';
-          boite.textContent = '#boite (display: inline)';
-        } else {
-          boite.style.display = 'inline-block';
-          boite.style.width = '140px';
-          boite.textContent = '#boite (display: inline-block ➔ En ligne + largeur 140px !)';
-        }
-      } else {
-        // none
-        if (step === 0) {
-          boite.style.display = 'inline-block';
-          boite.style.opacity = '1';
-          boite.textContent = '#boite (Élément présent)';
-        } else {
-          boite.style.display = 'none';
-        }
-      }
-    }
-    return;
-  }
-
-  // 9. ARRONDIS DES COINS (BORDER-RADIUS)
-  if (itemId === 'css-border-radius') {
-    box.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
-    box.style.width = '120px';
-    box.style.height = '120px';
-    box.style.display = 'flex';
-    box.style.alignItems = 'center';
-    box.style.justifyContent = 'center';
-    box.style.textAlign = 'center';
-
-    const rVal = opt ? opt.value : '15px';
-    if (rVal === '0px') {
-      if (step === 0) {
-        box.style.borderRadius = '24px';
-        box.style.borderColor = '#ef4444';
-        box.innerHTML = `<span>#boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Coins arrondis 24px)</small></span>`;
-      } else {
-        box.style.borderRadius = '0px';
-        box.style.borderColor = '#10b981';
-        box.innerHTML = `<span>#boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border-radius: 0px (Angles droits stricts à 90° rétablis !)</small></span>`;
-      }
-    } else if (rVal === '50%') {
-      if (step === 0) {
-        box.style.borderRadius = '0px';
-        box.style.borderColor = '#ef4444';
-        box.style.boxShadow = 'none';
-        box.innerHTML = `<span>#boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Carré strict 120px × 120px)</small></span>`;
-      } else {
-        box.style.borderRadius = '50%';
-        box.style.borderColor = '#10b981';
-        box.style.boxShadow = '0 0 24px rgba(16,185,129,0.5)';
-        box.innerHTML = `<span>#boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border-radius: 50% (Transformation en CERCLE parfait !)</small></span>`;
-      }
-    } else {
-      if (step === 0) {
-        box.style.borderRadius = '0px';
-        box.style.borderColor = '#ef4444';
-        box.innerHTML = `<span>#boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Coins carrés stricts 0px)</small></span>`;
-      } else {
-        box.style.borderRadius = rVal;
-        box.style.borderColor = '#10b981';
-        box.innerHTML = `<span>#boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border-radius: ${rVal} (Coins arrondis !)</small></span>`;
-      }
-    }
-    return;
-  }
-
-  // 10. OMBRE PORTÉE (BOX-SHADOW)
-  if (itemId === 'css-box-shadow') {
-    box.style.transition = 'all 0.4s ease';
-    const shVal = (opt && opt.value) ? opt.value : '0 4px 14px rgba(0,0,0,0.5)';
-
-    if (shVal === 'none') {
-      if (step === 0) {
-        box.style.boxShadow = '0 0 24px #38bdf8';
-        box.style.transform = 'translateY(-4px)';
-        box.innerHTML = `<span>#boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Ombre lumineuse active)</small></span>`;
-      } else {
-        box.style.boxShadow = 'none';
-        box.style.transform = 'translateY(0)';
-        box.innerHTML = `<span>#boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ box-shadow: none (Ombre retirée, boîte plate !)</small></span>`;
-      }
-    } else {
-      if (step === 0) {
-        box.style.boxShadow = 'none';
-        box.style.transform = 'translateY(0)';
-        box.innerHTML = `<span>#boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (box-shadow: none / Boîte plate)</small></span>`;
-      } else {
-        box.style.boxShadow = shVal;
-        box.style.transform = shVal.includes('inset') ? 'none' : 'translateY(-4px)';
-        box.innerHTML = `<span>#boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (box-shadow: ${shVal} !)</small></span>`;
-      }
-    }
-    return;
-  }
-
-  // 11. ALIGNEMENT DU TEXTE (TEXT-ALIGN)
-  if (itemId === 'css-text-align') {
-    const aVal = opt ? opt.value : 'center';
-    if (aVal === 'left') {
-      if (step === 0) {
-        box.style.textAlign = 'right';
-        box.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Aligné à droite)</small></span>`;
-      } else {
-        box.style.textAlign = 'left';
-        box.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ text-align: left (Aligné à gauche !)</small></span>`;
-      }
-    } else {
-      if (step === 0) {
-        box.style.textAlign = 'left';
-        box.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Aligné à gauche par défaut)</small></span>`;
-      } else {
-        box.style.textAlign = aVal;
-        box.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (text-align: ${aVal} !)</small></span>`;
-      }
-    }
-    return;
-  }
-
-  // 12. POLICE DE CARACTÈRES (FONT-FAMILY)
+  // =========================================================
+  // CATÉGORIE 2 : MISE EN FORME DU TEXTE (9 ITEMS)
+  // =========================================================
   if (itemId === 'css-font-family') {
-    const fVal = opt ? opt.value : 'Arial, sans-serif';
-    if (fVal.includes('Arial')) {
-      if (step === 0) {
-        box.style.fontFamily = "'Times New Roman', serif";
-        box.innerHTML = `<span>Texte de démo<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Police serif avec empattements)</small></span>`;
-      } else {
-        box.style.fontFamily = fVal;
-        box.innerHTML = `<span>Texte de démo<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (font-family: ${fVal})</small></span>`;
-      }
-    } else {
-      if (step === 0) {
-        box.style.fontFamily = "Arial, sans-serif";
-        box.innerHTML = `<span>Texte de démo<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Police Arial sans empattement)</small></span>`;
-      } else {
-        box.style.fontFamily = fVal;
-        box.innerHTML = `<span>Texte de démo<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (font-family: ${fVal})</small></span>`;
-      }
-    }
-    return;
-  }
-
-  // 13. CASSE DU TEXTE (TEXT-TRANSFORM)
-  if (itemId === 'css-text-transform') {
-    const txt = document.getElementById('h1Text') || box;
-    const tVal = opt ? opt.value : 'uppercase';
-
-    if (tVal === 'none') {
-      if (step === 0) {
-        box.style.textTransform = 'uppercase';
-        txt.style.textTransform = 'uppercase';
-        box.innerHTML = `<span>TEXTE EN MAJUSCULES<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Forcé en MAJUSCULES)</small></span>`;
-      } else {
-        box.style.textTransform = 'none';
-        txt.style.textTransform = 'none';
-        box.innerHTML = `<span>Texte de Démonstration<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ text-transform: none (Casse naturelle restituée !)</small></span>`;
-      }
-    } else if (tVal === 'uppercase') {
-      if (step === 0) {
-        box.style.textTransform = 'none';
-        txt.style.textTransform = 'none';
-        box.innerHTML = `<span>texte en minuscules<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Casse normale minuscule)</small></span>`;
-      } else {
-        box.style.textTransform = 'uppercase';
-        txt.style.textTransform = 'uppercase';
-        box.innerHTML = `<span>TEXTE EN MINUSCULES<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ text-transform: uppercase !</small></span>`;
-      }
-    } else if (tVal === 'lowercase') {
-      if (step === 0) {
-        box.style.textTransform = 'none';
-        txt.style.textTransform = 'none';
-        box.innerHTML = `<span>TEXTE EN MAJUSCULES<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Casse normale majuscule)</small></span>`;
-      } else {
-        box.style.textTransform = 'lowercase';
-        txt.style.textTransform = 'lowercase';
-        box.innerHTML = `<span>texte en majuscules<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ text-transform: lowercase !</small></span>`;
-      }
-    } else if (tVal === 'capitalize') {
-      if (step === 0) {
-        box.style.textTransform = 'none';
-        txt.style.textTransform = 'none';
-        box.innerHTML = `<span>bac technique informatique<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Sans majuscules initiales)</small></span>`;
-      } else {
-        box.style.textTransform = 'capitalize';
-        txt.style.textTransform = 'capitalize';
-        box.innerHTML = `<span>Bac Technique Informatique<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ text-transform: capitalize !</small></span>`;
-      }
-    }
-    return;
-  }
-
-  // 14. TRANSFORMATIONS GÉOMÉTRIQUES (TRANSFORM: rotate, scale, translate, skew)
-  if (itemId === 'css-transform') {
-    box.style.transition = 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.6s ease, border-color 0.6s ease';
+    const badge = document.getElementById('fontFamilyBadge');
     if (step === 0) {
-      box.style.transform = 'none';
-      box.style.boxShadow = '0 8px 24px rgba(0,0,0,0.4)';
-      box.style.borderColor = '#ef4444';
-      box.innerHTML = `<span>📦 &lt;div id="boite"&gt;</span><small id="transformStageBadge" style="font-size:0.75rem; color:#ef4444; margin-top:3px; font-weight:bold;">🔴 ÉTAT 1 : AVANT (transform: none / Au repos)</small>`;
+      box.style.setProperty('font-family', "'Times New Roman', serif", 'important');
+      box.style.setProperty('font-size', '26px', 'important');
+      box.style.setProperty('color', '#94a3b8', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : Times New Roman (Serif traditionnel avec empattements)'; badge.style.color = '#f87171'; }
     } else {
-      const trVal = (opt && opt.value) ? opt.value : 'rotate(25deg)';
-      box.style.transform = trVal;
-      box.style.boxShadow = '0 12px 30px rgba(56, 189, 248, 0.45)';
-      box.style.borderColor = '#10b981';
-      box.innerHTML = `<span>📦 &lt;div id="boite"&gt;</span><small id="transformStageBadge" style="font-size:0.75rem; color:#4ade80; margin-top:3px; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (transform: ${trVal})</small>`;
+      const fVal = opt ? opt.value : "'Courier New', monospace";
+      box.style.setProperty('font-family', fVal, 'important');
+      box.style.setProperty('font-size', '26px', 'important');
+      box.style.setProperty('color', '#38bdf8', 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : font-family: ${fVal}`; badge.style.color = '#4ade80'; }
     }
     return;
   }
 
-  // 15. FILTRES GRAPHIQUES (FILTER)
-  if (itemId === 'css-filter') {
-    const img = document.getElementById('img1') || box;
-    const badge = document.getElementById('filterStageBadge');
-    img.style.transition = 'filter 0.5s ease, border-color 0.5s ease';
-    box.style.transition = 'filter 0.5s ease, border-color 0.5s ease';
-    const flVal = (opt && opt.value) ? opt.value : 'grayscale(100%)';
-
-    if (flVal === 'none') {
-      if (step === 0) {
-        img.style.filter = 'grayscale(100%)';
-        img.style.borderColor = '#ef4444';
-        box.style.filter = 'grayscale(100%)';
-        box.style.borderColor = '#ef4444';
-        if (badge) badge.innerHTML = '<small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Filtre noir et blanc grayscale 100%)</small>';
-      } else {
-        img.style.filter = 'none';
-        img.style.borderColor = '#10b981';
-        box.style.filter = 'none';
-        box.style.borderColor = '#10b981';
-        if (badge) badge.innerHTML = '<small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ filter: none (Couleurs d\'origine restaurées !)</small>';
-      }
-    } else {
-      if (step === 0) {
-        img.style.filter = 'none';
-        img.style.borderColor = '#ef4444';
-        box.style.filter = 'none';
-        box.style.borderColor = '#ef4444';
-        if (badge) badge.innerHTML = '<small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (filter: none / Image brute)</small>';
-      } else {
-        img.style.filter = flVal;
-        img.style.borderColor = '#10b981';
-        box.style.filter = flVal;
-        box.style.borderColor = '#10b981';
-        if (badge) badge.innerHTML = `<small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ filter: ${flVal} !</small>`;
-      }
-    }
-    return;
-  }
-
-  // 16. TABLEAUX (BORDER-COLLAPSE & TABLE-LAYOUT)
-  if (itemId === 'css-border-collapse') {
-    const table = document.getElementById('tab') || box;
-    const statusTxt = document.getElementById('tableStatusText');
-    const cVal = opt ? opt.value : 'collapse';
-
-    if (cVal === 'separate') {
-      if (step === 0) {
-        table.style.borderCollapse = 'collapse';
-        table.style.borderSpacing = '0px';
-        box.style.borderCollapse = 'collapse';
-        box.style.borderSpacing = '0px';
-        if (statusTxt) { statusTxt.textContent = '🔴 ÉTAT 1 : AVANT ➔ border-collapse: collapse (Bordures fusionnées en un seul trait)'; statusTxt.style.color = '#f87171'; }
-      } else {
-        table.style.borderCollapse = 'separate';
-        table.style.borderSpacing = '10px';
-        box.style.borderCollapse = 'separate';
-        box.style.borderSpacing = '10px';
-        if (statusTxt) { statusTxt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ border-collapse: separate (Bordures séparées avec espacement visible entre cellules !)'; statusTxt.style.color = '#4ade80'; }
-      }
-    } else {
-      if (step === 0) {
-        table.style.borderCollapse = 'separate';
-        table.style.borderSpacing = '10px';
-        box.style.borderCollapse = 'separate';
-        box.style.borderSpacing = '10px';
-        if (statusTxt) { statusTxt.textContent = '🔴 ÉTAT 1 : AVANT ➔ border-collapse: separate (Bordures disjointes espacées)'; statusTxt.style.color = '#f87171'; }
-      } else {
-        table.style.borderCollapse = 'collapse';
-        table.style.borderSpacing = '0px';
-        box.style.borderCollapse = 'collapse';
-        box.style.borderSpacing = '0px';
-        if (statusTxt) { statusTxt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ border-collapse: collapse (Bordures fusionnées en un trait unique !)'; statusTxt.style.color = '#4ade80'; }
-      }
-    }
-    return;
-  }
-
-  if (itemId === 'css-table-layout') {
-    const table = document.getElementById('tab') || box;
-    const statusTxt = document.getElementById('tableStatusText');
-    const lVal = opt ? opt.value : 'fixed';
-
-    if (lVal === 'auto') {
-      if (step === 0) {
-        table.style.tableLayout = 'fixed';
-        box.style.tableLayout = 'fixed';
-        if (statusTxt) { statusTxt.textContent = '🔴 ÉTAT 1 : AVANT ➔ table-layout: fixed (Colonnes figées à 50%/50%, texte long tronqué)'; statusTxt.style.color = '#f87171'; }
-      } else {
-        table.style.tableLayout = 'auto';
-        box.style.tableLayout = 'auto';
-        if (statusTxt) { statusTxt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ table-layout: auto (La colonne 1 s\'élargit naturellement pour le mot entier !)'; statusTxt.style.color = '#4ade80'; }
-      }
-    } else {
-      if (step === 0) {
-        table.style.tableLayout = 'auto';
-        box.style.tableLayout = 'auto';
-        if (statusTxt) { statusTxt.textContent = '🔴 ÉTAT 1 : AVANT ➔ table-layout: auto (La colonne 1 envahit 80% de l\'espace du tableau)'; statusTxt.style.color = '#f87171'; }
-      } else {
-        table.style.tableLayout = 'fixed';
-        box.style.tableLayout = 'fixed';
-        if (statusTxt) { statusTxt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ table-layout: fixed (Colonnes strictement égales 50% / 50% !)'; statusTxt.style.color = '#4ade80'; }
-      }
-    }
-    return;
-  }
-
-  // 17. LISTES (LIST-STYLE-TYPE, POSITION, IMAGE, SHORTHAND)
-  if (itemId === 'css-list-style-type') {
-    const tVal = opt ? opt.value : 'disc';
-    if (step === 0) {
-      box.style.listStyleType = tVal === 'disc' ? 'circle' : 'disc';
-      box.style.border = '1px dashed rgba(255,255,255,0.2)';
-    } else {
-      box.style.listStyleType = tVal;
-      box.style.border = '1px solid #38bdf8';
-    }
-    return;
-  }
-
-  if (itemId === 'css-list-style-position') {
-    const pVal = opt ? opt.value : 'outside';
-    if (step === 0) {
-      box.style.listStylePosition = pVal === 'outside' ? 'inside' : 'outside';
-      box.style.border = '2px dashed #ef4444';
-    } else {
-      box.style.listStylePosition = pVal;
-      box.style.border = '2px solid #10b981';
-    }
-    return;
-  }
-
-  if (itemId === 'css-list-style-image') {
-    const starUrl = 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23facc15\' width=\'16px\' height=\'16px\'%3E%3Cpath d=\'M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z\'/></svg>")';
-    const isNone = opt && opt.value === 'none';
-
-    if (isNone) {
-      if (step === 0) {
-        box.style.listStyleImage = starUrl;
-      } else {
-        box.style.listStyleImage = 'none';
-        box.style.listStyleType = 'disc';
-      }
-    } else {
-      if (step === 0) {
-        box.style.listStyleImage = 'none';
-        box.style.listStyleType = 'disc';
-      } else {
-        box.style.listStyleImage = starUrl;
-      }
-    }
-    return;
-  }
-
-  if (itemId === 'css-list-style-shorthand') {
-    const sVal = opt ? opt.value : 'square inside';
-    if (sVal === 'none') {
-      if (step === 0) {
-        box.style.listStyle = 'square inside';
-      } else {
-        box.style.listStyle = 'none';
-      }
-    } else {
-      if (step === 0) {
-        box.style.listStyle = 'disc outside none';
-      } else {
-        box.style.listStyle = sVal;
-      }
-    }
-    return;
-  }
-
-  // 18. ANIMATIONS & KEYFRAMES EN POURCENTAGES
-  if (itemId === 'css-keyframes' || itemId.startsWith('css-animation')) {
-    applyKeyframesProgress(box, step === 0 ? 0 : 100, variantIdx, itemId);
-    return;
-  }
-
-  // 19. TRANSITIONS (TRANSITION-PROPERTY, DURATION, DELAY, SHORTHAND)
-  if (itemId === 'css-transition-property') {
-    box.style.transition = 'all 0.6s ease';
-    if (step === 0) {
-      box.style.transform = 'scale(1) rotate(0deg)';
-      box.style.background = '#1e293b';
-      box.style.borderColor = '#38bdf8';
-      box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Au repos)</small></span>`;
-    } else {
-      const pVal = opt ? opt.value : 'all';
-      if (pVal === 'all') {
-        box.style.transform = 'scale(1.15) rotate(5deg)';
-        box.style.background = '#0284c7';
-        box.style.borderColor = '#38bdf8';
-      } else if (pVal === 'background-color') {
-        box.style.background = '#10b981';
-      } else if (pVal === 'transform') {
-        box.style.transform = 'scale(1.18) rotate(-6deg)';
-      }
-      box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (transition-property: ${pVal})</small></span>`;
-    }
-    return;
-  }
-
-  if (itemId === 'css-transition-duration') {
-    const dVal = opt ? opt.value : '1s';
-    box.style.transition = `all ${dVal} ease`;
-    if (step === 0) {
-      box.style.transform = 'scale(1)';
-      box.style.background = '#1e293b';
-      box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Au repos)</small></span>`;
-    } else {
-      box.style.transform = 'scale(1.16)';
-      box.style.background = '#0ea5e9';
-      box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (transition-duration: ${dVal})</small></span>`;
-    }
-    return;
-  }
-
-  if (itemId === 'css-transition-delay') {
-    const delVal = opt ? opt.value : '1s';
-    box.style.transition = `all 0.6s ease ${delVal}`;
-    if (step === 0) {
-      box.style.transform = 'scale(1)';
-      box.style.background = '#1e293b';
-      box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Au repos)</small></span>`;
-    } else {
-      box.style.transform = 'scale(1.16)';
-      box.style.background = '#f59e0b';
-      box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (transition-delay: ${delVal})</small></span>`;
-    }
-    return;
-  }
-
-  if (itemId === 'css-transition-shorthand') {
-    const sVal = opt ? opt.value : 'all 0.5s ease';
-    box.style.transition = sVal;
-    if (step === 0) {
-      box.style.transform = 'scale(1) rotate(0deg)';
-      box.style.background = '#1e293b';
-      box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Au repos)</small></span>`;
-    } else {
-      box.style.transform = 'scale(1.18) rotate(4deg)';
-      box.style.background = '#ec4899';
-      box.innerHTML = `<span>📦 &lt;div id="boite"&gt;<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (transition: ${sVal})</small></span>`;
-    }
-    return;
-  }
-
-  // 20. ARRIÈRE-PLANS (BACKGROUND-*)
-  if (itemId === 'css-background-color') {
-    box.style.transition = 'all 0.5s ease';
-    if (step === 0) {
-      box.style.backgroundColor = 'transparent';
-      box.style.border = '2px dashed #64748b';
-      box.style.color = '#94a3b8';
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (background-color: transparent)</small></span>`;
-    } else {
-      const bgVal = opt ? opt.value : '#38bdf8';
-      box.style.backgroundColor = bgVal;
-      box.style.border = '2px solid transparent';
-      box.style.color = '#fff';
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (background-color: ${bgVal})</small></span>`;
-    }
-    return;
-  }
-
-  if (itemId === 'css-background-image') {
-    box.style.transition = 'all 0.5s ease';
-    const isNone = opt && opt.value === 'none';
-
-    if (isNone) {
-      if (step === 0) {
-        box.style.backgroundImage = 'linear-gradient(135deg, #0284c7, #38bdf8)';
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Image dégradée active)</small></span>`;
-      } else {
-        box.style.backgroundImage = 'none';
-        box.style.backgroundColor = '#1e293b';
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (background-image: none / Supprimée !)</small></span>`;
-      }
-    } else {
-      if (step === 0) {
-        box.style.backgroundImage = 'none';
-        box.style.backgroundColor = '#1e293b';
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Sans image de fond)</small></span>`;
-      } else {
-        const imgVal = opt ? opt.value : 'linear-gradient(135deg, #6366f1, #ec4899)';
-        box.style.backgroundImage = imgVal;
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (background-image: ${imgVal})</small></span>`;
-      }
-    }
-    return;
-  }
-
-  if (itemId === 'css-background-repeat') {
-    box.style.transition = 'all 0.5s ease';
-    box.style.backgroundImage = 'radial-gradient(#38bdf8 3px, transparent 3px)';
-    box.style.backgroundSize = '24px 24px';
-    const repVal = opt ? opt.value : 'no-repeat';
-
-    if (repVal === 'repeat') {
-      if (step === 0) {
-        box.style.backgroundRepeat = 'no-repeat';
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (no-repeat : Motif unique isolé)</small></span>`;
-      } else {
-        box.style.backgroundRepeat = 'repeat';
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (repeat : Mosaïque continue !)</small></span>`;
-      }
-    } else {
-      if (step === 0) {
-        box.style.backgroundRepeat = 'repeat';
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (repeat : Répétition totale)</small></span>`;
-      } else {
-        box.style.backgroundRepeat = repVal;
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (background-repeat: ${repVal})</small></span>`;
-      }
-    }
-    return;
-  }
-
-  if (itemId === 'css-background-size') {
-    box.style.transition = 'all 0.5s ease';
-    box.style.backgroundImage = 'linear-gradient(135deg, #0284c7, #6366f1)';
-    const szVal = opt ? opt.value : 'cover';
-
-    if (szVal === 'auto') {
-      if (step === 0) {
-        box.style.backgroundSize = 'cover';
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (background-size: cover étiré)</small></span>`;
-      } else {
-        box.style.backgroundSize = 'auto';
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (background-size: auto naturel !)</small></span>`;
-      }
-    } else {
-      if (step === 0) {
-        box.style.backgroundSize = 'auto';
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (background-size: auto)</small></span>`;
-      } else {
-        box.style.backgroundSize = szVal;
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (background-size: ${szVal})</small></span>`;
-      }
-    }
-    return;
-  }
-
-  if (itemId === 'css-background-shorthand') {
-    box.style.transition = 'all 0.5s ease';
-    if (step === 0) {
-      box.style.background = '#1e293b';
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Fond uni standard)</small></span>`;
-    } else {
-      if (opt && opt.css) box.style.cssText += opt.css;
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (background: ${opt ? opt.value : 'appliqué'})</small></span>`;
-    }
-    return;
-  }
-
-  // 21. BORDURES (BORDER-COLOR & BORDER-WIDTH)
-  if (itemId === 'css-border-color') {
-    box.style.transition = 'all 0.4s ease';
-    if (step === 0) {
-      box.style.border = '4px solid #334155';
-      box.style.boxShadow = 'none';
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Bordure grise neutre sans couleur)</small></span>`;
-    } else {
-      const cVal = opt ? opt.value : '#38bdf8';
-      box.style.border = `4px solid ${cVal}`;
-      box.style.boxShadow = `0 0 20px ${cVal}88`;
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (border-color: ${cVal})</small></span>`;
-    }
-    return;
-  }
-
-  if (itemId === 'css-border-width') {
-    box.style.transition = 'all 0.4s ease';
-    const wVal = opt ? opt.value : '4px';
-
-    if (step === 0) {
-      box.style.border = '0px solid transparent';
-      box.style.outline = '1px dashed rgba(255, 255, 255, 0.25)';
-      box.style.boxShadow = 'none';
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT ➔ border-width: 0px (Aucune épaisseur de bordure)</small></span>`;
-    } else {
-      box.style.outline = 'none';
-      box.style.border = `${wVal} solid #38bdf8`;
-      box.style.boxShadow = '0 0 16px rgba(56, 189, 248, 0.5)';
-      box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ border-width: ${wVal} (Épaisseur nette appliquée !)</small></span>`;
-    }
-    return;
-  }
-
-  // 22. TYPOGRAPHIE & TEXTE
   if (itemId === 'css-font-weight') {
-    const txt = document.getElementById('h1Text') || box;
-    const wVal = opt ? opt.value : 'bold';
-
-    if (wVal === 'normal') {
-      if (step === 0) {
-        box.style.fontWeight = 'bold';
-        txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (font-weight: bold / Gras 700)</small></span>`;
-      } else {
-        box.style.fontWeight = 'normal';
-        txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ font-weight: normal (Graisse 400 normale !)</small></span>`;
-      }
+    const badge = document.getElementById('fontWeightBadge');
+    if (step === 0) {
+      box.style.setProperty('font-weight', '100', 'important');
+      box.style.setProperty('color', '#94a3b8', 'important');
+      box.style.setProperty('font-size', '30px', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : font-weight: 100 (Ultra-fin / Thin)'; badge.style.color = '#f87171'; }
     } else {
-      if (step === 0) {
-        box.style.fontWeight = 'normal';
-        txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (font-weight: normal / 400)</small></span>`;
-      } else {
-        box.style.fontWeight = wVal;
-        txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (font-weight: ${wVal} !)</small></span>`;
-      }
+      const wVal = opt ? (opt.value === 'lighter' ? '100' : (opt.value === 'bold' ? '700' : opt.value)) : '900';
+      box.style.setProperty('font-weight', wVal, 'important');
+      box.style.setProperty('color', '#ffffff', 'important');
+      box.style.setProperty('font-size', '30px', 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : font-weight: ${opt ? opt.value : '900'} (Graisse ultra-épaisse !)`; badge.style.color = '#4ade80'; }
     }
     return;
   }
 
   if (itemId === 'css-font-style') {
-    const txt = document.getElementById('h1Text') || box;
-    const sVal = opt ? opt.value : 'italic';
-
-    if (sVal === 'normal') {
-      if (step === 0) {
-        box.style.fontStyle = 'italic';
-        txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (font-style: italic / Penché)</small></span>`;
-      } else {
-        box.style.fontStyle = 'normal';
-        txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ font-style: normal (Droit normal !)</small></span>`;
-      }
+    const badge = document.getElementById('fontStyleBadge');
+    if (step === 0) {
+      box.style.setProperty('font-style', 'normal', 'important');
+      box.style.setProperty('color', '#ffffff', 'important');
+      box.style.setProperty('font-size', '28px', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : font-style: normal (Texte droit traditionnel)'; badge.style.color = '#f87171'; }
     } else {
-      if (step === 0) {
-        box.style.fontStyle = 'normal';
-        txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (font-style: normal / Droit)</small></span>`;
-      } else {
-        box.style.fontStyle = 'italic';
-        txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ font-style: italic (Incliné en italique !)</small></span>`;
-      }
+      const sVal = opt ? opt.value : 'italic';
+      box.style.setProperty('font-style', sVal, 'important');
+      box.style.setProperty('color', sVal === 'italic' ? '#facc15' : '#ffffff', 'important');
+      box.style.setProperty('font-size', '32px', 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : font-style: ${sVal} ${sVal === 'italic' ? '(Incliné jaune vif 32px !)' : ''}`; badge.style.color = '#4ade80'; }
     }
     return;
   }
 
   if (itemId === 'css-font-size') {
-    const txt = document.getElementById('h1Text') || box;
-    const szVal = opt ? opt.value : '26px';
-
-    if (szVal === '14px') {
-      if (step === 0) {
-        box.style.fontSize = '32px';
-        txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (font-size: 32px Grande taille)</small></span>`;
-      } else {
-        box.style.fontSize = '14px';
-        txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ font-size: 14px (Petite taille fine !)</small></span>`;
-      }
+    const badge = document.getElementById('fontSizeBadge');
+    if (step === 0) {
+      box.style.setProperty('font-size', '14px', 'important');
+      box.style.setProperty('color', '#94a3b8', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : font-size: 14px (Petite taille fine)'; badge.style.color = '#f87171'; }
     } else {
-      if (step === 0) {
-        box.style.fontSize = '14px';
-        txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (font-size: 14px Petite taille)</small></span>`;
-      } else {
-        box.style.fontSize = szVal;
-        txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (font-size: ${szVal} !)</small></span>`;
-      }
+      const sz = opt ? opt.value : '42px';
+      box.style.setProperty('font-size', sz === '14px' ? '14px' : sz, 'important');
+      box.style.setProperty('color', '#ffffff', 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : font-size: ${sz} (Taille géante ultra-lisible !)`; badge.style.color = '#4ade80'; }
     }
     return;
   }
 
   if (itemId === 'css-font-shorthand') {
-    const txt = document.getElementById('h1Text') || box;
+    const badge = document.getElementById('fontShorthandBadge');
     if (step === 0) {
-      box.style.font = 'normal normal 16px Arial, sans-serif';
-      txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Police normale 16px Arial)</small></span>`;
+      box.style.setProperty('font', 'normal normal 16px Arial, sans-serif', 'important');
+      box.style.setProperty('color', '#94a3b8', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : font: normal 16px Arial (Style standard)'; badge.style.color = '#f87171'; }
     } else {
-      const fVal = opt ? opt.value : 'italic bold 22px Arial, sans-serif';
-      box.style.font = fVal;
-      txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (font: ${fVal})</small></span>`;
+      const fVal = opt ? opt.value : 'italic bold 26px "Courier New", monospace';
+      box.style.setProperty('font', fVal, 'important');
+      box.style.setProperty('color', '#38bdf8', 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : font: ${fVal}`; badge.style.color = '#4ade80'; }
     }
     return;
   }
 
-  if (itemId === 'css-color') {
-    const txt = document.getElementById('h1Text') || box;
+  if (itemId === 'css-text-align') {
+    const badge = document.getElementById('textAlignBadge');
     if (step === 0) {
-      box.style.color = '#94a3b8';
-      txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (color: #94a3b8 gris neutre)</small></span>`;
+      box.style.setProperty('text-align', 'left', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : text-align: left (Aligné à gauche par défaut)'; badge.style.color = '#f87171'; }
     } else {
-      const cVal = opt ? opt.value : '#38bdf8';
-      box.style.color = cVal;
-      txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (color: ${cVal})</small></span>`;
+      const al = opt ? opt.value : 'center';
+      box.style.setProperty('text-align', al, 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : text-align: ${al} (Alignement décalé avec succès !)`; badge.style.color = '#4ade80'; }
     }
     return;
   }
 
   if (itemId === 'css-text-shadow') {
-    const txt = document.getElementById('h1Text') || box;
-    const shVal = opt ? opt.value : '2px 2px 6px #38bdf8';
-
-    if (shVal === 'none') {
-      if (step === 0) {
-        box.style.textShadow = '0 0 16px #38bdf8';
-        txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Ombre lumineuse active)</small></span>`;
-      } else {
-        box.style.textShadow = 'none';
-        txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ text-shadow: none (Ombre retirée !)</small></span>`;
-      }
+    const badge = document.getElementById('textShadowBadge');
+    if (step === 0) {
+      box.style.setProperty('text-shadow', 'none', 'important');
+      box.style.setProperty('color', '#94a3b8', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : text-shadow: none (Texte plat sans aucun relief)'; badge.style.color = '#f87171'; }
     } else {
-      if (step === 0) {
-        box.style.textShadow = 'none';
-        txt.innerHTML = `<span>Titre #h1<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (Sans ombre de texte)</small></span>`;
-      } else {
-        box.style.textShadow = shVal;
-        txt.innerHTML = `<span>Titre #h1<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (text-shadow: ${shVal} !)</small></span>`;
-      }
+      const sh = (opt && opt.value && opt.value !== 'none') ? opt.value : '3px 3px 0px #ef4444, 6px 6px 0px #3b82f6, 0 0 20px #38bdf8';
+      box.style.setProperty('text-shadow', opt && opt.value === 'none' ? 'none' : sh, 'important');
+      box.style.setProperty('color', '#ffffff', 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : text-shadow: ${opt ? opt.value : '3D Néon Drop Shadow'}`; badge.style.color = '#4ade80'; }
     }
     return;
   }
 
-  // 23. DIMENSIONS & OPACITÉ
-  if (itemId === 'css-width') {
-    box.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
-    const wVal = opt ? opt.value : '260px';
-
-    if (wVal === '120px') {
-      if (step === 0) {
-        box.style.width = '280px';
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (width: 280px grande largeur)</small></span>`;
-      } else {
-        box.style.width = '120px';
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ width: 120px (Rétrécie à 120px !)</small></span>`;
-      }
+  if (itemId === 'css-text-transform') {
+    const badge = document.getElementById('textTransformBadge');
+    if (step === 0) {
+      box.style.setProperty('text-transform', 'none', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : text-transform: none (Casse mixte originale : bAc inFoRmaTiQue tuniSie)'; badge.style.color = '#f87171'; }
     } else {
-      if (step === 0) {
-        box.style.width = '100px';
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (width: 100px)</small></span>`;
-      } else {
-        box.style.width = wVal;
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (width: ${wVal} !)</small></span>`;
-      }
+      const tt = opt ? opt.value : 'uppercase';
+      box.style.setProperty('text-transform', tt, 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : text-transform: ${tt} (Transformation de casse active !)`; badge.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  if (itemId === 'css-color') {
+    const badge = document.getElementById('colorBadge');
+    if (step === 0) {
+      box.style.setProperty('color', '#64748b', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : color: #64748b (Gris neutre éteint)'; badge.style.color = '#f87171'; }
+    } else {
+      const col = opt ? opt.value : '#22c55e';
+      box.style.setProperty('color', col, 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : color: ${col} (Couleur vive éclatante appliquée !)`; badge.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  // =========================================================
+  // CATÉGORIE 3 : PROPRIÉTÉS DES LISTES (4 ITEMS)
+  // =========================================================
+  if (itemId === 'css-list-style-type') {
+    const txt = document.getElementById('listStatusText');
+    if (step === 0) {
+      box.style.setProperty('list-style-type', 'disc', 'important');
+      if (txt) { txt.textContent = '🔴 AVANT : list-style-type: disc (Puce ronde pleine standard)'; txt.style.color = '#f87171'; }
+    } else {
+      const lt = opt ? opt.value : 'circle';
+      box.style.setProperty('list-style-type', lt, 'important');
+      if (txt) { txt.textContent = `🟢 APRÈS : list-style-type: ${lt} (Style de puces personnalisé !)`; txt.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  if (itemId === 'css-list-style-position') {
+    const txt = document.getElementById('listStatusText');
+    if (step === 0) {
+      box.style.setProperty('list-style-position', 'outside', 'important');
+      if (txt) { txt.textContent = '🔴 AVANT : list-style-position: outside (Puces situées HORS du cadre orange des <li>)'; txt.style.color = '#f87171'; }
+    } else {
+      const lp = opt ? opt.value : 'inside';
+      box.style.setProperty('list-style-position', lp, 'important');
+      if (txt) { txt.textContent = `🟢 APRÈS : list-style-position: ${lp} ${lp === 'inside' ? '(Puces tirées DANS le cadre orange des <li> !)' : '(Puces hors cadre)'}`; txt.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  if (itemId === 'css-list-style-image') {
+    const txt = document.getElementById('listStatusText');
+    const starUrl = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23facc15' width='18px' height='18px'%3E%3Cpath d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'/%3E%3C/svg%3E\")";
+    if (step === 0) {
+      box.style.setProperty('list-style-image', 'none', 'important');
+      box.style.setProperty('list-style-type', 'disc', 'important');
+      if (txt) { txt.textContent = '🔴 AVANT : list-style-image: none (Puces standard par défaut)'; txt.style.color = '#f87171'; }
+    } else {
+      box.style.setProperty('list-style-image', starUrl, 'important');
+      if (txt) { txt.textContent = '🟢 APRÈS : list-style-image: url(...) (Étoiles dorées SVG personnalisées !)'; txt.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  if (itemId === 'css-list-style-shorthand') {
+    const txt = document.getElementById('listStatusText');
+    if (step === 0) {
+      box.style.setProperty('list-style', 'disc outside none', 'important');
+      if (txt) { txt.textContent = '🔴 AVANT : list-style: disc outside none (Style par défaut)'; txt.style.color = '#f87171'; }
+    } else {
+      const ls = opt ? opt.value : 'square inside';
+      box.style.setProperty('list-style', ls, 'important');
+      if (txt) { txt.textContent = `🟢 APRÈS : list-style: ${ls}`; txt.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  // =========================================================
+  // CATÉGORIE 4 : PROPRIÉTÉS DES TABLEAUX (2 ITEMS)
+  // =========================================================
+  if (itemId === 'css-table-layout') {
+    const table = document.getElementById('tab') || box;
+    const txt = document.getElementById('tableStatusText');
+    if (step === 0) {
+      table.style.setProperty('table-layout', 'auto', 'important');
+      table.style.setProperty('width', '95%', 'important');
+      if (txt) { txt.textContent = '🔴 ÉTAT 1 : AVANT ➔ table-layout: auto (La colonne 1 s\'élargit à 80% pour englober le long mot entier !)'; txt.style.color = '#f87171'; }
+    } else {
+      table.style.setProperty('table-layout', 'fixed', 'important');
+      table.style.setProperty('width', '360px', 'important');
+      if (txt) { txt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ table-layout: fixed (Colonnes strictement égales 50%/50% : le mot long est tronqué !)'; txt.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  if (itemId === 'css-border-collapse') {
+    const table = document.getElementById('tab') || box;
+    const txt = document.getElementById('tableStatusText');
+    const cells = table.querySelectorAll('th, td');
+    if (step === 0) {
+      table.style.setProperty('border-collapse', 'separate', 'important');
+      table.style.setProperty('border-spacing', '16px', 'important');
+      cells.forEach(td => { td.style.setProperty('border-color', '#38bdf8', 'important'); });
+      if (txt) { txt.textContent = '🔴 ÉTAT 1 : AVANT ➔ border-collapse: separate (Bordures doubles disjointes : espace visible de 16px entre cellules !)'; txt.style.color = '#f87171'; }
+    } else {
+      table.style.setProperty('border-collapse', 'collapse', 'important');
+      table.style.setProperty('border-spacing', '0px', 'important');
+      cells.forEach(td => { td.style.setProperty('border-color', '#10b981', 'important'); });
+      if (txt) { txt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ border-collapse: collapse (Bordures fusionnées en un seul trait vert uni : 0px d\'écart !)'; txt.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  // =========================================================
+  // CATÉGORIE 5 : BOÎTES & POSITIONNEMENT (11 ITEMS)
+  // =========================================================
+  if (itemId === 'css-width') {
+    const badge = document.getElementById('dimBadge');
+    if (step === 0) {
+      box.style.setProperty('width', '80px', 'important');
+      box.style.setProperty('height', '80px', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : width: 80px (Boîte étroite compacte)'; badge.style.color = '#f87171'; }
+    } else {
+      const w = opt ? opt.value : '260px';
+      box.style.setProperty('width', w, 'important');
+      box.style.setProperty('height', '80px', 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : width: ${w} (Largeur étendue avec succès !)`; badge.style.color = '#4ade80'; }
     }
     return;
   }
 
   if (itemId === 'css-height') {
-    box.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
-    const hVal = opt ? opt.value : '130px';
-
-    if (hVal === '50px') {
-      if (step === 0) {
-        box.style.height = '130px';
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (height: 130px haute)</small></span>`;
-      } else {
-        box.style.height = '50px';
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ height: 50px (Petite hauteur !)</small></span>`;
-      }
+    const badge = document.getElementById('dimBadge');
+    if (step === 0) {
+      box.style.setProperty('height', '50px', 'important');
+      box.style.setProperty('width', '180px', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : height: 50px (Boîte basse plate)'; badge.style.color = '#f87171'; }
     } else {
-      if (step === 0) {
-        box.style.height = '50px';
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (height: 50px)</small></span>`;
-      } else {
-        box.style.height = hVal;
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (height: ${hVal} !)</small></span>`;
-      }
+      const h = opt ? opt.value : '140px';
+      box.style.setProperty('height', h, 'important');
+      box.style.setProperty('width', '180px', 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : height: ${h} (Hauteur étendue avec succès !)`; badge.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  if (itemId === 'css-position' || itemId === 'css-coords-top-bottom-left-right') {
+    const badge = document.getElementById('posBadge');
+    if (step === 0) {
+      box.style.setProperty('position', 'static', 'important');
+      box.style.setProperty('top', '0px', 'important');
+      box.style.setProperty('left', '0px', 'important');
+      box.style.setProperty('border-color', '#475569', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : position: static (Au repos sur le repère d\'origine 0, 0)'; badge.style.color = '#f87171'; }
+    } else {
+      box.style.setProperty('position', 'relative', 'important');
+      box.style.setProperty('top', '40px', 'important');
+      box.style.setProperty('left', '80px', 'important');
+      box.style.setProperty('border-color', '#10b981', 'important');
+      if (badge) { badge.textContent = '🟢 APRÈS : position: relative (top: 40px, left: 80px ➔ Décalé sur le repère quadrillé !)'; badge.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  if (itemId === 'css-float') {
+    const lbl = document.getElementById('floatLabel');
+    if (step === 0) {
+      box.style.setProperty('float', 'none', 'important');
+      box.style.setProperty('margin', '0 auto 10px auto', 'important');
+      if (lbl) { lbl.textContent = '🔴 AVANT : float: none (Flux normal : texte refoulé en-dessous)'; lbl.style.color = '#f87171'; }
+    } else {
+      const fl = opt ? opt.value : 'left';
+      box.style.setProperty('float', fl, 'important');
+      box.style.setProperty('margin', fl === 'left' ? '4px 14px 6px 0' : '4px 0 6px 14px', 'important');
+      if (lbl) { lbl.textContent = `🟢 APRÈS : float: ${fl} (Le texte s'enroule harmonieusement autour du bloc !)`; lbl.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  if (itemId === 'css-padding') {
+    const txt = document.getElementById('paddingIndicatorText');
+    if (step === 0) {
+      box.style.setProperty('padding', '0px', 'important');
+      box.style.setProperty('border-color', '#ef4444', 'important');
+      if (txt) { txt.textContent = '🔴 AVANT : padding: 0px (Texte comprimé directement contre les bords !)'; txt.style.color = '#f87171'; }
+    } else {
+      const p = opt ? opt.value : '24px';
+      box.style.setProperty('padding', p, 'important');
+      box.style.setProperty('border-color', '#10b981', 'important');
+      if (txt) { txt.textContent = `🟢 APRÈS : padding: ${p} (Espace vert intérieur de respiration créé !)`; txt.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  if (itemId === 'css-margin') {
+    const vHaut = document.getElementById('voisinHaut');
+    const vBas = document.getElementById('voisinBas');
+    const txt = document.getElementById('marginIndicatorText');
+    if (step === 0) {
+      box.style.setProperty('margin', '0px auto', 'important');
+      box.style.setProperty('border-color', '#ef4444', 'important');
+      if (vHaut) vHaut.style.transform = 'translateY(2px)';
+      if (vBas) vBas.style.transform = 'translateY(-2px)';
+      if (txt) { txt.textContent = '🔴 AVANT : margin: 0px (Éléments voisins étouffés collés bord à bord !)'; txt.style.color = '#f87171'; }
+    } else {
+      const m = opt ? opt.value : '28px';
+      box.style.setProperty('margin', `${m} auto`, 'important');
+      box.style.setProperty('border-color', '#10b981', 'important');
+      if (vHaut) vHaut.style.transform = 'translateY(-14px)';
+      if (vBas) vBas.style.transform = 'translateY(14px)';
+      if (txt) { txt.textContent = `🟢 APRÈS : margin: ${m} (Voisins repoussés par l'espace orange externe !)`; txt.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  if (itemId === 'css-box-shadow') {
+    const badge = document.getElementById('shadowBadge');
+    if (step === 0) {
+      box.style.setProperty('box-shadow', 'none', 'important');
+      box.style.setProperty('transform', 'translateY(0)', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : box-shadow: none (Boîte plate sans relief)'; badge.style.color = '#f87171'; }
+    } else {
+      const sh = (opt && opt.value && opt.value !== 'none') ? opt.value : '0 14px 28px rgba(56, 189, 248, 0.65), 0 0 10px rgba(56, 189, 248, 0.4)';
+      box.style.setProperty('box-shadow', opt && opt.value === 'none' ? 'none' : sh, 'important');
+      box.style.setProperty('transform', opt && opt.value === 'none' ? 'translateY(0)' : 'translateY(-4px)', 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : box-shadow: ${opt ? opt.value : 'relief lumineux'}`; badge.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  if (itemId === 'css-display') {
+    const d = opt ? opt.value : 'block';
+    if (d === 'none') {
+      box.style.setProperty('display', step === 0 ? 'inline-block' : 'none', 'important');
+    } else if (d === 'inline') {
+      box.style.setProperty('display', step === 0 ? 'block' : 'inline', 'important');
+      box.style.setProperty('width', step === 0 ? '100%' : 'auto', 'important');
+    } else if (d === 'inline-block') {
+      box.style.setProperty('display', step === 0 ? 'inline' : 'inline-block', 'important');
+      box.style.setProperty('width', step === 0 ? 'auto' : '140px', 'important');
+    } else {
+      box.style.setProperty('display', step === 0 ? 'inline' : 'block', 'important');
+      box.style.setProperty('width', step === 0 ? 'auto' : '100%', 'important');
+    }
+    return;
+  }
+
+  if (itemId === 'css-overflow') {
+    const badge = document.getElementById('overflowBadge');
+    const txt = document.getElementById('overflowStatusText');
+    const o = opt ? opt.value : 'hidden';
+    if (step === 0) {
+      box.style.setProperty('overflow', o === 'visible' ? 'hidden' : 'visible', 'important');
+      if (badge) badge.textContent = o === 'visible' ? '🔴 AVANT : overflow: hidden' : '🔴 AVANT : overflow: visible';
+      if (txt) { txt.textContent = '🔴 ÉTAT 1 : AVANT (Comportement initial)'; txt.style.color = '#f87171'; }
+    } else {
+      box.style.setProperty('overflow', o, 'important');
+      if (badge) badge.textContent = `🟢 APRÈS : overflow: ${o}`;
+      if (txt) { txt.textContent = `🟢 ÉTAT 2 : APRÈS (overflow: ${o} appliqué !)`; txt.style.color = '#4ade80'; }
     }
     return;
   }
 
   if (itemId === 'css-opacity') {
-    box.style.transition = 'all 0.5s ease';
-    const opVal = opt ? opt.value : '0.35';
-
-    if (opVal === '1.0' || opVal === '1') {
-      if (step === 0) {
-        box.style.opacity = '0.2';
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (opacity: 0.2 ➔ Fortement transparent)</small></span>`;
-      } else {
-        box.style.opacity = '1.0';
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS ➔ opacity: 1.0 (100% Opaque et solide !)</small></span>`;
-      }
-    } else {
-      if (step === 0) {
-        box.style.opacity = '1.0';
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#ef4444; font-weight:bold;">🔴 ÉTAT 1 : AVANT (opacity: 1.0 ➔ Opaque)</small></span>`;
-      } else {
-        box.style.opacity = opVal;
-        box.innerHTML = `<span>📦 #boite<br><small style="color:#4ade80; font-weight:bold;">🟢 ÉTAT 2 : APRÈS (opacity: ${opVal} ➔ Transparence appliquée !)</small></span>`;
-      }
-    }
-    return;
-  }
-
-  // 24. TOUT AUTRE ÉLÉMENT AVEC VARIANTES DANS VARIETIES_CONFIG
-  if (opt && opt.css) {
+    const badge = document.getElementById('opacityBadge');
     if (step === 0) {
-      box.style.transform = 'scale(1)';
+      box.style.setProperty('opacity', '1.0', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : opacity: 1.0 (100% Opaque - Le damier sous-jacent est totalement masqué)'; badge.style.color = '#f87171'; }
     } else {
-      box.style.cssText += opt.css;
-      box.style.transform = 'scale(1.05)';
+      const op = opt ? opt.value : '0.40';
+      box.style.setProperty('opacity', op, 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : opacity: ${op} (Transparence active : le damier sous-jacent apparaît clairement !)`; badge.style.color = '#4ade80'; }
     }
     return;
   }
 
-  // 25. ANIMATION PAR DÉFAUT
+  // =========================================================
+  // CATÉGORIE 6 : ARRIÈRE-PLAN, TRANSFORM, FILTRES (8 ITEMS)
+  // =========================================================
+  if (itemId === 'css-background-color') {
+    const badge = document.getElementById('bgBadge');
+    if (step === 0) {
+      box.style.setProperty('background-color', 'transparent', 'important');
+      box.style.setProperty('border', '2px dashed #64748b', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : background-color: transparent (Fond vide transparent)'; badge.style.color = '#f87171'; }
+    } else {
+      const bgc = opt ? opt.value : '#0284c7';
+      box.style.setProperty('background-color', bgc, 'important');
+      box.style.setProperty('border', '2px solid transparent', 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : background-color: ${bgc} (Fond coloré uni appliqué !)`; badge.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  if (itemId === 'css-background-image') {
+    const badge = document.getElementById('bgImgBadge');
+    if (step === 0) {
+      box.style.setProperty('background-image', 'none', 'important');
+      box.style.setProperty('background-color', '#1e293b', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : background-image: none (Sans image de fond)'; badge.style.color = '#f87171'; }
+    } else {
+      const bgi = opt ? opt.value : 'linear-gradient(135deg, #0284c7, #38bdf8)';
+      box.style.setProperty('background-image', bgi, 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : background-image: ${bgi}`; badge.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  if (itemId === 'css-background-repeat') {
+    const badge = document.getElementById('bgRepBadge');
+    box.style.setProperty('background-image', 'radial-gradient(#38bdf8 3px, transparent 3px)', 'important');
+    box.style.setProperty('background-size', '24px 24px', 'important');
+    if (step === 0) {
+      box.style.setProperty('background-repeat', 'repeat', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : background-repeat: repeat (Mosaïque complète par défaut)'; badge.style.color = '#f87171'; }
+    } else {
+      const bgr = opt ? opt.value : 'no-repeat';
+      box.style.setProperty('background-repeat', bgr, 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : background-repeat: ${bgr}`; badge.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  if (itemId === 'css-background-size') {
+    const badge = document.getElementById('bgSzBadge');
+    box.style.setProperty('background-image', 'linear-gradient(135deg, #0284c7, #6366f1)', 'important');
+    if (step === 0) {
+      box.style.setProperty('background-size', 'auto', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : background-size: auto (Taille d\'origine 24px)'; badge.style.color = '#f87171'; }
+    } else {
+      const bgs = opt ? opt.value : 'cover';
+      box.style.setProperty('background-size', bgs, 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : background-size: ${bgs}`; badge.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  if (itemId === 'css-background-shorthand') {
+    const badge = document.getElementById('bgShBadge');
+    if (step === 0) {
+      box.style.setProperty('background', '#1e293b', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : background par défaut'; badge.style.color = '#f87171'; }
+    } else {
+      if (opt && opt.css) box.style.cssText += opt.css;
+      if (badge) { badge.textContent = `🟢 APRÈS : background: ${opt ? opt.value : 'appliqué'}`; badge.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  if (itemId === 'css-transform') {
+    const badge = document.getElementById('transformStageBadge');
+    if (step === 0) {
+      box.style.setProperty('transform', 'none', 'important');
+      box.style.setProperty('border-color', '#475569', 'important');
+      box.style.setProperty('box-shadow', 'none', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : transform: none (Au repos sur le repère fantôme rouge)'; badge.style.color = '#f87171'; }
+    } else {
+      const tr = opt ? opt.value : 'rotate(25deg)';
+      box.style.setProperty('transform', tr, 'important');
+      box.style.setProperty('border-color', '#10b981', 'important');
+      box.style.setProperty('box-shadow', '0 12px 30px rgba(56, 189, 248, 0.45)', 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : transform: ${tr} (Transformation 2D active !)`; badge.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  if (itemId === 'css-filter') {
+    const img = document.getElementById('img1') || box;
+    const badge = document.getElementById('filterStageBadge');
+    if (step === 0) {
+      img.style.setProperty('filter', 'none', 'important');
+      img.style.setProperty('border-color', '#475569', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : filter: none (Couleurs éclatantes d\'origine sans aucun filtre)'; badge.style.color = '#f87171'; }
+    } else {
+      const fl = opt ? opt.value : 'grayscale(100%)';
+      img.style.setProperty('filter', fl, 'important');
+      img.style.setProperty('border-color', '#10b981', 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : filter: ${fl} (Filtre visuel appliqué !)`; badge.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  // =========================================================
+  // CATÉGORIE 7 : PROPRIÉTÉS DES BORDURES (5 ITEMS)
+  // =========================================================
+  if (itemId === 'css-border-style') {
+    const badge = document.getElementById('borderStyleBadge');
+    if (step === 0) {
+      box.style.setProperty('border', '0px solid transparent', 'important');
+      box.style.setProperty('outline', '2px dashed #475569', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : border-style: none (Sans aucune bordure)'; badge.style.color = '#f87171'; }
+    } else {
+      const bs = opt ? opt.value : 'solid';
+      box.style.setProperty('outline', 'none', 'important');
+      if (bs === 'none') {
+        box.style.setProperty('border', 'none', 'important');
+      } else {
+        box.style.setProperty('border', `8px ${bs} #38bdf8`, 'important');
+        box.style.setProperty('box-shadow', '0 0 20px rgba(56, 189, 248, 0.55)', 'important');
+      }
+      if (badge) { badge.textContent = `🟢 APRÈS : border-style: ${bs} (Bordure 8px nette !)`; badge.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  if (itemId === 'css-border-color') {
+    const badge = document.getElementById('borderColorBadge');
+    if (step === 0) {
+      box.style.setProperty('border', '4px solid #334155', 'important');
+      box.style.setProperty('box-shadow', 'none', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : border-color: #334155 (Gris éteint neutre)'; badge.style.color = '#f87171'; }
+    } else {
+      const bc = opt ? opt.value : '#38bdf8';
+      box.style.setProperty('border', `4px solid ${bc}`, 'important');
+      box.style.setProperty('box-shadow', `0 0 20px ${bc}88`, 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : border-color: ${bc} (Bordure colorée éclatante !)`; badge.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  if (itemId === 'css-border-width') {
+    const badge = document.getElementById('borderWidthBadge');
+    if (step === 0) {
+      box.style.setProperty('border', '1px solid #475569', 'important');
+      box.style.setProperty('box-shadow', 'none', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : border-width: 1px (Filet fin quasi invisible)'; badge.style.color = '#f87171'; }
+    } else {
+      const bw = opt ? opt.value : '8px';
+      box.style.setProperty('border', `${bw} solid #38bdf8`, 'important');
+      box.style.setProperty('box-shadow', '0 0 16px rgba(56, 189, 248, 0.5)', 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : border-width: ${bw} (Épaisseur nette appliquée !)`; badge.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  if (itemId === 'css-border-radius') {
+    const badge = document.getElementById('borderRadiusBadge');
+    if (step === 0) {
+      box.style.setProperty('border-radius', '0px', 'important');
+      box.style.setProperty('border-color', '#475569', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : border-radius: 0px (Angles droits stricts à 90°)'; badge.style.color = '#f87171'; }
+    } else {
+      const br = opt ? opt.value : '24px';
+      box.style.setProperty('border-radius', br, 'important');
+      box.style.setProperty('border-color', '#10b981', 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : border-radius: ${br} ${br === '50%' ? '(Transformation en CERCLE parfait !)' : '(Coins arrondis !)'}`; badge.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  if (itemId === 'css-border-shorthand') {
+    const badge = document.getElementById('borderShBadge');
+    if (step === 0) {
+      box.style.setProperty('border', '0px solid transparent', 'important');
+      box.style.setProperty('outline', '2px dashed #475569', 'important');
+      if (badge) { badge.textContent = '🔴 AVANT : border: 0px (Contour nu)'; badge.style.color = '#f87171'; }
+    } else {
+      const bsh = opt ? opt.value : '4px solid #38bdf8';
+      box.style.setProperty('outline', 'none', 'important');
+      box.style.setProperty('border', bsh, 'important');
+      box.style.setProperty('box-shadow', '0 0 20px rgba(56, 189, 248, 0.55)', 'important');
+      if (badge) { badge.textContent = `🟢 APRÈS : border: ${bsh}`; badge.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  // =========================================================
+  // CATÉGORIE 8 : TRANSITIONS (4 ITEMS)
+  // =========================================================
+  if (itemId.startsWith('css-transition')) {
+    const trRaw = document.getElementById('trBoxRaw');
+    const trTimer = document.getElementById('trTimerLabel');
+    const trBadge = document.getElementById('trTrackBadge');
+    if (step === 0) {
+      if (trRaw) trRaw.style.setProperty('left', '0px', 'important');
+      box.style.setProperty('left', '0px', 'important');
+      box.style.setProperty('background-color', '#0284c7', 'important');
+      if (trTimer) { trTimer.textContent = 'T = 0.0s (Repos)'; trTimer.style.color = '#94a3b8'; }
+      if (trBadge) { trBadge.textContent = '🔴 AVANT : boîtes alignées au départ (0s)'; trBadge.style.color = '#f87171'; }
+    } else {
+      if (trRaw) trRaw.style.setProperty('left', 'calc(100% - 95px)', 'important');
+      box.style.setProperty('left', 'calc(100% - 95px)', 'important');
+      box.style.setProperty('background-color', '#10b981', 'important');
+      if (trTimer) { trTimer.textContent = 'T = 1.5s (Transition terminée)'; trTimer.style.color = '#4ade80'; }
+      if (trBadge) { trBadge.textContent = `🟢 APRÈS : glissement progressif fluide (${opt ? opt.value : '1.5s'}) !`; trBadge.style.color = '#4ade80'; }
+    }
+    return;
+  }
+
+  // =========================================================
+  // CATÉGORIE 9 : ANIMATIONS & KEYFRAMES (7 ITEMS)
+  // =========================================================
+  if (itemId === 'css-keyframes' || itemId.startsWith('css-animation')) {
+    applyKeyframesProgress(box, step === 0 ? 0 : 100, variantIdx, itemId);
+    return;
+  }
+
+  // Fallback général
   if (step === 0) {
-    box.style.transform = 'scale(1)';
+    box.style.setProperty('transform', 'scale(1)', 'important');
   } else {
-    box.style.transform = 'scale(1.08)';
+    box.style.setProperty('transform', 'scale(1.08)', 'important');
   }
 }
 
