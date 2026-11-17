@@ -4463,11 +4463,11 @@ const DATA = {
       "id": "algo-fichier-texte-creer",
       "category": "Chapitre 1 : Les fichiers binaires et fichier text",
       "type": "procédure",
-      "name": "Fichier Texte : Création & Remplissage (recréer, écrire_ligne)",
-      "syntax": "procédure Remplir_Fichier_Texte(nom_physique: chaîne)",
-      "summary": "Création et enregistrement de lignes dans un fichier texte jusqu'à saisie d'une chaîne vide.",
-      "description": "Au Baccalauréat tunisien, un fichier texte stocke des données sous forme de lignes de caractères. Pour le remplir : associer(f, nom_physique) lie la variable logique au fichier réel, recréer(f) l'ouvre en écriture, puis écrire_ligne(f, ch) ajoute chaque ligne. En Python, open(nom, 'w') et write().",
-      "pseudoCode": "0) procédure Remplir_Fichier_Texte(nom_physique: chaîne)\n1) associer(f, nom_physique)\n2) recréer(f)\n3) répéter\n     écrire(\"ch=\")\n     lire(ch)\n     si (ch ≠ \"\") alors\n       écrire_ligne(f, ch)\n     fin_si\n   jusqu'à (ch = \"\")\n4) fermer(f)\n5) fin",
+      "name": "Fichier Texte : Création & Remplissage (ouvrir en mode \"w\")",
+      "syntax": "procédure Remplir_Fichier_Texte()",
+      "summary": "Création et écriture de lignes dans un fichier texte jusqu'à saisie d'une chaîne vide.",
+      "description": "Au Baccalauréat tunisien, l'ouverture d'un fichier s'effectue avec ouvrir(nom_de_fichier, nom_logique, \"mode\") en algorithmique et f = open(nom_de_fichier, \"mode\") en Python. Le nom du fichier est spécifié directement à l'ouverture et non dans l'en-tête du sous-programme. Le mode \"w\" ouvre le fichier en écriture/création.",
+      "pseudoCode": "0) procédure Remplir_Fichier_Texte()\n1) ouvrir(\"donnees.txt\", f, \"w\")\n2) répéter\n     écrire(\"ch=\")\n     lire(ch)\n     si (ch ≠ \"\") alors\n       écrire_ligne(f, ch)\n     fin_si\n   jusqu'à (ch = \"\")\n3) fermer(f)\n4) fin",
       "tdo": [
         {
           "objet": "f",
@@ -4478,18 +4478,18 @@ const DATA = {
           "type": "chaîne"
         }
       ],
-      "pythonCode": "def remplir_fichier_texte(nom_physique):\n    f = open(nom_physique, \"w\")\n    ch = input(\"ch=\")\n    while not (ch == \"\"):\n        f.write(ch + \"\\n\")\n        ch = input(\"ch=\")\n    f.close()",
-      "example": "remplir_fichier_texte(\"donnees.txt\")"
+      "pythonCode": "def remplir_fichier_texte():\n    f = open(\"donnees.txt\", \"w\")\n    ch = input(\"ch=\")\n    while not (ch == \"\"):\n        f.write(ch + \"\\n\")\n        ch = input(\"ch=\")\n    f.close()",
+      "example": "remplir_fichier_texte()"
     },
     {
       "id": "algo-fichier-texte-afficher",
       "category": "Chapitre 1 : Les fichiers binaires et fichier text",
       "type": "procédure",
-      "name": "Fichier Texte : Lecture & Affichage (ouvrir, lire_ligne, fin_fichier)",
-      "syntax": "procédure Afficher_Fichier_Texte(nom_physique: chaîne)",
+      "name": "Fichier Texte : Lecture & Affichage (ouvrir en mode \"r\")",
+      "syntax": "procédure Afficher_Fichier_Texte()",
       "summary": "Parcours séquentiel et affichage ligne par ligne d'un fichier texte existant.",
-      "description": "La procédure associe le fichier physique à la variable f, l'ouvre en lecture seule via ouvrir(f), puis lit séquentiellement chaque ligne avec lire_ligne(f, ch) tant que non fin_fichier(f). En Python, boucle simple for ligne in f:.",
-      "pseudoCode": "0) procédure Afficher_Fichier_Texte(nom_physique: chaîne)\n1) associer(f, nom_physique)\n2) ouvrir(f)\n3) tant que non fin_fichier(f) faire\n     lire_ligne(f, ch)\n     écrire(ch)\n   fin_tant_que\n4) fermer(f)\n5) fin",
+      "description": "Le fichier texte est ouvert en lecture avec ouvrir(\"donnees.txt\", f, \"r\"). On parcourt séquentiellement chaque ligne avec lire_ligne(f, ch) tant que non fin_fichier(f). En Python, f = open(\"donnees.txt\", \"r\") puis parcours avec for ligne in f:.",
+      "pseudoCode": "0) procédure Afficher_Fichier_Texte()\n1) ouvrir(\"donnees.txt\", f, \"r\")\n2) tant que non fin_fichier(f) faire\n     lire_ligne(f, ch)\n     écrire(ch)\n   fin_tant_que\n3) fermer(f)\n4) fin",
       "tdo": [
         {
           "objet": "f",
@@ -4500,18 +4500,18 @@ const DATA = {
           "type": "chaîne"
         }
       ],
-      "pythonCode": "def afficher_fichier_texte(nom_physique):\n    f = open(nom_physique, \"r\")\n    for ligne in f:\n        ch = ligne.strip()\n        print(ch)\n    f.close()",
-      "example": "afficher_fichier_texte(\"donnees.txt\")"
+      "pythonCode": "def afficher_fichier_texte():\n    f = open(\"donnees.txt\", \"r\")\n    for ligne in f:\n        ch = ligne.strip()\n        print(ch)\n    f.close()",
+      "example": "afficher_fichier_texte()"
     },
     {
       "id": "algo-fichier-texte-transfert",
       "category": "Chapitre 1 : Les fichiers binaires et fichier text",
       "type": "procédure",
-      "name": "Fichier Texte : Transfert vers Tableau (Vecteur T)",
-      "syntax": "procédure Fichier_Vers_Tableau(nom_physique: chaîne, VAR T: tab, VAR n: entier)",
-      "summary": "Chargement des lignes d'un fichier texte dans un tableau T de n éléments pour manipulation.",
-      "description": "Problème type du Bac : charger les données d'un fichier texte dans un vecteur afin de pouvoir appliquer des tris, des filtres ou des recherches rapides.",
-      "pseudoCode": "0) procédure Fichier_Vers_Tableau(nom_physique: chaîne, VAR T: tab, VAR n: entier)\n1) associer(f, nom_physique)\n2) ouvrir(f)\n3) n <-- 0\n4) tant que non fin_fichier(f) faire\n     lire_ligne(f, ch)\n     T[n] <-- ch\n     n <-- n + 1\n   fin_tant_que\n5) fermer(f)\n6) fin",
+      "name": "Fichier Texte : Transfert vers Tableau (ouvrir en mode \"r\")",
+      "syntax": "procédure Fichier_Vers_Tableau(VAR T: tab, VAR n: entier)",
+      "summary": "Chargement des lignes d'un fichier texte dans un tableau T de n éléments.",
+      "description": "Problème type du Bac : ouvrir le fichier en lecture avec ouvrir(\"donnees.txt\", f, \"r\") et charger chaque ligne dans un vecteur T pour pouvoir le manipuler. En Python, f = open(\"donnees.txt\", \"r\") et T.append(ch).",
+      "pseudoCode": "0) procédure Fichier_Vers_Tableau(VAR T: tab, VAR n: entier)\n1) ouvrir(\"donnees.txt\", f, \"r\")\n2) n <-- 0\n3) tant que non fin_fichier(f) faire\n     lire_ligne(f, ch)\n     T[n] <-- ch\n     n <-- n + 1\n   fin_tant_que\n4) fermer(f)\n5) fin",
       "tdo": [
         {
           "objet": "f",
@@ -4522,18 +4522,18 @@ const DATA = {
           "type": "chaîne"
         }
       ],
-      "pythonCode": "def fichier_vers_tableau(nom_physique, T):\n    f = open(nom_physique, \"r\")\n    for ligne in f:\n        ch = ligne.strip()\n        T.append(ch)\n    f.close()",
-      "example": "T = [] ; fichier_vers_tableau(\"notes.txt\", T)"
+      "pythonCode": "def fichier_vers_tableau(T):\n    f = open(\"donnees.txt\", \"r\")\n    for ligne in f:\n        ch = ligne.strip()\n        T.append(ch)\n    f.close()",
+      "example": "T = [] ; fichier_vers_tableau(T)"
     },
     {
       "id": "algo-fichier-binaire-remplir",
       "category": "Chapitre 1 : Les fichiers binaires et fichier text",
       "type": "procédure",
-      "name": "Fichier Binaire : Enregistrement d'Objets (Module pickle / dump)",
-      "syntax": "procédure Remplir_Fichier_Binaire(nom_physique: chaîne, n: entier)",
+      "name": "Fichier Binaire : Enregistrement d'Objets (ouvrir en mode \"wb\", pickle.dump)",
+      "syntax": "procédure Remplir_Fichier_Binaire(n: entier)",
       "summary": "Création d'un fichier binaire et stockage de n enregistrements d'élèves (cin, nom, moy).",
-      "description": "Au Baccalauréat tunisien, les fichiers binaires stockent des enregistrements typés (dictionnaires en Python). En Python Thonny, le programme officiel utilise le module 'pickle' avec open(nom, 'wb') et dump(e, f).",
-      "pseudoCode": "0) procédure Remplir_Fichier_Binaire(nom_physique: chaîne, n: entier)\n1) associer(f, nom_physique)\n2) recréer(f)\n3) pour i de 0 à n - 1 faire\n     écrire(\"cin=\") ; lire(e.cin)\n     écrire(\"nom=\") ; lire(e.nom)\n     écrire(\"moy=\") ; lire(e.moy)\n     écrire_enreg(f, e)\n   fin_pour\n4) fermer(f)\n5) fin",
+      "description": "Au Baccalauréat tunisien, les fichiers binaires sont ouverts avec ouvrir(\"eleves.dat\", f, \"wb\"). En Python Thonny, le programme officiel utilise le module standard pickle avec f = open(\"eleves.dat\", \"wb\") et dump(e, f).",
+      "pseudoCode": "0) procédure Remplir_Fichier_Binaire(n: entier)\n1) ouvrir(\"eleves.dat\", f, \"wb\")\n2) pour i de 0 à n - 1 faire\n     écrire(\"cin=\") ; lire(e.cin)\n     écrire(\"nom=\") ; lire(e.nom)\n     écrire(\"moy=\") ; lire(e.moy)\n     écrire_enreg(f, e)\n   fin_pour\n3) fermer(f)\n4) fin",
       "tdo": [
         {
           "objet": "f",
@@ -4548,18 +4548,18 @@ const DATA = {
           "type": "entier"
         }
       ],
-      "pythonCode": "from pickle import dump\n\ndef remplir_fichier_binaire(nom_physique, n):\n    f = open(nom_physique, \"wb\")\n    for i in range(n):\n        e = {}\n        e[\"cin\"] = input(\"cin=\")\n        e[\"nom\"] = input(\"nom=\")\n        e[\"moy\"] = float(input(\"moy=\"))\n        dump(e, f)\n    f.close()",
-      "example": "remplir_fichier_binaire(\"eleves.dat\", 3)"
+      "pythonCode": "from pickle import dump\n\ndef remplir_fichier_binaire(n):\n    f = open(\"eleves.dat\", \"wb\")\n    for i in range(n):\n        e = {}\n        e[\"cin\"] = input(\"cin=\")\n        e[\"nom\"] = input(\"nom=\")\n        e[\"moy\"] = float(input(\"moy=\"))\n        dump(e, f)\n    f.close()",
+      "example": "remplir_fichier_binaire(3)"
     },
     {
       "id": "algo-fichier-binaire-afficher",
       "category": "Chapitre 1 : Les fichiers binaires et fichier text",
       "type": "procédure",
-      "name": "Fichier Binaire : Lecture & Parcours EOF (Module pickle / load)",
-      "syntax": "procédure Afficher_Fichier_Binaire(nom_physique: chaîne)",
+      "name": "Fichier Binaire : Lecture & Parcours EOF (ouvrir en mode \"rb\", pickle.load)",
+      "syntax": "procédure Afficher_Fichier_Binaire()",
       "summary": "Lecture de tous les enregistrements d'un fichier binaire jusqu'à la fin de fichier.",
-      "description": "En Python Thonny, la lecture au-delà du dernier enregistrement déclenche une exception EOFError. La méthode officielle du Bac pour détecter la fin de fichier utilise un bloc try / except fin = True.",
-      "pseudoCode": "0) procédure Afficher_Fichier_Binaire(nom_physique: chaîne)\n1) associer(f, nom_physique)\n2) ouvrir(f)\n3) tant que non fin_fichier(f) faire\n     lire_enreg(f, e)\n     écrire(e.cin, \" \", e.nom, \" \", e.moy)\n   fin_tant_que\n4) fermer(f)\n5) fin",
+      "description": "Le fichier binaire est ouvert avec ouvrir(\"eleves.dat\", f, \"rb\"). En Python Thonny, f = open(\"eleves.dat\", \"rb\"). La détection officielle de fin de fichier se fait par interception d'exception : while not fin: try: e = load(f) ... except: fin = True.",
+      "pseudoCode": "0) procédure Afficher_Fichier_Binaire()\n1) ouvrir(\"eleves.dat\", f, \"rb\")\n2) tant que non fin_fichier(f) faire\n     lire_enreg(f, e)\n     écrire(e.cin, \" \", e.nom, \" \", e.moy)\n   fin_tant_que\n3) fermer(f)\n4) fin",
       "tdo": [
         {
           "objet": "f",
@@ -4570,8 +4570,8 @@ const DATA = {
           "type": "eleve"
         }
       ],
-      "pythonCode": "from pickle import load\n\ndef afficher_fichier_binaire(nom_physique):\n    f = open(nom_physique, \"rb\")\n    fin = False\n    while not fin:\n        try:\n            e = load(f)\n            print(e[\"cin\"], e[\"nom\"], e[\"moy\"])\n        except:\n            fin = True\n    f.close()",
-      "example": "afficher_fichier_binaire(\"eleves.dat\")"
+      "pythonCode": "from pickle import load\n\ndef afficher_fichier_binaire():\n    f = open(\"eleves.dat\", \"rb\")\n    fin = False\n    while not fin:\n        try:\n            e = load(f)\n            print(e[\"cin\"], e[\"nom\"], e[\"moy\"])\n        except:\n            fin = True\n    f.close()",
+      "example": "afficher_fichier_binaire()"
     },
     {
       "id": "algo-remplir",
