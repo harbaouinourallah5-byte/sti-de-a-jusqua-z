@@ -4460,8 +4460,547 @@ const DATA = {
   ],
   "algo_theorique": [
     {
+      "id": "algo-fichier-texte-creer",
+      "category": "1) Les fichiers binaires et fichier text",
+      "type": "procédure",
+      "name": "Fichier Texte : Création & Remplissage (recréer, écrire_ligne)",
+      "syntax": "procédure Remplir_Fichier_Texte(nom_physique: chaîne)",
+      "summary": "Création et enregistrement de lignes dans un fichier texte jusqu'à saisie d'une chaîne vide.",
+      "description": "Au Baccalauréat tunisien, un fichier texte stocke des données sous forme de lignes de caractères. Pour le remplir : associer(f, nom_physique) lie la variable logique au fichier réel, recréer(f) l'ouvre en écriture, puis écrire_ligne(f, ch) ajoute chaque ligne. En Python, open(nom, 'w') et write().",
+      "pseudoCode": "0) procédure Remplir_Fichier_Texte(nom_physique: chaîne)\n1) associer(f, nom_physique)\n2) recréer(f)\n3) répéter\n     écrire(\"ch=\")\n     lire(ch)\n     si (ch ≠ \"\") alors\n       écrire_ligne(f, ch)\n     fin_si\n   jusqu'à (ch = \"\")\n4) fermer(f)\n5) fin",
+      "tdo": [
+        {
+          "objet": "f",
+          "type": "texte"
+        },
+        {
+          "objet": "ch",
+          "type": "chaîne"
+        }
+      ],
+      "pythonCode": "def remplir_fichier_texte(nom_physique):\n    f = open(nom_physique, \"w\")\n    ch = input(\"ch=\")\n    while not (ch == \"\"):\n        f.write(ch + \"\\n\")\n        ch = input(\"ch=\")\n    f.close()",
+      "example": "remplir_fichier_texte(\"donnees.txt\")"
+    },
+    {
+      "id": "algo-fichier-texte-afficher",
+      "category": "1) Les fichiers binaires et fichier text",
+      "type": "procédure",
+      "name": "Fichier Texte : Lecture & Affichage (ouvrir, lire_ligne, fin_fichier)",
+      "syntax": "procédure Afficher_Fichier_Texte(nom_physique: chaîne)",
+      "summary": "Parcours séquentiel et affichage ligne par ligne d'un fichier texte existant.",
+      "description": "La procédure associe le fichier physique à la variable f, l'ouvre en lecture seule via ouvrir(f), puis lit séquentiellement chaque ligne avec lire_ligne(f, ch) tant que non fin_fichier(f). En Python, boucle simple for ligne in f:.",
+      "pseudoCode": "0) procédure Afficher_Fichier_Texte(nom_physique: chaîne)\n1) associer(f, nom_physique)\n2) ouvrir(f)\n3) tant que non fin_fichier(f) faire\n     lire_ligne(f, ch)\n     écrire(ch)\n   fin_tant_que\n4) fermer(f)\n5) fin",
+      "tdo": [
+        {
+          "objet": "f",
+          "type": "texte"
+        },
+        {
+          "objet": "ch",
+          "type": "chaîne"
+        }
+      ],
+      "pythonCode": "def afficher_fichier_texte(nom_physique):\n    f = open(nom_physique, \"r\")\n    for ligne in f:\n        ch = ligne.strip()\n        print(ch)\n    f.close()",
+      "example": "afficher_fichier_texte(\"donnees.txt\")"
+    },
+    {
+      "id": "algo-fichier-texte-transfert",
+      "category": "1) Les fichiers binaires et fichier text",
+      "type": "procédure",
+      "name": "Fichier Texte : Transfert vers Tableau (Vecteur T)",
+      "syntax": "procédure Fichier_Vers_Tableau(nom_physique: chaîne, VAR T: tab, VAR n: entier)",
+      "summary": "Chargement des lignes d'un fichier texte dans un tableau T de n éléments pour manipulation.",
+      "description": "Problème type du Bac : charger les données d'un fichier texte dans un vecteur afin de pouvoir appliquer des tris, des filtres ou des recherches rapides.",
+      "pseudoCode": "0) procédure Fichier_Vers_Tableau(nom_physique: chaîne, VAR T: tab, VAR n: entier)\n1) associer(f, nom_physique)\n2) ouvrir(f)\n3) n <-- 0\n4) tant que non fin_fichier(f) faire\n     lire_ligne(f, ch)\n     T[n] <-- ch\n     n <-- n + 1\n   fin_tant_que\n5) fermer(f)\n6) fin",
+      "tdo": [
+        {
+          "objet": "f",
+          "type": "texte"
+        },
+        {
+          "objet": "ch",
+          "type": "chaîne"
+        }
+      ],
+      "pythonCode": "def fichier_vers_tableau(nom_physique, T):\n    f = open(nom_physique, \"r\")\n    for ligne in f:\n        ch = ligne.strip()\n        T.append(ch)\n    f.close()",
+      "example": "T = [] ; fichier_vers_tableau(\"notes.txt\", T)"
+    },
+    {
+      "id": "algo-fichier-binaire-remplir",
+      "category": "1) Les fichiers binaires et fichier text",
+      "type": "procédure",
+      "name": "Fichier Binaire : Enregistrement d'Objets (Module pickle / dump)",
+      "syntax": "procédure Remplir_Fichier_Binaire(nom_physique: chaîne, n: entier)",
+      "summary": "Création d'un fichier binaire et stockage de n enregistrements d'élèves (cin, nom, moy).",
+      "description": "Au Baccalauréat tunisien, les fichiers binaires stockent des enregistrements typés (dictionnaires en Python). En Python Thonny, le programme officiel utilise le module 'pickle' avec open(nom, 'wb') et dump(e, f).",
+      "pseudoCode": "0) procédure Remplir_Fichier_Binaire(nom_physique: chaîne, n: entier)\n1) associer(f, nom_physique)\n2) recréer(f)\n3) pour i de 0 à n - 1 faire\n     écrire(\"cin=\") ; lire(e.cin)\n     écrire(\"nom=\") ; lire(e.nom)\n     écrire(\"moy=\") ; lire(e.moy)\n     écrire_enreg(f, e)\n   fin_pour\n4) fermer(f)\n5) fin",
+      "tdo": [
+        {
+          "objet": "f",
+          "type": "fichier d'eleve"
+        },
+        {
+          "objet": "e",
+          "type": "eleve"
+        },
+        {
+          "objet": "i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "from pickle import dump\n\ndef remplir_fichier_binaire(nom_physique, n):\n    f = open(nom_physique, \"wb\")\n    for i in range(n):\n        e = {}\n        e[\"cin\"] = input(\"cin=\")\n        e[\"nom\"] = input(\"nom=\")\n        e[\"moy\"] = float(input(\"moy=\"))\n        dump(e, f)\n    f.close()",
+      "example": "remplir_fichier_binaire(\"eleves.dat\", 3)"
+    },
+    {
+      "id": "algo-fichier-binaire-afficher",
+      "category": "1) Les fichiers binaires et fichier text",
+      "type": "procédure",
+      "name": "Fichier Binaire : Lecture & Parcours EOF (Module pickle / load)",
+      "syntax": "procédure Afficher_Fichier_Binaire(nom_physique: chaîne)",
+      "summary": "Lecture de tous les enregistrements d'un fichier binaire jusqu'à la fin de fichier.",
+      "description": "En Python Thonny, la lecture au-delà du dernier enregistrement déclenche une exception EOFError. La méthode officielle du Bac pour détecter la fin de fichier utilise un bloc try / except fin = True.",
+      "pseudoCode": "0) procédure Afficher_Fichier_Binaire(nom_physique: chaîne)\n1) associer(f, nom_physique)\n2) ouvrir(f)\n3) tant que non fin_fichier(f) faire\n     lire_enreg(f, e)\n     écrire(e.cin, \" \", e.nom, \" \", e.moy)\n   fin_tant_que\n4) fermer(f)\n5) fin",
+      "tdo": [
+        {
+          "objet": "f",
+          "type": "fichier d'eleve"
+        },
+        {
+          "objet": "e",
+          "type": "eleve"
+        }
+      ],
+      "pythonCode": "from pickle import load\n\ndef afficher_fichier_binaire(nom_physique):\n    f = open(nom_physique, \"rb\")\n    fin = False\n    while not fin:\n        try:\n            e = load(f)\n            print(e[\"cin\"], e[\"nom\"], e[\"moy\"])\n        except:\n            fin = True\n    f.close()",
+      "example": "afficher_fichier_binaire(\"eleves.dat\")"
+    },
+    {
+      "id": "algo-recurrence-intro",
+      "category": "2) Récurrence",
+      "type": "structure",
+      "name": "Principe de la Récurrence (Cas de base & Cas général)",
+      "syntax": "fonction F_Rec(param: type): type_retour",
+      "summary": "Module réservé pour le Chapitre Récurrence selon les documents à venir.",
+      "description": "Ce chapitre accueillera les algorithmes de récursivité partagés par votre professeur. Le principe général d'une fonction récursive repose sur : 1) Une condition d'arrêt (cas de base), 2) Un appel récursif diminuant la taille du problème.",
+      "pseudoCode": "0) fonction Factorielle_Rec(n: entier): entier\n1) si (n = 0) ou (n = 1) alors\n     retourner 1\n   sinon\n     retourner n * Factorielle_Rec(n - 1)\n   fin_si\n2) fin",
+      "tdo": [],
+      "pythonCode": "def factorielle_rec(n):\n    if n == 0 or n == 1:\n        return 1\n    else:\n        return n * factorielle_rec(n - 1)",
+      "example": "factorielle_rec(5) → 120"
+    },
+    {
+      "id": "algo-bin2oct",
+      "category": "3) Convertion Entre les Bases",
+      "type": "fonction",
+      "name": "bin2oct(ch)",
+      "syntax": "fonction bin2oct(ch: chaîne): entier",
+      "summary": "Convertit un nombre binaire (base 2) en octal (base 8) par paquets de 3 bits.",
+      "description": "Complète la chaîne binaire avec des '0' à gauche pour atteindre une longueur multiple de 3. Découpe ensuite par tranches successives de 3 bits (valeur = b[0]*4 + b[1]*2 + b[2]) et concatène chaque chiffre octal obtenu.",
+      "pseudoCode": "0) fonction bin2oct(ch: chaîne): entier\n1) res <-- \"\"\n2) tant que (long(ch) mod 3 ≠ 0) faire\n     ch <-- \"0\" + ch\n   fin_tant_que\n3) tant que ch ≠ \"\" faire\n     b <-- sous_chaîne(ch, 0, 3)\n     ch <-- sous_chaîne(ch, 3, long(ch) - 1)\n     val <-- valeur(b[0]) * 4 + valeur(b[1]) * 2 + valeur(b[2])\n     res <-- res + convch(val)\n   fin_tant_que\n4) retourner valeur(res)\n5) fin",
+      "tdo": [
+        {
+          "objet": "res, b",
+          "type": "chaîne"
+        },
+        {
+          "objet": "val",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def bin2oct(ch):\n    while len(ch) % 3 != 0:\n        ch = \"0\" + ch\n    \n    res = \"\"\n    while ch != \"\":\n        b = ch[0:3]\n        ch = ch[3:]\n        val = int(b[0]) * 4 + int(b[1]) * 2 + int(b[2])\n        res = res + str(val)\n        \n    return int(res)",
+      "example": "bin2oct(\"1011011\") → 133"
+    },
+    {
+      "id": "algo-a2d",
+      "category": "3) Convertion Entre les Bases",
+      "type": "fonction",
+      "name": "a2d(ch, bs)",
+      "syntax": "fonction a2d(ch: chaîne, bs: entier): entier",
+      "summary": "Convertit un nombre d'une base bs quelconque (2 à 16) vers la base 10 (décimale).",
+      "description": "Parcourt la chaîne de droite à gauche (poids faibles vers poids forts). Multiplie la valeur numérique de chaque symbole (0-9, A-F) par la puissance de base correspondante (p = bs^i) et accumule la somme.",
+      "pseudoCode": "0) fonction a2d(ch: chaîne, bs: entier): entier\n1) res <-- 0\n2) p <-- 1\n3) chh <-- \"0123456789ABCDEF\"\n4) pour i de long(ch) - 1 à 0 (pas = -1) faire\n     res <-- res + pos(ch[i], chh) * p\n     p <-- p * bs\n   fin_pour\n5) retourner res\n6) fin",
+      "tdo": [
+        {
+          "objet": "res, p, i",
+          "type": "entier"
+        },
+        {
+          "objet": "chh",
+          "type": "chaîne"
+        }
+      ],
+      "pythonCode": "def a2d(ch, bs):\n    chh = \"0123456789ABCDEF\"\n    res = 0\n    p = 1\n    for i in range(len(ch) - 1, -1, -1):\n        pos = chh.index(ch[i].upper())\n        res = res + pos * p\n        p = p * bs\n    return res",
+      "example": "a2d(\"1A55F\", 16) → 107871"
+    },
+    {
+      "id": "algo-a2dr",
+      "category": "3) Convertion Entre les Bases",
+      "type": "fonction",
+      "name": "a2dR(ch, bs, p)",
+      "syntax": "fonction a2dR(ch: chaîne, bs, p: entier): entier",
+      "summary": "Conversion récursive d'un nombre en base bs quelconque vers la base 10 (décimale).",
+      "description": "Cas de base : chaîne vide renvoie 0. Cas général : évalue le premier symbole pondéré par p, additionné au résultat de l'appel récursif sur le reste de la chaîne avec p*bs.",
+      "pseudoCode": "0) fonction a2dR(ch: chaîne, bs, p: entier): entier\n1) chh <-- \"0123456789ABCDEF\"\n2) si long(ch) = 0 alors\n     retourner 0\n   sinon\n     retourner pos(ch[0], chh) * p + a2dR(sous_chaîne(ch, 1, long(ch) - 1), bs, p * bs)\n   fin_si\n3) fin",
+      "tdo": [
+        {
+          "objet": "chh",
+          "type": "chaîne"
+        }
+      ],
+      "pythonCode": "def a2dR(ch, bs, p):\n    chh = \"0123456789ABCDEF\"\n    if len(ch) == 0:\n        return 0\n    else:\n        return chh.index(ch[0].upper()) * p + a2dR(ch[1:], bs, p * bs)",
+      "example": "a2dR(\"1A55F\", 16, 1) → 107871"
+    },
+    {
+      "id": "algo-bin2hexa",
+      "category": "3) Convertion Entre les Bases",
+      "type": "fonction",
+      "name": "bin2hexa(ch)",
+      "syntax": "fonction bin2hexa(ch: chaîne): chaîne",
+      "summary": "Convertit un nombre binaire (base 2) en hexadécimal (base 16) par blocs de 4 bits.",
+      "description": "Complète le binaire à gauche pour avoir une longueur multiple de 4. Découpe par paquets de 4 bits et traduit chaque quartet en son chiffre hexadécimal équivalent (b[0]*8 + b[1]*4 + b[2]*2 + b[3]).",
+      "pseudoCode": "0) fonction bin2hexa(ch: chaîne): chaîne\n1) res <-- \"\"\n2) chh <-- \"0123456789ABCDEF\"\n3) tant que (long(ch) mod 4 ≠ 0) faire\n     ch <-- \"0\" + ch\n   fin_tant_que\n4) tant que ch ≠ \"\" faire\n     b <-- sous_chaîne(ch, 0, 4)\n     ch <-- sous_chaîne(ch, 4, long(ch) - 1)\n     val <-- valeur(b[0])*8 + valeur(b[1])*4 + valeur(b[2])*2 + valeur(b[3])\n     res <-- res + chh[val]\n   fin_tant_que\n5) retourner res\n6) fin",
+      "tdo": [
+        {
+          "objet": "res, b, chh",
+          "type": "chaîne"
+        },
+        {
+          "objet": "val",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def bin2hexa(ch):\n    chh = \"0123456789ABCDEF\"\n    while len(ch) % 4 != 0:\n        ch = \"0\" + ch\n    res = \"\"\n    while ch != \"\":\n        b = ch[0:4]\n        ch = ch[4:]\n        val = int(b[0]) * 8 + int(b[1]) * 4 + int(b[2]) * 2 + int(b[3])\n        res = res + chh[val]\n    return res",
+      "example": "bin2hexa(\"1011011\") → \"5B\""
+    },
+    {
+      "id": "algo-octal2bin",
+      "category": "3) Convertion Entre les Bases",
+      "type": "fonction",
+      "name": "octal2bin(ch)",
+      "syntax": "fonction octal2bin(ch: chaîne): chaîne",
+      "summary": "Convertit un nombre octal en son écriture binaire directe sur 3 bits par chiffre.",
+      "description": "Pour chaque chiffre octal, utilise dec2any(c, 2) puis ajuste la longueur à exactement 3 bits en préfixant des 0 si nécessaire.",
+      "pseudoCode": "0) fonction octal2bin(ch: chaîne): chaîne\n1) res <-- \"\"\n2) pour i de 0 à long(ch) - 1 faire\n     c <-- valeur(ch[i])\n     b <-- dec2any(c, 2)\n     tant que long(b) < 3 faire\n       b <-- \"0\" + b\n     fin_tant_que\n     res <-- res + b\n   fin_pour\n3) retourner res\n4) fin",
+      "tdo": [
+        {
+          "objet": "res, b",
+          "type": "chaîne"
+        },
+        {
+          "objet": "c, i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def octal2bin(ch):\n    res = \"\"\n    for char in ch:\n        c = int(char)\n        b = dec2any(c, 2)\n        while len(b) < 3:\n            b = \"0\" + b\n        res = res + b\n    return res",
+      "example": "octal2bin(\"75401\") → \"111101100000001\""
+    },
+    {
+      "id": "algo-octal2hexa",
+      "category": "3) Convertion Entre les Bases",
+      "type": "fonction",
+      "name": "octal2hexa(ch)",
+      "syntax": "fonction octal2hexa(ch: chaîne): chaîne",
+      "summary": "Convertit un nombre octal (base 8) en hexadécimal (base 16) via le binaire.",
+      "description": "Méthode directe sans division : transforme d'abord l'octal en binaire avec octal2bin, puis le binaire en hexadécimal avec bin2hexa.",
+      "pseudoCode": "0) fonction octal2hexa(ch: chaîne): chaîne\n1) b <-- octal2bin(ch)\n2) h <-- bin2hexa(b)\n3) retourner h\n4) fin",
+      "tdo": [
+        {
+          "objet": "b, h",
+          "type": "chaîne"
+        }
+      ],
+      "pythonCode": "def octal2hexa(ch):\n    b = octal2bin(ch)\n    h = bin2hexa(b)\n    return h",
+      "example": "octal2hexa(\"75401\") → \"7B01\""
+    },
+    {
+      "id": "algo-dec2any",
+      "category": "3) Convertion Entre les Bases",
+      "type": "fonction",
+      "name": "dec2any(n, bd)",
+      "syntax": "fonction dec2any(n: entier, bd: entier): chaîne",
+      "summary": "Convertit un entier décimal (base 10) vers une base quelconque bd (2 à 16).",
+      "description": "Méthode des divisions successives par bd. Chaque reste correspond à un chiffre de la base cible (0-9, A-F) ajouté en tête du résultat.",
+      "pseudoCode": "0) fonction dec2any(n: entier, bd: entier): chaîne\n1) chh <-- \"0123456789ABCDEF\"\n2) res <-- \"\"\n3) tant que n ≠ 0 faire\n     res <-- chh[n mod bd] + res\n     n <-- n div bd\n   fin_tant_que\n4) si res = \"\" alors\n     res <-- \"0\"\n   fin_si\n5) retourner res\n6) fin",
+      "tdo": [
+        {
+          "objet": "res, chh",
+          "type": "chaîne"
+        }
+      ],
+      "pythonCode": "def dec2any(n, bd):\n    chh = \"0123456789ABCDEF\"\n    if n == 0:\n        return \"0\"\n    res = \"\"\n    while n != 0:\n        res = chh[n % bd] + res\n        n = n // bd\n    return res",
+      "example": "dec2any(2591, 16) → \"A1F\""
+    },
+    {
+      "id": "algo-dec2anyr",
+      "category": "3) Convertion Entre les Bases",
+      "type": "fonction",
+      "name": "dec2anyR(n, bd)",
+      "syntax": "fonction dec2anyR(n: entier, bd: entier): chaîne",
+      "summary": "Conversion récursive d'un entier décimal vers une base destination bd.",
+      "description": "Cas d'arrêt : n = 0 renvoie la chaîne vide. Cas général : effectue la division entière (n div bd) récursivement et suffixe le reste (n mod bd).",
+      "pseudoCode": "0) fonction dec2anyR(n: entier, bd: entier): chaîne\n1) chh <-- \"0123456789ABCDEF\"\n2) si n = 0 alors\n     retourner \"\"\n   sinon\n     retourner dec2anyR(n div bd, bd) + chh[n mod bd]\n   fin_si\n3) fin",
+      "tdo": [
+        {
+          "objet": "chh",
+          "type": "chaîne"
+        }
+      ],
+      "pythonCode": "def dec2anyR(n, bd):\n    chh = \"0123456789ABCDEF\"\n    if n == 0:\n        return \"\"\n    return dec2anyR(n // bd, bd) + chh[n % bd]",
+      "example": "dec2anyR(46, 2) → \"101110\""
+    },
+    {
+      "id": "algo-hex2bin",
+      "category": "3) Convertion Entre les Bases",
+      "type": "fonction",
+      "name": "hex2bin(ch)",
+      "syntax": "fonction hex2bin(ch: chaîne): chaîne",
+      "summary": "Convertit un nombre hexadécimal en binaire direct en remplaçant chaque digit par 4 bits.",
+      "description": "Pour chaque symbole hexadécimal, cherche sa position dans '0123456789ABCDEF', convertit en base 2 avec dec2any et remplit à 4 bits.",
+      "pseudoCode": "0) fonction hex2bin(ch: chaîne): chaîne\n1) res <-- \"\"\n2) chh <-- \"0123456789ABCDEF\"\n3) pour i de 0 à long(ch) - 1 faire\n     c <-- pos(ch[i], chh)\n     b <-- dec2any(c, 2)\n     tant que long(b) < 4 faire\n       b <-- \"0\" + b\n     fin_tant_que\n     res <-- res + b\n   fin_pour\n4) retourner res\n5) fin",
+      "tdo": [
+        {
+          "objet": "res, b, chh",
+          "type": "chaîne"
+        },
+        {
+          "objet": "c, i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def hex2bin(ch):\n    res = \"\"\n    chh = \"0123456789ABCDEF\"\n    for char in ch:\n        c = chh.index(char.upper())\n        b = dec2any(c, 2)\n        while len(b) < 4:\n            b = \"0\" + b\n        res = res + b\n    return res",
+      "example": "hex2bin(\"1F5A\") → \"0001111101011010\""
+    },
+    {
+      "id": "algo-hex2octal",
+      "category": "3) Convertion Entre les Bases",
+      "type": "fonction",
+      "name": "hex2octal(ch)",
+      "syntax": "fonction hex2octal(ch: chaîne): chaîne",
+      "summary": "Convertit un nombre hexadécimal en octal en passant par le binaire intermédiaire.",
+      "description": "Combine hex2bin pour convertir en binaire, puis bin2oct pour regrouper les bits par 3 en octal. Simple, direct et sans perte de précision.",
+      "pseudoCode": "0) fonction hex2octal(ch: chaîne): chaîne\n1) b <-- hex2bin(ch)\n2) o <-- convch(bin2oct(b))\n3) retourner o\n4) fin",
+      "tdo": [
+        {
+          "objet": "b, o",
+          "type": "chaîne"
+        }
+      ],
+      "pythonCode": "def hex2octal(ch):\n    b = hex2bin(ch)\n    o = str(bin2oct(b))\n    return o",
+      "example": "hex2octal(\"1F5A\") → \"17532\""
+    },
+    {
+      "id": "algo-any2any",
+      "category": "3) Convertion Entre les Bases",
+      "type": "fonction",
+      "name": "any2any(ch, bs, bd)",
+      "syntax": "fonction any2any(ch: chaîne, bs, bd: entier): chaîne",
+      "summary": "Convertit un nombre d'une base bs vers une base bd quelconque via la base 10.",
+      "description": "Méthode pivot officielle : convertit d'abord ch de la base source bs en entier décimal via a2d, puis convertit cet entier décimal vers la base destination bd via dec2any.",
+      "pseudoCode": "0) fonction any2any(ch: chaîne, bs, bd: entier): chaîne\n1) n <-- a2d(ch, bs)\n2) res <-- dec2any(n, bd)\n3) retourner res\n4) fin",
+      "tdo": [
+        {
+          "objet": "n",
+          "type": "entier"
+        },
+        {
+          "objet": "res",
+          "type": "chaîne"
+        }
+      ],
+      "pythonCode": "def any2any(ch, bs, bd):\n    n = a2d(ch, bs)\n    res = dec2any(n, bd)\n    return res",
+      "example": "any2any(\"1FA2\", 16, 8) → \"17642\""
+    },
+    {
+      "id": "algo-premier",
+      "category": "4) Arithmétique",
+      "type": "fonction",
+      "name": "premier(n)",
+      "syntax": "fonction premier(n: entier): booléen",
+      "summary": "Teste si un entier n est premier (optimisé jusqu'à n div 2).",
+      "description": "Initialise ok à (n > 1). Parcourt les diviseurs potentiels de 2 à n div 2. Dès qu'un diviseur strict est trouvé (n mod i = 0), ok devient faux.",
+      "pseudoCode": "0) fonction premier(n: entier): booléen\n1) ok <-- n > 1\n2) pour i de 2 à n div 2 faire\n     si n mod i = 0 alors\n       ok <-- faux\n     fin_si\n   fin_pour\n3) retourner ok\n4) fin",
+      "tdo": [
+        {
+          "objet": "ok",
+          "type": "booléen"
+        },
+        {
+          "objet": "i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def premier(n):\n    if n <= 1:\n        return False\n    ok = True\n    for i in range(2, (n // 2) + 1):\n        if n % i == 0:\n            ok = False\n            break\n    return ok",
+      "example": "premier(17) → True, premier(21) → False"
+    },
+    {
+      "id": "algo-factorielle",
+      "category": "4) Arithmétique",
+      "type": "fonction",
+      "name": "factorielle(N)",
+      "syntax": "fonction factorielle(N: entier): entier",
+      "summary": "Calcule le produit factoriel N! = 1 * 2 * ... * N.",
+      "description": "Initialise l'accumulateur f à 1, puis multiplie consécutivement par chaque entier i variant de 2 jusqu'à N.",
+      "pseudoCode": "0) fonction factorielle(N: entier): entier\n1) f <-- 1\n2) pour i de 2 à N faire\n     f <-- f * i\n   fin_pour\n3) retourner f\n4) fin",
+      "tdo": [
+        {
+          "objet": "f, i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def factorielle(N):\n    f = 1\n    for i in range(2, N + 1):\n        f = f * i\n    return f",
+      "example": "factorielle(5) → 120"
+    },
+    {
+      "id": "algo-puissance",
+      "category": "4) Arithmétique",
+      "type": "fonction",
+      "name": "puissance(x, n)",
+      "syntax": "fonction puissance(x: entier, n: entier): réel",
+      "summary": "Calcule la puissance x^n pour un exposant entier positif.",
+      "description": "Initialise p à 1, puis effectue n multiplications successives de la base x.",
+      "pseudoCode": "0) fonction puissance(x: entier, n: entier): réel\n1) p <-- 1\n2) pour i de 1 à n faire\n     p <-- p * x\n   fin_pour\n3) retourner p\n4) fin",
+      "tdo": [
+        {
+          "objet": "p",
+          "type": "réel"
+        },
+        {
+          "objet": "i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def puissance(x, n):\n    p = 1\n    for i in range(1, n + 1):\n        p = p * x\n    return float(p)",
+      "example": "puissance(2, 5) → 32.0"
+    },
+    {
+      "id": "algo-puissance-va",
+      "category": "4) Arithmétique",
+      "type": "fonction",
+      "name": "puissance_va(x, n)",
+      "syntax": "fonction puissance_va(x: entier, n: entier): réel",
+      "summary": "Calcule la puissance x^n pour n quelconque (positif, nul ou négatif).",
+      "description": "Calcule le produit sur abs(n) itérations. Si l'exposant n est strictement négatif, inverse la valeur finale p <-- 1 / p.",
+      "pseudoCode": "0) fonction puissance_va(x: entier, n: entier): réel\n1) p <-- 1\n2) pour i de 1 à abs(n) faire\n     p <-- p * x\n   fin_pour\n3) si n < 0 alors\n     p <-- 1 / p\n   fin_si\n4) retourner p\n5) fin",
+      "tdo": [
+        {
+          "objet": "p",
+          "type": "réel"
+        },
+        {
+          "objet": "i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def puissance_va(x, n):\n    p = 1.0\n    for i in range(1, abs(n) + 1):\n        p = p * x\n    if n < 0:\n        p = 1.0 / p\n    return p",
+      "example": "puissance_va(2, -3) → 0.125"
+    },
+    {
+      "id": "algo-pgcd-ppcm",
+      "category": "4) Arithmétique",
+      "type": "fonction",
+      "name": "pgcd_ppcm(a, b)",
+      "syntax": "fonction pgcd_ppcm(a, b: entier): entier",
+      "summary": "Méthode optimisée Bac pour déterminer le PPCM et le PGCD simultanément.",
+      "description": "Cherche le plus petit coefficient k ≥ 1 tel que (a * k) mod b = 0. Le PPCM vaut a * k, et le PGCD vaut b div k (car PGCD * PPCM = a * b).",
+      "pseudoCode": "0) fonction pgcd_ppcm(a, b: entier): entier\n1) k <-- 1\n2) tant que ((a * k) mod b ≠ 0) faire\n     k <-- k + 1\n   fin_tant_que\n3) // Pour obtenir le PPCM : retourner a * k\n4) // Pour obtenir le PGCD : retourner b div k\n5) retourner b div k\n6) fin",
+      "tdo": [
+        {
+          "objet": "k",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def pgcd_ppcm(a, b):\n    k = 1\n    while (a * k) % b != 0:\n        k = k + 1\n    ppcm = a * k\n    pgcd = (a * b) // ppcm\n    return pgcd, ppcm",
+      "example": "pgcd_ppcm(12, 18) → (PGCD: 6, PPCM: 36)"
+    },
+    {
+      "id": "algo-aire-milieu",
+      "category": "5) Approximation and optimisation",
+      "type": "fonction",
+      "name": "aire_milieu(nb, a, b)",
+      "syntax": "fonction aire_milieu(nb: entier, a, b: réel): réel",
+      "summary": "Approximation de l'intégrale d'une fonction f par la méthode des rectangles au point médian.",
+      "description": "Découpe l'intervalle [a, b] en nb sous-intervalles de largeur h = |b - a| / nb. Évalue la fonction f(x) au centre de chaque intervalle x = a + h/2, puis somme les aires (f(x) * h).",
+      "pseudoCode": "0) fonction aire_milieu(nb: entier, a, b: réel): réel\n1) h <-- abs(b - a) / nb\n2) x <-- a + (h / 2)\n3) s <-- 0\n4) pour i de 0 à nb - 1 faire\n     s <-- s + (f(x) * h)\n     x <-- x + h\n   fin_pour\n5) retourner s\n6) fin",
+      "tdo": [
+        {
+          "objet": "h, x, s",
+          "type": "réel"
+        },
+        {
+          "objet": "i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def f(x):\n    return x * x  # Exemple de fonction à intégrer\n\ndef aire_milieu(nb, a, b):\n    h = abs(b - a) / nb\n    x = a + (h / 2)\n    s = 0.0\n    for i in range(nb):\n        s = s + f(x) * h\n        x = x + h\n    return round(s, 6)",
+      "example": "aire_milieu(100, 0, 1) avec f(x)=x^2 → 0.333325"
+    },
+    {
+      "id": "algo-aire-droite",
+      "category": "5) Approximation and optimisation",
+      "type": "fonction",
+      "name": "aire_droite(nb, a, b)",
+      "syntax": "fonction aire_droite(nb: entier, a, b: réel): réel",
+      "summary": "Approximation de l'intégrale par la méthode des rectangles avec la borne droite.",
+      "description": "Découpe en nb subdivisions de pas h. Le point de calcul démarre à x = a + h (extrémité droite du premier rectangle) et avance de h à chaque pas.",
+      "pseudoCode": "0) fonction aire_droite(nb: entier, a, b: réel): réel\n1) h <-- abs(b - a) / nb\n2) x <-- a + h\n3) s <-- 0\n4) pour i de 0 à nb - 1 faire\n     s <-- s + (f(x) * h)\n     x <-- x + h\n   fin_pour\n5) retourner s\n6) fin",
+      "tdo": [
+        {
+          "objet": "h, x, s",
+          "type": "réel"
+        },
+        {
+          "objet": "i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def f(x):\n    return x * x\n\ndef aire_droite(nb, a, b):\n    h = abs(b - a) / nb\n    x = a + h\n    s = 0.0\n    for i in range(nb):\n        s = s + f(x) * h\n        x = x + h\n    return round(s, 6)",
+      "example": "aire_droite(100, 0, 1) avec f(x)=x^2 → 0.338350"
+    },
+    {
+      "id": "algo-aire-gauche",
+      "category": "5) Approximation and optimisation",
+      "type": "fonction",
+      "name": "aire_gauche(nb, a, b)",
+      "syntax": "fonction aire_gauche(nb: entier, a, b: réel): réel",
+      "summary": "Approximation de l'intégrale par la méthode des rectangles avec la borne gauche.",
+      "description": "Démarre exactement à x = a (extrémité gauche du rectangle) et évalue f(x) avant d'incrémenter x de h à chaque itération.",
+      "pseudoCode": "0) fonction aire_gauche(nb: entier, a, b: réel): réel\n1) h <-- abs(b - a) / nb\n2) x <-- a\n3) s <-- 0\n4) pour i de 0 à nb - 1 faire\n     s <-- s + (f(x) * h)\n     x <-- x + h\n   fin_pour\n5) retourner s\n6) fin",
+      "tdo": [
+        {
+          "objet": "h, x, s",
+          "type": "réel"
+        },
+        {
+          "objet": "i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def f(x):\n    return x * x\n\ndef aire_gauche(nb, a, b):\n    h = abs(b - a) / nb\n    x = a\n    s = 0.0\n    for i in range(nb):\n        s = s + f(x) * h\n        x = x + h\n    return round(s, 6)",
+      "example": "aire_gauche(100, 0, 1) avec f(x)=x^2 → 0.328350"
+    },
+    {
+      "id": "algo-aire-trapezes",
+      "category": "5) Approximation and optimisation",
+      "type": "fonction",
+      "name": "aire_trapezes(nb, a, b)",
+      "syntax": "fonction aire_trapezes(nb: entier, a, b: réel): réel",
+      "summary": "Calcul d'aire approchée par la formule des trapèzes sur [a, b].",
+      "description": "Chaque tranche est approximée par un trapèze d'aire ((f(x) + f(x+h)) * h) / 2. Cette méthode donne une convergence nettement plus rapide et précise.",
+      "pseudoCode": "0) fonction aire_trapezes(nb: entier, a, b: réel): réel\n1) h <-- abs(b - a) / nb\n2) x <-- a\n3) s <-- 0\n4) pour i de 0 à nb - 1 faire\n     s <-- s + (((f(x) + f(x + h)) * h) / 2)\n     x <-- x + h\n   fin_pour\n5) retourner s\n6) fin",
+      "tdo": [
+        {
+          "objet": "h, x, s",
+          "type": "réel"
+        },
+        {
+          "objet": "i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def f(x):\n    return x * x\n\ndef aire_trapezes(nb, a, b):\n    h = abs(b - a) / nb\n    x = a\n    s = 0.0\n    for i in range(nb):\n        s = s + ((f(x) + f(x + h)) * h) / 2\n        x = x + h\n    return round(s, 6)",
+      "example": "aire_trapezes(100, 0, 1) avec f(x)=x^2 → 0.333350"
+    },
+    {
       "id": "algo-struct-si-sinonsi",
-      "category": "Structures de Contrôle",
+      "category": "Bases & Révision (Structures, Tris & Matrices)",
       "type": "structure",
       "name": "Structure Conditionnelle : Si ... Sinon Si ... Sinon",
       "syntax": "si (condition_1) alors ... sinon si (condition_2) alors ... sinon ... fin_si",
@@ -4483,7 +5022,7 @@ const DATA = {
     },
     {
       "id": "algo-struct-boucle-pour",
-      "category": "Structures de Contrôle",
+      "category": "Bases & Révision (Structures, Tris & Matrices)",
       "type": "structure",
       "name": "Boucle Pour (Nombre d'itérations connu)",
       "syntax": "pour i de début à fin [pas = p] faire ... fin_pour",
@@ -4501,7 +5040,7 @@ const DATA = {
     },
     {
       "id": "algo-struct-boucle-tantque",
-      "category": "Structures de Contrôle",
+      "category": "Bases & Révision (Structures, Tris & Matrices)",
       "type": "structure",
       "name": "Boucle Tant Que (Condition préalable)",
       "syntax": "tant que (condition) faire ... fin_tant_que",
@@ -4519,7 +5058,7 @@ const DATA = {
     },
     {
       "id": "algo-struct-boucle-repeter",
-      "category": "Structures de Contrôle",
+      "category": "Bases & Révision (Structures, Tris & Matrices)",
       "type": "structure",
       "name": "Boucle Répéter ... Jusqu'à (Arrêt sur condition)",
       "syntax": "répéter ... jusqu'à (condition_arrêt)",
@@ -4537,7 +5076,7 @@ const DATA = {
     },
     {
       "id": "algo-struct-sousprogrammes",
-      "category": "Structures de Contrôle",
+      "category": "Bases & Révision (Structures, Tris & Matrices)",
       "type": "structure",
       "name": "Sous-Programmes : Fonction & Procédure (VAR)",
       "syntax": "fonction F(p: type): type_retour | procédure P(VAR p1: type, p2: type)",
@@ -4555,7 +5094,7 @@ const DATA = {
     },
     {
       "id": "algo-struct-tdo-tdnt",
-      "category": "Structures de Contrôle",
+      "category": "Bases & Révision (Structures, Tris & Matrices)",
       "type": "structure",
       "name": "Conventions Officielles : T.D.O & T.D.N.T",
       "syntax": "T.D.O (Objet | Type/Nature) & T.D.N.T (Type | Définition)",
@@ -4580,420 +5119,8 @@ const DATA = {
       "example": "T.D.O & T.D.N.T conformes au barème officiel de correction"
     },
     {
-      "id": "algo-bin2oct",
-      "category": "Conversions de Bases",
-      "type": "fonction",
-      "name": "bin2oct(ch)",
-      "syntax": "fonction bin2oct(ch: chaîne): entier",
-      "summary": "Convertit un nombre binaire (base 2) en octal (base 8) par paquets de 3 bits.",
-      "description": "Complète la chaîne binaire avec des '0' à gauche pour atteindre une longueur multiple de 3. Découpe ensuite par tranches successives de 3 bits (valeur = b[0]*4 + b[1]*2 + b[2]) et concatène chaque chiffre octal obtenu.",
-      "pseudoCode": "0) fonction bin2oct(ch: chaîne): entier\n1) res <-- \"\"\n2) tant que (long(ch) mod 3 ≠ 0) faire\n     ch <-- \"0\" + ch\n   fin_tant_que\n3) tant que ch ≠ \"\" faire\n     b <-- sous_chaîne(ch, 0, 3)\n     ch <-- sous_chaîne(ch, 3, long(ch) - 1)\n     val <-- valeur(b[0]) * 4 + valeur(b[1]) * 2 + valeur(b[2])\n     res <-- res + convch(val)\n   fin_tant_que\n4) retourner valeur(res)\n5) fin",
-      "tdo": [
-        {
-          "objet": "res, b",
-          "type": "chaîne"
-        },
-        {
-          "objet": "val",
-          "type": "entier"
-        }
-      ],
-      "pythonCode": "def bin2oct(ch):\n    while len(ch) % 3 != 0:\n        ch = \"0\" + ch\n    \n    res = \"\"\n    while ch != \"\":\n        b = ch[0:3]\n        ch = ch[3:]\n        val = int(b[0]) * 4 + int(b[1]) * 2 + int(b[2])\n        res = res + str(val)\n        \n    return int(res)",
-      "example": "bin2oct(\"1011011\") → 133"
-    },
-    {
-      "id": "algo-a2d",
-      "category": "Conversions de Bases",
-      "type": "fonction",
-      "name": "a2d(ch, bs)",
-      "syntax": "fonction a2d(ch: chaîne, bs: entier): entier",
-      "summary": "Convertit un nombre d'une base bs quelconque (2 à 16) vers la base 10 (décimale).",
-      "description": "Parcourt la chaîne de droite à gauche (poids faibles vers poids forts). Multiplie la valeur numérique de chaque symbole (0-9, A-F) par la puissance de base correspondante (p = bs^i) et accumule la somme.",
-      "pseudoCode": "0) fonction a2d(ch: chaîne, bs: entier): entier\n1) res <-- 0\n2) p <-- 1\n3) chh <-- \"0123456789ABCDEF\"\n4) pour i de long(ch) - 1 à 0 (pas = -1) faire\n     res <-- res + pos(ch[i], chh) * p\n     p <-- p * bs\n   fin_pour\n5) retourner res\n6) fin",
-      "tdo": [
-        {
-          "objet": "res, p, i",
-          "type": "entier"
-        },
-        {
-          "objet": "chh",
-          "type": "chaîne"
-        }
-      ],
-      "pythonCode": "def a2d(ch, bs):\n    chh = \"0123456789ABCDEF\"\n    res = 0\n    p = 1\n    for i in range(len(ch) - 1, -1, -1):\n        pos = chh.index(ch[i].upper())\n        res = res + pos * p\n        p = p * bs\n    return res",
-      "example": "a2d(\"1A55F\", 16) → 107871"
-    },
-    {
-      "id": "algo-a2dr",
-      "category": "Conversions de Bases",
-      "type": "fonction",
-      "name": "a2dR(ch, bs, p)",
-      "syntax": "fonction a2dR(ch: chaîne, bs, p: entier): entier",
-      "summary": "Conversion récursive d'un nombre en base bs quelconque vers la base 10 (décimale).",
-      "description": "Cas de base : chaîne vide renvoie 0. Cas général : évalue le premier symbole pondéré par p, additionné au résultat de l'appel récursif sur le reste de la chaîne avec p*bs.",
-      "pseudoCode": "0) fonction a2dR(ch: chaîne, bs, p: entier): entier\n1) chh <-- \"0123456789ABCDEF\"\n2) si long(ch) = 0 alors\n     retourner 0\n   sinon\n     retourner pos(ch[0], chh) * p + a2dR(sous_chaîne(ch, 1, long(ch) - 1), bs, p * bs)\n   fin_si\n3) fin",
-      "tdo": [
-        {
-          "objet": "chh",
-          "type": "chaîne"
-        }
-      ],
-      "pythonCode": "def a2dR(ch, bs, p):\n    chh = \"0123456789ABCDEF\"\n    if len(ch) == 0:\n        return 0\n    else:\n        return chh.index(ch[0].upper()) * p + a2dR(ch[1:], bs, p * bs)",
-      "example": "a2dR(\"1A55F\", 16, 1) → 107871"
-    },
-    {
-      "id": "algo-bin2hexa",
-      "category": "Conversions de Bases",
-      "type": "fonction",
-      "name": "bin2hexa(ch)",
-      "syntax": "fonction bin2hexa(ch: chaîne): chaîne",
-      "summary": "Convertit un nombre binaire (base 2) en hexadécimal (base 16) par blocs de 4 bits.",
-      "description": "Complète le binaire à gauche pour avoir une longueur multiple de 4. Découpe par paquets de 4 bits et traduit chaque quartet en son chiffre hexadécimal équivalent (b[0]*8 + b[1]*4 + b[2]*2 + b[3]).",
-      "pseudoCode": "0) fonction bin2hexa(ch: chaîne): chaîne\n1) res <-- \"\"\n2) chh <-- \"0123456789ABCDEF\"\n3) tant que (long(ch) mod 4 ≠ 0) faire\n     ch <-- \"0\" + ch\n   fin_tant_que\n4) tant que ch ≠ \"\" faire\n     b <-- sous_chaîne(ch, 0, 4)\n     ch <-- sous_chaîne(ch, 4, long(ch) - 1)\n     val <-- valeur(b[0])*8 + valeur(b[1])*4 + valeur(b[2])*2 + valeur(b[3])\n     res <-- res + chh[val]\n   fin_tant_que\n5) retourner res\n6) fin",
-      "tdo": [
-        {
-          "objet": "res, b, chh",
-          "type": "chaîne"
-        },
-        {
-          "objet": "val",
-          "type": "entier"
-        }
-      ],
-      "pythonCode": "def bin2hexa(ch):\n    chh = \"0123456789ABCDEF\"\n    while len(ch) % 4 != 0:\n        ch = \"0\" + ch\n    res = \"\"\n    while ch != \"\":\n        b = ch[0:4]\n        ch = ch[4:]\n        val = int(b[0]) * 8 + int(b[1]) * 4 + int(b[2]) * 2 + int(b[3])\n        res = res + chh[val]\n    return res",
-      "example": "bin2hexa(\"1011011\") → \"5B\""
-    },
-    {
-      "id": "algo-octal2bin",
-      "category": "Conversions de Bases",
-      "type": "fonction",
-      "name": "octal2bin(ch)",
-      "syntax": "fonction octal2bin(ch: chaîne): chaîne",
-      "summary": "Convertit un nombre octal en son écriture binaire directe sur 3 bits par chiffre.",
-      "description": "Pour chaque chiffre octal, utilise dec2any(c, 2) puis ajuste la longueur à exactement 3 bits en préfixant des 0 si nécessaire.",
-      "pseudoCode": "0) fonction octal2bin(ch: chaîne): chaîne\n1) res <-- \"\"\n2) pour i de 0 à long(ch) - 1 faire\n     c <-- valeur(ch[i])\n     b <-- dec2any(c, 2)\n     tant que long(b) < 3 faire\n       b <-- \"0\" + b\n     fin_tant_que\n     res <-- res + b\n   fin_pour\n3) retourner res\n4) fin",
-      "tdo": [
-        {
-          "objet": "res, b",
-          "type": "chaîne"
-        },
-        {
-          "objet": "c, i",
-          "type": "entier"
-        }
-      ],
-      "pythonCode": "def octal2bin(ch):\n    res = \"\"\n    for char in ch:\n        c = int(char)\n        b = dec2any(c, 2)\n        while len(b) < 3:\n            b = \"0\" + b\n        res = res + b\n    return res",
-      "example": "octal2bin(\"75401\") → \"111101100000001\""
-    },
-    {
-      "id": "algo-octal2hexa",
-      "category": "Conversions de Bases",
-      "type": "fonction",
-      "name": "octal2hexa(ch)",
-      "syntax": "fonction octal2hexa(ch: chaîne): chaîne",
-      "summary": "Convertit un nombre octal (base 8) en hexadécimal (base 16) via le binaire.",
-      "description": "Méthode directe sans division : transforme d'abord l'octal en binaire avec octal2bin, puis le binaire en hexadécimal avec bin2hexa.",
-      "pseudoCode": "0) fonction octal2hexa(ch: chaîne): chaîne\n1) b <-- octal2bin(ch)\n2) h <-- bin2hexa(b)\n3) retourner h\n4) fin",
-      "tdo": [
-        {
-          "objet": "b, h",
-          "type": "chaîne"
-        }
-      ],
-      "pythonCode": "def octal2hexa(ch):\n    b = octal2bin(ch)\n    h = bin2hexa(b)\n    return h",
-      "example": "octal2hexa(\"75401\") → \"7B01\""
-    },
-    {
-      "id": "algo-dec2any",
-      "category": "Conversions de Bases",
-      "type": "fonction",
-      "name": "dec2any(n, bd)",
-      "syntax": "fonction dec2any(n: entier, bd: entier): chaîne",
-      "summary": "Convertit un entier décimal (base 10) vers une base quelconque bd (2 à 16).",
-      "description": "Méthode des divisions successives par bd. Chaque reste correspond à un chiffre de la base cible (0-9, A-F) ajouté en tête du résultat.",
-      "pseudoCode": "0) fonction dec2any(n: entier, bd: entier): chaîne\n1) chh <-- \"0123456789ABCDEF\"\n2) res <-- \"\"\n3) tant que n ≠ 0 faire\n     res <-- chh[n mod bd] + res\n     n <-- n div bd\n   fin_tant_que\n4) si res = \"\" alors\n     res <-- \"0\"\n   fin_si\n5) retourner res\n6) fin",
-      "tdo": [
-        {
-          "objet": "res, chh",
-          "type": "chaîne"
-        }
-      ],
-      "pythonCode": "def dec2any(n, bd):\n    chh = \"0123456789ABCDEF\"\n    if n == 0:\n        return \"0\"\n    res = \"\"\n    while n != 0:\n        res = chh[n % bd] + res\n        n = n // bd\n    return res",
-      "example": "dec2any(2591, 16) → \"A1F\""
-    },
-    {
-      "id": "algo-dec2anyr",
-      "category": "Conversions de Bases",
-      "type": "fonction",
-      "name": "dec2anyR(n, bd)",
-      "syntax": "fonction dec2anyR(n: entier, bd: entier): chaîne",
-      "summary": "Conversion récursive d'un entier décimal vers une base destination bd.",
-      "description": "Cas d'arrêt : n = 0 renvoie la chaîne vide. Cas général : effectue la division entière (n div bd) récursivement et suffixe le reste (n mod bd).",
-      "pseudoCode": "0) fonction dec2anyR(n: entier, bd: entier): chaîne\n1) chh <-- \"0123456789ABCDEF\"\n2) si n = 0 alors\n     retourner \"\"\n   sinon\n     retourner dec2anyR(n div bd, bd) + chh[n mod bd]\n   fin_si\n3) fin",
-      "tdo": [
-        {
-          "objet": "chh",
-          "type": "chaîne"
-        }
-      ],
-      "pythonCode": "def dec2anyR(n, bd):\n    chh = \"0123456789ABCDEF\"\n    if n == 0:\n        return \"\"\n    return dec2anyR(n // bd, bd) + chh[n % bd]",
-      "example": "dec2anyR(46, 2) → \"101110\""
-    },
-    {
-      "id": "algo-hex2bin",
-      "category": "Conversions de Bases",
-      "type": "fonction",
-      "name": "hex2bin(ch)",
-      "syntax": "fonction hex2bin(ch: chaîne): chaîne",
-      "summary": "Convertit un nombre hexadécimal en binaire direct en remplaçant chaque digit par 4 bits.",
-      "description": "Pour chaque symbole hexadécimal, cherche sa position dans '0123456789ABCDEF', convertit en base 2 avec dec2any et remplit à 4 bits.",
-      "pseudoCode": "0) fonction hex2bin(ch: chaîne): chaîne\n1) res <-- \"\"\n2) chh <-- \"0123456789ABCDEF\"\n3) pour i de 0 à long(ch) - 1 faire\n     c <-- pos(ch[i], chh)\n     b <-- dec2any(c, 2)\n     tant que long(b) < 4 faire\n       b <-- \"0\" + b\n     fin_tant_que\n     res <-- res + b\n   fin_pour\n4) retourner res\n5) fin",
-      "tdo": [
-        {
-          "objet": "res, b, chh",
-          "type": "chaîne"
-        },
-        {
-          "objet": "c, i",
-          "type": "entier"
-        }
-      ],
-      "pythonCode": "def hex2bin(ch):\n    res = \"\"\n    chh = \"0123456789ABCDEF\"\n    for char in ch:\n        c = chh.index(char.upper())\n        b = dec2any(c, 2)\n        while len(b) < 4:\n            b = \"0\" + b\n        res = res + b\n    return res",
-      "example": "hex2bin(\"1F5A\") → \"0001111101011010\""
-    },
-    {
-      "id": "algo-hex2octal",
-      "category": "Conversions de Bases",
-      "type": "fonction",
-      "name": "hex2octal(ch)",
-      "syntax": "fonction hex2octal(ch: chaîne): chaîne",
-      "summary": "Convertit un nombre hexadécimal en octal en passant par le binaire intermédiaire.",
-      "description": "Combine hex2bin pour convertir en binaire, puis bin2oct pour regrouper les bits par 3 en octal. Simple, direct et sans perte de précision.",
-      "pseudoCode": "0) fonction hex2octal(ch: chaîne): chaîne\n1) b <-- hex2bin(ch)\n2) o <-- convch(bin2oct(b))\n3) retourner o\n4) fin",
-      "tdo": [
-        {
-          "objet": "b, o",
-          "type": "chaîne"
-        }
-      ],
-      "pythonCode": "def hex2octal(ch):\n    b = hex2bin(ch)\n    o = str(bin2oct(b))\n    return o",
-      "example": "hex2octal(\"1F5A\") → \"17532\""
-    },
-    {
-      "id": "algo-any2any",
-      "category": "Conversions de Bases",
-      "type": "fonction",
-      "name": "any2any(ch, bs, bd)",
-      "syntax": "fonction any2any(ch: chaîne, bs, bd: entier): chaîne",
-      "summary": "Convertit un nombre d'une base bs vers une base bd quelconque via la base 10.",
-      "description": "Méthode pivot officielle : convertit d'abord ch de la base source bs en entier décimal via a2d, puis convertit cet entier décimal vers la base destination bd via dec2any.",
-      "pseudoCode": "0) fonction any2any(ch: chaîne, bs, bd: entier): chaîne\n1) n <-- a2d(ch, bs)\n2) res <-- dec2any(n, bd)\n3) retourner res\n4) fin",
-      "tdo": [
-        {
-          "objet": "n",
-          "type": "entier"
-        },
-        {
-          "objet": "res",
-          "type": "chaîne"
-        }
-      ],
-      "pythonCode": "def any2any(ch, bs, bd):\n    n = a2d(ch, bs)\n    res = dec2any(n, bd)\n    return res",
-      "example": "any2any(\"1FA2\", 16, 8) → \"17642\""
-    },
-    {
-      "id": "algo-aire-milieu",
-      "category": "Calcul d'Aires",
-      "type": "fonction",
-      "name": "aire_milieu(nb, a, b)",
-      "syntax": "fonction aire_milieu(nb: entier, a, b: réel): réel",
-      "summary": "Approximation de l'intégrale d'une fonction f par la méthode des rectangles au point médian.",
-      "description": "Découpe l'intervalle [a, b] en nb sous-intervalles de largeur h = |b - a| / nb. Évalue la fonction f(x) au centre de chaque intervalle x = a + h/2, puis somme les aires (f(x) * h).",
-      "pseudoCode": "0) fonction aire_milieu(nb: entier, a, b: réel): réel\n1) h <-- abs(b - a) / nb\n2) x <-- a + (h / 2)\n3) s <-- 0\n4) pour i de 0 à nb - 1 faire\n     s <-- s + (f(x) * h)\n     x <-- x + h\n   fin_pour\n5) retourner s\n6) fin",
-      "tdo": [
-        {
-          "objet": "h, x, s",
-          "type": "réel"
-        },
-        {
-          "objet": "i",
-          "type": "entier"
-        }
-      ],
-      "pythonCode": "def f(x):\n    return x * x  # Exemple de fonction à intégrer\n\ndef aire_milieu(nb, a, b):\n    h = abs(b - a) / nb\n    x = a + (h / 2)\n    s = 0.0\n    for i in range(nb):\n        s = s + f(x) * h\n        x = x + h\n    return round(s, 6)",
-      "example": "aire_milieu(100, 0, 1) avec f(x)=x^2 → 0.333325"
-    },
-    {
-      "id": "algo-aire-droite",
-      "category": "Calcul d'Aires",
-      "type": "fonction",
-      "name": "aire_droite(nb, a, b)",
-      "syntax": "fonction aire_droite(nb: entier, a, b: réel): réel",
-      "summary": "Approximation de l'intégrale par la méthode des rectangles avec la borne droite.",
-      "description": "Découpe en nb subdivisions de pas h. Le point de calcul démarre à x = a + h (extrémité droite du premier rectangle) et avance de h à chaque pas.",
-      "pseudoCode": "0) fonction aire_droite(nb: entier, a, b: réel): réel\n1) h <-- abs(b - a) / nb\n2) x <-- a + h\n3) s <-- 0\n4) pour i de 0 à nb - 1 faire\n     s <-- s + (f(x) * h)\n     x <-- x + h\n   fin_pour\n5) retourner s\n6) fin",
-      "tdo": [
-        {
-          "objet": "h, x, s",
-          "type": "réel"
-        },
-        {
-          "objet": "i",
-          "type": "entier"
-        }
-      ],
-      "pythonCode": "def f(x):\n    return x * x\n\ndef aire_droite(nb, a, b):\n    h = abs(b - a) / nb\n    x = a + h\n    s = 0.0\n    for i in range(nb):\n        s = s + f(x) * h\n        x = x + h\n    return round(s, 6)",
-      "example": "aire_droite(100, 0, 1) avec f(x)=x^2 → 0.338350"
-    },
-    {
-      "id": "algo-aire-gauche",
-      "category": "Calcul d'Aires",
-      "type": "fonction",
-      "name": "aire_gauche(nb, a, b)",
-      "syntax": "fonction aire_gauche(nb: entier, a, b: réel): réel",
-      "summary": "Approximation de l'intégrale par la méthode des rectangles avec la borne gauche.",
-      "description": "Démarre exactement à x = a (extrémité gauche du rectangle) et évalue f(x) avant d'incrémenter x de h à chaque itération.",
-      "pseudoCode": "0) fonction aire_gauche(nb: entier, a, b: réel): réel\n1) h <-- abs(b - a) / nb\n2) x <-- a\n3) s <-- 0\n4) pour i de 0 à nb - 1 faire\n     s <-- s + (f(x) * h)\n     x <-- x + h\n   fin_pour\n5) retourner s\n6) fin",
-      "tdo": [
-        {
-          "objet": "h, x, s",
-          "type": "réel"
-        },
-        {
-          "objet": "i",
-          "type": "entier"
-        }
-      ],
-      "pythonCode": "def f(x):\n    return x * x\n\ndef aire_gauche(nb, a, b):\n    h = abs(b - a) / nb\n    x = a\n    s = 0.0\n    for i in range(nb):\n        s = s + f(x) * h\n        x = x + h\n    return round(s, 6)",
-      "example": "aire_gauche(100, 0, 1) avec f(x)=x^2 → 0.328350"
-    },
-    {
-      "id": "algo-aire-trapezes",
-      "category": "Calcul d'Aires",
-      "type": "fonction",
-      "name": "aire_trapezes(nb, a, b)",
-      "syntax": "fonction aire_trapezes(nb: entier, a, b: réel): réel",
-      "summary": "Calcul d'aire approchée par la formule des trapèzes sur [a, b].",
-      "description": "Chaque tranche est approximée par un trapèze d'aire ((f(x) + f(x+h)) * h) / 2. Cette méthode donne une convergence nettement plus rapide et précise.",
-      "pseudoCode": "0) fonction aire_trapezes(nb: entier, a, b: réel): réel\n1) h <-- abs(b - a) / nb\n2) x <-- a\n3) s <-- 0\n4) pour i de 0 à nb - 1 faire\n     s <-- s + (((f(x) + f(x + h)) * h) / 2)\n     x <-- x + h\n   fin_pour\n5) retourner s\n6) fin",
-      "tdo": [
-        {
-          "objet": "h, x, s",
-          "type": "réel"
-        },
-        {
-          "objet": "i",
-          "type": "entier"
-        }
-      ],
-      "pythonCode": "def f(x):\n    return x * x\n\ndef aire_trapezes(nb, a, b):\n    h = abs(b - a) / nb\n    x = a\n    s = 0.0\n    for i in range(nb):\n        s = s + ((f(x) + f(x + h)) * h) / 2\n        x = x + h\n    return round(s, 6)",
-      "example": "aire_trapezes(100, 0, 1) avec f(x)=x^2 → 0.333350"
-    },
-    {
-      "id": "algo-premier",
-      "category": "Arithmétique & Nombres",
-      "type": "fonction",
-      "name": "premier(n)",
-      "syntax": "fonction premier(n: entier): booléen",
-      "summary": "Teste si un entier n est premier (optimisé jusqu'à n div 2).",
-      "description": "Initialise ok à (n > 1). Parcourt les diviseurs potentiels de 2 à n div 2. Dès qu'un diviseur strict est trouvé (n mod i = 0), ok devient faux.",
-      "pseudoCode": "0) fonction premier(n: entier): booléen\n1) ok <-- n > 1\n2) pour i de 2 à n div 2 faire\n     si n mod i = 0 alors\n       ok <-- faux\n     fin_si\n   fin_pour\n3) retourner ok\n4) fin",
-      "tdo": [
-        {
-          "objet": "ok",
-          "type": "booléen"
-        },
-        {
-          "objet": "i",
-          "type": "entier"
-        }
-      ],
-      "pythonCode": "def premier(n):\n    if n <= 1:\n        return False\n    ok = True\n    for i in range(2, (n // 2) + 1):\n        if n % i == 0:\n            ok = False\n            break\n    return ok",
-      "example": "premier(17) → True, premier(21) → False"
-    },
-    {
-      "id": "algo-factorielle",
-      "category": "Arithmétique & Nombres",
-      "type": "fonction",
-      "name": "factorielle(N)",
-      "syntax": "fonction factorielle(N: entier): entier",
-      "summary": "Calcule le produit factoriel N! = 1 * 2 * ... * N.",
-      "description": "Initialise l'accumulateur f à 1, puis multiplie consécutivement par chaque entier i variant de 2 jusqu'à N.",
-      "pseudoCode": "0) fonction factorielle(N: entier): entier\n1) f <-- 1\n2) pour i de 2 à N faire\n     f <-- f * i\n   fin_pour\n3) retourner f\n4) fin",
-      "tdo": [
-        {
-          "objet": "f, i",
-          "type": "entier"
-        }
-      ],
-      "pythonCode": "def factorielle(N):\n    f = 1\n    for i in range(2, N + 1):\n        f = f * i\n    return f",
-      "example": "factorielle(5) → 120"
-    },
-    {
-      "id": "algo-puissance",
-      "category": "Arithmétique & Nombres",
-      "type": "fonction",
-      "name": "puissance(x, n)",
-      "syntax": "fonction puissance(x: entier, n: entier): réel",
-      "summary": "Calcule la puissance x^n pour un exposant entier positif.",
-      "description": "Initialise p à 1, puis effectue n multiplications successives de la base x.",
-      "pseudoCode": "0) fonction puissance(x: entier, n: entier): réel\n1) p <-- 1\n2) pour i de 1 à n faire\n     p <-- p * x\n   fin_pour\n3) retourner p\n4) fin",
-      "tdo": [
-        {
-          "objet": "p",
-          "type": "réel"
-        },
-        {
-          "objet": "i",
-          "type": "entier"
-        }
-      ],
-      "pythonCode": "def puissance(x, n):\n    p = 1\n    for i in range(1, n + 1):\n        p = p * x\n    return float(p)",
-      "example": "puissance(2, 5) → 32.0"
-    },
-    {
-      "id": "algo-puissance-va",
-      "category": "Arithmétique & Nombres",
-      "type": "fonction",
-      "name": "puissance_va(x, n)",
-      "syntax": "fonction puissance_va(x: entier, n: entier): réel",
-      "summary": "Calcule la puissance x^n pour n quelconque (positif, nul ou négatif).",
-      "description": "Calcule le produit sur abs(n) itérations. Si l'exposant n est strictement négatif, inverse la valeur finale p <-- 1 / p.",
-      "pseudoCode": "0) fonction puissance_va(x: entier, n: entier): réel\n1) p <-- 1\n2) pour i de 1 à abs(n) faire\n     p <-- p * x\n   fin_pour\n3) si n < 0 alors\n     p <-- 1 / p\n   fin_si\n4) retourner p\n5) fin",
-      "tdo": [
-        {
-          "objet": "p",
-          "type": "réel"
-        },
-        {
-          "objet": "i",
-          "type": "entier"
-        }
-      ],
-      "pythonCode": "def puissance_va(x, n):\n    p = 1.0\n    for i in range(1, abs(n) + 1):\n        p = p * x\n    if n < 0:\n        p = 1.0 / p\n    return p",
-      "example": "puissance_va(2, -3) → 0.125"
-    },
-    {
-      "id": "algo-pgcd-ppcm",
-      "category": "Arithmétique & Nombres",
-      "type": "fonction",
-      "name": "pgcd_ppcm(a, b)",
-      "syntax": "fonction pgcd_ppcm(a, b: entier): entier",
-      "summary": "Méthode optimisée Bac pour déterminer le PPCM et le PGCD simultanément.",
-      "description": "Cherche le plus petit coefficient k ≥ 1 tel que (a * k) mod b = 0. Le PPCM vaut a * k, et le PGCD vaut b div k (car PGCD * PPCM = a * b).",
-      "pseudoCode": "0) fonction pgcd_ppcm(a, b: entier): entier\n1) k <-- 1\n2) tant que ((a * k) mod b ≠ 0) faire\n     k <-- k + 1\n   fin_tant_que\n3) // Pour obtenir le PPCM : retourner a * k\n4) // Pour obtenir le PGCD : retourner b div k\n5) retourner b div k\n6) fin",
-      "tdo": [
-        {
-          "objet": "k",
-          "type": "entier"
-        }
-      ],
-      "pythonCode": "def pgcd_ppcm(a, b):\n    k = 1\n    while (a * k) % b != 0:\n        k = k + 1\n    ppcm = a * k\n    pgcd = (a * b) // ppcm\n    return pgcd, ppcm",
-      "example": "pgcd_ppcm(12, 18) → (PGCD: 6, PPCM: 36)"
-    },
-    {
       "id": "algo-palindrome",
-      "category": "Traitement des Chaînes",
+      "category": "Bases & Révision (Structures, Tris & Matrices)",
       "type": "fonction",
       "name": "palindrome(ch)",
       "syntax": "fonction palindrome(ch: chaîne): booléen",
@@ -5015,7 +5142,7 @@ const DATA = {
     },
     {
       "id": "algo-lirech",
-      "category": "Traitement des Chaînes",
+      "category": "Bases & Révision (Structures, Tris & Matrices)",
       "type": "procédure",
       "name": "lirech(VAR ch)",
       "syntax": "procédure lirech(VAR ch: chaîne)",
@@ -5037,7 +5164,7 @@ const DATA = {
     },
     {
       "id": "algo-remplir",
-      "category": "Tableaux & Vecteurs",
+      "category": "Bases & Révision (Structures, Tris & Matrices)",
       "type": "procédure",
       "name": "remplir(VAR t, N)",
       "syntax": "procédure remplir(VAR t: tab, N: entier)",
@@ -5055,7 +5182,7 @@ const DATA = {
     },
     {
       "id": "algo-remplir-condition",
-      "category": "Tableaux & Vecteurs",
+      "category": "Bases & Révision (Structures, Tris & Matrices)",
       "type": "procédure",
       "name": "remplir_condition(VAR t, N)",
       "syntax": "procédure remplir_condition(VAR t: tab, N: entier)",
@@ -5073,7 +5200,7 @@ const DATA = {
     },
     {
       "id": "algo-remplir-distinct",
-      "category": "Tableaux & Vecteurs",
+      "category": "Bases & Révision (Structures, Tris & Matrices)",
       "type": "procédure",
       "name": "remplir_distinct(VAR t, n)",
       "syntax": "procédure remplir_distinct(VAR t: tab, n: entier)",
@@ -5095,7 +5222,7 @@ const DATA = {
     },
     {
       "id": "algo-tri-bulle",
-      "category": "Algorithmes de Tri",
+      "category": "Bases & Révision (Structures, Tris & Matrices)",
       "type": "procédure",
       "name": "tri_bulle(VAR t, n)",
       "syntax": "procédure tri_bulle(VAR t: tab, n: entier)",
@@ -5117,7 +5244,7 @@ const DATA = {
     },
     {
       "id": "algo-tri-selection",
-      "category": "Algorithmes de Tri",
+      "category": "Bases & Révision (Structures, Tris & Matrices)",
       "type": "procédure",
       "name": "tri_par_sélection(VAR T, N)",
       "syntax": "procédure tri_par_sélection(VAR T: tab, N: entier)",
@@ -5135,7 +5262,7 @@ const DATA = {
     },
     {
       "id": "algo-tri-insertion",
-      "category": "Algorithmes de Tri",
+      "category": "Bases & Révision (Structures, Tris & Matrices)",
       "type": "procédure",
       "name": "tri_par_insertion(VAR T, N)",
       "syntax": "procédure tri_par_insertion(VAR T: tab, N: entier)",
@@ -5153,7 +5280,7 @@ const DATA = {
     },
     {
       "id": "algo-recherche-dicho",
-      "category": "Algorithmes de Tri",
+      "category": "Bases & Révision (Structures, Tris & Matrices)",
       "type": "fonction",
       "name": "recherche_dichotomique(t, n, x)",
       "syntax": "fonction recherche_dichotomique(t: tab, n, x: entier): entier",
@@ -5171,7 +5298,7 @@ const DATA = {
     },
     {
       "id": "algo-tri-mat-colonne",
-      "category": "Matrices & Patterns",
+      "category": "Bases & Révision (Structures, Tris & Matrices)",
       "type": "procédure",
       "name": "tri_mat_colonne(VAR m, n)",
       "syntax": "procédure tri_mat_colonne(VAR m: mat, n: entier)",
@@ -5193,7 +5320,7 @@ const DATA = {
     },
     {
       "id": "algo-tri-mat-ligne",
-      "category": "Matrices & Patterns",
+      "category": "Bases & Révision (Structures, Tris & Matrices)",
       "type": "procédure",
       "name": "tri_mat_ligne(VAR m, n)",
       "syntax": "procédure tri_mat_ligne(VAR m: mat, n: entier)",
@@ -5215,7 +5342,7 @@ const DATA = {
     },
     {
       "id": "algo-mat-parcours-bas-haut",
-      "category": "Matrices & Patterns",
+      "category": "Bases & Révision (Structures, Tris & Matrices)",
       "type": "procédure",
       "name": "mat_parcours_bas_haut(m, L, C)",
       "syntax": "procédure mat_parcours_bas_haut(m: mat, L, C: entier)",
@@ -5233,7 +5360,7 @@ const DATA = {
     },
     {
       "id": "algo-mat-parcours-ligne-inverse",
-      "category": "Matrices & Patterns",
+      "category": "Bases & Révision (Structures, Tris & Matrices)",
       "type": "procédure",
       "name": "mat_parcours_ligne_inverse(m, L, C)",
       "syntax": "procédure mat_parcours_ligne_inverse(m: mat, L, C: entier)",
@@ -5251,7 +5378,7 @@ const DATA = {
     },
     {
       "id": "algo-mat-pattern-sablier",
-      "category": "Matrices & Patterns",
+      "category": "Bases & Révision (Structures, Tris & Matrices)",
       "type": "procédure",
       "name": "mat_pattern_sablier(m, L, C)",
       "syntax": "procédure mat_pattern_sablier(m: mat, L, C: entier)",
@@ -5269,7 +5396,7 @@ const DATA = {
     },
     {
       "id": "algo-mat-pattern-diagonales",
-      "category": "Matrices & Patterns",
+      "category": "Bases & Révision (Structures, Tris & Matrices)",
       "type": "procédure",
       "name": "mat_pattern_diagonales(m, L)",
       "syntax": "procédure mat_pattern_diagonales(m: mat, L: entier)",

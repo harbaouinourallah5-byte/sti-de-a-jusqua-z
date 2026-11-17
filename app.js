@@ -6330,9 +6330,11 @@ function renderLessons() {
 
     if (targetSubj !== 'all') {
       if (targetSubj === 'all-algo') {
-        if (!['algo-pratique', 'algo-theorique'].includes(lSubj)) return false;
+        if (!['algo-pratique', 'algo-theorique'].includes(lSubj) && !lSubj.startsWith('algo-')) return false;
       } else if (targetSubj === 'all-sti') {
         if (!['html', 'css', 'js', 'sql'].includes(lSubj)) return false;
+      } else if (targetSubj === 'algo-theorique') {
+        if (lSubj !== 'algo-theorique' && !lSubj.startsWith('algo-ch')) return false;
       } else if (lSubj !== targetSubj) {
         return false;
       }
@@ -6844,7 +6846,12 @@ async function handleUploadLesson(e) {
     js: "JavaScript",
     sql: "SQL (Bases de Données)",
     "algo-pratique": "Pratique (Qt ➔ Thonny)",
-    "algo-theorique": "Théorique (Algorithme)"
+    "algo-theorique": "Théorique (Algorithme)",
+    "algo-ch1-fichiers": "Ch 1 : Fichiers Binaires & Texte",
+    "algo-ch2-recurrence": "Ch 2 : Récurrence",
+    "algo-ch3-bases": "Ch 3 : Convertion Entre les Bases",
+    "algo-ch4-arithmetique": "Ch 4 : Arithmétique",
+    "algo-ch5-approximation": "Ch 5 : Approximation & Optimisation"
   };
 
   const subjectTags = {
@@ -6853,7 +6860,12 @@ async function handleUploadLesson(e) {
     js: ["js", "javascript", "script", "controle", "validation"],
     sql: ["sql", "bdd", "base", "table", "requete", "select"],
     "algo-pratique": ["algo", "algorithme", "pratique", "qt", "designer", "thonny", "python", "interface"],
-    "algo-theorique": ["algo", "algorithme", "theorique", "bac", "tri", "matrice", "pattern", "bases", "recursivite"]
+    "algo-theorique": ["algo", "algorithme", "theorique", "bac", "tri", "matrice", "pattern", "bases", "recursivite"],
+    "algo-ch1-fichiers": ["algo", "algorithme", "fichiers", "texte", "binaire", "pickle", "dump", "load", "eof", "recréer", "ouvrir", "associer"],
+    "algo-ch2-recurrence": ["algo", "algorithme", "recurrence", "recursivite", "base", "general"],
+    "algo-ch3-bases": ["algo", "algorithme", "bases", "conversion", "binaire", "octal", "hexadecimal", "decimal"],
+    "algo-ch4-arithmetique": ["algo", "algorithme", "arithmetique", "premier", "pgcd", "ppcm", "factorielle", "puissance"],
+    "algo-ch5-approximation": ["algo", "algorithme", "approximation", "optimisation", "aires", "rectangles", "trapezes", "integration"]
   };
 
   const typeLabels = {
@@ -6987,7 +6999,11 @@ function renderAdminLessonsTable() {
   const targetSubj = (adminFilterSubject || 'all').trim().toLowerCase();
   const filtered = allLessons.filter(l => {
     if (targetSubj === 'all') return true;
-    return (l.subject || '').trim().toLowerCase() === targetSubj;
+    const lSubj = (l.subject || '').trim().toLowerCase();
+    if (targetSubj === 'algo-theorique') {
+      return lSubj === 'algo-theorique' || lSubj.startsWith('algo-ch');
+    }
+    return lSubj === targetSubj;
   });
 
   if (filtered.length === 0) {
@@ -7095,10 +7111,26 @@ async function clearAllLessonsFromDB() {
 async function loadOfficialAlgoPdfPacks() {
   const packs = [
     {
+      id: "lesson-algo-theo-00",
+      title: "Support Officiel : Les Fichiers Binaires et Fichiers Texte (Bac Informatique)",
+      subject: "algo-ch1-fichiers",
+      subjectLabel: "Ch 1 : Fichiers Binaires & Texte",
+      type: "cours",
+      typeLabel: "📖 Support Officiel",
+      date: "2025-04-10",
+      author: "Inspection Générale de l'Informatique",
+      fileSize: "3.5 Mo",
+      pdfUrl: "pdf/Support_Fichiers_Texte_Binaires.pdf",
+      description: "Cours officiel complet : manipulation des fichiers texte (associer, recréer, ouvrir, lire_ligne, écrire_ligne) et fichiers d'enregistrements binaires (pickle dump/load sous Thonny Python).",
+      summary: "Polycopié de référence sur le Chapitre 1 : syntaxe théorique normalisée, TDO/TDNT, gestion du pointeur et détection de fin de fichier (EOF).",
+      downloadName: "Support_Officiel_Fichiers_Texte_Binaires.pdf",
+      isCustom: true
+    },
+    {
       id: "lesson-algo-theo-01",
       title: "Support Officiel : Conversion Entre Les Bases de Numération (Bases 2, 8, 10, 16)",
-      subject: "algo-theorique",
-      subjectLabel: "Théorique (Algorithme)",
+      subject: "algo-ch3-bases",
+      subjectLabel: "Ch 3 : Convertion Entre les Bases",
       type: "cours",
       typeLabel: "📖 Support Officiel",
       date: "2025-04-12",
@@ -7113,8 +7145,8 @@ async function loadOfficialAlgoPdfPacks() {
     {
       id: "lesson-algo-theo-02",
       title: "Support Officiel : Calcul d'Aires & Intégration Numérique (Trapèzes & Rectangles)",
-      subject: "algo-theorique",
-      subjectLabel: "Théorique (Algorithme)",
+      subject: "algo-ch5-approximation",
+      subjectLabel: "Ch 5 : Approximation & Optimisation",
       type: "cours",
       typeLabel: "📖 Support Officiel",
       date: "2025-04-15",
@@ -7130,7 +7162,7 @@ async function loadOfficialAlgoPdfPacks() {
       id: "lesson-algo-theo-03",
       title: "Fichier de Révision : Algorithmes Types, TDO & Sous-programmes Bac",
       subject: "algo-theorique",
-      subjectLabel: "Théorique (Algorithme)",
+      subjectLabel: "Bases & Révision (Algorithme)",
       type: "serie",
       typeLabel: "📝 Fichier de Révision",
       date: "2025-04-18",
@@ -7146,7 +7178,7 @@ async function loadOfficialAlgoPdfPacks() {
       id: "lesson-algo-theo-04",
       title: "Support Officiel : Matrices & Patterns (Spirale, Zigzag, Diagonales, Sablier)",
       subject: "algo-theorique",
-      subjectLabel: "Théorique (Algorithme)",
+      subjectLabel: "Bases & Révision (Matrices)",
       type: "cours",
       typeLabel: "📖 Support Officiel",
       date: "2025-04-20",
@@ -7164,7 +7196,7 @@ async function loadOfficialAlgoPdfPacks() {
     await STILessonsDB.save(l);
   }
   await initLessonsModule();
-  alert("✓ Les 4 supports officiels d'Algorithme ont été chargés avec succès !");
+  alert("✓ Les 5 supports officiels d'Algorithme ont été chargés avec succès !");
 }
 
 async function resetToDefaultLessons() {
@@ -7801,13 +7833,38 @@ function renderAlgoTheoriqueCategories() {
   if (!bar) return;
 
   const items = (typeof DATA !== 'undefined' && DATA && DATA.algo_theorique) ? DATA.algo_theorique : [];
-  const categories = ['all', ...new Set(items.map(x => x.category))];
+  
+  const desiredOrder = [
+    "1) Les fichiers binaires et fichier text",
+    "2) Récurrence",
+    "3) Convertion Entre les Bases",
+    "4) Arithmétique",
+    "5) Approximation and optimisation",
+    "Bases & Révision (Structures, Tris & Matrices)"
+  ];
+  
+  const existingCats = [...new Set(items.map(x => x.category))];
+  const sortedCats = desiredOrder.filter(c => existingCats.includes(c));
+  existingCats.forEach(c => {
+    if (!sortedCats.includes(c)) sortedCats.push(c);
+  });
+
+  const categories = ['all', ...sortedCats];
 
   bar.innerHTML = categories.map(cat => {
     const isAct = cat === currentAlgoTheoriqueCategory;
     const count = cat === 'all' ? items.length : items.filter(x => x.category === cat).length;
-    const label = cat === 'all' ? '✨ Tout afficher' : cat;
-    return `<button type="button" class="cat-pill ${isAct ? 'active' : ''}" onclick="setAlgoTheoriqueCategory('${cat}')">
+    let label = cat;
+    if (cat === 'all') label = '✨ Tout afficher';
+    else if (cat.startsWith('1)')) label = '📁 Ch 1 : Fichiers Binaires & Texte';
+    else if (cat.startsWith('2)')) label = '🔄 Ch 2 : Récurrence';
+    else if (cat.startsWith('3)')) label = '🔢 Ch 3 : Convertion Entre les Bases';
+    else if (cat.startsWith('4)')) label = '🧮 Ch 4 : Arithmétique';
+    else if (cat.startsWith('5)')) label = '📈 Ch 5 : Approximation & Optimisation';
+    else if (cat.startsWith('Bases')) label = '📚 Bases & Révision';
+
+    const safeCat = cat.replace(/'/g, "\\'");
+    return `<button type="button" class="cat-pill ${isAct ? 'active' : ''}" onclick="setAlgoTheoriqueCategory('${safeCat}')">
       <span>${label}</span>
       <span class="cat-pill-count">${count}</span>
     </button>`;

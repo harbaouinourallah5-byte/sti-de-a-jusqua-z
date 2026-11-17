@@ -3015,7 +3015,12 @@ input, select, textarea {
   border: 1px solid rgba(16, 185, 129, 0.4);
 }
 
-.subject-badge.algo-theorique {
+.subject-badge.algo-theorique,
+.subject-badge.algo-ch1-fichiers,
+.subject-badge.algo-ch2-recurrence,
+.subject-badge.algo-ch3-bases,
+.subject-badge.algo-ch4-arithmetique,
+.subject-badge.algo-ch5-approximation {
   background: rgba(245, 158, 11, 0.15);
   color: #fbbf24;
   border: 1px solid rgba(245, 158, 11, 0.4);
@@ -3051,7 +3056,14 @@ input, select, textarea {
 .lesson-card.js::before { background: #facc15; }
 .lesson-card.sql::before { background: #a855f7; }
 .lesson-card.algo-pratique::before { background: #10b981; }
-.lesson-card.algo-theorique::before { background: #f59e0b; }
+.lesson-card.algo-theorique::before,
+.lesson-card.algo-ch1-fichiers::before,
+.lesson-card.algo-ch2-recurrence::before,
+.lesson-card.algo-ch3-bases::before,
+.lesson-card.algo-ch4-arithmetique::before,
+.lesson-card.algo-ch5-approximation::before {
+  background: #f59e0b;
+}
 
 .lesson-card:hover {
   transform: translateY(-4px);
