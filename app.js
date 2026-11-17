@@ -8084,9 +8084,9 @@ function openAlgoTheoriqueModal(item) {
       </div>
       <div class="annexe-code-container" style="border-color: rgba(245, 158, 11, 0.35);">
         <div class="annexe-code-header" style="background: rgba(245, 158, 11, 0.1);">
-          <span style="color: #fbbf24; font-weight: 800;">ALGORITHME_OFFICIEL.TXT</span>
+          <span style="color: #fbbf24; font-weight: 800;">Algorithme (Pseudo-Code)</span>
           <button type="button" class="annexe-copy-btn" onclick='copyCodeText(${rawPseudoJson}, this)' style="background: rgba(245, 158, 11, 0.25); color: #fbbf24; border-color: rgba(245, 158, 11, 0.45);">
-            📋 Copier le Pseudo-Code
+            📋 Copier
           </button>
         </div>
         <pre class="annexe-code-pre" style="white-space: pre-wrap; word-break: break-word;"><code style="color: #fef08a;">${escapeHtml(item.pseudoCode || '')}</code></pre>
@@ -8105,9 +8105,9 @@ function openAlgoTheoriqueModal(item) {
         </div>
         <div class="annexe-code-container" style="border-color: rgba(16, 185, 129, 0.35);">
           <div class="annexe-code-header">
-            <span>script_python.py</span>
+            <span style="color: #34d399; font-weight: 800;">Code Python (Thonny)</span>
             <button type="button" class="annexe-copy-btn" onclick='copyCodeText(${rawPythonJson}, this)'>
-              📋 Copier le Code Python
+              📋 Copier
             </button>
           </div>
           <pre class="annexe-code-pre" style="white-space: pre-wrap; word-break: break-word;"><code class="python-syntax-view">${highlightedPython}</code></pre>

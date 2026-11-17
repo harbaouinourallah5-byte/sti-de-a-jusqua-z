@@ -19,70 +19,50 @@ const ALGO_CATEGORY_META = {
 // -------------------------------------------------------------
 function highlightPythonCode(code) {
   if (!code) return '';
+
+  const keywords = new Set([
+    'from', 'import', 'def', 'if', 'elif', 'else', 'return',
+    'True', 'False', 'in', 'not', 'and', 'or', 'try', 'except',
+    'pass', 'for', 'while', 'as', 'None'
+  ]);
+
+  const builtins = new Set([
+    'print', 'input', 'int', 'float', 'str', 'range', 'len',
+    'open', 'load', 'dump', 'append', 'strip', 'loadUi',
+    'exec_', 'show', 'text', 'setText', 'clear', 'setFocus',
+    'clicked', 'connect', 'isChecked', 'setChecked', 'currentText',
+    'currentIndex', 'setCurrentIndex', 'addItem', 'addItems',
+    'value', 'setValue', 'date', 'toString', 'critical',
+    'information', 'warning', 'setRowCount', 'setColumnCount',
+    'setItem', 'rowCount', 'currentRow', 'isdigit', 'isalpha', 'isnumeric'
+  ]);
+
   const lines = code.split('\n');
   return lines.map(line => {
-    const commentIdx = line.indexOf('#');
-    if (commentIdx !== -1) {
-      const codePart = line.substring(0, commentIdx);
-      const commentPart = line.substring(commentIdx);
-      return highlightPythonTokens(codePart) + `<span class="py-comment">${escapeHtmlSafe(commentPart)}</span>`;
+    const tokenRegex = /(".*?"|'.*?'|#.*|\b[a-zA-Z_]\w*\b|\b\d+(?:\.\d+)?\b|[^\s\w"']+|\s+)/g;
+    let match;
+    let result = '';
+
+    while ((match = tokenRegex.exec(line)) !== null) {
+      const token = match[0];
+
+      if (token.startsWith('#')) {
+        result += `<span class="py-comment" style="color: #64748b; font-style: italic;">${escapeHtmlSafe(token)}</span>`;
+      } else if (token.startsWith('"') || token.startsWith("'")) {
+        result += `<span class="py-str" style="color: #a7f3d0;">${escapeHtmlSafe(token)}</span>`;
+      } else if (keywords.has(token)) {
+        result += `<span class="py-kw" style="color: #38bdf8; font-weight: 700;">${token}</span>`;
+      } else if (builtins.has(token)) {
+        result += `<span class="py-method" style="color: #facc15;">${token}</span>`;
+      } else if (/^\d+(?:\.\d+)?$/.test(token)) {
+        result += `<span class="py-num" style="color: #f472b6;">${token}</span>`;
+      } else {
+        result += escapeHtmlSafe(token);
+      }
     }
-    return highlightPythonTokens(line);
+
+    return result;
   }).join('\n');
-}
-
-function highlightPythonTokens(str) {
-  if (!str) return '';
-  
-  // 1. Extraire et sanctuariser les chaînes de caractères
-  const stringPool = [];
-  let tokenized = str.replace(/(".*?"|'.*?')/g, (match) => {
-    const placeholder = `___PYSTR_${stringPool.length}___`;
-    stringPool.push(`<span class="py-str">${escapeHtmlSafe(match)}</span>`);
-    return placeholder;
-  });
-
-  tokenized = escapeHtmlSafe(tokenized);
-
-  // 2. Nombres littéraux
-  tokenized = tokenized.replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="py-num">$1</span>');
-
-  // 3. Mots-clés réservés Python
-  const kws = ['from', 'import', 'def', 'if', 'elif', 'else', 'return', 'int', 'float', 'str', 'True', 'False', 'in', 'not', 'and', 'or', 'class', 'try', 'except', 'pass', 'for', 'while', 'len', 'as', 'None'];
-  kws.forEach(kw => {
-    const regex = new RegExp(`\\b(${kw})\\b`, 'g');
-    tokenized = tokenized.replace(regex, '<span class="py-kw">$1</span>');
-  });
-
-  // 4. Objets Qt fondamentaux
-  tokenized = tokenized.replace(/\b(windows|W|app|QApplication|QMessageBox|QTableWidgetItem)\b/g, '<span class="py-obj">$1</span>');
-
-  // 5. Fonctions globales et constructeurs
-  const standaloneFuncs = ['loadUi', 'print', 'range', 'append'];
-  standaloneFuncs.forEach(fn => {
-    const regex = new RegExp(`\\b(${fn})\\b(?=\\s*\\()`, 'g');
-    tokenized = tokenized.replace(regex, '<span class="py-method">$1</span>');
-  });
-
-  // 6. Méthodes Qt officielles autorisées au Bac STI
-  const methods = [
-    'loadUi', 'show', 'exec_', 'text', 'toPlainText', 'setText', 'clear', 'setFocus',
-    'clicked', 'connect', 'isChecked', 'setChecked', 'currentText', 'currentIndex',
-    'setCurrentIndex', 'addItem', 'addItems', 'value', 'setValue', 'date', 'toString',
-    'critical', 'information', 'warning', 'setRowCount', 'setColumnCount',
-    'setHorizontalHeaderLabels', 'setItem', 'rowCount', 'currentRow', 'strip', 'isdigit', 'isalpha', 'isnumeric'
-  ];
-  methods.forEach(m => {
-    const regex = new RegExp(`(\\.)(${m})\\b`, 'g');
-    tokenized = tokenized.replace(regex, '$1<span class="py-method">$2</span>');
-  });
-
-  // 7. Restaurer les chaînes sanctuarisées
-  stringPool.forEach((span, idx) => {
-    tokenized = tokenized.replace(`___PYSTR_${idx}___`, span);
-  });
-
-  return tokenized;
 }
 
 function escapeHtmlSafe(str) {
@@ -90,7 +70,8 @@ function escapeHtmlSafe(str) {
   return str.replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;');
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
 }
 
 // -------------------------------------------------------------
@@ -1168,8 +1149,8 @@ function openAlgoModal(itemId) {
       
       <div class="annexe-code-container" style="background: #050811; border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 10px; overflow: hidden;">
         <div class="annexe-code-header" style="background: #09131e; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
-          <span style="color: #34d399; font-weight: 800; font-size: 0.82rem; letter-spacing: 0.5px;">📜 script_bac.py • Thonny Python 3.10</span>
-          <button type="button" class="annexe-copy-btn" onclick='copyCodeText(${rawThonnyJson}, this)' style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); padding: 5px 12px; border-radius: 6px; font-weight: 700; cursor: pointer;">📋 Copier le code complet</button>
+          <span style="color: #34d399; font-weight: 800; font-size: 0.82rem; letter-spacing: 0.5px;">🐍 Code Python • Thonny</span>
+          <button type="button" class="annexe-copy-btn" onclick='copyCodeText(${rawThonnyJson}, this)' style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); padding: 5px 12px; border-radius: 6px; font-weight: 700; cursor: pointer;">📋 Copier</button>
         </div>
         <pre class="annexe-code-pre" style="white-space: pre-wrap !important; word-break: break-word !important; overflow: visible !important; height: auto !important; max-height: none !important; margin: 0; padding: 18px; background: transparent;"><code class="python-syntax-view">${highlightedCode}</code></pre>
       </div>
