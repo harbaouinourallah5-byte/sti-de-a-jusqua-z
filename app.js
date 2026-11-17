@@ -8974,58 +8974,23 @@ function navigateGlobalSearchResult(index) {
   }
 }
 
-// 7. SÉCURITÉ ESPACE ENSEIGNANT (/admin)
-const ADMIN_MASTER_PASSCODE = "prof2025";
-
+// 7. ACCÈS DIRECT ESPACE ENSEIGNANT (/admin) SANS MOT DE PASSE
 function checkAdminAuth() {
-  const isAuth = (sessionStorage.getItem('sti_admin_auth') === 'true');
   const gate = document.getElementById('adminAuthGate');
   const dash = document.getElementById('adminDashboard');
-
-  if (isAuth) {
-    if (gate) gate.style.display = 'none';
-    if (dash) dash.style.display = 'block';
-    renderAdminLessonsTable();
-    setupAdminDragAndDrop();
-  } else {
-    if (gate) gate.style.display = 'block';
-    if (dash) dash.style.display = 'none';
-    const err = document.getElementById('adminAuthError');
-    if (err) err.style.display = 'none';
-    const input = document.getElementById('adminPasswordInput');
-    if (input) {
-      input.value = '';
-      setTimeout(() => input.focus(), 100);
-    }
-  }
+  if (gate) gate.style.display = 'none';
+  if (dash) dash.style.display = 'block';
+  renderAdminLessonsTable();
+  setupAdminDragAndDrop();
 }
 
 function handleAdminLogin(e) {
   if (e && e.preventDefault) e.preventDefault();
-  const input = document.getElementById('adminPasswordInput');
-  const err = document.getElementById('adminAuthError');
-  const val = input ? input.value.trim() : '';
-
-  // Vérification sécurisée du mot de passe enseignant
-  if (val === ADMIN_MASTER_PASSCODE || val === localStorage.getItem('sti_custom_admin_pass')) {
-    sessionStorage.setItem('sti_admin_auth', 'true');
-    checkAdminAuth();
-  } else {
-    if (err) {
-      err.style.display = 'block';
-      err.textContent = "Mot de passe incorrect. Veuillez réessayer ou contacter l'administrateur.";
-    }
-    if (input) {
-      input.focus();
-      input.select();
-    }
-  }
+  checkAdminAuth();
 }
 
 function handleAdminLogout() {
-  sessionStorage.removeItem('sti_admin_auth');
   checkAdminAuth();
-  alert("Vous avez été déconnecté(e) de l'espace enseignant.");
 }
 
 // 8. DOUBLE SÉCURITÉ POUR VIDER TOUS LES DOCUMENTS

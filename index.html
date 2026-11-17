@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=19.0">
+  <link rel="stylesheet" href="style.css?v=20.0">
 </head>
 <body>
 
@@ -2310,24 +2310,8 @@
       <div class="container" style="padding-top: 28px; padding-bottom: 50px;">
         
         <!-- TABLEAU DE BORD ENSEIGNANT (Accès direct sans mot de passe) -->
-        <!-- PORTE DE SÉCURITÉ AUTHENTIFICATION ENSEIGNANT -->
-        <div id="adminAuthGate" class="admin-auth-gate-box">
-          <div class="admin-auth-card">
-            <div class="admin-auth-icon">🔒</div>
-            <h3 class="admin-auth-title">Accès Réservé aux Enseignants</h3>
-            <p class="admin-auth-desc">Veuillez saisir le mot de passe enseignant pour accéder au dépôt et à la gestion des documents PDF.</p>
-            <form id="adminAuthForm" onsubmit="handleAdminLoginSubmit(event)">
-              <div class="auth-input-group">
-                <input type="password" id="adminPasswordInput" class="admin-auth-input" placeholder="Mot de passe enseignant..." required autofocus autocomplete="current-password">
-                <button type="submit" class="admin-auth-btn">Déverrouiller</button>
-              </div>
-              <div id="adminAuthError" class="admin-auth-error" style="display: none;">Mot de passe incorrect. Veuillez réessayer.</div>
-            </form>
-          </div>
-        </div>
-
-        <!-- TABLEAU DE BORD ENSEIGNANT (Protégé) -->
-        <div id="adminDashboard" style="display: none;">
+        <!-- TABLEAU DE BORD ENSEIGNANT (Accès direct sans mot de passe) -->
+        <div id="adminDashboard" style="display: block;">
           
           <!-- Barre d'état enseignant -->
           <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px 20px; margin-bottom: 26px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
@@ -3417,9 +3401,9 @@ app.exec_()</code></pre>
   </div>
 
   <!-- Fichiers Scripts -->
-  <script src="data.js?v=19.0"></script>
-  <script src="css_engine.js?v=19.0"></script>
-  <script src="algo_pratique_engine.js?v=19.0"></script>
-  <script src="app.js?v=19.0"></script>
+  <script src="data.js?v=20.0"></script>
+  <script src="css_engine.js?v=20.0"></script>
+  <script src="algo_pratique_engine.js?v=20.0"></script>
+  <script src="app.js?v=20.0"></script>
 </body>
 </html>
