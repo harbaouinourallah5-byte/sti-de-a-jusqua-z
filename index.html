@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=16.0">
+  <link rel="stylesheet" href="style.css?v=17.0">
 </head>
 <body>
 
@@ -117,7 +117,7 @@
         <div class="sidebar-group" id="sidebarGroupAlgo">
           <div class="sidebar-group-header">
             <span class="group-title">Algorithmique</span>
-            <span class="group-badge">5 Chapitres</span>
+            <span class="group-badge">6 Chapitres</span>
           </div>
           <div class="sidebar-group-links">
             <a class="sidebar-link" data-view="algo-home" onclick="switchView('algo-home')">
@@ -134,8 +134,8 @@
             <a class="sidebar-link" data-view="algo-theorique" onclick="switchView('algo-theorique')">
               <span class="nav-bullet algo"></span>
               <span class="nav-icon">📖</span>
-              <span class="nav-label">Théorique (5 Chapitres)</span>
-              <span class="nav-count">47</span>
+              <span class="nav-label">Théorique (6 Chapitres)</span>
+              <span class="nav-count">58</span>
             </a>
           </div>
         </div>
@@ -597,7 +597,7 @@
                 <table class="annexe-table">
                   <tr onclick="openHtmlModalById('tag-form')" title="Cliquer pour afficher la fiche complète">
                     <td class="syntax-col">&lt;form&gt;</td>
-                    <td class="desc-col">Crée un formulaire HTML. <br><em style="font-size:0.75rem; color:var(--text-muted);">Attributs : action, method ("post", "get"), onsubmit="return validerFormulaire()"</em></td>
+                    <td class="desc-col">Crée un formulaire HTML. <br><em style="font-size:0.75rem; color:var(--text-muted);">Attributs : action, method ("post", "get"), onsubmit="return verif()"</em></td>
                   </tr>
                   <tr onclick="openHtmlModalById('tag-fieldset-legend')" title="Cliquer pour afficher la fiche complète">
                     <td class="syntax-col">&lt;fieldset&gt; &amp; &lt;legend&gt;</td>
@@ -622,9 +622,9 @@
                 </table>
               </div>
 
-              <!-- 10. Evènements -->
+              <!-- 10. Événements -->
               <div class="annexe-box">
-                <div class="annexe-box-header">Evènements (Conforme Bac STI)</div>
+                <div class="annexe-box-header">Événements (Conforme Bac STI)</div>
                 <table class="annexe-table">
                   <tr onclick="openHtmlModalById('event-onclick')" title="Cliquer pour afficher la fiche onclick">
                     <td class="syntax-col">onclick</td>
@@ -656,7 +656,7 @@
                   </tr>
                   <tr onclick="openHtmlModalById('event-onsubmit')" title="Cliquer pour afficher la fiche onsubmit">
                     <td class="syntax-col">onsubmit</td>
-                    <td class="desc-col">Se déclenche lorsqu'un formulaire est soumis (onsubmit="return valider()").</td>
+                    <td class="desc-col">Se déclenche lorsqu'un formulaire est soumis (onsubmit="return verif()").</td>
                   </tr>
                   <tr onclick="openHtmlModalById('event-onkeydown')" title="Cliquer pour afficher la fiche onkeydown">
                     <td class="syntax-col">onkeydown</td>
@@ -938,7 +938,7 @@
                   </tr>
                   <tr onclick="openCssModalById('css-padding')" title="Cliquer pour afficher la fiche padding">
                     <td class="syntax-col">padding</td>
-                    <td class="desc-col">Propriété abrégée qui définit la marge intérieure d'un élément des 4 cotés.</td>
+                    <td class="desc-col">Propriété abrégée qui définit la marge intérieure d'un élément des 4 côtés.</td>
                   </tr>
                   <tr onclick="openCssModalById('css-margin')" title="Cliquer pour afficher la fiche margin">
                     <td class="syntax-col">margin</td>
@@ -1175,9 +1175,8 @@
         <div class="annexe-doc-container" id="jsOfficialDocView">
           <div class="annexe-doc-header">
             <div class="annexe-title-wrap">
-              <div class="annexe-logo-shield">
-                <span style="font-size:0.7rem; font-weight:bold;">JS</span>
-                <span style="font-size:1.15rem; font-weight:900; line-height:1;">5</span>
+              <div class="annexe-logo-shield" style="display:flex; align-items:center; justify-content:center;">
+                <span style="font-size:1.1rem; font-weight:900; line-height:1; color:#facc15;">JS</span>
               </div>
               <div>
                 <h2 class="annexe-title-text">Annexe JS</h2>
@@ -1279,7 +1278,7 @@
                     <td class="desc-col">Affiche un message dans une boîte de dialogue.</td>
                   </tr>
                   <tr onclick="openJsModalById('js-out-docwrite')" title="Cliquer pour afficher la fiche complète">
-                    <td class="syntax-col">Document.write()</td>
+                    <td class="syntax-col">document.write()</td>
                     <td class="desc-col">Affiche directement dans le document HTML.</td>
                   </tr>
                 </table>
@@ -1800,7 +1799,7 @@
                 <table class="annexe-table">
                   <tr onclick="openSqlModalById('sql-op-equal')" title="Cliquer pour voir l'opérateur =">
                     <td class="syntax-col" style="font-weight:800; color:#38bdf8;">=</td>
-                    <td class="desc-col">Égale à</td>
+                    <td class="desc-col">Égal à</td>
                   </tr>
                   <tr onclick="openSqlModalById('sql-op-diff')" title="Cliquer pour voir l'opérateur <>">
                     <td class="syntax-col" style="font-weight:800; color:#38bdf8;">&lt;&gt;</td>
@@ -1816,11 +1815,11 @@
                   </tr>
                   <tr onclick="openSqlModalById('sql-op-gte')" title="Cliquer pour voir l'opérateur >=">
                     <td class="syntax-col" style="font-weight:800; color:#38bdf8;">&gt;=</td>
-                    <td class="desc-col">Supérieur ou égale à</td>
+                    <td class="desc-col">Supérieur ou égal à</td>
                   </tr>
                   <tr onclick="openSqlModalById('sql-op-lte')" title="Cliquer pour voir l'opérateur <=">
                     <td class="syntax-col" style="font-weight:800; color:#38bdf8;">&lt;=</td>
-                    <td class="desc-col">Inférieur ou égale à</td>
+                    <td class="desc-col">Inférieur ou égal à</td>
                   </tr>
                   <tr onclick="openSqlModalById('sql-op-in')" title="Cliquer pour voir IN">
                     <td class="syntax-col" style="font-weight:800; color:#facc15;">IN</td>
@@ -1937,7 +1936,7 @@
                   </tr>
                   <tr onclick="openSqlModalById('sql-constraint-default')" title="Cliquer pour voir DEFAULT">
                     <td class="syntax-col" style="font-weight:800; color:#ec4899;">DEFAULT</td>
-                    <td class="desc-col">Attribut une valeur par défaut.</td>
+                    <td class="desc-col">Attribue une valeur par défaut.</td>
                   </tr>
                   <tr onclick="openSqlModalById('sql-constraint-check')" title="Cliquer pour voir CHECK">
                     <td class="syntax-col" style="font-weight:800; color:#ec4899;">CHECK</td>
@@ -2011,7 +2010,7 @@
                     <td class="desc-col">Supprime une contrainte.</td>
                   </tr>
                   <tr onclick="openSqlModalById('sql-ldd-alter-enable-disable')" title="Cliquer pour voir ENABLE/DISABLE">
-                    <td class="syntax-col" style="font-weight:800; color:#a855f7;">ALTER TABLE table1 ENABLE/ DISABLE CONSTRAINT nom</td>
+                    <td class="syntax-col" style="font-weight:800; color:#a855f7;">ALTER TABLE table1 ENABLE / DISABLE CONSTRAINT nom <span style="font-size:0.75rem; color:#ef4444; font-weight:normal;">(non supporté sous MySQL)</span></td>
                     <td class="desc-col">Active/Désactive une contrainte.</td>
                   </tr>
                   <tr onclick="openSqlModalById('sql-ldd-drop-table')" title="Cliquer pour voir DROP TABLE">
@@ -2232,6 +2231,10 @@
               <span>📈</span>
               <span>Ch 5 Approx</span>
             </button>
+            <button class="subject-tab algo-ch6-matrices" data-subject="algo-ch6-matrices" onclick="filterLessonsBySubject('algo-ch6-matrices')">
+              <span>📐</span>
+              <span>Ch 6 Matrices</span>
+            </button>
             <button class="subject-tab html" data-subject="html" onclick="filterLessonsBySubject('html')">
               <span>🌐</span>
               <span>HTML5</span>
@@ -2395,9 +2398,10 @@
                       <option value="algo-theorique">📖 Algorithme Théorique (Général / Révision)</option>
                       <option value="algo-ch1-fichiers">📁 Ch 1 : Fichiers Binaires & Texte</option>
                       <option value="algo-ch2-recurrence">🔄 Ch 2 : Récurrence</option>
-                      <option value="algo-ch3-bases">🔢 Ch 3 : Convertion Entre les Bases</option>
+                      <option value="algo-ch3-bases">🔢 Ch 3 : Conversion entre les bases</option>
                       <option value="algo-ch4-arithmetique">🧮 Ch 4 : Arithmétique</option>
                       <option value="algo-ch5-approximation">📈 Ch 5 : Approximation & Optimisation</option>
+                      <option value="algo-ch6-matrices">📐 Ch 6 : Matrices & Tableaux 2D</option>
                     </optgroup>
                   </select>
                 </div>
@@ -2498,9 +2502,11 @@
                 <button class="cat-btn" onclick="filterAdminTable('algo-pratique')">Algo Pratique</button>
                 <button class="cat-btn" onclick="filterAdminTable('algo-theorique')">Algo Théorique</button>
                 <button class="cat-btn" onclick="filterAdminTable('algo-ch1-fichiers')">Ch 1 Fichiers</button>
+                <button class="cat-btn" onclick="filterAdminTable('algo-ch2-recurrence')">Ch 2 Récurrence</button>
                 <button class="cat-btn" onclick="filterAdminTable('algo-ch3-bases')">Ch 3 Bases</button>
                 <button class="cat-btn" onclick="filterAdminTable('algo-ch4-arithmetique')">Ch 4 Arithmétique</button>
                 <button class="cat-btn" onclick="filterAdminTable('algo-ch5-approximation')">Ch 5 Approx</button>
+                <button class="cat-btn" onclick="filterAdminTable('algo-ch6-matrices')">Ch 6 Matrices</button>
               </div>
             </div>
 
@@ -2550,7 +2556,7 @@
             <!-- Outils de Sauvegarde & Actions Enseignant -->
             <div style="display: flex; gap: 12px; flex-wrap: wrap;">
               <button onclick="loadOfficialAlgoPdfPacks()" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid #10b981; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 700; cursor: pointer;">
-                📥 Charger les 4 cours officiels Algorithme Bac
+                📥 Charger les 6 cours officiels Algorithme Bac
               </button>
               <button onclick="clearAllLessonsFromDB()" style="background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid #ef4444; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 700; cursor: pointer;">
                 🗑️ Vider tous les documents
@@ -2614,10 +2620,10 @@
             <div class="card-icon-wrap" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #fff;">📖</div>
             <h2 class="card-title">Épreuve Théorique (Algorithmique Bac)</h2>
             <p class="card-subtitle">
-              Les 5 grands chapitres officiels du programme tunisien : <strong>1) Fichiers binaires &amp; texte</strong>, <strong>2) Récurrence</strong>, <strong>3) Convertion entre les bases</strong>, <strong>4) Arithmétique</strong>, et <strong>5) Approximation &amp; optimisation</strong> (+ socle Bases &amp; Révision).
+              Les 6 grands chapitres officiels du programme tunisien : <strong>1) Fichiers binaires &amp; texte</strong>, <strong>2) Récurrence</strong>, <strong>3) Conversion entre les bases</strong>, <strong>4) Arithmétique</strong>, <strong>5) Approximation &amp; optimisation</strong> et <strong>6) Matrices</strong>.
             </p>
             <div class="card-badges">
-              <span class="pill-badge" style="color: #fbbf24;">47 Algorithmes &amp; Modules</span>
+              <span class="pill-badge" style="color: #fbbf24;">58 Algorithmes &amp; Modules</span>
               <span class="pill-badge" style="color: #38bdf8;">📋 T.D.O &amp; T.D.N.T Officiels</span>
               <span class="pill-badge" style="color: #34d399;">⚡ Pseudo-Code &amp; Python Côte à Côte</span>
             </div>
@@ -2653,7 +2659,7 @@
             <div style="display: flex; align-items: center; gap: 10px;">
               <span style="font-size: 1.5rem;">📚</span>
               <div>
-                <h3 style="margin: 0; font-size: 1.2rem; color: #fbbf24;">Les 5 Chapitres Officiels d'Algorithmique (Bac Tunisie)</h3>
+                <h3 style="margin: 0; font-size: 1.2rem; color: #fbbf24;">Les 6 Chapitres Officiels d'Algorithmique (Bac Tunisie)</h3>
                 <span style="font-size: 0.82rem; color: var(--text-secondary);">Accès direct aux algorithmes types, T.D.O et implémentations Python Thonny</span>
               </div>
             </div>
@@ -2674,9 +2680,9 @@
               <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Principe de récursion : cas d'arrêt / cas de base et appel récursif général.</p>
             </div>
             <!-- Ch 3 -->
-            <div onclick="switchView('algo-theorique'); setAlgoTheoriqueCategory('Chapitre 3 : Convertion Entre les Bases');" style="cursor: pointer; background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border: 1px solid rgba(56, 189, 248, 0.25); border-left: 4px solid #38bdf8; transition: all 0.2s ease;">
+            <div onclick="switchView('algo-theorique'); setAlgoTheoriqueCategory('Chapitre 3 : Conversion entre les bases');" style="cursor: pointer; background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border: 1px solid rgba(56, 189, 248, 0.25); border-left: 4px solid #38bdf8; transition: all 0.2s ease;">
               <div style="font-size: 0.78rem; font-weight: 800; color: #38bdf8; text-transform: uppercase;">Chapitre 3</div>
-              <strong style="color: #f8fafc; font-size: 0.95rem; display: block; margin: 4px 0 6px 0;">🔢 Convertion des Bases</strong>
+              <strong style="color: #f8fafc; font-size: 0.95rem; display: block; margin: 4px 0 6px 0;">🔢 Conversion des Bases</strong>
               <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Binaire, Octal, Décimal, Hexadécimal (divisions et puissances pondérées).</p>
             </div>
             <!-- Ch 4 -->
@@ -2686,10 +2692,16 @@
               <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Nombres premiers, factorielle, puissances et PGCD / PPCM (Euclide).</p>
             </div>
             <!-- Ch 5 -->
-            <div onclick="switchView('algo-theorique'); setAlgoTheoriqueCategory('Chapitre 5 : Approximation and optimisation');" style="cursor: pointer; background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border: 1px solid rgba(239, 68, 68, 0.25); border-left: 4px solid #f87171; transition: all 0.2s ease;">
+            <div onclick="switchView('algo-theorique'); setAlgoTheoriqueCategory('Chapitre 5 : Approximation et optimisation');" style="cursor: pointer; background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border: 1px solid rgba(239, 68, 68, 0.25); border-left: 4px solid #f87171; transition: all 0.2s ease;">
               <div style="font-size: 0.78rem; font-weight: 800; color: #f87171; text-transform: uppercase;">Chapitre 5</div>
               <strong style="color: #f8fafc; font-size: 0.95rem; display: block; margin: 4px 0 6px 0;">📈 Approx &amp; Optimisation</strong>
               <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Calcul d'aires par intégration numérique (rectangles, trapèzes, milieu).</p>
+            </div>
+            <!-- Ch 6 -->
+            <div onclick="switchView('algo-theorique'); setAlgoTheoriqueCategory('Chapitre 6 : Matrices');" style="cursor: pointer; background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border: 1px solid rgba(234, 88, 12, 0.35); border-left: 4px solid #ea580c; transition: all 0.2s ease;">
+              <div style="font-size: 0.78rem; font-weight: 800; color: #fb923c; text-transform: uppercase;">Chapitre 6</div>
+              <strong style="color: #f8fafc; font-size: 0.95rem; display: block; margin: 4px 0 6px 0;">📐 Matrices &amp; Tableaux 2D</strong>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Remplissage, diagonales, symétrie, produit matriciel, recherche de min/max, persistence binaire.</p>
             </div>
           </div>
         </div>
@@ -3427,9 +3439,9 @@ app.exec_()</code></pre>
   </div>
 
   <!-- Fichiers Scripts -->
-  <script src="data.js?v=16.0"></script>
-  <script src="css_engine.js?v=16.0"></script>
-  <script src="algo_pratique_engine.js?v=16.0"></script>
-  <script src="app.js?v=16.0"></script>
+  <script src="data.js?v=17.0"></script>
+  <script src="css_engine.js?v=17.0"></script>
+  <script src="algo_pratique_engine.js?v=17.0"></script>
+  <script src="app.js?v=17.0"></script>
 </body>
 </html>

@@ -473,11 +473,11 @@ const DATA = {
       "attributes": [
         "action : URL ou fichier de traitement où envoyer les données (ex: traitement.php)",
         "method : 'post' (recommandé pour masquer les données) ou 'get'",
-        "onsubmit : onsubmit=\"return valider()\" pour exécuter la fonction JavaScript de validation (retourne true ou false)",
+        "onsubmit : onsubmit=\"return verif()\" pour exécuter la fonction JavaScript de validation (retourne true ou false)",
         "⚠️ Note STI : target n'est pas utilisé dans nos formulaires"
       ],
-      "code": "<!-- Structure officielle STI d'un Formulaire avec Validation JS -->\n<form action=\"traitement.php\" method=\"post\" onsubmit=\"return validerFormulaire()\">\n  <label for=\"nomEleve\">Nom :</label>\n  <input type=\"text\" id=\"nomEleve\" name=\"nom\">\n\n  <label for=\"noteEleve\">Note :</label>\n  <input type=\"number\" id=\"noteEleve\" name=\"note\">\n\n  <input type=\"submit\" value=\"Valider et Envoyer\">\n</form>\n\n<script>\nfunction validerFormulaire() {\n  // 1. Récupération des valeurs saisies via getElementById\n  let nom = document.getElementById(\"nomEleve\").value;\n  let note = document.getElementById(\"noteEleve\").value;\n\n  // 2. Vérification que le champ nom n'est pas vide\n  if (nom.trim() == \"\") {\n    alert(\"Erreur : Le nom est obligatoire !\");\n    return false; // BLOQUE L'ENVOI DU FORMULAIRE\n  }\n\n  // 3. Vérification de la note (entre 0 et 20)\n  if (isNaN(note) || note < 0 || note > 20) {\n    alert(\"Erreur : La note doit être comprise entre 0 et 20 !\");\n    return false; // BLOQUE L'ENVOI DU FORMULAIRE\n  }\n\n  // 4. Si toutes les conditions sont respectées :\n  alert(\"Formulaire vérifié avec succès ! Envoi des données...\");\n  return true; // AUTORISE L'ENVOI VERS ACTION=\"traitement.php\"\n}\n</script>",
-      "previewHtml": "<div style=\"background:#fff; border:1px solid #cbd5e1; border-radius:8px; padding:16px;\">\n        <div style=\"background:#e0f2fe; border-left:4px solid #0284c7; padding:8px 12px; border-radius:4px; margin-bottom:12px; font-size:12px; color:#0369a1;\">\n          💡 <strong>Modèle STI :</strong> <code>&lt;form action=\"traitement.php\" method=\"post\" onsubmit=\"return valider()\"&gt;</code> (sans <em>target</em>).\n        </div>\n        <form onsubmit=\"event.preventDefault(); let n = document.getElementById('demoNom').value.trim(); let note = parseFloat(document.getElementById('demoNote').value); let res = document.getElementById('formDemoFeedback'); if(n === '') { res.innerHTML = '❌ <strong>return false (Envoi bloqué) :</strong> Le champ Nom est vide !'; res.style.background='#fee2e2'; res.style.color='#991b1b'; return false; } if(isNaN(note) || note < 0 || note > 20) { res.innerHTML = '❌ <strong>return false (Envoi bloqué) :</strong> La note doit être entre 0 et 20 !'; res.style.background='#fee2e2'; res.style.color='#991b1b'; return false; } res.innerHTML = '✅ <strong>return true (Envoi validé) :</strong> Données conformes pour &quot;' + n + '&quot; (Note: ' + note + '/20) ! Le formulaire part vers traitement.php.'; res.style.background='#dcfce7'; res.style.color='#166534'; return true;\" style=\"display:flex; flex-direction:column; gap:10px;\">\n          <div>\n            <label style=\"display:block; font-size:12px; font-weight:600; color:#1e293b; margin-bottom:3px;\">Nom de l'élève :</label>\n            <input type=\"text\" id=\"demoNom\" placeholder=\"Tapez un nom...\" style=\"width:100%; box-sizing:border-box; padding:6px 10px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n          </div>\n          <div>\n            <label style=\"display:block; font-size:12px; font-weight:600; color:#1e293b; margin-bottom:3px;\">Note obtenue (sur 20) :</label>\n            <input type=\"number\" id=\"demoNote\" placeholder=\"Ex: 17\" style=\"width:100%; box-sizing:border-box; padding:6px 10px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n          </div>\n          <button type=\"submit\" style=\"background:#16a34a; color:#fff; border:none; padding:8px 16px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:13px; margin-top:4px;\">\n            Tester la fonction de validation (onsubmit)\n          </button>\n          <div id=\"formDemoFeedback\" style=\"font-size:12px; padding:8px 12px; border-radius:4px; background:#f8fafc; color:#64748b; font-family:monospace;\">\n            En attente de clic sur le bouton de soumission...\n          </div>\n        </form>\n      </div>"
+      "code": "<!-- Structure officielle STI d'un Formulaire avec Validation JS -->\n<form action=\"traitement.php\" method=\"post\" onsubmit=\"return verif()\">\n  <label for=\"nomEleve\">Nom :</label>\n  <input type=\"text\" id=\"nomEleve\" name=\"nom\">\n\n  <label for=\"noteEleve\">Note :</label>\n  <input type=\"number\" id=\"noteEleve\" name=\"note\">\n\n  <input type=\"submit\" value=\"Valider et Envoyer\">\n</form>\n\n<script>\nfunction verif() {\n  // 1. Récupération des valeurs saisies via getElementById\n  let nom = document.getElementById(\"nomEleve\").value;\n  let note = document.getElementById(\"noteEleve\").value;\n\n  // 2. Vérification que le champ nom n'est pas vide\n  if (nom.trim() == \"\") {\n    alert(\"Erreur : Le nom est obligatoire !\");\n    return false; // BLOQUE L'ENVOI DU FORMULAIRE\n  }\n\n  // 3. Vérification de la note (entre 0 et 20)\n  if (isNaN(note) || note < 0 || note > 20) {\n    alert(\"Erreur : La note doit être comprise entre 0 et 20 !\");\n    return false; // BLOQUE L'ENVOI DU FORMULAIRE\n  }\n\n  // 4. Si toutes les conditions sont respectées :\n  alert(\"Formulaire vérifié avec succès ! Envoi des données...\");\n  return true; // AUTORISE L'ENVOI VERS ACTION=\"traitement.php\"\n}\n</script>",
+      "previewHtml": "<div style=\"background:#fff; border:1px solid #cbd5e1; border-radius:8px; padding:16px;\">\n        <div style=\"background:#e0f2fe; border-left:4px solid #0284c7; padding:8px 12px; border-radius:4px; margin-bottom:12px; font-size:12px; color:#0369a1;\">\n          💡 <strong>Modèle STI :</strong> <code>&lt;form action=\"traitement.php\" method=\"post\" onsubmit=\"return verif()\"&gt;</code> (sans <em>target</em>).\n        </div>\n        <form onsubmit=\"event.preventDefault(); let n = document.getElementById('demoNom').value.trim(); let note = parseFloat(document.getElementById('demoNote').value); let res = document.getElementById('formDemoFeedback'); if(n === '') { res.innerHTML = '❌ <strong>return false (Envoi bloqué) :</strong> Le champ Nom est vide !'; res.style.background='#fee2e2'; res.style.color='#991b1b'; return false; } if(isNaN(note) || note < 0 || note > 20) { res.innerHTML = '❌ <strong>return false (Envoi bloqué) :</strong> La note doit être entre 0 et 20 !'; res.style.background='#fee2e2'; res.style.color='#991b1b'; return false; } res.innerHTML = '✅ <strong>return true (Envoi validé) :</strong> Données conformes pour &quot;' + n + '&quot; (Note: ' + note + '/20) ! Le formulaire part vers traitement.php.'; res.style.background='#dcfce7'; res.style.color='#166534'; return true;\" style=\"display:flex; flex-direction:column; gap:10px;\">\n          <div>\n            <label style=\"display:block; font-size:12px; font-weight:600; color:#1e293b; margin-bottom:3px;\">Nom de l'élève :</label>\n            <input type=\"text\" id=\"demoNom\" placeholder=\"Tapez un nom...\" style=\"width:100%; box-sizing:border-box; padding:6px 10px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n          </div>\n          <div>\n            <label style=\"display:block; font-size:12px; font-weight:600; color:#1e293b; margin-bottom:3px;\">Note obtenue (sur 20) :</label>\n            <input type=\"number\" id=\"demoNote\" placeholder=\"Ex: 17\" style=\"width:100%; box-sizing:border-box; padding:6px 10px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n          </div>\n          <button type=\"submit\" style=\"background:#16a34a; color:#fff; border:none; padding:8px 16px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:13px; margin-top:4px;\">\n            Tester la fonction de validation (onsubmit)\n          </button>\n          <div id=\"formDemoFeedback\" style=\"font-size:12px; padding:8px 12px; border-radius:4px; background:#f8fafc; color:#64748b; font-family:monospace;\">\n            En attente de clic sur le bouton de soumission...\n          </div>\n        </form>\n      </div>"
     },
     {
       "id": "tag-fieldset-legend",
@@ -2070,7 +2070,7 @@ const DATA = {
       "id": "js-out-docwrite",
       "section": "Méthodes pour afficher une sortie*",
       "category": "Méthodes pour afficher une sortie*",
-      "name": "Document.write()",
+      "name": "document.write()",
       "tag": "document.write()",
       "syntax": "document.write(chaineHTML)",
       "summary": "Affiche directement dans le document HTML.",
@@ -2923,7 +2923,173 @@ const DATA = {
       "runnableCode": "function testmail(mail) {\n  let pArobase = mail.indexOf(\"@\");\n  let pPoint = mail.lastIndexOf(\".\");\n  return (pArobase > 0 && pPoint > pArobase + 1 && pPoint < mail.length - 1);\n}\nconsole.log(\"testmail('eleve@domaine.tn') : \" + testmail('eleve@domaine.tn')); // true\nconsole.log(\"testmail('invalide.sans.arobase') : \" + testmail('invalide.sans.arobase')); // false\nconsole.log(\"testmail('@debut.com') : \" + testmail('@debut.com')); // false\nconsole.log(\"testmail('eleve@pointfinal.') : \" + testmail('eleve@pointfinal.')); // false"
     }
   ],
-  "lessons": [],
+  "lessons": [
+  {
+    "id": "lesson-html-official",
+    "title": "Support Officiel : Balises & Formulaires HTML5 (Bac STI)",
+    "subject": "html",
+    "subjectLabel": "HTML5",
+    "type": "cours",
+    "typeLabel": "📖 Cours Officiel",
+    "date": "2025-09-15",
+    "author": "Inspection Générale STI",
+    "fileSize": "2.8 Mo",
+    "pdfUrl": "pdf/Support_Officiel_HTML5_BacSTI.pdf",
+    "description": "Manuel complet de référence HTML5 : éléments de premier niveau, structuration sémantique, tableaux, listes et contrôles de formulaires avec attributs officiels.",
+    "summary": "Fiche officielle conforme au programme du Bac STI avec modèles d'examens.",
+    "downloadName": "Support_Officiel_HTML5_BacSTI.pdf"
+  },
+  {
+    "id": "lesson-css-official",
+    "title": "Support Officiel : Feuilles de Style & Sélecteurs CSS3 (Bac STI)",
+    "subject": "css",
+    "subjectLabel": "CSS3",
+    "type": "cours",
+    "typeLabel": "📖 Cours Officiel",
+    "date": "2025-10-01",
+    "author": "Inspection Générale STI",
+    "fileSize": "3.2 Mo",
+    "pdfUrl": "pdf/Support_Officiel_CSS3_BacSTI.pdf",
+    "description": "Les 61 propriétés indispensables avec sélecteurs #id, modèle de boîte, arrière-plans, typographie, transitions et animations.",
+    "summary": "Référence officielle du style Web conforme à la grille d'évaluation du Baccalauréat.",
+    "downloadName": "Support_Officiel_CSS3_BacSTI.pdf"
+  },
+  {
+    "id": "lesson-js-official",
+    "title": "Support Officiel : Validation de Formulaires verif() & Fonctions JS",
+    "subject": "js",
+    "subjectLabel": "JavaScript",
+    "type": "cours",
+    "typeLabel": "📖 Cours Officiel",
+    "date": "2025-11-10",
+    "author": "Coordination Pédagogique STI",
+    "fileSize": "3.6 Mo",
+    "pdfUrl": "pdf/Support_Officiel_JavaScript_BacSTI.pdf",
+    "description": "Validation rigoureuse des formulaires Web avec la fonction canonique verif(), contrôle des chaînes, expressions arithmétiques et DOM.",
+    "summary": "Manuel de référence pour l'épreuve de validation JavaScript du Bac STI.",
+    "downloadName": "Support_Officiel_JavaScript_BacSTI.pdf"
+  },
+  {
+    "id": "lesson-sql-official",
+    "title": "Support Officiel : Bases de Données MySQL (LDD, LMD & Requêtes)",
+    "subject": "sql",
+    "subjectLabel": "SQL MySQL",
+    "type": "cours",
+    "typeLabel": "📖 Cours Officiel",
+    "date": "2025-12-05",
+    "author": "Inspection Générale STI",
+    "fileSize": "4.1 Mo",
+    "pdfUrl": "pdf/Support_Officiel_SQL_BacSTI.pdf",
+    "description": "Création de tables, contraintes d'intégrité (PK, FK, CHECK), requêtes d'interrogation multi-tables, fonctions de dates et d'agrégation.",
+    "summary": "Guide complet SQL avec base scolaire d'entraînement conforme aux sujets d'examen.",
+    "downloadName": "Support_Officiel_SQL_BacSTI.pdf"
+  },
+  {
+    "id": "lesson-algo-pratique-official",
+    "title": "Support Officiel : Laboratoire Qt Designer ➔ Thonny Python",
+    "subject": "algo-pratique",
+    "subjectLabel": "Pratique Qt ➔ Thonny",
+    "type": "cours",
+    "typeLabel": "🛠️ Épreuve Pratique",
+    "date": "2026-01-15",
+    "author": "Coordination Pédagogique Informatique",
+    "fileSize": "4.8 Mo",
+    "pdfUrl": "pdf/Support_Officiel_QtDesigner_Thonny.pdf",
+    "description": "Guide méthodologique complet en 4 étapes pour réussir l'épreuve pratique : chargement de loadUi, signaux .clicked, widgets de saisie et QMessageBox.",
+    "summary": "Les 20 notions officielles et le starter template pour l'épreuve pratique.",
+    "downloadName": "Support_Officiel_QtDesigner_Thonny.pdf"
+  },
+  {
+    "id": "lesson-algo-ch1-fichiers",
+    "title": "Support Officiel : Ch 1 - Fichiers Binaires et Fichiers Texte",
+    "subject": "algo-ch1-fichiers",
+    "subjectLabel": "Ch 1 : Fichiers",
+    "type": "cours",
+    "typeLabel": "📖 Cours Officiel",
+    "date": "2026-02-01",
+    "author": "Inspection Générale de l'Informatique",
+    "fileSize": "3.5 Mo",
+    "pdfUrl": "pdf/Support_Fichiers_Texte_Binaires.pdf",
+    "description": "Manipulation des fichiers texte (ouvrir, lire_ligne, écrire_ligne) et fichiers d'enregistrements binaires avec le module pickle sous Thonny.",
+    "summary": "Polycopié de référence sur le Chapitre 1 avec syntaxe théorique normalisée et TDO/TDNT.",
+    "downloadName": "Support_Officiel_Ch1_Fichiers.pdf"
+  },
+  {
+    "id": "lesson-algo-ch2-recurrence",
+    "title": "Support Officiel : Ch 2 - Récurrence & Fonctions Récursives",
+    "subject": "algo-ch2-recurrence",
+    "subjectLabel": "Ch 2 : Récurrence",
+    "type": "cours",
+    "typeLabel": "📖 Cours Officiel",
+    "date": "2026-02-15",
+    "author": "Inspection Générale de l'Informatique",
+    "fileSize": "2.9 Mo",
+    "pdfUrl": "pdf/Support_Recurrence_BacInfo.pdf",
+    "description": "Principe de la récursivité, condition d'arrêt, cas de base et cas récursif. Exemples classiques : factorielle, puissance, suite de Fibonacci et PGCD récursif.",
+    "summary": "Méthodologie formelle pour concevoir et tracer un sous-programme récursif.",
+    "downloadName": "Support_Officiel_Ch2_Recurrence.pdf"
+  },
+  {
+    "id": "lesson-algo-ch3-bases",
+    "title": "Support Officiel : Ch 3 - Conversion Entre Les Bases de Numération",
+    "subject": "algo-ch3-bases",
+    "subjectLabel": "Ch 3 : Bases",
+    "type": "cours",
+    "typeLabel": "📖 Cours Officiel",
+    "date": "2026-03-01",
+    "author": "Inspection Générale de l'Informatique",
+    "fileSize": "4.5 Mo",
+    "pdfUrl": "pdf/Conversion_Bases_Numeration.pdf",
+    "description": "Méthode des divisions successives (décimal vers base B), méthode des puissances pondérées (base B vers décimal), et conversions directes (binaire, octal, hexadécimal).",
+    "summary": "Algorithmes théoriques de conversion avec tableaux de conversion et traces pas à pas.",
+    "downloadName": "Support_Officiel_Ch3_Bases.pdf"
+  },
+  {
+    "id": "lesson-algo-ch4-arithmetique",
+    "title": "Support Officiel : Ch 4 - Arithmétique, Divisibilité & Nombres Premiers",
+    "subject": "algo-ch4-arithmetique",
+    "subjectLabel": "Ch 4 : Arithmétique",
+    "type": "cours",
+    "typeLabel": "📖 Cours Officiel",
+    "date": "2026-03-15",
+    "author": "Inspection Générale de l'Informatique",
+    "fileSize": "3.7 Mo",
+    "pdfUrl": "pdf/Support_Arithmetique_BacInfo.pdf",
+    "description": "Test de primalité optimal, décomposition en facteurs premiers, PGCD par algorithme d'Euclide et soustractions, PPCM et nombres parfaits/amis.",
+    "summary": "Algorithmes fondamentaux d'arithmétique au programme du Baccalauréat.",
+    "downloadName": "Support_Officiel_Ch4_Arithmetique.pdf"
+  },
+  {
+    "id": "lesson-algo-ch5-approximation",
+    "title": "Support Officiel : Ch 5 - Calcul d'Aires & Approximation Numérique",
+    "subject": "algo-ch5-approximation",
+    "subjectLabel": "Ch 5 : Approx",
+    "type": "cours",
+    "typeLabel": "📖 Cours Officiel",
+    "date": "2026-04-01",
+    "author": "Inspection Générale de l'Informatique",
+    "fileSize": "4.2 Mo",
+    "pdfUrl": "pdf/Support_Calcul_Aires_Approximation.pdf",
+    "description": "Méthodes numériques d'intégration : rectangles (gauche, droite, point médian) et formule des trapèzes sur l'intervalle [a, b]. Recherche dichotomique.",
+    "summary": "Calculs approchés d'intégrales définies et convergence de suites d'aires.",
+    "downloadName": "Support_Officiel_Ch5_Approximation.pdf"
+  },
+  {
+    "id": "lesson-algo-ch6-matrices",
+    "title": "Support Officiel : Ch 6 - Matrices & Tableaux à Deux Dimensions",
+    "subject": "algo-ch6-matrices",
+    "subjectLabel": "Ch 6 : Matrices",
+    "type": "cours",
+    "typeLabel": "📖 Cours Officiel",
+    "date": "2026-04-15",
+    "author": "Inspection Générale de l'Informatique",
+    "fileSize": "5.1 Mo",
+    "pdfUrl": "pdf/Support_Officiel_Matrices_Patterns.pdf",
+    "description": "Création, parcours par lignes et colonnes, calculs sur diagonales (principale, secondaire), recherche de point-selle, tri et motifs d'affichage (sablier, diagonales).",
+    "summary": "Cours complet sur les matrices carrées et rectangulaires avec sujets types d'examen.",
+    "downloadName": "Support_Officiel_Ch6_Matrices.pdf"
+  }
+],
   "sql": [
     {
       "id": "sql-type-int",
@@ -3104,7 +3270,7 @@ const DATA = {
       "name": "DEFAULT",
       "tag": "DEFAULT",
       "syntax": "colonne type DEFAULT valeur_par_defaut",
-      "summary": "Attribut une valeur par défaut.",
+      "summary": "Attribue une valeur par défaut.",
       "description": "Attribue automatiquement une valeur prédéfinie à la colonne si l'utilisateur ne spécifie aucune valeur lors de l'insertion (INSERT INTO).",
       "howToUse": "Spécifier la constante par défaut après le mot-clé DEFAULT : un nombre (DEFAULT 0), un texte entre apostrophes (DEFAULT 'STI') ou une fonction (DEFAULT NOW()).",
       "values": [
@@ -3258,7 +3424,7 @@ const DATA = {
       "name": "=",
       "tag": "=",
       "syntax": "colonne = valeur",
-      "summary": "Égale à",
+      "summary": "Égal à",
       "description": "Opérateur de comparaison qui teste la stricte égalité entre deux expressions, colonnes ou constantes dans une clause WHERE ou HAVING.",
       "howToUse": "Pour les chaînes et dates, entourer la valeur d'apostrophes : WHERE section = 'STI' ou WHERE date_naiss = '2007-03-12'. Pour les nombres, écrire sans guillemets : WHERE num_inscr = 101.",
       "values": [
@@ -3334,7 +3500,7 @@ const DATA = {
       "name": ">=",
       "tag": ">=",
       "syntax": "colonne >= valeur",
-      "summary": "Supérieur ou égale à",
+      "summary": "Supérieur ou égal à",
       "description": "Opérateur de comparaison large vérifiant si la valeur est supérieure ou égale à la borne spécifiée (la valeur borne est incluse).",
       "howToUse": "Critère officiel d'admission au Baccalauréat tunisien : WHERE moyenne >= 10.00.",
       "values": [
@@ -3354,7 +3520,7 @@ const DATA = {
       "name": "<=",
       "tag": "<=",
       "syntax": "colonne <= valeur",
-      "summary": "Inférieur ou égale à",
+      "summary": "Inférieur ou égal à",
       "description": "Opérateur de comparaison large vérifiant si la valeur est inférieure ou égale à la borne spécifiée (borne incluse).",
       "howToUse": "S'utilise pour borner des notes, des prix ou des dates : WHERE moyenne <= 15.00.",
       "values": [
@@ -4461,7 +4627,7 @@ const DATA = {
   "algo_theorique": [
     {
       "id": "algo-fichier-texte-creer",
-      "category": "Chapitre 1 : Les fichiers binaires et fichier text",
+      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
       "type": "procédure",
       "name": "Fichier Texte : Création & Remplissage (ouvrir en mode \"w\")",
       "syntax": "procédure Remplir_Fichier_Texte()",
@@ -4483,7 +4649,7 @@ const DATA = {
     },
     {
       "id": "algo-fichier-texte-afficher",
-      "category": "Chapitre 1 : Les fichiers binaires et fichier text",
+      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
       "type": "procédure",
       "name": "Fichier Texte : Lecture & Affichage (ouvrir en mode \"r\")",
       "syntax": "procédure Afficher_Fichier_Texte()",
@@ -4505,7 +4671,7 @@ const DATA = {
     },
     {
       "id": "algo-fichier-texte-transfert",
-      "category": "Chapitre 1 : Les fichiers binaires et fichier text",
+      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
       "type": "procédure",
       "name": "Fichier Texte : Transfert vers Tableau (ouvrir en mode \"r\")",
       "syntax": "procédure Fichier_Vers_Tableau(VAR T: tab, VAR n: entier)",
@@ -4527,7 +4693,7 @@ const DATA = {
     },
     {
       "id": "algo-fichier-binaire-remplir",
-      "category": "Chapitre 1 : Les fichiers binaires et fichier text",
+      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
       "type": "procédure",
       "name": "Fichier Binaire : Enregistrement d'Objets (ouvrir en mode \"wb\", pickle.dump)",
       "syntax": "procédure Remplir_Fichier_Binaire(n: entier)",
@@ -4553,7 +4719,7 @@ const DATA = {
     },
     {
       "id": "algo-fichier-binaire-afficher",
-      "category": "Chapitre 1 : Les fichiers binaires et fichier text",
+      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
       "type": "procédure",
       "name": "Fichier Binaire : Lecture & Parcours EOF (ouvrir en mode \"rb\", pickle.load)",
       "syntax": "procédure Afficher_Fichier_Binaire()",
@@ -4575,7 +4741,7 @@ const DATA = {
     },
     {
       "id": "algo-remplir",
-      "category": "Chapitre 1 : Les fichiers binaires et fichier text",
+      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
       "type": "procédure",
       "name": "remplir(VAR t, N)",
       "syntax": "procédure remplir(VAR t: tab, N: entier)",
@@ -4593,7 +4759,7 @@ const DATA = {
     },
     {
       "id": "algo-remplir-condition",
-      "category": "Chapitre 1 : Les fichiers binaires et fichier text",
+      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
       "type": "procédure",
       "name": "remplir_condition(VAR t, N)",
       "syntax": "procédure remplir_condition(VAR t: tab, N: entier)",
@@ -4611,7 +4777,7 @@ const DATA = {
     },
     {
       "id": "algo-remplir-distinct",
-      "category": "Chapitre 1 : Les fichiers binaires et fichier text",
+      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
       "type": "procédure",
       "name": "remplir_distinct(VAR t, n)",
       "syntax": "procédure remplir_distinct(VAR t: tab, n: entier)",
@@ -4633,7 +4799,7 @@ const DATA = {
     },
     {
       "id": "algo-tri-bulle",
-      "category": "Chapitre 1 : Les fichiers binaires et fichier text",
+      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
       "type": "procédure",
       "name": "tri_bulle(VAR t, n)",
       "syntax": "procédure tri_bulle(VAR t: tab, n: entier)",
@@ -4655,7 +4821,7 @@ const DATA = {
     },
     {
       "id": "algo-tri-selection",
-      "category": "Chapitre 1 : Les fichiers binaires et fichier text",
+      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
       "type": "procédure",
       "name": "tri_par_sélection(VAR T, N)",
       "syntax": "procédure tri_par_sélection(VAR T: tab, N: entier)",
@@ -4673,7 +4839,7 @@ const DATA = {
     },
     {
       "id": "algo-tri-insertion",
-      "category": "Chapitre 1 : Les fichiers binaires et fichier text",
+      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
       "type": "procédure",
       "name": "tri_par_insertion(VAR T, N)",
       "syntax": "procédure tri_par_insertion(VAR T: tab, N: entier)",
@@ -4691,7 +4857,7 @@ const DATA = {
     },
     {
       "id": "algo-palindrome",
-      "category": "Chapitre 1 : Les fichiers binaires et fichier text",
+      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
       "type": "fonction",
       "name": "palindrome(ch)",
       "syntax": "fonction palindrome(ch: chaîne): booléen",
@@ -4713,7 +4879,7 @@ const DATA = {
     },
     {
       "id": "algo-lirech",
-      "category": "Chapitre 1 : Les fichiers binaires et fichier text",
+      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
       "type": "procédure",
       "name": "lirech(VAR ch)",
       "syntax": "procédure lirech(VAR ch: chaîne)",
@@ -4735,7 +4901,7 @@ const DATA = {
     },
     {
       "id": "algo-struct-si-sinonsi",
-      "category": "Chapitre 1 : Les fichiers binaires et fichier text",
+      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
       "type": "structure",
       "name": "Structure Conditionnelle : Si ... Sinon Si ... Sinon",
       "syntax": "si (condition_1) alors ... sinon si (condition_2) alors ... sinon ... fin_si",
@@ -4757,7 +4923,7 @@ const DATA = {
     },
     {
       "id": "algo-struct-boucle-pour",
-      "category": "Chapitre 1 : Les fichiers binaires et fichier text",
+      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
       "type": "structure",
       "name": "Boucle Pour (Nombre d'itérations connu)",
       "syntax": "pour i de début à fin [pas = p] faire ... fin_pour",
@@ -4775,7 +4941,7 @@ const DATA = {
     },
     {
       "id": "algo-struct-boucle-tantque",
-      "category": "Chapitre 1 : Les fichiers binaires et fichier text",
+      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
       "type": "structure",
       "name": "Boucle Tant Que (Condition préalable)",
       "syntax": "tant que (condition) faire ... fin_tant_que",
@@ -4793,7 +4959,7 @@ const DATA = {
     },
     {
       "id": "algo-struct-boucle-repeter",
-      "category": "Chapitre 1 : Les fichiers binaires et fichier text",
+      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
       "type": "structure",
       "name": "Boucle Répéter ... Jusqu'à (Arrêt sur condition)",
       "syntax": "répéter ... jusqu'à (condition_arrêt)",
@@ -4811,7 +4977,7 @@ const DATA = {
     },
     {
       "id": "algo-struct-sousprogrammes",
-      "category": "Chapitre 1 : Les fichiers binaires et fichier text",
+      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
       "type": "structure",
       "name": "Sous-Programmes : Fonction & Procédure (VAR)",
       "syntax": "fonction F(p: type): type_retour | procédure P(VAR p1: type, p2: type)",
@@ -4829,7 +4995,7 @@ const DATA = {
     },
     {
       "id": "algo-struct-tdo-tdnt",
-      "category": "Chapitre 1 : Les fichiers binaires et fichier text",
+      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
       "type": "structure",
       "name": "Conventions Officielles : T.D.O & T.D.N.T",
       "syntax": "T.D.O (Objet | Type/Nature) & T.D.N.T (Type | Définition)",
@@ -4904,7 +5070,7 @@ const DATA = {
     },
     {
       "id": "algo-bin2oct",
-      "category": "Chapitre 3 : Convertion Entre les Bases",
+      "category": "Chapitre 3 : Conversion entre les bases",
       "type": "fonction",
       "name": "bin2oct(ch)",
       "syntax": "fonction bin2oct(ch: chaîne): entier",
@@ -4926,7 +5092,7 @@ const DATA = {
     },
     {
       "id": "algo-a2d",
-      "category": "Chapitre 3 : Convertion Entre les Bases",
+      "category": "Chapitre 3 : Conversion entre les bases",
       "type": "fonction",
       "name": "a2d(ch, bs)",
       "syntax": "fonction a2d(ch: chaîne, bs: entier): entier",
@@ -4948,7 +5114,7 @@ const DATA = {
     },
     {
       "id": "algo-bin2hexa",
-      "category": "Chapitre 3 : Convertion Entre les Bases",
+      "category": "Chapitre 3 : Conversion entre les bases",
       "type": "fonction",
       "name": "bin2hexa(ch)",
       "syntax": "fonction bin2hexa(ch: chaîne): chaîne",
@@ -4970,7 +5136,7 @@ const DATA = {
     },
     {
       "id": "algo-octal2bin",
-      "category": "Chapitre 3 : Convertion Entre les Bases",
+      "category": "Chapitre 3 : Conversion entre les bases",
       "type": "fonction",
       "name": "octal2bin(ch)",
       "syntax": "fonction octal2bin(ch: chaîne): chaîne",
@@ -4992,7 +5158,7 @@ const DATA = {
     },
     {
       "id": "algo-octal2hexa",
-      "category": "Chapitre 3 : Convertion Entre les Bases",
+      "category": "Chapitre 3 : Conversion entre les bases",
       "type": "fonction",
       "name": "octal2hexa(ch)",
       "syntax": "fonction octal2hexa(ch: chaîne): chaîne",
@@ -5010,7 +5176,7 @@ const DATA = {
     },
     {
       "id": "algo-dec2any",
-      "category": "Chapitre 3 : Convertion Entre les Bases",
+      "category": "Chapitre 3 : Conversion entre les bases",
       "type": "fonction",
       "name": "dec2any(n, bd)",
       "syntax": "fonction dec2any(n: entier, bd: entier): chaîne",
@@ -5028,7 +5194,7 @@ const DATA = {
     },
     {
       "id": "algo-hex2bin",
-      "category": "Chapitre 3 : Convertion Entre les Bases",
+      "category": "Chapitre 3 : Conversion entre les bases",
       "type": "fonction",
       "name": "hex2bin(ch)",
       "syntax": "fonction hex2bin(ch: chaîne): chaîne",
@@ -5050,7 +5216,7 @@ const DATA = {
     },
     {
       "id": "algo-hex2octal",
-      "category": "Chapitre 3 : Convertion Entre les Bases",
+      "category": "Chapitre 3 : Conversion entre les bases",
       "type": "fonction",
       "name": "hex2octal(ch)",
       "syntax": "fonction hex2octal(ch: chaîne): chaîne",
@@ -5068,7 +5234,7 @@ const DATA = {
     },
     {
       "id": "algo-any2any",
-      "category": "Chapitre 3 : Convertion Entre les Bases",
+      "category": "Chapitre 3 : Conversion entre les bases",
       "type": "fonction",
       "name": "any2any(ch, bs, bd)",
       "syntax": "fonction any2any(ch: chaîne, bs, bd: entier): chaîne",
@@ -5192,7 +5358,7 @@ const DATA = {
     },
     {
       "id": "algo-aire-milieu",
-      "category": "Chapitre 5 : Approximation and optimisation",
+      "category": "Chapitre 5 : Approximation et optimisation",
       "type": "fonction",
       "name": "aire_milieu(nb, a, b)",
       "syntax": "fonction aire_milieu(nb: entier, a, b: réel): réel",
@@ -5214,7 +5380,7 @@ const DATA = {
     },
     {
       "id": "algo-aire-droite",
-      "category": "Chapitre 5 : Approximation and optimisation",
+      "category": "Chapitre 5 : Approximation et optimisation",
       "type": "fonction",
       "name": "aire_droite(nb, a, b)",
       "syntax": "fonction aire_droite(nb: entier, a, b: réel): réel",
@@ -5236,7 +5402,7 @@ const DATA = {
     },
     {
       "id": "algo-aire-gauche",
-      "category": "Chapitre 5 : Approximation and optimisation",
+      "category": "Chapitre 5 : Approximation et optimisation",
       "type": "fonction",
       "name": "aire_gauche(nb, a, b)",
       "syntax": "fonction aire_gauche(nb: entier, a, b: réel): réel",
@@ -5258,7 +5424,7 @@ const DATA = {
     },
     {
       "id": "algo-aire-trapezes",
-      "category": "Chapitre 5 : Approximation and optimisation",
+      "category": "Chapitre 5 : Approximation et optimisation",
       "type": "fonction",
       "name": "aire_trapezes(nb, a, b)",
       "syntax": "fonction aire_trapezes(nb: entier, a, b: réel): réel",
@@ -5280,7 +5446,7 @@ const DATA = {
     },
     {
       "id": "algo-recherche-dicho",
-      "category": "Chapitre 5 : Approximation and optimisation",
+      "category": "Chapitre 5 : Approximation et optimisation",
       "type": "fonction",
       "name": "recherche_dichotomique(t, n, x)",
       "syntax": "fonction recherche_dichotomique(t: tab, n, x: entier): entier",
@@ -5298,7 +5464,7 @@ const DATA = {
     },
     {
       "id": "algo-tri-mat-colonne",
-      "category": "Chapitre 5 : Approximation and optimisation",
+      "category": "Chapitre 6 : Matrices",
       "type": "procédure",
       "name": "tri_mat_colonne(VAR m, n)",
       "syntax": "procédure tri_mat_colonne(VAR m: mat, n: entier)",
@@ -5320,7 +5486,7 @@ const DATA = {
     },
     {
       "id": "algo-tri-mat-ligne",
-      "category": "Chapitre 5 : Approximation and optimisation",
+      "category": "Chapitre 6 : Matrices",
       "type": "procédure",
       "name": "tri_mat_ligne(VAR m, n)",
       "syntax": "procédure tri_mat_ligne(VAR m: mat, n: entier)",
@@ -5342,7 +5508,7 @@ const DATA = {
     },
     {
       "id": "algo-mat-parcours-bas-haut",
-      "category": "Chapitre 5 : Approximation and optimisation",
+      "category": "Chapitre 6 : Matrices",
       "type": "procédure",
       "name": "mat_parcours_bas_haut(m, L, C)",
       "syntax": "procédure mat_parcours_bas_haut(m: mat, L, C: entier)",
@@ -5360,7 +5526,7 @@ const DATA = {
     },
     {
       "id": "algo-mat-parcours-ligne-inverse",
-      "category": "Chapitre 5 : Approximation and optimisation",
+      "category": "Chapitre 6 : Matrices",
       "type": "procédure",
       "name": "mat_parcours_ligne_inverse(m, L, C)",
       "syntax": "procédure mat_parcours_ligne_inverse(m: mat, L, C: entier)",
@@ -5378,7 +5544,7 @@ const DATA = {
     },
     {
       "id": "algo-mat-pattern-sablier",
-      "category": "Chapitre 5 : Approximation and optimisation",
+      "category": "Chapitre 6 : Matrices",
       "type": "procédure",
       "name": "mat_pattern_sablier(m, L, C)",
       "syntax": "procédure mat_pattern_sablier(m: mat, L, C: entier)",
@@ -5396,7 +5562,7 @@ const DATA = {
     },
     {
       "id": "algo-mat-pattern-diagonales",
-      "category": "Chapitre 5 : Approximation and optimisation",
+      "category": "Chapitre 6 : Matrices",
       "type": "procédure",
       "name": "mat_pattern_diagonales(m, L)",
       "syntax": "procédure mat_pattern_diagonales(m: mat, L: entier)",
@@ -5412,5 +5578,264 @@ const DATA = {
       "pythonCode": "def mat_pattern_diagonales(m, L):\n    # Partie 1 : Moitié supérieure\n    for d in range(L):\n        j = 0\n        for i in range(d, -1, -1):\n            print(m[i][j], end=\" \")\n            j = j + 1\n        print()\n    \n    # Partie 2 : Moitié inférieure\n    for d in range(1, L):\n        j = d\n        for i in range(L - 1, d - 1, -1):\n            print(m[i][j], end=\" \")\n            j = j + 1\n        print()",
       "example": "Balaye toute la matrice par diagonales orientées vers le haut"
     }
-  ]
+  ,
+    {
+      "id": "algo-mat-declaration-creation",
+      "category": "Chapitre 6 : Matrices",
+      "name": "Création & Initialisation d'une Matrice",
+      "syntax": "Type mat = tableau de n, m entier | M = [[0]*m for _ in range(n)]",
+      "summary": "Déclaration au T.D.N.T et initialisation en mémoire d'une matrice de dimensions N lignes et M colonnes.",
+      "description": "Au Baccalauréat tunisien, une matrice est un tableau à deux dimensions. Elle se déclare dans le T.D.N.T sous la forme 'tableau de L, C type'. En Python Thonny, une matrice est représentée par une liste de listes créée par compréhension : `[[0] * C for _ in range(L)]`.",
+      "tdo": [
+        {
+          "objet": "mat",
+          "type": "Type : tableau de 20, 20 entier"
+        },
+        {
+          "objet": "M",
+          "type": "mat"
+        },
+        {
+          "objet": "n, m, i, j",
+          "type": "entier"
+        }
+      ],
+      "pseudoCode": "// T.D.N.T\nType\n  mat = tableau de 20, 20 entier\n\n// Algorithme d'initialisation\n0) procédure Initialiser_Matrice(VAR M: mat, n, m, val: entier)\n1) pour i de 0 à n - 1 faire\n     pour j de 0 à m - 1 faire\n       M[i, j] <-- val\n     fin_pour\n   fin_pour\n2) fin",
+      "pythonCode": "def creer_matrice(n, m, val=0):\n    M = []\n    for i in range(n):\n        ligne = []\n        for j in range(m):\n            ligne.append(val)\n        M.append(ligne)\n    return M",
+      "example": "creer_matrice(3, 4, 0) retourne une matrice 3x4 remplie de zéros"
+    },
+    {
+      "id": "algo-mat-remplissage-affichage",
+      "category": "Chapitre 6 : Matrices",
+      "name": "Remplissage & Affichage d'une Matrice",
+      "syntax": "procédure Remplir(VAR M: mat, n, m: entier) | procédure Afficher(M: mat, n, m: entier)",
+      "summary": "Saisie utilisateur élément par élément avec contrôle, puis affichage formaté en grille ligne par ligne.",
+      "description": "Parcours classique en double boucle imbriquée pour lire chaque composante M[i, j] puis afficher chaque ligne sur une ligne d'écran séparée.",
+      "tdo": [
+        {
+          "objet": "M",
+          "type": "mat"
+        },
+        {
+          "objet": "n, m, i, j",
+          "type": "entier"
+        }
+      ],
+      "pseudoCode": "0) procédure Remplir_Matrice(VAR M: mat, n, m: entier)\n1) pour i de 0 à n - 1 faire\n     pour j de 0 à m - 1 faire\n       écrire(\"M[\", i, \",\", j, \"]=\")\n       lire(M[i, j])\n     fin_pour\n   fin_pour\n2) fin\n\n0) procédure Afficher_Matrice(M: mat, n, m: entier)\n1) pour i de 0 à n - 1 faire\n     pour j de 0 à m - 1 faire\n       écrire(M[i, j], \" \")\n     fin_pour\n     écrire_ligne()\n   fin_pour\n2) fin",
+      "pythonCode": "def remplir_matrice(M, n, m):\n    for i in range(n):\n        for j in range(m):\n            M[i][j] = int(input(\"M[\" + str(i) + \",\" + str(j) + \"]=\"))\n\ndef afficher_matrice(M, n, m):\n    for i in range(n):\n        ch = \"\"\n        for j in range(m):\n            ch = ch + str(M[i][j]) + \" \"\n        print(ch)",
+      "example": "Affiche la matrice en tableau régulier 2D"
+    },
+    {
+      "id": "algo-mat-parcours-lignes-colonnes",
+      "category": "Chapitre 6 : Matrices",
+      "name": "Parcours par Lignes & par Colonnes",
+      "syntax": "Parcours Lignes (i externe, j interne) vs Colonnes (j externe, i interne)",
+      "summary": "Comparaison fondamentale de l'ordre d'itération : traitement horizontal ou traitement vertical.",
+      "description": "Le parcours par lignes traite chaque rangée de gauche à droite. Le parcours par colonnes traite chaque colonne du haut vers le bas en inversant l'imbrication des boucles.",
+      "tdo": [
+        {
+          "objet": "M",
+          "type": "mat"
+        },
+        {
+          "objet": "n, m, i, j",
+          "type": "entier"
+        }
+      ],
+      "pseudoCode": "// Parcours par colonnes (de haut en bas)\n0) procédure Parcours_Colonnes(M: mat, n, m: entier)\n1) pour j de 0 à m - 1 faire\n     écrire(\"--- Colonne \", j, \" ---\")\n     pour i de 0 à n - 1 faire\n       écrire(M[i, j])\n     fin_pour\n   fin_pour\n2) fin",
+      "pythonCode": "def parcours_colonnes(M, n, m):\n    for j in range(m):\n        for i in range(n):\n            print(\"Colonne \" + str(j) + \" : \" + str(M[i][j]))",
+      "example": "Visite M[0,0], M[1,0], M[2,0] puis M[0,1], M[1,1]..."
+    },
+    {
+      "id": "algo-mat-statistiques-globales",
+      "category": "Chapitre 6 : Matrices",
+      "name": "Somme, Maximum, Minimum & Moyenne",
+      "syntax": "fonction Somme_Mat(M: mat, n, m: entier): entier | fonction Max_Mat(M: mat, n, m: entier): entier",
+      "summary": "Calculs d'agrégation globale sur l'ensemble des coefficients d'une matrice.",
+      "description": "Parcours exhaustif pour cumuler la somme de tous les éléments et déterminer les extrémums (min, max). La moyenne est déduite par division par le nombre total d'éléments (n * m).",
+      "tdo": [
+        {
+          "objet": "M",
+          "type": "mat"
+        },
+        {
+          "objet": "n, m, i, j, s, mx",
+          "type": "entier"
+        },
+        {
+          "objet": "moy",
+          "type": "réel"
+        }
+      ],
+      "pseudoCode": "0) fonction Somme_Matrice(M: mat, n, m: entier): entier\n1) s <-- 0\n2) pour i de 0 à n - 1 faire\n     pour j de 0 à m - 1 faire\n       s <-- s + M[i, j]\n     fin_pour\n   fin_pour\n3) retourner s\n4) fin\n\n0) fonction Max_Matrice(M: mat, n, m: entier): entier\n1) mx <-- M[0, 0]\n2) pour i de 0 à n - 1 faire\n     pour j de 0 à m - 1 faire\n       si M[i, j] > mx alors\n         mx <-- M[i, j]\n       fin_si\n     fin_pour\n   fin_pour\n3) retourner mx\n4) fin",
+      "pythonCode": "def somme_matrice(M, n, m):\n    s = 0\n    for i in range(n):\n        for j in range(m):\n            s = s + M[i][j]\n    return s\n\ndef max_matrice(M, n, m):\n    mx = M[0][0]\n    for i in range(n):\n        for j in range(m):\n            if M[i][j] > mx:\n                mx = M[i][j]\n    return mx",
+      "example": "Retourne la somme totale et l'élément maximal de la matrice"
+    },
+    {
+      "id": "algo-mat-somme-lignes-colonnes",
+      "category": "Chapitre 6 : Matrices",
+      "name": "Somme par Ligne & Somme par Colonne",
+      "syntax": "procédure Somme_Par_Ligne(M: mat, n, m: entier, VAR SL: tab)",
+      "summary": "Stockage des totaux partiels de chaque ligne dans un vecteur SL et de chaque colonne dans SC.",
+      "description": "Chaque ligne i est sommée individuellement et son résultat placé dans SL[i]. De même, chaque colonne j est sommée dans SC[j]. Très fréquent au Bac dans les bilans statistiques.",
+      "tdo": [
+        {
+          "objet": "M",
+          "type": "mat"
+        },
+        {
+          "objet": "SL, SC",
+          "type": "tab"
+        },
+        {
+          "objet": "n, m, i, j, s",
+          "type": "entier"
+        }
+      ],
+      "pseudoCode": "0) procédure Somme_Par_Ligne(M: mat, n, m: entier, VAR SL: tab)\n1) pour i de 0 à n - 1 faire\n     s <-- 0\n     pour j de 0 à m - 1 faire\n       s <-- s + M[i, j]\n     fin_pour\n     SL[i] <-- s\n   fin_pour\n2) fin\n\n0) procédure Somme_Par_Colonne(M: mat, n, m: entier, VAR SC: tab)\n1) pour j de 0 à m - 1 faire\n     s <-- 0\n     pour i de 0 à n - 1 faire\n       s <-- s + M[i, j]\n     fin_pour\n     SC[j] <-- s\n   fin_pour\n2) fin",
+      "pythonCode": "def somme_par_ligne(M, n, m, SL):\n    for i in range(n):\n        s = 0\n        for j in range(m):\n            s = s + M[i][j]\n        SL.append(s)\n\ndef somme_par_colonne(M, n, m, SC):\n    for j in range(m):\n        s = 0\n        for i in range(n):\n            s = s + M[i][j]\n        SC.append(s)",
+      "example": "SL[i] contient le total de la ligne i, SC[j] le total de la colonne j"
+    },
+    {
+      "id": "algo-mat-diagonales",
+      "category": "Chapitre 6 : Matrices",
+      "name": "Diagonale Principale & Diagonale Secondaire",
+      "syntax": "M[i, i] (Principale) & M[i, n - 1 - i] (Secondaire)",
+      "summary": "Extraction et calculs spécifiques sur les deux diagonales d'une matrice carrée d'ordre N.",
+      "description": "Dans une matrice carrée (n = m) : la diagonale principale est formée des éléments où i = j (M[i, i]). La diagonale secondaire est formée des éléments où i + j = n - 1 (M[i, n - 1 - i]).",
+      "tdo": [
+        {
+          "objet": "M",
+          "type": "mat"
+        },
+        {
+          "objet": "n, i, sp, ss",
+          "type": "entier"
+        }
+      ],
+      "pseudoCode": "0) procédure Diagonales(M: mat, n: entier, VAR sp, ss: entier)\n1) sp <-- 0\n2) ss <-- 0\n3) pour i de 0 à n - 1 faire\n     sp <-- sp + M[i, i]\n     ss <-- ss + M[i, n - 1 - i]\n   fin_pour\n4) fin",
+      "pythonCode": "def somme_diagonales(M, n):\n    sp = 0\n    ss = 0\n    for i in range(n):\n        sp = sp + M[i][i]\n        ss = ss + M[i][n - 1 - i]\n    return sp, ss",
+      "example": "Calcule en O(n) les sommes des deux diagonales sans double boucle"
+    },
+    {
+      "id": "algo-mat-recherche-element",
+      "category": "Chapitre 6 : Matrices",
+      "name": "Recherche d'un Élément & Position (i, j)",
+      "syntax": "procédure Chercher_Mat(M: mat, n, m, x: entier, VAR trouve: booléen, VAR pos_i, pos_j: entier)",
+      "summary": "Localisation de la première occurrence d'une valeur cible x avec arrêt immédiat dès trouvée.",
+      "description": "Recherche séquentielle dans la matrice. Utilise un drapeau booléen avec boucles conditionnelles 'tant que' pour s'arrêter dès que la valeur est trouvée et renvoyer ses coordonnées (i, j).",
+      "tdo": [
+        {
+          "objet": "M",
+          "type": "mat"
+        },
+        {
+          "objet": "n, m, x, i, j, pos_i, pos_j",
+          "type": "entier"
+        },
+        {
+          "objet": "trouve",
+          "type": "booléen"
+        }
+      ],
+      "pseudoCode": "0) procédure Chercher_Matrice(M: mat, n, m, x: entier, VAR trouve: booléen, VAR pos_i, pos_j: entier)\n1) trouve <-- faux\n2) pos_i <-- -1\n3) pos_j <-- -1\n4) i <-- 0\n5) tant que (i < n) et (non trouve) faire\n     j <-- 0\n     tant que (j < m) et (non trouve) faire\n       si M[i, j] = x alors\n         trouve <-- vrai\n         pos_i <-- i\n         pos_j <-- j\n       sinon\n         j <-- j + 1\n       fin_si\n     fin_tant_que\n     i <-- i + 1\n   fin_tant_que\n6) fin",
+      "pythonCode": "def chercher_matrice(M, n, m, x):\n    trouve = False\n    pos_i = -1\n    pos_j = -1\n    i = 0\n    while i < n and not trouve:\n        j = 0\n        while j < m and not trouve:\n            if M[i][j] == x:\n                trouve = True\n                pos_i = i\n                pos_j = j\n            else:\n                j = j + 1\n        i = i + 1\n    return trouve, pos_i, pos_j",
+      "example": "Retourne True et les coordonnées (ligne, col), ou False et (-1, -1)"
+    },
+    {
+      "id": "algo-mat-transposee",
+      "category": "Chapitre 6 : Matrices",
+      "name": "Transposée d'une Matrice",
+      "syntax": "procédure Transposer(M: mat, n, m: entier, VAR T: mat)",
+      "summary": "Échange des lignes et des colonnes : l'élément T[j, i] reçoit M[i, j].",
+      "description": "La transposée d'une matrice M de dimensions (n × m) est une nouvelle matrice T de dimensions (m × n) où chaque ligne devient une colonne.",
+      "tdo": [
+        {
+          "objet": "M, T",
+          "type": "mat"
+        },
+        {
+          "objet": "n, m, i, j",
+          "type": "entier"
+        }
+      ],
+      "pseudoCode": "0) procédure Transposer(M: mat, n, m: entier, VAR T: mat)\n1) pour i de 0 à n - 1 faire\n     pour j de 0 à m - 1 faire\n       T[j, i] <-- M[i, j]\n     fin_pour\n   fin_pour\n2) fin",
+      "pythonCode": "def transposer_matrice(M, n, m):\n    T = []\n    for j in range(m):\n        ligne = []\n        for i in range(n):\n            ligne.append(M[i][j])\n        T.append(ligne)\n    return T",
+      "example": "Une matrice 2x3 devient une matrice 3x2"
+    },
+    {
+      "id": "algo-mat-verifications-speciales",
+      "category": "Chapitre 6 : Matrices",
+      "name": "Matrices Spéciales : Carrée, Symétrique & Identité",
+      "syntax": "fonction Est_Symetrique(M: mat, n: entier): booléen | fonction Est_Identite(M: mat, n: entier): booléen",
+      "summary": "Prédicats de validation des propriétés géométriques et algébriques remarquables.",
+      "description": "Une matrice carrée est symétrique si M[i, j] = M[j, i] pour tout i, j. Elle est identité si tous les éléments de la diagonale valent 1 et tous les autres valent 0.",
+      "tdo": [
+        {
+          "objet": "M",
+          "type": "mat"
+        },
+        {
+          "objet": "n, i, j",
+          "type": "entier"
+        },
+        {
+          "objet": "ok",
+          "type": "booléen"
+        }
+      ],
+      "pseudoCode": "0) fonction Est_Symetrique(M: mat, n: entier): booléen\n1) ok <-- vrai\n2) i <-- 0\n3) tant que (i < n) et ok faire\n     j <-- 0\n     tant que (j < i) et ok faire\n       si M[i, j] ≠ M[j, i] alors\n         ok <-- faux\n       sinon\n         j <-- j + 1\n       fin_si\n     fin_tant_que\n     i <-- i + 1\n   fin_tant_que\n4) retourner ok\n5) fin",
+      "pythonCode": "def est_symetrique(M, n):\n    ok = True\n    i = 0\n    while i < n and ok:\n        j = 0\n        while j < i and ok:\n            if M[i][j] != M[j][i]:\n                ok = False\n            else:\n                j = j + 1\n        i = i + 1\n    return ok\n\ndef est_identite(M, n):\n    ok = True\n    i = 0\n    while i < n and ok:\n        j = 0\n        while j < n and ok:\n            if i == j and M[i][j] != 1:\n                ok = False\n            elif i != j and M[i][j] != 0:\n                ok = False\n            else:\n                j = j + 1\n        i = i + 1\n    return ok",
+      "example": "Retourne True si M est identique à sa transposée ou si M est la matrice identité In"
+    },
+    {
+      "id": "algo-mat-fichiers-binaires",
+      "category": "Chapitre 6 : Matrices",
+      "name": "Matrices & Fichiers Binaires (pickle)",
+      "syntax": "procédure Sauvegarder_Matrice(nom_fich: chaîne, M: mat, n, m: entier)",
+      "summary": "Persistance et rechargement d'une structure matricielle 2D dans un fichier binaire avec le module pickle.",
+      "description": "Montre comment sauvegarder une matrice complète ligne par ligne ou globalement dans un fichier binaire en mode 'wb', puis la recharger en mémoire en mode 'rb'.",
+      "tdo": [
+        {
+          "objet": "f",
+          "type": "fichier d'enregistrements"
+        },
+        {
+          "objet": "M",
+          "type": "mat"
+        },
+        {
+          "objet": "n, m, i, j",
+          "type": "entier"
+        }
+      ],
+      "pseudoCode": "0) procédure Sauvegarder_Matrice(M: mat, n, m: entier)\n1) ouvrir(\"matrice.dat\", f, \"wb\")\n2) pour i de 0 à n - 1 faire\n     pour j de 0 à m - 1 faire\n       écrire_enreg(f, M[i, j])\n     fin_pour\n   fin_pour\n3) fermer(f)\n4) fin",
+      "pythonCode": "from pickle import dump, load\n\ndef sauvegarder_matrice(M):\n    f = open(\"matrice.dat\", \"wb\")\n    dump(M, f)\n    f.close()\n\ndef charger_matrice():\n    f = open(\"matrice.dat\", \"rb\")\n    M = load(f)\n    f.close()\n    return M",
+      "example": "Sérialise la matrice dans matrice.dat et la restaure intacte"
+    },
+    {
+      "id": "algo-mat-exercice-point-selle",
+      "category": "Chapitre 6 : Matrices",
+      "name": "Point-Selle d'une Matrice (Exemple d'entraînement)",
+      "syntax": "procédure Point_Selle(M: mat, n, m: entier) • Exemple d'entraînement",
+      "summary": "Problème type Baccalauréat : recherche d'un élément minimum sur sa ligne et maximum sur sa colonne.",
+      "description": "Un élément M[i, j] est appelé 'point-selle' s'il est simultanément le plus petit élément de sa ligne i et le plus grand élément de sa colonne j. Épreuve classique de synthèse.",
+      "tdo": [
+        {
+          "objet": "M",
+          "type": "mat"
+        },
+        {
+          "objet": "n, m, i, j, k, col_min",
+          "type": "entier"
+        },
+        {
+          "objet": "est_max, trouve",
+          "type": "booléen"
+        }
+      ],
+      "pseudoCode": "0) procédure Point_Selle(M: mat, n, m: entier)\n// Exemple d'entraînement type Baccalauréat\n1) trouve <-- faux\n2) pour i de 0 à n - 1 faire\n     // 1. Trouver l'indice de la valeur minimale de la ligne i\n     col_min <-- 0\n     pour j de 1 à m - 1 faire\n       si M[i, j] < M[i, col_min] alors\n         col_min <-- j\n       fin_si\n     fin_pour\n     // 2. Vérifier si M[i, col_min] est le maximum de sa colonne\n     est_max <-- vrai\n     pour k de 0 à n - 1 faire\n       si M[k, col_min] > M[i, col_min] alors\n         est_max <-- faux\n       fin_si\n     fin_pour\n     si est_max alors\n       écrire(\"Point-selle trouvé en (\", i, \",\", col_min, \") = \", M[i, col_min])\n       trouve <-- vrai\n     fin_si\n   fin_pour\n3) si non trouve alors\n     écrire(\"Aucun point-selle dans cette matrice.\")\n   fin_si\n4) fin",
+      "pythonCode": "# Exemple d'entraînement : Détection d'un point-selle\ndef point_selle(M, n, m):\n    trouve = False\n    for i in range(n):\n        col_min = 0\n        for j in range(1, m):\n            if M[i][j] < M[i][col_min]:\n                col_min = j\n        est_max = True\n        for k in range(n):\n            if M[k][col_min] > M[i][col_min]:\n                est_max = False\n        if est_max:\n            print(\"Point-selle en (\" + str(i) + \",\" + str(col_min) + \") = \" + str(M[i][col_min]))\n            trouve = True\n    if not trouve:\n        print(\"Aucun point-selle dans cette matrice.\")",
+      "example": "Identifie les points-selles d'une matrice de notes ou de coefficients"
+    }]
 };

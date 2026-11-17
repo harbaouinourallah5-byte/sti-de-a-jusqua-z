@@ -1582,6 +1582,7 @@ function setupNavigation() {
 }
 
 function switchView(viewName) {
+  if (typeof updatePageMeta === 'function') updatePageMeta(viewName);
   if (!viewName) return;
   // Normaliser les alias éventuels (cours, cours-pdf, etc.)
   if (viewName === 'cours' || viewName === 'cours-pdf' || viewName === 'cours-series') {
@@ -3655,6 +3656,22 @@ function runVirtualSqlQuery(query, db) {
     return { success: true, message: 'Table ' + tbl + ' supprimée avec succès.', headers: ['Statut'], rows: [['Table ' + tbl + ' supprimée.']], execTime };
   }
   if (upper.startsWith('ALTER TABLE')) {
+    if (upper.includes('ENABLE CONSTRAINT') || upper.includes('DISABLE CONSTRAINT') || upper.includes('ENABLE/ DISABLE')) {
+      return {
+        success: false,
+        message: "Erreur de syntaxe MySQL #1064 : La clause ENABLE / DISABLE CONSTRAINT n'est pas supportée par MySQL (fonctionnalité propriétaire Oracle / PostgreSQL). Sous MySQL, les contraintes CHECK ne peuvent pas être désactivées via cette syntaxe. Utilisez 'SET FOREIGN_KEY_CHECKS = 0;' pour désactiver temporairement les clés étrangères.",
+        execTime
+      };
+    }
+    if (upper.includes(' MODIFY ') || upper.includes(' ALTER ')) {
+      return { success: true, message: 'Table modifiée : Définition de colonne mise à jour avec succès.', headers: ['Statut'], rows: [['Colonne modifiée avec succès.']], execTime };
+    }
+    if (upper.includes(' CHANGE ') || upper.includes(' RENAME ')) {
+      return { success: true, message: 'Table modifiée : Colonne renommée avec succès.', headers: ['Statut'], rows: [['Colonne renommée avec succès.']], execTime };
+    }
+    if (upper.includes(' ADD ')) {
+      return { success: true, message: 'Table modifiée : Nouvelle colonne ajoutée avec succès.', headers: ['Statut'], rows: [['Colonne ajoutée avec succès.']], execTime };
+    }
     return { success: true, message: 'Table modifiée avec succès (ALTER TABLE).', headers: ['Statut'], rows: [['Structure de table modifiée avec succès.']], execTime };
   }
   if (upper.startsWith('INSERT INTO')) {
@@ -6389,7 +6406,7 @@ function renderLessons() {
   });
 
   if (counterBadge) {
-    counterBadge.textContent = `${filtered.length} Document${filtered.length > 1 ? 's' : ''}`;
+    counterBadge.textContent = filtered.length === 0 ? "Aucun document" : `${filtered.length} document${filtered.length > 1 ? 's' : ''}`;
   }
 
   // Si aucun document n'a été publié (tous les cours retirés)
@@ -6887,7 +6904,9 @@ async function handleUploadLesson(e) {
     "algo-theorique": "Théorique (Algorithme)",
     "algo-ch1-fichiers": "Ch 1 : Fichiers Binaires & Texte",
     "algo-ch2-recurrence": "Ch 2 : Récurrence",
-    "algo-ch3-bases": "Ch 3 : Convertion Entre les Bases",
+    "algo-ch2-recurrence": "Ch 2 : Récurrence",
+    "algo-ch3-bases": "Ch 3 : Conversion entre les bases",
+    "algo-ch6-matrices": "Ch 6 : Matrices",
     "algo-ch4-arithmetique": "Ch 4 : Arithmétique",
     "algo-ch5-approximation": "Ch 5 : Approximation & Optimisation"
   };
@@ -7081,7 +7100,7 @@ function renderAdminLessonsTable() {
 }
 
 async function deleteLesson(id) {
-  if (!confirm("Voulez-vous vraiment supprimer ce document ?")) return;
+  if (!confirm("Voulez-vous vraiment supprimer ce document ? Cette action est irréversible.")) return;
 
   const target = allLessons.find(l => l.id === id);
   if (target) {
@@ -7121,120 +7140,62 @@ function importLessonsBackup(e) {
   reader.onload = async () => {
     try {
       const data = JSON.parse(reader.result);
-      if (data && Array.isArray(data.customLessons)) {
-        for (let l of data.customLessons) {
-          await STILessonsDB.save(l);
-        }
-        await initLessonsModule();
-        alert(`✓ Sauvegarde importée avec succès (${data.customLessons.length} documents restaurés) !`);
-      } else {
-        alert("Fichier de sauvegarde invalide.");
+      if (!data || !Array.isArray(data.customLessons)) {
+        alert("Fichier de sauvegarde invalide : structure attendue 'customLessons' introuvable.");
+        return;
       }
+
+      const validSubjects = ['html', 'css', 'js', 'sql', 'algo-pratique', 'algo-theorique', 'algo-ch1-fichiers', 'algo-ch2-recurrence', 'algo-ch3-bases', 'algo-ch4-arithmetique', 'algo-ch5-approximation', 'algo-ch6-matrices'];
+      let importedCount = 0;
+
+      for (let l of data.customLessons) {
+        if (!l || typeof l !== 'object') continue;
+        if (!l.id || typeof l.id !== 'string') continue;
+        if (!l.title || typeof l.title !== 'string') continue;
+
+        // Assainissement des chaînes
+        const cleanLesson = {
+          id: String(l.id).replace(/[^a-zA-Z0-9_-]/g, ''),
+          title: String(l.title).slice(0, 200),
+          subject: validSubjects.includes(l.subject) ? l.subject : 'html',
+          subjectLabel: String(l.subjectLabel || l.subject || '').slice(0, 100),
+          type: String(l.type || 'cours').slice(0, 50),
+          typeLabel: String(l.typeLabel || '📖 Cours').slice(0, 50),
+          date: String(l.date || '2026').slice(0, 20),
+          author: String(l.author || 'Enseignant').slice(0, 100),
+          fileSize: String(l.fileSize || 'PDF').slice(0, 30),
+          pdfUrl: (typeof l.pdfUrl === 'string' && !l.pdfUrl.startsWith('javascript:')) ? l.pdfUrl : '',
+          description: String(l.description || '').slice(0, 1000),
+          summary: String(l.summary || '').slice(0, 500),
+          downloadName: String(l.downloadName || 'document.pdf').replace(/[^a-zA-Z0-9._-]/g, '_'),
+          isCustom: true
+        };
+
+        await STILessonsDB.save(cleanLesson);
+        importedCount++;
+      }
+
+      await initLessonsModule();
+      alert(`✓ Sauvegarde importée et vérifiée avec succès (${importedCount} documents restaurés) !`);
     } catch (err) {
-      alert("Erreur lors de la lecture du fichier de sauvegarde : " + err.message);
+      alert("Erreur lors de la lecture du fichier de sauvegarde JSON : " + err.message);
     }
   };
   reader.readAsText(file);
 }
 
-async function clearAllLessonsFromDB() {
-  if (!confirm("Voulez-vous vraiment supprimer TOUS les documents de cours ?")) return;
-  await STILessonsDB.clear();
-  allLessons = [];
-  renderAdminLessonsTable();
-  renderLessons();
-  alert("✓ Tous les documents ont été supprimés.");
-}
-
 async function loadOfficialAlgoPdfPacks() {
-  const packs = [
-    {
-      id: "lesson-algo-theo-00",
-      title: "Support Officiel : Les Fichiers Binaires et Fichiers Texte (Bac Informatique)",
-      subject: "algo-ch1-fichiers",
-      subjectLabel: "Ch 1 : Fichiers Binaires & Texte",
-      type: "cours",
-      typeLabel: "📖 Support Officiel",
-      date: "2025-04-10",
-      author: "Inspection Générale de l'Informatique",
-      fileSize: "3.5 Mo",
-      pdfUrl: "pdf/Support_Fichiers_Texte_Binaires.pdf",
-      description: "Cours officiel complet : manipulation des fichiers texte (associer, recréer, ouvrir, lire_ligne, écrire_ligne) et fichiers d'enregistrements binaires (pickle dump/load sous Thonny Python).",
-      summary: "Polycopié de référence sur le Chapitre 1 : syntaxe théorique normalisée, TDO/TDNT, gestion du pointeur et détection de fin de fichier (EOF).",
-      downloadName: "Support_Officiel_Fichiers_Texte_Binaires.pdf",
-      isCustom: true
-    },
-    {
-      id: "lesson-algo-theo-01",
-      title: "Support Officiel : Conversion Entre Les Bases de Numération (Bases 2, 8, 10, 16)",
-      subject: "algo-ch3-bases",
-      subjectLabel: "Ch 3 : Convertion Entre les Bases",
-      type: "cours",
-      typeLabel: "📖 Support Officiel",
-      date: "2025-04-12",
-      author: "Inspection Générale de l'Informatique",
-      fileSize: "4.5 Mo",
-      pdfUrl: "pdf/Conversion_Bases_Numeration.pdf",
-      description: "Polycopié officiel d'arithmétique : méthode des divisions successives (décimal vers base B), méthode des puissances pondérées (base B vers décimal), et conversions directes rapides.",
-      summary: "Document de référence couvrant les chapitres d'arithmétique et de représentation de l'information : tableaux d'équivalence, démonstrations formelles, algorithmes types.",
-      downloadName: "Support_Officiel_Bases_Numeration_BacInfo.pdf",
-      isCustom: true
-    },
-    {
-      id: "lesson-algo-theo-02",
-      title: "Support Officiel : Calcul d'Aires & Intégration Numérique (Trapèzes & Rectangles)",
-      subject: "algo-ch5-approximation",
-      subjectLabel: "Ch 5 : Approximation & Optimisation",
-      type: "cours",
-      typeLabel: "📖 Support Officiel",
-      date: "2025-04-15",
-      author: "Inspection Générale de l'Informatique",
-      fileSize: "4.2 Mo",
-      pdfUrl: "pdf/Support_Calcul_Aires.pdf",
-      description: "Méthodes numériques d'approximation d'aires sous une courbe : discrétisation du pas h = (b - a) / n, méthode des rectangles et méthode des trapèzes.",
-      summary: "Cours théorique complet avec formalisation mathématique et algorithmique : formules de sommation, étude d'erreur et convergence, algorithme d'intégration par les trapèzes.",
-      downloadName: "Support_Officiel_Calcul_Aires_BacInfo.pdf",
-      isCustom: true
-    },
-    {
-      id: "lesson-algo-theo-03",
-      title: "Fichier de Révision : Algorithmes Types, TDO & Sous-programmes Bac",
-      subject: "algo-theorique",
-      subjectLabel: "Bases & Révision (Algorithme)",
-      type: "serie",
-      typeLabel: "📝 Fichier de Révision",
-      date: "2025-04-18",
-      author: "Inspection Générale de l'Informatique",
-      fileSize: "2.8 Mo",
-      pdfUrl: "pdf/Fichier_Revision_Algorithme.pdf",
-      description: "Recueil de révision globale pour l'épreuve écrite du Bac : algorithmes de tri, recherche dichotomique, primalité, PGCD, palindromes et anagrammes.",
-      summary: "Fascicule officiel indispensable récapitulant les algorithmes types du Baccalauréat tunisien : syntaxe officielle du pseudo-code, T.D.O et sous-programmes.",
-      downloadName: "Fichier_Revision_Algorithme_BacInfo.pdf",
-      isCustom: true
-    },
-    {
-      id: "lesson-algo-theo-04",
-      title: "Support Officiel : Matrices & Patterns (Spirale, Zigzag, Diagonales, Sablier)",
-      subject: "algo-theorique",
-      subjectLabel: "Bases & Révision (Matrices)",
-      type: "cours",
-      typeLabel: "📖 Support Officiel",
-      date: "2025-04-20",
-      author: "Inspection Générale de l'Informatique",
-      fileSize: "1.2 Mo",
-      pdfUrl: "pdf/Matrice_Pattern.pdf",
-      description: "Étude avancée des tableaux à deux dimensions (matrices carrées et rectangulaires) et des tracés de motifs géométriques (spirale, zigzag, diagonales, sablier).",
-      summary: "Document officiel d'approfondissement : déclarations T.D.N.T (Tableau de N lignes et M colonnes), contrôles de symétrie, vérification de carré magique.",
-      downloadName: "Support_Officiel_Matrices_Patterns_BacInfo.pdf",
-      isCustom: true
-    }
-  ];
+  const packs = (typeof DATA !== 'undefined' && DATA && DATA.lessons) ? DATA.lessons : [];
+  if (packs.length === 0) {
+    alert("Aucun support par défaut disponible.");
+    return;
+  }
 
   for (let l of packs) {
     await STILessonsDB.save(l);
   }
   await initLessonsModule();
-  alert("✓ Les 5 supports officiels d'Algorithme ont été chargés avec succès !");
+  alert(`✓ Les ${packs.length} cours officiels Baccalauréat (STI & 6 Chapitres d'Algorithme dont Matrices) ont été chargés avec succès !`);
 }
 
 async function resetToDefaultLessons() {
@@ -7875,54 +7836,57 @@ function renderAlgoPratiqueCards() {
 // 6. Rendu & Filtres de la Section Théorique (Algorithmique Bac)
 // -------------------------------------------------------------
 const ALGO_CHAPTER_METAS = {
-  "Chapitre 1 : Les fichiers binaires et fichier text": {
-    num: "1",
-    shortName: "Ch 1 : Fichiers Binaires & Texte",
+  "Chapitre 1 : Les fichiers binaires et fichiers texte": {
     icon: "📁",
-    color: "#f59e0b",
-    border: "#f59e0b",
-    desc: "Fichiers texte (recréer, ouvrir, lire_ligne, écrire_ligne), fichiers binaires (pickle dump, load, EOF) et manipulation de données."
-  },
-  "Chapitre 2 : Récurrence": {
-    num: "2",
-    shortName: "Ch 2 : Récurrence",
-    icon: "🔄",
-    color: "#c084fc",
-    border: "#a855f7",
-    desc: "Sous-programmes récursifs, condition d'arrêt (cas de base) et traitement récurrent."
-  },
-  "Chapitre 3 : Convertion Entre les Bases": {
-    num: "3",
-    shortName: "Ch 3 : Convertion Entre les Bases",
-    icon: "🔢",
-    color: "#38bdf8",
-    border: "#38bdf8",
-    desc: "Systèmes de numération (Bases 2, 8, 10, 16 et base quelconque) par divisions successives et puissances pondérées."
-  },
-  "Chapitre 4 : Arithmétique": {
-    num: "4",
-    shortName: "Ch 4 : Arithmétique",
-    icon: "🧮",
+    shortName: "Ch 1 : Fichiers Binaires & Texte",
     color: "#34d399",
     border: "#10b981",
-    desc: "Algorithmes arithmétiques : tests de primalité, factorielle, puissances entières et PGCD / PPCM (Euclide)."
+    desc: "Fichiers texte (lignes) et fichiers d'enregistrements binaires (pickle dump/load sous Thonny)."
   },
-  "Chapitre 5 : Approximation and optimisation": {
-    num: "5",
-    shortName: "Ch 5 : Approximation & Optimisation",
+  "Chapitre 2 : Récurrence": {
+    icon: "🔄",
+    shortName: "Ch 2 : Récurrence",
+    color: "#60a5fa",
+    border: "#3b82f6",
+    desc: "Sous-programmes récursifs : cas de base, condition d'arrêt et appels récursifs conformes Bac."
+  },
+  "Chapitre 3 : Conversion entre les bases": {
+    icon: "🔢",
+    shortName: "Ch 3 : Conversion entre les bases",
+    color: "#c084fc",
+    border: "#a855f7",
+    desc: "Conversions universelles : base B vers décimal, décimal vers base B (divisions successives) et conversions directes."
+  },
+  "Chapitre 4 : Arithmétique": {
+    icon: "🧮",
+    shortName: "Ch 4 : Arithmétique",
+    color: "#f472b6",
+    border: "#ec4899",
+    desc: "Primalité, PGCD (Euclide & soustractions), PPCM, divisibilité et décomposition en facteurs premiers."
+  },
+  "Chapitre 5 : Approximation et optimisation": {
     icon: "📈",
-    color: "#f87171",
-    border: "#ef4444",
-    desc: "Méthodes numériques d'approximation d'aires (milieu, rectangles, trapèzes), recherche dichotomique et optimisation de matrices."
+    shortName: "Ch 5 : Approximation & Optimisation",
+    color: "#f59e0b",
+    border: "#d97706",
+    desc: "Méthodes numériques d'approximation d'aires (milieu, rectangles, trapèzes) et recherche dichotomique."
+  },
+  "Chapitre 6 : Matrices": {
+    icon: "📐",
+    shortName: "Ch 6 : Matrices",
+    color: "#38bdf8",
+    border: "#0284c7",
+    desc: "Tableaux à deux dimensions (2D), parcours lignes/colonnes, diagonales, point-selle, tri et motifs géométriques."
   }
 };
 
 const OFFICIAL_ALGO_CHAPTERS = [
-  "Chapitre 1 : Les fichiers binaires et fichier text",
+  "Chapitre 1 : Les fichiers binaires et fichiers texte",
   "Chapitre 2 : Récurrence",
-  "Chapitre 3 : Convertion Entre les Bases",
+  "Chapitre 3 : Conversion entre les bases",
   "Chapitre 4 : Arithmétique",
-  "Chapitre 5 : Approximation and optimisation"
+  "Chapitre 5 : Approximation et optimisation",
+  "Chapitre 6 : Matrices"
 ];
 
 function renderAlgoTheoriqueCategories() {
@@ -8816,4 +8780,63 @@ async function clearAllLessonsFromDB() {
   renderAdminLessonsTable();
   renderLessons();
   alert("✓ Tous les documents ont été supprimés de la base locale.");
+}
+
+
+// -------------------------------------------------------------
+// Mise à jour dynamique du Titre de la page et de la Description Meta
+// -------------------------------------------------------------
+function updatePageMeta(viewName) {
+  const metaMap = {
+    'home': {
+      title: "Accueil • STI de A à Z — Portail de Révision Bac STI & Algorithme Bac Info",
+      desc: "Portail complet d'étude pour le Baccalauréat tunisien : STI (HTML5, CSS3, JavaScript, SQL) et Algorithmique (Qt Designer, Thonny Python, 6 chapitres théoriques)."
+    },
+    'html': {
+      title: "HTML5 • STI de A à Z — Annexe Officielle & Balises Bac STI",
+      desc: "Guide exhaustif des 57 balises HTML5 officielles du Bac STI avec aperçu visuel, formulaire d'examen et exemples conformes."
+    },
+    'css': {
+      title: "CSS3 • STI de A à Z — Annexe Officielle & Propriétés Bac STI",
+      desc: "Les 61 propriétés CSS3 indispensables au Bac STI avec sélecteurs #id, styles d'examen et simulateur interactif."
+    },
+    'js': {
+      title: "JavaScript • STI de A à Z — Fonctions & Validation verif() Bac STI",
+      desc: "Toutes les 63 fonctions JavaScript de l'annexe Bac STI, validation de formulaires verif(), DOM et console interactive."
+    },
+    'sql': {
+      title: "SQL MySQL • STI de A à Z — Commandes & Console Interactive Bac STI",
+      desc: "Les 57 notions et commandes SQL du Baccalauréat STI avec console MySQL interactive sur base scolaire réelle."
+    },
+    'lessons': {
+      title: "Cours & Séries PDF • STI Web & BD & Algorithme Baccalauréat Tunisie",
+      desc: "Bibliothèque officielle de cours, séries d'exercices et devoirs corrigés en PDF pour les modules STI et Algorithmique."
+    },
+    'algo-home': {
+      title: "Algorithme & Programmation • Accueil Module Bac Informatique",
+      desc: "Espace de révision officiel pour l'algorithmique au Bac tunisien : pratique Qt Designer & Thonny et 6 chapitres théoriques."
+    },
+    'algo-pratique': {
+      title: "Pratique Qt Designer ➔ Thonny Python • Algorithme Bac Info",
+      desc: "Simulateur visuel interactif et fiches pratiques des 20 notions Qt Designer et Python pour l'épreuve pratique du Bac."
+    },
+    'algo-theorique': {
+      title: "Algorithmique Théorique • 6 Chapitres Officiels Bac Informatique",
+      desc: "Les 6 chapitres théoriques officiels (Fichiers, Récurrence, Bases, Arithmétique, Approximation, Matrices) avec algorithmes et Python."
+    },
+    'admin': {
+      title: "Espace Enseignant • Dépôt & Gestion Sécurisée des Documents PDF",
+      desc: "Interface réservée aux enseignants pour le téléversement et la gestion des documents PDF de cours et devoirs."
+    }
+  };
+
+  const item = metaMap[viewName] || metaMap['home'];
+  document.title = item.title;
+  let metaTag = document.querySelector('meta[name="description"]');
+  if (!metaTag) {
+    metaTag = document.createElement('meta');
+    metaTag.name = "description";
+    document.head.appendChild(metaTag);
+  }
+  metaTag.content = item.desc;
 }
