@@ -476,8 +476,8 @@ const DATA = {
         "onsubmit : onsubmit=\"return valider()\" pour exécuter la fonction JavaScript de validation (retourne true ou false)",
         "⚠️ Note STI : target n'est pas utilisé dans nos formulaires"
       ],
-      "code": "<!-- Structure officielle STI d'un Formulaire avec Validation JS -->\n<form action=\"traitement.php\" method=\"post\" onsubmit=\"return validerFormulaire()\">\n  <label for=\"nomEleve\">Nom :</label>\n  <input type=\"text\" id=\"nomEleve\" name=\"nom\">\n\n  <label for=\"noteEleve\">Note :</label>\n  <input type=\"number\" id=\"noteEleve\" name=\"note\">\n\n  <input type=\"submit\" value=\"Valider et Envoyer\">\n</form>\n\n<script>\nfunction validerFormulaire() {\n  // 1. Récupération des valeurs saisies via getElementById\n  var nom = document.getElementById(\"nomEleve\").value;\n  var note = document.getElementById(\"noteEleve\").value;\n\n  // 2. Vérification que le champ nom n'est pas vide\n  if (nom == \"\") {\n    alert(\"Erreur : Le nom est obligatoire !\");\n    return false; // BLOQUE L'ENVOI DU FORMULAIRE\n  }\n\n  // 3. Vérification de la note (entre 0 et 20)\n  if (isNaN(note) || note < 0 || note > 20) {\n    alert(\"Erreur : La note doit être comprise entre 0 et 20 !\");\n    return false; // BLOQUE L'ENVOI DU FORMULAIRE\n  }\n\n  // 4. Si toutes les conditions sont respectées :\n  alert(\"Formulaire vérifié avec succès ! Envoi des données...\");\n  return true; // AUTORISE L'ENVOI VERS ACTION=\"traitement.php\"\n}\n</script>",
-      "previewHtml": "<div style=\"background:#fff; border:1px solid #cbd5e1; border-radius:8px; padding:16px;\">\n        <div style=\"background:#e0f2fe; border-left:4px solid #0284c7; padding:8px 12px; border-radius:4px; margin-bottom:12px; font-size:12px; color:#0369a1;\">\n          💡 <strong>Modèle STI :</strong> <code>&lt;form action=\"traitement.php\" method=\"post\" onsubmit=\"return valider()\"&gt;</code> (sans <em>target</em>).\n        </div>\n        <form onsubmit=\"event.preventDefault(); var n = document.getElementById('demoNom').value; var note = parseFloat(document.getElementById('demoNote').value); var res = document.getElementById('formDemoFeedback'); if(n == '') { res.innerHTML = '❌ <strong>return false (Envoi bloqué) :</strong> Le champ Nom est vide !'; res.style.background='#fee2e2'; res.style.color='#991b1b'; return false; } if(isNaN(note) || note < 0 || note > 20) { res.innerHTML = '❌ <strong>return false (Envoi bloqué) :</strong> La note doit être entre 0 et 20 !'; res.style.background='#fee2e2'; res.style.color='#991b1b'; return false; } res.innerHTML = '✅ <strong>return true (Envoi validé) :</strong> Données conformes pour &quot;' + n + '&quot; (Note: ' + note + '/20) ! Le formulaire part vers traitement.php.'; res.style.background='#dcfce7'; res.style.color='#166534'; return true;\" style=\"display:flex; flex-direction:column; gap:10px;\">\n          <div>\n            <label style=\"display:block; font-size:12px; font-weight:600; color:#1e293b; margin-bottom:3px;\">Nom de l'élève :</label>\n            <input type=\"text\" id=\"demoNom\" placeholder=\"Tapez un nom...\" style=\"width:100%; box-sizing:border-box; padding:6px 10px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n          </div>\n          <div>\n            <label style=\"display:block; font-size:12px; font-weight:600; color:#1e293b; margin-bottom:3px;\">Note obtenue (sur 20) :</label>\n            <input type=\"number\" id=\"demoNote\" placeholder=\"Ex: 17\" style=\"width:100%; box-sizing:border-box; padding:6px 10px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n          </div>\n          <button type=\"submit\" style=\"background:#16a34a; color:#fff; border:none; padding:8px 16px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:13px; margin-top:4px;\">\n            Tester la fonction de validation (onsubmit)\n          </button>\n          <div id=\"formDemoFeedback\" style=\"font-size:12px; padding:8px 12px; border-radius:4px; background:#f8fafc; color:#64748b; font-family:monospace;\">\n            En attente de clic sur le bouton de soumission...\n          </div>\n        </form>\n      </div>"
+      "code": "<!-- Structure officielle STI d'un Formulaire avec Validation JS -->\n<form action=\"traitement.php\" method=\"post\" onsubmit=\"return validerFormulaire()\">\n  <label for=\"nomEleve\">Nom :</label>\n  <input type=\"text\" id=\"nomEleve\" name=\"nom\">\n\n  <label for=\"noteEleve\">Note :</label>\n  <input type=\"number\" id=\"noteEleve\" name=\"note\">\n\n  <input type=\"submit\" value=\"Valider et Envoyer\">\n</form>\n\n<script>\nfunction validerFormulaire() {\n  // 1. Récupération des valeurs saisies via getElementById\n  let nom = document.getElementById(\"nomEleve\").value;\n  let note = document.getElementById(\"noteEleve\").value;\n\n  // 2. Vérification que le champ nom n'est pas vide\n  if (nom.trim() == \"\") {\n    alert(\"Erreur : Le nom est obligatoire !\");\n    return false; // BLOQUE L'ENVOI DU FORMULAIRE\n  }\n\n  // 3. Vérification de la note (entre 0 et 20)\n  if (isNaN(note) || note < 0 || note > 20) {\n    alert(\"Erreur : La note doit être comprise entre 0 et 20 !\");\n    return false; // BLOQUE L'ENVOI DU FORMULAIRE\n  }\n\n  // 4. Si toutes les conditions sont respectées :\n  alert(\"Formulaire vérifié avec succès ! Envoi des données...\");\n  return true; // AUTORISE L'ENVOI VERS ACTION=\"traitement.php\"\n}\n</script>",
+      "previewHtml": "<div style=\"background:#fff; border:1px solid #cbd5e1; border-radius:8px; padding:16px;\">\n        <div style=\"background:#e0f2fe; border-left:4px solid #0284c7; padding:8px 12px; border-radius:4px; margin-bottom:12px; font-size:12px; color:#0369a1;\">\n          💡 <strong>Modèle STI :</strong> <code>&lt;form action=\"traitement.php\" method=\"post\" onsubmit=\"return valider()\"&gt;</code> (sans <em>target</em>).\n        </div>\n        <form onsubmit=\"event.preventDefault(); let n = document.getElementById('demoNom').value.trim(); let note = parseFloat(document.getElementById('demoNote').value); let res = document.getElementById('formDemoFeedback'); if(n === '') { res.innerHTML = '❌ <strong>return false (Envoi bloqué) :</strong> Le champ Nom est vide !'; res.style.background='#fee2e2'; res.style.color='#991b1b'; return false; } if(isNaN(note) || note < 0 || note > 20) { res.innerHTML = '❌ <strong>return false (Envoi bloqué) :</strong> La note doit être entre 0 et 20 !'; res.style.background='#fee2e2'; res.style.color='#991b1b'; return false; } res.innerHTML = '✅ <strong>return true (Envoi validé) :</strong> Données conformes pour &quot;' + n + '&quot; (Note: ' + note + '/20) ! Le formulaire part vers traitement.php.'; res.style.background='#dcfce7'; res.style.color='#166534'; return true;\" style=\"display:flex; flex-direction:column; gap:10px;\">\n          <div>\n            <label style=\"display:block; font-size:12px; font-weight:600; color:#1e293b; margin-bottom:3px;\">Nom de l'élève :</label>\n            <input type=\"text\" id=\"demoNom\" placeholder=\"Tapez un nom...\" style=\"width:100%; box-sizing:border-box; padding:6px 10px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n          </div>\n          <div>\n            <label style=\"display:block; font-size:12px; font-weight:600; color:#1e293b; margin-bottom:3px;\">Note obtenue (sur 20) :</label>\n            <input type=\"number\" id=\"demoNote\" placeholder=\"Ex: 17\" style=\"width:100%; box-sizing:border-box; padding:6px 10px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n          </div>\n          <button type=\"submit\" style=\"background:#16a34a; color:#fff; border:none; padding:8px 16px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:13px; margin-top:4px;\">\n            Tester la fonction de validation (onsubmit)\n          </button>\n          <div id=\"formDemoFeedback\" style=\"font-size:12px; padding:8px 12px; border-radius:4px; background:#f8fafc; color:#64748b; font-family:monospace;\">\n            En attente de clic sur le bouton de soumission...\n          </div>\n        </form>\n      </div>"
     },
     {
       "id": "tag-fieldset-legend",
@@ -568,7 +568,7 @@ const DATA = {
         "Utilisable sur presque toutes les balises : <button>, <a>, <input>, <div>, <img>"
       ],
       "code": "<!-- Déclenchement direct via onclick -->\n<button onclick=\"saluerUtilisateur()\">Cliquez pour valider</button>\n\n<script>\nfunction saluerUtilisateur() {\n  alert(\"Bravo ! Vous venez de déclencher l'événement onclick.\");\n}\n</script>",
-      "previewHtml": "<div style=\"text-align:center; padding:15px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px;\">\n        <p style=\"font-size:13px; color:#475569; margin-bottom:10px;\">Cliquez sur le bouton ci-dessous pour tester :</p>\n        <button onclick=\"var c = document.getElementById('clickCounter'); c.textContent = parseInt(c.textContent) + 1; alert('Événement onclick réussi ! Nombre de clics : ' + c.textContent);\" style=\"background:#0284c7; color:#fff; border:none; padding:8px 18px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:13px; box-shadow:0 2px 4px rgba(0,0,0,0.1);\">\n          🖱️ Cliquez-moi !\n        </button>\n        <div style=\"margin-top:10px; font-size:12px; color:#64748b;\">Compteur de clics : <strong id=\"clickCounter\" style=\"color:#0284c7;\">0</strong></div>\n      </div>"
+      "previewHtml": "<div style=\"text-align:center; padding:15px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px;\">\n        <p style=\"font-size:13px; color:#475569; margin-bottom:10px;\">Cliquez sur le bouton ci-dessous pour tester :</p>\n        <button onclick=\"let c = document.getElementById('clickCounter'); c.textContent = parseInt(c.textContent) + 1; alert('Événement onclick réussi ! Nombre de clics : ' + c.textContent);\" style=\"background:#0284c7; color:#fff; border:none; padding:8px 18px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:13px; box-shadow:0 2px 4px rgba(0,0,0,0.1);\">\n          🖱️ Cliquez-moi !\n        </button>\n        <div style=\"margin-top:10px; font-size:12px; color:#64748b;\">Compteur de clics : <strong id=\"clickCounter\" style=\"color:#0284c7;\">0</strong></div>\n      </div>"
     },
     {
       "id": "event-onmouseover",
@@ -619,8 +619,8 @@ const DATA = {
       "attributes": [
         "<input>, <textarea>, <select>"
       ],
-      "code": "<input type=\"number\" id=\"noteSTI\" onblur=\"verifierNote()\">\n\n<script>\nfunction verifierNote() {\n  var v = document.getElementById(\"noteSTI\").value;\n  if (v < 0 || v > 20) {\n    alert(\"Attention : la note doit être comprise entre 0 et 20 !\");\n  }\n}\n</script>",
-      "previewHtml": "<div style=\"background:#fff; border:1px solid #e2e8f0; padding:14px; border-radius:6px;\">\n        <label style=\"display:block; font-size:12px; margin-bottom:4px; font-weight:600; color:#1e293b;\">Tapez une note sur 20 puis cliquez en dehors du champ :</label>\n        <input type=\"number\" id=\"testNoteInput\" placeholder=\"Ex: 18 ou 25\" onblur=\"var val = parseFloat(this.value); var res = document.getElementById('blurResult'); if (isNaN(val)) { res.innerHTML = '⚪ Veuillez taper un nombre.'; } else if (val < 0 || val > 20) { res.innerHTML = '❌ <strong>onblur :</strong> Erreur ! La note ' + val + ' n\\'est pas entre 0 et 20 !'; res.style.color='#dc2626'; } else { res.innerHTML = '✅ <strong>onblur :</strong> Parfait ! Note de ' + val + '/20 valide.'; res.style.color='#16a34a'; }\" style=\"width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n        <div id=\"blurResult\" style=\"margin-top:6px; font-size:12px; color:#64748b;\">⚪ Tapez une note et cliquez en dehors pour déclencher onblur.</div>\n      </div>"
+      "code": "<input type=\"number\" id=\"noteSTI\" onblur=\"verifierNote()\">\n\n<script>\nfunction verifierNote() {\n  let v = document.getElementById(\"noteSTI\").value;\n  if (v < 0 || v > 20) {\n    alert(\"Attention : la note doit être comprise entre 0 et 20 !\");\n  }\n}\n</script>",
+      "previewHtml": "<div style=\"background:#fff; border:1px solid #e2e8f0; padding:14px; border-radius:6px;\">\n        <label style=\"display:block; font-size:12px; margin-bottom:4px; font-weight:600; color:#1e293b;\">Tapez une note sur 20 puis cliquez en dehors du champ :</label>\n        <input type=\"number\" id=\"testNoteInput\" placeholder=\"Ex: 18 ou 25\" onblur=\"let val = parseFloat(this.value); let res = document.getElementById('blurResult'); if (isNaN(val)) { res.innerHTML = '⚪ Veuillez taper un nombre.'; } else if (val < 0 || val > 20) { res.innerHTML = '❌ <strong>onblur :</strong> Erreur ! La note ' + val + ' n\\'est pas entre 0 et 20 !'; res.style.color='#dc2626'; } else { res.innerHTML = '✅ <strong>onblur :</strong> Parfait ! Note de ' + val + '/20 valide.'; res.style.color='#16a34a'; }\" style=\"width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n        <div id=\"blurResult\" style=\"margin-top:6px; font-size:12px; color:#64748b;\">⚪ Tapez une note et cliquez en dehors pour déclencher onblur.</div>\n      </div>"
     },
     {
       "id": "event-oninput",
@@ -646,7 +646,7 @@ const DATA = {
         "<select>, <input type=\"checkbox\">, <input type=\"radio\">, <input type=\"text\">"
       ],
       "code": "<select onchange=\"changerSection(this.value)\">\n  <option value=\"STI\">Sciences et Technologies</option>\n  <option value=\"ECO\">Économie</option>\n</select>\n\n<script>\nfunction changerSection(choix) {\n  alert(\"Vous avez choisi : \" + choix);\n}\n</script>",
-      "previewHtml": "<div style=\"background:#fff; border:1px solid #e2e8f0; padding:14px; border-radius:6px;\">\n        <label style=\"display:block; font-size:12px; margin-bottom:4px; font-weight:600; color:#1e293b;\">Choisissez une filière dans la liste :</label>\n        <select onchange=\"var box = document.getElementById('changeFeedback'); box.innerHTML = '⚡ <strong>onchange déclenché :</strong> Option choisie : &quot;' + this.value + '&quot; !'; box.style.background='#dcfce7'; box.style.color='#15803d';\" style=\"width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n          <option value=\"Sciences et Technologies de l'Industrie (STI)\">Sciences et Technologies (STI)</option>\n          <option value=\"Informatique & Programmation\">Informatique & Programmation</option>\n          <option value=\"Électronique & Systèmes Numériques\">Électronique & Systèmes Numériques</option>\n        </select>\n        <div id=\"changeFeedback\" style=\"margin-top:8px; font-size:12px; padding:6px 10px; border-radius:4px; background:#f1f5f9; color:#475569;\">\n          Sélectionnez une option pour déclencher l'événement onchange.\n        </div>\n      </div>"
+      "previewHtml": "<div style=\"background:#fff; border:1px solid #e2e8f0; padding:14px; border-radius:6px;\">\n        <label style=\"display:block; font-size:12px; margin-bottom:4px; font-weight:600; color:#1e293b;\">Choisissez une filière dans la liste :</label>\n        <select onchange=\"let box = document.getElementById('changeFeedback'); box.innerHTML = '⚡ <strong>onchange déclenché :</strong> Option choisie : &quot;' + this.value + '&quot; !'; box.style.background='#dcfce7'; box.style.color='#15803d';\" style=\"width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n          <option value=\"Sciences et Technologies de l'Industrie (STI)\">Sciences et Technologies (STI)</option>\n          <option value=\"Informatique & Programmation\">Informatique & Programmation</option>\n          <option value=\"Électronique & Systèmes Numériques\">Électronique & Systèmes Numériques</option>\n        </select>\n        <div id=\"changeFeedback\" style=\"margin-top:8px; font-size:12px; padding:6px 10px; border-radius:4px; background:#f1f5f9; color:#475569;\">\n          Sélectionnez une option pour déclencher l'événement onchange.\n        </div>\n      </div>"
     },
     {
       "id": "event-onsubmit",
@@ -658,8 +658,8 @@ const DATA = {
       "attributes": [
         "<form>"
       ],
-      "code": "<form onsubmit=\"return verifierTout()\">\n  <input type=\"text\" id=\"login\" placeholder=\"Nom d'utilisateur\">\n  <input type=\"submit\" value=\"Se connecter\">\n</form>\n\n<script>\nfunction verifierTout() {\n  var log = document.getElementById(\"login\").value;\n  if (log == \"\") {\n    alert(\"Le champ identifiant est obligatoire !\");\n    return false; // Bloque la soumission\n  }\n  return true; // Envoi autorisé\n}\n</script>",
-      "previewHtml": "<form onsubmit=\"event.preventDefault(); var val = document.getElementById('loginInput').value; var fb = document.getElementById('submitFeedback'); if(val == ''){ fb.innerHTML = '❌ <strong>onsubmit bloqué :</strong> Veuillez remplir le champ !'; fb.style.color='#dc2626'; } else { fb.innerHTML = '✅ <strong>onsubmit validé :</strong> Formulaire expédié pour &quot;' + val + '&quot; !'; fb.style.color='#16a34a'; }\" style=\"background:#fff; border:1px solid #e2e8f0; padding:14px; border-radius:6px; display:flex; flex-direction:column; gap:8px;\">\n        <label style=\"font-size:12px; font-weight:600;\">Test de validation formulaire :</label>\n        <div style=\"display:flex; gap:8px;\">\n          <input type=\"text\" id=\"loginInput\" placeholder=\"Entrez votre identifiant...\" style=\"flex:1; padding:6px 10px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n          <button type=\"submit\" style=\"background:#16a34a; color:#fff; border:none; padding:6px 14px; border-radius:4px; font-weight:bold; cursor:pointer;\">Envoyer</button>\n        </div>\n        <div id=\"submitFeedback\" style=\"font-size:12px; color:#64748b;\">Cliquez sur Envoyer pour tester la soumission.</div>\n      </form>"
+      "code": "<form onsubmit=\"return verifierTout()\">\n  <input type=\"text\" id=\"login\" placeholder=\"Nom d'utilisateur\">\n  <input type=\"submit\" value=\"Se connecter\">\n</form>\n\n<script>\nfunction verifierTout() {\n  let log = document.getElementById(\"login\").value;\n  if (log.trim() === \"\") {\n    alert(\"Le champ identifiant est obligatoire !\");\n    return false; // Bloque la soumission\n  }\n  return true; // Envoi autorisé\n}\n</script>",
+      "previewHtml": "<form onsubmit=\"event.preventDefault(); let val = document.getElementById('loginInput').value; let fb = document.getElementById('submitFeedback'); if(!val.trim()){ fb.innerHTML = '❌ <strong>onsubmit bloqué :</strong> Veuillez remplir le champ !'; fb.style.color='#dc2626'; } else { fb.innerHTML = '✅ <strong>onsubmit validé :</strong> Formulaire expédié pour &quot;' + val + '&quot; !'; fb.style.color='#16a34a'; }\" style=\"background:#fff; border:1px solid #e2e8f0; padding:14px; border-radius:6px; display:flex; flex-direction:column; gap:8px;\">\n        <label style=\"font-size:12px; font-weight:600;\">Test de validation formulaire :</label>\n        <div style=\"display:flex; gap:8px;\">\n          <input type=\"text\" id=\"loginInput\" placeholder=\"Entrez votre identifiant...\" style=\"flex:1; padding:6px 10px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n          <button type=\"submit\" style=\"background:#16a34a; color:#fff; border:none; padding:6px 14px; border-radius:4px; font-weight:bold; cursor:pointer;\">Envoyer</button>\n        </div>\n        <div id=\"submitFeedback\" style=\"font-size:12px; color:#64748b;\">Cliquez sur Envoyer pour tester la soumission.</div>\n      </form>"
     },
     {
       "id": "event-onkeydown",
@@ -698,7 +698,7 @@ const DATA = {
         "<body>, <img>, <iframe>, <script>"
       ],
       "code": "<body onload=\"initialiserSite()\">\n  <h1>Bienvenue</h1>\n</body>\n\n<script>\nfunction initialiserSite() {\n  alert(\"Page chargée à 100% avec succès !\");\n}\n</script>",
-      "previewHtml": "<div style=\"background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:15px; text-align:center;\">\n        <span style=\"font-size:24px;\">🌐</span>\n        <h4 style=\"margin:4px 0; color:#0f172a;\">Simulation de l'événement onload</h4>\n        <p style=\"font-size:12px; color:#64748b; margin-bottom:10px;\">Cliquez ci-dessous pour simuler le chargement complet d'une page :</p>\n        <button onclick=\"var b = document.getElementById('loadSimBar'); b.style.width='0%'; setTimeout(() function() b.style.width='100%', 100); setTimeout(() function() alert('Événement onload : Le document et ses ressources sont prêts !'), 1200);\" style=\"background:#0284c7; color:#fff; border:none; padding:6px 14px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:12px;\">\n          ▶ Simuler le chargement de la page\n        </button>\n        <div style=\"height:6px; background:#e2e8f0; border-radius:3px; margin-top:12px; overflow:hidden;\">\n          <div id=\"loadSimBar\" style=\"width:0%; height:100%; background:#10b981; transition:width 1s ease;\"></div>\n        </div>\n      </div>"
+      "previewHtml": "<div style=\"background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:15px; text-align:center;\">\n        <span style=\"font-size:24px;\">🌐</span>\n        <h4 style=\"margin:4px 0; color:#0f172a;\">Simulation de l'événement onload</h4>\n        <p style=\"font-size:12px; color:#64748b; margin-bottom:10px;\">Cliquez ci-dessous pour simuler le chargement complet d'une page :</p>\n        <button onclick=\"let b = document.getElementById('loadSimBar'); b.style.width='0%'; setTimeout(() => b.style.width='100%', 100); setTimeout(() => alert('Événement onload : Le document et ses ressources sont prêts !'), 1200);\" style=\"background:#0284c7; color:#fff; border:none; padding:6px 14px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:12px;\">\n          ▶ Simuler le chargement de la page\n        </button>\n        <div style=\"height:6px; background:#e2e8f0; border-radius:3px; margin-top:12px; overflow:hidden;\">\n          <div id=\"loadSimBar\" style=\"width:0%; height:100%; background:#10b981; transition:width 1s ease;\"></div>\n        </div>\n      </div>"
     },
     {
       "id": "event-onplay",
@@ -711,7 +711,7 @@ const DATA = {
         "<audio>, <video>"
       ],
       "code": "<video controls src=\"film.mp4\" onplay=\"afficherStatutLecture()\">\n</video>\n\n<script>\nfunction afficherStatutLecture() {\n  console.log(\"Lecture du média démarrée !\");\n}\n</script>",
-      "previewHtml": "<div style=\"background:#0f172a; color:#fff; border-radius:8px; padding:15px; text-align:center;\">\n        <span style=\"font-size:28px;\">🎬</span>\n        <h4 style=\"margin:4px 0; color:#38bdf8;\">Lecteur Multimédia (onplay)</h4>\n        <p style=\"font-size:12px; color:#94a3b8; margin-bottom:10px;\">Cliquez sur Lecture pour déclencher l'événement onplay :</p>\n        <button onclick=\"var st = document.getElementById('mediaStatusPlay'); st.textContent='▶ ÉVÉNEMENT ONPLAY DÉCLENCHÉ : Lecture démarrée !'; st.style.color='#4ade80';\" style=\"background:#22c55e; color:#fff; border:none; padding:8px 16px; border-radius:20px; font-weight:bold; cursor:pointer; font-size:13px;\">\n          ▶ Lancer la lecture\n        </button>\n        <div id=\"mediaStatusPlay\" style=\"margin-top:10px; font-size:12px; color:#94a3b8; font-family:monospace;\">En attente de lecture...</div>\n      </div>"
+      "previewHtml": "<div style=\"background:#0f172a; color:#fff; border-radius:8px; padding:15px; text-align:center;\">\n        <span style=\"font-size:28px;\">🎬</span>\n        <h4 style=\"margin:4px 0; color:#38bdf8;\">Lecteur Multimédia (onplay)</h4>\n        <p style=\"font-size:12px; color:#94a3b8; margin-bottom:10px;\">Cliquez sur Lecture pour déclencher l'événement onplay :</p>\n        <button onclick=\"let st = document.getElementById('mediaStatusPlay'); st.textContent='▶ ÉVÉNEMENT ONPLAY DÉCLENCHÉ : Lecture démarrée !'; st.style.color='#4ade80';\" style=\"background:#22c55e; color:#fff; border:none; padding:8px 16px; border-radius:20px; font-weight:bold; cursor:pointer; font-size:13px;\">\n          ▶ Lancer la lecture\n        </button>\n        <div id=\"mediaStatusPlay\" style=\"margin-top:10px; font-size:12px; color:#94a3b8; font-family:monospace;\">En attente de lecture...</div>\n      </div>"
     },
     {
       "id": "event-onpause",
@@ -724,7 +724,7 @@ const DATA = {
         "<audio>, <video>"
       ],
       "code": "<audio controls src=\"cours.mp3\" onpause=\"afficherStatutPause()\">\n</audio>\n\n<script>\nfunction afficherStatutPause() {\n  alert(\"Le fichier audio a été mis en pause.\");\n}\n</script>",
-      "previewHtml": "<div style=\"background:#0f172a; color:#fff; border-radius:8px; padding:15px; text-align:center;\">\n        <span style=\"font-size:28px;\">⏸</span>\n        <h4 style=\"margin:4px 0; color:#facc15;\">Lecteur Multimédia (onpause)</h4>\n        <p style=\"font-size:12px; color:#94a3b8; margin-bottom:10px;\">Cliquez sur Pause pour déclencher l'événement onpause :</p>\n        <button onclick=\"var st = document.getElementById('mediaStatusPause'); st.textContent='⏸ ÉVÉNEMENT ONPAUSE DÉCLENCHÉ : Média en pause !'; st.style.color='#facc15';\" style=\"background:#eab308; color:#000; border:none; padding:8px 16px; border-radius:20px; font-weight:bold; cursor:pointer; font-size:13px;\">\n          ⏸ Mettre en pause\n        </button>\n        <div id=\"mediaStatusPause\" style=\"margin-top:10px; font-size:12px; color:#94a3b8; font-family:monospace;\">En lecture...</div>\n      </div>"
+      "previewHtml": "<div style=\"background:#0f172a; color:#fff; border-radius:8px; padding:15px; text-align:center;\">\n        <span style=\"font-size:28px;\">⏸</span>\n        <h4 style=\"margin:4px 0; color:#facc15;\">Lecteur Multimédia (onpause)</h4>\n        <p style=\"font-size:12px; color:#94a3b8; margin-bottom:10px;\">Cliquez sur Pause pour déclencher l'événement onpause :</p>\n        <button onclick=\"let st = document.getElementById('mediaStatusPause'); st.textContent='⏸ ÉVÉNEMENT ONPAUSE DÉCLENCHÉ : Média en pause !'; st.style.color='#facc15';\" style=\"background:#eab308; color:#000; border:none; padding:8px 16px; border-radius:20px; font-weight:bold; cursor:pointer; font-size:13px;\">\n          ⏸ Mettre en pause\n        </button>\n        <div id=\"mediaStatusPause\" style=\"margin-top:10px; font-size:12px; color:#94a3b8; font-family:monospace;\">En lecture...</div>\n      </div>"
     },
     {
       "id": "global-attributes",
@@ -2475,7 +2475,7 @@ const DATA = {
     "tag": "ch.trim()",
     "syntax": "ch.trim()",
     "summary": "Supprime tous les espaces existants au début et à la fin de ch.",
-    "description": "Nettoie une chaîne de caractères en retirant les espaces superflus avant le premier mot et après le dernier mot. Remarque examen Bac STI : Au sujet national officiel, la vérification standard d'un champ vide s'effectue par if (champ == \"\") ou if (champ.length == 0). La méthode .trim() est acceptée pour filtrer les saisies contenant uniquement des espaces.",
+    "description": "Nettoie une chaîne de caractères en retirant les espaces superflus avant le premier mot et après le dernier mot. Les espaces situés à l'intérieur ne sont pas touchés.",
     "howToUse": "if (document.getElementById('nom').value.trim() == '') { alert('Champ vide !'); }",
     "values": [
       "'  test  '.trim() -> 'test'",
@@ -2750,7 +2750,7 @@ const DATA = {
       "Number(cp) < 1000 || Number(cp) > 9999",
       "req == '' || req.length > 50"
     ],
-    "code": "function verif() {\n  // Récupération des valeurs des champs\n  var np = document.getElementById(\"np\").value;\n  var ntel = document.getElementById(\"ntel\").value;\n  var mail = document.getElementById(\"mail\").value;\n  var mps = document.getElementById(\"mps\").value;\n  var cfmps = document.getElementById(\"cfmps\").value;\n  var adr = document.getElementById(\"adr\").value;\n  var vil = document.getElementById(\"vill\");\n  var cp = document.getElementById(\"cp\").value;\n  var req = document.getElementById(\"rq\").value;\n\n  // Validation du cocher civilité 1ére méthode\n  /* var f = document.getElementById('f').checked;\n     var h = document.getElementById('h').checked;\n     if (f == false && h == false) {\n       alert('Veuillez cocher la civilité');\n       return false;\n     }\n  */\n\n  // Validation du cocher civilité 2ème Méthode\n  var civ = document.getElementsByName(\"civ\");\n  if (civ[0].checked == false && civ[1].checked == false) {\n    alert(\"Veuillez cocher la civilité\");\n    return false;\n  }\n\n  // Validation du champ Nom et prénom\n  if (np == \"\" || np.length > 30 || alpha(np) == false) {\n    alert(\"Nom vide ou incorrect\");\n    return false;\n  }\n\n  // Validation du champ Numéro téléphone\n  if (ntel.length != 8 || testtel(ntel) == false || isnum(ntel) == false) {\n    alert(\"numéro téléphone vide ou incorrect\");\n    return false;\n  }\n\n  // Validation du champ Mail\n  if (mail == \"\" || mail.indexOf(\"@\") == -1 || testmail(mail) == false) {\n    alert(\"Mail obligatoire ou invalide\");\n    return false;\n  }\n\n  // Validation du champ mot de passe\n  if (mps.length != 8) {\n    alert(\"Mot de Passe obligatoire ou invalide\");\n    return false;\n  }\n\n  // Validation du confirmation du mot de passe\n  if (cfmps != mps) {\n    alert(\"Mot de Passe incorrect\");\n    document.getElementById('cfmps').style.backgroundColor = 'red';\n    return false;\n  }\n\n  // Validation du champ Adresse\n  if (adr == \"\" || adr.indexOf(\" \") == -1) {\n    alert(\"adresse vide ou incorrecte\");\n    return false;\n  }\n\n  // Validation du cocher ville\n  if (vil.selectedIndex == 0) {\n    alert(\"selectionner une ville\");\n    return false;\n  }\n\n  // Validation du champ code postal\n  if (Number(cp) < 1000 || Number(cp) > 9999) {\n    alert(\"code postal obligatoire ou invalid\");\n    return false;\n  }\n\n  // Validation du champ Remarque\n  if (req == \"\" || req.length > 50) {\n    alert(\"remarque obligatoire ou invalid\");\n    return false;\n  }\n} /// fin fonction verif",
+    "code": "function verif() {\n  // Récupération des valeurs des champs\n  let np = document.getElementById(\"np\").value;\n  let ntel = document.getElementById(\"ntel\").value;\n  let mail = document.getElementById(\"mail\").value;\n  let mps = document.getElementById(\"mps\").value;\n  let cfmps = document.getElementById(\"cfmps\").value;\n  let adr = document.getElementById(\"adr\").value;\n  let vil = document.getElementById(\"vill\");\n  let cp = document.getElementById(\"cp\").value;\n  let req = document.getElementById(\"rq\").value;\n\n  // Validation du cocher civilité 1ére méthode\n  /* let f = document.getElementById('f').checked;\n     let h = document.getElementById('h').checked;\n     if (f == false && h == false) {\n       alert('Veuillez cocher la civilité');\n       return false;\n     }\n  */\n\n  // Validation du cocher civilité 2ème Méthode\n  let civ = document.getElementsByName(\"civ\");\n  if (civ[0].checked == false && civ[1].checked == false) {\n    alert(\"Veuillez cocher la civilité\");\n    return false;\n  }\n\n  // Validation du champ Nom et prénom\n  if (np == \"\" || np.length > 30 || alpha(np) == false) {\n    alert(\"Nom vide ou incorrect\");\n    return false;\n  }\n\n  // Validation du champ Numéro téléphone\n  if (ntel.length != 8 || testtel(ntel) == false || isnum(ntel) == false) {\n    alert(\"numéro téléphone vide ou incorrect\");\n    return false;\n  }\n\n  // Validation du champ Mail\n  if (mail == \"\" || mail.indexOf(\"@\") == -1 || testmail(mail) == false) {\n    alert(\"Mail obligatoire ou invalide\");\n    return false;\n  }\n\n  // Validation du champ mot de passe\n  if (mps.length != 8) {\n    alert(\"Mot de Passe obligatoire ou invalide\");\n    return false;\n  }\n\n  // Validation du confirmation du mot de passe\n  if (cfmps != mps) {\n    alert(\"Mot de Passe incorrect\");\n    document.getElementById('cfmps').style.backgroundColor = 'red';\n    return false;\n  }\n\n  // Validation du champ Adresse\n  if (adr == \"\" || adr.indexOf(\" \") == -1) {\n    alert(\"adresse vide ou incorrecte\");\n    return false;\n  }\n\n  // Validation du cocher ville\n  if (vil.selectedIndex == 0) {\n    alert(\"selectionner une ville\");\n    return false;\n  }\n\n  // Validation du champ code postal\n  if (Number(cp) < 1000 || Number(cp) > 9999) {\n    alert(\"code postal obligatoire ou invalid\");\n    return false;\n  }\n\n  // Validation du champ Remarque\n  if (req == \"\" || req.length > 50) {\n    alert(\"remarque obligatoire ou invalid\");\n    return false;\n  }\n} /// fin fonction verif",
     "runnableCode": "console.log(\"=== SIMULATION DE VERIF() AU BAC STI ===\");\nconsole.log(\"1. Civilité : civ[0].checked et civ[1].checked vérifiés.\");\nconsole.log(\"2. Nom et Prénom : longueur <= 30 et alpha(np) == true.\");\nconsole.log(\"3. Tél : 8 chiffres exacts, premier chiffre valide (testtel) et isnum.\");\nconsole.log(\"4. Mail : non vide, présence de '@' et format testmail valide.\");\nconsole.log(\"5. Mot de passe : longueur == 8.\");\nconsole.log(\"6. Confirmation : si cfmps != mps, style.backgroundColor = 'red'.\");\nconsole.log(\"7. Adresse : présence obligatoire d'au moins un espace ' ' (indexOf != -1).\");\nconsole.log(\"8. Ville : menu déroulant vil.selectedIndex != 0.\");\nconsole.log(\"9. Code postal : Number(cp) entre 1000 et 9999 (4 chiffres).\");\nconsole.log(\"10. Remarque : non vide et longueur <= 50 caractères.\");\nconsole.log(\"✓ Tous les contrôles sont conformes au barème officiel du Bac STI !\");"
   },
   {
@@ -2764,15 +2764,15 @@ const DATA = {
     "description": "Fonction classique d'examen du Bac STI pour valider l'âge d'un candidat :\\n1. Récupère la chaîne de date depuis l'input date id='dnais'.\\n2. Instancie dc = new Date() pour obtenir l'année courante (ac = dc.getFullYear()).\\n3. Instancie dp = new Date(dt) pour convertir la saisie et extraire l'année de naissance (ap = dp.getFullYear()).\\n4. Calcule la différence diff = ac - ap.\\n5. Si diff < 15 ou diff > 30, affiche une boîte d'alerte 'age invalid'.",
     "howToUse": "Appeler sur l'événement onblur ou onchange du champ date : <input type=\"date\" id=\"dnais\" onchange=\"validage()\"> ou dans verif().",
     "values": [
-      "var dc = new Date();",
-      "var dp = new Date(dt);",
-      "var ap = dp.getFullYear();",
-      "var ac = dc.getFullYear();",
-      "var diff = ac - ap;",
+      "let dc = new Date();",
+      "let dp = new Date(dt);",
+      "let ap = dp.getFullYear();",
+      "let ac = dc.getFullYear();",
+      "let diff = ac - ap;",
       "if (diff < 15 || diff > 30) alert('age invalid');"
     ],
-    "code": "function validage() {\n  var dt = document.getElementById('dnais').value;\n  var dc = new Date(); // Retourne la date courante\n  var dp = new Date(dt); // Convertir la variable dt en un objet date\n  var ap = dp.getFullYear(); // Retourne l'année à partir de la date dp sur 4 chiffres\n  var ac = dc.getFullYear();\n  var diff = ac - ap;\n  if (diff < 15 || diff > 30) {\n    alert('age invalid');\n  }\n}",
-    "runnableCode": "var anneeCourante = new Date().getFullYear();\nvar anneeNaissanceTest = anneeCourante - 18; // 18 ans\nvar diff = anneeCourante - anneeNaissanceTest;\nconsole.log(\"Année courante (ac) : \" + anneeCourante);\nconsole.log(\"Année de naissance test (ap) : \" + anneeNaissanceTest);\nconsole.log(\"Âge calculé (diff = ac - ap) : \" + diff + \" ans\");\nif (diff < 15 || diff > 30) {\n  console.log(\"Résultat : ❌ Âge invalide (doit être entre 15 et 30 ans)\");\n} else {\n  console.log(\"Résultat : ✓ Âge valide pour le Bac STI !\");\n}"
+    "code": "function validage() {\n  let dt = document.getElementById('dnais').value;\n  let dc = new Date(); // Retourne la date courante\n  let dp = new Date(dt); // Convertir la variable dt en un objet date\n  let ap = dp.getFullYear(); // Retourne l'année à partir de la date dp sur 4 chiffres\n  let ac = dc.getFullYear();\n  let diff = ac - ap;\n  if (diff < 15 || diff > 30) {\n    alert('age invalid');\n  }\n}",
+    "runnableCode": "const anneeCourante = new Date().getFullYear();\nconst anneeNaissanceTest = anneeCourante - 18; // 18 ans\nconst diff = anneeCourante - anneeNaissanceTest;\nconsole.log(\"Année courante (ac) : \" + anneeCourante);\nconsole.log(\"Année de naissance test (ap) : \" + anneeNaissanceTest);\nconsole.log(\"Âge calculé (diff = ac - ap) : \" + diff + \" ans\");\nif (diff < 15 || diff > 30) {\n  console.log(\"Résultat : ❌ Âge invalide (doit être entre 15 et 30 ans)\");\n} else {\n  console.log(\"Résultat : ✓ Âge valide pour le Bac STI !\");\n}"
   },
   {
     "id": "js-fn-captcha",
@@ -2790,8 +2790,8 @@ const DATA = {
       "else String.fromCharCode(n + 97)",
       "document.getElementById('cap').value = code"
     ],
-    "code": "function Captcha() {\n  var code = \"\";\n  for (var i = 1; i <= 10; i++) {\n    var n = Math.trunc(Math.random() * 26);\n    if (n % 2 == 0) {\n      code = code + String.fromCharCode(n + 65);\n    } else {\n      code = code + String.fromCharCode(n + 97);\n    }\n  }\n  document.getElementById('cap').value = code;\n}",
-    "runnableCode": "var code = \"\";\nfor (var i = 1; i <= 10; i++) {\n  var n = Math.trunc(Math.random() * 26);\n  if (n % 2 == 0) {\n    code = code + String.fromCharCode(n + 65);\n  } else {\n    code = code + String.fromCharCode(n + 97);\n  }\n}\nconsole.log(\"Code Captcha généré (10 caractères) : \" + code);\nconsole.log(\"Longueur : \" + code.length + \" caractères (mélange de majuscules et minuscules)\");"
+    "code": "function Captcha() {\n  let code = \"\";\n  for (let i = 1; i <= 10; i++) {\n    let n = Math.trunc(Math.random() * 26);\n    if (n % 2 == 0) {\n      code = code + String.fromCharCode(n + 65);\n    } else {\n      code = code + String.fromCharCode(n + 97);\n    }\n  }\n  document.getElementById('cap').value = code;\n}",
+    "runnableCode": "let code = \"\";\nfor (let i = 1; i <= 10; i++) {\n  let n = Math.trunc(Math.random() * 26);\n  if (n % 2 == 0) {\n    code = code + String.fromCharCode(n + 65);\n  } else {\n    code = code + String.fromCharCode(n + 97);\n  }\n}\nconsole.log(\"Code Captcha généré (10 caractères) : \" + code);\nconsole.log(\"Longueur : \" + code.length + \" caractères (mélange de majuscules et minuscules)\");"
   },
   {
     "id": "js-fn-nbmajus",
@@ -2801,15 +2801,15 @@ const DATA = {
     "tag": "function nbmajus()",
     "syntax": "function nbmajus() { ... }",
     "summary": "Compte le nombre de lettres majuscules présentes dans le Captcha (#cap) et compare avec la valeur saisie par l'utilisateur (#nbmaj). En cas d'erreur, colore le champ en rouge.",
-    "description": "Procédure d'évaluation d'un Captcha par comptage :\\n1. Récupère la chaîne du Captcha depuis document.getElementById('cap').value.\\n2. Parcourt la chaîne caractère par caractère avec une boucle for.\\n3. Si le caractère est compris entre 'A' et 'Z' (ch.charAt(i) >= 'A' && ch.charAt(i) <= 'Z'), incrémente le compteur nb.\\n4. Récupère la réponse de l'utilisateur val = document.getElementById('nbmaj').value.\\n5. Si nb != val, applique un style rouge : document.getElementById('nbmaj').style.backgroundColor = 'red'.",
+    "description": "Procédure d'évaluation d'un Captcha par comptage :\\n1. Récupère la chaîne du Captcha depuis document.getElementById('cap').value.\\n2. Parcourt la chaîne caractère par caractère avec une boucle for.\\n3. Si le caractère est compris entre 'A' et 'Z' (ch[i] >= 'A' && ch[i] <= 'Z'), incrémente le compteur nb.\\n4. Récupère la réponse de l'utilisateur val = document.getElementById('nbmaj').value.\\n5. Si nb != val, applique un style rouge : document.getElementById('nbmaj').style.backgroundColor = 'red'.",
     "howToUse": "Appeler au clic du bouton de vérification ou dans la fonction globale verif().",
     "values": [
-      "for (var i = 0; i < ch.length; i++)",
+      "for (let i = 0; i < ch.length; i++)",
       "if (ch[i] >= 'A' && ch[i] <= 'Z') nb = nb + 1",
       "document.getElementById('nbmaj').style.backgroundColor = 'red'"
     ],
-    "code": "function nbmajus() {\n  var ch = document.getElementById('cap').value;\n  var nb = 0;\n  for (var i = 0; i < ch.length; i++) {\n    if (ch.charAt(i) >= \"A\" && ch.charAt(i) <= \"Z\") {\n      nb = nb + 1;\n    }\n  }\n  var val = document.getElementById('nbmaj').value;\n  if (nb != val) {\n    document.getElementById('nbmaj').style.backgroundColor = 'red';\n  }\n}",
-    "runnableCode": "var testChaine = \"AbCDeFgHiJ\";\nvar nb = 0;\nfor (var i = 0; i < testChaine.length; i++) {\n  if (testChaine.charAt(i) >= \"A\" && testChaine.charAt(i) <= \"Z\") {\n    nb = nb + 1;\n  }\n}\nconsole.log(\"Chaîne analysée : \" + testChaine);\nconsole.log(\"Nombre de majuscules trouvées : \" + nb + \" sur \" + testChaine.length + \" caractères\");\nconsole.log(\"Test utilisateur saisissant 5 : \" + (nb == 5 ? \"✓ Correct !\" : \"❌ Incorrect -> fond rouge !\"));"
+    "code": "function nbmajus() {\n  let ch = document.getElementById('cap').value;\n  let nb = 0;\n  for (let i = 0; i < ch.length; i++) {\n    if (ch[i] >= \"A\" && ch[i] <= \"Z\") {\n      nb = nb + 1;\n    }\n  }\n  let val = document.getElementById('nbmaj').value;\n  if (nb != val) {\n    document.getElementById('nbmaj').style.backgroundColor = 'red';\n  }\n}",
+    "runnableCode": "const testChaine = \"AbCDeFgHiJ\";\nlet nb = 0;\nfor (let i = 0; i < testChaine.length; i++) {\n  if (testChaine[i] >= \"A\" && testChaine[i] <= \"Z\") {\n    nb = nb + 1;\n  }\n}\nconsole.log(\"Chaîne analysée : \" + testChaine);\nconsole.log(\"Nombre de majuscules trouvées : \" + nb + \" sur \" + testChaine.length + \" caractères\");\nconsole.log(\"Test utilisateur saisissant 5 : \" + (nb == 5 ? \"✓ Correct !\" : \"❌ Incorrect -> fond rouge !\"));"
   },
   {
     "id": "js-fn-actualiser",
@@ -2826,8 +2826,8 @@ const DATA = {
       "Math.trunc(Math.random() * 26)",
       "document.getElementById('cap').value = code"
     ],
-    "code": "function actualiser() {\n  var code = \"\";\n  for (var i = 1; i <= 10; i++) {\n    var n = Math.trunc(Math.random() * 26);\n    if (n % 2 == 0) {\n      code = code + String.fromCharCode(n + 65);\n    } else {\n      code = code + String.fromCharCode(n + 97);\n    }\n  }\n  document.getElementById('cap').value = code;\n}",
-    "runnableCode": "var code = \"\";\nfor (var i = 1; i <= 10; i++) {\n  var n = Math.trunc(Math.random() * 26);\n  if (n % 2 == 0) {\n    code = code + String.fromCharCode(n + 65);\n  } else {\n    code = code + String.fromCharCode(n + 97);\n  }\n}\nconsole.log(\"Ancien code : aB3kL9pQxZ\");\nconsole.log(\"Nouveau code actualisé : \" + code);\nconsole.log(\"✓ Champ #cap mis à jour avec succès !\");"
+    "code": "function actualiser() {\n  let code = \"\";\n  for (let i = 1; i <= 10; i++) {\n    let n = Math.trunc(Math.random() * 26);\n    if (n % 2 == 0) {\n      code = code + String.fromCharCode(n + 65);\n    } else {\n      code = code + String.fromCharCode(n + 97);\n    }\n  }\n  document.getElementById('cap').value = code;\n}",
+    "runnableCode": "let code = \"\";\nfor (let i = 1; i <= 10; i++) {\n  let n = Math.trunc(Math.random() * 26);\n  if (n % 2 == 0) {\n    code = code + String.fromCharCode(n + 65);\n  } else {\n    code = code + String.fromCharCode(n + 97);\n  }\n}\nconsole.log(\"Ancien code : aB3kL9pQxZ\");\nconsole.log(\"Nouveau code actualisé : \" + code);\nconsole.log(\"✓ Champ #cap mis à jour avec succès !\");"
   },
   {
     "id": "js-structure-switch-saisons",
@@ -2837,7 +2837,7 @@ const DATA = {
     "tag": "switch (mois)",
     "syntax": "switch (expression) { case c1: ... break; default: ... break; }",
     "summary": "Structure conditionnelle à choix multiples (switch) : détermine la saison de l'année à partir du numéro du mois (1 à 12) avec regroupement de cas multiples (case 12: case 1: case 2:), instruction break et clause default.",
-    "description": "Guide complet sur l'utilisation de switch au Baccalauréat STI :\\n\\n1. Saisie & Conversion :\\n   var mois = prompt('mois=');\\n   mois = Number(mois); // OBLIGATOIRE : switch compare avec === (valeur et type exacts).\\n\\n2. Regroupement de cas multiples (OU logique) :\\n   Quand plusieurs valeurs produisent le même traitement, on empile les étiquettes case sans instruction intermédiaire :\\n   - case 12: case 1: case 2: -> 'hiver'\\n   - case 3: case 4: case 5: -> 'printemps'\\n   - case 6: case 7: case 8: -> 'été'\\n   - case 9: case 10: case 11: -> 'Automne'\\n\\n3. Le rôle crucial de 'break;' :\\n   L'instruction 'break;' termine immédiatement le bloc switch. Sans break, JavaScript continuerait à exécuter aveuglément les blocs suivants (comportement fall-through), ce qui provoquerait des affichages erronés !\\n\\n4. La clause 'default:' :\\n   Sert de filet de sécurité lorsque la valeur saisie ne correspond à aucun des cas listés (par exemple si l'utilisateur saisit 13, 0 ou -5). Affiche 'Numéro erroné'.",
+    "description": "Guide complet sur l'utilisation de switch au Baccalauréat STI :\\n\\n1. Saisie & Conversion :\\n   let mois = prompt('mois=');\\n   mois = Number(mois); // OBLIGATOIRE : switch compare avec === (valeur et type exacts).\\n\\n2. Regroupement de cas multiples (OU logique) :\\n   Quand plusieurs valeurs produisent le même traitement, on empile les étiquettes case sans instruction intermédiaire :\\n   - case 12: case 1: case 2: -> 'hiver'\\n   - case 3: case 4: case 5: -> 'printemps'\\n   - case 6: case 7: case 8: -> 'été'\\n   - case 9: case 10: case 11: -> 'Automne'\\n\\n3. Le rôle crucial de 'break;' :\\n   L'instruction 'break;' termine immédiatement le bloc switch. Sans break, JavaScript continuerait à exécuter aveuglément les blocs suivants (comportement fall-through), ce qui provoquerait des affichages erronés !\\n\\n4. La clause 'default:' :\\n   Sert de filet de sécurité lorsque la valeur saisie ne correspond à aucun des cas listés (par exemple si l'utilisateur saisit 13, 0 ou -5). Affiche 'Numéro erroné'.",
     "howToUse": "Utiliser switch dès qu'une variable peut prendre plusieurs valeurs fixes et distinctes (numéros de mois, choix de menu, codes postaux régionaux). Structure plus claire et rapide qu'une longue série de if ... else if.",
     "values": [
       "switch (mois) { ... }",
@@ -2848,7 +2848,7 @@ const DATA = {
       "break; (interrompt le switch)",
       "default: alert('Numéro erroné'); break;"
     ],
-    "code": "<script>\n// déterminer la saison à partir du numéro du mois saisi\nvar mois = prompt(\"mois=\");\nmois = Number(mois);\nswitch (mois) {\n  case 12: case 1: case 2:\n    alert(\"hiver\");\n    break;\n  case 3: case 4: case 5:\n    alert(\"printemps\");\n    break;\n  case 6: case 7: case 8:\n    alert(\"été\");\n    break;\n  case 9: case 10: case 11:\n    alert(\"Automne\");\n    break;\n  default:\n    alert(\"Numéro erroné\");\n    break;\n}\n</script>",
+    "code": "<script>\n// déterminer la saison à partir du numéro du mois saisi\nlet mois = prompt(\"mois=\");\nmois = Number(mois);\nswitch (mois) {\n  case 12: case 1: case 2:\n    alert(\"hiver\");\n    break;\n  case 3: case 4: case 5:\n    alert(\"printemps\");\n    break;\n  case 6: case 7: case 8:\n    alert(\"été\");\n    break;\n  case 9: case 10: case 11:\n    alert(\"Automne\");\n    break;\n  default:\n    alert(\"Numéro erroné\");\n    break;\n}\n</script>",
     "runnableCode": "function getSaison(m) {\n  m = Number(m);\n  switch (m) {\n    case 12: case 1: case 2:\n      return \"❄️ hiver\";\n    case 3: case 4: case 5:\n      return \"🌸 printemps\";\n    case 6: case 7: case 8:\n      return \"☀️ été\";\n    case 9: case 10: case 11:\n      return \"🍂 Automne\";\n    default:\n      return \"❌ Numéro erroné\";\n  }\n}\n\nconsole.log(\"=== DÉMONSTRATION STRUCTURE SWITCH (BAC STI) ===\");\nconsole.log(\"Mois 1 (Janvier)   -> \" + getSaison(1));\nconsole.log(\"Mois 4 (Avril)     -> \" + getSaison(4));\nconsole.log(\"Mois 7 (Juillet)   -> \" + getSaison(7));\nconsole.log(\"Mois 10 (Octobre)  -> \" + getSaison(10));\nconsole.log(\"Mois 12 (Décembre) -> \" + getSaison(12));\nconsole.log(\"Mois 15 (Invalide) -> \" + getSaison(15));\nconsole.log(\"✓ Fonction switch testée sur tous les cas possibles !\");"
   },
   {
@@ -2867,8 +2867,8 @@ const DATA = {
       "if ((ch[i] < 'A' || ch[i] > 'Z') && ch[i] != ' ') return false;",
       "return true;"
     ],
-    "code": "function alpha(ch) {\n  ch = ch.toUpperCase();\n  for (var i = 0; i < ch.length; i++) {\n    if ((ch.charAt(i) < \"A\" || ch.charAt(i) > \"Z\") && ch.charAt(i) != \" \") {\n      return false;\n    }\n  }\n  return true;\n}",
-    "runnableCode": "function alpha(ch) {\n  ch = ch.toUpperCase();\n  for (var i = 0; i < ch.length; i++) {\n    if ((ch.charAt(i) < \"A\" || ch.charAt(i) > \"Z\") && ch.charAt(i) != \" \") {\n      return false;\n    }\n  }\n  return true;\n}\nconsole.log(\"alpha('Mohamed Ben Ali') : \" + alpha('Mohamed Ben Ali')); // true\nconsole.log(\"alpha('Ali123') : \" + alpha('Ali123')); // false\nconsole.log(\"alpha('Sarra!') : \" + alpha('Sarra!')); // false"
+    "code": "function alpha(ch) {\n  ch = ch.toUpperCase();\n  for (let i = 0; i < ch.length; i++) {\n    if ((ch[i] < \"A\" || ch[i] > \"Z\") && ch[i] != \" \") {\n      return false;\n    }\n  }\n  return true;\n}",
+    "runnableCode": "function alpha(ch) {\n  ch = ch.toUpperCase();\n  for (let i = 0; i < ch.length; i++) {\n    if ((ch[i] < \"A\" || ch[i] > \"Z\") && ch[i] != \" \") {\n      return false;\n    }\n  }\n  return true;\n}\nconsole.log(\"alpha('Mohamed Ben Ali') : \" + alpha('Mohamed Ben Ali')); // true\nconsole.log(\"alpha('Ali123') : \" + alpha('Ali123')); // false\nconsole.log(\"alpha('Sarra!') : \" + alpha('Sarra!')); // false"
   },
   {
     "id": "js-fn-isnum",
@@ -2885,8 +2885,8 @@ const DATA = {
       "if (ch[i] < '0' || ch[i] > '9') return false;",
       "return true;"
     ],
-    "code": "function isnum(ch) {\n  for (var i = 0; i < ch.length; i++) {\n    if (ch.charAt(i) < \"0\" || ch.charAt(i) > \"9\") {\n      return false;\n    }\n  }\n  return true;\n}",
-    "runnableCode": "function isnum(ch) {\n  for (var i = 0; i < ch.length; i++) {\n    if (ch.charAt(i) < \"0\" || ch.charAt(i) > \"9\") {\n      return false;\n    }\n  }\n  return true;\n}\nconsole.log(\"isnum('98123456') : \" + isnum('98123456')); // true\nconsole.log(\"isnum('9812A456') : \" + isnum('9812A456')); // false\nconsole.log(\"isnum('2024') : \" + isnum('2024')); // true"
+    "code": "function isnum(ch) {\n  for (let i = 0; i < ch.length; i++) {\n    if (ch[i] < \"0\" || ch[i] > \"9\") {\n      return false;\n    }\n  }\n  return true;\n}",
+    "runnableCode": "function isnum(ch) {\n  for (let i = 0; i < ch.length; i++) {\n    if (ch[i] < \"0\" || ch[i] > \"9\") {\n      return false;\n    }\n  }\n  return true;\n}\nconsole.log(\"isnum('98123456') : \" + isnum('98123456')); // true\nconsole.log(\"isnum('9812A456') : \" + isnum('9812A456')); // false\nconsole.log(\"isnum('2024') : \" + isnum('2024')); // true"
   },
   {
     "id": "js-fn-testtel",
@@ -2896,14 +2896,14 @@ const DATA = {
     "tag": "function testtel(ch)",
     "syntax": "function testtel(ch) { ... return true; }",
     "summary": "Vérifie si le premier chiffre d'un numéro de téléphone tunisien à 8 chiffres commence par un préfixe valide (2, 4, 5, 7 ou 9).",
-    "description": "Contrôle d'indicatif téléphonique officiel du Bac STI tunisien :\\n1. Récupère le premier chiffre : var prem = ch.charAt(0);\\n2. Vérifie s'il est égal à 2, 4, 5, 7 ou 9 (opérateurs de comparaison et OU logique ||).\\n3. Si oui, retourne true ; sinon retourne false.",
+    "description": "Contrôle d'indicatif téléphonique officiel du Bac STI tunisien :\\n1. Récupère le premier chiffre : let prem = ch.charAt(0); ou ch[0].\\n2. Vérifie s'il est égal à 2, 4, 5, 7 ou 9 (opérateurs de comparaison et OU logique ||).\\n3. Si oui, retourne true ; sinon retourne false.",
     "howToUse": "if (testtel(ntel) == false) { alert('Numéro de téléphone invalide (doit commencer par 2, 4, 5, 7 ou 9) !'); return false; }",
     "values": [
       "let prem = ch.charAt(0);",
       "prem == '2' || prem == '4' || prem == '5' || prem == '7' || prem == '9'"
     ],
-    "code": "function testtel(ch) {\n  var prem = ch.charAt(0);\n  return (prem == \"2\" || prem == \"4\" || prem == \"5\" || prem == \"7\" || prem == \"9\");\n}",
-    "runnableCode": "function testtel(ch) {\n  var prem = ch.charAt(0);\n  return (prem == \"2\" || prem == \"4\" || prem == \"5\" || prem == \"7\" || prem == \"9\");\n}\nconsole.log(\"testtel('98123456') : \" + testtel('98123456')); // true (commence par 9)\nconsole.log(\"testtel('52123456') : \" + testtel('52123456')); // true (commence par 5)\nconsole.log(\"testtel('18123456') : \" + testtel('18123456')); // false (1 invalide)"
+    "code": "function testtel(ch) {\n  let prem = ch.charAt(0);\n  return (prem == \"2\" || prem == \"4\" || prem == \"5\" || prem == \"7\" || prem == \"9\");\n}",
+    "runnableCode": "function testtel(ch) {\n  let prem = ch.charAt(0);\n  return (prem == \"2\" || prem == \"4\" || prem == \"5\" || prem == \"7\" || prem == \"9\");\n}\nconsole.log(\"testtel('98123456') : \" + testtel('98123456')); // true (commence par 9)\nconsole.log(\"testtel('52123456') : \" + testtel('52123456')); // true (commence par 5)\nconsole.log(\"testtel('18123456') : \" + testtel('18123456')); // false (1 invalide)"
   },
   {
     "id": "js-fn-testmail",
@@ -2913,15 +2913,15 @@ const DATA = {
     "tag": "function testmail(mail)",
     "syntax": "function testmail(mail) { ... return true; }",
     "summary": "Vérifie la conformité d'une adresse email : présence du caractère '@' non au début, et d'un point '.' placé après le '@' sans être le dernier caractère.",
-    "description": "Contrôle d'adresse e-mail standard au Bac STI :\\n1. Trouve la position de l'arobase : var pArobase = mail.indexOf('@');\\n2. Trouve la position du dernier point : var pPoint = mail.lastIndexOf('.');\\n3. Vérifie que pArobase > 0 (il y a du texte avant '@').\\n4. Vérifie que pPoint > pArobase + 1 (il y a du texte entre '@' et '.').\\n5. Vérifie que pPoint < mail.length - 1 (il y a une extension après le point).",
+    "description": "Contrôle d'adresse e-mail standard au Bac STI :\\n1. Trouve la position de l'arobase : let pArobase = mail.indexOf('@');\\n2. Trouve la position du dernier point : let pPoint = mail.lastIndexOf('.');\\n3. Vérifie que pArobase > 0 (il y a du texte avant '@').\\n4. Vérifie que pPoint > pArobase + 1 (il y a du texte entre '@' et '.').\\n5. Vérifie que pPoint < mail.length - 1 (il y a une extension après le point).",
     "howToUse": "if (testmail(mail) == false) { alert('Adresse email obligatoire ou invalide !'); return false; }",
     "values": [
       "let pArobase = mail.indexOf('@');",
       "let pPoint = mail.lastIndexOf('.');",
       "pArobase > 0 && pPoint > pArobase + 1 && pPoint < mail.length - 1"
     ],
-    "code": "function testmail(mail) {\n  var pArobase = mail.indexOf(\"@\");\n  var pPoint = mail.lastIndexOf(\".\");\n  return (pArobase > 0 && pPoint > pArobase + 1 && pPoint < mail.length - 1);\n}",
-    "runnableCode": "function testmail(mail) {\n  var pArobase = mail.indexOf(\"@\");\n  var pPoint = mail.lastIndexOf(\".\");\n  return (pArobase > 0 && pPoint > pArobase + 1 && pPoint < mail.length - 1);\n}\nconsole.log(\"testmail('eleve@domaine.tn') : \" + testmail('eleve@domaine.tn')); // true\nconsole.log(\"testmail('invalide.sans.arobase') : \" + testmail('invalide.sans.arobase')); // false\nconsole.log(\"testmail('@debut.com') : \" + testmail('@debut.com')); // false\nconsole.log(\"testmail('eleve@pointfinal.') : \" + testmail('eleve@pointfinal.')); // false"
+    "code": "function testmail(mail) {\n  let pArobase = mail.indexOf(\"@\");\n  let pPoint = mail.lastIndexOf(\".\");\n  return (pArobase > 0 && pPoint > pArobase + 1 && pPoint < mail.length - 1);\n}",
+    "runnableCode": "function testmail(mail) {\n  let pArobase = mail.indexOf(\"@\");\n  let pPoint = mail.lastIndexOf(\".\");\n  return (pArobase > 0 && pPoint > pArobase + 1 && pPoint < mail.length - 1);\n}\nconsole.log(\"testmail('eleve@domaine.tn') : \" + testmail('eleve@domaine.tn')); // true\nconsole.log(\"testmail('invalide.sans.arobase') : \" + testmail('invalide.sans.arobase')); // false\nconsole.log(\"testmail('@debut.com') : \" + testmail('@debut.com')); // false\nconsole.log(\"testmail('eleve@pointfinal.') : \" + testmail('eleve@pointfinal.')); // false"
   }
 ],
   "lessons": [],
@@ -4479,7 +4479,7 @@ const DATA = {
         "type": "entier"
       }
     ],
-    "pythonCode": "def bin2oct(ch: str) -> int:\n    while len(ch) % 3 != 0:\n        ch = \"0\" + ch\n    \n    res = \"\"\n    while ch != \"\":\n        b = ch[0:3]\n        ch = ch[3:]\n        val = int(b[0]) * 4 + int(b[1]) * 2 + int(b[2])\n        res += str(val)\n        \n    return int(res)",
+    "pythonCode": "def bin2oct(ch):\n    while len(ch) % 3 != 0:\n        ch = \"0\" + ch\n    \n    res = \"\"\n    while ch != \"\":\n        b = ch[0:3]\n        ch = ch[3:]\n        val = int(b[0]) * 4 + int(b[1]) * 2 + int(b[2])\n        res = res + str(val)\n        \n    return int(res)",
     "example": "bin2oct(\"1011011\") → 133"
   },
   {
@@ -4501,7 +4501,7 @@ const DATA = {
         "type": "chaîne"
       }
     ],
-    "pythonCode": "def a2d(ch: str, bs: int) -> int:\n    chh = \"0123456789ABCDEF\"\n    res = 0\n    p = 1\n    for i in range(len(ch) - 1, -1, -1):\n        pos = chh.index(ch[i].upper())\n        res += pos * p\n        p *= bs\n    return res",
+    "pythonCode": "def a2d(ch, bs):\n    chh = \"0123456789ABCDEF\"\n    res = 0\n    p = 1\n    for i in range(len(ch) - 1, -1, -1):\n        pos = chh.index(ch[i].upper())\n        res = res + pos * p\n        p = p * bs\n    return res",
     "example": "a2d(\"1A55F\", 16) → 107871"
   },
   {
@@ -4519,7 +4519,7 @@ const DATA = {
         "type": "chaîne"
       }
     ],
-    "pythonCode": "def a2dR(ch: str, bs: int, p: int = 1) -> int:\n    chh = \"0123456789ABCDEF\"\n    if len(ch) == 0:\n        return 0\n    else:\n        return chh.index(ch[0].upper()) * p + a2dR(ch[1:], bs, p * bs)",
+    "pythonCode": "def a2dR(ch, bs, p):\n    chh = \"0123456789ABCDEF\"\n    if len(ch) == 0:\n        return 0\n    else:\n        return chh.index(ch[0].upper()) * p + a2dR(ch[1:], bs, p * bs)",
     "example": "a2dR(\"1A55F\", 16, 1) → 107871"
   },
   {
@@ -4541,7 +4541,7 @@ const DATA = {
         "type": "entier"
       }
     ],
-    "pythonCode": "def bin2hexa(ch: str) -> str:\n    chh = \"0123456789ABCDEF\"\n    while len(ch) % 4 != 0:\n        ch = \"0\" + ch\n    res = \"\"\n    while ch != \"\":\n        b = ch[0:4]\n        ch = ch[4:]\n        val = int(b[0])*8 + int(b[1])*4 + int(b[2])*2 + int(b[3])\n        res += chh[val]\n    return res",
+    "pythonCode": "def bin2hexa(ch):\n    chh = \"0123456789ABCDEF\"\n    while len(ch) % 4 != 0:\n        ch = \"0\" + ch\n    res = \"\"\n    while ch != \"\":\n        b = ch[0:4]\n        ch = ch[4:]\n        val = int(b[0]) * 8 + int(b[1]) * 4 + int(b[2]) * 2 + int(b[3])\n        res = res + chh[val]\n    return res",
     "example": "bin2hexa(\"1011011\") → \"5B\""
   },
   {
@@ -4563,7 +4563,7 @@ const DATA = {
         "type": "entier"
       }
     ],
-    "pythonCode": "def octal2bin(ch: str) -> str:\n    res = \"\"\n    for char in ch:\n        c = int(char)\n        b = dec2any(c, 2)\n        while len(b) < 3:\n            b = \"0\" + b\n        res += b\n    return res",
+    "pythonCode": "def octal2bin(ch):\n    res = \"\"\n    for char in ch:\n        c = int(char)\n        b = dec2any(c, 2)\n        while len(b) < 3:\n            b = \"0\" + b\n        res = res + b\n    return res",
     "example": "octal2bin(\"75401\") → \"111101100000001\""
   },
   {
@@ -4581,7 +4581,7 @@ const DATA = {
         "type": "chaîne"
       }
     ],
-    "pythonCode": "def octal2hexa(ch: str) -> str:\n    b = octal2bin(ch)\n    h = bin2hexa(b)\n    return h",
+    "pythonCode": "def octal2hexa(ch):\n    b = octal2bin(ch)\n    h = bin2hexa(b)\n    return h",
     "example": "octal2hexa(\"75401\") → \"7B01\""
   },
   {
@@ -4599,7 +4599,7 @@ const DATA = {
         "type": "chaîne"
       }
     ],
-    "pythonCode": "def dec2any(n: int, bd: int) -> str:\n    chh = \"0123456789ABCDEF\"\n    if n == 0:\n        return \"0\"\n    res = \"\"\n    while n != 0:\n        res = chh[n % bd] + res\n        n = n // bd\n    return res",
+    "pythonCode": "def dec2any(n, bd):\n    chh = \"0123456789ABCDEF\"\n    if n == 0:\n        return \"0\"\n    res = \"\"\n    while n != 0:\n        res = chh[n % bd] + res\n        n = n // bd\n    return res",
     "example": "dec2any(2591, 16) → \"A1F\""
   },
   {
@@ -4617,7 +4617,7 @@ const DATA = {
         "type": "chaîne"
       }
     ],
-    "pythonCode": "def dec2anyR(n: int, bd: int) -> str:\n    chh = \"0123456789ABCDEF\"\n    if n == 0:\n        return \"\"\n    return dec2anyR(n // bd, bd) + chh[n % bd]",
+    "pythonCode": "def dec2anyR(n, bd):\n    chh = \"0123456789ABCDEF\"\n    if n == 0:\n        return \"\"\n    return dec2anyR(n // bd, bd) + chh[n % bd]",
     "example": "dec2anyR(46, 2) → \"101110\""
   },
   {
@@ -4639,7 +4639,7 @@ const DATA = {
         "type": "entier"
       }
     ],
-    "pythonCode": "def hex2bin(ch: str) -> str:\n    res = \"\"\n    chh = \"0123456789ABCDEF\"\n    for char in ch:\n        c = chh.index(char.upper())\n        b = dec2any(c, 2)\n        while len(b) < 4:\n            b = \"0\" + b\n        res += b\n    return res",
+    "pythonCode": "def hex2bin(ch):\n    res = \"\"\n    chh = \"0123456789ABCDEF\"\n    for char in ch:\n        c = chh.index(char.upper())\n        b = dec2any(c, 2)\n        while len(b) < 4:\n            b = \"0\" + b\n        res = res + b\n    return res",
     "example": "hex2bin(\"1F5A\") → \"0001111101011010\""
   },
   {
@@ -4657,7 +4657,7 @@ const DATA = {
         "type": "chaîne"
       }
     ],
-    "pythonCode": "def hex2octal(ch: str) -> str:\n    b = hex2bin(ch)\n    o = str(bin2oct(b))\n    return o",
+    "pythonCode": "def hex2octal(ch):\n    b = hex2bin(ch)\n    o = str(bin2oct(b))\n    return o",
     "example": "hex2octal(\"1F5A\") → \"17532\""
   },
   {
@@ -4679,7 +4679,7 @@ const DATA = {
         "type": "chaîne"
       }
     ],
-    "pythonCode": "def any2any(ch: str, bs: int, bd: int) -> str:\n    n = a2d(ch, bs)\n    res = dec2any(n, bd)\n    return res",
+    "pythonCode": "def any2any(ch, bs, bd):\n    n = a2d(ch, bs)\n    res = dec2any(n, bd)\n    return res",
     "example": "any2any(\"1FA2\", 16, 8) → \"17642\""
   },
   {
@@ -4701,7 +4701,7 @@ const DATA = {
         "type": "entier"
       }
     ],
-    "pythonCode": "def f(x: float) -> float:\n    return x * x  # Exemple de fonction à intégrer\n\ndef aire_milieu(nb: int, a: float, b: float) -> float:\n    h = abs(b - a) / nb\n    x = a + (h / 2)\n    s = 0.0\n    for i in range(nb):\n        s += f(x) * h\n        x += h\n    return round(s, 6)",
+    "pythonCode": "def f(x):\n    return x * x  # Exemple de fonction à intégrer\n\ndef aire_milieu(nb, a, b):\n    h = abs(b - a) / nb\n    x = a + (h / 2)\n    s = 0.0\n    for i in range(nb):\n        s = s + f(x) * h\n        x = x + h\n    return round(s, 6)",
     "example": "aire_milieu(100, 0, 1) avec f(x)=x^2 → 0.333325"
   },
   {
@@ -4723,7 +4723,7 @@ const DATA = {
         "type": "entier"
       }
     ],
-    "pythonCode": "def f(x: float) -> float:\n    return x * x\n\ndef aire_droite(nb: int, a: float, b: float) -> float:\n    h = abs(b - a) / nb\n    x = a + h\n    s = 0.0\n    for i in range(nb):\n        s += f(x) * h\n        x += h\n    return round(s, 6)",
+    "pythonCode": "def f(x):\n    return x * x\n\ndef aire_droite(nb, a, b):\n    h = abs(b - a) / nb\n    x = a + h\n    s = 0.0\n    for i in range(nb):\n        s = s + f(x) * h\n        x = x + h\n    return round(s, 6)",
     "example": "aire_droite(100, 0, 1) avec f(x)=x^2 → 0.338350"
   },
   {
@@ -4745,7 +4745,7 @@ const DATA = {
         "type": "entier"
       }
     ],
-    "pythonCode": "def f(x: float) -> float:\n    return x * x\n\ndef aire_gauche(nb: int, a: float, b: float) -> float:\n    h = abs(b - a) / nb\n    x = a\n    s = 0.0\n    for i in range(nb):\n        s += f(x) * h\n        x += h\n    return round(s, 6)",
+    "pythonCode": "def f(x):\n    return x * x\n\ndef aire_gauche(nb, a, b):\n    h = abs(b - a) / nb\n    x = a\n    s = 0.0\n    for i in range(nb):\n        s = s + f(x) * h\n        x = x + h\n    return round(s, 6)",
     "example": "aire_gauche(100, 0, 1) avec f(x)=x^2 → 0.328350"
   },
   {
@@ -4767,7 +4767,7 @@ const DATA = {
         "type": "entier"
       }
     ],
-    "pythonCode": "def f(x: float) -> float:\n    return x * x\n\ndef aire_trapezes(nb: int, a: float, b: float) -> float:\n    h = abs(b - a) / nb\n    x = a\n    s = 0.0\n    for i in range(nb):\n        s += ((f(x) + f(x + h)) * h) / 2\n        x += h\n    return round(s, 6)",
+    "pythonCode": "def f(x):\n    return x * x\n\ndef aire_trapezes(nb, a, b):\n    h = abs(b - a) / nb\n    x = a\n    s = 0.0\n    for i in range(nb):\n        s = s + ((f(x) + f(x + h)) * h) / 2\n        x = x + h\n    return round(s, 6)",
     "example": "aire_trapezes(100, 0, 1) avec f(x)=x^2 → 0.333350"
   },
   {
@@ -4789,7 +4789,7 @@ const DATA = {
         "type": "entier"
       }
     ],
-    "pythonCode": "def premier(n: int) -> bool:\n    if n <= 1:\n        return False\n    ok = True\n    for i in range(2, (n // 2) + 1):\n        if n % i == 0:\n            ok = False\n            break\n    return ok",
+    "pythonCode": "def premier(n):\n    if n <= 1:\n        return False\n    ok = True\n    for i in range(2, (n // 2) + 1):\n        if n % i == 0:\n            ok = False\n            break\n    return ok",
     "example": "premier(17) → True, premier(21) → False"
   },
   {
@@ -4807,7 +4807,7 @@ const DATA = {
         "type": "entier"
       }
     ],
-    "pythonCode": "def factorielle(N: int) -> int:\n    f = 1\n    for i in range(2, N + 1):\n        f *= i\n    return f",
+    "pythonCode": "def factorielle(N):\n    f = 1\n    for i in range(2, N + 1):\n        f = f * i\n    return f",
     "example": "factorielle(5) → 120"
   },
   {
@@ -4829,7 +4829,7 @@ const DATA = {
         "type": "entier"
       }
     ],
-    "pythonCode": "def puissance(x: int, n: int) -> float:\n    p = 1\n    for i in range(1, n + 1):\n        p *= x\n    return float(p)",
+    "pythonCode": "def puissance(x, n):\n    p = 1\n    for i in range(1, n + 1):\n        p = p * x\n    return float(p)",
     "example": "puissance(2, 5) → 32.0"
   },
   {
@@ -4851,7 +4851,7 @@ const DATA = {
         "type": "entier"
       }
     ],
-    "pythonCode": "def puissance_va(x: int, n: int) -> float:\n    p = 1.0\n    for i in range(1, abs(n) + 1):\n        p *= x\n    if n < 0:\n        p = 1.0 / p\n    return p",
+    "pythonCode": "def puissance_va(x, n):\n    p = 1.0\n    for i in range(1, abs(n) + 1):\n        p = p * x\n    if n < 0:\n        p = 1.0 / p\n    return p",
     "example": "puissance_va(2, -3) → 0.125"
   },
   {
@@ -4869,7 +4869,7 @@ const DATA = {
         "type": "entier"
       }
     ],
-    "pythonCode": "def pgcd_ppcm(a: int, b: int) -> tuple[int, int]:\n    k = 1\n    while (a * k) % b != 0:\n        k += 1\n    ppcm = a * k\n    pgcd = b // k\n    return (pgcd, ppcm)",
+    "pythonCode": "def pgcd_ppcm(a, b):\n    k = 1\n    while (a * k) % b != 0:\n        k = k + 1\n    ppcm = a * k\n    pgcd = (a * b) // ppcm\n    return pgcd, ppcm",
     "example": "pgcd_ppcm(12, 18) → (PGCD: 6, PPCM: 36)"
   },
   {
@@ -4891,18 +4891,18 @@ const DATA = {
         "type": "entier"
       }
     ],
-    "pythonCode": "def palindrome(ch: str) -> bool:\n    res = True\n    n = len(ch)\n    for i in range(n // 2):\n        if ch[i] != ch[n - 1 - i]:\n            res = False\n            break\n    return res",
+    "pythonCode": "def palindrome(ch):\n    i = 0\n    j = len(ch) - 1\n    ok = True\n    while i < j and ok:\n        if ch[i] != ch[j]:\n            ok = False\n        else:\n            i = i + 1\n            j = j - 1\n    return ok",
     "example": "palindrome(\"radar\") → True, palindrome(\"bac\") → False"
   },
   {
     "id": "algo-lirech",
     "category": "Traitement des Chaînes",
     "type": "procédure",
-    "name": "lirech(VAR ch)",
-    "syntax": "procédure lirech(VAR ch: chaîne)",
+    "name": "lirech(@ch)",
+    "syntax": "procédure lirech(@ch: chaîne)",
     "summary": "Saisie contrôlée d'une chaîne dont tous les caractères sont distincts (aucun doublon).",
     "description": "Boucle de répétition demandant la saisie de ch tant que la chaîne contient au moins un caractère en double (testé via pos(ch[i], ch) ≠ i).",
-    "pseudoCode": "0) procédure lirech(VAR ch: chaîne)\n1) répéter\n     ok <-- vrai\n     lire(ch)\n     pour i de 1 à long(ch) - 1 faire\n       si (pos(ch[i], ch) ≠ i) alors\n         ok <-- faux\n       fin_si\n     fin_pour\n   jusqu'à ok = vrai\n2) fin",
+    "pseudoCode": "0) procédure lirech(@ch: chaîne)\n1) répéter\n     ok <-- vrai\n     lire(ch)\n     pour i de 1 à long(ch) - 1 faire\n       si (pos(ch[i], ch) ≠ i) alors\n         ok <-- faux\n       fin_si\n     fin_pour\n   jusqu'à ok = vrai\n2) fin",
     "tdo": [
       {
         "objet": "ok",
@@ -4913,54 +4913,54 @@ const DATA = {
         "type": "entier"
       }
     ],
-    "pythonCode": "def lirech() -> str:\n    while True:\n        ch = input(\"Entrez une chaîne à caractères distincts : \")\n        ok = True\n        for i in range(1, len(ch)):\n            if ch.index(ch[i]) != i:\n                ok = False\n                break\n        if ok and len(ch) > 0:\n            return ch\n        print(\"Erreur : la chaîne contient des caractères répétés !\")",
+    "pythonCode": "def lirech():\n    while True:\n        ch = input(\"Donner une chaîne : \")\n        ok = True\n        for i in range(len(ch)):\n            if ch.count(ch[i]) > 1:\n                ok = False\n                break\n        if ok and len(ch) > 0:\n            return ch\n        print(\"Erreur : la chaîne contient des caractères répétés !\")",
     "example": "lirech() avec \"bac\" → valide, avec \"test\" (2 fois t) → rejeté"
   },
   {
     "id": "algo-remplir",
     "category": "Tableaux & Vecteurs",
     "type": "procédure",
-    "name": "remplir(VAR t, N)",
-    "syntax": "procédure remplir(VAR t: tab, N: entier)",
+    "name": "remplir(@t, N)",
+    "syntax": "procédure remplir(@t: tab, N: entier)",
     "summary": "Saisie séquentielle des N éléments d'un tableau.",
-    "description": "Parcourt les indices de 0 à N-1 et invite l'utilisateur à saisir chaque valeur t[i]. Passage de t par variable (mot-clé VAR) obligatoire.",
-    "pseudoCode": "0) procédure remplir(VAR t: tab, N: entier)\n1) pour i de 0 à N - 1 faire\n     écrire(\"Taper t[\", i, \"] : \")\n     lire(t[i])\n   fin_pour\n2) fin",
+    "description": "Parcourt les indices de 0 à N-1 et invite l'utilisateur à saisir chaque valeur t[i]. Passage de t par variable (@) obligatoire.",
+    "pseudoCode": "0) procédure remplir(@t: tab, N: entier)\n1) pour i de 0 à N - 1 faire\n     écrire(\"Taper t[\", i, \"] : \")\n     lire(t[i])\n   fin_pour\n2) fin",
     "tdo": [
       {
         "objet": "i",
         "type": "entier"
       }
     ],
-    "pythonCode": "def remplir(t: list, N: int) -> None:\n    for i in range(N):\n        val = int(input(f\"Taper t[{i}] : \"))\n        t.append(val)",
+    "pythonCode": "def remplir(t, N):\n    for i in range(N):\n        val = int(input(\"Taper t[\" + str(i) + \"] : \"))\n        t.append(val)",
     "example": "remplir(t, 4) → t = [12, 45, 7, 88]"
   },
   {
     "id": "algo-remplir-condition",
     "category": "Tableaux & Vecteurs",
     "type": "procédure",
-    "name": "remplir_condition(VAR t, N)",
-    "syntax": "procédure remplir_condition(VAR t: tab, N: entier)",
+    "name": "remplir_condition(@t, N)",
+    "syntax": "procédure remplir_condition(@t: tab, N: entier)",
     "summary": "Remplissage d'un tableau avec validation obligatoire de chaque élément saisi.",
     "description": "Intègre une boucle Répéter ... Jusqu'à à l'intérieur de la boucle Pour pour s'assurer que chaque élément satisfait une condition stricte (ex: strictement positif ou intervalle valide).",
-    "pseudoCode": "0) procédure remplir_condition(VAR t: tab, N: entier)\n1) pour i de 0 à N - 1 faire\n     répéter\n       écrire(\"Taper t[\", i, \"] (> 0) : \")\n       lire(t[i])\n     jusqu'à (t[i] > 0)\n   fin_pour\n2) fin",
+    "pseudoCode": "0) procédure remplir_condition(@t: tab, N: entier)\n1) pour i de 0 à N - 1 faire\n     répéter\n       écrire(\"Taper t[\", i, \"] (> 0) : \")\n       lire(t[i])\n     jusqu'à (t[i] > 0)\n   fin_pour\n2) fin",
     "tdo": [
       {
         "objet": "i",
         "type": "entier"
       }
     ],
-    "pythonCode": "def remplir_condition(t: list, N: int) -> None:\n    for i in range(N):\n        while True:\n            val = int(input(f\"Taper t[{i}] (> 0) : \"))\n            if val > 0:\n                t.append(val)\n                break\n            print(\"Erreur : la valeur doit être strictement positive !\")",
+    "pythonCode": "def remplir_condition(t, N):\n    for i in range(N):\n        while True:\n            val = int(input(\"Taper t[\" + str(i) + \"] (> 0) : \"))\n            if val > 0:\n                t.append(val)\n                break\n            print(\"Erreur : la valeur doit être strictement positive !\")",
     "example": "Force la saisie de nombres strictement positifs pour chaque case"
   },
   {
     "id": "algo-remplir-distinct",
     "category": "Tableaux & Vecteurs",
     "type": "procédure",
-    "name": "remplir_distinct(VAR t, n)",
-    "syntax": "procédure remplir_distinct(VAR t: tab, n: entier)",
+    "name": "remplir_distinct(@t, n)",
+    "syntax": "procédure remplir_distinct(@t: tab, n: entier)",
     "summary": "Remplissage d'un tableau à éléments tous uniques et distincts (sans doublon).",
     "description": "S'appuie sur une fonction auxiliaire existe(t, i) qui vérifie si la valeur saisie en t[i] figure déjà dans les cases précédentes 0 à i-1.",
-    "pseudoCode": "0) fonction existe(t: tab, n: entier): booléen\n1) ok <-- faux\n2) pour i de 0 à n - 1 faire\n     si t[i] = t[n] alors\n       ok <-- vrai\n     fin_si\n   fin_pour\n3) retourner ok\n4) fin\n\n0) procédure remplir_distinct(VAR t: tab, n: entier)\n1) pour i de 0 à n - 1 faire\n     répéter\n       écrire(\"t[\", i, \"] = \")\n       lire(t[i])\n     jusqu'à (existe(t, i) = faux)\n   fin_pour\n2) fin",
+    "pseudoCode": "0) fonction existe(t: tab, n: entier): booléen\n1) ok <-- faux\n2) pour i de 0 à n - 1 faire\n     si t[i] = t[n] alors\n       ok <-- vrai\n     fin_si\n   fin_pour\n3) retourner ok\n4) fin\n\n0) procédure remplir_distinct(@t: tab, n: entier)\n1) pour i de 0 à n - 1 faire\n     répéter\n       écrire(\"t[\", i, \"] = \")\n       lire(t[i])\n     jusqu'à (existe(t, i) = faux)\n   fin_pour\n2) fin",
     "tdo": [
       {
         "objet": "i",
@@ -4971,18 +4971,18 @@ const DATA = {
         "type": "fonction"
       }
     ],
-    "pythonCode": "def existe(t: list, n: int) -> bool:\n    for i in range(n):\n        if t[i] == t[n]:\n            return True\n    return False\n\ndef remplir_distinct(n: int) -> list:\n    t = []\n    for i in range(n):\n        while True:\n            val = int(input(f\"t[{i}] = \"))\n            if val not in t:\n                t.append(val)\n                break\n            print(\"Valeur déjà existante ! Entrez un nombre distinct.\")\n    return t",
+    "pythonCode": "def existe(t, n):\n    for i in range(n):\n        if t[i] == t[n]:\n            return True\n    return False\n\ndef remplir_distinct(n):\n    t = []\n    for i in range(n):\n        while True:\n            val = int(input(\"t[\" + str(i) + \"] = \"))\n            if val not in t:\n                t.append(val)\n                break\n            print(\"Valeur déjà existante ! Entrez un nombre distinct.\")\n    return t",
     "example": "Saisie t = [5, 12, 8, 99] (rejette tout doublon)"
   },
   {
     "id": "algo-tri-bulle",
     "category": "Algorithmes de Tri",
     "type": "procédure",
-    "name": "tri_bulle(VAR t, n)",
-    "syntax": "procédure tri_bulle(VAR t: tab, n: entier)",
+    "name": "tri_bulle(@t, n)",
+    "syntax": "procédure tri_bulle(@t: tab, n: entier)",
     "summary": "Tri à bulles optimisé avec indicateur booléen de permutation et borne décroissante.",
     "description": "Compare deux éléments consécutifs t[i] et t[i+1]. S'ils sont désordonnés, les permute et active le témoin p. Diminue n de 1 après chaque passage pour ne plus retester les éléments déjà triés.",
-    "pseudoCode": "0) procédure tri_bulle(VAR t: tab, n: entier)\n1) p <-- vrai\n2) tant que p faire\n     p <-- faux\n     pour i de 0 à n - 2 faire\n       si t[i] > t[i + 1] alors\n         aux <-- t[i]\n         t[i] <-- t[i + 1]\n         t[i + 1] <-- aux\n         p <-- vrai\n       fin_si\n     fin_pour\n     n <-- n - 1\n   fin_tant_que\n3) fin",
+    "pseudoCode": "0) procédure tri_bulle(@t: tab, n: entier)\n1) p <-- vrai\n2) tant que p faire\n     p <-- faux\n     pour i de 0 à n - 2 faire\n       si t[i] > t[i + 1] alors\n         aux <-- t[i]\n         t[i] <-- t[i + 1]\n         t[i + 1] <-- aux\n         p <-- vrai\n       fin_si\n     fin_pour\n     n <-- n - 1\n   fin_tant_que\n3) fin",
     "tdo": [
       {
         "objet": "p",
@@ -4993,43 +4993,43 @@ const DATA = {
         "type": "entier"
       }
     ],
-    "pythonCode": "def tri_bulle(t: list, n: int) -> None:\n    p = True\n    while p:\n        p = False\n        for i in range(n - 1):\n            if t[i] > t[i + 1]:\n                t[i], t[i + 1] = t[i + 1], t[i]\n                p = True\n        n -= 1",
+    "pythonCode": "def tri_bulle(t, n):\n    p = True\n    while p:\n        p = False\n        for i in range(n - 1):\n            if t[i] > t[i + 1]:\n                aux = t[i]\n                t[i] = t[i + 1]\n                t[i + 1] = aux\n                p = True\n        n = n - 1",
     "example": "tri_bulle([64, 34, 25, 12, 22], 5) → [12, 22, 24, 34, 64]"
   },
   {
     "id": "algo-tri-selection",
     "category": "Algorithmes de Tri",
     "type": "procédure",
-    "name": "tri_par_sélection(VAR T, N)",
-    "syntax": "procédure tri_par_sélection(VAR T: tab, N: entier)",
+    "name": "tri_par_sélection(@T, N)",
+    "syntax": "procédure tri_par_sélection(@T: tab, N: entier)",
     "summary": "Tri par sélection du minimum successif.",
     "description": "À chaque étape i, cherche la position du plus petit élément restant pos_min entre i et N-1. Si pos_min ≠ i, permute T[i] et T[pos_min].",
-    "pseudoCode": "0) procédure tri_par_sélection(VAR T: tab, N: entier)\n1) pour i de 0 à N - 2 faire\n     // Recherche de la position du minimum\n     pos_min <-- i\n     pour j de i + 1 à N - 1 faire\n       si T[j] < T[pos_min] alors\n         pos_min <-- j\n       fin_si\n     fin_pour\n     // Permutation avec la case actuelle\n     si i ≠ pos_min alors\n       kes <-- T[i]\n       T[i] <-- T[pos_min]\n       T[pos_min] <-- kes\n     fin_si\n   fin_pour\n2) fin",
+    "pseudoCode": "0) procédure tri_par_sélection(@T: tab, N: entier)\n1) pour i de 0 à N - 2 faire\n     // Recherche de la position du minimum\n     pos_min <-- i\n     pour j de i + 1 à N - 1 faire\n       si T[j] < T[pos_min] alors\n         pos_min <-- j\n       fin_si\n     fin_pour\n     // Permutation avec la case actuelle\n     si i ≠ pos_min alors\n       kes <-- T[i]\n       T[i] <-- T[pos_min]\n       T[pos_min] <-- kes\n     fin_si\n   fin_pour\n2) fin",
     "tdo": [
       {
         "objet": "i, j, pos_min, kes",
         "type": "entier"
       }
     ],
-    "pythonCode": "def tri_par_selection(T: list, N: int) -> None:\n    for i in range(N - 1):\n        pos_min = i\n        for j in range(i + 1, N):\n            if T[j] < T[pos_min]:\n                pos_min = j\n        if i != pos_min:\n            T[i], T[pos_min] = T[pos_min], T[i]",
+    "pythonCode": "def tri_par_selection(T, N):\n    for i in range(N - 1):\n        pos_min = i\n        for j in range(i + 1, N):\n            if T[j] < T[pos_min]:\n                pos_min = j\n        if i != pos_min:\n            aux = T[i]\n            T[i] = T[pos_min]\n            T[pos_min] = aux",
     "example": "tri_par_selection([29, 10, 14, 37, 13], 5) → [10, 13, 14, 29, 37]"
   },
   {
     "id": "algo-tri-insertion",
     "category": "Algorithmes de Tri",
     "type": "procédure",
-    "name": "tri_par_insertion(VAR T, N)",
-    "syntax": "procédure tri_par_insertion(VAR T: tab, N: entier)",
+    "name": "tri_par_insertion(@T, N)",
+    "syntax": "procédure tri_par_insertion(@T: tab, N: entier)",
     "summary": "Tri par insertion progressive avec décalage vers la droite.",
     "description": "Pour chaque élément T[i], sauvegarde sa valeur dans backup, décale vers la droite tous les éléments plus grands que backup, puis insère backup à sa position libre.",
-    "pseudoCode": "0) procédure tri_par_insertion(VAR T: tab, N: entier)\n1) pour i de 1 à N - 1 faire\n     // Sauvegarder la valeur à insérer\n     backup <-- T[i]\n     inLibre <-- i\n     // Décalage à droite et recherche de position\n     tant que ((inLibre > 0) et (T[inLibre - 1] > backup)) faire\n       T[inLibre] <-- T[inLibre - 1]\n       inLibre <-- inLibre - 1\n     fin_tant_que\n     // Insertion de backup\n     T[inLibre] <-- backup\n   fin_pour\n2) fin",
+    "pseudoCode": "0) procédure tri_par_insertion(@T: tab, N: entier)\n1) pour i de 1 à N - 1 faire\n     // Sauvegarder la valeur à insérer\n     backup <-- T[i]\n     inLibre <-- i\n     // Décalage à droite et recherche de position\n     tant que ((inLibre > 0) et (T[inLibre - 1] > backup)) faire\n       T[inLibre] <-- T[inLibre - 1]\n       inLibre <-- inLibre - 1\n     fin_tant_que\n     // Insertion de backup\n     T[inLibre] <-- backup\n   fin_pour\n2) fin",
     "tdo": [
       {
         "objet": "i, inLibre, backup",
         "type": "entier"
       }
     ],
-    "pythonCode": "def tri_par_insertion(T: list, N: int) -> None:\n    for i in range(1, N):\n        backup = T[i]\n        inLibre = i\n        while inLibre > 0 and T[inLibre - 1] > backup:\n            T[inLibre] = T[inLibre - 1]\n            inLibre -= 1\n        T[inLibre] = backup",
+    "pythonCode": "def tri_par_insertion(T, N):\n    for i in range(1, N):\n        backup = T[i]\n        inLibre = i\n        while inLibre > 0 and T[inLibre - 1] > backup:\n            T[inLibre] = T[inLibre - 1]\n            inLibre = inLibre - 1\n        T[inLibre] = backup",
     "example": "tri_par_insertion([12, 11, 13, 5, 6], 5) → [5, 6, 11, 12, 13]"
   },
   {
@@ -5047,18 +5047,18 @@ const DATA = {
         "type": "entier"
       }
     ],
-    "pythonCode": "def recherche_dichotomique(t: list, n: int, x: int) -> int:\n    g = 0\n    d = n - 1\n    pos = -1\n    while g <= d and pos == -1:\n        m = (g + d) // 2\n        if t[m] == x:\n            pos = m\n        elif t[m] < x:\n            g = m + 1\n        else:\n            d = m - 1\n    return pos",
+    "pythonCode": "def recherche_dichotomique(t, n, x):\n    g = 0\n    d = n - 1\n    pos = -1\n    while g <= d and pos == -1:\n        m = (g + d) // 2\n        if t[m] == x:\n            pos = m\n        elif t[m] < x:\n            g = m + 1\n        else:\n            d = m - 1\n    return pos",
     "example": "recherche_dichotomique([10, 20, 30, 40, 50], 5, 30) → 2"
   },
   {
     "id": "algo-tri-mat-colonne",
     "category": "Matrices & Patterns",
     "type": "procédure",
-    "name": "tri_mat_colonne(VAR m, n)",
-    "syntax": "procédure tri_mat_colonne(VAR m: mat, n: entier)",
+    "name": "tri_mat_colonne(@m, n)",
+    "syntax": "procédure tri_mat_colonne(@m: mat, n: entier)",
     "summary": "Trie chaque colonne d'une matrice carrée de façon indépendante.",
     "description": "Fixe l'indice de colonne j de 0 à n-1, puis applique un tri à bulles sur les éléments de la colonne m[i, j] pour i allant de 0 à n-2.",
-    "pseudoCode": "0) procédure tri_mat_colonne(VAR m: mat, n: entier)\n1) pour j de 0 à n - 1 faire\n     p <-- vrai\n     tant que p faire\n       p <-- faux\n       pour i de 0 à n - 2 faire\n         si m[i, j] > m[i + 1, j] alors\n           aux <-- m[i, j]\n           m[i, j] <-- m[i + 1, j]\n           m[i + 1, j] <-- aux\n           p <-- vrai\n         fin_si\n       fin_pour\n       n <-- n - 1\n     fin_tant_que\n   fin_pour\n2) fin",
+    "pseudoCode": "0) procédure tri_mat_colonne(@m: mat, n: entier)\n1) pour j de 0 à n - 1 faire\n     p <-- vrai\n     tant que p faire\n       p <-- faux\n       pour i de 0 à n - 2 faire\n         si m[i, j] > m[i + 1, j] alors\n           aux <-- m[i, j]\n           m[i, j] <-- m[i + 1, j]\n           m[i + 1, j] <-- aux\n           p <-- vrai\n         fin_si\n       fin_pour\n       n <-- n - 1\n     fin_tant_que\n   fin_pour\n2) fin",
     "tdo": [
       {
         "objet": "i, j, aux",
@@ -5069,18 +5069,18 @@ const DATA = {
         "type": "booléen"
       }
     ],
-    "pythonCode": "def tri_mat_colonne(m: list[list[int]], n: int) -> None:\n    for j in range(n):\n        p = True\n        taille = n\n        while p:\n            p = False\n            for i in range(taille - 1):\n                if m[i][j] > m[i + 1][j]:\n                    m[i][j], m[i + 1][j] = m[i + 1][j], m[i][j]\n                    p = True\n            taille -= 1",
+    "pythonCode": "def tri_mat_colonne(m, n):\n    for j in range(n):\n        p = True\n        taille = n\n        while p:\n            p = False\n            for i in range(taille - 1):\n                if m[i][j] > m[i + 1][j]:\n                    aux = m[i][j]\n                    m[i][j] = m[i + 1][j]\n                    m[i + 1][j] = aux\n                    p = True\n            taille = taille - 1",
     "example": "Chaque colonne de la matrice devient triée par ordre croissant"
   },
   {
     "id": "algo-tri-mat-ligne",
     "category": "Matrices & Patterns",
     "type": "procédure",
-    "name": "tri_mat_ligne(VAR m, n)",
-    "syntax": "procédure tri_mat_ligne(VAR m: mat, n: entier)",
+    "name": "tri_mat_ligne(@m, n)",
+    "syntax": "procédure tri_mat_ligne(@m: mat, n: entier)",
     "summary": "Trie chaque ligne d'une matrice carrée de façon indépendante.",
     "description": "Fixe l'indice de ligne i de 0 à n-1, puis applique un tri sur les éléments de la ligne m[i, j] pour j variant de 0 à n-2.",
-    "pseudoCode": "0) procédure tri_mat_ligne(VAR m: mat, n: entier)\n1) pour i de 0 à n - 1 faire\n     p <-- vrai\n     tant que p faire\n       p <-- faux\n       pour j de 0 à n - 2 faire\n         si m[i, j] > m[i, j + 1] alors\n           aux <-- m[i, j]\n           m[i, j] <-- m[i, j + 1]\n           m[i, j + 1] <-- aux\n           p <-- vrai\n         fin_si\n       fin_pour\n       n <-- n - 1\n     fin_tant_que\n   fin_pour\n2) fin",
+    "pseudoCode": "0) procédure tri_mat_ligne(@m: mat, n: entier)\n1) pour i de 0 à n - 1 faire\n     p <-- vrai\n     tant que p faire\n       p <-- faux\n       pour j de 0 à n - 2 faire\n         si m[i, j] > m[i, j + 1] alors\n           aux <-- m[i, j]\n           m[i, j] <-- m[i, j + 1]\n           m[i, j + 1] <-- aux\n           p <-- vrai\n         fin_si\n       fin_pour\n       n <-- n - 1\n     fin_tant_que\n   fin_pour\n2) fin",
     "tdo": [
       {
         "objet": "i, j, aux",
@@ -5091,7 +5091,7 @@ const DATA = {
         "type": "booléen"
       }
     ],
-    "pythonCode": "def tri_mat_ligne(m: list[list[int]], n: int) -> None:\n    for i in range(n):\n        p = True\n        taille = n\n        while p:\n            p = False\n            for j in range(taille - 1):\n                if m[i][j] > m[i][j + 1]:\n                    m[i][j], m[i][j + 1] = m[i][j + 1], m[i][j]\n                    p = True\n            taille -= 1",
+    "pythonCode": "def tri_mat_ligne(m, n):\n    for i in range(n):\n        p = True\n        taille = n\n        while p:\n            p = False\n            for j in range(taille - 1):\n                if m[i][j] > m[i][j + 1]:\n                    aux = m[i][j]\n                    m[i][j] = m[i][j + 1]\n                    m[i][j + 1] = aux\n                    p = True\n            taille = taille - 1",
     "example": "Chaque ligne de la matrice devient triée par ordre croissant"
   },
   {
@@ -5109,7 +5109,7 @@ const DATA = {
         "type": "entier"
       }
     ],
-    "pythonCode": "def mat_parcours_bas_haut(m: list[list], L: int, C: int) -> None:\n    for j in range(C - 1, -1, -1):\n        for i in range(L - 1, -1, -1):\n            print(f\"Case [{i}, {j}] = {m[i][j]}\")",
+    "pythonCode": "def mat_parcours_bas_haut(m, L, C):\n    for j in range(C - 1, -1, -1):\n        for i in range(L - 1, -1, -1):\n            print(\"Case [\" + str(i) + \", \" + str(j) + \"] = \" + str(m[i][j]))",
     "example": "Explore m[L-1, C-1], m[L-2, C-1], ..., m[0, 0]"
   },
   {
@@ -5127,7 +5127,7 @@ const DATA = {
         "type": "entier"
       }
     ],
-    "pythonCode": "def mat_parcours_ligne_inverse(m: list[list], L: int, C: int) -> None:\n    for i in range(L - 1, -1, -1):\n        for j in range(C - 1, -1, -1):\n            print(f\"Case [{i}, {j}] = {m[i][j]}\")",
+    "pythonCode": "def mat_parcours_ligne_inverse(m, L, C):\n    for i in range(L - 1, -1, -1):\n        for j in range(C - 1, -1, -1):\n            print(\"Case [\" + str(i) + \", \" + str(j) + \"] = \" + str(m[i][j]))",
     "example": "Lecture inversée ligne par ligne complète"
   },
   {
@@ -5145,7 +5145,7 @@ const DATA = {
         "type": "entier"
       }
     ],
-    "pythonCode": "def mat_pattern_sablier(m: list[list], L: int, C: int) -> None:\n    d = 0\n    f = C - 1\n    for i in range(L):\n        if d <= f:\n            for j in range(d, f + 1):\n                print(f\"[{i},{j}] = {m[i][j]}\", end=\" \")\n            print()\n            d += 1\n            f -= 1",
+    "pythonCode": "def mat_pattern_sablier(m, L, C):\n    d = 0\n    f = C - 1\n    for i in range(L):\n        if d <= f:\n            for j in range(d, f + 1):\n                print(\"[\" + str(i) + \",\" + str(j) + \"] = \" + str(m[i][j]), end=\" \")\n            print()\n            d = d + 1\n            f = f - 1",
     "example": "Parcours des étoiles * formant un entonnoir dans la matrice"
   },
   {
@@ -5163,7 +5163,7 @@ const DATA = {
         "type": "entier"
       }
     ],
-    "pythonCode": "def mat_pattern_diagonales(m: list[list], L: int) -> None:\n    # Partie 1 : Moitié supérieure\n    for d in range(L):\n        j = 0\n        for i in range(d, -1, -1):\n            print(f\"[{i},{j}] = {m[i][j]}\", end=\" \")\n            j += 1\n        print()\n    \n    # Partie 2 : Moitié inférieure\n    for d in range(1, L):\n        j = d\n        for i in range(L - 1, d - 1, -1):\n            print(f\"[{i},{j}] = {m[i][j]}\", end=\" \")\n            j += 1\n        print()",
+    "pythonCode": "def mat_pattern_diagonales(m, L):\n    # Partie 1 : Moitié supérieure\n    for d in range(L):\n        j = 0\n        for i in range(d, -1, -1):\n            print(\"[\" + str(i) + \",\" + str(j) + \"] = \" + str(m[i][j]), end=\" \")\n            j = j + 1\n        print()\n    \n    # Partie 2 : Moitié inférieure\n    for d in range(1, L):\n        j = d\n        for i in range(L - 1, d - 1, -1):\n            print(\"[\" + str(i) + \",\" + str(j) + \"] = \" + str(m[i][j]), end=\" \")\n            j = j + 1\n        print()",
     "example": "Balaye toute la matrice par diagonales orientées vers le haut"
   }
 ]};
