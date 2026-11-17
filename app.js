@@ -7828,40 +7828,72 @@ function renderAlgoPratiqueCards() {
 // -------------------------------------------------------------
 // 6. Rendu & Filtres de la Section Théorique (Algorithmique Bac)
 // -------------------------------------------------------------
+const ALGO_CHAPTER_METAS = {
+  "Chapitre 1 : Les fichiers binaires et fichier text": {
+    num: "1",
+    shortName: "Ch 1 : Fichiers Binaires & Texte",
+    icon: "📁",
+    color: "#f59e0b",
+    border: "#f59e0b",
+    desc: "Fichiers texte (recréer, ouvrir, lire_ligne, écrire_ligne), fichiers binaires (pickle dump, load, EOF) et manipulation de données."
+  },
+  "Chapitre 2 : Récurrence": {
+    num: "2",
+    shortName: "Ch 2 : Récurrence",
+    icon: "🔄",
+    color: "#c084fc",
+    border: "#a855f7",
+    desc: "Sous-programmes récursifs, condition d'arrêt (cas de base) et traitement récurrent."
+  },
+  "Chapitre 3 : Convertion Entre les Bases": {
+    num: "3",
+    shortName: "Ch 3 : Convertion Entre les Bases",
+    icon: "🔢",
+    color: "#38bdf8",
+    border: "#38bdf8",
+    desc: "Systèmes de numération (Bases 2, 8, 10, 16 et base quelconque) par divisions successives et puissances pondérées."
+  },
+  "Chapitre 4 : Arithmétique": {
+    num: "4",
+    shortName: "Ch 4 : Arithmétique",
+    icon: "🧮",
+    color: "#34d399",
+    border: "#10b981",
+    desc: "Algorithmes arithmétiques : tests de primalité, factorielle, puissances entières et PGCD / PPCM (Euclide)."
+  },
+  "Chapitre 5 : Approximation and optimisation": {
+    num: "5",
+    shortName: "Ch 5 : Approximation & Optimisation",
+    icon: "📈",
+    color: "#f87171",
+    border: "#ef4444",
+    desc: "Méthodes numériques d'approximation d'aires (milieu, rectangles, trapèzes), recherche dichotomique et optimisation de matrices."
+  }
+};
+
+const OFFICIAL_ALGO_CHAPTERS = [
+  "Chapitre 1 : Les fichiers binaires et fichier text",
+  "Chapitre 2 : Récurrence",
+  "Chapitre 3 : Convertion Entre les Bases",
+  "Chapitre 4 : Arithmétique",
+  "Chapitre 5 : Approximation and optimisation"
+];
+
 function renderAlgoTheoriqueCategories() {
   const bar = document.getElementById('algoTheoriqueCategories');
   if (!bar) return;
 
   const items = (typeof DATA !== 'undefined' && DATA && DATA.algo_theorique) ? DATA.algo_theorique : [];
-  
-  const desiredOrder = [
-    "1) Les fichiers binaires et fichier text",
-    "2) Récurrence",
-    "3) Convertion Entre les Bases",
-    "4) Arithmétique",
-    "5) Approximation and optimisation",
-    "Bases & Révision (Structures, Tris & Matrices)"
-  ];
-  
-  const existingCats = [...new Set(items.map(x => x.category))];
-  const sortedCats = desiredOrder.filter(c => existingCats.includes(c));
-  existingCats.forEach(c => {
-    if (!sortedCats.includes(c)) sortedCats.push(c);
-  });
-
-  const categories = ['all', ...sortedCats];
+  const categories = ['all', ...OFFICIAL_ALGO_CHAPTERS];
 
   bar.innerHTML = categories.map(cat => {
     const isAct = cat === currentAlgoTheoriqueCategory;
     const count = cat === 'all' ? items.length : items.filter(x => x.category === cat).length;
-    let label = cat;
-    if (cat === 'all') label = '✨ Tout afficher';
-    else if (cat.startsWith('1)')) label = '📁 Ch 1 : Fichiers Binaires & Texte';
-    else if (cat.startsWith('2)')) label = '🔄 Ch 2 : Récurrence';
-    else if (cat.startsWith('3)')) label = '🔢 Ch 3 : Convertion Entre les Bases';
-    else if (cat.startsWith('4)')) label = '🧮 Ch 4 : Arithmétique';
-    else if (cat.startsWith('5)')) label = '📈 Ch 5 : Approximation & Optimisation';
-    else if (cat.startsWith('Bases')) label = '📚 Bases & Révision';
+    let label = '✨ Tout afficher';
+    if (cat !== 'all') {
+      const meta = ALGO_CHAPTER_METAS[cat];
+      label = meta ? `${meta.icon} ${meta.shortName}` : cat;
+    }
 
     const safeCat = cat.replace(/'/g, "\\'");
     return `<button type="button" class="cat-pill ${isAct ? 'active' : ''}" onclick="setAlgoTheoriqueCategory('${safeCat}')">
@@ -7888,20 +7920,21 @@ function renderAlgoTheoriqueCards() {
   container.innerHTML = '';
 
   const items = (typeof DATA !== 'undefined' && DATA && DATA.algo_theorique) ? DATA.algo_theorique : [];
+  const q = currentAlgoTheoriqueSearch.toLowerCase();
 
-  const filtered = items.filter(item => {
+  const filteredAll = items.filter(item => {
     const matchCat = (currentAlgoTheoriqueCategory === 'all' || item.category === currentAlgoTheoriqueCategory);
-    const q = currentAlgoTheoriqueSearch.toLowerCase();
     const matchSearch = (!q || 
       item.name.toLowerCase().includes(q) ||
       (item.summary && item.summary.toLowerCase().includes(q)) ||
       (item.description && item.description.toLowerCase().includes(q)) ||
-      (item.pseudoCode && item.pseudoCode.toLowerCase().includes(q))
+      (item.pseudoCode && item.pseudoCode.toLowerCase().includes(q)) ||
+      (item.pythonCode && item.pythonCode.toLowerCase().includes(q))
     );
     return matchCat && matchSearch;
   });
 
-  if (filtered.length === 0) {
+  if (filteredAll.length === 0) {
     container.innerHTML = `
       <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); background: var(--bg-card); border-radius: var(--radius-md);">
         🔍 Aucun sous-programme ou algorithme ne correspond à votre recherche.
@@ -7910,33 +7943,78 @@ function renderAlgoTheoriqueCards() {
     return;
   }
 
-  filtered.forEach(item => {
-    const isStructure = item.type === 'structure';
-    const isProcedure = item.name.toLowerCase().startsWith('procédure') || item.type === 'procedure' || item.type === 'procédure';
-    const typeLabel = isStructure ? 'Structure' : (isProcedure ? 'Procédure' : 'Fonction');
-    const typeBadgeColor = isStructure ? '#c084fc' : (isProcedure ? '#38bdf8' : '#f59e0b');
-    const typeBadgeBg = isStructure ? 'rgba(192, 132, 252, 0.15)' : (isProcedure ? 'rgba(56, 189, 248, 0.15)' : 'rgba(245, 158, 11, 0.15)');
-    const typeBadgeBorder = isStructure ? 'rgba(192, 132, 252, 0.35)' : (isProcedure ? 'rgba(56, 189, 248, 0.35)' : 'rgba(245, 158, 11, 0.35)');
+  const chaptersToShow = (currentAlgoTheoriqueCategory === 'all')
+    ? OFFICIAL_ALGO_CHAPTERS
+    : [currentAlgoTheoriqueCategory];
 
-    const card = document.createElement('div');
-    card.className = 'item-card card-theorique';
-    card.style.cursor = 'pointer';
-    card.innerHTML = `
-      <div class="card-cat-badge" style="color: #f59e0b;">${escapeHtml(item.category)}</div>
-      <div class="item-card-title">
-        <span>${escapeHtml(item.name)}</span>
-        <span class="item-card-tag" style="color: ${typeBadgeColor}; background: ${typeBadgeBg}; border-color: ${typeBadgeBorder}; font-size: 0.8rem; font-weight: 700;">
-          ${typeLabel}
+  chaptersToShow.forEach(catName => {
+    const chapterItems = filteredAll.filter(x => x.category === catName);
+    if (chapterItems.length === 0) return;
+
+    const meta = ALGO_CHAPTER_METAS[catName] || {
+      icon: "📖",
+      shortName: catName,
+      color: "#fbbf24",
+      border: "#f59e0b",
+      desc: catName
+    };
+
+    const chapterSection = document.createElement('div');
+    chapterSection.className = 'algo-chapter-section-wrap';
+    chapterSection.style.gridColumn = '1 / -1';
+    chapterSection.style.marginBottom = '32px';
+
+    chapterSection.innerHTML = `
+      <div class="algo-chapter-banner" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; padding: 14px 18px; background: rgba(15, 23, 42, 0.75); border: 1px solid var(--border-color); border-left: 4px solid ${meta.border}; border-radius: var(--radius-md);">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="font-size: 1.4rem; background: rgba(255,255,255,0.06); width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+            ${meta.icon}
+          </div>
+          <div>
+            <h3 style="margin: 0; font-size: 1.15rem; color: ${meta.color}; font-weight: 800;">${escapeHtml(catName)}</h3>
+            <span style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4;">${escapeHtml(meta.desc)}</span>
+          </div>
+        </div>
+        <span style="background: rgba(255,255,255,0.08); color: ${meta.color}; border: 1px solid ${meta.border}55; font-size: 0.8rem; font-weight: 800; padding: 4px 12px; border-radius: 20px; white-space: nowrap;">
+          ${chapterItems.length} ${chapterItems.length > 1 ? 'fonctions & algorithmes' : 'fonction'}
         </span>
       </div>
-      <p class="item-card-desc">${escapeHtml(item.description || item.summary)}</p>
-      <div class="card-action-bar">
-        <span style="color: #f59e0b;">⚡ Voir l'Algorithme, TDO & Python</span>
-        <span>→</span>
+      <div class="items-grid" style="grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;">
       </div>
     `;
-    card.addEventListener('click', () => openAlgoTheoriqueModal(item));
-    container.appendChild(card);
+
+    const grid = chapterSection.querySelector('.items-grid');
+
+    chapterItems.forEach(item => {
+      const isStructure = item.type === 'structure';
+      const isProcedure = item.name.toLowerCase().startsWith('procédure') || item.type === 'procedure' || item.type === 'procédure';
+      const typeLabel = isStructure ? 'Structure' : (isProcedure ? 'Procédure' : 'Fonction');
+      const typeBadgeColor = isStructure ? '#c084fc' : (isProcedure ? '#38bdf8' : '#f59e0b');
+      const typeBadgeBg = isStructure ? 'rgba(192, 132, 252, 0.15)' : (isProcedure ? 'rgba(56, 189, 248, 0.15)' : 'rgba(245, 158, 11, 0.15)');
+      const typeBadgeBorder = isStructure ? 'rgba(192, 132, 252, 0.35)' : (isProcedure ? 'rgba(56, 189, 248, 0.35)' : 'rgba(245, 158, 11, 0.35)');
+
+      const card = document.createElement('div');
+      card.className = 'item-card card-theorique';
+      card.style.cursor = 'pointer';
+      card.innerHTML = `
+        <div class="card-cat-badge" style="color: ${meta.color};">${escapeHtml(meta.shortName)}</div>
+        <div class="item-card-title">
+          <span>${escapeHtml(item.name)}</span>
+          <span class="item-card-tag" style="color: ${typeBadgeColor}; background: ${typeBadgeBg}; border-color: ${typeBadgeBorder}; font-size: 0.8rem; font-weight: 700;">
+            ${typeLabel}
+          </span>
+        </div>
+        <p class="item-card-desc">${escapeHtml(item.description || item.summary)}</p>
+        <div class="card-action-bar">
+          <span style="color: ${meta.color}; font-weight: 700; font-size: 0.86rem;">⚡ Voir l'Algorithme, TDO & Python</span>
+          <span style="color: ${meta.color}; font-size: 1rem;">→</span>
+        </div>
+      `;
+      card.addEventListener('click', () => openAlgoTheoriqueModal(item));
+      grid.appendChild(card);
+    });
+
+    container.appendChild(chapterSection);
   });
 }
 
