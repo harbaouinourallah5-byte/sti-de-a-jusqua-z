@@ -43,6 +43,12 @@
   --radius-md: 14px;
   --radius-lg: 20px;
   --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Marges de sécurité pour smartphones encoche & rotation */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
 }
 
 [data-theme="light"] {
@@ -84,6 +90,10 @@ body {
   line-height: 1.5;
   overflow-x: hidden;
   transition: background-color 0.3s ease, color 0.3s ease;
+  padding-left: var(--safe-left);
+  padding-right: var(--safe-right);
+  -webkit-tap-highlight-color: rgba(56, 189, 248, 0.2);
+  touch-action: manipulation;
 }
 
 /* Container */
@@ -654,10 +664,12 @@ input, select, textarea {
   font-weight: 700;
 }
 
-/* Grille des Éléments (HTML ou CSS) */
-.items-grid {
+/* Grille des Éléments (HTML, CSS, JS, SQL, ALGO) */
+.items-grid,
+.algo-items-grid,
+.algo-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
 }
 
@@ -797,6 +809,13 @@ input, select, textarea {
   overflow-y: auto;
   position: relative;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.pdf-modal-content {
+  max-width: 960px;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-header {
@@ -1673,20 +1692,30 @@ input, select, textarea {
 
   /* Modale Responsive sur Téléphone */
   .modal-overlay {
-    padding: 6px;
+    padding: 0 0 env(safe-area-inset-bottom, 0px) 0;
     align-items: flex-end;
+    backdrop-filter: blur(8px);
   }
 
   .modal-content {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
-    max-height: 94vh !important;
-    border-radius: 16px 16px 8px 8px !important;
+    max-height: 92vh !important;
+    border-radius: 18px 18px 0 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
   }
 
   .modal-header {
-    padding: 12px 14px !important;
+    padding: 12px 16px !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 20 !important;
+    background: var(--bg-card) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    flex-shrink: 0 !important;
   }
 
   .modal-title-group h3 {
@@ -1699,14 +1728,72 @@ input, select, textarea {
   }
 
   .close-modal-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 1rem;
+    width: 36px;
+    height: 36px;
+    font-size: 1.25rem;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
   }
 
   .modal-body {
-    padding: 12px 10px !important;
+    padding: 12px 14px max(24px, env(safe-area-inset-bottom)) 14px !important;
+    flex: 1 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain;
+  }
+
+  .pdf-modal-content {
+    height: 94vh !important;
+    max-height: 94vh !important;
+    width: 100% !important;
+    border-radius: 16px 16px 0 0 !important;
+  }
+
+  /* Grilles sur Téléphone Portrait */
+  .items-grid,
+  .algo-items-grid,
+  .algo-cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .item-card {
+    padding: 16px 14px !important;
+  }
+
+  /* Cartes Chapitre Algorithme */
+  .algo-chapter-banner {
+    padding: 10px 12px !important;
+    gap: 8px !important;
+  }
+
+  .algo-chapter-banner h3 {
+    font-size: 1rem !important;
+  }
+
+  /* Code et TDO fluides sur mobile */
+  .annexe-code-pre {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    word-break: normal !important;
+    white-space: pre !important;
+    font-size: 0.82rem !important;
+    padding: 12px 14px !important;
+  }
+
+  .algo-tdo-table {
+    font-size: 0.82rem !important;
+    display: table !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+  }
+
+  .algo-tdo-table th, .algo-tdo-table td {
+    padding: 6px 10px !important;
   }
 
   .modal-section {
@@ -1990,7 +2077,7 @@ input, select, textarea {
   }
 
   .search-input {
-    font-size: 0.88rem;
+    font-size: 16px !important;
     padding: 9px 12px;
   }
 
@@ -3897,9 +3984,9 @@ input, select, textarea {
 
 @media (max-width: 900px) {
   .keyboard-switch-container {
-    order: 3;
+    order: 2;
     width: 100%;
-    margin: 8px 0;
+    margin: 6px 0;
   }
   .keyboard-switch-base {
     width: 100%;
@@ -5012,5 +5099,290 @@ input, select, textarea {
 @media (max-width: 768px) {
   .qt-thonny-lab-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ===================================================================
+   ROTATION DU TÉLÉPHONE : MODE PAYSAGE & RESPONSIVE COMPLET
+   Optimisé pour l'orientation horizontale sur iPhone, Android et tablettes
+   =================================================================== */
+@media (max-height: 560px), 
+       (orientation: landscape) and (max-height: 600px) and (max-width: 1024px) {
+
+  /* 1. En-tête Compact Monoligne (Économise l'espace vertical précieux) */
+  .site-header {
+    padding: 3px 0 !important;
+  }
+
+  .nav-inner {
+    height: 48px !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    padding: 0 max(12px, env(safe-area-inset-right)) 0 max(12px, env(safe-area-inset-left)) !important;
+  }
+
+  .brand-logo {
+    font-size: 0.95rem !important;
+    gap: 6px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .brand-icon {
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 0.82rem !important;
+  }
+
+  .brand-badge {
+    display: none !important;
+  }
+
+  /* Switcher Clavier Compact en ligne */
+  .keyboard-switch-container {
+    order: 2 !important;
+    width: auto !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+  }
+
+  .keyboard-switch-base {
+    width: auto !important;
+    padding: 2px 6px !important;
+    gap: 4px !important;
+    border-radius: 8px !important;
+  }
+
+  .keycap-btn {
+    padding: 3px 8px !important;
+    gap: 5px !important;
+    border-radius: 6px !important;
+  }
+
+  .keycap-sub {
+    display: none !important;
+  }
+
+  .keycap-text {
+    font-size: 0.78rem !important;
+  }
+
+  .keycap-led {
+    width: 7px !important;
+    height: 7px !important;
+  }
+
+  /* Onglets de Navigation en défilement horizontal compact */
+  .nav-actions {
+    order: 3 !important;
+    width: auto !important;
+    max-width: 52% !important;
+    padding-bottom: 0 !important;
+    gap: 6px !important;
+    flex-shrink: 1 !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .nav-btn {
+    padding: 4px 10px !important;
+    font-size: 0.76rem !important;
+    border-radius: 14px !important;
+    white-space: nowrap !important;
+  }
+
+  /* 2. Hero Section Compacte en Paysage */
+  .hero-section {
+    padding: 14px 12px 10px !important;
+  }
+
+  .hero-title {
+    font-size: 1.35rem !important;
+    line-height: 1.2 !important;
+    margin-bottom: 4px !important;
+  }
+
+  .hero-subtitle {
+    font-size: 0.82rem !important;
+    margin-bottom: 8px !important;
+  }
+
+  /* 3. Grilles en Mode Paysage (2 Colonnes idéales pour écran large) */
+  .items-grid,
+  .algo-items-grid,
+  .algo-cards-grid,
+  .cards-grid,
+  .portal-grid,
+  .sql-sheet-grid,
+  .qt-thonny-lab-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .item-card {
+    padding: 12px 14px !important;
+  }
+
+  .item-card-title {
+    font-size: 0.95rem !important;
+  }
+
+  .item-card-desc {
+    font-size: 0.8rem !important;
+    line-height: 1.35 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+
+  .algo-chapter-banner {
+    padding: 8px 12px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .algo-chapter-banner h3 {
+    font-size: 0.96rem !important;
+  }
+
+  /* 4. Modales en Rotation Paysage (Plein Écran Ultra-Fluide & Défilable) */
+  .modal-overlay {
+    align-items: flex-start !important;
+    justify-content: center !important;
+    padding: 4px !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .modal-content {
+    width: 98% !important;
+    max-width: 960px !important;
+    height: calc(100vh - 8px) !important;
+    max-height: calc(100vh - 8px) !important;
+    margin: 0 auto !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+
+  .modal-header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 30 !important;
+    padding: 6px 14px !important;
+    min-height: 40px !important;
+    background: var(--bg-card) !important;
+    flex-shrink: 0 !important;
+  }
+
+  .modal-title-group h3 {
+    font-size: 0.96rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .modal-title-group .category-label {
+    font-size: 0.66rem !important;
+  }
+
+  .close-modal-btn {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 1.15rem !important;
+    flex-shrink: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .modal-body {
+    flex: 1 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 8px 14px max(12px, env(safe-area-inset-bottom)) 14px !important;
+  }
+
+  .modal-section {
+    margin-bottom: 12px !important;
+  }
+
+  .modal-section-title {
+    font-size: 0.88rem !important;
+    margin-bottom: 6px !important;
+  }
+
+  .modal-text {
+    font-size: 0.85rem !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Code et TDO en rotation */
+  .annexe-code-container {
+    margin-bottom: 10px !important;
+  }
+
+  .annexe-code-header {
+    padding: 5px 12px !important;
+    font-size: 0.78rem !important;
+  }
+
+  .annexe-copy-btn {
+    padding: 3px 8px !important;
+    font-size: 0.72rem !important;
+  }
+
+  .annexe-code-pre {
+    padding: 10px 12px !important;
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+    max-height: none !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .algo-tdo-table {
+    font-size: 0.8rem !important;
+    display: table !important;
+    max-width: 100% !important;
+  }
+
+  .algo-tdo-table th, .algo-tdo-table td {
+    padding: 5px 10px !important;
+  }
+
+  /* 5. Modale PDF en Plein Écran Paysage (Idéal pour révision de documents) */
+  .pdf-modal-content {
+    width: 100% !important;
+    height: calc(100vh - 6px) !important;
+    max-height: calc(100vh - 6px) !important;
+    border-radius: 6px !important;
+  }
+
+  #pdfModalBody {
+    flex: 1 !important;
+    height: 100% !important;
+  }
+
+  #pdfModalBody iframe {
+    width: 100% !important;
+    height: 100% !important;
+    border: none !important;
+  }
+
+  /* Barre de recherche et filtres */
+  .filter-bar {
+    padding: 6px 10px !important;
+    gap: 8px !important;
+  }
+
+  .search-input {
+    padding: 6px 12px !important;
+    font-size: 14px !important;
+  }
+
+  .chip {
+    padding: 4px 8px !important;
+    font-size: 0.72rem !important;
   }
 }

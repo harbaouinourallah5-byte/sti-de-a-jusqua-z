@@ -7979,7 +7979,7 @@ function renderAlgoTheoriqueCards() {
           ${chapterItems.length} ${chapterItems.length > 1 ? 'fonctions & algorithmes' : 'fonction'}
         </span>
       </div>
-      <div class="items-grid" style="grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;">
+      <div class="items-grid algo-cards-grid">
       </div>
     `;
 
