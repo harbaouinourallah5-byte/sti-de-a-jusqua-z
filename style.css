@@ -6861,3 +6861,101 @@ input, select, textarea {
   border-color: rgba(239, 68, 68, 0.4);
   color: #FCA5A5;
 }
+
+/* ===================================================================
+   GUIDE VISUEL & SCHÉMAS DES MATRICES (Support Bac Tunisie)
+   =================================================================== */
+.matrix-interactive-guide {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-left: 4px solid #ea580c;
+  border-radius: var(--radius-md, 14px);
+  padding: 22px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.matrix-guide-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.matrix-guide-tab-btn {
+  background: var(--bg-input, rgba(15, 23, 42, 0.6));
+  color: var(--text-secondary);
+  border: 1px solid var(--border-soft);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.83rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+
+.matrix-guide-tab-btn:hover {
+  background: rgba(234, 88, 12, 0.12);
+  color: #ea580c;
+  border-color: rgba(234, 88, 12, 0.4);
+}
+
+.matrix-guide-tab-btn.active {
+  background: linear-gradient(135deg, #ea580c, #f97316);
+  color: #ffffff !important;
+  border-color: #ea580c;
+  box-shadow: 0 3px 12px rgba(234, 88, 12, 0.35);
+}
+
+.matrix-guide-content-panel {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 22px;
+  align-items: center;
+  background: var(--bg-body, rgba(15, 23, 42, 0.5));
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  padding: 18px;
+}
+
+@media (max-width: 900px) {
+  .matrix-guide-content-panel {
+    grid-template-columns: 1fr;
+  }
+}
+
+.matrix-guide-img-box {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.matrix-guide-img-box img {
+  width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+  border-radius: 6px;
+  transition: transform 0.25s ease;
+}
+
+.matrix-guide-img-box:hover img {
+  transform: scale(1.015);
+}
+
+.matrix-modal-img-card {
+  background: var(--bg-body, rgba(15, 23, 42, 0.7));
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 10px;
+}

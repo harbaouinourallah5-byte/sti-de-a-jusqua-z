@@ -2924,172 +2924,172 @@ const DATA = {
     }
   ],
   "lessons": [
-  {
-    "id": "lesson-html-official",
-    "title": "Support Officiel : Balises & Formulaires HTML5 (Bac STI)",
-    "subject": "html",
-    "subjectLabel": "HTML5",
-    "type": "cours",
-    "typeLabel": "📖 Cours Officiel",
-    "date": "2025-09-15",
-    "author": "Inspection Générale STI",
-    "fileSize": "2.8 Mo",
-    "pdfUrl": "pdf/Support_Officiel_HTML5_BacSTI.pdf",
-    "description": "Manuel complet de référence HTML5 : éléments de premier niveau, structuration sémantique, tableaux, listes et contrôles de formulaires avec attributs officiels.",
-    "summary": "Fiche officielle conforme au programme du Bac STI avec modèles d'examens.",
-    "downloadName": "Support_Officiel_HTML5_BacSTI.pdf"
-  },
-  {
-    "id": "lesson-css-official",
-    "title": "Support Officiel : Feuilles de Style & Sélecteurs CSS3 (Bac STI)",
-    "subject": "css",
-    "subjectLabel": "CSS3",
-    "type": "cours",
-    "typeLabel": "📖 Cours Officiel",
-    "date": "2025-10-01",
-    "author": "Inspection Générale STI",
-    "fileSize": "3.2 Mo",
-    "pdfUrl": "pdf/Support_Officiel_CSS3_BacSTI.pdf",
-    "description": "Les 61 propriétés indispensables avec sélecteurs #id, modèle de boîte, arrière-plans, typographie, transitions et animations.",
-    "summary": "Référence officielle du style Web conforme à la grille d'évaluation du Baccalauréat.",
-    "downloadName": "Support_Officiel_CSS3_BacSTI.pdf"
-  },
-  {
-    "id": "lesson-js-official",
-    "title": "Support Officiel : Validation de Formulaires verif() & Fonctions JS",
-    "subject": "js",
-    "subjectLabel": "JavaScript",
-    "type": "cours",
-    "typeLabel": "📖 Cours Officiel",
-    "date": "2025-11-10",
-    "author": "Coordination Pédagogique STI",
-    "fileSize": "3.6 Mo",
-    "pdfUrl": "pdf/Support_Officiel_JavaScript_BacSTI.pdf",
-    "description": "Validation rigoureuse des formulaires Web avec la fonction canonique verif(), contrôle des chaînes, expressions arithmétiques et DOM.",
-    "summary": "Manuel de référence pour l'épreuve de validation JavaScript du Bac STI.",
-    "downloadName": "Support_Officiel_JavaScript_BacSTI.pdf"
-  },
-  {
-    "id": "lesson-sql-official",
-    "title": "Support Officiel : Bases de Données MySQL (LDD, LMD & Requêtes)",
-    "subject": "sql",
-    "subjectLabel": "SQL MySQL",
-    "type": "cours",
-    "typeLabel": "📖 Cours Officiel",
-    "date": "2025-12-05",
-    "author": "Inspection Générale STI",
-    "fileSize": "4.1 Mo",
-    "pdfUrl": "pdf/Support_Officiel_SQL_BacSTI.pdf",
-    "description": "Création de tables, contraintes d'intégrité (PK, FK, CHECK), requêtes d'interrogation multi-tables, fonctions de dates et d'agrégation.",
-    "summary": "Guide complet SQL avec base scolaire d'entraînement conforme aux sujets d'examen.",
-    "downloadName": "Support_Officiel_SQL_BacSTI.pdf"
-  },
-  {
-    "id": "lesson-algo-pratique-official",
-    "title": "Support Officiel : Laboratoire Qt Designer ➔ Thonny Python",
-    "subject": "algo-pratique",
-    "subjectLabel": "Pratique Qt ➔ Thonny",
-    "type": "cours",
-    "typeLabel": "🛠️ Épreuve Pratique",
-    "date": "2026-01-15",
-    "author": "Coordination Pédagogique Informatique",
-    "fileSize": "4.8 Mo",
-    "pdfUrl": "pdf/Support_Officiel_QtDesigner_Thonny.pdf",
-    "description": "Guide méthodologique complet en 4 étapes pour réussir l'épreuve pratique : chargement de loadUi, signaux .clicked, widgets de saisie et QMessageBox.",
-    "summary": "Les 20 notions officielles et le starter template pour l'épreuve pratique.",
-    "downloadName": "Support_Officiel_QtDesigner_Thonny.pdf"
-  },
-  {
-    "id": "lesson-algo-ch1-fichiers",
-    "title": "Support Officiel : Ch 1 - Fichiers Binaires et Fichiers Texte",
-    "subject": "algo-ch1-fichiers",
-    "subjectLabel": "Ch 1 : Fichiers",
-    "type": "cours",
-    "typeLabel": "📖 Cours Officiel",
-    "date": "2026-02-01",
-    "author": "Inspection Générale de l'Informatique",
-    "fileSize": "3.5 Mo",
-    "pdfUrl": "pdf/Support_Fichiers_Texte_Binaires.pdf",
-    "description": "Manipulation des fichiers texte (ouvrir, lire_ligne, écrire_ligne) et fichiers d'enregistrements binaires avec le module pickle sous Thonny.",
-    "summary": "Polycopié de référence sur le Chapitre 1 avec syntaxe théorique normalisée et TDO/TDNT.",
-    "downloadName": "Support_Officiel_Ch1_Fichiers.pdf"
-  },
-  {
-    "id": "lesson-algo-ch2-recurrence",
-    "title": "Support Officiel : Ch 2 - Récurrence & Fonctions Récursives",
-    "subject": "algo-ch2-recurrence",
-    "subjectLabel": "Ch 2 : Récurrence",
-    "type": "cours",
-    "typeLabel": "📖 Cours Officiel",
-    "date": "2026-02-15",
-    "author": "Inspection Générale de l'Informatique",
-    "fileSize": "2.9 Mo",
-    "pdfUrl": "pdf/Support_Recurrence_BacInfo.pdf",
-    "description": "Principe de la récursivité, condition d'arrêt, cas de base et cas récursif. Exemples classiques : factorielle, puissance, suite de Fibonacci et PGCD récursif.",
-    "summary": "Méthodologie formelle pour concevoir et tracer un sous-programme récursif.",
-    "downloadName": "Support_Officiel_Ch2_Recurrence.pdf"
-  },
-  {
-    "id": "lesson-algo-ch3-bases",
-    "title": "Support Officiel : Ch 3 - Conversion Entre Les Bases de Numération",
-    "subject": "algo-ch3-bases",
-    "subjectLabel": "Ch 3 : Bases",
-    "type": "cours",
-    "typeLabel": "📖 Cours Officiel",
-    "date": "2026-03-01",
-    "author": "Inspection Générale de l'Informatique",
-    "fileSize": "4.5 Mo",
-    "pdfUrl": "pdf/Conversion_Bases_Numeration.pdf",
-    "description": "Méthode des divisions successives (décimal vers base B), méthode des puissances pondérées (base B vers décimal), et conversions directes (binaire, octal, hexadécimal).",
-    "summary": "Algorithmes théoriques de conversion avec tableaux de conversion et traces pas à pas.",
-    "downloadName": "Support_Officiel_Ch3_Bases.pdf"
-  },
-  {
-    "id": "lesson-algo-ch4-arithmetique",
-    "title": "Support Officiel : Ch 4 - Arithmétique, Divisibilité & Nombres Premiers",
-    "subject": "algo-ch4-arithmetique",
-    "subjectLabel": "Ch 4 : Arithmétique",
-    "type": "cours",
-    "typeLabel": "📖 Cours Officiel",
-    "date": "2026-03-15",
-    "author": "Inspection Générale de l'Informatique",
-    "fileSize": "3.7 Mo",
-    "pdfUrl": "pdf/Support_Arithmetique_BacInfo.pdf",
-    "description": "Test de primalité optimal, décomposition en facteurs premiers, PGCD par algorithme d'Euclide et soustractions, PPCM et nombres parfaits/amis.",
-    "summary": "Algorithmes fondamentaux d'arithmétique au programme du Baccalauréat.",
-    "downloadName": "Support_Officiel_Ch4_Arithmetique.pdf"
-  },
-  {
-    "id": "lesson-algo-ch5-approximation",
-    "title": "Support Officiel : Ch 5 - Calcul d'Aires & Approximation Numérique",
-    "subject": "algo-ch5-approximation",
-    "subjectLabel": "Ch 5 : Approx",
-    "type": "cours",
-    "typeLabel": "📖 Cours Officiel",
-    "date": "2026-04-01",
-    "author": "Inspection Générale de l'Informatique",
-    "fileSize": "4.2 Mo",
-    "pdfUrl": "pdf/Support_Calcul_Aires_Approximation.pdf",
-    "description": "Méthodes numériques d'intégration : rectangles (gauche, droite, point médian) et formule des trapèzes sur l'intervalle [a, b]. Recherche dichotomique.",
-    "summary": "Calculs approchés d'intégrales définies et convergence de suites d'aires.",
-    "downloadName": "Support_Officiel_Ch5_Approximation.pdf"
-  },
-  {
-    "id": "lesson-algo-ch6-matrices",
-    "title": "Support Officiel : Ch 6 - Matrices & Tableaux à Deux Dimensions",
-    "subject": "algo-ch6-matrices",
-    "subjectLabel": "Ch 6 : Matrices",
-    "type": "cours",
-    "typeLabel": "📖 Cours Officiel",
-    "date": "2026-04-15",
-    "author": "Inspection Générale de l'Informatique",
-    "fileSize": "5.1 Mo",
-    "pdfUrl": "pdf/Support_Officiel_Matrices_Patterns.pdf",
-    "description": "Création, parcours par lignes et colonnes, calculs sur diagonales (principale, secondaire), recherche de point-selle, tri et motifs d'affichage (sablier, diagonales).",
-    "summary": "Cours complet sur les matrices carrées et rectangulaires avec sujets types d'examen.",
-    "downloadName": "Support_Officiel_Ch6_Matrices.pdf"
-  }
-],
+    {
+      "id": "lesson-html-official",
+      "title": "Support Officiel : Balises & Formulaires HTML5 (Bac STI)",
+      "subject": "html",
+      "subjectLabel": "HTML5",
+      "type": "cours",
+      "typeLabel": "📖 Cours Officiel",
+      "date": "2025-09-15",
+      "author": "Inspection Générale STI",
+      "fileSize": "2.8 Mo",
+      "pdfUrl": "pdf/Support_Officiel_HTML5_BacSTI.pdf",
+      "description": "Manuel complet de référence HTML5 : éléments de premier niveau, structuration sémantique, tableaux, listes et contrôles de formulaires avec attributs officiels.",
+      "summary": "Fiche officielle conforme au programme du Bac STI avec modèles d'examens.",
+      "downloadName": "Support_Officiel_HTML5_BacSTI.pdf"
+    },
+    {
+      "id": "lesson-css-official",
+      "title": "Support Officiel : Feuilles de Style & Sélecteurs CSS3 (Bac STI)",
+      "subject": "css",
+      "subjectLabel": "CSS3",
+      "type": "cours",
+      "typeLabel": "📖 Cours Officiel",
+      "date": "2025-10-01",
+      "author": "Inspection Générale STI",
+      "fileSize": "3.2 Mo",
+      "pdfUrl": "pdf/Support_Officiel_CSS3_BacSTI.pdf",
+      "description": "Les 61 propriétés indispensables avec sélecteurs #id, modèle de boîte, arrière-plans, typographie, transitions et animations.",
+      "summary": "Référence officielle du style Web conforme à la grille d'évaluation du Baccalauréat.",
+      "downloadName": "Support_Officiel_CSS3_BacSTI.pdf"
+    },
+    {
+      "id": "lesson-js-official",
+      "title": "Support Officiel : Validation de Formulaires verif() & Fonctions JS",
+      "subject": "js",
+      "subjectLabel": "JavaScript",
+      "type": "cours",
+      "typeLabel": "📖 Cours Officiel",
+      "date": "2025-11-10",
+      "author": "Coordination Pédagogique STI",
+      "fileSize": "3.6 Mo",
+      "pdfUrl": "pdf/Support_Officiel_JavaScript_BacSTI.pdf",
+      "description": "Validation rigoureuse des formulaires Web avec la fonction canonique verif(), contrôle des chaînes, expressions arithmétiques et DOM.",
+      "summary": "Manuel de référence pour l'épreuve de validation JavaScript du Bac STI.",
+      "downloadName": "Support_Officiel_JavaScript_BacSTI.pdf"
+    },
+    {
+      "id": "lesson-sql-official",
+      "title": "Support Officiel : Bases de Données MySQL (LDD, LMD & Requêtes)",
+      "subject": "sql",
+      "subjectLabel": "SQL MySQL",
+      "type": "cours",
+      "typeLabel": "📖 Cours Officiel",
+      "date": "2025-12-05",
+      "author": "Inspection Générale STI",
+      "fileSize": "4.1 Mo",
+      "pdfUrl": "pdf/Support_Officiel_SQL_BacSTI.pdf",
+      "description": "Création de tables, contraintes d'intégrité (PK, FK, CHECK), requêtes d'interrogation multi-tables, fonctions de dates et d'agrégation.",
+      "summary": "Guide complet SQL avec base scolaire d'entraînement conforme aux sujets d'examen.",
+      "downloadName": "Support_Officiel_SQL_BacSTI.pdf"
+    },
+    {
+      "id": "lesson-algo-pratique-official",
+      "title": "Support Officiel : Laboratoire Qt Designer ➔ Thonny Python",
+      "subject": "algo-pratique",
+      "subjectLabel": "Pratique Qt ➔ Thonny",
+      "type": "cours",
+      "typeLabel": "🛠️ Épreuve Pratique",
+      "date": "2026-01-15",
+      "author": "Coordination Pédagogique Informatique",
+      "fileSize": "4.8 Mo",
+      "pdfUrl": "pdf/Support_Officiel_QtDesigner_Thonny.pdf",
+      "description": "Guide méthodologique complet en 4 étapes pour réussir l'épreuve pratique : chargement de loadUi, signaux .clicked, widgets de saisie et QMessageBox.",
+      "summary": "Les 20 notions officielles et le starter template pour l'épreuve pratique.",
+      "downloadName": "Support_Officiel_QtDesigner_Thonny.pdf"
+    },
+    {
+      "id": "lesson-algo-ch1-fichiers",
+      "title": "Support Officiel : Ch 1 - Fichiers Binaires et Fichiers Texte",
+      "subject": "algo-ch1-fichiers",
+      "subjectLabel": "Ch 1 : Fichiers",
+      "type": "cours",
+      "typeLabel": "📖 Cours Officiel",
+      "date": "2026-02-01",
+      "author": "Inspection Générale de l'Informatique",
+      "fileSize": "3.5 Mo",
+      "pdfUrl": "pdf/Support_Fichiers_Texte_Binaires.pdf",
+      "description": "Manipulation des fichiers texte (ouvrir, lire_ligne, écrire_ligne) et fichiers d'enregistrements binaires avec le module pickle sous Thonny.",
+      "summary": "Polycopié de référence sur le Chapitre 1 avec syntaxe théorique normalisée et TDO/TDNT.",
+      "downloadName": "Support_Officiel_Ch1_Fichiers.pdf"
+    },
+    {
+      "id": "lesson-algo-ch2-recurrence",
+      "title": "Support Officiel : Ch 2 - Récurrence & Fonctions Récursives",
+      "subject": "algo-ch2-recurrence",
+      "subjectLabel": "Ch 2 : Récurrence",
+      "type": "cours",
+      "typeLabel": "📖 Cours Officiel",
+      "date": "2026-02-15",
+      "author": "Inspection Générale de l'Informatique",
+      "fileSize": "2.9 Mo",
+      "pdfUrl": "pdf/Support_Recurrence_BacInfo.pdf",
+      "description": "Principe de la récursivité, condition d'arrêt, cas de base et cas récursif. Exemples classiques : factorielle, puissance, suite de Fibonacci et PGCD récursif.",
+      "summary": "Méthodologie formelle pour concevoir et tracer un sous-programme récursif.",
+      "downloadName": "Support_Officiel_Ch2_Recurrence.pdf"
+    },
+    {
+      "id": "lesson-algo-ch3-bases",
+      "title": "Support Officiel : Ch 3 - Conversion Entre Les Bases de Numération",
+      "subject": "algo-ch3-bases",
+      "subjectLabel": "Ch 3 : Bases",
+      "type": "cours",
+      "typeLabel": "📖 Cours Officiel",
+      "date": "2026-03-01",
+      "author": "Inspection Générale de l'Informatique",
+      "fileSize": "4.5 Mo",
+      "pdfUrl": "pdf/Conversion_Bases_Numeration.pdf",
+      "description": "Méthode des divisions successives (décimal vers base B), méthode des puissances pondérées (base B vers décimal), et conversions directes (binaire, octal, hexadécimal).",
+      "summary": "Algorithmes théoriques de conversion avec tableaux de conversion et traces pas à pas.",
+      "downloadName": "Support_Officiel_Ch3_Bases.pdf"
+    },
+    {
+      "id": "lesson-algo-ch4-arithmetique",
+      "title": "Support Officiel : Ch 4 - Arithmétique, Divisibilité & Nombres Premiers",
+      "subject": "algo-ch4-arithmetique",
+      "subjectLabel": "Ch 4 : Arithmétique",
+      "type": "cours",
+      "typeLabel": "📖 Cours Officiel",
+      "date": "2026-03-15",
+      "author": "Inspection Générale de l'Informatique",
+      "fileSize": "3.7 Mo",
+      "pdfUrl": "pdf/Support_Arithmetique_BacInfo.pdf",
+      "description": "Test de primalité optimal, décomposition en facteurs premiers, PGCD par algorithme d'Euclide et soustractions, PPCM et nombres parfaits/amis.",
+      "summary": "Algorithmes fondamentaux d'arithmétique au programme du Baccalauréat.",
+      "downloadName": "Support_Officiel_Ch4_Arithmetique.pdf"
+    },
+    {
+      "id": "lesson-algo-ch5-approximation",
+      "title": "Support Officiel : Ch 5 - Calcul d'Aires & Approximation Numérique",
+      "subject": "algo-ch5-approximation",
+      "subjectLabel": "Ch 5 : Approx",
+      "type": "cours",
+      "typeLabel": "📖 Cours Officiel",
+      "date": "2026-04-01",
+      "author": "Inspection Générale de l'Informatique",
+      "fileSize": "4.2 Mo",
+      "pdfUrl": "pdf/Support_Calcul_Aires_Approximation.pdf",
+      "description": "Méthodes numériques d'intégration : rectangles (gauche, droite, point médian) et formule des trapèzes sur l'intervalle [a, b]. Recherche dichotomique.",
+      "summary": "Calculs approchés d'intégrales définies et convergence de suites d'aires.",
+      "downloadName": "Support_Officiel_Ch5_Approximation.pdf"
+    },
+    {
+      "id": "lesson-algo-ch6-matrices",
+      "title": "Support Officiel : Ch 6 - Matrices & Tableaux à Deux Dimensions",
+      "subject": "algo-ch6-matrices",
+      "subjectLabel": "Ch 6 : Matrices",
+      "type": "cours",
+      "typeLabel": "📖 Cours Officiel",
+      "date": "2026-04-15",
+      "author": "Inspection Générale de l'Informatique",
+      "fileSize": "5.1 Mo",
+      "pdfUrl": "pdf/Support_Officiel_Matrices_Patterns.pdf",
+      "description": "Création, parcours par lignes et colonnes, calculs sur diagonales (principale, secondaire), recherche de point-selle, tri et motifs d'affichage (sablier, diagonales).",
+      "summary": "Cours complet sur les matrices carrées et rectangulaires avec sujets types d'examen.",
+      "downloadName": "Support_Officiel_Ch6_Matrices.pdf"
+    }
+  ],
   "sql": [
     {
       "id": "sql-type-int",
@@ -5482,7 +5482,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def tri_mat_colonne(m, n):\n    for j in range(n):\n        p = True\n        taille = n\n        while p:\n            p = False\n            for i in range(taille - 1):\n                if m[i][j] > m[i + 1][j]:\n                    aux = m[i][j]\n                    m[i][j] = m[i + 1][j]\n                    m[i + 1][j] = aux\n                    p = True\n            taille = taille - 1",
-      "example": "Chaque colonne de la matrice devient triée par ordre croissant"
+      "example": "Chaque colonne de la matrice devient triée par ordre croissant",
+      "imageUrl": "img/matrices/tri_matrice_colonne.png",
+      "imageCaption": "Fiche officielle Bac Tunisie : Algorithme tri_mat_colonne (Tri à bulles optimisé par colonne indépendante avec drapeau booléen p et réduction de taille)."
     },
     {
       "id": "algo-tri-mat-ligne",
@@ -5504,7 +5506,37 @@ const DATA = {
         }
       ],
       "pythonCode": "def tri_mat_ligne(m, n):\n    for i in range(n):\n        p = True\n        taille = n\n        while p:\n            p = False\n            for j in range(taille - 1):\n                if m[i][j] > m[i][j + 1]:\n                    aux = m[i][j]\n                    m[i][j] = m[i][j + 1]\n                    m[i][j + 1] = aux\n                    p = True\n            taille = taille - 1",
-      "example": "Chaque ligne de la matrice devient triée par ordre croissant"
+      "example": "Chaque ligne de la matrice devient triée par ordre croissant",
+      "imageUrl": "img/matrices/tri_matrice_ligne.png",
+      "imageCaption": "Fiche officielle Bac Tunisie : Algorithme tri_mat_ligne (Tri à bulles optimisé ligne par ligne avec boucle externe sur les lignes i et permutation sur les colonnes j)."
+    },
+    {
+      "id": "algo-mat-zones-boucles",
+      "category": "Chapitre 6 : Matrices",
+      "type": "structure",
+      "name": "Structure Stratégique en 5 Zones des Matrices",
+      "syntax": "Zone 1 (Global Init) → Pour i ... Zone 2 (Init Ligne/Col) → Pour j ... Zone 3 (Case M[i,j]) → Fin Pour → Zone 4 (Vérif Ligne/Col) → Fin Pour → Zone 5 (Résultat Global)",
+      "summary": "Règle d'or d'architecture Bac : Décomposer tout traitement de matrice en 5 zones pour ne jamais se tromper sur l'emplacement des initialisations, calculs et vérifications.",
+      "description": "Méthodologie fondamentale du Support Officiel Bac Tunisie (IKODE) :\n• Règle clé n°1 : La boucle interne (da5lenya) est TOUJOURS celle qui bouge le plus vite !\n• Règle clé n°2 : L'indice i gère toujours les LIGNES (L-1), et j gère toujours les COLONNES (C-1).\n• Zone 1 : Initialisation des variables globales à toute la matrice (ex: somme totale, max global, booléen de conformité globale).\n• Zone 2 : Initialisation des variables réinitialisées à chaque ligne, colonne ou diagonale (ex: cumul de la ligne courante, indicateur booléen de ligne valide).\n• Zone 3 : Cœur de la boucle : traitement individuel de chaque cellule m[i, j] et cumul dans les variables de Zone 1 ou 2.\n• Zone 4 : Traitement ou vérification intermédiaire après le parcours complet d'une ligne ou colonne (ex: affichage de la somme de la ligne, test si ligne magique).\n• Zone 5 : Traitement et résultat final après la fin de toutes les boucles (ex: affichage de la somme globale, validation définitive de la matrice).",
+      "pseudoCode": "// ARCHITECTURE OFFICIELLE EN 5 ZONES POUR MATRICES (Support Bac)\n\n// ZONE 1 : Initialisation des variables globales (matrice entière)\ns_tot <-- 0\n\nPour i de 0 à L - 1 faire\n  // ZONE 2 : Initialisation pour CHAQUE ligne (ou colonne)\n  s_ligne <-- 0\n\n  Pour j de 0 à C - 1 faire\n    // ZONE 3 : Traitement cellule par cellule m[i, j]\n    s_ligne <-- s_ligne + m[i, j]\n    s_tot <-- s_tot + m[i, j]\n  Fin pour\n\n  // ZONE 4 : Traitement / vérification à la fin de chaque ligne\n  écrire(\"Somme de la ligne \", i, \" = \", s_ligne)\nFin pour\n\n// ZONE 5 : Traitement / affichage final pour toute la matrice\nécrire(\"Somme totale de la matrice = \", s_tot)",
+      "tdo": [
+        {
+          "objet": "i, j, L, C",
+          "type": "entier"
+        },
+        {
+          "objet": "s_tot, s_ligne",
+          "type": "entier"
+        },
+        {
+          "objet": "m",
+          "type": "mat"
+        }
+      ],
+      "pythonCode": "def architecture_5_zones(m, L, C):\n    # ZONE 1 : Variables globales pour toute la matrice\n    s_tot = 0\n    \n    for i in range(L):\n        # ZONE 2 : Variables réinitialisées pour chaque ligne\n        s_ligne = 0\n        \n        for j in range(C):\n            # ZONE 3 : Traitement cellule par cellule m[i][j]\n            s_ligne += m[i][j]\n            s_tot += m[i][j]\n        \n        # ZONE 4 : Traitement / vérification à la fin de la ligne\n        print(f\"Somme ligne {i} = {s_ligne}\")\n        \n    # ZONE 5 : Traitement / affichage final après les deux boucles\n    print(f\"Somme totale de la matrice = {s_tot}\")",
+      "example": "Modèle architectural universel pour tous les exercices de matrices au Bac (lignes, colonnes, carrés magiques, symétrie)",
+      "imageUrl": "img/matrices/zones_boucles_matrice.png",
+      "imageCaption": "Fiche manuscrite originale du Support Bac : Schéma des 5 Zones d'une boucle imbriquée (Zone 1 globale, Zone 2 par axe, Zone 3 traitement cellule, Zone 4 fin d'axe, Zone 5 résultat final)."
     },
     {
       "id": "algo-mat-parcours-bas-haut",
@@ -5522,7 +5554,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def mat_parcours_bas_haut(m, L, C):\n    for j in range(C - 1, -1, -1):\n        for i in range(L - 1, -1, -1):\n            print(m[i][j])",
-      "example": "Explore m[L-1, C-1], m[L-2, C-1], ..., m[0, 0]"
+      "example": "Explore m[L-1, C-1], m[L-2, C-1], ..., m[0, 0]",
+      "imageUrl": "img/matrices/parcours_colonne_bas_haut.png",
+      "imageCaption": "Schéma manuscrit original du Support Bac : Parcours d'une matrice 3x4 colonne par colonne du bas vers le haut et de droite à gauche. Règle d'or : \"elli tet7arek fisa3 hiya el pour da5lenya\" (la boucle interne varie le plus vite)."
     },
     {
       "id": "algo-mat-parcours-ligne-inverse",
@@ -5540,7 +5574,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def mat_parcours_ligne_inverse(m, L, C):\n    for i in range(L - 1, -1, -1):\n        for j in range(C - 1, -1, -1):\n            print(m[i][j])",
-      "example": "Lecture inversée ligne par ligne complète"
+      "example": "Lecture inversée ligne par ligne complète",
+      "imageUrl": "img/matrices/parcours_ligne_droite_gauche.png",
+      "imageCaption": "Schéma manuscrit original du Support Bac : Parcours ligne par ligne à l'envers (de droite à gauche et du bas vers le haut). Règle d'or : \"dima el i taba3 el ligne, el j taba3 el colonne\"."
     },
     {
       "id": "algo-mat-pattern-sablier",
@@ -5558,7 +5594,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def mat_pattern_sablier(m, L, C):\n    d = 0\n    f = C - 1\n    for i in range(L):\n        if d <= f:\n            for j in range(d, f + 1):\n                print(m[i][j], end=\" \")\n            print()\n            d = d + 1\n            f = f - 1",
-      "example": "Parcours des étoiles * formant un entonnoir dans la matrice"
+      "example": "Parcours des étoiles * formant un entonnoir dans la matrice",
+      "imageUrl": "img/matrices/pattern_sablier_pyramide.png",
+      "imageCaption": "Schéma manuscrit original du Support Bac : Motif triangulaire / sablier (pyramide inversée) d'étoiles *. Utilise des bornes de colonnes dynamiques d <- 0 et f <- C - 1 ajustées à chaque saut de ligne."
     },
     {
       "id": "algo-mat-pattern-diagonales",
@@ -5576,9 +5614,18 @@ const DATA = {
         }
       ],
       "pythonCode": "def mat_pattern_diagonales(m, L):\n    # Partie 1 : Moitié supérieure\n    for d in range(L):\n        j = 0\n        for i in range(d, -1, -1):\n            print(m[i][j], end=\" \")\n            j = j + 1\n        print()\n    \n    # Partie 2 : Moitié inférieure\n    for d in range(1, L):\n        j = d\n        for i in range(L - 1, d - 1, -1):\n            print(m[i][j], end=\" \")\n            j = j + 1\n        print()",
-      "example": "Balaye toute la matrice par diagonales orientées vers le haut"
-    }
-  ,
+      "example": "Balaye toute la matrice par diagonales orientées vers le haut",
+      "imageUrl": "img/matrices/pattern_diagonales_complet.png",
+      "images": [
+        "img/matrices/pattern_diagonales_partie1.png",
+        "img/matrices/pattern_diagonales_partie2.png"
+      ],
+      "imageSteps": [
+        "Partie 1 : Diagonales montantes de la moitié supérieure (au-dessus et sur la diagonale principale)",
+        "Partie 2 : Diagonales montantes de la moitié inférieure (sous la diagonale principale)"
+      ],
+      "imageCaption": "Schémas manuscrits originaux du Support Bac : Balayage complet d'une matrice carrée par diagonales montantes en deux boucles complémentaires (décalage coordonné de i et j)."
+    },
     {
       "id": "algo-mat-declaration-creation",
       "category": "Chapitre 6 : Matrices",
@@ -5837,5 +5884,6 @@ const DATA = {
       "pseudoCode": "0) procédure Point_Selle(M: mat, n, m: entier)\n// Exemple d'entraînement type Baccalauréat\n1) trouve <-- faux\n2) pour i de 0 à n - 1 faire\n     // 1. Trouver l'indice de la valeur minimale de la ligne i\n     col_min <-- 0\n     pour j de 1 à m - 1 faire\n       si M[i, j] < M[i, col_min] alors\n         col_min <-- j\n       fin_si\n     fin_pour\n     // 2. Vérifier si M[i, col_min] est le maximum de sa colonne\n     est_max <-- vrai\n     pour k de 0 à n - 1 faire\n       si M[k, col_min] > M[i, col_min] alors\n         est_max <-- faux\n       fin_si\n     fin_pour\n     si est_max alors\n       écrire(\"Point-selle trouvé en (\", i, \",\", col_min, \") = \", M[i, col_min])\n       trouve <-- vrai\n     fin_si\n   fin_pour\n3) si non trouve alors\n     écrire(\"Aucun point-selle dans cette matrice.\")\n   fin_si\n4) fin",
       "pythonCode": "# Exemple d'entraînement : Détection d'un point-selle\ndef point_selle(M, n, m):\n    trouve = False\n    for i in range(n):\n        col_min = 0\n        for j in range(1, m):\n            if M[i][j] < M[i][col_min]:\n                col_min = j\n        est_max = True\n        for k in range(n):\n            if M[k][col_min] > M[i][col_min]:\n                est_max = False\n        if est_max:\n            print(\"Point-selle en (\" + str(i) + \",\" + str(col_min) + \") = \" + str(M[i][col_min]))\n            trouve = True\n    if not trouve:\n        print(\"Aucun point-selle dans cette matrice.\")",
       "example": "Identifie les points-selles d'une matrice de notes ou de coefficients"
-    }]
+    }
+  ]
 };

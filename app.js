@@ -7938,6 +7938,168 @@ function handleAlgoTheoriqueSearch(val) {
   renderAlgoTheoriqueCards();
 }
 
+
+// =============================================================
+// GUIDE VISUEL & INTERACTIF DES MATRICES (Support Bac Tunisie)
+// =============================================================
+let currentMatrixGuideTab = 'zones';
+
+const MATRIX_GUIDE_DATA = {
+  zones: {
+    id: 'zones',
+    label: '📐 5 Zones Stratégiques',
+    badge: 'Méthodologie d\'or Bac',
+    title: 'Structure en 5 Zones des Boucles Imbriquées',
+    algoId: 'algo-mat-zones-boucles',
+    imageUrl: 'img/matrices/zones_boucles_matrice.png',
+    summary: 'Savoir exactement où placer chaque variable : Zone 1 (Init globale) → Zone 2 (Init par ligne/colonne) → Zone 3 (Cœur de boucle case m[i,j]) → Zone 4 (Traitement fin de ligne) → Zone 5 (Résultat final matrice entière).',
+    keyLoop: '// Décomposition en 5 Zones :\ns_tot <-- 0  // Zone 1 (Global)\nPour i de 0 à L-1 faire\n  s_l <-- 0  // Zone 2 (Par ligne)\n  Pour j de 0 à C-1 faire\n    // Zone 3 (Traitement cellule)\n    s_l <-- s_l + m[i, j]\n  Fin pour\n  écrire(s_l) // Zone 4 (Fin ligne)\nFin pour\nécrire(s_tot) // Zone 5 (Final)',
+    bacTip: '💡 Astuce Support IKODE : La boucle interne (da5lenya) est TOUJOURS celle qui tourne le plus vite ! i suit les lignes, j suit les colonnes.'
+  },
+  colonne_bas_haut: {
+    id: 'colonne_bas_haut',
+    label: '⬆️ Colonne / Colonne (Bas vers Haut)',
+    badge: 'Parcours Vertical',
+    title: 'Parcours Colonne par Colonne (Bas vers le Haut & Droite vers Gauche)',
+    algoId: 'algo-mat-parcours-bas-haut',
+    imageUrl: 'img/matrices/parcours_colonne_bas_haut.png',
+    summary: 'On fixe la colonne de droite (C-1) et on monte les lignes de L-1 à 0. La colonne décrémente ensuite vers la gauche jusqu\'à 0.',
+    keyLoop: 'Pour j de C - 1 à 0 (pas = -1) faire\n  Pour i de L - 1 à 0 (pas = -1) faire\n    // Traitement m[i, j]\n    écrire(m[i, j])\n  Fin pour\nFin pour',
+    bacTip: '💡 Indice Bac : Comme les colonnes avancent plus lentement que les lignes qui montent, la boucle externe est sur j (colonnes) et la boucle interne sur i (lignes).'
+  },
+  ligne_droite_gauche: {
+    id: 'ligne_droite_gauche',
+    label: '⬅️ Ligne / Ligne Inversé',
+    badge: 'Parcours Horizontal Inversé',
+    title: 'Parcours Ligne par Ligne Inversé (Droite vers Gauche & Bas vers le Haut)',
+    algoId: 'algo-mat-parcours-ligne-inverse',
+    imageUrl: 'img/matrices/parcours_ligne_droite_gauche.png',
+    summary: 'On commence par la dernière ligne du bas (L-1) et on lit les colonnes de droite à gauche de C-1 à 0.',
+    keyLoop: 'Pour i de L - 1 à 0 (pas = -1) faire\n  Pour j de C - 1 à 0 (pas = -1) faire\n    // Traitement m[i, j]\n    écrire(m[i, j])\n  Fin pour\nFin pour',
+    bacTip: '💡 Indice Bac : Toujours se rappeler : "dima el i taba3 el ligne, el j taba3 el colonne". Ici les deux boucles ont un pas négatif (-1).'
+  },
+  sablier: {
+    id: 'sablier',
+    label: '⏳ Motif Sablier (Pyramide Inversée)',
+    badge: 'Pattern Dynamique d & f',
+    title: 'Motif en Sablier / Entonnoir avec Bornes Variables',
+    algoId: 'algo-mat-pattern-sablier',
+    imageUrl: 'img/matrices/pattern_sablier_pyramide.png',
+    summary: 'Parcours des étoiles * formant un entonnoir ou sablier. Les bornes début (d) et fin (f) se resserrent à chaque nouvelle ligne.',
+    keyLoop: 'd <-- 0\nf <-- C - 1\nPour i de 0 à L - 1 faire\n  Pour j de d à f faire\n    // Traitement m[i, j]\n  Fin pour\n  d <-- d + 1\n  f <-- f - 1\nFin pour',
+    bacTip: '💡 Indice Bac : À chaque incrémentation de ligne i, la borne gauche d augmente de 1 et la borne droite f diminue de 1.'
+  },
+  diagonales: {
+    id: 'diagonales',
+    label: '↗️ Diagonales Montantes (Oblique)',
+    badge: 'Balayage Oblique en 2 Temps',
+    title: 'Parcours par Diagonales Montantes (Anti-Diagonales)',
+    algoId: 'algo-mat-pattern-diagonales',
+    imageUrl: 'img/matrices/pattern_diagonales_complet.png',
+    images: ['img/matrices/pattern_diagonales_partie1.png', 'img/matrices/pattern_diagonales_partie2.png'],
+    imageSteps: ['Partie 1 : Moitié supérieure (au-dessus et sur la diagonale principale)', 'Partie 2 : Moitié inférieure (sous la diagonale principale)'],
+    summary: 'Balaye toute la matrice par diagonales orientées vers le haut. Décomposé en deux boucles : triangle supérieur puis triangle inférieur.',
+    keyLoop: '// Partie 1 : Supérieure\nPour d de 0 à L - 1 faire\n  j <-- 0\n  Pour i de d à 0 (pas = -1) faire\n    écrire(m[i, j])\n    j <-- j + 1\n  Fin pour\nFin pour\n\n// Partie 2 : Inférieure\nPour d de 1 à L - 1 faire\n  j <-- d\n  Pour i de L - 1 à d (pas = -1) faire\n    écrire(m[i, j])\n    j <-- j + 1\n  Fin pour\nFin pour',
+    bacTip: '💡 Indice Bac : i et j bougent en même temps (i décrémente pendant que j incrémente), créant ainsi une trajectoire à 45° vers le haut droite.'
+  },
+  tri_colonne: {
+    id: 'tri_colonne',
+    label: '🔄 Tri par Colonne',
+    badge: 'Feuille d\'Annexe Bac',
+    title: 'Tri Indépendant de Chaque Colonne d\'une Matrice',
+    algoId: 'algo-tri-mat-colonne',
+    imageUrl: 'img/matrices/tri_matrice_colonne.png',
+    summary: 'Fixe la colonne j de 0 à n-1, puis applique un tri à bulles optimisé avec booléen p sur les cases m[i, j] et m[i + 1, j].',
+    keyLoop: 'Pour j de 0 à n - 1 faire\n  p <-- vrai\n  Tant que p faire\n    p <-- faux\n    Pour i de 0 à taille - 2 faire\n      Si m[i, j] > m[i + 1, j] alors\n        aux <-- m[i, j]\n        m[i, j] <-- m[i + 1, j]\n        m[i + 1, j] <-- aux\n        p <-- vrai\n      Fin si\n    Fin pour\n    taille <-- taille - 1\n  Fin tant que\nFin pour',
+    bacTip: '💡 Indice Bac : Chaque colonne est triée verticalement de manière totalement indépendante.'
+  },
+  tri_ligne: {
+    id: 'tri_ligne',
+    label: '🔄 Tri par Ligne',
+    badge: 'Feuille d\'Annexe Bac',
+    title: 'Tri Indépendant de Chaque Ligne d\'une Matrice',
+    algoId: 'algo-tri-mat-ligne',
+    imageUrl: 'img/matrices/tri_matrice_ligne.png',
+    summary: 'Fixe la ligne i de 0 à n-1, puis applique un tri à bulles optimisé avec booléen p sur les colonnes m[i, j] et m[i, j + 1].',
+    keyLoop: 'Pour i de 0 à n - 1 faire\n  p <-- vrai\n  Tant que p faire\n    p <-- faux\n    Pour j de 0 à taille - 2 faire\n      Si m[i, j] > m[i, j + 1] alors\n        aux <-- m[i, j]\n        m[i, j] <-- m[i, j + 1]\n        m[i, j + 1] <-- aux\n        p <-- vrai\n      Fin si\n    Fin pour\n    taille <-- taille - 1\n  Fin tant que\nFin pour',
+    bacTip: '💡 Indice Bac : Chaque ligne est triée horizontalement de manière totalement indépendante.'
+  }
+};
+
+function selectMatrixGuideTab(tabKey) {
+  currentMatrixGuideTab = tabKey;
+  const guide = MATRIX_GUIDE_DATA[tabKey];
+  if (!guide) return;
+
+  // Mettre à jour l'état visuel des onglets
+  document.querySelectorAll('.matrix-guide-tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-tab') === tabKey);
+  });
+
+  const displayEl = document.getElementById('matrixGuideDisplayArea');
+  if (!displayEl) return;
+
+  const itemObj = (typeof DATA !== 'undefined' && DATA && DATA.algo_theorique)
+    ? DATA.algo_theorique.find(x => x.id === guide.algoId)
+    : null;
+
+  displayEl.innerHTML = `
+    <div class="matrix-guide-content-panel">
+      <!-- Colonne Visuelle : Photo du PDF -->
+      <div class="matrix-guide-visual-col">
+        <div class="matrix-guide-img-box">
+          <a href="${guide.imageUrl}" target="_blank" rel="noopener noreferrer" title="Cliquer pour afficher l'image en plein écran">
+            <img src="${guide.imageUrl}" alt="${escapeHtml(guide.title)}" loading="lazy" />
+          </a>
+        </div>
+        <div style="margin-top: 8px; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;">
+          <span style="font-size: 0.78rem; color: var(--text-muted);">🔍 Cliquez pour ouvrir en haute résolution</span>
+          <a href="${guide.imageUrl}" target="_blank" rel="noopener noreferrer" class="link-btn-subtle" style="font-size: 0.78rem; color: #ea580c; font-weight: 700;">
+            Ouvrir l'image ↗
+          </a>
+        </div>
+      </div>
+
+      <!-- Colonne Explicative & Algorithmique -->
+      <div class="matrix-guide-info-col">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;">
+          <span style="background: rgba(234, 88, 12, 0.15); color: #ea580c; border: 1px solid rgba(234, 88, 12, 0.35); font-size: 0.78rem; font-weight: 700; padding: 2px 10px; border-radius: 12px;">
+            ${escapeHtml(guide.badge)}
+          </span>
+        </div>
+        <h4 style="margin: 0 0 10px 0; color: #fb923c; font-size: 1.15rem; font-weight: 800;">
+          ${escapeHtml(guide.title)}
+        </h4>
+        <p style="margin: 0 0 14px 0; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.55;">
+          ${escapeHtml(guide.summary)}
+        </p>
+
+        <!-- Squelette de Boucle Clé -->
+        <div style="background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(234, 88, 12, 0.3); border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+          <div style="font-size: 0.78rem; font-weight: 800; color: #fb923c; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+            <span>⚡</span> Structure de Boucle Bac :
+          </div>
+          <pre style="margin: 0; font-family: monospace; font-size: 0.84rem; color: #fef08a; white-space: pre-wrap; line-height: 1.45;"><code>${escapeHtml(guide.keyLoop)}</code></pre>
+        </div>
+
+        <!-- Astuce Examen -->
+        <div style="background: rgba(245, 158, 11, 0.1); border-left: 3px solid #f59e0b; padding: 8px 12px; border-radius: 4px; font-size: 0.82rem; color: #fde68a; margin-bottom: 16px; line-height: 1.45;">
+          ${escapeHtml(guide.bacTip)}
+        </div>
+
+        <!-- Bouton d'action pour ouvrir la fiche complète avec TDO et Python -->
+        ${itemObj ? `
+          <button type="button" class="btn-primary" onclick='openAlgoTheoriqueModal(${JSON.stringify(itemObj).replace(/'/g, "&#39;")})' style="background: linear-gradient(135deg, #ea580c, #f97316); color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 700; font-size: 0.88rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 3px 12px rgba(234, 88, 12, 0.35);">
+            <span>📖</span>
+            <span>Voir la Fiche Complète (T.D.O & Code Python)</span>
+            <span>→</span>
+          </button>
+        ` : ''}
+      </div>
+    </div>
+  `;
+}
+
 function renderAlgoTheoriqueCards() {
   const container = document.getElementById('algoTheoriqueGrid');
   if (!container) return;
@@ -7983,6 +8145,41 @@ function renderAlgoTheoriqueCards() {
       desc: catName
     };
 
+    
+    const isMatricesCat = (catName === 'Chapitre 6 : Matrices');
+    let matrixGuideHtml = '';
+    if (isMatricesCat && !currentAlgoTheoriqueSearch) {
+      matrixGuideHtml = `
+        <div class="matrix-interactive-guide">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px;">
+            <div>
+              <h4 style="margin: 0; color: #fb923c; font-size: 1.15rem; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                <span>📸</span> Guide Visuel des Types de Matrices & Schémas Manuscris (Support Bac)
+              </h4>
+              <p style="margin: 4px 0 0 0; color: var(--text-secondary); font-size: 0.84rem;">
+                Consultez les schémas originaux, l'architecture des boucles et les règles méthodologiques officielles.
+              </p>
+            </div>
+            <span style="background: rgba(234, 88, 12, 0.2); color: #fb923c; border: 1px solid rgba(234, 88, 12, 0.4); padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 700;">
+              7 Fiches Illustrées
+            </span>
+          </div>
+
+          <!-- Onglets de sélection -->
+          <div class="matrix-guide-tabs">
+            ${Object.values(MATRIX_GUIDE_DATA).map(g => `
+              <button type="button" class="matrix-guide-tab-btn ${g.id === currentMatrixGuideTab ? 'active' : ''}" data-tab="${g.id}" onclick="selectMatrixGuideTab('${g.id}')">
+                ${escapeHtml(g.label)}
+              </button>
+            `).join('')}
+          </div>
+
+          <!-- Panneau d'affichage dynamique -->
+          <div id="matrixGuideDisplayArea"></div>
+        </div>
+      `;
+    }
+
     const chapterSection = document.createElement('div');
     chapterSection.className = 'algo-chapter-section-wrap';
     chapterSection.style.gridColumn = '1 / -1';
@@ -8003,6 +8200,7 @@ function renderAlgoTheoriqueCards() {
           ${chapterItems.length} ${chapterItems.length > 1 ? 'fonctions & algorithmes' : 'fonction'}
         </span>
       </div>
+      ${matrixGuideHtml}
       <div class="items-grid algo-cards-grid">
       </div>
     `;
@@ -8024,9 +8222,16 @@ function renderAlgoTheoriqueCards() {
         <div class="card-cat-badge" style="color: ${meta.color};">${escapeHtml(meta.shortName)}</div>
         <div class="item-card-title">
           <span>${escapeHtml(item.name)}</span>
-          <span class="item-card-tag" style="color: ${typeBadgeColor}; background: ${typeBadgeBg}; border-color: ${typeBadgeBorder}; font-size: 0.8rem; font-weight: 700;">
-            ${typeLabel}
-          </span>
+          <div style="display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+            ${(item.imageUrl || (item.images && item.images.length)) ? `
+              <span class="item-card-tag" style="color: #38bdf8; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); font-size: 0.74rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                📸 Schéma Inclus
+              </span>
+            ` : ''}
+            <span class="item-card-tag" style="color: ${typeBadgeColor}; background: ${typeBadgeBg}; border-color: ${typeBadgeBorder}; font-size: 0.8rem; font-weight: 700;">
+              ${typeLabel}
+            </span>
+          </div>
         </div>
         <p class="item-card-desc">${escapeHtml(item.description || item.summary)}</p>
         <div class="card-action-bar">
@@ -8039,6 +8244,9 @@ function renderAlgoTheoriqueCards() {
     });
 
     container.appendChild(chapterSection);
+    if (isMatricesCat && !currentAlgoTheoriqueSearch) {
+      setTimeout(() => selectMatrixGuideTab(currentMatrixGuideTab), 10);
+    }
   });
 }
 
@@ -8099,6 +8307,44 @@ function openAlgoTheoriqueModal(item) {
         ${item.description || item.summary}
       </p>
     </div>
+
+    <!-- ILLUSTRATION & SCHÉMA MANUSCRIT DU SUPPORT BAC -->
+    ${(item.imageUrl || (item.images && item.images.length)) ? `
+      <div class="modal-section">
+        <div class="modal-section-title green" style="color: #38bdf8;">
+          <span>📸</span>
+          <span>Illustration & Schéma Manuscrit (Support Officiel Bac)</span>
+        </div>
+        <div class="matrix-modal-img-card" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 12px; padding: 14px; margin-top: 10px;">
+          ${item.images && item.images.length ? `
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+              ${item.images.map((img, idx) => `
+                <div style="background: #ffffff; border-radius: 8px; padding: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.25);">
+                  <div style="font-size: 0.82rem; font-weight: 700; color: #1e293b; margin-bottom: 6px; padding: 0 4px;">
+                    ${escapeHtml(item.imageSteps && item.imageSteps[idx] ? item.imageSteps[idx] : 'Schéma ' + (idx + 1))}
+                  </div>
+                  <a href="${img}" target="_blank" rel="noopener noreferrer" title="Cliquer pour afficher l'image en taille réelle dans un nouvel onglet">
+                    <img src="${img}" alt="${escapeHtml(item.name)}" style="width: 100%; height: auto; max-height: 480px; object-fit: contain; border-radius: 4px; display: block;" />
+                  </a>
+                </div>
+              `).join('')}
+            </div>
+          ` : `
+            <div style="background: #ffffff; border-radius: 8px; padding: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.25);">
+              <a href="${item.imageUrl}" target="_blank" rel="noopener noreferrer" title="Cliquer pour afficher l'image en taille réelle dans un nouvel onglet">
+                <img src="${item.imageUrl}" alt="${escapeHtml(item.name)}" style="width: 100%; height: auto; max-height: 520px; object-fit: contain; border-radius: 4px; display: block;" />
+              </a>
+            </div>
+          `}
+          ${item.imageCaption ? `
+            <p style="margin-top: 10px; font-size: 0.85rem; color: #94a3b8; line-height: 1.45; font-style: italic;">
+              💡 ${escapeHtml(item.imageCaption)}
+              <span style="display: block; font-size: 0.76rem; color: #64748b; margin-top: 4px;">(Cliquez sur l'image pour l'ouvrir en plein écran haute résolution)</span>
+            </p>
+          ` : ''}
+        </div>
+      </div>
+    ` : ''}
 
     <!-- 2. PSEUDO-CODE OFFICIEL BAC TUNISIEN -->
     <div class="modal-section">
