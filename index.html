@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=17.0">
+  <link rel="stylesheet" href="style.css?v=18.0">
 </head>
 <body>
 
@@ -170,10 +170,16 @@
     <!-- CONTENU PRINCIPAL DE L'APPLICATION -->
     <div class="app-main-content">
       <!-- FIL D'ARIANE DYNAMIQUE (BREADCRUMB) -->
-      <nav class="app-breadcrumb-bar" id="appBreadcrumbBar" aria-label="Fil d'Ariane">
-        <div class="breadcrumb-container" id="breadcrumbContainer">
-          <span class="breadcrumb-item active">Accueil</span>
+      <nav class="page-breadcrumb-bar" id="appBreadcrumbBar" aria-label="Fil d'Ariane">
+        <div class="breadcrumb-trail">
+          <a onclick="switchView('home')" style="cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+            <span>🏠</span>
+            <span>Accueil</span>
+          </a>
+          <span class="breadcrumb-sep">/</span>
+          <span class="breadcrumb-current" id="breadcrumbCurrent">Accueil &amp; Vue d'ensemble</span>
         </div>
+        <span class="breadcrumb-module-badge sti" id="breadcrumbModule">STI Web &amp; BD</span>
       </nav>
 
       <main class="app-main-body">
@@ -716,7 +722,6 @@
             <span class="pagination-title">🎨 Annexe CSS3</span>
           </div>
         </div>
-        </div>
       </div>
     </section>
 
@@ -724,23 +729,7 @@
          VUE 3 : PAGE DÉDIÉE CSS3
          ========================================== -->
     <section id="view-css" class="view-section">
-      <div class="page-header-banner">
-        <div class="container">
-          <div class="breadcrumb">
-            <a onclick="switchView('home')">Accueil</a>
-            <span>/</span>
-            <span style="color: #38bdf8; font-weight: 600;">CSS3</span>
-          </div>
-          <div class="subpage-title-row">
-            <h2 class="subpage-title">
-              <span style="color: #38bdf8;">🎨</span> Annexe Complète CSS3
-            </h2>
-            <button class="back-to-home-btn">
-              <span>←</span>
-              <span>Retour à l'accueil</span>
-            </button>
-          </div>
-        </div>
+      <div class="container">
 
         <!-- Onglets de bascule d'affichage CSS3 -->
         <div class="view-tabs-bar">
@@ -1127,7 +1116,6 @@
             <span class="pagination-label">Suivant →</span>
             <span class="pagination-title">⚡ Annexe JavaScript</span>
           </div>
-        </div>
         </div>
       </div>
     </section>
@@ -1680,7 +1668,6 @@
             <span class="pagination-title">🗄️ Annexe SQL MySQL</span>
           </div>
         </div>
-        </div>
 
       </div>
     </section>
@@ -2102,7 +2089,6 @@
             <span class="pagination-title">📚 Cours &amp; Séries PDF</span>
           </div>
         </div>
-        </div>
 
       </div>
     </section>
@@ -2287,7 +2273,6 @@
             <span class="pagination-label">Suivant →</span>
             <span class="pagination-title">🐍 Module Algorithme</span>
           </div>
-        </div>
         </div>
 
       </div>
@@ -2749,12 +2734,6 @@
           <div class="pagination-card next" onclick="switchView('algo-pratique')">
             <span class="pagination-label">Suivant →</span>
             <span class="pagination-title">🛠️ Pratique (Qt Designer ➔ Thonny)</span>
-          </div>
-        </div>
-          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <button class="nav-btn" onclick="switchView('algo-pratique')" style="color: #10b981; border: 1px solid rgba(16, 185, 129, 0.4);">🛠️ Voir la Pratique Qt</button>
-            <button class="nav-btn" onclick="switchView('algo-theorique')" style="color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4);">📖 Voir le Théorique</button>
-            <button class="nav-btn" onclick="switchModule('sti')" style="color: #38bdf8;">⌨️ Revenir au module STI</button>
           </div>
         </div>
 
@@ -3282,9 +3261,8 @@ app.exec_()</code></pre>
           </div>
           <div class="pagination-card next" onclick="switchView('algo-theorique')">
             <span class="pagination-label">Suivant →</span>
-            <span class="pagination-title">📖 Théorique (5 Chapitres Officiels)</span>
+            <span class="pagination-title">📖 Théorique (6 Chapitres Officiels)</span>
           </div>
-        </div>
         </div>
 
       </div>
@@ -3439,9 +3417,9 @@ app.exec_()</code></pre>
   </div>
 
   <!-- Fichiers Scripts -->
-  <script src="data.js?v=17.0"></script>
-  <script src="css_engine.js?v=17.0"></script>
-  <script src="algo_pratique_engine.js?v=17.0"></script>
-  <script src="app.js?v=17.0"></script>
+  <script src="data.js?v=18.0"></script>
+  <script src="css_engine.js?v=18.0"></script>
+  <script src="algo_pratique_engine.js?v=18.0"></script>
+  <script src="app.js?v=18.0"></script>
 </body>
 </html>

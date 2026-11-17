@@ -289,13 +289,15 @@ h1, h2, h3, h4, h5, h6 {
    VUE 1 : PAGE D'ACCUEIL AVEC LES 3 GRANDS BLOCS (HTML, CSS, JS)
    =================================================================== */
 .view-section {
-  display: none;
-  padding: 40px 0 80px 0;
-  animation: fadeIn 0.35s ease;
+  display: none !important;
+  padding: 24px 0 60px 0;
+  margin: 0;
+  width: 100%;
 }
 
 .view-section.active {
-  display: block;
+  display: block !important;
+  animation: fadeIn 0.2s ease-out;
 }
 
 @keyframes fadeIn {
@@ -5921,6 +5923,11 @@ input, select, textarea {
   z-index: 999;
 }
 
+.app-main-body {
+  width: 100%;
+  flex: 1;
+}
+
 /* 5. FIL D'ARIANE (BREADCRUMB) MODERNE & ÉPURÉ */
 .page-breadcrumb-bar {
   display: flex;
@@ -5928,11 +5935,16 @@ input, select, textarea {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 10px;
-  padding: 16px 24px;
+  padding: 12px 24px;
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border-color);
   font-size: 0.88rem;
   color: var(--text-muted);
+  min-height: 48px;
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  backdrop-filter: blur(10px);
 }
 
 .breadcrumb-trail {
@@ -6411,6 +6423,11 @@ input, select, textarea {
 
   .mobile-bottom-nav {
     display: flex;
+  }
+
+  .page-breadcrumb-bar {
+    position: static;
+    padding: 10px 16px;
   }
 
   .site-header {

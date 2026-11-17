@@ -1647,7 +1647,14 @@ function switchView(viewName) {
     else bottomLessons.classList.remove('active');
   }
 
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Forcer le défilement vers le haut de la zone principale et de la fenêtre
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+  const mainContentEl = document.querySelector('.app-main-content');
+  if (mainContentEl) mainContentEl.scrollTop = 0;
+  const mainBodyEl = document.querySelector('.app-main-body');
+  if (mainBodyEl) mainBodyEl.scrollTop = 0;
 
   // Réinitialiser les champs de recherche
   if (viewName === 'html') {
@@ -1732,7 +1739,14 @@ function openLessonsForModule(moduleName) {
   } else {
     filterLessonsBySubject('all');
   }
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Forcer le défilement vers le haut de la zone principale et de la fenêtre
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+  const mainContentEl = document.querySelector('.app-main-content');
+  if (mainContentEl) mainContentEl.scrollTop = 0;
+  const mainBodyEl = document.querySelector('.app-main-body');
+  if (mainBodyEl) mainBodyEl.scrollTop = 0;
 }
 
 // -------------------------------------------------------------
@@ -8338,7 +8352,7 @@ function setupReadingProgressBarAndBackToTop() {
 
 // 4. FIL D'ARIANE DYNAMIQUE (BREADCRUMB)
 const VIEW_METAS = {
-  'home': { module: 'sti', modLabel: 'STI Web & BD', title: 'Accueil STI' },
+  'home': { module: 'sti', modLabel: 'STI Web & BD', title: 'Accueil & Vue d\'ensemble' },
   'html': { module: 'sti', modLabel: 'STI Web & BD', title: 'HTML5 (Structure & Balises)' },
   'css': { module: 'sti', modLabel: 'STI Web & BD', title: 'CSS3 (Sélecteurs & Styles)' },
   'js': { module: 'sti', modLabel: 'STI Web & BD', title: 'JavaScript (Contrôles & DOM)' },
@@ -8347,7 +8361,7 @@ const VIEW_METAS = {
   'admin': { module: 'admin', modLabel: 'Administration', title: 'Espace Enseignant' },
   'algo-home': { module: 'algo', modLabel: 'Algorithme', title: 'Accueil Algorithme' },
   'algo-pratique': { module: 'algo', modLabel: 'Algorithme', title: 'Pratique (Qt ➔ Thonny Python)' },
-  'algo-theorique': { module: 'algo', modLabel: 'Algorithme', title: 'Théorique (5 Chapitres Bac Info)' }
+  'algo-theorique': { module: 'algo', modLabel: 'Algorithme', title: 'Théorique (6 Chapitres Bac Info)' }
 };
 
 function updateBreadcrumbBar(viewName) {
