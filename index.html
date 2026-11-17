@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="dark">
+<html lang="fr" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>STI de A à Z - Portail d'Étude Web (HTML5, CSS3, JS, SQL)</title>
-  <link rel="stylesheet" href="style.css?v=14.0">
+  <title>STI de A à Z — Mode Étude Calme (STI & Algorithme Bac Info)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=15.0">
 </head>
 <body>
 
@@ -1327,7 +1330,7 @@
                   </tr>
                   <tr onclick="openJsModalById('js-date-getmonth')" title="Cliquer pour afficher la fiche complète">
                     <td class="syntax-col">d.getMonth()</td>
-                    <td class="desc-col">Retourne le numéro du mois (entre 1 et 11).</td>
+                    <td class="desc-col">Retourne le numéro du mois (entre 0 et 11 : 0 = Janvier, 11 = Décembre).</td>
                   </tr>
                   <tr onclick="openJsModalById('js-date-getfullyear')" title="Cliquer pour afficher la fiche complète">
                     <td class="syntax-col">d.getFullYear()</td>
@@ -3181,22 +3184,76 @@ app.exec_()</code></pre>
           <!-- Rempli dynamiquement par JS -->
         </div>
 
-        <!-- Navigation bas de page Théorique -->
-        <div class="bottom-nav-box" style="margin-top: 40px; padding: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
-          <button class="back-to-home-btn" onclick="switchView('algo-home')">
-            <span>←</span>
-            <span>Retour à l'accueil Algo</span>
-          </button>
-          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <button class="nav-btn" onclick="switchView('algo-pratique')" style="color: #10b981; border: 1px solid rgba(16, 185, 129, 0.4);">🛠️ Voir la Pratique Qt ➔ Thonny</button>
-            <button class="nav-btn" onclick="switchModule('sti')" style="color: #38bdf8;">⌨️ Revenir au module STI</button>
+        <!-- Pagination bas de page Théorique -->
+        <div class="page-pagination-bar">
+          <div class="pagination-card prev" onclick="switchView('algo-pratique')">
+            <span class="pagination-label">← Précédent</span>
+            <span class="pagination-title">🛠️ Pratique (Qt Designer ➔ Thonny)</span>
+          </div>
+          <div class="pagination-card next" onclick="openLessonsForModule('algo')">
+            <span class="pagination-label">Suivant →</span>
+            <span class="pagination-title">📚 Cours &amp; Séries PDF Algorithme</span>
           </div>
         </div>
-
       </div>
     </section>
 
-  </main>
+        </main>
+    </div> <!-- fin .app-main-content -->
+  </div> <!-- fin .app-shell -->
+
+  <!-- BARRE DE NAVIGATION INFÉRIEURE MOBILE (< 1024px) -->
+  <nav class="mobile-bottom-nav" id="mobileBottomNav">
+    <button class="mobile-bottom-item active" id="bottomNavHome" onclick="handleHomeBottomNav()">
+      <span class="icon">🏠</span>
+      <span>Accueil</span>
+    </button>
+    <button class="mobile-bottom-item" id="bottomNavSearch" onclick="openGlobalSearchModal()">
+      <span class="icon">🔍</span>
+      <span>Recherche</span>
+    </button>
+    <button class="mobile-bottom-item" id="bottomNavLessons" onclick="switchView('lessons')">
+      <span class="icon">📚</span>
+      <span>Cours PDF</span>
+    </button>
+    <button class="mobile-bottom-item" id="bottomNavMenu" onclick="toggleSidebarDrawer()">
+      <span class="icon">☰</span>
+      <span>Menu</span>
+    </button>
+  </nav>
+
+  <!-- BOUTON RETOUR EN HAUT (BACK TO TOP) -->
+  <button id="backToTopBtn" class="back-to-top-btn" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" title="Retour en haut" aria-label="Retour en haut">
+    ↑
+  </button>
+
+  <!-- MODALE DE RECHERCHE GLOBALE SPOTLIGHT (CTRL+K) -->
+  <div class="global-search-overlay" id="globalSearchOverlay" onclick="handleGlobalSearchBackdrop(event)">
+    <div class="global-search-modal" role="dialog" aria-modal="true" aria-label="Recherche globale">
+      <div class="search-input-header">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="globalSearchInput" placeholder="Rechercher une notion, balise, fonction, algo, PDF..." autocomplete="off">
+        <span class="esc-pill" onclick="closeGlobalSearchModal()">Échap</span>
+      </div>
+      <div class="search-filter-pills" id="globalSearchFilterPills">
+        <button class="search-filter-pill active" data-filter="all" onclick="setGlobalSearchFilter('all')">Tous</button>
+        <button class="search-filter-pill" data-filter="sti" onclick="setGlobalSearchFilter('sti')">🌐 STI Web &amp; BD</button>
+        <button class="search-filter-pill" data-filter="algo" onclick="setGlobalSearchFilter('algo')">🐍 Algorithme</button>
+        <button class="search-filter-pill" data-filter="pdf" onclick="setGlobalSearchFilter('pdf')">📚 Cours &amp; Séries PDF</button>
+      </div>
+      <div class="search-results-list" id="globalSearchResultsList">
+        <!-- Injecté en direct par JS -->
+      </div>
+      <div class="search-footer-bar">
+        <div class="search-footer-shortcuts">
+          <span><kbd>↑</kbd><kbd>↓</kbd> Naviguer</span>
+          <span><kbd>↵</kbd> Ouvrir</span>
+          <span><kbd>Échap</kbd> Fermer</span>
+        </div>
+        <span style="color:var(--text-muted); font-size:0.75rem;">Recherche instantanée • Baccalauréat Tunisie</span>
+      </div>
+    </div>
+  </div>
 
   <!-- ==========================================
        MODALE UNIVERSELLE DE DÉTAILS
@@ -3242,9 +3299,9 @@ app.exec_()</code></pre>
   </div>
 
   <!-- Fichiers Scripts -->
-  <script src="data.js?v=14.0"></script>
-  <script src="css_engine.js?v=14.0"></script>
-  <script src="algo_pratique_engine.js?v=14.0"></script>
-  <script src="app.js?v=14.0"></script>
+  <script src="data.js?v=15.0"></script>
+  <script src="css_engine.js?v=15.0"></script>
+  <script src="algo_pratique_engine.js?v=15.0"></script>
+  <script src="app.js?v=15.0"></script>
 </body>
 </html>

@@ -2558,14 +2558,14 @@ const DATA = {
       "name": "d.getMonth()",
       "tag": "d.getMonth()",
       "syntax": "d.getMonth()",
-      "summary": "Retourne le numéro du mois (entre 1 et 11).",
-      "description": "Extrait le mois de l'objet Date. Note officielle de l'annexe Bac STI : mentionne le numéro du mois. En JavaScript standard, les mois sont indexés de 0 (Janvier) à 11 (Décembre), donc pour un affichage usuel, on ajoute généralement +1.",
+      "summary": "Retourne le numéro du mois (entre 0 et 11 : 0 = Janvier, 11 = Décembre).",
+      "description": "Extrait le mois de l'objet Date. En JavaScript, les mois sont toujours indexés de 0 (Janvier) à 11 (Décembre). Pour un affichage usuel de 1 à 12, on effectue généralement d.getMonth() + 1.",
       "howToUse": "var mois = d.getMonth() + 1; // 1 pour Janvier, 12 pour Décembre",
       "values": [
         "0 = Janvier",
         "1 = Février",
         "11 = Décembre",
-        "Note Bac : entre 1 et 11"
+        "Valeur exacte : 0 à 11"
       ],
       "code": "// Formater le mois de la date courante\nfunction afficherMois() {\n  var d = new Date();\n  var mois = d.getMonth() + 1;\n  alert(\"Mois numéro : \" + mois);\n}",
       "runnableCode": "var d = new Date();\nconsole.log(\"Mois natif (0 à 11) : \" + d.getMonth());\nconsole.log(\"Mois usuel (+1) : \" + (d.getMonth() + 1));"

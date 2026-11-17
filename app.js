@@ -1532,6 +1532,10 @@ document.addEventListener('DOMContentLoaded', () => {
   renderJsCards();
   renderSqlCards();
   initLessonsModule();
+  if (typeof setupGlobalSearch === 'function') setupGlobalSearch();
+  if (typeof setupReadingProgressBarAndBackToTop === 'function') setupReadingProgressBarAndBackToTop();
+  if (typeof updateResumeStudyCard === 'function') updateResumeStudyCard();
+  if (typeof updateBreadcrumbBar === 'function') updateBreadcrumbBar(currentView || 'home');
 });
 
 // -------------------------------------------------------------
@@ -1597,7 +1601,7 @@ function switchView(viewName) {
     console.warn(`Section view-${viewName} non trouvée.`);
   }
 
-  // Mise à jour de la navbar
+  // Mise à jour de la navbar classique
   document.querySelectorAll('.nav-btn').forEach(btn => {
     if (btn.getAttribute('data-view') === viewName) {
       btn.classList.add('active');
@@ -1605,6 +1609,42 @@ function switchView(viewName) {
       btn.classList.remove('active');
     }
   });
+
+  // Mise à jour des liens de la nouvelle sidebar
+  document.querySelectorAll('.sidebar-link').forEach(link => {
+    if (link.getAttribute('data-view') === viewName) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
+  });
+
+  // Mise à jour du fil d'ariane
+  if (typeof updateBreadcrumbBar === 'function') {
+    updateBreadcrumbBar(viewName);
+  }
+
+  // Mémoriser la session d'étude ("Continuer où j'ai arrêté")
+  if (typeof saveStudySession === 'function' && viewName !== 'admin') {
+    saveStudySession(viewName);
+  }
+
+  // Fermer le tiroir mobile s'il était ouvert
+  if (typeof toggleSidebarDrawer === 'function') {
+    toggleSidebarDrawer(false);
+  }
+
+  // Mise à jour de la barre inférieure mobile
+  const bottomHome = document.getElementById('bottomNavHome');
+  const bottomLessons = document.getElementById('bottomNavLessons');
+  if (bottomHome) {
+    if (viewName === 'home' || viewName === 'algo-home') bottomHome.classList.add('active');
+    else bottomHome.classList.remove('active');
+  }
+  if (bottomLessons) {
+    if (viewName === 'lessons') bottomLessons.classList.add('active');
+    else bottomLessons.classList.remove('active');
+  }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -1648,11 +1688,9 @@ function switchView(viewName) {
     }
     history.replaceState(null, '', '#lessons');
   } else if (viewName === 'admin') {
-    isAdminLoggedIn = true;
-    const dash = document.getElementById('adminDashboard');
-    if (dash) dash.style.display = 'block';
-    renderAdminLessonsTable();
-    setupAdminDragAndDrop();
+    if (typeof checkAdminAuth === 'function') {
+      checkAdminAuth();
+    }
     history.replaceState(null, '', '/admin');
   } else if (viewName === 'algo-home') {
     history.replaceState(null, '', '#algo-home');
@@ -7301,6 +7339,10 @@ function switchModule(moduleName, skipViewSwitch = false) {
       btnAlgo.classList.add('active');
       btnAlgo.setAttribute('aria-selected', 'true');
     }
+    const tabSti = document.getElementById('sidebarTabSti');
+    const tabAlgo = document.getElementById('sidebarTabAlgo');
+    if (tabSti) tabSti.classList.remove('active-sti');
+    if (tabAlgo) tabAlgo.classList.add('active-algo');
     if (brandTitle) brandTitle.textContent = "ALGO & THONNY";
     if (brandBadge) brandBadge.textContent = "Bac Informatique";
     if (brandIcon) {
@@ -7326,6 +7368,10 @@ function switchModule(moduleName, skipViewSwitch = false) {
       btnAlgo.classList.remove('active');
       btnAlgo.setAttribute('aria-selected', 'false');
     }
+    const tabSti = document.getElementById('sidebarTabSti');
+    const tabAlgo = document.getElementById('sidebarTabAlgo');
+    if (tabSti) tabSti.classList.add('active-sti');
+    if (tabAlgo) tabAlgo.classList.remove('active-algo');
     if (brandTitle) brandTitle.textContent = "STI de A à Z";
     if (brandBadge) brandBadge.textContent = "Révision Web";
     if (brandIcon) {
@@ -8253,4 +8299,521 @@ Table Widget  | W.nomTable.setItem(r, c, QTableWidgetItem(str(v))) | Remplir une
 
   const btn = event ? event.target : null;
   copyCodeText(summary, btn);
+}
+
+
+// ===================================================================
+// EXTENSION MODE ÉTUDE CALME & NOUVELLE NAVIGATION
+// ===================================================================
+
+let currentSearchFilter = 'all';
+let currentSearchResults = [];
+let selectedSearchIndex = 0;
+
+// 1. GESTION DU THÈME AVEC MODE ÉTUDE CALME PAR DÉFAUT
+function setupThemeToggle() {
+  const savedTheme = localStorage.getItem('sti_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  updateThemeVisuals(savedTheme);
+}
+
+function toggleSiteTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'light';
+  const newTheme = (current === 'light') ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('sti_theme', newTheme);
+  updateThemeVisuals(newTheme);
+}
+
+function updateThemeVisuals(theme) {
+  const icon = document.getElementById('themeToggleIcon');
+  const label = document.getElementById('themeToggleLabel');
+  const mobileBtn = document.getElementById('mobileThemeToggleBtn');
+  const isDark = (theme === 'dark');
+
+  if (icon) icon.textContent = isDark ? '☀️' : '🌙';
+  if (label) label.textContent = isDark ? 'Mode Clair' : 'Mode Sombre';
+  if (mobileBtn) mobileBtn.textContent = isDark ? '☀️' : '🌙';
+}
+
+// 2. CONTRÔLE DE LA SIDEBAR SUR MOBILE (TIROIR COULISSANT)
+function toggleSidebarDrawer(force) {
+  const sidebar = document.getElementById('appSidebar');
+  const backdrop = document.getElementById('sidebarBackdrop');
+  if (!sidebar) return;
+
+  const isOpen = (typeof force === 'boolean') ? force : !sidebar.classList.contains('open');
+  if (isOpen) {
+    sidebar.classList.add('open');
+    if (backdrop) backdrop.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  } else {
+    sidebar.classList.remove('open');
+    if (backdrop) backdrop.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+
+// 3. BARRE DE PROGRESSION DE LECTURE & BOUTON RETOUR EN HAUT
+function setupReadingProgressBarAndBackToTop() {
+  window.addEventListener('scroll', () => {
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+    
+    const bar = document.getElementById('readingProgressBar');
+    if (bar) bar.style.width = scrolled + '%';
+
+    const topBtn = document.getElementById('backToTopBtn');
+    if (topBtn) {
+      if (winScroll > 280) topBtn.classList.add('visible');
+      else topBtn.classList.remove('visible');
+    }
+  }, { passive: true });
+}
+
+// 4. FIL D'ARIANE DYNAMIQUE (BREADCRUMB)
+const VIEW_METAS = {
+  'home': { module: 'sti', modLabel: 'STI Web & BD', title: 'Accueil STI' },
+  'html': { module: 'sti', modLabel: 'STI Web & BD', title: 'HTML5 (Structure & Balises)' },
+  'css': { module: 'sti', modLabel: 'STI Web & BD', title: 'CSS3 (Sélecteurs & Styles)' },
+  'js': { module: 'sti', modLabel: 'STI Web & BD', title: 'JavaScript (Contrôles & DOM)' },
+  'sql': { module: 'sti', modLabel: 'STI Web & BD', title: 'SQL & MySQL (Bases de Données)' },
+  'lessons': { module: 'all', modLabel: 'Cours & Séries', title: 'Polycopiés & Examens PDF' },
+  'admin': { module: 'admin', modLabel: 'Administration', title: 'Espace Enseignant' },
+  'algo-home': { module: 'algo', modLabel: 'Algorithme', title: 'Accueil Algorithme' },
+  'algo-pratique': { module: 'algo', modLabel: 'Algorithme', title: 'Pratique (Qt ➔ Thonny Python)' },
+  'algo-theorique': { module: 'algo', modLabel: 'Algorithme', title: 'Théorique (5 Chapitres Bac Info)' }
+};
+
+function updateBreadcrumbBar(viewName) {
+  const meta = VIEW_METAS[viewName] || { module: 'sti', modLabel: 'STI Web & BD', title: viewName };
+  const badge = document.getElementById('breadcrumbModule');
+  const current = document.getElementById('breadcrumbCurrent');
+
+  if (badge) {
+    badge.textContent = meta.modLabel;
+    badge.className = `breadcrumb-module-badge ${meta.module === 'algo' ? 'algo' : 'sti'}`;
+  }
+  if (current) {
+    current.textContent = meta.title;
+  }
+}
+
+// 5. HISTORIQUE D'ÉTUDE : "CONTINUER OÙ J'AI ARRÊTÉ"
+function saveStudySession(viewName, itemTitle = null) {
+  const meta = VIEW_METAS[viewName];
+  if (!meta) return;
+  const title = itemTitle || meta.title;
+  const record = { view: viewName, title: title, time: Date.now() };
+  localStorage.setItem('sti_last_visited', JSON.stringify(record));
+  updateResumeStudyCard();
+}
+
+function updateResumeStudyCard() {
+  const card = document.getElementById('resumeStudyCard');
+  if (!card) return;
+
+  const raw = localStorage.getItem('sti_last_visited');
+  if (!raw) {
+    card.style.display = 'none';
+    return;
+  }
+
+  try {
+    const data = JSON.parse(raw);
+    const titleEl = document.getElementById('resumeStudyTitle');
+    const subtitleEl = document.getElementById('resumeStudySubtitle');
+    const btn = document.getElementById('resumeStudyBtn');
+
+    if (titleEl) titleEl.textContent = `Continuer votre révision : ${data.title}`;
+    if (subtitleEl) subtitleEl.textContent = `Dernière consultation enregistrée • Cliquez pour reprendre`;
+    if (btn) btn.setAttribute('data-target-view', data.view);
+    card.style.display = 'flex';
+  } catch (e) {
+    card.style.display = 'none';
+  }
+}
+
+function resumeLastStudySession() {
+  const raw = localStorage.getItem('sti_last_visited');
+  if (raw) {
+    try {
+      const data = JSON.parse(raw);
+      if (data && data.view) {
+        if (data.view.startsWith('algo') && currentModule !== 'algo') {
+          switchModule('algo', true);
+        } else if (!data.view.startsWith('algo') && currentModule === 'algo') {
+          switchModule('sti', true);
+        }
+        switchView(data.view);
+        return;
+      }
+    } catch (e) {}
+  }
+  switchView('html');
+}
+
+function handleHomeBottomNav() {
+  if (currentModule === 'algo') {
+    switchView('algo-home');
+  } else {
+    switchView('home');
+  }
+}
+
+function openLessonsForModule(mod) {
+  currentModule = mod;
+  localStorage.setItem('sti_current_module', mod);
+  if (typeof currentLessonSubject !== 'undefined') {
+    currentLessonSubject = (mod === 'algo') ? 'algo-ch1-fichiers' : 'all';
+  }
+  switchView('lessons');
+}
+
+// 6. RECHERCHE GLOBALE SPOTLIGHT (CTRL+K)
+function setupGlobalSearch() {
+  window.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
+      e.preventDefault();
+      openGlobalSearchModal();
+    } else if (e.key === 'Escape') {
+      closeGlobalSearchModal();
+    } else if (e.shiftKey && (e.key === 'd' || e.key === 'D')) {
+      // Raccourci Shift+D pour basculer le thème
+      e.preventDefault();
+      toggleSiteTheme();
+    }
+  });
+
+  const input = document.getElementById('globalSearchInput');
+  if (input) {
+    input.addEventListener('input', (e) => handleGlobalSearchInput(e.target.value));
+    input.addEventListener('keydown', handleGlobalSearchKeyboard);
+  }
+}
+
+function openGlobalSearchModal() {
+  const overlay = document.getElementById('globalSearchOverlay');
+  const input = document.getElementById('globalSearchInput');
+  if (!overlay) return;
+
+  overlay.classList.add('active');
+  if (input) {
+    input.value = '';
+    setTimeout(() => input.focus(), 50);
+  }
+  currentSearchFilter = 'all';
+  updateSearchFilterPills();
+  executeGlobalSearch('');
+}
+
+function closeGlobalSearchModal() {
+  const overlay = document.getElementById('globalSearchOverlay');
+  if (overlay) overlay.classList.remove('active');
+}
+
+function handleGlobalSearchBackdrop(e) {
+  if (e.target && e.target.id === 'globalSearchOverlay') {
+    closeGlobalSearchModal();
+  }
+}
+
+function setGlobalSearchFilter(filter) {
+  currentSearchFilter = filter;
+  updateSearchFilterPills();
+  const input = document.getElementById('globalSearchInput');
+  executeGlobalSearch(input ? input.value : '');
+}
+
+function updateSearchFilterPills() {
+  document.querySelectorAll('#globalSearchFilterPills .search-filter-pill').forEach(pill => {
+    if (pill.getAttribute('data-filter') === currentSearchFilter) {
+      pill.classList.add('active');
+    } else {
+      pill.classList.remove('active');
+    }
+  });
+}
+
+function executeGlobalSearch(q) {
+  const query = (q || '').trim().toLowerCase();
+  const resultsList = document.getElementById('globalSearchResultsList');
+  if (!resultsList) return;
+
+  let pool = [];
+
+  // Rassembler les données de tous les modules
+  if (typeof DATA !== 'undefined' && DATA) {
+    if ((currentSearchFilter === 'all' || currentSearchFilter === 'sti') && DATA.html) {
+      DATA.html.forEach(item => pool.push({
+        id: item.id,
+        name: `<${item.tag}> ${item.name || ''}`,
+        summary: item.summary || item.description || '',
+        category: 'HTML5',
+        module: 'sti',
+        view: 'html',
+        icon: '🌐',
+        item: item
+      }));
+    }
+    if ((currentSearchFilter === 'all' || currentSearchFilter === 'sti') && DATA.css) {
+      DATA.css.forEach(item => pool.push({
+        id: item.id,
+        name: item.property || item.name || '',
+        summary: item.summary || item.description || '',
+        category: 'CSS3',
+        module: 'sti',
+        view: 'css',
+        icon: '🎨',
+        item: item
+      }));
+    }
+    if ((currentSearchFilter === 'all' || currentSearchFilter === 'sti') && DATA.js) {
+      DATA.js.forEach(item => pool.push({
+        id: item.id,
+        name: item.syntax || item.name || '',
+        summary: item.summary || item.description || '',
+        category: 'JavaScript',
+        module: 'sti',
+        view: 'js',
+        icon: '⚡',
+        item: item
+      }));
+    }
+    if ((currentSearchFilter === 'all' || currentSearchFilter === 'sti') && DATA.sql) {
+      DATA.sql.forEach(item => pool.push({
+        id: item.id,
+        name: item.syntax || item.name || '',
+        summary: item.summary || item.description || '',
+        category: 'SQL & BD',
+        module: 'sti',
+        view: 'sql',
+        icon: '🗄️',
+        item: item
+      }));
+    }
+    if ((currentSearchFilter === 'all' || currentSearchFilter === 'algo') && DATA.algo_theorique) {
+      DATA.algo_theorique.forEach(item => pool.push({
+        id: item.id,
+        name: item.name || item.syntax || '',
+        summary: item.summary || item.description || '',
+        category: item.category || 'Algorithme Théorique',
+        module: 'algo',
+        view: 'algo-theorique',
+        icon: '📖',
+        item: item
+      }));
+    }
+    if ((currentSearchFilter === 'all' || currentSearchFilter === 'algo') && DATA.algo_pratique) {
+      DATA.algo_pratique.forEach(item => pool.push({
+        id: item.id,
+        name: item.title || item.syntax || '',
+        summary: item.summary || item.description || '',
+        category: 'Pratique Qt/Thonny',
+        module: 'algo',
+        view: 'algo-pratique',
+        icon: '🛠️',
+        item: item
+      }));
+    }
+  }
+
+  // Leçons PDF
+  if ((currentSearchFilter === 'all' || currentSearchFilter === 'pdf') && typeof allLessons !== 'undefined') {
+    allLessons.forEach(l => pool.push({
+      id: l.id,
+      name: l.title,
+      summary: l.description || l.summary || '',
+      category: l.subjectLabel || 'Cours & Séries PDF',
+      module: (l.subject && l.subject.includes('algo')) ? 'algo' : 'sti',
+      view: 'lessons',
+      icon: '📚',
+      isLesson: true,
+      lessonId: l.id
+    }));
+  }
+
+  // Filtrage selon la requête
+  let filtered = pool;
+  if (query) {
+    filtered = pool.filter(item => {
+      const n = (item.name || '').toLowerCase();
+      const s = (item.summary || '').toLowerCase();
+      const c = (item.category || '').toLowerCase();
+      return n.includes(query) || s.includes(query) || c.includes(query);
+    });
+  }
+
+  currentSearchResults = filtered.slice(0, 30);
+  selectedSearchIndex = 0;
+
+  if (currentSearchResults.length === 0) {
+    resultsList.innerHTML = `
+      <div style="text-align: center; padding: 40px 16px; color: var(--text-muted);">
+        <div style="font-size: 2rem; margin-bottom: 8px;">🔍</div>
+        <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">Aucun résultat trouvé</div>
+        <div style="font-size: 0.85rem;">Essayez un autre mot-clé (ex: getMonth, tri, pickle, flex, table...)</div>
+      </div>
+    `;
+    return;
+  }
+
+  resultsList.innerHTML = currentSearchResults.map((res, idx) => `
+    <div class="search-result-item ${idx === 0 ? 'selected' : ''}" data-idx="${idx}" onclick="navigateGlobalSearchResult(${idx})">
+      <div class="search-result-main">
+        <div class="search-result-icon" style="background: ${res.module === 'algo' ? 'var(--algo-accent-light)' : 'var(--sti-accent-light)'};">
+          ${res.icon}
+        </div>
+        <div class="search-result-info">
+          <div class="search-result-name">${escapeHtml(res.name)}</div>
+          <div class="search-result-desc">${escapeHtml(res.summary)}</div>
+        </div>
+      </div>
+      <div class="search-result-meta">
+        <span class="breadcrumb-module-badge ${res.module === 'algo' ? 'algo' : 'sti'}" style="font-size: 0.68rem; padding: 2px 7px;">
+          ${res.module === 'algo' ? 'ALGO' : 'STI'}
+        </span>
+        <span style="font-size: 0.75rem; color: var(--text-muted);">${escapeHtml(res.category)}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function handleGlobalSearchInput(val) {
+  executeGlobalSearch(val);
+}
+
+function handleGlobalSearchKeyboard(e) {
+  if (currentSearchResults.length === 0) return;
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    selectedSearchIndex = (selectedSearchIndex + 1) % currentSearchResults.length;
+    highlightSelectedSearchResult();
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    selectedSearchIndex = (selectedSearchIndex - 1 + currentSearchResults.length) % currentSearchResults.length;
+    highlightSelectedSearchResult();
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    navigateGlobalSearchResult(selectedSearchIndex);
+  }
+}
+
+function highlightSelectedSearchResult() {
+  document.querySelectorAll('.search-result-item').forEach((item, idx) => {
+    if (idx === selectedSearchIndex) {
+      item.classList.add('selected');
+      item.scrollIntoView({ block: 'nearest' });
+    } else {
+      item.classList.remove('selected');
+    }
+  });
+}
+
+function navigateGlobalSearchResult(index) {
+  const target = currentSearchResults[index];
+  if (!target) return;
+
+  closeGlobalSearchModal();
+
+  // Activer le bon module
+  if (target.module === 'algo' && currentModule !== 'algo') {
+    switchModule('algo', true);
+  } else if (target.module === 'sti' && currentModule === 'algo') {
+    switchModule('sti', true);
+  }
+
+  // Changer de vue
+  switchView(target.view);
+
+  // Si c'est une leçon PDF
+  if (target.isLesson && typeof openPdfModal === 'function') {
+    setTimeout(() => openPdfModal(target.lessonId), 150);
+    return;
+  }
+
+  // Ouvrir la modale correspondante
+  if (target.view === 'html' && typeof openHtmlModal === 'function') {
+    setTimeout(() => openHtmlModal(target.item), 150);
+  } else if (target.view === 'css' && typeof openCssModal === 'function') {
+    setTimeout(() => openCssModal(target.item), 150);
+  } else if (target.view === 'js' && typeof openJsModal === 'function') {
+    setTimeout(() => openJsModal(target.item), 150);
+  } else if (target.view === 'sql' && typeof openSqlModal === 'function') {
+    setTimeout(() => openSqlModal(target.item), 150);
+  } else if (target.view === 'algo-theorique' && typeof openAlgoTheoriqueModal === 'function') {
+    setTimeout(() => openAlgoTheoriqueModal(target.item), 150);
+  } else if (target.view === 'algo-pratique' && typeof openAlgoPratiqueModal === 'function') {
+    setTimeout(() => openAlgoPratiqueModal(target.item), 150);
+  }
+}
+
+// 7. SÉCURITÉ ESPACE ENSEIGNANT (/admin)
+const ADMIN_MASTER_PASSCODE = "prof2025";
+
+function checkAdminAuth() {
+  const isAuth = (sessionStorage.getItem('sti_admin_auth') === 'true');
+  const gate = document.getElementById('adminAuthGate');
+  const dash = document.getElementById('adminDashboard');
+
+  if (isAuth) {
+    if (gate) gate.style.display = 'none';
+    if (dash) dash.style.display = 'block';
+    renderAdminLessonsTable();
+    setupAdminDragAndDrop();
+  } else {
+    if (gate) gate.style.display = 'block';
+    if (dash) dash.style.display = 'none';
+    const err = document.getElementById('adminAuthError');
+    if (err) err.style.display = 'none';
+    const input = document.getElementById('adminPasswordInput');
+    if (input) {
+      input.value = '';
+      setTimeout(() => input.focus(), 100);
+    }
+  }
+}
+
+function handleAdminLogin(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const input = document.getElementById('adminPasswordInput');
+  const err = document.getElementById('adminAuthError');
+  const val = input ? input.value.trim() : '';
+
+  // Vérification sécurisée du mot de passe enseignant
+  if (val === ADMIN_MASTER_PASSCODE || val === localStorage.getItem('sti_custom_admin_pass')) {
+    sessionStorage.setItem('sti_admin_auth', 'true');
+    checkAdminAuth();
+  } else {
+    if (err) {
+      err.style.display = 'block';
+      err.textContent = "Mot de passe incorrect. Veuillez réessayer ou contacter l'administrateur.";
+    }
+    if (input) {
+      input.focus();
+      input.select();
+    }
+  }
+}
+
+function handleAdminLogout() {
+  sessionStorage.removeItem('sti_admin_auth');
+  checkAdminAuth();
+  alert("Vous avez été déconnecté(e) de l'espace enseignant.");
+}
+
+// 8. DOUBLE SÉCURITÉ POUR VIDER TOUS LES DOCUMENTS
+async function clearAllLessonsFromDB() {
+  const code = prompt("⚠️ ATTENTION : Vous êtes sur le point de supprimer TOUS les documents de cours et séries PDF.\\n\\nCette action est irréversible. Pour confirmer définitivement, tapez SUPPRIMER ci-dessous :");
+  if (code !== "SUPPRIMER") {
+    alert("Action annulée. Aucun document n'a été supprimé.");
+    return;
+  }
+  await STILessonsDB.clear();
+  allLessons = [];
+  renderAdminLessonsTable();
+  renderLessons();
+  alert("✓ Tous les documents ont été supprimés de la base locale.");
 }
