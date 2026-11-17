@@ -7,189 +7,301 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=15.0">
+  <link rel="stylesheet" href="style.css?v=16.0">
 </head>
 <body>
 
   <!-- ==========================================
        EN-TÊTE PRINCIPAL ET BARRE DE NAVIGATION
        ========================================== -->
-  <header class="site-header">
-    <div class="container nav-inner">
-      <div class="brand-logo" onclick="handleLogoClick()">
-        <div class="brand-icon" id="brandIcon">STI</div>
-        <div>
-          <span id="brandTitle">STI de A à Z</span>
-          <span class="brand-badge" id="brandBadge">Révision Web</span>
-        </div>
+  <!-- BARRE DE PROGRESSION DE LECTURE -->
+  <div id="readingProgressBar" class="reading-progress-bar"></div>
+
+  <!-- EN-TÊTE MOBILE TOP (< 1024px) -->
+  <header class="mobile-top-header" id="mobileTopHeader">
+    <div class="mobile-header-inner">
+      <button class="mobile-menu-btn" onclick="toggleSidebarDrawer()" aria-label="Ouvrir le menu">☰</button>
+      <div class="mobile-brand" onclick="switchView('home')">
+        <span class="mobile-brand-icon">📚</span>
+        <span class="mobile-brand-title">STI &amp; ALGO</span>
       </div>
-
-      <!-- SÉLECTEUR TACTILE DOUBLE TOUCHE CLAVIER (STI vs ALGO) -->
-      <div class="keyboard-switch-container">
-        <div class="keyboard-switch-base" role="tablist" aria-label="Bascule de module d'examen">
-          <button class="keycap-btn active" id="keycap-sti" onclick="switchModule('sti')" role="tab" aria-selected="true" title="Module STI : HTML5, CSS3, JavaScript, SQL">
-            <span class="keycap-led"></span>
-            <span class="keycap-body">
-              <span class="keycap-icon">⌨️</span>
-              <span class="keycap-text">STI</span>
-              <span class="keycap-sub">WEB &amp; BD</span>
-            </span>
-          </button>
-          <button class="keycap-btn" id="keycap-algo" onclick="switchModule('algo')" role="tab" aria-selected="false" title="Module Algorithme : Qt Designer &amp; Thonny Python">
-            <span class="keycap-led"></span>
-            <span class="keycap-body">
-              <span class="keycap-icon">🐍</span>
-              <span class="keycap-text">ALGO</span>
-              <span class="keycap-sub">QT &amp; THONNY</span>
-            </span>
-          </button>
-        </div>
-      </div>
-
-      <div class="nav-actions">
-        <!-- NAVIGATION MODULE STI -->
-        <button class="nav-btn nav-sti-item active" data-view="home" onclick="switchView('home')">🏠 Accueil</button>
-        <button class="nav-btn nav-sti-item" data-view="html" onclick="switchView('html')" style="color: #f97316;">🌐 HTML5</button>
-        <button class="nav-btn nav-sti-item" data-view="css" onclick="switchView('css')" style="color: #38bdf8;">🎨 CSS3</button>
-        <button class="nav-btn nav-sti-item" data-view="js" onclick="switchView('js')" style="color: #facc15;">⚡ JavaScript</button>
-        <button class="nav-btn nav-sti-item" data-view="sql" onclick="switchView('sql')" style="color: #c084fc;">🗄️ SQL</button>
-        <button class="nav-btn nav-sti-item" data-view="lessons" onclick="switchView('lessons')" style="color: #a855f7;">📚 Cours & Séries PDF</button>
-        
-        <!-- NAVIGATION MODULE ALGORITHME & PROGRAMMATION -->
-        <button class="nav-btn nav-algo-item" data-view="algo-home" onclick="switchView('algo-home')" style="display:none; color: #38bdf8;">🏠 Accueil Algo</button>
-        <button class="nav-btn nav-algo-item" data-view="algo-pratique" onclick="switchView('algo-pratique')" style="display:none; color: #10b981;">🛠️ Pratique (Qt ➔ Thonny)</button>
-        <button class="nav-btn nav-algo-item" data-view="algo-theorique" onclick="switchView('algo-theorique')" style="display:none; color: #f59e0b;">📖 Théorique (Bac Info)</button>
-        <button class="nav-btn nav-algo-item" data-view="lessons" onclick="switchView('lessons')" style="display:none; color: #a855f7;">📚 Cours & Séries PDF</button>
-
-        <button class="theme-toggle-btn" id="themeToggleBtn" title="Basculer thème sombre / clair">☀️</button>
+      <div class="mobile-header-actions">
+        <button class="mobile-action-btn" onclick="openGlobalSearchModal()" title="Recherche (Ctrl+K)">🔍</button>
+        <button class="mobile-action-btn" id="mobileThemeToggleBtn" onclick="toggleThemeMode()" title="Changer de thème">☀️</button>
       </div>
     </div>
   </header>
 
-  <main>
+  <!-- BACKDROP POUR TIROIR MOBILE -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebarDrawer(false)"></div>
+
+  <div class="app-shell">
+    <!-- BARRE LATÉRALE FIXE (DESKTOP) & TIROIR MOBILE -->
+    <aside class="app-sidebar" id="appSidebar">
+      <!-- 1. En-tête de marque -->
+      <div class="sidebar-brand-header">
+        <div class="sidebar-brand-logo" onclick="switchView('home')">
+          <div class="sidebar-brand-badge">BAC</div>
+          <div class="sidebar-brand-text">
+            <span class="brand-title">STI de A à Z</span>
+            <span class="brand-sub">Baccalauréat Tunisie</span>
+          </div>
+        </div>
+        <button class="sidebar-close-btn" onclick="toggleSidebarDrawer(false)" aria-label="Fermer le menu">✕</button>
+      </div>
+
+      <!-- 2. Bascule instantanée de module (1 CLIC STI <-> ALGO) -->
+      <div class="sidebar-module-switch-box">
+        <div class="sidebar-module-tabs">
+          <button class="sidebar-module-tab active-sti" id="sidebarTabSti" onclick="switchModule('sti')" title="Basculer vers le module STI Web & BD">
+            <span class="tab-icon">🌐</span>
+            <span class="tab-title">STI Web &amp; BD</span>
+          </button>
+          <button class="sidebar-module-tab" id="sidebarTabAlgo" onclick="switchModule('algo')" title="Basculer vers le module Algorithme">
+            <span class="tab-icon">🐍</span>
+            <span class="tab-title">Algorithme</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 3. Déclencheur Recherche Globale Spotlight (Ctrl+K) -->
+      <div class="sidebar-search-trigger" onclick="openGlobalSearchModal()">
+        <span class="search-icon">🔍</span>
+        <span class="search-text">Rechercher...</span>
+        <span class="search-kbd">Ctrl K</span>
+      </div>
+
+      <!-- 4. Navigation structurée par module -->
+      <nav class="sidebar-nav-scroll" id="sidebarNavScroll">
+        <!-- Accueil Général -->
+        <a class="sidebar-link active" data-view="home" onclick="switchView('home')">
+          <span class="nav-icon">🏠</span>
+          <span class="nav-label">Accueil &amp; Vue d'ensemble</span>
+        </a>
+
+        <!-- GROUPE MODULE 1 : STI WEB & BASES DE DONNÉES -->
+        <div class="sidebar-group" id="sidebarGroupSti">
+          <div class="sidebar-group-header">
+            <span class="group-title">STI Web &amp; BD</span>
+            <span class="group-badge">4 Matières</span>
+          </div>
+          <div class="sidebar-group-links">
+            <a class="sidebar-link" data-view="html" onclick="switchView('html')">
+              <span class="nav-bullet sti"></span>
+              <span class="nav-icon">🌐</span>
+              <span class="nav-label">HTML5</span>
+              <span class="nav-count">57</span>
+            </a>
+            <a class="sidebar-link" data-view="css" onclick="switchView('css')">
+              <span class="nav-bullet sti"></span>
+              <span class="nav-icon">🎨</span>
+              <span class="nav-label">CSS3</span>
+              <span class="nav-count">61</span>
+            </a>
+            <a class="sidebar-link" data-view="js" onclick="switchView('js')">
+              <span class="nav-bullet sti"></span>
+              <span class="nav-icon">⚡</span>
+              <span class="nav-label">JavaScript</span>
+              <span class="nav-count">63</span>
+            </a>
+            <a class="sidebar-link" data-view="sql" onclick="switchView('sql')">
+              <span class="nav-bullet sti"></span>
+              <span class="nav-icon">🗄️</span>
+              <span class="nav-label">SQL MySQL</span>
+              <span class="nav-count">57</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- GROUPE MODULE 2 : ALGORITHME & PROGRAMMATION -->
+        <div class="sidebar-group" id="sidebarGroupAlgo">
+          <div class="sidebar-group-header">
+            <span class="group-title">Algorithmique</span>
+            <span class="group-badge">5 Chapitres</span>
+          </div>
+          <div class="sidebar-group-links">
+            <a class="sidebar-link" data-view="algo-home" onclick="switchView('algo-home')">
+              <span class="nav-bullet algo"></span>
+              <span class="nav-icon">📑</span>
+              <span class="nav-label">Vue d'ensemble Algo</span>
+            </a>
+            <a class="sidebar-link" data-view="algo-pratique" onclick="switchView('algo-pratique')">
+              <span class="nav-bullet algo"></span>
+              <span class="nav-icon">🛠️</span>
+              <span class="nav-label">Pratique (Qt ➔ Thonny)</span>
+              <span class="nav-count">20</span>
+            </a>
+            <a class="sidebar-link" data-view="algo-theorique" onclick="switchView('algo-theorique')">
+              <span class="nav-bullet algo"></span>
+              <span class="nav-icon">📖</span>
+              <span class="nav-label">Théorique (5 Chapitres)</span>
+              <span class="nav-count">47</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- GROUPE TRANSVERSAL : COURS & EXAMENS -->
+        <div class="sidebar-group">
+          <div class="sidebar-group-header">
+            <span class="group-title">Ressources &amp; Documents</span>
+          </div>
+          <div class="sidebar-group-links">
+            <a class="sidebar-link" data-view="lessons" onclick="switchView('lessons')">
+              <span class="nav-icon">📚</span>
+              <span class="nav-label">Cours &amp; Séries PDF</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- 5. Pied de la barre latérale : Thème & Espace Professeur -->
+      <div class="sidebar-footer">
+        <button class="sidebar-footer-btn" id="sidebarThemeBtn" onclick="toggleThemeMode()" title="Changer de thème">
+          <span class="footer-icon">🌙</span>
+          <span class="footer-text">Mode Sombre</span>
+        </button>
+        <button class="sidebar-footer-btn admin" onclick="switchView('admin')" title="Espace Enseignant">
+          <span class="footer-icon">⚙️</span>
+          <span class="footer-text">Espace Professeur</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- CONTENU PRINCIPAL DE L'APPLICATION -->
+    <div class="app-main-content">
+      <!-- FIL D'ARIANE DYNAMIQUE (BREADCRUMB) -->
+      <nav class="app-breadcrumb-bar" id="appBreadcrumbBar" aria-label="Fil d'Ariane">
+        <div class="breadcrumb-container" id="breadcrumbContainer">
+          <span class="breadcrumb-item active">Accueil</span>
+        </div>
+      </nav>
+
+      <main class="app-main-body">
     <!-- ==========================================
          VUE 1 : PAGE D'ACCUEIL (LES 3 GRANDS BLOCS)
          ========================================== -->
     <section id="view-home" class="view-section active">
       <div class="container">
         
-        <div class="hero">
-          <span class="hero-tag">📚 Annexe & Fiches de Révision Officielles</span>
-          <h1 class="hero-title">Portail d'Étude Web - STI de A à Z</h1>
-          <p class="hero-desc">
-            Retrouvez toutes les notions officielles du Baccalauréat STI : les balises HTML5 avec photos du résultat, les propriétés CSS3 avec vidéos explicatives, les fonctions JavaScript avec validation de formulaires, ainsi que la section SQL complète avec console MySQL en direct.
+        <!-- HERO PRINCIPAL MODE ÉTUDE CALME -->
+        <div class="home-calm-hero">
+          <div class="home-calm-badge">
+            <span>✨</span>
+            <span>Baccalauréat Tunisie • STI &amp; Informatique</span>
+          </div>
+          <h1 class="home-calm-title">Bienvenue, on révise !</h1>
+          <p class="home-calm-subtitle">
+            Un espace d'étude calme, clair et structuré pour maîtriser l'intégralité du programme officiel de STI (Web &amp; Bases de données) et d'Algorithmique.
           </p>
         </div>
 
-        <!-- LES 3 GRANDS BLOCS DU COURS (HTML, CSS, JS) -->
-        <div class="portal-grid">
-          
-          <!-- BLOC 1 : HTML5 -->
-          <div class="portal-card card-html" data-view="html">
-            <div class="card-icon-wrap">🌐</div>
-            <h2 class="card-title">HTML5</h2>
-            <p class="card-subtitle">
-              Annexe complète : balises de structuration, tableaux, conteneurs, listes, éléments multimédias et éléments de formulaire.
-            </p>
-            <div class="card-badges">
-              <span class="pill-badge" style="color:#fb923c;">57 Notions & Balises</span>
-              <span class="pill-badge" style="color:#f97316;">📋 Tableau Officiel 3 Colonnes</span>
-              <span class="pill-badge">🎛️ Variantes Radio & Rendu</span>
-            </div>
-            <div class="card-cta-btn">
-              <span>Ouvrir l'annexe HTML5</span>
-              <span>→</span>
+        <!-- CARTE "CONTINUER OÙ J'AI ARRÊTÉ" (LOCALSTORAGE) -->
+        <div class="resume-study-card" id="resumeStudyCard" style="display: none;">
+          <div class="resume-left">
+            <div class="resume-icon-box">⏱️</div>
+            <div class="resume-info">
+              <h4 id="resumeStudyTitle">Continuer votre révision</h4>
+              <p id="resumeStudySubtitle">Dernière consultation enregistrée • Cliquez pour reprendre</p>
             </div>
           </div>
-
-          <!-- BLOC 2 : CSS3 -->
-          <div class="portal-card card-css" data-view="css">
-            <div class="card-icon-wrap">🎨</div>
-            <h2 class="card-title">CSS3</h2>
-            <p class="card-subtitle">
-              Annexe complète : 61 propriétés avec sélecteurs #id, polices, arrière-plan, boîtes, transitions, animations et filtres.
-            </p>
-            <div class="card-badges">
-              <span class="pill-badge" style="color:#38bdf8;">61 Propriétés (#id)</span>
-              <span class="pill-badge" style="color:#38bdf8;">📋 Tableau Officiel 3 Colonnes</span>
-              <span class="pill-badge" style="color:#facc15;">🎛️ Variantes Radio (solid, dotted...)</span>
-            </div>
-            <div class="card-cta-btn">
-              <span>Ouvrir l'annexe CSS3 & Vidéos</span>
-              <span>→</span>
-            </div>
-          </div>
-
-          <!-- BLOC 3 : JAVASCRIPT -->
-          <div class="portal-card card-js" data-view="js">
-            <div class="card-icon-wrap" style="background: linear-gradient(135deg, #059669, #10b981);">⚡</div>
-            <h2 class="card-title">JavaScript</h2>
-            <p class="card-subtitle">
-              Annexe officielle conforme : 14 sections du Bac STI (opérateurs, chaînes, Math, Date, Tableaux, DOM, validation verif, Captcha, et structure switch).
-            </p>
-            <div class="card-badges">
-              <span class="pill-badge" style="color:#34d399;">63 Notions & Fonctions (14 sections)</span>
-              <span class="pill-badge" style="color:#10b981;">📋 Tableau Officiel & Fonctions Bac</span>
-              <span class="pill-badge">Console de test en direct</span>
-            </div>
-            <div class="card-cta-btn">
-              <span>Ouvrir l'annexe JS & Tests</span>
-              <span>→</span>
-            </div>
-          </div>
-
-          <!-- BLOC 4 : SQL (BASE DE DONNÉES) -->
-          <div class="portal-card card-sql" data-view="sql">
-            <div class="card-icon-wrap" style="background: linear-gradient(135deg, #7c3aed, #a855f7); color:#fff;">🗄️</div>
-            <h2 class="card-title">SQL</h2>
-            <p class="card-subtitle">
-              Annexe officielle conforme : 8 sections indispensables (Types de données, Contraintes d'intégrité, LDD, LMD, Fonctions date et agrégation) avec console SQL interactive.
-            </p>
-            <div class="card-badges">
-              <span class="pill-badge" style="color:#c084fc;">57 Notions & Commandes (8 sections)</span>
-              <span class="pill-badge" style="color:#a855f7;">📋 Fiche Officielle Bac STI</span>
-              <span class="pill-badge" style="color:#34d399;">🗄️ Console SQL en direct</span>
-            </div>
-            <div class="card-cta-btn" style="background: #8b5cf6; color: #fff;">
-              <span>Ouvrir l'annexe SQL & Simulateur</span>
-              <span>→</span>
-            </div>
-          </div>
-
-          <!-- BLOC 5 : COURS & SÉRIES PDF (PROFESSEUR) -->
-          <div class="portal-card card-lessons" data-view="lessons" onclick="openLessonsForModule('sti')">
-            <div class="card-icon-wrap" style="background: linear-gradient(135deg, #7c3aed, #a855f7);">📚</div>
-            <h2 class="card-title">Cours & Séries PDF</h2>
-            <p class="card-subtitle">
-              Documents et polycopiés officiels partagés par votre professeur : leçons détaillées, séries d'exercices et devoirs pour HTML5, CSS3, JavaScript et SQL.
-            </p>
-            <div class="card-badges">
-              <span class="pill-badge" style="color:#c084fc;">4 Matières (HTML, CSS, JS, SQL)</span>
-              <span class="pill-badge" style="color:#a855f7;">📑 Téléchargement & Aperçu PDF</span>
-            </div>
-            <div class="card-cta-btn" onclick="openLessonsForModule('sti')" style="background: #a855f7; color: #fff;">
-              <span>Consulter les Leçons PDF</span>
-              <span>→</span>
-            </div>
-          </div>
-
+          <button class="resume-cta-btn" id="resumeStudyBtn" onclick="resumeLastStudySession()">
+            <span>Reprendre</span>
+            <span>→</span>
+          </button>
         </div>
 
-        <!-- Astuce pour les révisions -->
-        <div class="bottom-nav-box" style="margin-top: 50px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
-          <div>
-            <h3 style="font-size: 1.1rem; margin-bottom: 4px;">🎯 Astuce d'examen pour la section STI :</h3>
-            <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;">
-              Chaque fiche contient le code source réutilisable en un clic et le résultat visuel ou vidéo correspondant pour mémoriser rapidement.
+        <!-- LES DEUX GRANDES CARTES DE MODULES (STI vs ALGO) -->
+        <div class="big-modules-grid">
+          
+          <!-- GRAND BLOC 1 : STI WEB & BD -->
+          <div class="big-module-card sti" onclick="switchView('html')">
+            <div class="big-module-card-header">
+              <div class="big-module-icon">🌐</div>
+              <div>
+                <span class="big-module-badge">Module STI</span>
+                <h3>STI Web &amp; BD</h3>
+              </div>
+            </div>
+            <p class="big-module-desc">
+              Le programme complet des 4 matières du Web et des Bases de Données pour la section STI :
             </p>
+            <ul class="big-module-topics-list">
+              <li class="big-module-topic-item" onclick="event.stopPropagation(); switchView('html')">
+                <div class="big-module-topic-name">
+                  <span>🌐</span>
+                  <span>HTML5</span>
+                </div>
+                <span class="big-module-topic-badge">57 notions &amp; balises</span>
+              </li>
+              <li class="big-module-topic-item" onclick="event.stopPropagation(); switchView('css')">
+                <div class="big-module-topic-name">
+                  <span>🎨</span>
+                  <span>CSS3</span>
+                </div>
+                <span class="big-module-topic-badge">61 propriétés (#id)</span>
+              </li>
+              <li class="big-module-topic-item" onclick="event.stopPropagation(); switchView('js')">
+                <div class="big-module-topic-name">
+                  <span>⚡</span>
+                  <span>JavaScript</span>
+                </div>
+                <span class="big-module-topic-badge">63 fonctions &amp; DOM</span>
+              </li>
+              <li class="big-module-topic-item" onclick="event.stopPropagation(); switchView('sql')">
+                <div class="big-module-topic-name">
+                  <span>🗄️</span>
+                  <span>SQL MySQL</span>
+                </div>
+                <span class="big-module-topic-badge">57 commandes &amp; requêtes</span>
+              </li>
+            </ul>
+            <button class="big-module-cta-btn" onclick="event.stopPropagation(); switchView('html')">
+              <span>Explorer le module STI</span>
+              <span>→</span>
+            </button>
           </div>
-          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <button class="nav-btn" data-view="html" onclick="switchView('html')">🌐 Voir HTML5</button>
-            <button class="nav-btn" data-view="css" onclick="switchView('css')">🎨 Voir CSS3</button>
-            <button class="nav-btn" data-view="js" onclick="switchView('js')">⚡ Voir JavaScript</button>
-            <button class="nav-btn" data-view="sql" onclick="switchView('sql')" style="color:#c084fc;">🗄️ Voir SQL</button>
-            <button class="nav-btn" data-view="lessons" onclick="switchView('lessons')">📚 Cours & Séries PDF</button>
+
+          <!-- GRAND BLOC 2 : ALGORITHME & PROGRAMMATION -->
+          <div class="big-module-card algo" onclick="switchView('algo-pratique')">
+            <div class="big-module-card-header">
+              <div class="big-module-icon">🐍</div>
+              <div>
+                <span class="big-module-badge">Module Algorithmique</span>
+                <h3>Algorithme &amp; Python</h3>
+              </div>
+            </div>
+            <p class="big-module-desc">
+              Le programme officiel tunisien structuré en 5 chapitres rigoureux et son laboratoire interactif :
+            </p>
+            <ul class="big-module-topics-list">
+              <li class="big-module-topic-item" onclick="event.stopPropagation(); switchView('algo-pratique')">
+                <div class="big-module-topic-name">
+                  <span>🛠️</span>
+                  <span>Pratique (Qt Designer ➔ Thonny)</span>
+                </div>
+                <span class="big-module-topic-badge">20 notions &amp; simulateur</span>
+              </li>
+              <li class="big-module-topic-item" onclick="event.stopPropagation(); switchView('algo-theorique')">
+                <div class="big-module-topic-name">
+                  <span>📖</span>
+                  <span>Théorique (5 Chapitres Officiels)</span>
+                </div>
+                <span class="big-module-topic-badge">47 algorithmes complets</span>
+              </li>
+              <li class="big-module-topic-item" onclick="event.stopPropagation(); openLessonsForModule('algo')">
+                <div class="big-module-topic-name">
+                  <span>📚</span>
+                  <span>Cours &amp; Séries PDF</span>
+                </div>
+                <span class="big-module-topic-badge">Sujets types &amp; annales</span>
+              </li>
+            </ul>
+            <button class="big-module-cta-btn" onclick="event.stopPropagation(); switchView('algo-pratique')">
+              <span>Explorer l'Algorithmique</span>
+              <span>→</span>
+            </button>
           </div>
+
         </div>
 
       </div>
@@ -594,16 +706,16 @@
         </div>
 
         <!-- Navigation bas de page HTML5 -->
-        <div class="bottom-nav-box" style="margin-top: 40px; padding: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
-          <button class="back-to-home-btn" onclick="switchView('home')">
-            <span>←</span>
-            <span>Retour à l'accueil</span>
-          </button>
-          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <button class="nav-btn" data-view="css" onclick="switchView('css')">🎨 Passer à CSS3 →</button>
-            <button class="nav-btn" data-view="js" onclick="switchView('js')">⚡ Passer à JavaScript →</button>
-            <button class="nav-btn" data-view="sql" onclick="switchView('sql')" style="color:#c084fc;">🗄️ Passer à SQL →</button>
+        <div class="page-pagination-bar">
+          <div class="pagination-card prev" onclick="switchView('home')">
+            <span class="pagination-label">← Précédent</span>
+            <span class="pagination-title">🏠 Accueil &amp; Vue d'ensemble</span>
           </div>
+          <div class="pagination-card next" onclick="switchView('css')">
+            <span class="pagination-label">Suivant →</span>
+            <span class="pagination-title">🎨 Annexe CSS3</span>
+          </div>
+        </div>
         </div>
       </div>
     </section>
@@ -1006,16 +1118,16 @@
         </div>
 
         <!-- Navigation bas de page CSS3 -->
-        <div class="bottom-nav-box" style="margin-top: 40px; padding: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
-          <button class="back-to-home-btn" onclick="switchView('home')">
-            <span>←</span>
-            <span>Retour à l'accueil</span>
-          </button>
-          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <button class="nav-btn" data-view="html" onclick="switchView('html')">🌐 Voir HTML5</button>
-            <button class="nav-btn" data-view="js" onclick="switchView('js')">⚡ Passer à JavaScript →</button>
-            <button class="nav-btn" data-view="sql" onclick="switchView('sql')" style="color:#c084fc;">🗄️ Passer à SQL →</button>
+        <div class="page-pagination-bar">
+          <div class="pagination-card prev" onclick="switchView('html')">
+            <span class="pagination-label">← Précédent</span>
+            <span class="pagination-title">🌐 Annexe HTML5</span>
           </div>
+          <div class="pagination-card next" onclick="switchView('js')">
+            <span class="pagination-label">Suivant →</span>
+            <span class="pagination-title">⚡ Annexe JavaScript</span>
+          </div>
+        </div>
         </div>
       </div>
     </section>
@@ -1559,17 +1671,16 @@
         </div>
 
         <!-- Navigation bas de page JavaScript -->
-        <div class="bottom-nav-box" style="margin-top: 40px; padding: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
-          <button class="back-to-home-btn" onclick="switchView('home')">
-            <span>←</span>
-            <span>Retour à l'accueil</span>
-          </button>
-          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <button class="nav-btn" data-view="html" onclick="switchView('html')">🌐 Voir HTML5</button>
-            <button class="nav-btn" data-view="css" onclick="switchView('css')">🎨 Voir CSS3</button>
-            <button class="nav-btn" data-view="sql" onclick="switchView('sql')" style="color:#c084fc;">🗄️ Passer à SQL →</button>
-            <button class="nav-btn" data-view="lessons" onclick="switchView('lessons')">📚 Cours & Séries PDF</button>
+        <div class="page-pagination-bar">
+          <div class="pagination-card prev" onclick="switchView('css')">
+            <span class="pagination-label">← Précédent</span>
+            <span class="pagination-title">🎨 Annexe CSS3</span>
           </div>
+          <div class="pagination-card next" onclick="switchView('sql')">
+            <span class="pagination-label">Suivant →</span>
+            <span class="pagination-title">🗄️ Annexe SQL MySQL</span>
+          </div>
+        </div>
         </div>
 
       </div>
@@ -1982,17 +2093,16 @@
         </div>
 
         <!-- Navigation bas de page SQL -->
-        <div class="bottom-nav-box" style="margin-top: 40px; padding: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
-          <button class="back-to-home-btn" onclick="switchView('home')">
-            <span>←</span>
-            <span>Retour à l'accueil</span>
-          </button>
-          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <button class="nav-btn" data-view="html" onclick="switchView('html')">🌐 Voir HTML5</button>
-            <button class="nav-btn" data-view="css" onclick="switchView('css')">🎨 Voir CSS3</button>
-            <button class="nav-btn" data-view="js" onclick="switchView('js')">⚡ Voir JavaScript</button>
-            <button class="nav-btn" data-view="lessons" onclick="switchView('lessons')">📚 Cours & Séries PDF →</button>
+        <div class="page-pagination-bar">
+          <div class="pagination-card prev" onclick="switchView('js')">
+            <span class="pagination-label">← Précédent</span>
+            <span class="pagination-title">⚡ Annexe JavaScript</span>
           </div>
+          <div class="pagination-card next" onclick="switchView('lessons')">
+            <span class="pagination-label">Suivant →</span>
+            <span class="pagination-title">📚 Cours &amp; Séries PDF</span>
+          </div>
+        </div>
         </div>
 
       </div>
@@ -2165,19 +2275,16 @@
         </div>
 
         <!-- Navigation bas de page -->
-        <div class="bottom-nav-box" style="margin-top: 40px; padding: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
-          <button class="back-to-home-btn" onclick="handleLogoClick()">
-            <span>←</span>
-            <span>Retour à l'accueil</span>
-          </button>
-          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <button class="nav-btn" data-view="html" onclick="switchView('html')">🌐 Voir HTML5</button>
-            <button class="nav-btn" data-view="css" onclick="switchView('css')">🎨 Voir CSS3</button>
-            <button class="nav-btn" data-view="js" onclick="switchView('js')">⚡ Voir JavaScript</button>
-            <button class="nav-btn" data-view="sql" onclick="switchView('sql')">🗄️ Voir SQL</button>
-            <button class="nav-btn" onclick="switchView('algo-pratique')" style="color: #34d399; border-color: rgba(52, 211, 153, 0.4);">🛠️ Pratique (Qt)</button>
-            <button class="nav-btn" onclick="switchView('algo-theorique')" style="color: #fbbf24; border-color: rgba(251, 191, 36, 0.4);">📖 Théorique (Bac)</button>
+        <div class="page-pagination-bar">
+          <div class="pagination-card prev" onclick="switchView('sql')">
+            <span class="pagination-label">← Précédent</span>
+            <span class="pagination-title">🗄️ Annexe SQL MySQL</span>
           </div>
+          <div class="pagination-card next" onclick="switchView('algo-home')">
+            <span class="pagination-label">Suivant →</span>
+            <span class="pagination-title">🐍 Module Algorithme</span>
+          </div>
+        </div>
         </div>
 
       </div>
@@ -2215,7 +2322,24 @@
       <div class="container" style="padding-top: 28px; padding-bottom: 50px;">
         
         <!-- TABLEAU DE BORD ENSEIGNANT (Accès direct sans mot de passe) -->
-        <div id="adminDashboard" style="display: block;">
+        <!-- PORTE DE SÉCURITÉ AUTHENTIFICATION ENSEIGNANT -->
+        <div id="adminAuthGate" class="admin-auth-gate-box">
+          <div class="admin-auth-card">
+            <div class="admin-auth-icon">🔒</div>
+            <h3 class="admin-auth-title">Accès Réservé aux Enseignants</h3>
+            <p class="admin-auth-desc">Veuillez saisir le mot de passe enseignant pour accéder au dépôt et à la gestion des documents PDF.</p>
+            <form id="adminAuthForm" onsubmit="handleAdminLoginSubmit(event)">
+              <div class="auth-input-group">
+                <input type="password" id="adminPasswordInput" class="admin-auth-input" placeholder="Mot de passe enseignant..." required autofocus autocomplete="current-password">
+                <button type="submit" class="admin-auth-btn">Déverrouiller</button>
+              </div>
+              <div id="adminAuthError" class="admin-auth-error" style="display: none;">Mot de passe incorrect. Veuillez réessayer.</div>
+            </form>
+          </div>
+        </div>
+
+        <!-- TABLEAU DE BORD ENSEIGNANT (Protégé) -->
+        <div id="adminDashboard" style="display: none;">
           
           <!-- Barre d'état enseignant -->
           <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px 20px; margin-bottom: 26px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
@@ -2605,13 +2729,16 @@
         </div>
 
         <!-- Astuce pour les révisions -->
-        <div class="bottom-nav-box" style="margin-top: 30px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
-          <div>
-            <h4 style="font-size: 1rem; margin-bottom: 4px; color: #34d399;">💡 Passerelle d'étude :</h4>
-            <p style="font-size: 0.88rem; color: var(--text-secondary); margin: 0;">
-              Vous pouvez basculer à tout moment entre le module <strong>STI (Web &amp; BD)</strong> et le module <strong>Algorithme</strong> grâce aux deux touches mécaniques situées dans la barre supérieure.
-            </p>
+        <div class="page-pagination-bar">
+          <div class="pagination-card prev" onclick="switchView('home')">
+            <span class="pagination-label">← Précédent</span>
+            <span class="pagination-title">🏠 Accueil Général</span>
           </div>
+          <div class="pagination-card next" onclick="switchView('algo-pratique')">
+            <span class="pagination-label">Suivant →</span>
+            <span class="pagination-title">🛠️ Pratique (Qt Designer ➔ Thonny)</span>
+          </div>
+        </div>
           <div style="display: flex; gap: 10px; flex-wrap: wrap;">
             <button class="nav-btn" onclick="switchView('algo-pratique')" style="color: #10b981; border: 1px solid rgba(16, 185, 129, 0.4);">🛠️ Voir la Pratique Qt</button>
             <button class="nav-btn" onclick="switchView('algo-theorique')" style="color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4);">📖 Voir le Théorique</button>
@@ -3136,15 +3263,16 @@ app.exec_()</code></pre>
         </div>
 
         <!-- Navigation bas de page Pratique -->
-        <div class="bottom-nav-box" style="margin-top: 40px; padding: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
-          <button class="back-to-home-btn" onclick="switchView('algo-home')">
-            <span>←</span>
-            <span>Retour à l'accueil Algo</span>
-          </button>
-          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <button class="nav-btn" onclick="switchView('algo-theorique')" style="color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4);">📖 Voir le Théorique (Algorithmique Bac) →</button>
-            <button class="nav-btn" onclick="switchModule('sti')" style="color: #38bdf8;">⌨️ Revenir au module STI</button>
+        <div class="page-pagination-bar">
+          <div class="pagination-card prev" onclick="switchView('algo-home')">
+            <span class="pagination-label">← Précédent</span>
+            <span class="pagination-title">📑 Vue d'ensemble Algo</span>
           </div>
+          <div class="pagination-card next" onclick="switchView('algo-theorique')">
+            <span class="pagination-label">Suivant →</span>
+            <span class="pagination-title">📖 Théorique (5 Chapitres Officiels)</span>
+          </div>
+        </div>
         </div>
 
       </div>
@@ -3299,9 +3427,9 @@ app.exec_()</code></pre>
   </div>
 
   <!-- Fichiers Scripts -->
-  <script src="data.js?v=15.0"></script>
-  <script src="css_engine.js?v=15.0"></script>
-  <script src="algo_pratique_engine.js?v=15.0"></script>
-  <script src="app.js?v=15.0"></script>
+  <script src="data.js?v=16.0"></script>
+  <script src="css_engine.js?v=16.0"></script>
+  <script src="algo_pratique_engine.js?v=16.0"></script>
+  <script src="app.js?v=16.0"></script>
 </body>
 </html>
