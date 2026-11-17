@@ -1797,3373 +1797,3493 @@ const DATA = {
     }
   ],
   "js": [
-  {
-    "id": "js-op-et",
-    "section": "Opérateurs logiques",
-    "category": "Opérateurs logiques",
-    "name": "&& (ET logique)",
-    "tag": "&&",
-    "syntax": "condition1 && condition2",
-    "summary": "ET",
-    "description": "Opérateur logique ET. Renvoie true si et seulement si toutes les conditions liées sont vraies en même temps. Très utilisé dans les contrôles de formulaire pour combiner plusieurs validations.",
-    "howToUse": "Dans une structure conditionnelle if (...), relier deux expressions avec &&. Si la première est fausse, JavaScript s'arrête (court-circuit).",
-    "values": [
-      "condition1 && condition2",
-      "true && true -> true",
-      "true && false -> false"
-    ],
-    "code": "// Validation d'une note de Bac entre 0 et 20\nfunction validerNote() {\n  var note = Number(document.getElementById(\"note\").value);\n  if (note >= 0 && note <= 20) {\n    alert(\"Note valide (\" + note + \"/20)\");\n    return true;\n  } else {\n    alert(\"Erreur : la note doit être comprise entre 0 et 20 !\");\n    return false;\n  }\n}",
-    "runnableCode": "var note = 14;\nvar estValide = (note >= 0 && note <= 20);\nconsole.log(\"Note = \" + note + \" -> Est valide (note >= 0 && note <= 20) : \" + estValide);"
-  },
-  {
-    "id": "js-op-ou",
-    "section": "Opérateurs logiques",
-    "category": "Opérateurs logiques",
-    "name": "|| (OU logique)",
-    "tag": "||",
-    "syntax": "condition1 || condition2",
-    "summary": "OU",
-    "description": "Opérateur logique OU. Renvoie true si au moins l'une des conditions est vraie. Renvoie false uniquement si toutes les conditions sont fausses.",
-    "howToUse": "Utiliser || pour autoriser plusieurs choix alternatifs ou détecter si un champ parmi plusieurs est manquant.",
-    "values": [
-      "condition1 || condition2",
-      "false || true -> true",
-      "false || false -> false"
-    ],
-    "code": "// Vérifier si au moins un des champs obligatoires est vide\nfunction verifierChamps() {\n  var nom = document.getElementById(\"nom\").value;\n  var email = document.getElementById(\"email\").value;\n  if (nom == \"\" || email == \"\") {\n    alert(\"Attention : vous devez remplir le nom OU l'email !\");\n    return false;\n  }\n  return true;\n}",
-    "runnableCode": "var ville = \"Sousse\";\nvar estTunisie = (ville == \"Tunis\" || ville == \"Sousse\" || ville == \"Sfax\");\nconsole.log(\"Ville = \" + ville + \" -> Ville en Tunisie : \" + estTunisie);"
-  },
-  {
-    "id": "js-op-non",
-    "section": "Opérateurs logiques",
-    "category": "Opérateurs logiques",
-    "name": "! (NON logique)",
-    "tag": "!",
-    "syntax": "!condition",
-    "summary": "NON",
-    "description": "Opérateur logique NON (négation). Inverse la valeur booléenne : transforme true en false, et transforme false en true.",
-    "howToUse": "Placer le point d'exclamation devant une variable booléenne ou une condition pour tester son contraire.",
-    "values": [
-      "!true -> false",
-      "!false -> true",
-      "!isNaN(val) -> teste si c'est un nombre"
-    ],
-    "code": "// Vérifier si une case à cocher n'est PAS cochée\nfunction validerReglement() {\n  var accepte = document.getElementById(\"chk_accord\").checked;\n  if (!accepte) {\n    alert(\"Vous devez accepter le règlement avant d'envoyer !\");\n    return false;\n  }\n  return true;\n}",
-    "runnableCode": "var connecte = false;\nconsole.log(\"Connecté : \" + connecte);\nconsole.log(\"!connecte (Non connecté) : \" + (!connecte));"
-  },
-  {
-    "id": "js-comp-egal",
-    "section": "Opérateurs de comparaison",
-    "category": "Opérateurs de comparaison",
-    "name": "== (Egal)",
-    "tag": "==",
-    "syntax": "a == b",
-    "summary": "Egal",
-    "description": "Teste l'égalité de valeur entre deux expressions. Renvoie true si les deux valeurs sont équivalentes après conversion implicite de type.",
-    "howToUse": "Attention à ne pas confondre avec le simple signe d'affectation =. Dans un test if, utiliser toujours ==.",
-    "values": [
-      "a == b",
-      "10 == '10' -> true",
-      "'bac' == 'bac' -> true"
-    ],
-    "code": "// Vérifier la confirmation d'un mot de passe\nfunction verifierMdp() {\n  var p1 = document.getElementById(\"pass1\").value;\n  var p2 = document.getElementById(\"pass2\").value;\n  if (p1 == p2) {\n    alert(\"Mots de passe identiques !\");\n    return true;\n  } else {\n    alert(\"Erreur : les mots de passe ne correspondent pas !\");\n    return false;\n  }\n}",
-    "runnableCode": "var code = \"BAC2026\";\nconsole.log(\"Test (code == 'BAC2026') : \" + (code == \"BAC2026\"));"
-  },
-  {
-    "id": "js-comp-diff",
-    "section": "Opérateurs de comparaison",
-    "category": "Opérateurs de comparaison",
-    "name": "!= (Différent)",
-    "tag": "!=",
-    "syntax": "a != b",
-    "summary": "Différent",
-    "description": "Teste la non-égalité entre deux expressions. Renvoie true si les valeurs sont différentes.",
-    "howToUse": "Très utile pour s'assurer qu'un champ texte n'est pas vide (ch != '') ou qu'une sélection n'est pas celle par défaut.",
-    "values": [
-      "a != b",
-      "5 != 10 -> true",
-      "ch != '' -> true si non vide"
-    ],
-    "code": "// Contrôler qu'un champ texte n'est pas vide\nfunction verifierChamp() {\n  var nom = document.getElementById(\"nom\").value;\n  if (nom != \"\") {\n    alert(\"Nom renseigné : \" + nom);\n    return true;\n  } else {\n    alert(\"Le champ nom ne doit pas être vide !\");\n    return false;\n  }\n}",
-    "runnableCode": "var prenom = \"Nour\";\nconsole.log(\"Prénom : \" + prenom + \" -> (prenom != '') : \" + (prenom != \"\"));"
-  },
-  {
-    "id": "js-comp-sup",
-    "section": "Opérateurs de comparaison",
-    "category": "Opérateurs de comparaison",
-    "name": "> (Supérieur à)",
-    "tag": ">",
-    "syntax": "a > b",
-    "summary": "Supérieur à",
-    "description": "Renvoie true si la valeur de gauche est strictement plus grande que la valeur de droite.",
-    "howToUse": "Utiliser > pour vérifier des seuils stricts (ex: montant > 0, moyenne > 10).",
-    "values": [
-      "a > b",
-      "15 > 10 -> true",
-      "10 > 10 -> false"
-    ],
-    "code": "// Vérifier si un prix est strictement positif\nfunction verifierPrix() {\n  var prix = Number(document.getElementById(\"prix\").value);\n  if (prix > 0) {\n    alert(\"Prix valide !\");\n  } else {\n    alert(\"Le prix doit être strictement supérieur à 0 !\");\n  }\n}",
-    "runnableCode": "var note = 13.5;\nconsole.log(\"Note = 13.5 -> (note > 10) : \" + (note > 10));"
-  },
-  {
-    "id": "js-comp-supegal",
-    "section": "Opérateurs de comparaison",
-    "category": "Opérateurs de comparaison",
-    "name": ">= (Supérieur ou égal à)",
-    "tag": ">=",
-    "syntax": "a >= b",
-    "summary": "Supérieur ou égal à",
-    "description": "Renvoie true si la valeur de gauche est plus grande ou égale à celle de droite.",
-    "howToUse": "Indispensable pour les conditions de majorité ou d'admission (ex: age >= 18, moyenne >= 10).",
-    "values": [
-      "a >= b",
-      "18 >= 18 -> true",
-      "20 >= 10 -> true"
-    ],
-    "code": "// Vérification de la majorité\nfunction verifierAge() {\n  var age = Number(document.getElementById(\"age\").value);\n  if (age >= 18) {\n    alert(\"Accès autorisé (Majeur)\");\n  } else {\n    alert(\"Accès refusé : vous devez avoir au moins 18 ans !\");\n  }\n}",
-    "runnableCode": "var age = 18;\nconsole.log(\"Age = 18 -> (age >= 18) : \" + (age >= 18));"
-  },
-  {
-    "id": "js-comp-inf",
-    "section": "Opérateurs de comparaison",
-    "category": "Opérateurs de comparaison",
-    "name": "< (Inférieur)",
-    "tag": "<",
-    "syntax": "a < b",
-    "summary": "Inférieur",
-    "description": "Renvoie true si la valeur de gauche est strictement inférieure à la valeur de droite.",
-    "howToUse": "Utiliser pour tester un plafond strict ou les indices dans une boucle (ex: for (var i=0; i < tab.length; i++)).",
-    "values": [
-      "a < b",
-      "5 < 10 -> true",
-      "10 < 10 -> false"
-    ],
-    "code": "// Vérifier la longueur minimale\nfunction verifierTaille() {\n  var texte = document.getElementById(\"comm\").value;\n  if (texte.length < 10) {\n    alert(\"Votre commentaire est trop court (min 10 caractères) !\");\n  }\n}",
-    "runnableCode": "var temperature = 5;\nconsole.log(\"Température = 5 -> (temperature < 10) : \" + (temperature < 10));"
-  },
-  {
-    "id": "js-comp-infegal",
-    "section": "Opérateurs de comparaison",
-    "category": "Opérateurs de comparaison",
-    "name": "<= (Inférieur ou égal à)",
-    "tag": "<=",
-    "syntax": "a <= b",
-    "summary": "Inférieur ou égal à",
-    "description": "Renvoie true si la valeur de gauche est plus petite ou égale à celle de droite.",
-    "howToUse": "Utiliser pour valider un nombre qui ne doit pas dépasser un maximum (ex: note <= 20).",
-    "values": [
-      "a <= b",
-      "20 <= 20 -> true",
-      "15 <= 20 -> true"
-    ],
-    "code": "// Borne supérieure d'une note\nfunction controlerPlafond() {\n  var note = Number(document.getElementById(\"note\").value);\n  if (note <= 20) {\n    alert(\"Note dans la limite autorisée.\");\n  } else {\n    alert(\"La note ne peut pas dépasser 20 !\");\n  }\n}",
-    "runnableCode": "var note = 20;\nconsole.log(\"Note = 20 -> (note <= 20) : \" + (note <= 20));"
-  },
-  {
-    "id": "js-arithm-add",
-    "section": "Opérateurs arithmétiques",
-    "category": "Opérateurs arithmétiques",
-    "name": "+ (Addition)",
-    "tag": "+",
-    "syntax": "a + b",
-    "summary": "Addition",
-    "description": "Additionne deux valeurs numériques. Attention : si l'une des valeurs est une chaîne, le symbole '+' effectue une concaténation au lieu d'une addition !",
-    "howToUse": "Toujours convertir les valeurs issues d'un formulaire avec Number() ou parseInt() avant de les additionner.",
-    "values": [
-      "a + b",
-      "10 + 5 -> 15",
-      "Number('10') + Number('5') -> 15"
-    ],
-    "code": "// Calculer la somme de deux nombres saisis\nfunction calculerSomme() {\n  var n1 = Number(document.getElementById(\"txt1\").value);\n  var n2 = Number(document.getElementById(\"txt2\").value);\n  var total = n1 + n2;\n  alert(\"La somme est : \" + total);\n}",
-    "runnableCode": "var a = 12.5;\nvar b = 7.5;\nconsole.log(\"a = \" + a + \", b = \" + b + \" -> Somme (a + b) = \" + (a + b));"
-  },
-  {
-    "id": "js-arithm-sous",
-    "section": "Opérateurs arithmétiques",
-    "category": "Opérateurs arithmétiques",
-    "name": "- (Soustraction)",
-    "tag": "-",
-    "syntax": "a - b",
-    "summary": "Soustraction",
-    "description": "Soustrait le second nombre du premier.",
-    "howToUse": "Effectue une soustraction arithmétique. Contrairement au +, le - convertit automatiquement les chaînes en nombres si possible.",
-    "values": [
-      "a - b",
-      "20 - 8 -> 12"
-    ],
-    "code": "// Calculer le prix net après remise\nfunction calculerRemise() {\n  var brut = Number(document.getElementById(\"prixBrut\").value);\n  var remise = Number(document.getElementById(\"remise\").value);\n  var net = brut - remise;\n  document.getElementById(\"resNet\").innerHTML = \"Net à payer : \" + net + \" DT\";\n}",
-    "runnableCode": "var brut = 100;\nvar remise = 15;\nconsole.log(\"Brut : \" + brut + \", Remise : \" + remise + \" -> Net : \" + (brut - remise));"
-  },
-  {
-    "id": "js-arithm-mult",
-    "section": "Opérateurs arithmétiques",
-    "category": "Opérateurs arithmétiques",
-    "name": "* (Multiplication)",
-    "tag": "*",
-    "syntax": "a * b",
-    "summary": "Multiplication",
-    "description": "Multiplie deux nombres et renvoie le produit.",
-    "howToUse": "Utiliser pour les calculs de totaux (quantité * prix) ou de coefficients de matières au Bac.",
-    "values": [
-      "a * b",
-      "5 * 4 -> 20",
-      "prix * quantite"
-    ],
-    "code": "// Calcul du total d'une commande\nfunction calculerTotal() {\n  var qte = parseInt(document.getElementById(\"qte\").value);\n  var pu = parseFloat(document.getElementById(\"pu\").value);\n  var total = qte * pu;\n  alert(\"Total commande : \" + total + \" DT\");\n}",
-    "runnableCode": "var qte = 4;\nvar pu = 12.5;\nconsole.log(qte + \" x \" + pu + \" DT = \" + (qte * pu) + \" DT\");"
-  },
-  {
-    "id": "js-arithm-div",
-    "section": "Opérateurs arithmétiques",
-    "category": "Opérateurs arithmétiques",
-    "name": "/ (Division)",
-    "tag": "/",
-    "syntax": "a / b",
-    "summary": "Division",
-    "description": "Divise le dividende par le diviseur et renvoie le quotient exact.",
-    "howToUse": "Penser à vérifier que le diviseur b est différent de 0 pour éviter une valeur spéciale Infinity.",
-    "values": [
-      "a / b",
-      "15 / 2 -> 7.5",
-      "somme / nb"
-    ],
-    "code": "// Calcul de la moyenne arithmétique\nfunction calculerMoyenne() {\n  var noteTech = Number(document.getElementById(\"tech\").value);\n  var noteMath = Number(document.getElementById(\"math\").value);\n  var moyenne = (noteTech + noteMath) / 2;\n  alert(\"Moyenne : \" + moyenne + \"/20\");\n}",
-    "runnableCode": "var total = 45;\nvar nb = 3;\nconsole.log(\"Moyenne (45 / 3) = \" + (total / nb));"
-  },
-  {
-    "id": "js-arithm-modulo",
-    "section": "Opérateurs arithmétiques",
-    "category": "Opérateurs arithmétiques",
-    "name": "% (Reste de la division euclidienne)",
-    "tag": "%",
-    "syntax": "a % b",
-    "summary": "Reste de la division euclidienne",
-    "description": "Opérateur modulo. Calcule et renvoie le reste entier de la division euclidienne de a par b. Très fréquent au Bac pour déterminer la parité ou tester des diviseurs.",
-    "howToUse": "Pour savoir si n est pair : (n % 2 == 0). Pour tester si n est divisible par 5 : (n % 5 == 0).",
-    "values": [
-      "a % b",
-      "10 % 3 -> 1",
-      "8 % 2 -> 0 (pair)",
-      "7 % 2 -> 1 (impair)"
-    ],
-    "code": "// Tester si un entier est pair ou impair\nfunction testerParite() {\n  var n = parseInt(document.getElementById(\"nombre\").value);\n  if (n % 2 == 0) {\n    alert(n + \" est un nombre PAIR.\");\n  } else {\n    alert(n + \" est un nombre IMPAIR.\");\n  }\n}",
-    "runnableCode": "var n1 = 17, n2 = 24;\nconsole.log(n1 + \" % 2 = \" + (n1 % 2) + \" (Impair)\");\nconsole.log(n2 + \" % 2 = \" + (n2 % 2) + \" (Pair)\");"
-  },
-  {
-    "id": "js-out-alert",
-    "section": "Méthodes pour afficher une sortie*",
-    "category": "Méthodes pour afficher une sortie*",
-    "name": "alert()",
-    "tag": "alert()",
-    "syntax": "alert(message)",
-    "summary": "Affiche un message dans une boîte de dialogue.",
-    "description": "Affiche un message textuel à l'utilisateur dans une boîte de dialogue modale du navigateur dotée d'un bouton OK. L'exécution du script est mise en pause jusqu'à ce que l'utilisateur clique sur OK.",
-    "howToUse": "C'est la méthode reine demandée au Baccalauréat STI pour signaler à l'internaute une erreur de saisie ou un succès de validation.",
-    "values": [
-      "alert('Message')",
-      "alert('Erreur : champ obligatoire !')"
-    ],
-    "code": "// Alerte d'information Bac STI\nfunction verifierChamp() {\n  var nom = document.getElementById(\"nom\").value;\n  if (nom == \"\") {\n    alert(\"Erreur : veuillez remplir votre nom !\");\n    return false;\n  }\n  alert(\"Bienvenue \" + nom + \" ! Formulaire validé.\");\n  return true;\n}",
-    "runnableCode": "console.log(\"Appel alert('Bonjour candidat Bac STI !')\");\nalert(\"Bonjour candidat Bac STI !\");*/"
-  },
-  {
-    "id": "js-out-docwrite",
-    "section": "Méthodes pour afficher une sortie*",
-    "category": "Méthodes pour afficher une sortie*",
-    "name": "Document.write()",
-    "tag": "document.write()",
-    "syntax": "document.write(chaineHTML)",
-    "summary": "Affiche directement dans le document HTML.",
-    "description": "Écrit directement une chaîne de caractères ou du code HTML dans le document au moment du chargement de la page.",
-    "howToUse": "Appelée directement dans la balise <script> du fichier HTML pour insérer du contenu généré dynamiquement.",
-    "values": [
-      "document.write('Texte')",
-      "document.write('<h1>Titre</h1>')"
-    ],
-    "code": "<!-- Exemple d'insertion directe dans la page -->\n<script>\n  var annee = new Date().getFullYear();\n  document.write(\"<p>Copyright &copy; \" + annee + \" - Section STI Lycée Technique</p>\");\n</script>",
-    "runnableCode": "console.log(\"document.write() écrit directement dans le corps de la page HTML.\");"
-  },
-  {
-    "id": "js-out-innerhtml",
-    "section": "Méthodes pour afficher une sortie*",
-    "category": "Méthodes pour afficher une sortie*",
-    "name": "innerHTML (Note officielle)",
-    "tag": "element.innerHTML",
-    "syntax": "element.innerHTML = 'contenu'",
-    "summary": "*Pour afficher/modifier un contenu dynamique, on peut utiliser la propriété innerHTML d'un élément HTML.",
-    "description": "Propriété officielle mise en avant par la note de bas de tableau de l'annexe. Elle permet de lire ou d'injecter du texte formaté ou de nouvelles balises HTML à l'intérieur d'un élément repéré par son id.",
-    "howToUse": "document.getElementById('idBloc').innerHTML = '<b>Texte formaté</b>';",
-    "values": [
-      "element.innerHTML = 'texte'",
-      "element.innerHTML = '<b>Gras</b>'"
-    ],
-    "code": "// Afficher un message de validation stylé sans recharger la page\nfunction afficherStatut() {\n  var zone = document.getElementById(\"zoneMessage\");\n  zone.innerHTML = \"<span style='color: green; font-weight: bold;'>✔ Données enregistrées avec succès !</span>\";\n}",
-    "runnableCode": "// Exemple conceptuel\nvar contenu = \"<span style='color:green;'>Succès !</span>\";\nconsole.log(\"Contenu injecté via innerHTML : \" + contenu);"
-  },
-  {
-    "id": "js-in-prompt",
-    "section": "Méthode pour saisir une entrée",
-    "category": "Méthode pour saisir une entrée",
-    "name": "prompt()",
-    "tag": "prompt()",
-    "syntax": "prompt(message [, valeurParDefaut])",
-    "summary": "Affiche une boîte de dialogue avec une zone de saisie.",
-    "description": "Ouvre une fenêtre modale contenant un message, une zone de texte permettant à l'utilisateur de saisir une valeur, ainsi que les boutons OK et Annuler. Renvoie la chaîne saisie sous forme de texte, ou null si l'utilisateur clique sur Annuler.",
-    "howToUse": "var rep = prompt('Question ?', 'Valeur initiale'); Penser à convertir la réponse avec Number() si vous attendez un chiffre.",
-    "values": [
-      "prompt('Message')",
-      "prompt('Message', 'Par défaut')"
-    ],
-    "code": "// Demander le nom d'un élève\nfunction demanderNom() {\n  var nom = prompt(\"Veuillez saisir votre prénom :\", \"Nour\");\n  if (nom != null && nom != \"\") {\n    alert(\"Bonjour \" + nom + \" !\");\n  } else {\n    alert(\"Saisie annulée.\");\n  }\n}",
-    "runnableCode": "// Simulation console\nconsole.log(\"prompt() ouvre une boîte de saisie pour l'utilisateur.\");"
-  },
-  {
-    "id": "js-fn-isnan",
-    "section": "Fonctions/Méthodes JS",
-    "category": "Fonctions/Méthodes JS",
-    "name": "isNaN(ch)",
-    "tag": "isNaN(ch)",
-    "syntax": "isNaN(ch)",
-    "summary": "Retourne true si l'argument ch n'est pas convertible en un nombre, sinon retourne false.",
-    "description": "Indispensable pour contrôler la validité des champs numériques d'un formulaire au Bac STI (numéro de téléphone, code postal, âge, prix). Si l'utilisateur tape des lettres dans un champ réservé aux nombres, isNaN(...) renvoie true.",
-    "howToUse": "if (isNaN(document.getElementById('tel').value)) { alert('Numéro invalide !'); return false; }",
-    "values": [
-      "isNaN('123') -> false",
-      "isNaN('abc') -> true",
-      "isNaN('') -> false (vide compte comme 0)"
-    ],
-    "code": "// Validation d'un code postal tunisien (4 chiffres)\nfunction validerCodePostal() {\n  var cp = document.getElementById(\"cp\").value;\n  if (isNaN(cp) || cp.length != 4) {\n    alert(\"Le code postal doit être un NOMBRE composé d'exactement 4 chiffres !\");\n    return false;\n  }\n  return true;\n}",
-    "runnableCode": "console.log(\"isNaN('2026') : \" + isNaN(\"2026\") + \" (C'est un nombre valide)\");\nconsole.log(\"isNaN('BAC2026') : \" + isNaN(\"BAC2026\") + \" (Ce n'est PAS un nombre)\");"
-  },
-  {
-    "id": "js-fn-number",
-    "section": "Fonctions/Méthodes JS",
-    "category": "Fonctions/Méthodes JS",
-    "name": "Number(ch)",
-    "tag": "Number(ch)",
-    "syntax": "Number(ch)",
-    "summary": "Convertit une chaîne ch en un nombre*. (*Si la conversion n'est pas possible, la fonction retourne NaN.)",
-    "description": "Convertit une chaîne de caractères représentant un nombre (entier ou flottant) en valeur numérique réelle. Si la chaîne ne peut pas être convertie, retourne la valeur spéciale NaN (Not a Number).",
-    "howToUse": "var note = Number(document.getElementById('note').value);",
-    "values": [
-      "Number('15.5') -> 15.5",
-      "Number('42') -> 42",
-      "Number('xyz') -> NaN"
-    ],
-    "code": "// Calcul de la TVA avec Number()\nfunction calculerTVA() {\n  var prixHT = Number(document.getElementById(\"ht\").value);\n  if (isNaN(prixHT) || prixHT <= 0) {\n    alert(\"Prix HT invalide !\");\n    return;\n  }\n  var tva = prixHT * 0.19;\n  var ttc = prixHT + tva;\n  alert(\"Montant TTC : \" + ttc.toFixed(3) + \" DT\");\n}",
-    "runnableCode": "var s1 = \"12.75\";\nvar n1 = Number(s1);\nconsole.log(\"Number('\" + s1 + \"') = \" + n1 + \" (Type: \" + typeof n1 + \")\");\nconsole.log(\"Number('ABC') = \" + Number(\"ABC\") + \" (Non convertible)\");"
-  },
-  {
-    "id": "js-fn-parsefloat",
-    "section": "Fonctions/Méthodes JS",
-    "category": "Fonctions/Méthodes JS",
-    "name": "parseFloat(ch)",
-    "tag": "parseFloat(ch)",
-    "syntax": "parseFloat(ch)",
-    "summary": "Convertit une chaîne ch en un réel.",
-    "description": "Analyse une chaîne textuelle et extrait un nombre décimal à virgule flottante. Lit les caractères jusqu'au premier caractère non numérique.",
-    "howToUse": "var reel = parseFloat('14.25'); Utiliser le point '.' comme séparateur décimal.",
-    "values": [
-      "parseFloat('14.5') -> 14.5",
-      "parseFloat('10.25 DT') -> 10.25",
-      "parseFloat('abc') -> NaN"
-    ],
-    "code": "// Calcul de moyenne avec parseFloat\nfunction calculerMoyenneReelle() {\n  var n1 = parseFloat(document.getElementById(\"note1\").value);\n  var n2 = parseFloat(document.getElementById(\"note2\").value);\n  var moy = (n1 + n2) / 2;\n  document.getElementById(\"res\").innerHTML = \"Moyenne : \" + moy;\n}",
-    "runnableCode": "var str = \"17.85 sur 20\";\nvar val = parseFloat(str);\nconsole.log(\"parseFloat('\" + str + \"') = \" + val);"
-  },
-  {
-    "id": "js-fn-parseint",
-    "section": "Fonctions/Méthodes JS",
-    "category": "Fonctions/Méthodes JS",
-    "name": "parseInt(ch [,b])",
-    "tag": "parseInt(ch [,b])",
-    "syntax": "parseInt(ch [,b])",
-    "summary": "Convertit une chaîne ch en un entier exprimé dans la base b.",
-    "description": "Analyse une chaîne de caractères et retourne un nombre entier selon la base numérique spécifiée par b (2 pour binaire, 8 pour octal, 10 pour décimal, 16 pour hexadécimal).",
-    "howToUse": "parseInt('1010', 2) convertit du binaire en décimal. parseInt('FF', 16) convertit de l'hexadécimal. Si b est omis, la base 10 est utilisée.",
-    "values": [
-      "parseInt('42', 10) -> 42",
-      "parseInt('1010', 2) -> 10",
-      "parseInt('1F', 16) -> 31"
-    ],
-    "code": "// Conversion binaire vers décimal (programme STI)\nfunction convertirBinaire() {\n  var binaire = document.getElementById(\"txtBinaire\").value;\n  var decimal = parseInt(binaire, 2);\n  if (isNaN(decimal)) {\n    alert(\"Format binaire incorrect !\");\n  } else {\n    alert(\"En décimal : \" + decimal);\n  }\n}",
-    "runnableCode": "console.log(\"parseInt('1101', 2) = \" + parseInt(\"1101\", 2) + \" (Binaire -> Décimal)\");\nconsole.log(\"parseInt('2A', 16) = \" + parseInt(\"2A\", 16) + \" (Hexa -> Décimal)\");\nconsole.log(\"parseInt('25', 10) = \" + parseInt(\"25\", 10) + \" (Décimal)\");"
-  },
-  {
-    "id": "js-fn-string",
-    "section": "Fonctions/Méthodes JS",
-    "category": "Fonctions/Méthodes JS",
-    "name": "String(a)",
-    "tag": "String(a)",
-    "syntax": "String(a)",
-    "summary": "Convertit la valeur a en une chaîne.",
-    "description": "Convertit n'importe quel type de données JavaScript (nombre, booléen, date, etc.) en sa représentation textuelle sous forme d'objet String.",
-    "howToUse": "var s = String(2026); Permet ensuite d'utiliser toutes les méthodes de chaînes comme .length, .indexOf()...",
-    "values": [
-      "String(123) -> '123'",
-      "String(true) -> 'true'",
-      "String(new Date()) -> texte"
-    ],
-    "code": "// Tester le nombre de chiffres d'un entier\nfunction compterChiffres() {\n  var nombre = 15894;\n  var str = String(nombre);\n  alert(\"Le nombre \" + nombre + \" possède \" + str.length + \" chiffres.\");\n}",
-    "runnableCode": "var num = 2026;\nvar str = String(num);\nconsole.log(\"String(\" + num + \") = '\" + str + \"' -> Longueur : \" + str.length + \" caractères.\");"
-  },
-  {
-    "id": "js-dom-getelementbyid",
-    "section": "Méthodes pour sélectionner des éléments HTML",
-    "category": "Sélection d'éléments HTML",
-    "name": "document.getElementById()",
-    "tag": "document.getElementById()",
-    "syntax": "document.getElementById(id)",
-    "summary": "permet de sélectionner un élément unique en fonction de son identifiant.",
-    "description": "C'est la méthode de sélection HTML centrale du programme officiel STI. Elle recherche dans le document la balise portant l'attribut id='nomId' et en retourne la référence directe.",
-    "howToUse": "var elt = document.getElementById('monId'); elt.value pour les champs, elt.innerHTML pour les blocs.",
-    "values": [
-      "document.getElementById('id')",
-      "document.getElementById('nom').value",
-      "document.getElementById('titre').style"
-    ],
-    "code": "// Récupérer la valeur d'un champ avec son ID\nfunction validerIdentifiant() {\n  var champ = document.getElementById(\"login\");\n  if (champ.value == \"\") {\n    alert(\"Veuillez saisir votre login !\");\n    champ.focus();\n    return false;\n  }\n  return true;\n}",
-    "runnableCode": "console.log(\"document.getElementById('champ').value récupère la saisie.\");"
-  },
-  {
-    "id": "js-dom-getelementsbyname",
-    "section": "Méthodes pour sélectionner des éléments HTML",
-    "category": "Sélection d'éléments HTML",
-    "name": "document.getElementsByName()",
-    "tag": "document.getElementsByName()",
-    "syntax": "document.getElementsByName(nom)",
-    "summary": "permet de sélectionner tous les éléments ayant le même nom.",
-    "description": "Retourne une liste (NodeList) de tous les éléments HTML du document qui partagent la même valeur pour leur attribut name='monNom'. Indispensable au Bac pour vérifier quel bouton radio a été coché par l'internaute !",
-    "howToUse": "var radios = document.getElementsByName('genre'); puis boucler pour tester radios[i].checked.",
-    "values": [
-      "document.getElementsByName('name')",
-      "radios[i].checked -> true si sélectionné"
-    ],
-    "code": "// Vérifier si un bouton radio est coché dans un groupe\nfunction verifierRadio() {\n  var options = document.getElementsByName(\"civilite\");\n  var coche = false;\n  for (var i = 0; i < options.length; i++) {\n    if (options[i].checked) {\n      coche = true;\n      break;\n    }\n  }\n  if (!coche) {\n    alert(\"Veuillez choisir une civilité (M. ou Mme) !\");\n    return false;\n  }\n  return true;\n}",
-    "runnableCode": "console.log(\"document.getElementsByName('groupe') retourne une liste de tous les éléments du groupe radio.\");"
-  },
-  {
-    "id": "js-math-abs",
-    "section": "Méthodes de l'objet Math (Math)",
-    "category": "Méthodes de l'objet Math",
-    "name": "abs(x)",
-    "tag": "Math.abs(x)",
-    "syntax": "Math.abs(x)",
-    "summary": "Retourne la valeur absolue.",
-    "description": "Donne la valeur absolue d'un nombre x, c'est-à-dire le nombre positif correspondant (|x| sans son signe négatif).",
-    "howToUse": "Math.abs(-12) donne 12. Math.abs(5) donne 5.",
-    "values": [
-      "Math.abs(-15) -> 15",
-      "Math.abs(15) -> 15"
-    ],
-    "code": "// Calculer l'écart absolu entre deux notes\nfunction calculerEcart() {\n  var note1 = Number(document.getElementById(\"n1\").value);\n  var note2 = Number(document.getElementById(\"n2\").value);\n  var ecart = Math.abs(note1 - note2);\n  alert(\"L'écart absolu est de : \" + ecart + \" points.\");\n}",
-    "runnableCode": "var diff = 10 - 18;\nconsole.log(\"Différence brute : \" + diff);\nconsole.log(\"Math.abs(\" + diff + \") = \" + Math.abs(diff));"
-  },
-  {
-    "id": "js-math-sqrt",
-    "section": "Méthodes de l'objet Math (Math)",
-    "category": "Méthodes de l'objet Math",
-    "name": "sqrt(x)",
-    "tag": "Math.sqrt(x)",
-    "syntax": "Math.sqrt(x)",
-    "summary": "Retourne la racine carrée.",
-    "description": "Calcule la racine carrée positive d'un nombre (√x). Si x est négatif, la fonction retourne NaN.",
-    "howToUse": "Math.sqrt(9) donne 3. Math.sqrt(25) donne 5.",
-    "values": [
-      "Math.sqrt(16) -> 4",
-      "Math.sqrt(25) -> 5",
-      "Math.sqrt(2) -> 1.4142..."
-    ],
-    "code": "// Théorème de Pythagore pour STI\nfunction calculerHypotenuse() {\n  var a = Number(document.getElementById(\"coteA\").value);\n  var b = Number(document.getElementById(\"coteB\").value);\n  var h = Math.sqrt(a * a + b * b);\n  alert(\"Hypoténuse : \" + h.toFixed(2));\n}",
-    "runnableCode": "console.log(\"Math.sqrt(64) = \" + Math.sqrt(64));\nconsole.log(\"Math.sqrt(2) = \" + Math.sqrt(2).toFixed(4));"
-  },
-  {
-    "id": "js-math-round",
-    "section": "Méthodes de l'objet Math (Math)",
-    "category": "Méthodes de l'objet Math",
-    "name": "round(x)",
-    "tag": "Math.round(x)",
-    "syntax": "Math.round(x)",
-    "summary": "Retourne l'entier le plus proche.",
-    "description": "Arrondit la valeur x à l'entier le plus proche. Si la partie décimale est supérieure ou égale à 0.5, arrondit vers le haut, sinon vers le bas.",
-    "howToUse": "Math.round(14.4) donne 14. Math.round(14.5) donne 15.",
-    "values": [
-      "Math.round(4.4) -> 4",
-      "Math.round(4.5) -> 5",
-      "Math.round(4.9) -> 5"
-    ],
-    "code": "// Arrondir une moyenne générale\nfunction arrondirMoyenne() {\n  var moy = 13.65;\n  var arr = Math.round(moy);\n  alert(\"Moyenne arrondie : \" + arr);\n}",
-    "runnableCode": "console.log(\"Math.round(12.4) = \" + Math.round(12.4));\nconsole.log(\"Math.round(12.5) = \" + Math.round(12.5));\nconsole.log(\"Math.round(12.9) = \" + Math.round(12.9));"
-  },
-  {
-    "id": "js-math-trunc",
-    "section": "Méthodes de l'objet Math (Math)",
-    "category": "Méthodes de l'objet Math",
-    "name": "trunc(x)",
-    "tag": "Math.trunc(x)",
-    "syntax": "Math.trunc(x)",
-    "summary": "Retourne la troncature entière d'un nombre en retirant sa partie décimale.",
-    "description": "Supprime purement et simplement les chiffres après la virgule, sans effectuer d'arrondi. Renvoie la partie entière brute.",
-    "howToUse": "Math.trunc(14.89) donne 14. Math.trunc(-14.89) donne -14.",
-    "values": [
-      "Math.trunc(17.9) -> 17",
-      "Math.trunc(5.1) -> 5",
-      "Math.trunc(-3.8) -> -3"
-    ],
-    "code": "// Extraire la partie entière d'un nombre\nfunction tronquerValeur() {\n  var val = 18.95;\n  var entier = Math.trunc(val);\n  alert(\"Partie entière : \" + entier); // 18\n}",
-    "runnableCode": "console.log(\"Math.trunc(15.99) = \" + Math.trunc(15.99) + \" (sans arrondi)\");\nconsole.log(\"Math.round(15.99) = \" + Math.round(15.99) + \" (avec arrondi)\");"
-  },
-  {
-    "id": "js-math-random",
-    "section": "Méthodes de l'objet Math (Math)",
-    "category": "Méthodes de l'objet Math",
-    "name": "random()",
-    "tag": "Math.random()",
-    "syntax": "Math.random()",
-    "summary": "Retourne un réel aléatoire dans [0, 1[.",
-    "description": "Génère un nombre décimal pseudo-aléatoire compris entre 0 inclus et 1 exclu (0 <= r < 1).",
-    "howToUse": "Pour tirer un entier au sort entre min et max : Math.floor(Math.random() * (max - min + 1)) + min.",
-    "values": [
-      "Math.random() -> réel entre 0 et 1",
-      "Math.trunc(Math.random() * 6) + 1 -> dé à 6 faces"
-    ],
-    "code": "// Générer un code de vérification aléatoire à 4 chiffres\nfunction genererCodeCaptcha() {\n  var code = Math.trunc(Math.random() * 9000) + 1000;\n  document.getElementById(\"captcha\").innerHTML = \"Code : \" + code;\n}",
-    "runnableCode": "var r = Math.random();\nconsole.log(\"Réel aléatoire : \" + r);\nconsole.log(\"Tirage entier entre 1 et 100 : \" + (Math.trunc(r * 100) + 1));"
-  },
-  {
-    "id": "js-str-concat",
-    "section": "Les chaînes de caractères",
-    "category": "Les chaînes de caractères",
-    "name": "+ (Concaténation)",
-    "tag": "ch1 + ch2",
-    "syntax": "ch1 + ch2",
-    "summary": "Opérateur de concaténation.",
-    "description": "Assemble et concatène deux ou plusieurs chaînes de caractères les unes au bout des autres pour en former une seule.",
-    "howToUse": "var nomComplet = nom + ' ' + prenom;",
-    "values": [
-      "'Bac ' + 'STI' -> 'Bac STI'",
-      "'Note : ' + 15 -> 'Note : 15'"
-    ],
-    "code": "// Concaténer le nom et le prénom saisis\nfunction afficherBienvenue() {\n  var prenom = document.getElementById(\"prenom\").value;\n  var nom = document.getElementById(\"nom\").value;\n  var message = \"Bienvenue, \" + prenom + \" \" + nom + \" !\";\n  alert(message);\n}",
-    "runnableCode": "var s1 = \"Révision Web \";\nvar s2 = \"Baccalauréat STI\";\nconsole.log(s1 + s2);"
-  },
-  {
-    "id": "js-str-length",
-    "section": "Les chaînes de caractères",
-    "category": "Les chaînes de caractères",
-    "name": "ch.length",
-    "tag": "ch.length",
-    "syntax": "ch.length",
-    "summary": "Propriété qui retourne la longueur de ch.",
-    "description": "Propriété qui renvoie le nombre total de caractères contenus dans la chaîne de caractères ch (y compris les espaces).",
-    "howToUse": "Indispensable pour contrôler la longueur d'un mot de passe (mdp.length >= 8) ou d'un numéro de CIN tunisien (cin.length == 8).",
-    "values": [
-      "'STI'.length -> 3",
-      "'Tunisie'.length -> 7",
-      "cin.length == 8"
-    ],
-    "code": "// Validation de la carte d'identité (CIN tunisienne : 8 chiffres)\nfunction validerCIN() {\n  var cin = document.getElementById(\"cin\").value;\n  if (cin.length != 8 || isNaN(cin)) {\n    alert(\"Le numéro de CIN doit comporter exactement 8 chiffres !\");\n    return false;\n  }\n  return true;\n}",
-    "runnableCode": "var mot = \"Informatique\";\nconsole.log(\"Mot : '\" + mot + \"' -> Longueur (ch.length) : \" + mot.length);"
-  },
-  {
-    "id": "js-str-indexof",
-    "section": "Les chaînes de caractères",
-    "category": "Les chaînes de caractères",
-    "name": "ch.indexOf(ch1 [,p])",
-    "tag": "ch.indexOf(ch1 [,p])",
-    "syntax": "ch.indexOf(ch1 [,p])",
-    "summary": "Retourne la position de la 1ère occurrence de ch1 dans ch, en effectuant la recherche à partir de la position p (sinon -1).",
-    "description": "Cherche la première position où apparaît ch1 dans ch à partir de l'indice p (0 par défaut). Retourne l'indice (base 0) ou -1 si la sous-chaîne est introuvable.",
-    "howToUse": "C'est l'outil officiel du Bac pour vérifier si une adresse email contient un arobase : if (email.indexOf('@') == -1) { ... }",
-    "values": [
-      "ch.indexOf('@') -> position ou -1",
-      "ch.indexOf('a', 3) -> cherche à partir de l'indice 3"
-    ],
-    "code": "// Vérification de la présence de l'arobase dans l'email\nfunction validerEmail() {\n  var email = document.getElementById(\"email\").value;\n  var pos = email.indexOf(\"@\");\n  if (pos == -1 || pos == 0 || pos == email.length - 1) {\n    alert(\"Adresse email invalide : l'arobase '@' est absent ou mal positionné !\");\n    return false;\n  }\n  return true;\n}",
-    "runnableCode": "var mail = \"candidat@bac.tn\";\nconsole.log(\"ch.indexOf('@') dans '\" + mail + \"' : position \" + mail.indexOf(\"@\"));\nconsole.log(\"ch.indexOf('xyz') : \" + mail.indexOf(\"xyz\") + \" (Introuvable -> -1)\");"
-  },
-  {
-    "id": "js-str-lastindexof",
-    "section": "Les chaînes de caractères",
-    "category": "Les chaînes de caractères",
-    "name": "ch.lastIndexOf(ch1 [,p])",
-    "tag": "ch.lastIndexOf(ch1 [,p])",
-    "syntax": "ch.lastIndexOf(ch1 [,p])",
-    "summary": "Retourne la position de la dernière occurrence de ch1 dans ch à partir de la position p.",
-    "description": "Recherche la dernière apparition de ch1 en parcourant la chaîne de droite à gauche. Retourne l'indice trouvé ou -1.",
-    "howToUse": "Utile pour trouver la dernière extension d'un nom de fichier (ex: le dernier point '.') ou vérifier la position du point après l'@ dans un email.",
-    "values": [
-      "ch.lastIndexOf('.') -> position du dernier point",
-      "retourne -1 si introuvable"
-    ],
-    "code": "// Vérifier la position du dernier point dans un email\nfunction verifierPointEmail() {\n  var email = document.getElementById(\"email\").value;\n  var posPoint = email.lastIndexOf(\".\");\n  var posArobase = email.indexOf(\"@\");\n  if (posPoint < posArobase) {\n    alert(\"Le point doit se trouver APRÈS l'arobase !\");\n    return false;\n  }\n  return true;\n}",
-    "runnableCode": "var phrase = \"bac.sti.revision.html\";\nconsole.log(\"Dernier point dans '\" + phrase + \"' : position \" + phrase.lastIndexOf(\".\"));"
-  },
-  {
-    "id": "js-str-substring",
-    "section": "Les chaînes de caractères",
-    "category": "Les chaînes de caractères",
-    "name": "ch.substring(d, f)",
-    "tag": "ch.substring(d, f)",
-    "syntax": "ch.substring(d, f)",
-    "summary": "Retourne une sous-chaîne de ch de la position d à la position f (non incluse).",
-    "description": "Extrait et renvoie une portion de la chaîne ch commençant à l'indice d (inclus) jusqu'à l'indice f (non inclus).",
-    "howToUse": "ch.substring(0, 3) extrait les 3 premiers caractères (indices 0, 1 et 2).",
-    "values": [
-      "'Baccalauréat'.substring(0, 3) -> 'Bac'",
-      "'Technologie'.substring(4, 8) -> 'nolo'"
-    ],
-    "code": "// Extraire les deux premiers chiffres d'un code postal pour identifier le gouvernorat\nfunction extraireGouvernorat() {\n  var cp = document.getElementById(\"cp\").value;\n  var codeGouv = cp.substring(0, 2);\n  alert(\"Code gouvernorat : \" + codeGouv);\n}",
-    "runnableCode": "var ch = \"Technologie\";\nconsole.log(\"'\" + ch + \"'.substring(0, 4) = '\" + ch.substring(0, 4) + \"'\");"
-  },
-  {
-    "id": "js-str-replace",
-    "section": "Les chaînes de caractères",
-    "category": "Les chaînes de caractères",
-    "name": "ch.replace(ch1, ch2)",
-    "tag": "ch.replace(ch1, ch2)",
-    "syntax": "ch.replace(ch1, ch2)",
-    "summary": "Retourne une chaîne dans laquelle la 1ère occurrence de ch1 dans ch est remplacée par ch2.",
-    "description": "Recherche la première occurrence de la sous-chaîne ch1 et la remplace par le texte ch2. La chaîne d'origine n'est pas modifiée, une nouvelle chaîne est retournée.",
-    "howToUse": "var propre = ch.replace(',', '.'); pour remplacer une virgule par un point avant conversion en réel.",
-    "values": [
-      "ch.replace(',', '.')",
-      "'Bonjour Ali'.replace('Ali', 'Sami') -> 'Bonjour Sami'"
-    ],
-    "code": "// Remplacer la virgule décimale par un point\nfunction corrigerNombre() {\n  var saisie = document.getElementById(\"prix\").value;\n  var corrigee = saisie.replace(\",\", \".\");\n  var prix = parseFloat(corrigee);\n  alert(\"Prix converti : \" + prix);\n}",
-    "runnableCode": "var str = \"15,75 DT\";\nvar res = str.replace(\",\", \".\");\nconsole.log(\"Avant : \" + str + \" -> Après replace(',', '.') : \" + res);"
-  },
-  {
-    "id": "js-str-tolowercase",
-    "section": "Les chaînes de caractères",
-    "category": "Les chaînes de caractères",
-    "name": "ch.toLowerCase()",
-    "tag": "ch.toLowerCase()",
-    "syntax": "ch.toLowerCase()",
-    "summary": "Convertit tous les caractères de ch en minuscules.",
-    "description": "Renvoie une nouvelle chaîne dans laquelle toutes les lettres majuscules ont été converties en minuscules.",
-    "howToUse": "Très utile pour comparer deux chaînes sans tenir compte de la casse : if (ch1.toLowerCase() == ch2.toLowerCase()).",
-    "values": [
-      "'BAC'.toLowerCase() -> 'bac'",
-      "'Tunisie'.toLowerCase() -> 'tunisie'"
-    ],
-    "code": "// Normaliser une adresse email en minuscules\nfunction normaliserEmail() {\n  var champ = document.getElementById(\"email\");\n  champ.value = champ.value.toLowerCase();\n}",
-    "runnableCode": "var nom = \"BAC TECHNIQUE 2026\";\nconsole.log(\"'\" + nom + \"'.toLowerCase() = '\" + nom.toLowerCase() + \"'\");"
-  },
-  {
-    "id": "js-str-touppercase",
-    "section": "Les chaînes de caractères",
-    "category": "Les chaînes de caractères",
-    "name": "ch.toUpperCase()",
-    "tag": "ch.toUpperCase()",
-    "syntax": "ch.toUpperCase()",
-    "summary": "Convertit tous les caractères de ch en majuscules.",
-    "description": "Renvoie une nouvelle chaîne avec tous les caractères convertis en majuscules.",
-    "howToUse": "Utilisé pour formater automatiquement les noms de famille ou les codes de série.",
-    "values": [
-      "'sti'.toUpperCase() -> 'STI'",
-      "'tunis'.toUpperCase() -> 'TUNIS'"
-    ],
-    "code": "// Mettre le nom en majuscules\nfunction formaterNom() {\n  var champNom = document.getElementById(\"nom\");\n  champNom.value = champNom.value.toUpperCase();\n}",
-    "runnableCode": "var ville = \"tunis\";\nconsole.log(\"'\" + ville + \"'.toUpperCase() = '\" + ville.toUpperCase() + \"'\");"
-  },
-  {
-    "id": "js-str-trim",
-    "section": "Les chaînes de caractères",
-    "category": "Les chaînes de caractères",
-    "name": "ch.trim()",
-    "tag": "ch.trim()",
-    "syntax": "ch.trim()",
-    "summary": "Supprime tous les espaces existants au début et à la fin de ch.",
-    "description": "Nettoie une chaîne de caractères en retirant les espaces superflus avant le premier mot et après le dernier mot. Les espaces situés à l'intérieur ne sont pas touchés.",
-    "howToUse": "if (document.getElementById('nom').value.trim() == '') { alert('Champ vide !'); }",
-    "values": [
-      "'  test  '.trim() -> 'test'",
-      "Supprime espaces, tabulations et retours chariot aux extrémités"
-    ],
-    "code": "// Nettoyer la saisie avant validation\nfunction validerSansEspaces() {\n  var nom = document.getElementById(\"nom\").value.trim();\n  if (nom == \"\") {\n    alert(\"Vous ne pouvez pas valider avec uniquement des espaces !\");\n    return false;\n  }\n  return true;\n}",
-    "runnableCode": "var brut = \"   Technologie STI   \";\nconsole.log(\"Brut : '\" + brut + \"' (longueur: \" + brut.length + \")\");\nvar propre = brut.trim();\nconsole.log(\"Après trim() : '\" + propre + \"' (longueur: \" + propre.length + \")\");"
-  },
-  {
-    "id": "js-str-fromcharcode",
-    "section": "Les chaînes de caractères",
-    "category": "Les chaînes de caractères",
-    "name": "String.fromCharCode(num, ..., numN)",
-    "tag": "String.fromCharCode()",
-    "syntax": "String.fromCharCode(num1, num2, ...)",
-    "summary": "Retourne une chaîne formée par la concaténation des résultats de conversion des codes ASCII passés en paramètres.",
-    "description": "Méthode statique de l'objet String qui convertit un ou plusieurs codes numériques ASCII / UTF-16 en leurs caractères correspondants.",
-    "howToUse": "String.fromCharCode(65) donne 'A'. String.fromCharCode(97) donne 'a'.",
-    "values": [
-      "String.fromCharCode(65) -> 'A'",
-      "String.fromCharCode(66) -> 'B'",
-      "String.fromCharCode(65, 66, 67) -> 'ABC'"
-    ],
-    "code": "// Générer l'alphabet majuscule avec les codes ASCII 65 à 90\nfunction genererAlphabet() {\n  var alpha = \"\";\n  for (var code = 65; code <= 90; code++) {\n    alpha += String.fromCharCode(code) + \" \";\n  }\n  alert(\"Alphabet : \" + alpha);\n}",
-    "runnableCode": "console.log(\"String.fromCharCode(65, 66, 67) = \" + String.fromCharCode(65, 66, 67));\nconsole.log(\"Code 83, 84, 73 -> \" + String.fromCharCode(83, 84, 73) + \" (STI)\");"
-  },
-  {
-    "id": "js-date-now",
-    "section": "L'objet Date",
-    "category": "L'objet Date",
-    "name": "new Date()",
-    "tag": "new Date()",
-    "syntax": "var d = new Date();",
-    "summary": "Retourne la date courante.",
-    "description": "Instancie et initialise un nouvel objet Date représentant la date et l'heure système actuelles au moment de l'exécution.",
-    "howToUse": "var aujourdhui = new Date(); puis appeler .getDate(), .getMonth(), .getFullYear() sur cette variable.",
-    "values": [
-      "new Date() -> objet Date courante"
-    ],
-    "code": "// Récupérer la date du jour\nfunction afficherDateDuJour() {\n  var d = new Date();\n  alert(\"Date courante : \" + d.toString());\n}",
-    "runnableCode": "var ajd = new Date();\nconsole.log(\"new Date() : \" + ajd.toString());"
-  },
-  {
-    "id": "js-date-parse",
-    "section": "L'objet Date",
-    "category": "L'objet Date",
-    "name": "new Date(ch)",
-    "tag": "new Date(ch)",
-    "syntax": "var d = new Date(ch);",
-    "summary": "Retourne un objet Date à partir d'une chaine de caractères ch représentant une date.",
-    "description": "Crée un objet Date à partir d'une chaîne textuelle formatée (ex: '2026-06-15'). Permet ensuite de comparer deux dates ou d'extraire des éléments.",
-    "howToUse": "var dNaiss = new Date(document.getElementById('dateNaiss').value);",
-    "values": [
-      "new Date('2026-06-15')",
-      "new Date('2007-03-22')"
-    ],
-    "code": "// Calculer l'âge à partir d'un champ HTML5 <input type=\"date\">\nfunction calculerAge() {\n  var dateSaisie = document.getElementById(\"dateNaiss\").value;\n  var dNaiss = new Date(dateSaisie);\n  var auj = new Date();\n  var age = auj.getFullYear() - dNaiss.getFullYear();\n  alert(\"Âge approximatif : \" + age + \" ans.\");\n}",
-    "runnableCode": "var d = new Date(\"2026-06-15\");\nconsole.log(\"new Date('2026-06-15') : \" + d.toString());"
-  },
-  {
-    "id": "js-date-getdate",
-    "section": "L'objet Date",
-    "category": "L'objet Date",
-    "name": "d.getDate()",
-    "tag": "d.getDate()",
-    "syntax": "d.getDate()",
-    "summary": "Retourne le jour du mois (entre 1 et 31).",
-    "description": "Extrait et retourne le quantième du mois (nombre entier de 1 à 31) pour l'objet Date d.",
-    "howToUse": "var jour = d.getDate();",
-    "values": [
-      "d.getDate() -> 1 à 31"
-    ],
-    "code": "// Afficher le jour actuel\nfunction afficherJour() {\n  var d = new Date();\n  alert(\"Nous sommes le \" + d.getDate() + \" du mois.\");\n}",
-    "runnableCode": "var d = new Date();\nconsole.log(\"Jour actuel (d.getDate()) : \" + d.getDate());"
-  },
-  {
-    "id": "js-date-getmonth",
-    "section": "L'objet Date",
-    "category": "L'objet Date",
-    "name": "d.getMonth()",
-    "tag": "d.getMonth()",
-    "syntax": "d.getMonth()",
-    "summary": "Retourne le numéro du mois (entre 1 et 11).",
-    "description": "Extrait le mois de l'objet Date. Note officielle de l'annexe Bac STI : mentionne le numéro du mois. En JavaScript standard, les mois sont indexés de 0 (Janvier) à 11 (Décembre), donc pour un affichage usuel, on ajoute généralement +1.",
-    "howToUse": "var mois = d.getMonth() + 1; // 1 pour Janvier, 12 pour Décembre",
-    "values": [
-      "0 = Janvier",
-      "1 = Février",
-      "11 = Décembre",
-      "Note Bac : entre 1 et 11"
-    ],
-    "code": "// Formater le mois de la date courante\nfunction afficherMois() {\n  var d = new Date();\n  var mois = d.getMonth() + 1;\n  alert(\"Mois numéro : \" + mois);\n}",
-    "runnableCode": "var d = new Date();\nconsole.log(\"Mois natif (0 à 11) : \" + d.getMonth());\nconsole.log(\"Mois usuel (+1) : \" + (d.getMonth() + 1));"
-  },
-  {
-    "id": "js-date-getfullyear",
-    "section": "L'objet Date",
-    "category": "L'objet Date",
-    "name": "d.getFullYear()",
-    "tag": "d.getFullYear()",
-    "syntax": "d.getFullYear()",
-    "summary": "Retourne la valeur de l'année sur 4 chiffres.",
-    "description": "Retourne l'année complète sous forme d'un entier à 4 chiffres (ex: 2026). Ne pas utiliser getYear() qui est déprécié.",
-    "howToUse": "var annee = d.getFullYear();",
-    "values": [
-      "d.getFullYear() -> ex: 2026"
-    ],
-    "code": "// Afficher l'année actuelle pour la session du Bac\nfunction afficherSession() {\n  var d = new Date();\n  alert(\"Session du Baccalauréat : \" + d.getFullYear());\n}",
-    "runnableCode": "var d = new Date();\nconsole.log(\"Année sur 4 chiffres (d.getFullYear()) : \" + d.getFullYear());"
-  },
-  {
-    "id": "js-date-tostring",
-    "section": "L'objet Date",
-    "category": "L'objet Date",
-    "name": "d.toString()",
-    "tag": "d.toString()",
-    "syntax": "d.toString()",
-    "summary": "Retourne une chaine de caractères représentant la date d.",
-    "description": "Convertit l'objet Date d en chaîne textuelle lisible complète incluant le jour, le mois, le numéro du jour, l'année, l'heure et le fuseau horaire.",
-    "howToUse": "var str = d.toString();",
-    "values": [
-      "d.toString() -> 'Tue Nov 10 2026 20:30:00 GMT...'"
-    ],
-    "code": "// Journaliser l'envoi d'un formulaire\nfunction enregistrerDateEnvoi() {\n  var d = new Date();\n  document.getElementById(\"dateEnvoi\").value = d.toString();\n}",
-    "runnableCode": "var d = new Date();\nconsole.log(\"d.toString() : \" + d.toString());"
-  },
-  {
-    "id": "js-arr-literal",
-    "section": "L'objet Array",
-    "category": "L'objet Array",
-    "name": "[] (Littéraux de tableau)",
-    "tag": "[ ]",
-    "syntax": "var tab = [elem1, elem2, ...];",
-    "summary": "Pour créer un tableau, utiliser les littéraux de tableau [].",
-    "description": "Règle officielle de l'annexe : pour instancier un tableau en JavaScript, on utilise la notation littérale entre crochets []. Les éléments sont séparés par des virgules et peuvent être de n'importe quel type.",
-    "howToUse": "var t = ['Technique', 'Math', 'Sciences']; Accès au 1er élément par t[0].",
-    "values": [
-      "var t = [] -> tableau vide",
-      "var t = [10, 15, 20] -> tableau de nombres"
-    ],
-    "code": "// Déclarer et manipuler un tableau de filières\nfunction listerFilieres() {\n  var filieres = [\"STI (Sciences & Technologies)\", \"Mathématiques\", \"Sciences Expérimentales\", \"Économie & Gestion\"];\n  alert(\"Première filière : \" + filieres[0]);\n}",
-    "runnableCode": "var matieres = [\"Techno\", \"Math\", \"Info\", \"Physique\"];\nconsole.log(\"Tableau créé avec [] :\", matieres);\nconsole.log(\"Premier élément : \" + matieres[0]);"
-  },
-  {
-    "id": "js-arr-length",
-    "section": "L'objet Array",
-    "category": "L'objet Array",
-    "name": "length (Tableau)",
-    "tag": "tab.length",
-    "syntax": "tab.length",
-    "summary": "Propriété qui représente le nombre d'éléments dans un tableau.",
-    "description": "Propriété de l'objet Array renvoyant le nombre exact d'éléments contenus dans le tableau. Essentielle pour les conditions d'arrêt des boucles for.",
-    "howToUse": "for (var i = 0; i < tab.length; i++) { ... }",
-    "values": [
-      "tab.length -> nombre entier >= 0"
-    ],
-    "code": "// Calculer la moyenne des notes d'un tableau\nfunction moyenneTableau() {\n  var notes = [12, 14, 16, 18];\n  var somme = 0;\n  for (var i = 0; i < notes.length; i++) {\n    somme += notes[i];\n  }\n  var moy = somme / notes.length;\n  alert(\"Moyenne des \" + notes.length + \" notes : \" + moy);\n}",
-    "runnableCode": "var t = [\"A\", \"B\", \"C\", \"D\", \"E\"];\nconsole.log(\"Nombre d'éléments dans le tableau (tab.length) : \" + t.length);"
-  },
-  {
-    "id": "js-dom-attr-val",
-    "section": "Modification du contenu, des attributs ou des styles des éléments HTML",
-    "category": "Modification HTML & Styles",
-    "name": "element.attribut = valeur",
-    "tag": "element.attribut = valeur",
-    "syntax": "element.attribut = valeur",
-    "summary": "Change la valeur de l'attribut d'un élément HTML.",
-    "description": "Permet de modifier dynamiquement les attributs d'une balise HTML. Règle officielle de l'annexe Bac STI : 'Se limiter à la manipulation des attributs value, checked, disabled, readonly, src, muted.'",
-    "howToUse": "document.getElementById('monBouton').disabled = true; document.getElementById('photo').src = 'nouveau.jpg';",
-    "values": [
-      "value : valeur textuelle d'un champ",
-      "checked : true ou false pour checkbox/radio",
-      "disabled : true ou false pour désactiver un bouton",
-      "readonly : true ou false pour lecture seule",
-      "src : chemin de l'image ou du média",
-      "muted : true ou false pour couper le son"
-    ],
-    "code": "// Exemple Bac STI : manipulation des attributs officiels\nfunction modifierAttributs() {\n  // 1. Modifier la valeur (value)\n  document.getElementById(\"prenom\").value = \"Nour\";\n\n  // 2. Cocher une case (checked)\n  document.getElementById(\"chk_accord\").checked = true;\n\n  // 3. Désactiver un bouton (disabled)\n  document.getElementById(\"btnEnvoyer\").disabled = true;\n\n  // 4. Mettre en lecture seule (readonly)\n  document.getElementById(\"login\").readonly = true;\n\n  // 5. Modifier la source d'une image (src)\n  document.getElementById(\"logo\").src = \"images/bac_reussite.png\";\n\n  // 6. Rendre muette une vidéo (muted)\n  document.getElementById(\"maVideo\").muted = true;\n}",
-    "runnableCode": "console.log(\"element.attribut = valeur modifie: value, checked, disabled, readonly, src, muted.\");"
-  },
-  {
-    "id": "js-dom-style-prop",
-    "section": "Modification du contenu, des attributs ou des styles des éléments HTML",
-    "category": "Modification HTML & Styles",
-    "name": "element.style.propriété = valeur",
-    "tag": "element.style.propriété = valeur",
-    "syntax": "element.style.propriete = 'valeur'",
-    "summary": "Change le style d'un élément HTML.",
-    "description": "Permet de modifier dynamiquement le style CSS en ligne d'un élément HTML. Règle officielle de l'annexe Bac STI : 'Se limiter à la manipulation des propriétés color, background, border, font, width, height.'",
-    "howToUse": "document.getElementById('titre').style.color = 'red';",
-    "values": [
-      "color : couleur du texte ('red', '#ff0000')",
-      "background : fond de l'élément ('yellow', '#eee')",
-      "border : bordure ('1px solid red')",
-      "font : police combinée ('bold 16px Arial')",
-      "width : largeur ('300px', '50%')",
-      "height : hauteur ('150px')"
-    ],
-    "code": "// Exemple Bac STI : manipulation des styles officiels\nfunction appliquerStylesSTI() {\n  var boite = document.getElementById(\"boite\");\n  \n  // Les 6 propriétés officielles de l'annexe :\n  boite.style.color = \"red\";\n  boite.style.background = \"#fff3cd\";\n  boite.style.border = \"2px dashed #f59e0b\";\n  boite.style.font = \"bold 16px 'Segoe UI', sans-serif\";\n  boite.style.width = \"400px\";\n  boite.style.height = \"120px\";\n}",
-    "runnableCode": "console.log(\"element.style.propriété modifie : color, background, border, font, width, height.\");"
-  },
-  {
-    "id": "js-dom-method-play",
-    "section": "Modification du contenu, des attributs ou des styles des éléments HTML",
-    "category": "Modification HTML & Styles",
-    "name": "element.play()",
-    "tag": "element.play()",
-    "syntax": "element.play()",
-    "summary": "Effectue une action sur un élément HTML (méthode play()).",
-    "description": "Lance la lecture d'un élément multimédia HTML5 (<audio> ou <video>). Fait partie des 2 méthodes multimédia officielles autorisées par l'annexe ('Se limiter à la manipulation des méthodes play(), pause()').",
-    "howToUse": "document.getElementById('monAudio').play();",
-    "values": [
-      "element.play() lance la lecture"
-    ],
-    "code": "// Démarrer la lecture d'un enregistrement audio\nfunction demarrerAudio() {\n  var lecteur = document.getElementById(\"audioCours\");\n  lecteur.play();\n  alert(\"Lecture audio démarrée !\");\n}",
-    "runnableCode": "console.log(\"element.play() démarre la lecture audio ou vidéo.\");"
-  },
-  {
-    "id": "js-dom-method-pause",
-    "section": "Modification du contenu, des attributs ou des styles des éléments HTML",
-    "category": "Modification HTML & Styles",
-    "name": "element.pause()",
-    "tag": "element.pause()",
-    "syntax": "element.pause()",
-    "summary": "Effectue une action sur un élément HTML (méthode pause()).",
-    "description": "Met en pause la lecture en cours d'un fichier audio ou vidéo HTML5. Seconde méthode multimédia officielle autorisée par l'annexe STI.",
-    "howToUse": "document.getElementById('maVideo').pause();",
-    "values": [
-      "element.pause() met en pause"
-    ],
-    "code": "// Mettre en pause une vidéo explicative\nfunction arreterVideo() {\n  var video = document.getElementById(\"videoDemo\");\n  video.pause();\n  alert(\"Vidéo mise en pause.\");\n}",
-    "runnableCode": "console.log(\"element.pause() met en pause la lecture multimédia.\");"
-  },
-  {
-    "id": "js-dom-selectedindex",
-    "section": "Modification du contenu, des attributs ou des styles des éléments HTML",
-    "category": "Modification HTML & Styles",
-    "name": "selectedIndex (<select>)",
-    "tag": "select.selectedIndex",
-    "syntax": "selectElement.selectedIndex",
-    "summary": "Pour une liste déroulante (<select>), utiliser la propriété selectedIndex pour récupérer l'indice de l'option sélectionnée.",
-    "description": "Note officielle de l'annexe : renvoie le numéro d'indice (commençant à 0) de l'option active dans un menu déroulant <select>. Si l'option 0 est '--- Choisissez ---', la condition (liste.selectedIndex == 0) permet de vérifier que l'utilisateur a bien fait un choix !",
-    "howToUse": "if (document.getElementById('filiere').selectedIndex == 0) { alert('Veuillez choisir une option !'); return false; }",
-    "values": [
-      "0 = première option (<option>)",
-      "1 = deuxième option",
-      "selectedIndex == -1 si rien n'est sélectionné"
-    ],
-    "code": "// Validation d'une liste déroulante au Bac STI\nfunction validerListe() {\n  var menu = document.getElementById(\"selectVille\");\n  if (menu.selectedIndex == 0) {\n    alert(\"Veuillez sélectionner votre ville dans la liste !\");\n    return false;\n  }\n  var optionChoisie = menu.options[menu.selectedIndex].text;\n  alert(\"Ville choisie : \" + optionChoisie);\n  return true;\n}",
-    "runnableCode": "console.log(\"select.selectedIndex donne l'indice de l'option choisie (0 pour la première).\");"
-  }
-,
-  {
-    "id": "js-fn-verif-complete",
-    "section": "Contrôles de Saisie & Formulaires (Bac STI)",
-    "category": "Validation de Formulaires Bac STI",
-    "name": "function verif() (Validation Complète Formulaire)",
-    "tag": "function verif()",
-    "syntax": "function verif() { ... return false; }",
-    "summary": "Fonction complète de contrôle et validation de formulaire du Bac STI : vérification de la civilité (radio), nom/prénom, téléphone (8 chiffres), email (@ et .), mot de passe et confirmation (avec style.backgroundColor='red'), adresse, sélection de la ville (selectedIndex), code postal (4 chiffres) et remarque.",
-    "description": "Fonction maîtresse de contrôle d'un formulaire HTML du Bac STI. Elle récupère les valeurs de chaque champ via getElementById et getElementsByName, puis applique les règles de validation successives : si une règle n'est pas respectée, un alert() s'affiche, le champ erroné est éventuellement coloré en rouge et la fonction retourne false pour bloquer l'envoi.",
-    "howToUse": "Associer à l'événement onsubmit du formulaire : <form onsubmit=\"return verif()\" action=\"reponse.php\" method=\"post\"> ou au bouton : <input type=\"submit\" value=\"Envoyer\" onclick=\"return verif()\">.",
-    "values": [
-      "civ[0].checked == false && civ[1].checked == false",
-      "np == '' || np.length > 30 || alpha(np) == false",
-      "ntel.length != 8 || testtel(ntel) == false || isnum(ntel) == false",
-      "mail == '' || mail.indexOf('@') == -1 || testmail(mail) == false",
-      "mps.length != 8",
-      "cfmps != mps -> style.backgroundColor = 'red'",
-      "adr == '' || adr.indexOf(' ') == -1",
-      "vil.selectedIndex == 0",
-      "Number(cp) < 1000 || Number(cp) > 9999",
-      "req == '' || req.length > 50"
-    ],
-    "code": "function verif() {\n  // Récupération des valeurs des champs\n  let np = document.getElementById(\"np\").value;\n  let ntel = document.getElementById(\"ntel\").value;\n  let mail = document.getElementById(\"mail\").value;\n  let mps = document.getElementById(\"mps\").value;\n  let cfmps = document.getElementById(\"cfmps\").value;\n  let adr = document.getElementById(\"adr\").value;\n  let vil = document.getElementById(\"vill\");\n  let cp = document.getElementById(\"cp\").value;\n  let req = document.getElementById(\"rq\").value;\n\n  // Validation du cocher civilité 1ére méthode\n  /* let f = document.getElementById('f').checked;\n     let h = document.getElementById('h').checked;\n     if (f == false && h == false) {\n       alert('Veuillez cocher la civilité');\n       return false;\n     }\n  */\n\n  // Validation du cocher civilité 2ème Méthode\n  let civ = document.getElementsByName(\"civ\");\n  if (civ[0].checked == false && civ[1].checked == false) {\n    alert(\"Veuillez cocher la civilité\");\n    return false;\n  }\n\n  // Validation du champ Nom et prénom\n  if (np == \"\" || np.length > 30 || alpha(np) == false) {\n    alert(\"Nom vide ou incorrect\");\n    return false;\n  }\n\n  // Validation du champ Numéro téléphone\n  if (ntel.length != 8 || testtel(ntel) == false || isnum(ntel) == false) {\n    alert(\"numéro téléphone vide ou incorrect\");\n    return false;\n  }\n\n  // Validation du champ Mail\n  if (mail == \"\" || mail.indexOf(\"@\") == -1 || testmail(mail) == false) {\n    alert(\"Mail obligatoire ou invalide\");\n    return false;\n  }\n\n  // Validation du champ mot de passe\n  if (mps.length != 8) {\n    alert(\"Mot de Passe obligatoire ou invalide\");\n    return false;\n  }\n\n  // Validation du confirmation du mot de passe\n  if (cfmps != mps) {\n    alert(\"Mot de Passe incorrect\");\n    document.getElementById('cfmps').style.backgroundColor = 'red';\n    return false;\n  }\n\n  // Validation du champ Adresse\n  if (adr == \"\" || adr.indexOf(\" \") == -1) {\n    alert(\"adresse vide ou incorrecte\");\n    return false;\n  }\n\n  // Validation du cocher ville\n  if (vil.selectedIndex == 0) {\n    alert(\"selectionner une ville\");\n    return false;\n  }\n\n  // Validation du champ code postal\n  if (Number(cp) < 1000 || Number(cp) > 9999) {\n    alert(\"code postal obligatoire ou invalid\");\n    return false;\n  }\n\n  // Validation du champ Remarque\n  if (req == \"\" || req.length > 50) {\n    alert(\"remarque obligatoire ou invalid\");\n    return false;\n  }\n} /// fin fonction verif",
-    "runnableCode": "console.log(\"=== SIMULATION DE VERIF() AU BAC STI ===\");\nconsole.log(\"1. Civilité : civ[0].checked et civ[1].checked vérifiés.\");\nconsole.log(\"2. Nom et Prénom : longueur <= 30 et alpha(np) == true.\");\nconsole.log(\"3. Tél : 8 chiffres exacts, premier chiffre valide (testtel) et isnum.\");\nconsole.log(\"4. Mail : non vide, présence de '@' et format testmail valide.\");\nconsole.log(\"5. Mot de passe : longueur == 8.\");\nconsole.log(\"6. Confirmation : si cfmps != mps, style.backgroundColor = 'red'.\");\nconsole.log(\"7. Adresse : présence obligatoire d'au moins un espace ' ' (indexOf != -1).\");\nconsole.log(\"8. Ville : menu déroulant vil.selectedIndex != 0.\");\nconsole.log(\"9. Code postal : Number(cp) entre 1000 et 9999 (4 chiffres).\");\nconsole.log(\"10. Remarque : non vide et longueur <= 50 caractères.\");\nconsole.log(\"✓ Tous les contrôles sont conformes au barème officiel du Bac STI !\");"
-  },
-  {
-    "id": "js-fn-validage",
-    "section": "Contrôles de Saisie & Formulaires (Bac STI)",
-    "category": "Validation de Formulaires Bac STI",
-    "name": "function validage() (Validation Date de Naissance & Âge)",
-    "tag": "function validage()",
-    "syntax": "function validage() { ... }",
-    "summary": "Calcule l'âge d'un utilisateur à partir de sa date de naissance (#dnais) et vérifie s'il est compris entre 15 et 30 ans en exploitant l'objet Date (new Date(), getFullYear()).",
-    "description": "Fonction classique d'examen du Bac STI pour valider l'âge d'un candidat :\\n1. Récupère la chaîne de date depuis l'input date id='dnais'.\\n2. Instancie dc = new Date() pour obtenir l'année courante (ac = dc.getFullYear()).\\n3. Instancie dp = new Date(dt) pour convertir la saisie et extraire l'année de naissance (ap = dp.getFullYear()).\\n4. Calcule la différence diff = ac - ap.\\n5. Si diff < 15 ou diff > 30, affiche une boîte d'alerte 'age invalid'.",
-    "howToUse": "Appeler sur l'événement onblur ou onchange du champ date : <input type=\"date\" id=\"dnais\" onchange=\"validage()\"> ou dans verif().",
-    "values": [
-      "let dc = new Date();",
-      "let dp = new Date(dt);",
-      "let ap = dp.getFullYear();",
-      "let ac = dc.getFullYear();",
-      "let diff = ac - ap;",
-      "if (diff < 15 || diff > 30) alert('age invalid');"
-    ],
-    "code": "function validage() {\n  let dt = document.getElementById('dnais').value;\n  let dc = new Date(); // Retourne la date courante\n  let dp = new Date(dt); // Convertir la variable dt en un objet date\n  let ap = dp.getFullYear(); // Retourne l'année à partir de la date dp sur 4 chiffres\n  let ac = dc.getFullYear();\n  let diff = ac - ap;\n  if (diff < 15 || diff > 30) {\n    alert('age invalid');\n  }\n}",
-    "runnableCode": "const anneeCourante = new Date().getFullYear();\nconst anneeNaissanceTest = anneeCourante - 18; // 18 ans\nconst diff = anneeCourante - anneeNaissanceTest;\nconsole.log(\"Année courante (ac) : \" + anneeCourante);\nconsole.log(\"Année de naissance test (ap) : \" + anneeNaissanceTest);\nconsole.log(\"Âge calculé (diff = ac - ap) : \" + diff + \" ans\");\nif (diff < 15 || diff > 30) {\n  console.log(\"Résultat : ❌ Âge invalide (doit être entre 15 et 30 ans)\");\n} else {\n  console.log(\"Résultat : ✓ Âge valide pour le Bac STI !\");\n}"
-  },
-  {
-    "id": "js-fn-captcha",
-    "section": "Contrôles de Saisie & Formulaires (Bac STI)",
-    "category": "Validation de Formulaires Bac STI",
-    "name": "function Captcha() (Génération Code Aléatoire)",
-    "tag": "function Captcha()",
-    "syntax": "function Captcha() { ... }",
-    "summary": "Génère un code Captcha aléatoire de 10 caractères composé de majuscules (ASCII 65-90) et de minuscules (ASCII 97-122) grâce à Math.trunc, Math.random() et String.fromCharCode().",
-    "description": "Algorithme officiel du Bac STI pour créer un code de sécurité Captcha aléatoire :\\n1. Initialise une chaîne code vide.\\n2. Boucle de 1 à 10 pour générer 10 caractères.\\n3. Tire un nombre entier n aléatoire entre 0 et 25 via Math.trunc(Math.random() * 26).\\n4. Si n est pair (n % 2 == 0), convertit en majuscule : String.fromCharCode(n + 65) (A-Z).\\n5. Sinon, convertit en minuscule : String.fromCharCode(n + 97) (a-z).\\n6. Insère le code généré dans le champ input id='cap'.",
-    "howToUse": "Appeler au chargement de la page : <body onload=\"Captcha()\"> ou lors d'une réinitialisation.",
-    "values": [
-      "Math.trunc(Math.random() * 26)",
-      "if (n % 2 == 0) String.fromCharCode(n + 65)",
-      "else String.fromCharCode(n + 97)",
-      "document.getElementById('cap').value = code"
-    ],
-    "code": "function Captcha() {\n  let code = \"\";\n  for (let i = 1; i <= 10; i++) {\n    let n = Math.trunc(Math.random() * 26);\n    if (n % 2 == 0) {\n      code = code + String.fromCharCode(n + 65);\n    } else {\n      code = code + String.fromCharCode(n + 97);\n    }\n  }\n  document.getElementById('cap').value = code;\n}",
-    "runnableCode": "let code = \"\";\nfor (let i = 1; i <= 10; i++) {\n  let n = Math.trunc(Math.random() * 26);\n  if (n % 2 == 0) {\n    code = code + String.fromCharCode(n + 65);\n  } else {\n    code = code + String.fromCharCode(n + 97);\n  }\n}\nconsole.log(\"Code Captcha généré (10 caractères) : \" + code);\nconsole.log(\"Longueur : \" + code.length + \" caractères (mélange de majuscules et minuscules)\");"
-  },
-  {
-    "id": "js-fn-nbmajus",
-    "section": "Contrôles de Saisie & Formulaires (Bac STI)",
-    "category": "Validation de Formulaires Bac STI",
-    "name": "function nbmajus() (Comptage des Majuscules)",
-    "tag": "function nbmajus()",
-    "syntax": "function nbmajus() { ... }",
-    "summary": "Compte le nombre de lettres majuscules présentes dans le Captcha (#cap) et compare avec la valeur saisie par l'utilisateur (#nbmaj). En cas d'erreur, colore le champ en rouge.",
-    "description": "Procédure d'évaluation d'un Captcha par comptage :\\n1. Récupère la chaîne du Captcha depuis document.getElementById('cap').value.\\n2. Parcourt la chaîne caractère par caractère avec une boucle for.\\n3. Si le caractère est compris entre 'A' et 'Z' (ch[i] >= 'A' && ch[i] <= 'Z'), incrémente le compteur nb.\\n4. Récupère la réponse de l'utilisateur val = document.getElementById('nbmaj').value.\\n5. Si nb != val, applique un style rouge : document.getElementById('nbmaj').style.backgroundColor = 'red'.",
-    "howToUse": "Appeler au clic du bouton de vérification ou dans la fonction globale verif().",
-    "values": [
-      "for (let i = 0; i < ch.length; i++)",
-      "if (ch[i] >= 'A' && ch[i] <= 'Z') nb = nb + 1",
-      "document.getElementById('nbmaj').style.backgroundColor = 'red'"
-    ],
-    "code": "function nbmajus() {\n  let ch = document.getElementById('cap').value;\n  let nb = 0;\n  for (let i = 0; i < ch.length; i++) {\n    if (ch[i] >= \"A\" && ch[i] <= \"Z\") {\n      nb = nb + 1;\n    }\n  }\n  let val = document.getElementById('nbmaj').value;\n  if (nb != val) {\n    document.getElementById('nbmaj').style.backgroundColor = 'red';\n  }\n}",
-    "runnableCode": "const testChaine = \"AbCDeFgHiJ\";\nlet nb = 0;\nfor (let i = 0; i < testChaine.length; i++) {\n  if (testChaine[i] >= \"A\" && testChaine[i] <= \"Z\") {\n    nb = nb + 1;\n  }\n}\nconsole.log(\"Chaîne analysée : \" + testChaine);\nconsole.log(\"Nombre de majuscules trouvées : \" + nb + \" sur \" + testChaine.length + \" caractères\");\nconsole.log(\"Test utilisateur saisissant 5 : \" + (nb == 5 ? \"✓ Correct !\" : \"❌ Incorrect -> fond rouge !\"));"
-  },
-  {
-    "id": "js-fn-actualiser",
-    "section": "Contrôles de Saisie & Formulaires (Bac STI)",
-    "category": "Validation de Formulaires Bac STI",
-    "name": "function actualiser() (Régénérer le Captcha)",
-    "tag": "function actualiser()",
-    "syntax": "function actualiser() { ... }",
-    "summary": "Permet à l'utilisateur de renouveler le code Captcha aléatoire s'il le trouve illisible, en régénérant 10 nouveaux caractères et en actualisant le champ #cap.",
-    "description": "Fonction liée au bouton d'actualisation du Captcha :\\n1. Réinitialise le code aléatoire.\\n2. Exécute la boucle for de 10 itérations avec tirage aléatoire Math.random() et conversion ASCII String.fromCharCode().\\n3. Met à jour la valeur affichée dans document.getElementById('cap').value.\\n4. Réinitialise également si nécessaire la couleur de fond du champ réponse.",
-    "howToUse": "Associer à un bouton rafraîchir : <button type=\"button\" onclick=\"actualiser()\">🔄 Actualiser le Captcha</button>.",
-    "values": [
-      "code = ''",
-      "Math.trunc(Math.random() * 26)",
-      "document.getElementById('cap').value = code"
-    ],
-    "code": "function actualiser() {\n  let code = \"\";\n  for (let i = 1; i <= 10; i++) {\n    let n = Math.trunc(Math.random() * 26);\n    if (n % 2 == 0) {\n      code = code + String.fromCharCode(n + 65);\n    } else {\n      code = code + String.fromCharCode(n + 97);\n    }\n  }\n  document.getElementById('cap').value = code;\n}",
-    "runnableCode": "let code = \"\";\nfor (let i = 1; i <= 10; i++) {\n  let n = Math.trunc(Math.random() * 26);\n  if (n % 2 == 0) {\n    code = code + String.fromCharCode(n + 65);\n  } else {\n    code = code + String.fromCharCode(n + 97);\n  }\n}\nconsole.log(\"Ancien code : aB3kL9pQxZ\");\nconsole.log(\"Nouveau code actualisé : \" + code);\nconsole.log(\"✓ Champ #cap mis à jour avec succès !\");"
-  },
-  {
-    "id": "js-structure-switch-saisons",
-    "section": "Structures Conditionnelles (Bac STI)",
-    "category": "Structures de Contrôle (switch)",
-    "name": "switch (variable) (Saisons de l'Année)",
-    "tag": "switch (mois)",
-    "syntax": "switch (expression) { case c1: ... break; default: ... break; }",
-    "summary": "Structure conditionnelle à choix multiples (switch) : détermine la saison de l'année à partir du numéro du mois (1 à 12) avec regroupement de cas multiples (case 12: case 1: case 2:), instruction break et clause default.",
-    "description": "Guide complet sur l'utilisation de switch au Baccalauréat STI :\\n\\n1. Saisie & Conversion :\\n   let mois = prompt('mois=');\\n   mois = Number(mois); // OBLIGATOIRE : switch compare avec === (valeur et type exacts).\\n\\n2. Regroupement de cas multiples (OU logique) :\\n   Quand plusieurs valeurs produisent le même traitement, on empile les étiquettes case sans instruction intermédiaire :\\n   - case 12: case 1: case 2: -> 'hiver'\\n   - case 3: case 4: case 5: -> 'printemps'\\n   - case 6: case 7: case 8: -> 'été'\\n   - case 9: case 10: case 11: -> 'Automne'\\n\\n3. Le rôle crucial de 'break;' :\\n   L'instruction 'break;' termine immédiatement le bloc switch. Sans break, JavaScript continuerait à exécuter aveuglément les blocs suivants (comportement fall-through), ce qui provoquerait des affichages erronés !\\n\\n4. La clause 'default:' :\\n   Sert de filet de sécurité lorsque la valeur saisie ne correspond à aucun des cas listés (par exemple si l'utilisateur saisit 13, 0 ou -5). Affiche 'Numéro erroné'.",
-    "howToUse": "Utiliser switch dès qu'une variable peut prendre plusieurs valeurs fixes et distinctes (numéros de mois, choix de menu, codes postaux régionaux). Structure plus claire et rapide qu'une longue série de if ... else if.",
-    "values": [
-      "switch (mois) { ... }",
-      "case 12: case 1: case 2: -> hiver",
-      "case 3: case 4: case 5: -> printemps",
-      "case 6: case 7: case 8: -> été",
-      "case 9: case 10: case 11: -> Automne",
-      "break; (interrompt le switch)",
-      "default: alert('Numéro erroné'); break;"
-    ],
-    "code": "<script>\n// déterminer la saison à partir du numéro du mois saisi\nlet mois = prompt(\"mois=\");\nmois = Number(mois);\nswitch (mois) {\n  case 12: case 1: case 2:\n    alert(\"hiver\");\n    break;\n  case 3: case 4: case 5:\n    alert(\"printemps\");\n    break;\n  case 6: case 7: case 8:\n    alert(\"été\");\n    break;\n  case 9: case 10: case 11:\n    alert(\"Automne\");\n    break;\n  default:\n    alert(\"Numéro erroné\");\n    break;\n}\n</script>",
-    "runnableCode": "function getSaison(m) {\n  m = Number(m);\n  switch (m) {\n    case 12: case 1: case 2:\n      return \"❄️ hiver\";\n    case 3: case 4: case 5:\n      return \"🌸 printemps\";\n    case 6: case 7: case 8:\n      return \"☀️ été\";\n    case 9: case 10: case 11:\n      return \"🍂 Automne\";\n    default:\n      return \"❌ Numéro erroné\";\n  }\n}\n\nconsole.log(\"=== DÉMONSTRATION STRUCTURE SWITCH (BAC STI) ===\");\nconsole.log(\"Mois 1 (Janvier)   -> \" + getSaison(1));\nconsole.log(\"Mois 4 (Avril)     -> \" + getSaison(4));\nconsole.log(\"Mois 7 (Juillet)   -> \" + getSaison(7));\nconsole.log(\"Mois 10 (Octobre)  -> \" + getSaison(10));\nconsole.log(\"Mois 12 (Décembre) -> \" + getSaison(12));\nconsole.log(\"Mois 15 (Invalide) -> \" + getSaison(15));\nconsole.log(\"✓ Fonction switch testée sur tous les cas possibles !\");"
-  },
-  {
-    "id": "js-fn-alpha",
-    "section": "Contrôles de Saisie & Formulaires (Bac STI)",
-    "category": "Validation de Formulaires Bac STI",
-    "name": "function alpha(ch) (Contrôle Chaîne Alphabétique)",
-    "tag": "function alpha(ch)",
-    "syntax": "function alpha(ch) { ... return true; }",
-    "summary": "Vérifie si une chaîne ch passée en paramètre est strictement alphabétique (composée uniquement de lettres A-Z et d'espaces). Utilisée dans verif() pour valider le Nom et Prénom.",
-    "description": "Fonction auxiliaire indispensable du Bac STI :\\n1. Convertit la chaîne en majuscules avec ch = ch.toUpperCase() pour simplifier les comparaisons.\\n2. Parcourt chaque caractère avec une boucle for.\\n3. Si un caractère n'est ni compris entre 'A' et 'Z', ni égal à un espace ' ', retourne immédiatement false.\\n4. Si toute la chaîne a été vérifiée sans erreur, retourne true.",
-    "howToUse": "if (alpha(np) == false) { alert('Nom vide ou incorrect'); return false; }",
-    "values": [
-      "ch = ch.toUpperCase()",
-      "for (let i = 0; i < ch.length; i++)",
-      "if ((ch[i] < 'A' || ch[i] > 'Z') && ch[i] != ' ') return false;",
-      "return true;"
-    ],
-    "code": "function alpha(ch) {\n  ch = ch.toUpperCase();\n  for (let i = 0; i < ch.length; i++) {\n    if ((ch[i] < \"A\" || ch[i] > \"Z\") && ch[i] != \" \") {\n      return false;\n    }\n  }\n  return true;\n}",
-    "runnableCode": "function alpha(ch) {\n  ch = ch.toUpperCase();\n  for (let i = 0; i < ch.length; i++) {\n    if ((ch[i] < \"A\" || ch[i] > \"Z\") && ch[i] != \" \") {\n      return false;\n    }\n  }\n  return true;\n}\nconsole.log(\"alpha('Mohamed Ben Ali') : \" + alpha('Mohamed Ben Ali')); // true\nconsole.log(\"alpha('Ali123') : \" + alpha('Ali123')); // false\nconsole.log(\"alpha('Sarra!') : \" + alpha('Sarra!')); // false"
-  },
-  {
-    "id": "js-fn-isnum",
-    "section": "Contrôles de Saisie & Formulaires (Bac STI)",
-    "category": "Validation de Formulaires Bac STI",
-    "name": "function isnum(ch) (Contrôle Chaîne Numérique)",
-    "tag": "function isnum(ch)",
-    "syntax": "function isnum(ch) { ... return true; }",
-    "summary": "Vérifie si une chaîne ch ne contient que des chiffres de '0' à '9'. Utilisée dans verif() pour valider le Numéro de téléphone ou le Code Postal.",
-    "description": "Fonction classique de contrôle numérique au Bac STI :\\n1. Parcourt tous les caractères de la chaîne avec une boucle for.\\n2. Si un caractère est strictement inférieur à '0' ou supérieur à '9', retourne false.\\n3. Si tous les caractères sont des chiffres, retourne true.",
-    "howToUse": "if (isnum(ntel) == false) { alert('Le numéro de téléphone doit être numérique !'); return false; }",
-    "values": [
-      "for (let i = 0; i < ch.length; i++)",
-      "if (ch[i] < '0' || ch[i] > '9') return false;",
-      "return true;"
-    ],
-    "code": "function isnum(ch) {\n  for (let i = 0; i < ch.length; i++) {\n    if (ch[i] < \"0\" || ch[i] > \"9\") {\n      return false;\n    }\n  }\n  return true;\n}",
-    "runnableCode": "function isnum(ch) {\n  for (let i = 0; i < ch.length; i++) {\n    if (ch[i] < \"0\" || ch[i] > \"9\") {\n      return false;\n    }\n  }\n  return true;\n}\nconsole.log(\"isnum('98123456') : \" + isnum('98123456')); // true\nconsole.log(\"isnum('9812A456') : \" + isnum('9812A456')); // false\nconsole.log(\"isnum('2024') : \" + isnum('2024')); // true"
-  },
-  {
-    "id": "js-fn-testtel",
-    "section": "Contrôles de Saisie & Formulaires (Bac STI)",
-    "category": "Validation de Formulaires Bac STI",
-    "name": "function testtel(ch) (Contrôle Indicatif Téléphone)",
-    "tag": "function testtel(ch)",
-    "syntax": "function testtel(ch) { ... return true; }",
-    "summary": "Vérifie si le premier chiffre d'un numéro de téléphone tunisien à 8 chiffres commence par un préfixe valide (2, 4, 5, 7 ou 9).",
-    "description": "Contrôle d'indicatif téléphonique officiel du Bac STI tunisien :\\n1. Récupère le premier chiffre : let prem = ch.charAt(0); ou ch[0].\\n2. Vérifie s'il est égal à 2, 4, 5, 7 ou 9 (opérateurs de comparaison et OU logique ||).\\n3. Si oui, retourne true ; sinon retourne false.",
-    "howToUse": "if (testtel(ntel) == false) { alert('Numéro de téléphone invalide (doit commencer par 2, 4, 5, 7 ou 9) !'); return false; }",
-    "values": [
-      "let prem = ch.charAt(0);",
-      "prem == '2' || prem == '4' || prem == '5' || prem == '7' || prem == '9'"
-    ],
-    "code": "function testtel(ch) {\n  let prem = ch.charAt(0);\n  return (prem == \"2\" || prem == \"4\" || prem == \"5\" || prem == \"7\" || prem == \"9\");\n}",
-    "runnableCode": "function testtel(ch) {\n  let prem = ch.charAt(0);\n  return (prem == \"2\" || prem == \"4\" || prem == \"5\" || prem == \"7\" || prem == \"9\");\n}\nconsole.log(\"testtel('98123456') : \" + testtel('98123456')); // true (commence par 9)\nconsole.log(\"testtel('52123456') : \" + testtel('52123456')); // true (commence par 5)\nconsole.log(\"testtel('18123456') : \" + testtel('18123456')); // false (1 invalide)"
-  },
-  {
-    "id": "js-fn-testmail",
-    "section": "Contrôles de Saisie & Formulaires (Bac STI)",
-    "category": "Validation de Formulaires Bac STI",
-    "name": "function testmail(mail) (Contrôle Format Adresse Email)",
-    "tag": "function testmail(mail)",
-    "syntax": "function testmail(mail) { ... return true; }",
-    "summary": "Vérifie la conformité d'une adresse email : présence du caractère '@' non au début, et d'un point '.' placé après le '@' sans être le dernier caractère.",
-    "description": "Contrôle d'adresse e-mail standard au Bac STI :\\n1. Trouve la position de l'arobase : let pArobase = mail.indexOf('@');\\n2. Trouve la position du dernier point : let pPoint = mail.lastIndexOf('.');\\n3. Vérifie que pArobase > 0 (il y a du texte avant '@').\\n4. Vérifie que pPoint > pArobase + 1 (il y a du texte entre '@' et '.').\\n5. Vérifie que pPoint < mail.length - 1 (il y a une extension après le point).",
-    "howToUse": "if (testmail(mail) == false) { alert('Adresse email obligatoire ou invalide !'); return false; }",
-    "values": [
-      "let pArobase = mail.indexOf('@');",
-      "let pPoint = mail.lastIndexOf('.');",
-      "pArobase > 0 && pPoint > pArobase + 1 && pPoint < mail.length - 1"
-    ],
-    "code": "function testmail(mail) {\n  let pArobase = mail.indexOf(\"@\");\n  let pPoint = mail.lastIndexOf(\".\");\n  return (pArobase > 0 && pPoint > pArobase + 1 && pPoint < mail.length - 1);\n}",
-    "runnableCode": "function testmail(mail) {\n  let pArobase = mail.indexOf(\"@\");\n  let pPoint = mail.lastIndexOf(\".\");\n  return (pArobase > 0 && pPoint > pArobase + 1 && pPoint < mail.length - 1);\n}\nconsole.log(\"testmail('eleve@domaine.tn') : \" + testmail('eleve@domaine.tn')); // true\nconsole.log(\"testmail('invalide.sans.arobase') : \" + testmail('invalide.sans.arobase')); // false\nconsole.log(\"testmail('@debut.com') : \" + testmail('@debut.com')); // false\nconsole.log(\"testmail('eleve@pointfinal.') : \" + testmail('eleve@pointfinal.')); // false"
-  }
-],
+    {
+      "id": "js-op-et",
+      "section": "Opérateurs logiques",
+      "category": "Opérateurs logiques",
+      "name": "&& (ET logique)",
+      "tag": "&&",
+      "syntax": "condition1 && condition2",
+      "summary": "ET",
+      "description": "Opérateur logique ET. Renvoie true si et seulement si toutes les conditions liées sont vraies en même temps. Très utilisé dans les contrôles de formulaire pour combiner plusieurs validations.",
+      "howToUse": "Dans une structure conditionnelle if (...), relier deux expressions avec &&. Si la première est fausse, JavaScript s'arrête (court-circuit).",
+      "values": [
+        "condition1 && condition2",
+        "true && true -> true",
+        "true && false -> false"
+      ],
+      "code": "// Validation d'une note de Bac entre 0 et 20\nfunction validerNote() {\n  var note = Number(document.getElementById(\"note\").value);\n  if (note >= 0 && note <= 20) {\n    alert(\"Note valide (\" + note + \"/20)\");\n    return true;\n  } else {\n    alert(\"Erreur : la note doit être comprise entre 0 et 20 !\");\n    return false;\n  }\n}",
+      "runnableCode": "var note = 14;\nvar estValide = (note >= 0 && note <= 20);\nconsole.log(\"Note = \" + note + \" -> Est valide (note >= 0 && note <= 20) : \" + estValide);"
+    },
+    {
+      "id": "js-op-ou",
+      "section": "Opérateurs logiques",
+      "category": "Opérateurs logiques",
+      "name": "|| (OU logique)",
+      "tag": "||",
+      "syntax": "condition1 || condition2",
+      "summary": "OU",
+      "description": "Opérateur logique OU. Renvoie true si au moins l'une des conditions est vraie. Renvoie false uniquement si toutes les conditions sont fausses.",
+      "howToUse": "Utiliser || pour autoriser plusieurs choix alternatifs ou détecter si un champ parmi plusieurs est manquant.",
+      "values": [
+        "condition1 || condition2",
+        "false || true -> true",
+        "false || false -> false"
+      ],
+      "code": "// Vérifier si au moins un des champs obligatoires est vide\nfunction verifierChamps() {\n  var nom = document.getElementById(\"nom\").value;\n  var email = document.getElementById(\"email\").value;\n  if (nom == \"\" || email == \"\") {\n    alert(\"Attention : vous devez remplir le nom OU l'email !\");\n    return false;\n  }\n  return true;\n}",
+      "runnableCode": "var ville = \"Sousse\";\nvar estTunisie = (ville == \"Tunis\" || ville == \"Sousse\" || ville == \"Sfax\");\nconsole.log(\"Ville = \" + ville + \" -> Ville en Tunisie : \" + estTunisie);"
+    },
+    {
+      "id": "js-op-non",
+      "section": "Opérateurs logiques",
+      "category": "Opérateurs logiques",
+      "name": "! (NON logique)",
+      "tag": "!",
+      "syntax": "!condition",
+      "summary": "NON",
+      "description": "Opérateur logique NON (négation). Inverse la valeur booléenne : transforme true en false, et transforme false en true.",
+      "howToUse": "Placer le point d'exclamation devant une variable booléenne ou une condition pour tester son contraire.",
+      "values": [
+        "!true -> false",
+        "!false -> true",
+        "!isNaN(val) -> teste si c'est un nombre"
+      ],
+      "code": "// Vérifier si une case à cocher n'est PAS cochée\nfunction validerReglement() {\n  var accepte = document.getElementById(\"chk_accord\").checked;\n  if (!accepte) {\n    alert(\"Vous devez accepter le règlement avant d'envoyer !\");\n    return false;\n  }\n  return true;\n}",
+      "runnableCode": "var connecte = false;\nconsole.log(\"Connecté : \" + connecte);\nconsole.log(\"!connecte (Non connecté) : \" + (!connecte));"
+    },
+    {
+      "id": "js-comp-egal",
+      "section": "Opérateurs de comparaison",
+      "category": "Opérateurs de comparaison",
+      "name": "== (Egal)",
+      "tag": "==",
+      "syntax": "a == b",
+      "summary": "Egal",
+      "description": "Teste l'égalité de valeur entre deux expressions. Renvoie true si les deux valeurs sont équivalentes après conversion implicite de type.",
+      "howToUse": "Attention à ne pas confondre avec le simple signe d'affectation =. Dans un test if, utiliser toujours ==.",
+      "values": [
+        "a == b",
+        "10 == '10' -> true",
+        "'bac' == 'bac' -> true"
+      ],
+      "code": "// Vérifier la confirmation d'un mot de passe\nfunction verifierMdp() {\n  var p1 = document.getElementById(\"pass1\").value;\n  var p2 = document.getElementById(\"pass2\").value;\n  if (p1 == p2) {\n    alert(\"Mots de passe identiques !\");\n    return true;\n  } else {\n    alert(\"Erreur : les mots de passe ne correspondent pas !\");\n    return false;\n  }\n}",
+      "runnableCode": "var code = \"BAC2026\";\nconsole.log(\"Test (code == 'BAC2026') : \" + (code == \"BAC2026\"));"
+    },
+    {
+      "id": "js-comp-diff",
+      "section": "Opérateurs de comparaison",
+      "category": "Opérateurs de comparaison",
+      "name": "!= (Différent)",
+      "tag": "!=",
+      "syntax": "a != b",
+      "summary": "Différent",
+      "description": "Teste la non-égalité entre deux expressions. Renvoie true si les valeurs sont différentes.",
+      "howToUse": "Très utile pour s'assurer qu'un champ texte n'est pas vide (ch != '') ou qu'une sélection n'est pas celle par défaut.",
+      "values": [
+        "a != b",
+        "5 != 10 -> true",
+        "ch != '' -> true si non vide"
+      ],
+      "code": "// Contrôler qu'un champ texte n'est pas vide\nfunction verifierChamp() {\n  var nom = document.getElementById(\"nom\").value;\n  if (nom != \"\") {\n    alert(\"Nom renseigné : \" + nom);\n    return true;\n  } else {\n    alert(\"Le champ nom ne doit pas être vide !\");\n    return false;\n  }\n}",
+      "runnableCode": "var prenom = \"Nour\";\nconsole.log(\"Prénom : \" + prenom + \" -> (prenom != '') : \" + (prenom != \"\"));"
+    },
+    {
+      "id": "js-comp-sup",
+      "section": "Opérateurs de comparaison",
+      "category": "Opérateurs de comparaison",
+      "name": "> (Supérieur à)",
+      "tag": ">",
+      "syntax": "a > b",
+      "summary": "Supérieur à",
+      "description": "Renvoie true si la valeur de gauche est strictement plus grande que la valeur de droite.",
+      "howToUse": "Utiliser > pour vérifier des seuils stricts (ex: montant > 0, moyenne > 10).",
+      "values": [
+        "a > b",
+        "15 > 10 -> true",
+        "10 > 10 -> false"
+      ],
+      "code": "// Vérifier si un prix est strictement positif\nfunction verifierPrix() {\n  var prix = Number(document.getElementById(\"prix\").value);\n  if (prix > 0) {\n    alert(\"Prix valide !\");\n  } else {\n    alert(\"Le prix doit être strictement supérieur à 0 !\");\n  }\n}",
+      "runnableCode": "var note = 13.5;\nconsole.log(\"Note = 13.5 -> (note > 10) : \" + (note > 10));"
+    },
+    {
+      "id": "js-comp-supegal",
+      "section": "Opérateurs de comparaison",
+      "category": "Opérateurs de comparaison",
+      "name": ">= (Supérieur ou égal à)",
+      "tag": ">=",
+      "syntax": "a >= b",
+      "summary": "Supérieur ou égal à",
+      "description": "Renvoie true si la valeur de gauche est plus grande ou égale à celle de droite.",
+      "howToUse": "Indispensable pour les conditions de majorité ou d'admission (ex: age >= 18, moyenne >= 10).",
+      "values": [
+        "a >= b",
+        "18 >= 18 -> true",
+        "20 >= 10 -> true"
+      ],
+      "code": "// Vérification de la majorité\nfunction verifierAge() {\n  var age = Number(document.getElementById(\"age\").value);\n  if (age >= 18) {\n    alert(\"Accès autorisé (Majeur)\");\n  } else {\n    alert(\"Accès refusé : vous devez avoir au moins 18 ans !\");\n  }\n}",
+      "runnableCode": "var age = 18;\nconsole.log(\"Age = 18 -> (age >= 18) : \" + (age >= 18));"
+    },
+    {
+      "id": "js-comp-inf",
+      "section": "Opérateurs de comparaison",
+      "category": "Opérateurs de comparaison",
+      "name": "< (Inférieur)",
+      "tag": "<",
+      "syntax": "a < b",
+      "summary": "Inférieur",
+      "description": "Renvoie true si la valeur de gauche est strictement inférieure à la valeur de droite.",
+      "howToUse": "Utiliser pour tester un plafond strict ou les indices dans une boucle (ex: for (var i=0; i < tab.length; i++)).",
+      "values": [
+        "a < b",
+        "5 < 10 -> true",
+        "10 < 10 -> false"
+      ],
+      "code": "// Vérifier la longueur minimale\nfunction verifierTaille() {\n  var texte = document.getElementById(\"comm\").value;\n  if (texte.length < 10) {\n    alert(\"Votre commentaire est trop court (min 10 caractères) !\");\n  }\n}",
+      "runnableCode": "var temperature = 5;\nconsole.log(\"Température = 5 -> (temperature < 10) : \" + (temperature < 10));"
+    },
+    {
+      "id": "js-comp-infegal",
+      "section": "Opérateurs de comparaison",
+      "category": "Opérateurs de comparaison",
+      "name": "<= (Inférieur ou égal à)",
+      "tag": "<=",
+      "syntax": "a <= b",
+      "summary": "Inférieur ou égal à",
+      "description": "Renvoie true si la valeur de gauche est plus petite ou égale à celle de droite.",
+      "howToUse": "Utiliser pour valider un nombre qui ne doit pas dépasser un maximum (ex: note <= 20).",
+      "values": [
+        "a <= b",
+        "20 <= 20 -> true",
+        "15 <= 20 -> true"
+      ],
+      "code": "// Borne supérieure d'une note\nfunction controlerPlafond() {\n  var note = Number(document.getElementById(\"note\").value);\n  if (note <= 20) {\n    alert(\"Note dans la limite autorisée.\");\n  } else {\n    alert(\"La note ne peut pas dépasser 20 !\");\n  }\n}",
+      "runnableCode": "var note = 20;\nconsole.log(\"Note = 20 -> (note <= 20) : \" + (note <= 20));"
+    },
+    {
+      "id": "js-arithm-add",
+      "section": "Opérateurs arithmétiques",
+      "category": "Opérateurs arithmétiques",
+      "name": "+ (Addition)",
+      "tag": "+",
+      "syntax": "a + b",
+      "summary": "Addition",
+      "description": "Additionne deux valeurs numériques. Attention : si l'une des valeurs est une chaîne, le symbole '+' effectue une concaténation au lieu d'une addition !",
+      "howToUse": "Toujours convertir les valeurs issues d'un formulaire avec Number() ou parseInt() avant de les additionner.",
+      "values": [
+        "a + b",
+        "10 + 5 -> 15",
+        "Number('10') + Number('5') -> 15"
+      ],
+      "code": "// Calculer la somme de deux nombres saisis\nfunction calculerSomme() {\n  var n1 = Number(document.getElementById(\"txt1\").value);\n  var n2 = Number(document.getElementById(\"txt2\").value);\n  var total = n1 + n2;\n  alert(\"La somme est : \" + total);\n}",
+      "runnableCode": "var a = 12.5;\nvar b = 7.5;\nconsole.log(\"a = \" + a + \", b = \" + b + \" -> Somme (a + b) = \" + (a + b));"
+    },
+    {
+      "id": "js-arithm-sous",
+      "section": "Opérateurs arithmétiques",
+      "category": "Opérateurs arithmétiques",
+      "name": "- (Soustraction)",
+      "tag": "-",
+      "syntax": "a - b",
+      "summary": "Soustraction",
+      "description": "Soustrait le second nombre du premier.",
+      "howToUse": "Effectue une soustraction arithmétique. Contrairement au +, le - convertit automatiquement les chaînes en nombres si possible.",
+      "values": [
+        "a - b",
+        "20 - 8 -> 12"
+      ],
+      "code": "// Calculer le prix net après remise\nfunction calculerRemise() {\n  var brut = Number(document.getElementById(\"prixBrut\").value);\n  var remise = Number(document.getElementById(\"remise\").value);\n  var net = brut - remise;\n  document.getElementById(\"resNet\").innerHTML = \"Net à payer : \" + net + \" DT\";\n}",
+      "runnableCode": "var brut = 100;\nvar remise = 15;\nconsole.log(\"Brut : \" + brut + \", Remise : \" + remise + \" -> Net : \" + (brut - remise));"
+    },
+    {
+      "id": "js-arithm-mult",
+      "section": "Opérateurs arithmétiques",
+      "category": "Opérateurs arithmétiques",
+      "name": "* (Multiplication)",
+      "tag": "*",
+      "syntax": "a * b",
+      "summary": "Multiplication",
+      "description": "Multiplie deux nombres et renvoie le produit.",
+      "howToUse": "Utiliser pour les calculs de totaux (quantité * prix) ou de coefficients de matières au Bac.",
+      "values": [
+        "a * b",
+        "5 * 4 -> 20",
+        "prix * quantite"
+      ],
+      "code": "// Calcul du total d'une commande\nfunction calculerTotal() {\n  var qte = parseInt(document.getElementById(\"qte\").value);\n  var pu = parseFloat(document.getElementById(\"pu\").value);\n  var total = qte * pu;\n  alert(\"Total commande : \" + total + \" DT\");\n}",
+      "runnableCode": "var qte = 4;\nvar pu = 12.5;\nconsole.log(qte + \" x \" + pu + \" DT = \" + (qte * pu) + \" DT\");"
+    },
+    {
+      "id": "js-arithm-div",
+      "section": "Opérateurs arithmétiques",
+      "category": "Opérateurs arithmétiques",
+      "name": "/ (Division)",
+      "tag": "/",
+      "syntax": "a / b",
+      "summary": "Division",
+      "description": "Divise le dividende par le diviseur et renvoie le quotient exact.",
+      "howToUse": "Penser à vérifier que le diviseur b est différent de 0 pour éviter une valeur spéciale Infinity.",
+      "values": [
+        "a / b",
+        "15 / 2 -> 7.5",
+        "somme / nb"
+      ],
+      "code": "// Calcul de la moyenne arithmétique\nfunction calculerMoyenne() {\n  var noteTech = Number(document.getElementById(\"tech\").value);\n  var noteMath = Number(document.getElementById(\"math\").value);\n  var moyenne = (noteTech + noteMath) / 2;\n  alert(\"Moyenne : \" + moyenne + \"/20\");\n}",
+      "runnableCode": "var total = 45;\nvar nb = 3;\nconsole.log(\"Moyenne (45 / 3) = \" + (total / nb));"
+    },
+    {
+      "id": "js-arithm-modulo",
+      "section": "Opérateurs arithmétiques",
+      "category": "Opérateurs arithmétiques",
+      "name": "% (Reste de la division euclidienne)",
+      "tag": "%",
+      "syntax": "a % b",
+      "summary": "Reste de la division euclidienne",
+      "description": "Opérateur modulo. Calcule et renvoie le reste entier de la division euclidienne de a par b. Très fréquent au Bac pour déterminer la parité ou tester des diviseurs.",
+      "howToUse": "Pour savoir si n est pair : (n % 2 == 0). Pour tester si n est divisible par 5 : (n % 5 == 0).",
+      "values": [
+        "a % b",
+        "10 % 3 -> 1",
+        "8 % 2 -> 0 (pair)",
+        "7 % 2 -> 1 (impair)"
+      ],
+      "code": "// Tester si un entier est pair ou impair\nfunction testerParite() {\n  var n = parseInt(document.getElementById(\"nombre\").value);\n  if (n % 2 == 0) {\n    alert(n + \" est un nombre PAIR.\");\n  } else {\n    alert(n + \" est un nombre IMPAIR.\");\n  }\n}",
+      "runnableCode": "var n1 = 17, n2 = 24;\nconsole.log(n1 + \" % 2 = \" + (n1 % 2) + \" (Impair)\");\nconsole.log(n2 + \" % 2 = \" + (n2 % 2) + \" (Pair)\");"
+    },
+    {
+      "id": "js-out-alert",
+      "section": "Méthodes pour afficher une sortie*",
+      "category": "Méthodes pour afficher une sortie*",
+      "name": "alert()",
+      "tag": "alert()",
+      "syntax": "alert(message)",
+      "summary": "Affiche un message dans une boîte de dialogue.",
+      "description": "Affiche un message textuel à l'utilisateur dans une boîte de dialogue modale du navigateur dotée d'un bouton OK. L'exécution du script est mise en pause jusqu'à ce que l'utilisateur clique sur OK.",
+      "howToUse": "C'est la méthode reine demandée au Baccalauréat STI pour signaler à l'internaute une erreur de saisie ou un succès de validation.",
+      "values": [
+        "alert('Message')",
+        "alert('Erreur : champ obligatoire !')"
+      ],
+      "code": "// Alerte d'information Bac STI\nfunction verifierChamp() {\n  var nom = document.getElementById(\"nom\").value;\n  if (nom == \"\") {\n    alert(\"Erreur : veuillez remplir votre nom !\");\n    return false;\n  }\n  alert(\"Bienvenue \" + nom + \" ! Formulaire validé.\");\n  return true;\n}",
+      "runnableCode": "console.log(\"Appel alert('Bonjour candidat Bac STI !')\");\nalert(\"Bonjour candidat Bac STI !\");*/"
+    },
+    {
+      "id": "js-out-docwrite",
+      "section": "Méthodes pour afficher une sortie*",
+      "category": "Méthodes pour afficher une sortie*",
+      "name": "Document.write()",
+      "tag": "document.write()",
+      "syntax": "document.write(chaineHTML)",
+      "summary": "Affiche directement dans le document HTML.",
+      "description": "Écrit directement une chaîne de caractères ou du code HTML dans le document au moment du chargement de la page.",
+      "howToUse": "Appelée directement dans la balise <script> du fichier HTML pour insérer du contenu généré dynamiquement.",
+      "values": [
+        "document.write('Texte')",
+        "document.write('<h1>Titre</h1>')"
+      ],
+      "code": "<!-- Exemple d'insertion directe dans la page -->\n<script>\n  var annee = new Date().getFullYear();\n  document.write(\"<p>Copyright &copy; \" + annee + \" - Section STI Lycée Technique</p>\");\n</script>",
+      "runnableCode": "console.log(\"document.write() écrit directement dans le corps de la page HTML.\");"
+    },
+    {
+      "id": "js-out-innerhtml",
+      "section": "Méthodes pour afficher une sortie*",
+      "category": "Méthodes pour afficher une sortie*",
+      "name": "innerHTML (Note officielle)",
+      "tag": "element.innerHTML",
+      "syntax": "element.innerHTML = 'contenu'",
+      "summary": "*Pour afficher/modifier un contenu dynamique, on peut utiliser la propriété innerHTML d'un élément HTML.",
+      "description": "Propriété officielle mise en avant par la note de bas de tableau de l'annexe. Elle permet de lire ou d'injecter du texte formaté ou de nouvelles balises HTML à l'intérieur d'un élément repéré par son id.",
+      "howToUse": "document.getElementById('idBloc').innerHTML = '<b>Texte formaté</b>';",
+      "values": [
+        "element.innerHTML = 'texte'",
+        "element.innerHTML = '<b>Gras</b>'"
+      ],
+      "code": "// Afficher un message de validation stylé sans recharger la page\nfunction afficherStatut() {\n  var zone = document.getElementById(\"zoneMessage\");\n  zone.innerHTML = \"<span style='color: green; font-weight: bold;'>✔ Données enregistrées avec succès !</span>\";\n}",
+      "runnableCode": "// Exemple conceptuel\nvar contenu = \"<span style='color:green;'>Succès !</span>\";\nconsole.log(\"Contenu injecté via innerHTML : \" + contenu);"
+    },
+    {
+      "id": "js-in-prompt",
+      "section": "Méthode pour saisir une entrée",
+      "category": "Méthode pour saisir une entrée",
+      "name": "prompt()",
+      "tag": "prompt()",
+      "syntax": "prompt(message [, valeurParDefaut])",
+      "summary": "Affiche une boîte de dialogue avec une zone de saisie.",
+      "description": "Ouvre une fenêtre modale contenant un message, une zone de texte permettant à l'utilisateur de saisir une valeur, ainsi que les boutons OK et Annuler. Renvoie la chaîne saisie sous forme de texte, ou null si l'utilisateur clique sur Annuler.",
+      "howToUse": "var rep = prompt('Question ?', 'Valeur initiale'); Penser à convertir la réponse avec Number() si vous attendez un chiffre.",
+      "values": [
+        "prompt('Message')",
+        "prompt('Message', 'Par défaut')"
+      ],
+      "code": "// Demander le nom d'un élève\nfunction demanderNom() {\n  var nom = prompt(\"Veuillez saisir votre prénom :\", \"Nour\");\n  if (nom != null && nom != \"\") {\n    alert(\"Bonjour \" + nom + \" !\");\n  } else {\n    alert(\"Saisie annulée.\");\n  }\n}",
+      "runnableCode": "// Simulation console\nconsole.log(\"prompt() ouvre une boîte de saisie pour l'utilisateur.\");"
+    },
+    {
+      "id": "js-fn-isnan",
+      "section": "Fonctions/Méthodes JS",
+      "category": "Fonctions/Méthodes JS",
+      "name": "isNaN(ch)",
+      "tag": "isNaN(ch)",
+      "syntax": "isNaN(ch)",
+      "summary": "Retourne true si l'argument ch n'est pas convertible en un nombre, sinon retourne false.",
+      "description": "Indispensable pour contrôler la validité des champs numériques d'un formulaire au Bac STI (numéro de téléphone, code postal, âge, prix). Si l'utilisateur tape des lettres dans un champ réservé aux nombres, isNaN(...) renvoie true.",
+      "howToUse": "if (isNaN(document.getElementById('tel').value)) { alert('Numéro invalide !'); return false; }",
+      "values": [
+        "isNaN('123') -> false",
+        "isNaN('abc') -> true",
+        "isNaN('') -> false (vide compte comme 0)"
+      ],
+      "code": "// Validation d'un code postal tunisien (4 chiffres)\nfunction validerCodePostal() {\n  var cp = document.getElementById(\"cp\").value;\n  if (isNaN(cp) || cp.length != 4) {\n    alert(\"Le code postal doit être un NOMBRE composé d'exactement 4 chiffres !\");\n    return false;\n  }\n  return true;\n}",
+      "runnableCode": "console.log(\"isNaN('2026') : \" + isNaN(\"2026\") + \" (C'est un nombre valide)\");\nconsole.log(\"isNaN('BAC2026') : \" + isNaN(\"BAC2026\") + \" (Ce n'est PAS un nombre)\");"
+    },
+    {
+      "id": "js-fn-number",
+      "section": "Fonctions/Méthodes JS",
+      "category": "Fonctions/Méthodes JS",
+      "name": "Number(ch)",
+      "tag": "Number(ch)",
+      "syntax": "Number(ch)",
+      "summary": "Convertit une chaîne ch en un nombre*. (*Si la conversion n'est pas possible, la fonction retourne NaN.)",
+      "description": "Convertit une chaîne de caractères représentant un nombre (entier ou flottant) en valeur numérique réelle. Si la chaîne ne peut pas être convertie, retourne la valeur spéciale NaN (Not a Number).",
+      "howToUse": "var note = Number(document.getElementById('note').value);",
+      "values": [
+        "Number('15.5') -> 15.5",
+        "Number('42') -> 42",
+        "Number('xyz') -> NaN"
+      ],
+      "code": "// Calcul de la TVA avec Number()\nfunction calculerTVA() {\n  var prixHT = Number(document.getElementById(\"ht\").value);\n  if (isNaN(prixHT) || prixHT <= 0) {\n    alert(\"Prix HT invalide !\");\n    return;\n  }\n  var tva = prixHT * 0.19;\n  var ttc = prixHT + tva;\n  alert(\"Montant TTC : \" + ttc.toFixed(3) + \" DT\");\n}",
+      "runnableCode": "var s1 = \"12.75\";\nvar n1 = Number(s1);\nconsole.log(\"Number('\" + s1 + \"') = \" + n1 + \" (Type: \" + typeof n1 + \")\");\nconsole.log(\"Number('ABC') = \" + Number(\"ABC\") + \" (Non convertible)\");"
+    },
+    {
+      "id": "js-fn-parsefloat",
+      "section": "Fonctions/Méthodes JS",
+      "category": "Fonctions/Méthodes JS",
+      "name": "parseFloat(ch)",
+      "tag": "parseFloat(ch)",
+      "syntax": "parseFloat(ch)",
+      "summary": "Convertit une chaîne ch en un réel.",
+      "description": "Analyse une chaîne textuelle et extrait un nombre décimal à virgule flottante. Lit les caractères jusqu'au premier caractère non numérique.",
+      "howToUse": "var reel = parseFloat('14.25'); Utiliser le point '.' comme séparateur décimal.",
+      "values": [
+        "parseFloat('14.5') -> 14.5",
+        "parseFloat('10.25 DT') -> 10.25",
+        "parseFloat('abc') -> NaN"
+      ],
+      "code": "// Calcul de moyenne avec parseFloat\nfunction calculerMoyenneReelle() {\n  var n1 = parseFloat(document.getElementById(\"note1\").value);\n  var n2 = parseFloat(document.getElementById(\"note2\").value);\n  var moy = (n1 + n2) / 2;\n  document.getElementById(\"res\").innerHTML = \"Moyenne : \" + moy;\n}",
+      "runnableCode": "var str = \"17.85 sur 20\";\nvar val = parseFloat(str);\nconsole.log(\"parseFloat('\" + str + \"') = \" + val);"
+    },
+    {
+      "id": "js-fn-parseint",
+      "section": "Fonctions/Méthodes JS",
+      "category": "Fonctions/Méthodes JS",
+      "name": "parseInt(ch [,b])",
+      "tag": "parseInt(ch [,b])",
+      "syntax": "parseInt(ch [,b])",
+      "summary": "Convertit une chaîne ch en un entier exprimé dans la base b.",
+      "description": "Analyse une chaîne de caractères et retourne un nombre entier selon la base numérique spécifiée par b (2 pour binaire, 8 pour octal, 10 pour décimal, 16 pour hexadécimal).",
+      "howToUse": "parseInt('1010', 2) convertit du binaire en décimal. parseInt('FF', 16) convertit de l'hexadécimal. Si b est omis, la base 10 est utilisée.",
+      "values": [
+        "parseInt('42', 10) -> 42",
+        "parseInt('1010', 2) -> 10",
+        "parseInt('1F', 16) -> 31"
+      ],
+      "code": "// Conversion binaire vers décimal (programme STI)\nfunction convertirBinaire() {\n  var binaire = document.getElementById(\"txtBinaire\").value;\n  var decimal = parseInt(binaire, 2);\n  if (isNaN(decimal)) {\n    alert(\"Format binaire incorrect !\");\n  } else {\n    alert(\"En décimal : \" + decimal);\n  }\n}",
+      "runnableCode": "console.log(\"parseInt('1101', 2) = \" + parseInt(\"1101\", 2) + \" (Binaire -> Décimal)\");\nconsole.log(\"parseInt('2A', 16) = \" + parseInt(\"2A\", 16) + \" (Hexa -> Décimal)\");\nconsole.log(\"parseInt('25', 10) = \" + parseInt(\"25\", 10) + \" (Décimal)\");"
+    },
+    {
+      "id": "js-fn-string",
+      "section": "Fonctions/Méthodes JS",
+      "category": "Fonctions/Méthodes JS",
+      "name": "String(a)",
+      "tag": "String(a)",
+      "syntax": "String(a)",
+      "summary": "Convertit la valeur a en une chaîne.",
+      "description": "Convertit n'importe quel type de données JavaScript (nombre, booléen, date, etc.) en sa représentation textuelle sous forme d'objet String.",
+      "howToUse": "var s = String(2026); Permet ensuite d'utiliser toutes les méthodes de chaînes comme .length, .indexOf()...",
+      "values": [
+        "String(123) -> '123'",
+        "String(true) -> 'true'",
+        "String(new Date()) -> texte"
+      ],
+      "code": "// Tester le nombre de chiffres d'un entier\nfunction compterChiffres() {\n  var nombre = 15894;\n  var str = String(nombre);\n  alert(\"Le nombre \" + nombre + \" possède \" + str.length + \" chiffres.\");\n}",
+      "runnableCode": "var num = 2026;\nvar str = String(num);\nconsole.log(\"String(\" + num + \") = '\" + str + \"' -> Longueur : \" + str.length + \" caractères.\");"
+    },
+    {
+      "id": "js-dom-getelementbyid",
+      "section": "Méthodes pour sélectionner des éléments HTML",
+      "category": "Sélection d'éléments HTML",
+      "name": "document.getElementById()",
+      "tag": "document.getElementById()",
+      "syntax": "document.getElementById(id)",
+      "summary": "permet de sélectionner un élément unique en fonction de son identifiant.",
+      "description": "C'est la méthode de sélection HTML centrale du programme officiel STI. Elle recherche dans le document la balise portant l'attribut id='nomId' et en retourne la référence directe.",
+      "howToUse": "var elt = document.getElementById('monId'); elt.value pour les champs, elt.innerHTML pour les blocs.",
+      "values": [
+        "document.getElementById('id')",
+        "document.getElementById('nom').value",
+        "document.getElementById('titre').style"
+      ],
+      "code": "// Récupérer la valeur d'un champ avec son ID\nfunction validerIdentifiant() {\n  var champ = document.getElementById(\"login\");\n  if (champ.value == \"\") {\n    alert(\"Veuillez saisir votre login !\");\n    champ.focus();\n    return false;\n  }\n  return true;\n}",
+      "runnableCode": "console.log(\"document.getElementById('champ').value récupère la saisie.\");"
+    },
+    {
+      "id": "js-dom-getelementsbyname",
+      "section": "Méthodes pour sélectionner des éléments HTML",
+      "category": "Sélection d'éléments HTML",
+      "name": "document.getElementsByName()",
+      "tag": "document.getElementsByName()",
+      "syntax": "document.getElementsByName(nom)",
+      "summary": "permet de sélectionner tous les éléments ayant le même nom.",
+      "description": "Retourne une liste (NodeList) de tous les éléments HTML du document qui partagent la même valeur pour leur attribut name='monNom'. Indispensable au Bac pour vérifier quel bouton radio a été coché par l'internaute !",
+      "howToUse": "var radios = document.getElementsByName('genre'); puis boucler pour tester radios[i].checked.",
+      "values": [
+        "document.getElementsByName('name')",
+        "radios[i].checked -> true si sélectionné"
+      ],
+      "code": "// Vérifier si un bouton radio est coché dans un groupe\nfunction verifierRadio() {\n  var options = document.getElementsByName(\"civilite\");\n  var coche = false;\n  for (var i = 0; i < options.length; i++) {\n    if (options[i].checked) {\n      coche = true;\n      break;\n    }\n  }\n  if (!coche) {\n    alert(\"Veuillez choisir une civilité (M. ou Mme) !\");\n    return false;\n  }\n  return true;\n}",
+      "runnableCode": "console.log(\"document.getElementsByName('groupe') retourne une liste de tous les éléments du groupe radio.\");"
+    },
+    {
+      "id": "js-math-abs",
+      "section": "Méthodes de l'objet Math (Math)",
+      "category": "Méthodes de l'objet Math",
+      "name": "abs(x)",
+      "tag": "Math.abs(x)",
+      "syntax": "Math.abs(x)",
+      "summary": "Retourne la valeur absolue.",
+      "description": "Donne la valeur absolue d'un nombre x, c'est-à-dire le nombre positif correspondant (|x| sans son signe négatif).",
+      "howToUse": "Math.abs(-12) donne 12. Math.abs(5) donne 5.",
+      "values": [
+        "Math.abs(-15) -> 15",
+        "Math.abs(15) -> 15"
+      ],
+      "code": "// Calculer l'écart absolu entre deux notes\nfunction calculerEcart() {\n  var note1 = Number(document.getElementById(\"n1\").value);\n  var note2 = Number(document.getElementById(\"n2\").value);\n  var ecart = Math.abs(note1 - note2);\n  alert(\"L'écart absolu est de : \" + ecart + \" points.\");\n}",
+      "runnableCode": "var diff = 10 - 18;\nconsole.log(\"Différence brute : \" + diff);\nconsole.log(\"Math.abs(\" + diff + \") = \" + Math.abs(diff));"
+    },
+    {
+      "id": "js-math-sqrt",
+      "section": "Méthodes de l'objet Math (Math)",
+      "category": "Méthodes de l'objet Math",
+      "name": "sqrt(x)",
+      "tag": "Math.sqrt(x)",
+      "syntax": "Math.sqrt(x)",
+      "summary": "Retourne la racine carrée.",
+      "description": "Calcule la racine carrée positive d'un nombre (√x). Si x est négatif, la fonction retourne NaN.",
+      "howToUse": "Math.sqrt(9) donne 3. Math.sqrt(25) donne 5.",
+      "values": [
+        "Math.sqrt(16) -> 4",
+        "Math.sqrt(25) -> 5",
+        "Math.sqrt(2) -> 1.4142..."
+      ],
+      "code": "// Théorème de Pythagore pour STI\nfunction calculerHypotenuse() {\n  var a = Number(document.getElementById(\"coteA\").value);\n  var b = Number(document.getElementById(\"coteB\").value);\n  var h = Math.sqrt(a * a + b * b);\n  alert(\"Hypoténuse : \" + h.toFixed(2));\n}",
+      "runnableCode": "console.log(\"Math.sqrt(64) = \" + Math.sqrt(64));\nconsole.log(\"Math.sqrt(2) = \" + Math.sqrt(2).toFixed(4));"
+    },
+    {
+      "id": "js-math-round",
+      "section": "Méthodes de l'objet Math (Math)",
+      "category": "Méthodes de l'objet Math",
+      "name": "round(x)",
+      "tag": "Math.round(x)",
+      "syntax": "Math.round(x)",
+      "summary": "Retourne l'entier le plus proche.",
+      "description": "Arrondit la valeur x à l'entier le plus proche. Si la partie décimale est supérieure ou égale à 0.5, arrondit vers le haut, sinon vers le bas.",
+      "howToUse": "Math.round(14.4) donne 14. Math.round(14.5) donne 15.",
+      "values": [
+        "Math.round(4.4) -> 4",
+        "Math.round(4.5) -> 5",
+        "Math.round(4.9) -> 5"
+      ],
+      "code": "// Arrondir une moyenne générale\nfunction arrondirMoyenne() {\n  var moy = 13.65;\n  var arr = Math.round(moy);\n  alert(\"Moyenne arrondie : \" + arr);\n}",
+      "runnableCode": "console.log(\"Math.round(12.4) = \" + Math.round(12.4));\nconsole.log(\"Math.round(12.5) = \" + Math.round(12.5));\nconsole.log(\"Math.round(12.9) = \" + Math.round(12.9));"
+    },
+    {
+      "id": "js-math-trunc",
+      "section": "Méthodes de l'objet Math (Math)",
+      "category": "Méthodes de l'objet Math",
+      "name": "trunc(x)",
+      "tag": "Math.trunc(x)",
+      "syntax": "Math.trunc(x)",
+      "summary": "Retourne la troncature entière d'un nombre en retirant sa partie décimale.",
+      "description": "Supprime purement et simplement les chiffres après la virgule, sans effectuer d'arrondi. Renvoie la partie entière brute.",
+      "howToUse": "Math.trunc(14.89) donne 14. Math.trunc(-14.89) donne -14.",
+      "values": [
+        "Math.trunc(17.9) -> 17",
+        "Math.trunc(5.1) -> 5",
+        "Math.trunc(-3.8) -> -3"
+      ],
+      "code": "// Extraire la partie entière d'un nombre\nfunction tronquerValeur() {\n  var val = 18.95;\n  var entier = Math.trunc(val);\n  alert(\"Partie entière : \" + entier); // 18\n}",
+      "runnableCode": "console.log(\"Math.trunc(15.99) = \" + Math.trunc(15.99) + \" (sans arrondi)\");\nconsole.log(\"Math.round(15.99) = \" + Math.round(15.99) + \" (avec arrondi)\");"
+    },
+    {
+      "id": "js-math-random",
+      "section": "Méthodes de l'objet Math (Math)",
+      "category": "Méthodes de l'objet Math",
+      "name": "random()",
+      "tag": "Math.random()",
+      "syntax": "Math.random()",
+      "summary": "Retourne un réel aléatoire dans [0, 1[.",
+      "description": "Génère un nombre décimal pseudo-aléatoire compris entre 0 inclus et 1 exclu (0 <= r < 1).",
+      "howToUse": "Pour tirer un entier au sort entre min et max : Math.floor(Math.random() * (max - min + 1)) + min.",
+      "values": [
+        "Math.random() -> réel entre 0 et 1",
+        "Math.trunc(Math.random() * 6) + 1 -> dé à 6 faces"
+      ],
+      "code": "// Générer un code de vérification aléatoire à 4 chiffres\nfunction genererCodeCaptcha() {\n  var code = Math.trunc(Math.random() * 9000) + 1000;\n  document.getElementById(\"captcha\").innerHTML = \"Code : \" + code;\n}",
+      "runnableCode": "var r = Math.random();\nconsole.log(\"Réel aléatoire : \" + r);\nconsole.log(\"Tirage entier entre 1 et 100 : \" + (Math.trunc(r * 100) + 1));"
+    },
+    {
+      "id": "js-str-concat",
+      "section": "Les chaînes de caractères",
+      "category": "Les chaînes de caractères",
+      "name": "+ (Concaténation)",
+      "tag": "ch1 + ch2",
+      "syntax": "ch1 + ch2",
+      "summary": "Opérateur de concaténation.",
+      "description": "Assemble et concatène deux ou plusieurs chaînes de caractères les unes au bout des autres pour en former une seule.",
+      "howToUse": "var nomComplet = nom + ' ' + prenom;",
+      "values": [
+        "'Bac ' + 'STI' -> 'Bac STI'",
+        "'Note : ' + 15 -> 'Note : 15'"
+      ],
+      "code": "// Concaténer le nom et le prénom saisis\nfunction afficherBienvenue() {\n  var prenom = document.getElementById(\"prenom\").value;\n  var nom = document.getElementById(\"nom\").value;\n  var message = \"Bienvenue, \" + prenom + \" \" + nom + \" !\";\n  alert(message);\n}",
+      "runnableCode": "var s1 = \"Révision Web \";\nvar s2 = \"Baccalauréat STI\";\nconsole.log(s1 + s2);"
+    },
+    {
+      "id": "js-str-length",
+      "section": "Les chaînes de caractères",
+      "category": "Les chaînes de caractères",
+      "name": "ch.length",
+      "tag": "ch.length",
+      "syntax": "ch.length",
+      "summary": "Propriété qui retourne la longueur de ch.",
+      "description": "Propriété qui renvoie le nombre total de caractères contenus dans la chaîne de caractères ch (y compris les espaces).",
+      "howToUse": "Indispensable pour contrôler la longueur d'un mot de passe (mdp.length >= 8) ou d'un numéro de CIN tunisien (cin.length == 8).",
+      "values": [
+        "'STI'.length -> 3",
+        "'Tunisie'.length -> 7",
+        "cin.length == 8"
+      ],
+      "code": "// Validation de la carte d'identité (CIN tunisienne : 8 chiffres)\nfunction validerCIN() {\n  var cin = document.getElementById(\"cin\").value;\n  if (cin.length != 8 || isNaN(cin)) {\n    alert(\"Le numéro de CIN doit comporter exactement 8 chiffres !\");\n    return false;\n  }\n  return true;\n}",
+      "runnableCode": "var mot = \"Informatique\";\nconsole.log(\"Mot : '\" + mot + \"' -> Longueur (ch.length) : \" + mot.length);"
+    },
+    {
+      "id": "js-str-indexof",
+      "section": "Les chaînes de caractères",
+      "category": "Les chaînes de caractères",
+      "name": "ch.indexOf(ch1 [,p])",
+      "tag": "ch.indexOf(ch1 [,p])",
+      "syntax": "ch.indexOf(ch1 [,p])",
+      "summary": "Retourne la position de la 1ère occurrence de ch1 dans ch, en effectuant la recherche à partir de la position p (sinon -1).",
+      "description": "Cherche la première position où apparaît ch1 dans ch à partir de l'indice p (0 par défaut). Retourne l'indice (base 0) ou -1 si la sous-chaîne est introuvable.",
+      "howToUse": "C'est l'outil officiel du Bac pour vérifier si une adresse email contient un arobase : if (email.indexOf('@') == -1) { ... }",
+      "values": [
+        "ch.indexOf('@') -> position ou -1",
+        "ch.indexOf('a', 3) -> cherche à partir de l'indice 3"
+      ],
+      "code": "// Vérification de la présence de l'arobase dans l'email\nfunction validerEmail() {\n  var email = document.getElementById(\"email\").value;\n  var pos = email.indexOf(\"@\");\n  if (pos == -1 || pos == 0 || pos == email.length - 1) {\n    alert(\"Adresse email invalide : l'arobase '@' est absent ou mal positionné !\");\n    return false;\n  }\n  return true;\n}",
+      "runnableCode": "var mail = \"candidat@bac.tn\";\nconsole.log(\"ch.indexOf('@') dans '\" + mail + \"' : position \" + mail.indexOf(\"@\"));\nconsole.log(\"ch.indexOf('xyz') : \" + mail.indexOf(\"xyz\") + \" (Introuvable -> -1)\");"
+    },
+    {
+      "id": "js-str-lastindexof",
+      "section": "Les chaînes de caractères",
+      "category": "Les chaînes de caractères",
+      "name": "ch.lastIndexOf(ch1 [,p])",
+      "tag": "ch.lastIndexOf(ch1 [,p])",
+      "syntax": "ch.lastIndexOf(ch1 [,p])",
+      "summary": "Retourne la position de la dernière occurrence de ch1 dans ch à partir de la position p.",
+      "description": "Recherche la dernière apparition de ch1 en parcourant la chaîne de droite à gauche. Retourne l'indice trouvé ou -1.",
+      "howToUse": "Utile pour trouver la dernière extension d'un nom de fichier (ex: le dernier point '.') ou vérifier la position du point après l'@ dans un email.",
+      "values": [
+        "ch.lastIndexOf('.') -> position du dernier point",
+        "retourne -1 si introuvable"
+      ],
+      "code": "// Vérifier la position du dernier point dans un email\nfunction verifierPointEmail() {\n  var email = document.getElementById(\"email\").value;\n  var posPoint = email.lastIndexOf(\".\");\n  var posArobase = email.indexOf(\"@\");\n  if (posPoint < posArobase) {\n    alert(\"Le point doit se trouver APRÈS l'arobase !\");\n    return false;\n  }\n  return true;\n}",
+      "runnableCode": "var phrase = \"bac.sti.revision.html\";\nconsole.log(\"Dernier point dans '\" + phrase + \"' : position \" + phrase.lastIndexOf(\".\"));"
+    },
+    {
+      "id": "js-str-substring",
+      "section": "Les chaînes de caractères",
+      "category": "Les chaînes de caractères",
+      "name": "ch.substring(d, f)",
+      "tag": "ch.substring(d, f)",
+      "syntax": "ch.substring(d, f)",
+      "summary": "Retourne une sous-chaîne de ch de la position d à la position f (non incluse).",
+      "description": "Extrait et renvoie une portion de la chaîne ch commençant à l'indice d (inclus) jusqu'à l'indice f (non inclus).",
+      "howToUse": "ch.substring(0, 3) extrait les 3 premiers caractères (indices 0, 1 et 2).",
+      "values": [
+        "'Baccalauréat'.substring(0, 3) -> 'Bac'",
+        "'Technologie'.substring(4, 8) -> 'nolo'"
+      ],
+      "code": "// Extraire les deux premiers chiffres d'un code postal pour identifier le gouvernorat\nfunction extraireGouvernorat() {\n  var cp = document.getElementById(\"cp\").value;\n  var codeGouv = cp.substring(0, 2);\n  alert(\"Code gouvernorat : \" + codeGouv);\n}",
+      "runnableCode": "var ch = \"Technologie\";\nconsole.log(\"'\" + ch + \"'.substring(0, 4) = '\" + ch.substring(0, 4) + \"'\");"
+    },
+    {
+      "id": "js-str-replace",
+      "section": "Les chaînes de caractères",
+      "category": "Les chaînes de caractères",
+      "name": "ch.replace(ch1, ch2)",
+      "tag": "ch.replace(ch1, ch2)",
+      "syntax": "ch.replace(ch1, ch2)",
+      "summary": "Retourne une chaîne dans laquelle la 1ère occurrence de ch1 dans ch est remplacée par ch2.",
+      "description": "Recherche la première occurrence de la sous-chaîne ch1 et la remplace par le texte ch2. La chaîne d'origine n'est pas modifiée, une nouvelle chaîne est retournée.",
+      "howToUse": "var propre = ch.replace(',', '.'); pour remplacer une virgule par un point avant conversion en réel.",
+      "values": [
+        "ch.replace(',', '.')",
+        "'Bonjour Ali'.replace('Ali', 'Sami') -> 'Bonjour Sami'"
+      ],
+      "code": "// Remplacer la virgule décimale par un point\nfunction corrigerNombre() {\n  var saisie = document.getElementById(\"prix\").value;\n  var corrigee = saisie.replace(\",\", \".\");\n  var prix = parseFloat(corrigee);\n  alert(\"Prix converti : \" + prix);\n}",
+      "runnableCode": "var str = \"15,75 DT\";\nvar res = str.replace(\",\", \".\");\nconsole.log(\"Avant : \" + str + \" -> Après replace(',', '.') : \" + res);"
+    },
+    {
+      "id": "js-str-tolowercase",
+      "section": "Les chaînes de caractères",
+      "category": "Les chaînes de caractères",
+      "name": "ch.toLowerCase()",
+      "tag": "ch.toLowerCase()",
+      "syntax": "ch.toLowerCase()",
+      "summary": "Convertit tous les caractères de ch en minuscules.",
+      "description": "Renvoie une nouvelle chaîne dans laquelle toutes les lettres majuscules ont été converties en minuscules.",
+      "howToUse": "Très utile pour comparer deux chaînes sans tenir compte de la casse : if (ch1.toLowerCase() == ch2.toLowerCase()).",
+      "values": [
+        "'BAC'.toLowerCase() -> 'bac'",
+        "'Tunisie'.toLowerCase() -> 'tunisie'"
+      ],
+      "code": "// Normaliser une adresse email en minuscules\nfunction normaliserEmail() {\n  var champ = document.getElementById(\"email\");\n  champ.value = champ.value.toLowerCase();\n}",
+      "runnableCode": "var nom = \"BAC TECHNIQUE 2026\";\nconsole.log(\"'\" + nom + \"'.toLowerCase() = '\" + nom.toLowerCase() + \"'\");"
+    },
+    {
+      "id": "js-str-touppercase",
+      "section": "Les chaînes de caractères",
+      "category": "Les chaînes de caractères",
+      "name": "ch.toUpperCase()",
+      "tag": "ch.toUpperCase()",
+      "syntax": "ch.toUpperCase()",
+      "summary": "Convertit tous les caractères de ch en majuscules.",
+      "description": "Renvoie une nouvelle chaîne avec tous les caractères convertis en majuscules.",
+      "howToUse": "Utilisé pour formater automatiquement les noms de famille ou les codes de série.",
+      "values": [
+        "'sti'.toUpperCase() -> 'STI'",
+        "'tunis'.toUpperCase() -> 'TUNIS'"
+      ],
+      "code": "// Mettre le nom en majuscules\nfunction formaterNom() {\n  var champNom = document.getElementById(\"nom\");\n  champNom.value = champNom.value.toUpperCase();\n}",
+      "runnableCode": "var ville = \"tunis\";\nconsole.log(\"'\" + ville + \"'.toUpperCase() = '\" + ville.toUpperCase() + \"'\");"
+    },
+    {
+      "id": "js-str-trim",
+      "section": "Les chaînes de caractères",
+      "category": "Les chaînes de caractères",
+      "name": "ch.trim()",
+      "tag": "ch.trim()",
+      "syntax": "ch.trim()",
+      "summary": "Supprime tous les espaces existants au début et à la fin de ch.",
+      "description": "Nettoie une chaîne de caractères en retirant les espaces superflus avant le premier mot et après le dernier mot. Les espaces situés à l'intérieur ne sont pas touchés.",
+      "howToUse": "if (document.getElementById('nom').value.trim() == '') { alert('Champ vide !'); }",
+      "values": [
+        "'  test  '.trim() -> 'test'",
+        "Supprime espaces, tabulations et retours chariot aux extrémités"
+      ],
+      "code": "// Nettoyer la saisie avant validation\nfunction validerSansEspaces() {\n  var nom = document.getElementById(\"nom\").value.trim();\n  if (nom == \"\") {\n    alert(\"Vous ne pouvez pas valider avec uniquement des espaces !\");\n    return false;\n  }\n  return true;\n}",
+      "runnableCode": "var brut = \"   Technologie STI   \";\nconsole.log(\"Brut : '\" + brut + \"' (longueur: \" + brut.length + \")\");\nvar propre = brut.trim();\nconsole.log(\"Après trim() : '\" + propre + \"' (longueur: \" + propre.length + \")\");"
+    },
+    {
+      "id": "js-str-fromcharcode",
+      "section": "Les chaînes de caractères",
+      "category": "Les chaînes de caractères",
+      "name": "String.fromCharCode(num, ..., numN)",
+      "tag": "String.fromCharCode()",
+      "syntax": "String.fromCharCode(num1, num2, ...)",
+      "summary": "Retourne une chaîne formée par la concaténation des résultats de conversion des codes ASCII passés en paramètres.",
+      "description": "Méthode statique de l'objet String qui convertit un ou plusieurs codes numériques ASCII / UTF-16 en leurs caractères correspondants.",
+      "howToUse": "String.fromCharCode(65) donne 'A'. String.fromCharCode(97) donne 'a'.",
+      "values": [
+        "String.fromCharCode(65) -> 'A'",
+        "String.fromCharCode(66) -> 'B'",
+        "String.fromCharCode(65, 66, 67) -> 'ABC'"
+      ],
+      "code": "// Générer l'alphabet majuscule avec les codes ASCII 65 à 90\nfunction genererAlphabet() {\n  var alpha = \"\";\n  for (var code = 65; code <= 90; code++) {\n    alpha += String.fromCharCode(code) + \" \";\n  }\n  alert(\"Alphabet : \" + alpha);\n}",
+      "runnableCode": "console.log(\"String.fromCharCode(65, 66, 67) = \" + String.fromCharCode(65, 66, 67));\nconsole.log(\"Code 83, 84, 73 -> \" + String.fromCharCode(83, 84, 73) + \" (STI)\");"
+    },
+    {
+      "id": "js-date-now",
+      "section": "L'objet Date",
+      "category": "L'objet Date",
+      "name": "new Date()",
+      "tag": "new Date()",
+      "syntax": "var d = new Date();",
+      "summary": "Retourne la date courante.",
+      "description": "Instancie et initialise un nouvel objet Date représentant la date et l'heure système actuelles au moment de l'exécution.",
+      "howToUse": "var aujourdhui = new Date(); puis appeler .getDate(), .getMonth(), .getFullYear() sur cette variable.",
+      "values": [
+        "new Date() -> objet Date courante"
+      ],
+      "code": "// Récupérer la date du jour\nfunction afficherDateDuJour() {\n  var d = new Date();\n  alert(\"Date courante : \" + d.toString());\n}",
+      "runnableCode": "var ajd = new Date();\nconsole.log(\"new Date() : \" + ajd.toString());"
+    },
+    {
+      "id": "js-date-parse",
+      "section": "L'objet Date",
+      "category": "L'objet Date",
+      "name": "new Date(ch)",
+      "tag": "new Date(ch)",
+      "syntax": "var d = new Date(ch);",
+      "summary": "Retourne un objet Date à partir d'une chaine de caractères ch représentant une date.",
+      "description": "Crée un objet Date à partir d'une chaîne textuelle formatée (ex: '2026-06-15'). Permet ensuite de comparer deux dates ou d'extraire des éléments.",
+      "howToUse": "var dNaiss = new Date(document.getElementById('dateNaiss').value);",
+      "values": [
+        "new Date('2026-06-15')",
+        "new Date('2007-03-22')"
+      ],
+      "code": "// Calculer l'âge à partir d'un champ HTML5 <input type=\"date\">\nfunction calculerAge() {\n  var dateSaisie = document.getElementById(\"dateNaiss\").value;\n  var dNaiss = new Date(dateSaisie);\n  var auj = new Date();\n  var age = auj.getFullYear() - dNaiss.getFullYear();\n  alert(\"Âge approximatif : \" + age + \" ans.\");\n}",
+      "runnableCode": "var d = new Date(\"2026-06-15\");\nconsole.log(\"new Date('2026-06-15') : \" + d.toString());"
+    },
+    {
+      "id": "js-date-getdate",
+      "section": "L'objet Date",
+      "category": "L'objet Date",
+      "name": "d.getDate()",
+      "tag": "d.getDate()",
+      "syntax": "d.getDate()",
+      "summary": "Retourne le jour du mois (entre 1 et 31).",
+      "description": "Extrait et retourne le quantième du mois (nombre entier de 1 à 31) pour l'objet Date d.",
+      "howToUse": "var jour = d.getDate();",
+      "values": [
+        "d.getDate() -> 1 à 31"
+      ],
+      "code": "// Afficher le jour actuel\nfunction afficherJour() {\n  var d = new Date();\n  alert(\"Nous sommes le \" + d.getDate() + \" du mois.\");\n}",
+      "runnableCode": "var d = new Date();\nconsole.log(\"Jour actuel (d.getDate()) : \" + d.getDate());"
+    },
+    {
+      "id": "js-date-getmonth",
+      "section": "L'objet Date",
+      "category": "L'objet Date",
+      "name": "d.getMonth()",
+      "tag": "d.getMonth()",
+      "syntax": "d.getMonth()",
+      "summary": "Retourne le numéro du mois (entre 1 et 11).",
+      "description": "Extrait le mois de l'objet Date. Note officielle de l'annexe Bac STI : mentionne le numéro du mois. En JavaScript standard, les mois sont indexés de 0 (Janvier) à 11 (Décembre), donc pour un affichage usuel, on ajoute généralement +1.",
+      "howToUse": "var mois = d.getMonth() + 1; // 1 pour Janvier, 12 pour Décembre",
+      "values": [
+        "0 = Janvier",
+        "1 = Février",
+        "11 = Décembre",
+        "Note Bac : entre 1 et 11"
+      ],
+      "code": "// Formater le mois de la date courante\nfunction afficherMois() {\n  var d = new Date();\n  var mois = d.getMonth() + 1;\n  alert(\"Mois numéro : \" + mois);\n}",
+      "runnableCode": "var d = new Date();\nconsole.log(\"Mois natif (0 à 11) : \" + d.getMonth());\nconsole.log(\"Mois usuel (+1) : \" + (d.getMonth() + 1));"
+    },
+    {
+      "id": "js-date-getfullyear",
+      "section": "L'objet Date",
+      "category": "L'objet Date",
+      "name": "d.getFullYear()",
+      "tag": "d.getFullYear()",
+      "syntax": "d.getFullYear()",
+      "summary": "Retourne la valeur de l'année sur 4 chiffres.",
+      "description": "Retourne l'année complète sous forme d'un entier à 4 chiffres (ex: 2026). Ne pas utiliser getYear() qui est déprécié.",
+      "howToUse": "var annee = d.getFullYear();",
+      "values": [
+        "d.getFullYear() -> ex: 2026"
+      ],
+      "code": "// Afficher l'année actuelle pour la session du Bac\nfunction afficherSession() {\n  var d = new Date();\n  alert(\"Session du Baccalauréat : \" + d.getFullYear());\n}",
+      "runnableCode": "var d = new Date();\nconsole.log(\"Année sur 4 chiffres (d.getFullYear()) : \" + d.getFullYear());"
+    },
+    {
+      "id": "js-date-tostring",
+      "section": "L'objet Date",
+      "category": "L'objet Date",
+      "name": "d.toString()",
+      "tag": "d.toString()",
+      "syntax": "d.toString()",
+      "summary": "Retourne une chaine de caractères représentant la date d.",
+      "description": "Convertit l'objet Date d en chaîne textuelle lisible complète incluant le jour, le mois, le numéro du jour, l'année, l'heure et le fuseau horaire.",
+      "howToUse": "var str = d.toString();",
+      "values": [
+        "d.toString() -> 'Tue Nov 10 2026 20:30:00 GMT...'"
+      ],
+      "code": "// Journaliser l'envoi d'un formulaire\nfunction enregistrerDateEnvoi() {\n  var d = new Date();\n  document.getElementById(\"dateEnvoi\").value = d.toString();\n}",
+      "runnableCode": "var d = new Date();\nconsole.log(\"d.toString() : \" + d.toString());"
+    },
+    {
+      "id": "js-arr-literal",
+      "section": "L'objet Array",
+      "category": "L'objet Array",
+      "name": "[] (Littéraux de tableau)",
+      "tag": "[ ]",
+      "syntax": "var tab = [elem1, elem2, ...];",
+      "summary": "Pour créer un tableau, utiliser les littéraux de tableau [].",
+      "description": "Règle officielle de l'annexe : pour instancier un tableau en JavaScript, on utilise la notation littérale entre crochets []. Les éléments sont séparés par des virgules et peuvent être de n'importe quel type.",
+      "howToUse": "var t = ['Technique', 'Math', 'Sciences']; Accès au 1er élément par t[0].",
+      "values": [
+        "var t = [] -> tableau vide",
+        "var t = [10, 15, 20] -> tableau de nombres"
+      ],
+      "code": "// Déclarer et manipuler un tableau de filières\nfunction listerFilieres() {\n  var filieres = [\"STI (Sciences & Technologies)\", \"Mathématiques\", \"Sciences Expérimentales\", \"Économie & Gestion\"];\n  alert(\"Première filière : \" + filieres[0]);\n}",
+      "runnableCode": "var matieres = [\"Techno\", \"Math\", \"Info\", \"Physique\"];\nconsole.log(\"Tableau créé avec [] :\", matieres);\nconsole.log(\"Premier élément : \" + matieres[0]);"
+    },
+    {
+      "id": "js-arr-length",
+      "section": "L'objet Array",
+      "category": "L'objet Array",
+      "name": "length (Tableau)",
+      "tag": "tab.length",
+      "syntax": "tab.length",
+      "summary": "Propriété qui représente le nombre d'éléments dans un tableau.",
+      "description": "Propriété de l'objet Array renvoyant le nombre exact d'éléments contenus dans le tableau. Essentielle pour les conditions d'arrêt des boucles for.",
+      "howToUse": "for (var i = 0; i < tab.length; i++) { ... }",
+      "values": [
+        "tab.length -> nombre entier >= 0"
+      ],
+      "code": "// Calculer la moyenne des notes d'un tableau\nfunction moyenneTableau() {\n  var notes = [12, 14, 16, 18];\n  var somme = 0;\n  for (var i = 0; i < notes.length; i++) {\n    somme += notes[i];\n  }\n  var moy = somme / notes.length;\n  alert(\"Moyenne des \" + notes.length + \" notes : \" + moy);\n}",
+      "runnableCode": "var t = [\"A\", \"B\", \"C\", \"D\", \"E\"];\nconsole.log(\"Nombre d'éléments dans le tableau (tab.length) : \" + t.length);"
+    },
+    {
+      "id": "js-dom-attr-val",
+      "section": "Modification du contenu, des attributs ou des styles des éléments HTML",
+      "category": "Modification HTML & Styles",
+      "name": "element.attribut = valeur",
+      "tag": "element.attribut = valeur",
+      "syntax": "element.attribut = valeur",
+      "summary": "Change la valeur de l'attribut d'un élément HTML.",
+      "description": "Permet de modifier dynamiquement les attributs d'une balise HTML. Règle officielle de l'annexe Bac STI : 'Se limiter à la manipulation des attributs value, checked, disabled, readonly, src, muted.'",
+      "howToUse": "document.getElementById('monBouton').disabled = true; document.getElementById('photo').src = 'nouveau.jpg';",
+      "values": [
+        "value : valeur textuelle d'un champ",
+        "checked : true ou false pour checkbox/radio",
+        "disabled : true ou false pour désactiver un bouton",
+        "readonly : true ou false pour lecture seule",
+        "src : chemin de l'image ou du média",
+        "muted : true ou false pour couper le son"
+      ],
+      "code": "// Exemple Bac STI : manipulation des attributs officiels\nfunction modifierAttributs() {\n  // 1. Modifier la valeur (value)\n  document.getElementById(\"prenom\").value = \"Nour\";\n\n  // 2. Cocher une case (checked)\n  document.getElementById(\"chk_accord\").checked = true;\n\n  // 3. Désactiver un bouton (disabled)\n  document.getElementById(\"btnEnvoyer\").disabled = true;\n\n  // 4. Mettre en lecture seule (readonly)\n  document.getElementById(\"login\").readonly = true;\n\n  // 5. Modifier la source d'une image (src)\n  document.getElementById(\"logo\").src = \"images/bac_reussite.png\";\n\n  // 6. Rendre muette une vidéo (muted)\n  document.getElementById(\"maVideo\").muted = true;\n}",
+      "runnableCode": "console.log(\"element.attribut = valeur modifie: value, checked, disabled, readonly, src, muted.\");"
+    },
+    {
+      "id": "js-dom-style-prop",
+      "section": "Modification du contenu, des attributs ou des styles des éléments HTML",
+      "category": "Modification HTML & Styles",
+      "name": "element.style.propriété = valeur",
+      "tag": "element.style.propriété = valeur",
+      "syntax": "element.style.propriete = 'valeur'",
+      "summary": "Change le style d'un élément HTML.",
+      "description": "Permet de modifier dynamiquement le style CSS en ligne d'un élément HTML. Règle officielle de l'annexe Bac STI : 'Se limiter à la manipulation des propriétés color, background, border, font, width, height.'",
+      "howToUse": "document.getElementById('titre').style.color = 'red';",
+      "values": [
+        "color : couleur du texte ('red', '#ff0000')",
+        "background : fond de l'élément ('yellow', '#eee')",
+        "border : bordure ('1px solid red')",
+        "font : police combinée ('bold 16px Arial')",
+        "width : largeur ('300px', '50%')",
+        "height : hauteur ('150px')"
+      ],
+      "code": "// Exemple Bac STI : manipulation des styles officiels\nfunction appliquerStylesSTI() {\n  var boite = document.getElementById(\"boite\");\n  \n  // Les 6 propriétés officielles de l'annexe :\n  boite.style.color = \"red\";\n  boite.style.background = \"#fff3cd\";\n  boite.style.border = \"2px dashed #f59e0b\";\n  boite.style.font = \"bold 16px 'Segoe UI', sans-serif\";\n  boite.style.width = \"400px\";\n  boite.style.height = \"120px\";\n}",
+      "runnableCode": "console.log(\"element.style.propriété modifie : color, background, border, font, width, height.\");"
+    },
+    {
+      "id": "js-dom-method-play",
+      "section": "Modification du contenu, des attributs ou des styles des éléments HTML",
+      "category": "Modification HTML & Styles",
+      "name": "element.play()",
+      "tag": "element.play()",
+      "syntax": "element.play()",
+      "summary": "Effectue une action sur un élément HTML (méthode play()).",
+      "description": "Lance la lecture d'un élément multimédia HTML5 (<audio> ou <video>). Fait partie des 2 méthodes multimédia officielles autorisées par l'annexe ('Se limiter à la manipulation des méthodes play(), pause()').",
+      "howToUse": "document.getElementById('monAudio').play();",
+      "values": [
+        "element.play() lance la lecture"
+      ],
+      "code": "// Démarrer la lecture d'un enregistrement audio\nfunction demarrerAudio() {\n  var lecteur = document.getElementById(\"audioCours\");\n  lecteur.play();\n  alert(\"Lecture audio démarrée !\");\n}",
+      "runnableCode": "console.log(\"element.play() démarre la lecture audio ou vidéo.\");"
+    },
+    {
+      "id": "js-dom-method-pause",
+      "section": "Modification du contenu, des attributs ou des styles des éléments HTML",
+      "category": "Modification HTML & Styles",
+      "name": "element.pause()",
+      "tag": "element.pause()",
+      "syntax": "element.pause()",
+      "summary": "Effectue une action sur un élément HTML (méthode pause()).",
+      "description": "Met en pause la lecture en cours d'un fichier audio ou vidéo HTML5. Seconde méthode multimédia officielle autorisée par l'annexe STI.",
+      "howToUse": "document.getElementById('maVideo').pause();",
+      "values": [
+        "element.pause() met en pause"
+      ],
+      "code": "// Mettre en pause une vidéo explicative\nfunction arreterVideo() {\n  var video = document.getElementById(\"videoDemo\");\n  video.pause();\n  alert(\"Vidéo mise en pause.\");\n}",
+      "runnableCode": "console.log(\"element.pause() met en pause la lecture multimédia.\");"
+    },
+    {
+      "id": "js-dom-selectedindex",
+      "section": "Modification du contenu, des attributs ou des styles des éléments HTML",
+      "category": "Modification HTML & Styles",
+      "name": "selectedIndex (<select>)",
+      "tag": "select.selectedIndex",
+      "syntax": "selectElement.selectedIndex",
+      "summary": "Pour une liste déroulante (<select>), utiliser la propriété selectedIndex pour récupérer l'indice de l'option sélectionnée.",
+      "description": "Note officielle de l'annexe : renvoie le numéro d'indice (commençant à 0) de l'option active dans un menu déroulant <select>. Si l'option 0 est '--- Choisissez ---', la condition (liste.selectedIndex == 0) permet de vérifier que l'utilisateur a bien fait un choix !",
+      "howToUse": "if (document.getElementById('filiere').selectedIndex == 0) { alert('Veuillez choisir une option !'); return false; }",
+      "values": [
+        "0 = première option (<option>)",
+        "1 = deuxième option",
+        "selectedIndex == -1 si rien n'est sélectionné"
+      ],
+      "code": "// Validation d'une liste déroulante au Bac STI\nfunction validerListe() {\n  var menu = document.getElementById(\"selectVille\");\n  if (menu.selectedIndex == 0) {\n    alert(\"Veuillez sélectionner votre ville dans la liste !\");\n    return false;\n  }\n  var optionChoisie = menu.options[menu.selectedIndex].text;\n  alert(\"Ville choisie : \" + optionChoisie);\n  return true;\n}",
+      "runnableCode": "console.log(\"select.selectedIndex donne l'indice de l'option choisie (0 pour la première).\");"
+    },
+    {
+      "id": "js-fn-verif-complete",
+      "section": "Contrôles de Saisie & Formulaires (Bac STI)",
+      "category": "Validation de Formulaires Bac STI",
+      "name": "function verif() (Validation Complète Formulaire)",
+      "tag": "function verif()",
+      "syntax": "function verif() { ... return false; }",
+      "summary": "Fonction complète de contrôle et validation de formulaire du Bac STI : vérification de la civilité (radio), nom/prénom, téléphone (8 chiffres), email (@ et .), mot de passe et confirmation (avec style.backgroundColor='red'), adresse, sélection de la ville (selectedIndex), code postal (4 chiffres) et remarque.",
+      "description": "Fonction maîtresse de contrôle d'un formulaire HTML du Bac STI. Elle récupère les valeurs de chaque champ via getElementById et getElementsByName, puis applique les règles de validation successives : si une règle n'est pas respectée, un alert() s'affiche, le champ erroné est éventuellement coloré en rouge et la fonction retourne false pour bloquer l'envoi.",
+      "howToUse": "Associer à l'événement onsubmit du formulaire : <form onsubmit=\"return verif()\" action=\"reponse.php\" method=\"post\"> ou au bouton : <input type=\"submit\" value=\"Envoyer\" onclick=\"return verif()\">.",
+      "values": [
+        "civ[0].checked == false && civ[1].checked == false",
+        "np == '' || np.length > 30 || alpha(np) == false",
+        "ntel.length != 8 || testtel(ntel) == false || isnum(ntel) == false",
+        "mail == '' || mail.indexOf('@') == -1 || testmail(mail) == false",
+        "mps.length != 8",
+        "cfmps != mps -> style.backgroundColor = 'red'",
+        "adr == '' || adr.indexOf(' ') == -1",
+        "vil.selectedIndex == 0",
+        "Number(cp) < 1000 || Number(cp) > 9999",
+        "req == '' || req.length > 50"
+      ],
+      "code": "function verif() {\n  // Récupération des valeurs des champs\n  let np = document.getElementById(\"np\").value;\n  let ntel = document.getElementById(\"ntel\").value;\n  let mail = document.getElementById(\"mail\").value;\n  let mps = document.getElementById(\"mps\").value;\n  let cfmps = document.getElementById(\"cfmps\").value;\n  let adr = document.getElementById(\"adr\").value;\n  let vil = document.getElementById(\"vill\");\n  let cp = document.getElementById(\"cp\").value;\n  let req = document.getElementById(\"rq\").value;\n\n  // Validation du cocher civilité 1ére méthode\n  /* let f = document.getElementById('f').checked;\n     let h = document.getElementById('h').checked;\n     if (f == false && h == false) {\n       alert('Veuillez cocher la civilité');\n       return false;\n     }\n  */\n\n  // Validation du cocher civilité 2ème Méthode\n  let civ = document.getElementsByName(\"civ\");\n  if (civ[0].checked == false && civ[1].checked == false) {\n    alert(\"Veuillez cocher la civilité\");\n    return false;\n  }\n\n  // Validation du champ Nom et prénom\n  if (np == \"\" || np.length > 30 || alpha(np) == false) {\n    alert(\"Nom vide ou incorrect\");\n    return false;\n  }\n\n  // Validation du champ Numéro téléphone\n  if (ntel.length != 8 || testtel(ntel) == false || isnum(ntel) == false) {\n    alert(\"numéro téléphone vide ou incorrect\");\n    return false;\n  }\n\n  // Validation du champ Mail\n  if (mail == \"\" || mail.indexOf(\"@\") == -1 || testmail(mail) == false) {\n    alert(\"Mail obligatoire ou invalide\");\n    return false;\n  }\n\n  // Validation du champ mot de passe\n  if (mps.length != 8) {\n    alert(\"Mot de Passe obligatoire ou invalide\");\n    return false;\n  }\n\n  // Validation du confirmation du mot de passe\n  if (cfmps != mps) {\n    alert(\"Mot de Passe incorrect\");\n    document.getElementById('cfmps').style.backgroundColor = 'red';\n    return false;\n  }\n\n  // Validation du champ Adresse\n  if (adr == \"\" || adr.indexOf(\" \") == -1) {\n    alert(\"adresse vide ou incorrecte\");\n    return false;\n  }\n\n  // Validation du cocher ville\n  if (vil.selectedIndex == 0) {\n    alert(\"selectionner une ville\");\n    return false;\n  }\n\n  // Validation du champ code postal\n  if (Number(cp) < 1000 || Number(cp) > 9999) {\n    alert(\"code postal obligatoire ou invalid\");\n    return false;\n  }\n\n  // Validation du champ Remarque\n  if (req == \"\" || req.length > 50) {\n    alert(\"remarque obligatoire ou invalid\");\n    return false;\n  }\n} /// fin fonction verif",
+      "runnableCode": "console.log(\"=== SIMULATION DE VERIF() AU BAC STI ===\");\nconsole.log(\"1. Civilité : civ[0].checked et civ[1].checked vérifiés.\");\nconsole.log(\"2. Nom et Prénom : longueur <= 30 et alpha(np) == true.\");\nconsole.log(\"3. Tél : 8 chiffres exacts, premier chiffre valide (testtel) et isnum.\");\nconsole.log(\"4. Mail : non vide, présence de '@' et format testmail valide.\");\nconsole.log(\"5. Mot de passe : longueur == 8.\");\nconsole.log(\"6. Confirmation : si cfmps != mps, style.backgroundColor = 'red'.\");\nconsole.log(\"7. Adresse : présence obligatoire d'au moins un espace ' ' (indexOf != -1).\");\nconsole.log(\"8. Ville : menu déroulant vil.selectedIndex != 0.\");\nconsole.log(\"9. Code postal : Number(cp) entre 1000 et 9999 (4 chiffres).\");\nconsole.log(\"10. Remarque : non vide et longueur <= 50 caractères.\");\nconsole.log(\"✓ Tous les contrôles sont conformes au barème officiel du Bac STI !\");"
+    },
+    {
+      "id": "js-fn-validage",
+      "section": "Contrôles de Saisie & Formulaires (Bac STI)",
+      "category": "Validation de Formulaires Bac STI",
+      "name": "function validage() (Validation Date de Naissance & Âge)",
+      "tag": "function validage()",
+      "syntax": "function validage() { ... }",
+      "summary": "Calcule l'âge d'un utilisateur à partir de sa date de naissance (#dnais) et vérifie s'il est compris entre 15 et 30 ans en exploitant l'objet Date (new Date(), getFullYear()).",
+      "description": "Fonction classique d'examen du Bac STI pour valider l'âge d'un candidat :\\n1. Récupère la chaîne de date depuis l'input date id='dnais'.\\n2. Instancie dc = new Date() pour obtenir l'année courante (ac = dc.getFullYear()).\\n3. Instancie dp = new Date(dt) pour convertir la saisie et extraire l'année de naissance (ap = dp.getFullYear()).\\n4. Calcule la différence diff = ac - ap.\\n5. Si diff < 15 ou diff > 30, affiche une boîte d'alerte 'age invalid'.",
+      "howToUse": "Appeler sur l'événement onblur ou onchange du champ date : <input type=\"date\" id=\"dnais\" onchange=\"validage()\"> ou dans verif().",
+      "values": [
+        "let dc = new Date();",
+        "let dp = new Date(dt);",
+        "let ap = dp.getFullYear();",
+        "let ac = dc.getFullYear();",
+        "let diff = ac - ap;",
+        "if (diff < 15 || diff > 30) alert('age invalid');"
+      ],
+      "code": "function validage() {\n  let dt = document.getElementById('dnais').value;\n  let dc = new Date(); // Retourne la date courante\n  let dp = new Date(dt); // Convertir la variable dt en un objet date\n  let ap = dp.getFullYear(); // Retourne l'année à partir de la date dp sur 4 chiffres\n  let ac = dc.getFullYear();\n  let diff = ac - ap;\n  if (diff < 15 || diff > 30) {\n    alert('age invalid');\n  }\n}",
+      "runnableCode": "const anneeCourante = new Date().getFullYear();\nconst anneeNaissanceTest = anneeCourante - 18; // 18 ans\nconst diff = anneeCourante - anneeNaissanceTest;\nconsole.log(\"Année courante (ac) : \" + anneeCourante);\nconsole.log(\"Année de naissance test (ap) : \" + anneeNaissanceTest);\nconsole.log(\"Âge calculé (diff = ac - ap) : \" + diff + \" ans\");\nif (diff < 15 || diff > 30) {\n  console.log(\"Résultat : ❌ Âge invalide (doit être entre 15 et 30 ans)\");\n} else {\n  console.log(\"Résultat : ✓ Âge valide pour le Bac STI !\");\n}"
+    },
+    {
+      "id": "js-fn-captcha",
+      "section": "Contrôles de Saisie & Formulaires (Bac STI)",
+      "category": "Validation de Formulaires Bac STI",
+      "name": "function Captcha() (Génération Code Aléatoire)",
+      "tag": "function Captcha()",
+      "syntax": "function Captcha() { ... }",
+      "summary": "Génère un code Captcha aléatoire de 10 caractères composé de majuscules (ASCII 65-90) et de minuscules (ASCII 97-122) grâce à Math.trunc, Math.random() et String.fromCharCode().",
+      "description": "Algorithme officiel du Bac STI pour créer un code de sécurité Captcha aléatoire :\\n1. Initialise une chaîne code vide.\\n2. Boucle de 1 à 10 pour générer 10 caractères.\\n3. Tire un nombre entier n aléatoire entre 0 et 25 via Math.trunc(Math.random() * 26).\\n4. Si n est pair (n % 2 == 0), convertit en majuscule : String.fromCharCode(n + 65) (A-Z).\\n5. Sinon, convertit en minuscule : String.fromCharCode(n + 97) (a-z).\\n6. Insère le code généré dans le champ input id='cap'.",
+      "howToUse": "Appeler au chargement de la page : <body onload=\"Captcha()\"> ou lors d'une réinitialisation.",
+      "values": [
+        "Math.trunc(Math.random() * 26)",
+        "if (n % 2 == 0) String.fromCharCode(n + 65)",
+        "else String.fromCharCode(n + 97)",
+        "document.getElementById('cap').value = code"
+      ],
+      "code": "function Captcha() {\n  let code = \"\";\n  for (let i = 1; i <= 10; i++) {\n    let n = Math.trunc(Math.random() * 26);\n    if (n % 2 == 0) {\n      code = code + String.fromCharCode(n + 65);\n    } else {\n      code = code + String.fromCharCode(n + 97);\n    }\n  }\n  document.getElementById('cap').value = code;\n}",
+      "runnableCode": "let code = \"\";\nfor (let i = 1; i <= 10; i++) {\n  let n = Math.trunc(Math.random() * 26);\n  if (n % 2 == 0) {\n    code = code + String.fromCharCode(n + 65);\n  } else {\n    code = code + String.fromCharCode(n + 97);\n  }\n}\nconsole.log(\"Code Captcha généré (10 caractères) : \" + code);\nconsole.log(\"Longueur : \" + code.length + \" caractères (mélange de majuscules et minuscules)\");"
+    },
+    {
+      "id": "js-fn-nbmajus",
+      "section": "Contrôles de Saisie & Formulaires (Bac STI)",
+      "category": "Validation de Formulaires Bac STI",
+      "name": "function nbmajus() (Comptage des Majuscules)",
+      "tag": "function nbmajus()",
+      "syntax": "function nbmajus() { ... }",
+      "summary": "Compte le nombre de lettres majuscules présentes dans le Captcha (#cap) et compare avec la valeur saisie par l'utilisateur (#nbmaj). En cas d'erreur, colore le champ en rouge.",
+      "description": "Procédure d'évaluation d'un Captcha par comptage :\\n1. Récupère la chaîne du Captcha depuis document.getElementById('cap').value.\\n2. Parcourt la chaîne caractère par caractère avec une boucle for.\\n3. Si le caractère est compris entre 'A' et 'Z' (ch[i] >= 'A' && ch[i] <= 'Z'), incrémente le compteur nb.\\n4. Récupère la réponse de l'utilisateur val = document.getElementById('nbmaj').value.\\n5. Si nb != val, applique un style rouge : document.getElementById('nbmaj').style.backgroundColor = 'red'.",
+      "howToUse": "Appeler au clic du bouton de vérification ou dans la fonction globale verif().",
+      "values": [
+        "for (let i = 0; i < ch.length; i++)",
+        "if (ch[i] >= 'A' && ch[i] <= 'Z') nb = nb + 1",
+        "document.getElementById('nbmaj').style.backgroundColor = 'red'"
+      ],
+      "code": "function nbmajus() {\n  let ch = document.getElementById('cap').value;\n  let nb = 0;\n  for (let i = 0; i < ch.length; i++) {\n    if (ch[i] >= \"A\" && ch[i] <= \"Z\") {\n      nb = nb + 1;\n    }\n  }\n  let val = document.getElementById('nbmaj').value;\n  if (nb != val) {\n    document.getElementById('nbmaj').style.backgroundColor = 'red';\n  }\n}",
+      "runnableCode": "const testChaine = \"AbCDeFgHiJ\";\nlet nb = 0;\nfor (let i = 0; i < testChaine.length; i++) {\n  if (testChaine[i] >= \"A\" && testChaine[i] <= \"Z\") {\n    nb = nb + 1;\n  }\n}\nconsole.log(\"Chaîne analysée : \" + testChaine);\nconsole.log(\"Nombre de majuscules trouvées : \" + nb + \" sur \" + testChaine.length + \" caractères\");\nconsole.log(\"Test utilisateur saisissant 5 : \" + (nb == 5 ? \"✓ Correct !\" : \"❌ Incorrect -> fond rouge !\"));"
+    },
+    {
+      "id": "js-fn-actualiser",
+      "section": "Contrôles de Saisie & Formulaires (Bac STI)",
+      "category": "Validation de Formulaires Bac STI",
+      "name": "function actualiser() (Régénérer le Captcha)",
+      "tag": "function actualiser()",
+      "syntax": "function actualiser() { ... }",
+      "summary": "Permet à l'utilisateur de renouveler le code Captcha aléatoire s'il le trouve illisible, en régénérant 10 nouveaux caractères et en actualisant le champ #cap.",
+      "description": "Fonction liée au bouton d'actualisation du Captcha :\\n1. Réinitialise le code aléatoire.\\n2. Exécute la boucle for de 10 itérations avec tirage aléatoire Math.random() et conversion ASCII String.fromCharCode().\\n3. Met à jour la valeur affichée dans document.getElementById('cap').value.\\n4. Réinitialise également si nécessaire la couleur de fond du champ réponse.",
+      "howToUse": "Associer à un bouton rafraîchir : <button type=\"button\" onclick=\"actualiser()\">🔄 Actualiser le Captcha</button>.",
+      "values": [
+        "code = ''",
+        "Math.trunc(Math.random() * 26)",
+        "document.getElementById('cap').value = code"
+      ],
+      "code": "function actualiser() {\n  let code = \"\";\n  for (let i = 1; i <= 10; i++) {\n    let n = Math.trunc(Math.random() * 26);\n    if (n % 2 == 0) {\n      code = code + String.fromCharCode(n + 65);\n    } else {\n      code = code + String.fromCharCode(n + 97);\n    }\n  }\n  document.getElementById('cap').value = code;\n}",
+      "runnableCode": "let code = \"\";\nfor (let i = 1; i <= 10; i++) {\n  let n = Math.trunc(Math.random() * 26);\n  if (n % 2 == 0) {\n    code = code + String.fromCharCode(n + 65);\n  } else {\n    code = code + String.fromCharCode(n + 97);\n  }\n}\nconsole.log(\"Ancien code : aB3kL9pQxZ\");\nconsole.log(\"Nouveau code actualisé : \" + code);\nconsole.log(\"✓ Champ #cap mis à jour avec succès !\");"
+    },
+    {
+      "id": "js-structure-switch-saisons",
+      "section": "Structures Conditionnelles (Bac STI)",
+      "category": "Structures de Contrôle (switch)",
+      "name": "switch (variable) (Saisons de l'Année)",
+      "tag": "switch (mois)",
+      "syntax": "switch (expression) { case c1: ... break; default: ... break; }",
+      "summary": "Structure conditionnelle à choix multiples (switch) : détermine la saison de l'année à partir du numéro du mois (1 à 12) avec regroupement de cas multiples (case 12: case 1: case 2:), instruction break et clause default.",
+      "description": "Guide complet sur l'utilisation de switch au Baccalauréat STI :\\n\\n1. Saisie & Conversion :\\n   let mois = prompt('mois=');\\n   mois = Number(mois); // OBLIGATOIRE : switch compare avec === (valeur et type exacts).\\n\\n2. Regroupement de cas multiples (OU logique) :\\n   Quand plusieurs valeurs produisent le même traitement, on empile les étiquettes case sans instruction intermédiaire :\\n   - case 12: case 1: case 2: -> 'hiver'\\n   - case 3: case 4: case 5: -> 'printemps'\\n   - case 6: case 7: case 8: -> 'été'\\n   - case 9: case 10: case 11: -> 'Automne'\\n\\n3. Le rôle crucial de 'break;' :\\n   L'instruction 'break;' termine immédiatement le bloc switch. Sans break, JavaScript continuerait à exécuter aveuglément les blocs suivants (comportement fall-through), ce qui provoquerait des affichages erronés !\\n\\n4. La clause 'default:' :\\n   Sert de filet de sécurité lorsque la valeur saisie ne correspond à aucun des cas listés (par exemple si l'utilisateur saisit 13, 0 ou -5). Affiche 'Numéro erroné'.",
+      "howToUse": "Utiliser switch dès qu'une variable peut prendre plusieurs valeurs fixes et distinctes (numéros de mois, choix de menu, codes postaux régionaux). Structure plus claire et rapide qu'une longue série de if ... else if.",
+      "values": [
+        "switch (mois) { ... }",
+        "case 12: case 1: case 2: -> hiver",
+        "case 3: case 4: case 5: -> printemps",
+        "case 6: case 7: case 8: -> été",
+        "case 9: case 10: case 11: -> Automne",
+        "break; (interrompt le switch)",
+        "default: alert('Numéro erroné'); break;"
+      ],
+      "code": "<script>\n// déterminer la saison à partir du numéro du mois saisi\nlet mois = prompt(\"mois=\");\nmois = Number(mois);\nswitch (mois) {\n  case 12: case 1: case 2:\n    alert(\"hiver\");\n    break;\n  case 3: case 4: case 5:\n    alert(\"printemps\");\n    break;\n  case 6: case 7: case 8:\n    alert(\"été\");\n    break;\n  case 9: case 10: case 11:\n    alert(\"Automne\");\n    break;\n  default:\n    alert(\"Numéro erroné\");\n    break;\n}\n</script>",
+      "runnableCode": "function getSaison(m) {\n  m = Number(m);\n  switch (m) {\n    case 12: case 1: case 2:\n      return \"❄️ hiver\";\n    case 3: case 4: case 5:\n      return \"🌸 printemps\";\n    case 6: case 7: case 8:\n      return \"☀️ été\";\n    case 9: case 10: case 11:\n      return \"🍂 Automne\";\n    default:\n      return \"❌ Numéro erroné\";\n  }\n}\n\nconsole.log(\"=== DÉMONSTRATION STRUCTURE SWITCH (BAC STI) ===\");\nconsole.log(\"Mois 1 (Janvier)   -> \" + getSaison(1));\nconsole.log(\"Mois 4 (Avril)     -> \" + getSaison(4));\nconsole.log(\"Mois 7 (Juillet)   -> \" + getSaison(7));\nconsole.log(\"Mois 10 (Octobre)  -> \" + getSaison(10));\nconsole.log(\"Mois 12 (Décembre) -> \" + getSaison(12));\nconsole.log(\"Mois 15 (Invalide) -> \" + getSaison(15));\nconsole.log(\"✓ Fonction switch testée sur tous les cas possibles !\");"
+    },
+    {
+      "id": "js-fn-alpha",
+      "section": "Contrôles de Saisie & Formulaires (Bac STI)",
+      "category": "Validation de Formulaires Bac STI",
+      "name": "function alpha(ch) (Contrôle Chaîne Alphabétique)",
+      "tag": "function alpha(ch)",
+      "syntax": "function alpha(ch) { ... return true; }",
+      "summary": "Vérifie si une chaîne ch passée en paramètre est strictement alphabétique (composée uniquement de lettres A-Z et d'espaces). Utilisée dans verif() pour valider le Nom et Prénom.",
+      "description": "Fonction auxiliaire indispensable du Bac STI :\\n1. Convertit la chaîne en majuscules avec ch = ch.toUpperCase() pour simplifier les comparaisons.\\n2. Parcourt chaque caractère avec une boucle for.\\n3. Si un caractère n'est ni compris entre 'A' et 'Z', ni égal à un espace ' ', retourne immédiatement false.\\n4. Si toute la chaîne a été vérifiée sans erreur, retourne true.",
+      "howToUse": "if (alpha(np) == false) { alert('Nom vide ou incorrect'); return false; }",
+      "values": [
+        "ch = ch.toUpperCase()",
+        "for (let i = 0; i < ch.length; i++)",
+        "if ((ch[i] < 'A' || ch[i] > 'Z') && ch[i] != ' ') return false;",
+        "return true;"
+      ],
+      "code": "function alpha(ch) {\n  ch = ch.toUpperCase();\n  for (let i = 0; i < ch.length; i++) {\n    if ((ch[i] < \"A\" || ch[i] > \"Z\") && ch[i] != \" \") {\n      return false;\n    }\n  }\n  return true;\n}",
+      "runnableCode": "function alpha(ch) {\n  ch = ch.toUpperCase();\n  for (let i = 0; i < ch.length; i++) {\n    if ((ch[i] < \"A\" || ch[i] > \"Z\") && ch[i] != \" \") {\n      return false;\n    }\n  }\n  return true;\n}\nconsole.log(\"alpha('Mohamed Ben Ali') : \" + alpha('Mohamed Ben Ali')); // true\nconsole.log(\"alpha('Ali123') : \" + alpha('Ali123')); // false\nconsole.log(\"alpha('Sarra!') : \" + alpha('Sarra!')); // false"
+    },
+    {
+      "id": "js-fn-isnum",
+      "section": "Contrôles de Saisie & Formulaires (Bac STI)",
+      "category": "Validation de Formulaires Bac STI",
+      "name": "function isnum(ch) (Contrôle Chaîne Numérique)",
+      "tag": "function isnum(ch)",
+      "syntax": "function isnum(ch) { ... return true; }",
+      "summary": "Vérifie si une chaîne ch ne contient que des chiffres de '0' à '9'. Utilisée dans verif() pour valider le Numéro de téléphone ou le Code Postal.",
+      "description": "Fonction classique de contrôle numérique au Bac STI :\\n1. Parcourt tous les caractères de la chaîne avec une boucle for.\\n2. Si un caractère est strictement inférieur à '0' ou supérieur à '9', retourne false.\\n3. Si tous les caractères sont des chiffres, retourne true.",
+      "howToUse": "if (isnum(ntel) == false) { alert('Le numéro de téléphone doit être numérique !'); return false; }",
+      "values": [
+        "for (let i = 0; i < ch.length; i++)",
+        "if (ch[i] < '0' || ch[i] > '9') return false;",
+        "return true;"
+      ],
+      "code": "function isnum(ch) {\n  for (let i = 0; i < ch.length; i++) {\n    if (ch[i] < \"0\" || ch[i] > \"9\") {\n      return false;\n    }\n  }\n  return true;\n}",
+      "runnableCode": "function isnum(ch) {\n  for (let i = 0; i < ch.length; i++) {\n    if (ch[i] < \"0\" || ch[i] > \"9\") {\n      return false;\n    }\n  }\n  return true;\n}\nconsole.log(\"isnum('98123456') : \" + isnum('98123456')); // true\nconsole.log(\"isnum('9812A456') : \" + isnum('9812A456')); // false\nconsole.log(\"isnum('2024') : \" + isnum('2024')); // true"
+    },
+    {
+      "id": "js-fn-testtel",
+      "section": "Contrôles de Saisie & Formulaires (Bac STI)",
+      "category": "Validation de Formulaires Bac STI",
+      "name": "function testtel(ch) (Contrôle Indicatif Téléphone)",
+      "tag": "function testtel(ch)",
+      "syntax": "function testtel(ch) { ... return true; }",
+      "summary": "Vérifie si le premier chiffre d'un numéro de téléphone tunisien à 8 chiffres commence par un préfixe valide (2, 4, 5, 7 ou 9).",
+      "description": "Contrôle d'indicatif téléphonique officiel du Bac STI tunisien :\\n1. Récupère le premier chiffre : let prem = ch.charAt(0); ou ch[0].\\n2. Vérifie s'il est égal à 2, 4, 5, 7 ou 9 (opérateurs de comparaison et OU logique ||).\\n3. Si oui, retourne true ; sinon retourne false.",
+      "howToUse": "if (testtel(ntel) == false) { alert('Numéro de téléphone invalide (doit commencer par 2, 4, 5, 7 ou 9) !'); return false; }",
+      "values": [
+        "let prem = ch.charAt(0);",
+        "prem == '2' || prem == '4' || prem == '5' || prem == '7' || prem == '9'"
+      ],
+      "code": "function testtel(ch) {\n  let prem = ch.charAt(0);\n  return (prem == \"2\" || prem == \"4\" || prem == \"5\" || prem == \"7\" || prem == \"9\");\n}",
+      "runnableCode": "function testtel(ch) {\n  let prem = ch.charAt(0);\n  return (prem == \"2\" || prem == \"4\" || prem == \"5\" || prem == \"7\" || prem == \"9\");\n}\nconsole.log(\"testtel('98123456') : \" + testtel('98123456')); // true (commence par 9)\nconsole.log(\"testtel('52123456') : \" + testtel('52123456')); // true (commence par 5)\nconsole.log(\"testtel('18123456') : \" + testtel('18123456')); // false (1 invalide)"
+    },
+    {
+      "id": "js-fn-testmail",
+      "section": "Contrôles de Saisie & Formulaires (Bac STI)",
+      "category": "Validation de Formulaires Bac STI",
+      "name": "function testmail(mail) (Contrôle Format Adresse Email)",
+      "tag": "function testmail(mail)",
+      "syntax": "function testmail(mail) { ... return true; }",
+      "summary": "Vérifie la conformité d'une adresse email : présence du caractère '@' non au début, et d'un point '.' placé après le '@' sans être le dernier caractère.",
+      "description": "Contrôle d'adresse e-mail standard au Bac STI :\\n1. Trouve la position de l'arobase : let pArobase = mail.indexOf('@');\\n2. Trouve la position du dernier point : let pPoint = mail.lastIndexOf('.');\\n3. Vérifie que pArobase > 0 (il y a du texte avant '@').\\n4. Vérifie que pPoint > pArobase + 1 (il y a du texte entre '@' et '.').\\n5. Vérifie que pPoint < mail.length - 1 (il y a une extension après le point).",
+      "howToUse": "if (testmail(mail) == false) { alert('Adresse email obligatoire ou invalide !'); return false; }",
+      "values": [
+        "let pArobase = mail.indexOf('@');",
+        "let pPoint = mail.lastIndexOf('.');",
+        "pArobase > 0 && pPoint > pArobase + 1 && pPoint < mail.length - 1"
+      ],
+      "code": "function testmail(mail) {\n  let pArobase = mail.indexOf(\"@\");\n  let pPoint = mail.lastIndexOf(\".\");\n  return (pArobase > 0 && pPoint > pArobase + 1 && pPoint < mail.length - 1);\n}",
+      "runnableCode": "function testmail(mail) {\n  let pArobase = mail.indexOf(\"@\");\n  let pPoint = mail.lastIndexOf(\".\");\n  return (pArobase > 0 && pPoint > pArobase + 1 && pPoint < mail.length - 1);\n}\nconsole.log(\"testmail('eleve@domaine.tn') : \" + testmail('eleve@domaine.tn')); // true\nconsole.log(\"testmail('invalide.sans.arobase') : \" + testmail('invalide.sans.arobase')); // false\nconsole.log(\"testmail('@debut.com') : \" + testmail('@debut.com')); // false\nconsole.log(\"testmail('eleve@pointfinal.') : \" + testmail('eleve@pointfinal.')); // false"
+    }
+  ],
   "lessons": [],
   "sql": [
-  {
-    "id": "sql-type-int",
-    "category": "Type de données",
-    "name": "INT",
-    "tag": "INT",
-    "syntax": "colonne INT",
-    "summary": "Entier",
-    "description": "Type de données numérique représentant des nombres entiers (positifs, négatifs ou zéro). C'est le type privilégié au Bac STI pour les identifiants uniques, numéros d'inscription, codes postaux ou quantités entières.",
-    "howToUse": "S'utilise lors de la déclaration d'une colonne dans CREATE TABLE. Souvent associé à la contrainte PRIMARY KEY (et éventuellement AUTO_INCREMENT en MySQL).",
-    "values": [
-      "Entier signé ou non signé",
-      "Ex: 101, 2025, 0, -15",
-      "Taille standard : 4 octets"
-    ],
-    "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  age INT CHECK (age >= 15 AND age <= 30)\n);",
-    "simQuery": "SELECT num_inscr, nom, prenom FROM Eleve WHERE num_inscr > 102;",
-    "simTable": "Eleve",
-    "simDescription": "Filtre les élèves dont le numéro d'inscription entier (INT) est supérieur à 102."
-  },
-  {
-    "id": "sql-type-decimal",
-    "category": "Type de données",
-    "name": "DECIMAL",
-    "tag": "DECIMAL",
-    "syntax": "colonne DECIMAL(p, s)",
-    "summary": "Réel",
-    "description": "Type de données numérique à virgule fixe représentant un nombre réel exact. 'p' (précision) est le nombre total de chiffres, et 's' (échelle) est le nombre de chiffres après la virgule. Très utilisé pour les moyennes (ex: 15.75) et les prix.",
-    "howToUse": "Pour une moyenne au Bac STI de 0 à 20 avec deux décimales, on écrit : moyenne DECIMAL(4, 2). Par exemple, 17.50 occupe 4 chiffres au total dont 2 décimales.",
-    "values": [
-      "DECIMAL(taille_totale, decimales)",
-      "Ex: DECIMAL(4, 2) pour une moyenne (de 00.00 à 99.99)",
-      "Ex: DECIMAL(6, 3) pour un montant en dinars tunisiens (millimes)"
-    ],
-    "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  moyenne DECIMAL(4, 2) CHECK (moyenne BETWEEN 0 AND 20)\n);",
-    "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne >= 10.00 ORDER BY moyenne DESC;",
-    "simTable": "Eleve",
-    "simDescription": "Affiche les élèves ayant une moyenne réelle (DECIMAL) supérieure ou égale à 10.00."
-  },
-  {
-    "id": "sql-type-char",
-    "category": "Type de données",
-    "name": "CHAR",
-    "tag": "CHAR",
-    "syntax": "colonne CHAR(longueur_fixe)",
-    "summary": "Chaîne de caractères de longueur fixe.",
-    "howToUse": "À utiliser obligatoirement lorsque toutes les valeurs ont rigoureusement la même taille connue à l'avance : CIN (8 chiffres), code matière (4 lettres), code postal (4 chiffres), genre ('M'/'F').",
-    "description": "Chaîne de caractères dont la taille en mémoire est fixe. Si la chaîne saisie est plus courte que la longueur définie, MySQL la complète automatiquement par des espaces.",
-    "values": [
-      "CHAR(N) où N est le nombre fixe de caractères",
-      "Ex: cin CHAR(8)",
-      "Ex: code_mat CHAR(4)",
-      "Ex: genre CHAR(1)"
-    ],
-    "code": "CREATE TABLE Matiere (\n  code_mat CHAR(4) PRIMARY KEY,\n  libelle VARCHAR(30) NOT NULL,\n  coef INT NOT NULL\n);",
-    "simQuery": "SELECT * FROM Matiere WHERE code_mat = 'INFO';",
-    "simTable": "Matiere",
-    "simDescription": "Recherche la matière dont le code fixe (CHAR(4)) est exactement 'INFO'."
-  },
-  {
-    "id": "sql-type-varchar",
-    "category": "Type de données",
-    "name": "VARCHAR",
-    "tag": "VARCHAR",
-    "syntax": "colonne VARCHAR(longueur_max)",
-    "summary": "Chaîne de caractères de longueur variable dont la longueur maximale fixée.",
-    "description": "Chaîne de caractères de taille variable. Contrairement à CHAR, VARCHAR n'occupe en mémoire que la longueur réelle du texte saisi + 1 octet pour la taille. Idéal pour les noms, prénoms, adresses et villes.",
-    "howToUse": "Définir la longueur maximale autorisée entre parenthèses. Si l'élève saisit moins de caractères, aucun espace n'est gaspillé en mémoire.",
-    "values": [
-      "VARCHAR(N) où N est la limite maximale",
-      "Ex: nom VARCHAR(30)",
-      "Ex: email VARCHAR(50)",
-      "Ex: adresse VARCHAR(60)"
-    ],
-    "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  prenom VARCHAR(30) NOT NULL,\n  ville VARCHAR(25) DEFAULT 'Tunis'\n);",
-    "simQuery": "SELECT nom, prenom, ville FROM Eleve WHERE ville = 'Sousse';",
-    "simTable": "Eleve",
-    "simDescription": "Extrait les données textuelles variables (VARCHAR) des élèves résidant à Sousse."
-  },
-  {
-    "id": "sql-type-text",
-    "category": "Type de données",
-    "name": "TEXT",
-    "tag": "TEXT",
-    "syntax": "colonne TEXT",
-    "summary": "Chaîne de caractères de longueur variable.",
-    "description": "Type destiné au stockage de textes très longs sans avoir à spécifier une limite stricte lors de la création de la table (jusqu'à 65 535 caractères).",
-    "howToUse": "Utilisé pour les colonnes contenant des paragraphes, des observations de fin d'année, des résumés de TP ou des remarques d'enseignant.",
-    "values": [
-      "TEXT",
-      "Capacité maximale : 64 Ko",
-      "Pas besoin de spécifier de taille entre parenthèses"
-    ],
-    "code": "CREATE TABLE FicheObservation (\n  id_fiche INT PRIMARY KEY,\n  num_inscr INT,\n  remarque TEXT\n);",
-    "simQuery": "SELECT num_inscr, nom, ville FROM Eleve;",
-    "simTable": "Eleve",
-    "simDescription": "Exemple de colonnes textuelles dans la base de données relationnelle."
-  },
-  {
-    "id": "sql-type-date",
-    "category": "Type de données",
-    "name": "DATE",
-    "tag": "DATE",
-    "syntax": "colonne DATE",
-    "summary": "Date.",
-    "description": "Type de données temporel stockant une date civile au format international strict 'AAAA-MM-JJ' (Année sur 4 chiffres, Mois sur 2 chiffres, Jour sur 2 chiffres).",
-    "howToUse": "En SQL, toute valeur DATE doit être entourée d'apostrophes (ou guillemets), par exemple : '2007-06-15'. Compatible avec les fonctions YEAR(), MONTH(), DAY(), DATEDIFF().",
-    "values": [
-      "Format strict : 'AAAA-MM-JJ'",
-      "Ex: '2007-03-12'",
-      "Ex: '2026-11-11'"
-    ],
-    "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  date_naiss DATE NOT NULL\n);",
-    "simQuery": "SELECT nom, prenom, date_naiss FROM Eleve WHERE date_naiss >= '2007-01-01';",
-    "simTable": "Eleve",
-    "simDescription": "Sélectionne les élèves nés à partir du 1er janvier 2007 (type DATE au format 'AAAA-MM-JJ')."
-  },
-  {
-    "id": "sql-type-time",
-    "category": "Type de données",
-    "name": "TIME",
-    "tag": "TIME",
-    "syntax": "colonne TIME",
-    "summary": "Temps.",
-    "description": "Stocke une heure ou une durée au format standard 'HH:MM:SS' (Heures : Minutes : Secondes).",
-    "howToUse": "S'emploie pour enregistrer les heures d'épreuves du Bac STI (ex: heure début '08:00:00' et heure fin '10:00:00').",
-    "values": [
-      "Format standard : 'HH:MM:SS'",
-      "Ex: '08:30:00'",
-      "Ex: '14:00:00'"
-    ],
-    "code": "CREATE TABLE Seance (\n  id_seance INT PRIMARY KEY,\n  code_mat CHAR(4),\n  heure_debut TIME,\n  heure_fin TIME\n);",
-    "simQuery": "SELECT NOW() AS heure_actuelle;",
-    "simTable": "Eleve",
-    "simDescription": "Affiche l'heure courante du serveur SQL."
-  },
-  {
-    "id": "sql-type-datetime",
-    "category": "Type de données",
-    "name": "DATETIME",
-    "tag": "DATETIME",
-    "syntax": "colonne DATETIME",
-    "summary": "Date et Heure.",
-    "description": "Combine à la fois une date et une heure au format combiné 'AAAA-MM-JJ HH:MM:SS'. Permet un horodatage précis à la seconde près.",
-    "howToUse": "Utilisé pour enregistrer la date et l'heure exactes d'une inscription en ligne, du dépôt d'un devoir ou d'une modification.",
-    "values": [
-      "Format : 'AAAA-MM-JJ HH:MM:SS'",
-      "Ex: '2026-11-11 08:30:00'",
-      "Ex: NOW()"
-    ],
-    "code": "CREATE TABLE Inscription (\n  num_inscr INT PRIMARY KEY,\n  date_heure_inscr DATETIME DEFAULT NOW()\n);",
-    "simQuery": "SELECT nom, NOW() AS date_heure_consultation FROM Eleve LIMIT 3;",
-    "simTable": "Eleve",
-    "simDescription": "Exemple de valeur combinée Date et Heure (DATETIME)."
-  },
-  {
-    "id": "sql-constraint-not-null",
-    "category": "Contraintes d'intégrité",
-    "name": "NOT NULL",
-    "tag": "NOT NULL",
-    "syntax": "colonne type NOT NULL",
-    "summary": "Interdit une valeur nulle.",
-    "description": "Contrainte d'intégrité de niveau colonne qui oblige l'utilisateur à obligatoirement saisir une valeur. Le champ ne peut jamais être laissé vide ou indéfini (NULL).",
-    "howToUse": "Se place immédiatement après le type de la colonne dans CREATE TABLE ou ALTER TABLE ADD/MODIFY. Indispensable pour les noms, prénoms et mots de passe.",
-    "values": [
-      "NOT NULL",
-      "Obligatoire sur les attributs essentiels",
-      "Une clé primaire (PRIMARY KEY) est automatiquement NOT NULL"
-    ],
-    "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  prenom VARCHAR(30) NOT NULL\n);",
-    "simQuery": "SELECT nom, prenom FROM Eleve WHERE nom IS NOT NULL;",
-    "simTable": "Eleve",
-    "simDescription": "Garantit que tous les élèves retournés possèdent un nom non nul."
-  },
-  {
-    "id": "sql-constraint-default",
-    "category": "Contraintes d'intégrité",
-    "name": "DEFAULT",
-    "tag": "DEFAULT",
-    "syntax": "colonne type DEFAULT valeur_par_defaut",
-    "summary": "Attribut une valeur par défaut.",
-    "description": "Attribue automatiquement une valeur prédéfinie à la colonne si l'utilisateur ne spécifie aucune valeur lors de l'insertion (INSERT INTO).",
-    "howToUse": "Spécifier la constante par défaut après le mot-clé DEFAULT : un nombre (DEFAULT 0), un texte entre apostrophes (DEFAULT 'STI') ou une fonction (DEFAULT NOW()).",
-    "values": [
-      "DEFAULT valeur",
-      "Ex: section VARCHAR(10) DEFAULT 'STI'",
-      "Ex: ville VARCHAR(20) DEFAULT 'Tunis'",
-      "Ex: coef INT DEFAULT 3"
-    ],
-    "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  section VARCHAR(10) DEFAULT 'STI',\n  ville VARCHAR(20) DEFAULT 'Tunis'\n);",
-    "simQuery": "SELECT nom, section, ville FROM Eleve WHERE section = 'STI';",
-    "simTable": "Eleve",
-    "simDescription": "Affiche les élèves dont la section correspond à la valeur par défaut ('STI')."
-  },
-  {
-    "id": "sql-constraint-check",
-    "category": "Contraintes d'intégrité",
-    "name": "CHECK",
-    "tag": "CHECK",
-    "syntax": "CHECK (condition)",
-    "summary": "Spécifie que les valeurs de la colonne doivent respecter une condition.",
-    "description": "Contrainte d'intégrité du domaine qui valide les données insérées en vérifiant qu'elles satisfont une condition logique booléenne (comparaisons, encadrements, listes de valeurs).",
-    "howToUse": "Placer l'expression entre parenthèses. Par exemple pour une moyenne scolaire : CHECK (moyenne >= 0 AND moyenne <= 20) ou CHECK (moyenne BETWEEN 0 AND 20).",
-    "values": [
-      "CHECK (colonne >= min AND colonne <= max)",
-      "CHECK (colonne BETWEEN a AND b)",
-      "CHECK (section IN ('STI', 'Math', 'SI', 'Eco'))"
-    ],
-    "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  moyenne DECIMAL(4, 2),\n  CONSTRAINT chk_moy CHECK (moyenne BETWEEN 0 AND 20)\n);",
-    "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne BETWEEN 0 AND 20;",
-    "simTable": "Eleve",
-    "simDescription": "Valide que toutes les moyennes respectent la règle de gestion définie par le CHECK (0 à 20)."
-  },
-  {
-    "id": "sql-constraint-primary-key",
-    "category": "Contraintes d'intégrité",
-    "name": "PRIMARY KEY",
-    "tag": "PRIMARY KEY",
-    "syntax": "colonne type PRIMARY KEY  ou  PRIMARY KEY (colonne1, colonne2)",
-    "summary": "Définit une clé primaire.",
-    "description": "Identifie de manière unique et certaine chaque enregistrement (ligne) d'une table relationnelle. Une table ne peut avoir qu'une seule clé primaire. Elle garantit à la fois l'unicité et l'interdiction de valeur nulle (UNIQUE + NOT NULL).",
-    "howToUse": "Peut être déclarée au niveau colonne (pour une clé simple) ou au niveau table en bas de CREATE TABLE (obligatoire pour une clé primaire composée de plusieurs colonnes).",
-    "values": [
-      "PRIMARY KEY",
-      "Clé simple : num_inscr INT PRIMARY KEY",
-      "Clé composée : PRIMARY KEY (num_inscr, code_mat)"
-    ],
-    "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL\n);\n\n-- Clé primaire composée pour une table de liaison :\nCREATE TABLE Note (\n  num_inscr INT,\n  code_mat CHAR(4),\n  note_ds DECIMAL(4, 2),\n  PRIMARY KEY (num_inscr, code_mat)\n);",
-    "simQuery": "SELECT num_inscr, nom, prenom FROM Eleve WHERE num_inscr = 101;",
-    "simTable": "Eleve",
-    "simDescription": "Recherche un enregistrement unique garanti par sa clé primaire (PRIMARY KEY = 101)."
-  },
-  {
-    "id": "sql-constraint-unique",
-    "category": "Contraintes d'intégrité",
-    "name": "UNIQUE",
-    "tag": "UNIQUE",
-    "syntax": "colonne type UNIQUE",
-    "summary": "Spécifie l'unicité des valeurs d'une colonne.",
-    "description": "Interdit les doublons dans une colonne. Contrairement à la clé primaire, une table peut contenir plusieurs contraintes UNIQUE, et celles-ci peuvent autoriser la valeur NULL.",
-    "howToUse": "Indispensable pour des colonnes comme le numéro de carte d'identité nationale (CIN), l'adresse e-mail ou le numéro de téléphone.",
-    "values": [
-      "UNIQUE",
-      "Ex: cin CHAR(8) UNIQUE",
-      "Ex: email VARCHAR(50) UNIQUE",
-      "Ex: num_tel CHAR(8) UNIQUE"
-    ],
-    "code": "CREATE TABLE Candidat (\n  num_inscr INT PRIMARY KEY,\n  cin CHAR(8) NOT NULL UNIQUE,\n  email VARCHAR(50) UNIQUE\n);",
-    "simQuery": "SELECT num_inscr, nom, prenom FROM Eleve GROUP BY num_inscr;",
-    "simTable": "Eleve",
-    "simDescription": "Illustration de l'unicité des identifiants sans aucun doublon."
-  },
-  {
-    "id": "sql-constraint-foreign-key",
-    "category": "Contraintes d'intégrité",
-    "name": "FOREIGN KEY",
-    "tag": "FOREIGN KEY",
-    "syntax": "FOREIGN KEY (colonne) REFERENCES table_mere(colonne_pk)",
-    "summary": "Définit une clé étrangère.",
-    "description": "Établit un lien d'intégrité référentielle entre une colonne de la table fille et la clé primaire de la table mère. Empêche l'insertion d'une référence qui n'existe pas dans la table mère.",
-    "howToUse": "Déclarée dans la table fille qui pointe vers la table mère. Doit impérativement avoir le même type de données que la clé primaire référencée.",
-    "values": [
-      "FOREIGN KEY (col_fille) REFERENCES table_mere(col_mere)",
-      "Garantit la cohérence des liens relationnels",
-      "Peut être complétée par ON UPDATE CASCADE ou ON DELETE CASCADE"
-    ],
-    "code": "CREATE TABLE Note (\n  id_note INT PRIMARY KEY,\n  num_inscr INT,\n  code_mat CHAR(4),\n  note_ds DECIMAL(4, 2),\n  FOREIGN KEY (num_inscr) REFERENCES Eleve(num_inscr),\n  FOREIGN KEY (code_mat) REFERENCES Matiere(code_mat)\n);",
-    "simQuery": "SELECT Eleve.num_inscr, Eleve.nom, Matiere.libelle FROM Eleve, Matiere WHERE Eleve.num_inscr = 101 AND Matiere.code_mat = 'INFO';",
-    "simTable": "Eleve",
-    "simDescription": "Associe les tables par leurs clés relationnelles (FOREIGN KEY)."
-  },
-  {
-    "id": "sql-constraint-references",
-    "category": "Contraintes d'intégrité",
-    "name": "REFERENCES",
-    "tag": "REFERENCES",
-    "syntax": "REFERENCES table_mere (colonne_pk)",
-    "summary": "Fait référence à une clé primaire d'une autre table.",
-    "description": "Mot-clé inséparable de la déclaration de clé étrangère (FOREIGN KEY). Il indique explicitement le nom de la table parente ainsi que sa colonne clé primaire ciblée.",
-    "howToUse": "S'écrit sous la forme REFERENCES NomTable(NomColonne). La colonne cible doit obligatoirement être indexée ou clé primaire dans la table mère.",
-    "values": [
-      "REFERENCES table_parente(cle_primaire)",
-      "Ex: REFERENCES Eleve(num_inscr)",
-      "Ex: REFERENCES Matiere(code_mat)"
-    ],
-    "code": "ALTER TABLE Note\nADD CONSTRAINT fk_eleve\nFOREIGN KEY (num_inscr) REFERENCES Eleve(num_inscr)\nON DELETE CASCADE;",
-    "simQuery": "SELECT num_inscr, nom, prenom FROM Eleve WHERE num_inscr IN (SELECT num_inscr FROM Eleve);",
-    "simTable": "Eleve",
-    "simDescription": "Vérification des correspondances de clés avec REFERENCES."
-  },
-  {
-    "id": "sql-constraint-on-update-cascade",
-    "category": "Contraintes d'intégrité",
-    "name": "ON UPDATE CASCADE",
-    "tag": "ON UPDATE CASCADE",
-    "syntax": "FOREIGN KEY (...) REFERENCES ... ON UPDATE CASCADE",
-    "summary": "Met à jour la clé étrangère en cas de mise à jour de la clé primaire.",
-    "description": "Règle de propagation automatique des modifications : si la clé primaire de la table mère est modifiée par un UPDATE, toutes les clés étrangères correspondantes dans la table fille sont automatiquement mises à jour avec la nouvelle valeur.",
-    "howToUse": "S'ajoute à la suite de la clause FOREIGN KEY ... REFERENCES ... dans CREATE TABLE ou ALTER TABLE.",
-    "values": [
-      "ON UPDATE CASCADE",
-      "Évite les incohérences en cas de renommage d'identifiant",
-      "Alternative au blocage (RESTRICT)"
-    ],
-    "code": "CREATE TABLE Note (\n  num_inscr INT,\n  code_mat CHAR(4),\n  note_ds DECIMAL(4, 2),\n  PRIMARY KEY (num_inscr, code_mat),\n  FOREIGN KEY (num_inscr) REFERENCES Eleve(num_inscr)\n    ON UPDATE CASCADE\n    ON DELETE CASCADE\n);",
-    "simQuery": "SELECT num_inscr, nom, prenom FROM Eleve;",
-    "simTable": "Eleve",
-    "simDescription": "Règle de propagation de mise à jour en cascade (ON UPDATE CASCADE)."
-  },
-  {
-    "id": "sql-constraint-on-delete-cascade",
-    "category": "Contraintes d'intégrité",
-    "name": "ON DELETE CASCADE",
-    "tag": "ON DELETE CASCADE",
-    "syntax": "FOREIGN KEY (...) REFERENCES ... ON DELETE CASCADE",
-    "summary": "Supprime automatiquement tous les enregistrements de la table fille suite à la suppression de l'enregistrement correspondant de la table mère.",
-    "description": "Règle de suppression automatique : si un enregistrement parent est supprimé de la table mère (via DELETE FROM), tous ses enregistrements enfants associés dans la table fille sont automatiquement effacés du système pour éviter les données orphelines.",
-    "howToUse": "À spécifier à la fin de la déclaration FOREIGN KEY ... REFERENCES ... Indispensable pour nettoyer automatiquement les notes ou lignes de commande d'un élève ou client supprimé.",
-    "values": [
-      "ON DELETE CASCADE",
-      "Supprime les enregistrements fils automatiquement",
-      "Prévient les enregistrements orphelins dans la base"
-    ],
-    "code": "ALTER TABLE Inscription\nADD CONSTRAINT fk_inscr_eleve\nFOREIGN KEY (num_inscr) REFERENCES Eleve(num_inscr)\nON DELETE CASCADE;",
-    "simQuery": "SELECT num_inscr, nom, section FROM Eleve WHERE num_inscr = 101;",
-    "simTable": "Eleve",
-    "simDescription": "Démonstration de la règle de suppression en cascade (ON DELETE CASCADE)."
-  },
-  {
-    "id": "sql-op-equal",
-    "category": "Opérateurs de comparaison",
-    "name": "=",
-    "tag": "=",
-    "syntax": "colonne = valeur",
-    "summary": "Égale à",
-    "description": "Opérateur de comparaison qui teste la stricte égalité entre deux expressions, colonnes ou constantes dans une clause WHERE ou HAVING.",
-    "howToUse": "Pour les chaînes et dates, entourer la valeur d'apostrophes : WHERE section = 'STI' ou WHERE date_naiss = '2007-03-12'. Pour les nombres, écrire sans guillemets : WHERE num_inscr = 101.",
-    "values": [
-      "colonne = valeur",
-      "Sensible à la casse selon le classement (collation)",
-      "Ex: section = 'STI'"
-    ],
-    "code": "SELECT nom, prenom, moyenne FROM Eleve\nWHERE section = 'STI';",
-    "simQuery": "SELECT num_inscr, nom, prenom, section FROM Eleve WHERE section = 'STI';",
-    "simTable": "Eleve",
-    "simDescription": "Filtre les élèves dont la section est strictement égale à 'STI'."
-  },
-  {
-    "id": "sql-op-diff",
-    "category": "Opérateurs de comparaison",
-    "name": "<>",
-    "tag": "<>",
-    "syntax": "colonne <> valeur",
-    "summary": "Différent de",
-    "description": "Opérateur de comparaison standard du SQL pour vérifier qu'une valeur est différente d'une autre. En MySQL, != est également accepté comme synonyme.",
-    "howToUse": "S'utilise dans la clause WHERE pour exclure des enregistrements particuliers, par exemple : WHERE ville <> 'Tunis'.",
-    "values": [
-      "colonne <> valeur",
-      "Ex: section <> 'Math'",
-      "Ex: ville <> 'Tunis'"
-    ],
-    "code": "SELECT nom, prenom, ville FROM Eleve\nWHERE ville <> 'Tunis';",
-    "simQuery": "SELECT nom, prenom, ville FROM Eleve WHERE ville <> 'Tunis';",
-    "simTable": "Eleve",
-    "simDescription": "Sélectionne tous les élèves dont la ville est différente de 'Tunis'."
-  },
-  {
-    "id": "sql-op-gt",
-    "category": "Opérateurs de comparaison",
-    "name": ">",
-    "tag": ">",
-    "syntax": "colonne > valeur",
-    "summary": "Supérieur à",
-    "description": "Opérateur de comparaison stricte vérifiant si la valeur de gauche est strictement plus grande que la valeur de droite.",
-    "howToUse": "Applicable aux nombres (moyenne > 10), dates (date_naiss > '2007-01-01') et chaînes selon l'ordre alphabétique.",
-    "values": [
-      "colonne > valeur",
-      "Ex: moyenne > 10.00",
-      "Ex: age > 18"
-    ],
-    "code": "SELECT nom, prenom, moyenne FROM Eleve\nWHERE moyenne > 12.00\nORDER BY moyenne DESC;",
-    "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne > 12.00;",
-    "simTable": "Eleve",
-    "simDescription": "Affiche les élèves ayant une moyenne strictement supérieure à 12.00."
-  },
-  {
-    "id": "sql-op-lt",
-    "category": "Opérateurs de comparaison",
-    "name": "<",
-    "tag": "<",
-    "syntax": "colonne < valeur",
-    "summary": "Inférieur à",
-    "description": "Opérateur de comparaison stricte vérifiant si la valeur de gauche est strictement inférieure à la valeur de droite.",
-    "howToUse": "Très utilisé pour identifier les élèves ajournés (moyenne < 10) ou des dates antérieures à un seuil.",
-    "values": [
-      "colonne < valeur",
-      "Ex: moyenne < 10.00",
-      "Ex: coef < 3"
-    ],
-    "code": "SELECT nom, prenom, moyenne FROM Eleve\nWHERE moyenne < 10.00;",
-    "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne < 10.00;",
-    "simTable": "Eleve",
-    "simDescription": "Extrait les élèves dont la moyenne est strictement inférieure à 10.00."
-  },
-  {
-    "id": "sql-op-gte",
-    "category": "Opérateurs de comparaison",
-    "name": ">=",
-    "tag": ">=",
-    "syntax": "colonne >= valeur",
-    "summary": "Supérieur ou égale à",
-    "description": "Opérateur de comparaison large vérifiant si la valeur est supérieure ou égale à la borne spécifiée (la valeur borne est incluse).",
-    "howToUse": "Critère officiel d'admission au Baccalauréat tunisien : WHERE moyenne >= 10.00.",
-    "values": [
-      "colonne >= valeur",
-      "Borne incluse",
-      "Ex: moyenne >= 10.00",
-      "Ex: coef >= 3"
-    ],
-    "code": "SELECT nom, prenom, moyenne FROM Eleve\nWHERE moyenne >= 10.00\nORDER BY moyenne DESC;",
-    "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne >= 10.00 ORDER BY moyenne DESC;",
-    "simTable": "Eleve",
-    "simDescription": "Affiche tous les élèves admis au Bac STI (moyenne >= 10.00)."
-  },
-  {
-    "id": "sql-op-lte",
-    "category": "Opérateurs de comparaison",
-    "name": "<=",
-    "tag": "<=",
-    "syntax": "colonne <= valeur",
-    "summary": "Inférieur ou égale à",
-    "description": "Opérateur de comparaison large vérifiant si la valeur est inférieure ou égale à la borne spécifiée (borne incluse).",
-    "howToUse": "S'utilise pour borner des notes, des prix ou des dates : WHERE moyenne <= 15.00.",
-    "values": [
-      "colonne <= valeur",
-      "Borne incluse",
-      "Ex: moyenne <= 15.00",
-      "Ex: date_naiss <= '2007-12-31'"
-    ],
-    "code": "SELECT nom, prenom, moyenne FROM Eleve\nWHERE moyenne <= 12.00;",
-    "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne <= 12.00;",
-    "simTable": "Eleve",
-    "simDescription": "Affiche les élèves ayant une moyenne inférieure ou égale à 12.00."
-  },
-  {
-    "id": "sql-op-in",
-    "category": "Opérateurs de comparaison",
-    "name": "IN",
-    "tag": "IN",
-    "syntax": "colonne IN (valeur1, valeur2, ...)",
-    "summary": "Dans",
-    "description": "Vérifie si la valeur d'une colonne appartient à un ensemble de valeurs données entre parenthèses. Évite d'écrire de multiples conditions OR successives.",
-    "howToUse": "Lister les valeurs séparées par des virgules entre parenthèses : WHERE ville IN ('Tunis', 'Sousse', 'Sfax'). Peut également recevoir le résultat d'une sous-requête SQL.",
-    "values": [
-      "IN (val1, val2, ...)",
-      "Équivalent à (col = val1 OR col = val2 ...)",
-      "Peut être inversé avec NOT IN"
-    ],
-    "code": "SELECT nom, prenom, ville FROM Eleve\nWHERE ville IN ('Tunis', 'Sousse');",
-    "simQuery": "SELECT nom, prenom, ville FROM Eleve WHERE ville IN ('Tunis', 'Sousse');",
-    "simTable": "Eleve",
-    "simDescription": "Extrait les élèves résidant dans la liste de villes ('Tunis' ou 'Sousse')."
-  },
-  {
-    "id": "sql-op-between",
-    "category": "Opérateurs de comparaison",
-    "name": "BETWEEN",
-    "tag": "BETWEEN",
-    "syntax": "colonne BETWEEN borne_min AND borne_max",
-    "summary": "Entre deux valeurs d'un intervalle.",
-    "description": "Vérifie si une valeur est comprise dans un intervalle fermé (les deux bornes minimale et maximale sont incluses). Équivalent à : (colonne >= borne_min AND colonne <= borne_max).",
-    "howToUse": "Attention : la borne inférieure doit obligatoirement être écrite en premier, suivie du mot-clé AND puis de la borne supérieure : WHERE moyenne BETWEEN 10 AND 15.",
-    "values": [
-      "BETWEEN min AND max",
-      "Bornes min et max INCLUSES",
-      "Applicable aux nombres, dates et lettres"
-    ],
-    "code": "SELECT nom, prenom, moyenne FROM Eleve\nWHERE moyenne BETWEEN 10.00 AND 15.00\nORDER BY moyenne ASC;",
-    "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne BETWEEN 10.00 AND 15.00;",
-    "simTable": "Eleve",
-    "simDescription": "Filtre les élèves dont la moyenne est comprise entre 10.00 et 15.00 inclus."
-  },
-  {
-    "id": "sql-op-like",
-    "category": "Opérateurs de comparaison",
-    "name": "LIKE",
-    "tag": "LIKE",
-    "syntax": "colonne LIKE 'motif'",
-    "summary": "Recherche de motif/valeur.",
-    "description": "Recherche textuelle basée sur des caractères génériques (jokers) : le symbole '%' remplace zéro, un ou plusieurs caractères ; le symbole '_' remplace exactement un seul caractère.",
-    "howToUse": "Motifs classiques au Bac STI : LIKE 'A%' (commence par A), LIKE '%Ben%' (contient Ben), LIKE '%s' (finit par s), LIKE '_a%' (deuxième lettre est 'a').",
-    "values": [
-      "'%' : 0, 1 ou plusieurs caractères",
-      "'_' : exactement un seul caractère",
-      "Ex: nom LIKE 'B%'",
-      "Ex: nom LIKE '%Salah%'"
-    ],
-    "code": "SELECT nom, prenom FROM Eleve\nWHERE nom LIKE 'B%';\n\n-- Recherche contenant le mot 'Salah' :\nSELECT nom, prenom FROM Eleve\nWHERE nom LIKE '%Salah%';",
-    "simQuery": "SELECT num_inscr, nom, prenom FROM Eleve WHERE nom LIKE 'B%';",
-    "simTable": "Eleve",
-    "simDescription": "Recherche tous les élèves dont le nom commence par la lettre 'B' (LIKE 'B%')."
-  },
-  {
-    "id": "sql-op-is",
-    "category": "Opérateurs de comparaison",
-    "name": "IS",
-    "tag": "IS",
-    "syntax": "colonne IS NULL  ou  colonne IS NOT NULL",
-    "summary": "Filtre les résultats contenant la valeur NULL.",
-    "description": "En SQL, la valeur NULL représente l'absence d'information (valeur inconnue ou indéfinie). Elle ne peut jamais être testée avec l'opérateur '=' (écrire '= NULL' renvoie toujours false). On utilise impérativement l'opérateur IS.",
-    "howToUse": "Écrire 'colonne IS NULL' pour trouver les champs vides, ou 'colonne IS NOT NULL' pour trouver les champs renseignés.",
-    "values": [
-      "IS NULL : valeur non renseignée",
-      "IS NOT NULL : valeur renseignée",
-      "Interdiction d'utiliser '= NULL' !"
-    ],
-    "code": "SELECT nom, prenom FROM Eleve\nWHERE ville IS NOT NULL;\n\n-- Trouver les élèves sans remarque :\nSELECT nom, prenom FROM Eleve\nWHERE remarque IS NULL;",
-    "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne IS NOT NULL;",
-    "simTable": "Eleve",
-    "simDescription": "Sélectionne les enregistrements dont la moyenne est bien renseignée (IS NOT NULL)."
-  },
-  {
-    "id": "sql-op-and",
-    "category": "Opérateurs logiques",
-    "name": "AND",
-    "tag": "AND",
-    "syntax": "condition1 AND condition2",
-    "summary": "ET",
-    "description": "Opérateur logique ET. Renvoie vrai si et seulement si toutes les conditions combinées sont simultanément vraies.",
-    "howToUse": "Utilisé pour restreindre les résultats en exigeant plusieurs critères simultanés : par exemple, être de la section STI ET avoir une moyenne >= 10.",
-    "values": [
-      "VRAI AND VRAI = VRAI",
-      "VRAI AND FAUX = FAUX",
-      "Ex: section = 'STI' AND moyenne >= 10"
-    ],
-    "code": "SELECT nom, prenom, moyenne FROM Eleve\nWHERE section = 'STI' AND moyenne >= 10.00;",
-    "simQuery": "SELECT nom, prenom, section, moyenne FROM Eleve WHERE section = 'STI' AND moyenne >= 10.00;",
-    "simTable": "Eleve",
-    "simDescription": "Combine deux critères avec AND : section = 'STI' ET moyenne >= 10.00."
-  },
-  {
-    "id": "sql-op-or",
-    "category": "Opérateurs logiques",
-    "name": "OR",
-    "tag": "OR",
-    "syntax": "condition1 OR condition2",
-    "summary": "OU",
-    "description": "Opérateur logique OU. Renvoie vrai dès qu'au moins l'une des conditions est vraie. Renvoie faux uniquement si toutes les conditions sont fausses.",
-    "howToUse": "Utilisé pour élargir la sélection à plusieurs alternatives : par exemple, habiter à Tunis OU habiter à Sousse.",
-    "values": [
-      "VRAI OR FAUX = VRAI",
-      "FAUX OR FAUX = FAUX",
-      "Ex: ville = 'Tunis' OR ville = 'Sousse'"
-    ],
-    "code": "SELECT nom, prenom, ville FROM Eleve\nWHERE ville = 'Tunis' OR ville = 'Sousse';",
-    "simQuery": "SELECT nom, prenom, ville FROM Eleve WHERE ville = 'Tunis' OR ville = 'Sousse';",
-    "simTable": "Eleve",
-    "simDescription": "Sélectionne les élèves satisfaisant au moins une condition (ville = 'Tunis' OR ville = 'Sousse')."
-  },
-  {
-    "id": "sql-op-not",
-    "category": "Opérateurs logiques",
-    "name": "NOT",
-    "tag": "NOT",
-    "syntax": "NOT condition",
-    "summary": "NON",
-    "description": "Opérateur logique de négation. Inverse le résultat booléen d'une condition : transforme vrai en faux, et faux en vrai.",
-    "howToUse": "Se place devant une condition, ou combiné avec des opérateurs comme NOT IN, NOT BETWEEN, NOT LIKE, IS NOT NULL.",
-    "values": [
-      "NOT (VRAI) = FAUX",
-      "NOT (FAUX) = VRAI",
-      "Ex: NOT (section = 'Math')",
-      "Ex: nom NOT LIKE 'B%'"
-    ],
-    "code": "SELECT nom, prenom, section FROM Eleve\nWHERE NOT (section = 'Math');",
-    "simQuery": "SELECT nom, prenom, section FROM Eleve WHERE NOT (section = 'Math');",
-    "simTable": "Eleve",
-    "simDescription": "Exclut les élèves de la section Math grâce à l'opérateur de négation NOT."
-  },
-  {
-    "id": "sql-ldd-create-db",
-    "category": "Définition des données",
-    "name": "CREATE DATABASE",
-    "tag": "CREATE DATABASE",
-    "syntax": "CREATE DATABASE nom",
-    "summary": "Crée une base de données.",
-    "description": "Instruction du Langage de Définition de Données (LDD) qui crée un nouvel espace de stockage de base de données vide avec le nom spécifié.",
-    "howToUse": "S'exécute une seule fois au tout début d'un projet informatique ou d'une épreuve pratique avant de créer les tables. En MySQL, on peut ajouter IF NOT EXISTS pour éviter les erreurs si la base existe déjà.",
-    "values": [
-      "CREATE DATABASE nom_base",
-      "Ex: CREATE DATABASE Gestion_Lycee;",
-      "Ex: CREATE DATABASE IF NOT EXISTS BacSTI_2026;"
-    ],
-    "code": "-- Création de la base de données du lycée\nCREATE DATABASE Gestion_Lycee;\nUSE Gestion_Lycee;",
-    "simQuery": "SELECT 'Base de données active : Gestion_Lycee' AS Statut;",
-    "simTable": "Eleve",
-    "simDescription": "Simulation de création d'une nouvelle base de données (CREATE DATABASE)."
-  },
-  {
-    "id": "sql-ldd-drop-db",
-    "category": "Définition des données",
-    "name": "DROP DATABASE",
-    "tag": "DROP DATABASE",
-    "syntax": "DROP DATABASE nom",
-    "summary": "Supprime une base de données.",
-    "description": "Supprime définitivement une base de données existante ainsi que l'intégralité des tables, enregistrements et index qu'elle contient.",
-    "howToUse": "Attention : action irréversible ! À manipuler avec précaution.",
-    "values": [
-      "DROP DATABASE nom_base",
-      "Supprime toutes les tables et données",
-      "Ex: DROP DATABASE Gestion_Lycee;"
-    ],
-    "code": "DROP DATABASE Gestion_Lycee;",
-    "simQuery": "SELECT 'Base de données supprimée avec succès' AS Statut;",
-    "simTable": "Eleve",
-    "simDescription": "Supprime définitivement une base de données (DROP DATABASE)."
-  },
-  {
-    "id": "sql-ldd-create-table",
-    "category": "Définition des données",
-    "name": "CREATE TABLE",
-    "tag": "CREATE TABLE",
-    "syntax": "CREATE TABLE table1 ( colonne1 type [contrainte], colonne2 type [contrainte], ... [[CONSTRAINT] [nom] [contrainte], ...] )",
-    "summary": "Crée une table.",
-    "description": "Instruction fondamentale du LDD pour concevoir la structure relationnelle d'une table : liste des colonnes, leurs types de données respectifs, et leurs contraintes d'intégrité (PRIMARY KEY, NOT NULL, DEFAULT, CHECK, FOREIGN KEY).",
-    "howToUse": "Ouvrir une parenthèse après le nom de table, déclarer chaque colonne séparée par une virgule, et refermer la parenthèse avec un point-virgule.",
-    "values": [
-      "CREATE TABLE nom (col1 type1, col2 type2, ...)",
-      "Définition des clés primaires et contraintes",
-      "Respecter l'ordre : tables mères créées avant les tables filles"
-    ],
-    "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  prenom VARCHAR(30) NOT NULL,\n  section VARCHAR(10) DEFAULT 'STI',\n  moyenne DECIMAL(4, 2) CHECK (moyenne BETWEEN 0 AND 20),\n  date_naiss DATE NOT NULL,\n  ville VARCHAR(25) DEFAULT 'Tunis'\n);",
-    "simQuery": "SELECT * FROM Eleve LIMIT 3;",
-    "simTable": "Eleve",
-    "simDescription": "Structure complète de la table Eleve créée avec CREATE TABLE."
-  },
-  {
-    "id": "sql-ldd-alter-add",
-    "category": "Définition des données",
-    "name": "ALTER TABLE ... ADD",
-    "tag": "ALTER TABLE ADD",
-    "syntax": "ALTER TABLE table1 ADD colonne type [contrainte]",
-    "summary": "Ajoute une colonne à une table.",
-    "description": "Permet d'ajouter une nouvelle colonne dans une table existante sans avoir à détruire ni recréer la table, préservant ainsi toutes les données déjà enregistrées.",
-    "howToUse": "Spécifier le nom de la table, le mot-clé ADD, puis le nom de la nouvelle colonne avec son type et ses contraintes éventuelles.",
-    "values": [
-      "ALTER TABLE nom_table ADD nom_colonne type [contraintes]",
-      "Ex: ALTER TABLE Eleve ADD email VARCHAR(50);",
-      "Ex: ALTER TABLE Eleve ADD mention VARCHAR(15);"
-    ],
-    "code": "-- Ajouter une colonne 'email' dans la table Eleve\nALTER TABLE Eleve ADD email VARCHAR(50);",
-    "simQuery": "SELECT num_inscr, nom, prenom, 'mohamed@lycee.tn' AS email FROM Eleve LIMIT 3;",
-    "simTable": "Eleve",
-    "simDescription": "Résultat après ajout de la colonne 'email' avec ALTER TABLE ADD."
-  },
-  {
-    "id": "sql-ldd-alter-drop",
-    "category": "Définition des données",
-    "name": "ALTER TABLE ... DROP colonne",
-    "tag": "ALTER TABLE DROP colonne",
-    "syntax": "ALTER TABLE table1 DROP colonne",
-    "summary": "Supprime une colonne.",
-    "description": "Supprime physiquement une colonne existante ainsi que toutes les valeurs qu'elle contenait dans la table.",
-    "howToUse": "Écrire ALTER TABLE nom_table DROP COLUMN nom_colonne (le mot-clé COLUMN est optionnel en MySQL).",
-    "values": [
-      "ALTER TABLE table DROP colonne",
-      "Action définitive pour les données de cette colonne",
-      "Ex: ALTER TABLE Eleve DROP ville;"
-    ],
-    "code": "-- Supprimer la colonne 'remarque' de la table Eleve\nALTER TABLE Eleve DROP remarque;",
-    "simQuery": "SELECT num_inscr, nom, prenom, moyenne FROM Eleve LIMIT 3;",
-    "simTable": "Eleve",
-    "simDescription": "Affichage de la table après suppression d'une colonne avec ALTER TABLE DROP."
-  },
-  {
-    "id": "sql-ldd-alter-modify",
-    "category": "Définition des données",
-    "name": "ALTER TABLE ... ALTER / MODIFY",
-    "tag": "ALTER TABLE MODIFY",
-    "syntax": "ALTER TABLE table1 ALTER* colonne type  (* on peut utiliser MODIFY au lieu de ALTER)",
-    "summary": "Modifie le type d'une colonne.",
-    "description": "Modifie le type de données ou la taille maximale d'une colonne existante (par exemple agrandir un VARCHAR(20) en VARCHAR(40)). En MySQL, la syntaxe la plus utilisée en TP au Bac STI est MODIFY.",
-    "howToUse": "Écrire ALTER TABLE nom_table MODIFY nom_colonne nouveau_type. Attention : si la table contient déjà des données, le nouveau type doit être compatible.",
-    "values": [
-      "ALTER TABLE table MODIFY colonne nouveau_type",
-      "Équivalent officiel : ALTER colonne type",
-      "Ex: ALTER TABLE Eleve MODIFY nom VARCHAR(45) NOT NULL;"
-    ],
-    "code": "-- Agrandir la taille du champ 'nom' de 30 à 45 caractères\nALTER TABLE Eleve MODIFY nom VARCHAR(45) NOT NULL;",
-    "simQuery": "SELECT num_inscr, nom, prenom FROM Eleve LIMIT 3;",
-    "simTable": "Eleve",
-    "simDescription": "Modification du type et de la taille d'une colonne (ALTER / MODIFY)."
-  },
-  {
-    "id": "sql-ldd-alter-rename",
-    "category": "Définition des données",
-    "name": "ALTER TABLE ... RENAME / CHANGE",
-    "tag": "ALTER TABLE RENAME / CHANGE",
-    "syntax": "ALTER TABLE table1 RENAME** nom1 TO nom2  (** on peut utiliser CHANGE au lieu de RENAME)",
-    "summary": "Modifie le nom d'une colonne.",
-    "description": "Permet de renommer une colonne existante. L'annexe officielle précise qu'on peut utiliser RENAME COLUMN ancien_nom TO nouveau_nom ou CHANGE ancien_nom nouveau_nom type.",
-    "howToUse": "Syntaxe 1 : ALTER TABLE table RENAME COLUMN ancien TO nouveau;\nSyntaxe 2 (MySQL classique) : ALTER TABLE table CHANGE ancien nouveau type;",
-    "values": [
-      "ALTER TABLE table RENAME col_ancien TO col_nouveau",
-      "ALTER TABLE table CHANGE col_ancien col_nouveau type",
-      "Ex: ALTER TABLE Eleve RENAME COLUMN moyenne TO moyenne_bac;"
-    ],
-    "code": "-- Renommer la colonne 'moyenne' en 'moyenne_bac'\nALTER TABLE Eleve RENAME COLUMN moyenne TO moyenne_bac;\n\n-- Variante MySQL avec CHANGE :\nALTER TABLE Eleve CHANGE moyenne moyenne_bac DECIMAL(4, 2);",
-    "simQuery": "SELECT num_inscr, nom, moyenne AS moyenne_bac FROM Eleve LIMIT 3;",
-    "simTable": "Eleve",
-    "simDescription": "Renommage d'une colonne de table (RENAME / CHANGE)."
-  },
-  {
-    "id": "sql-ldd-alter-add-constraint",
-    "category": "Définition des données",
-    "name": "ALTER TABLE ... ADD CONSTRAINT",
-    "tag": "ALTER TABLE ADD CONSTRAINT",
-    "syntax": "ALTER TABLE table1 ADD CONSTRAINT [nom] contrainte",
-    "summary": "Ajoute une contrainte sur une colonne d'une table.",
-    "description": "Permet d'ajouter a posteriori une contrainte d'intégrité nommée (PRIMARY KEY, UNIQUE, CHECK ou FOREIGN KEY) sur une table déjà existante.",
-    "howToUse": "Donner un nom explicite à la contrainte pour pouvoir la gérer facilement plus tard : par exemple, 'chk_moy' ou 'fk_inscr'.",
-    "values": [
-      "ADD CONSTRAINT nom PRIMARY KEY (...)",
-      "ADD CONSTRAINT nom FOREIGN KEY (...) REFERENCES ...",
-      "ADD CONSTRAINT nom CHECK (...)"
-    ],
-    "code": "-- Ajouter une clé étrangère avec contrainte nommée\nALTER TABLE Note\nADD CONSTRAINT fk_note_eleve\nFOREIGN KEY (num_inscr) REFERENCES Eleve(num_inscr)\nON DELETE CASCADE;\n\n-- Ajouter une contrainte CHECK :\nALTER TABLE Eleve\nADD CONSTRAINT chk_age\nCHECK (age >= 15 AND age <= 30);",
-    "simQuery": "SELECT 'Contrainte ajoutée avec succès sur la table' AS Resultat;",
-    "simTable": "Eleve",
-    "simDescription": "Ajout d'une contrainte d'intégrité nommée (ADD CONSTRAINT)."
-  },
-  {
-    "id": "sql-ldd-alter-drop-constraint",
-    "category": "Définition des données",
-    "name": "ALTER TABLE ... DROP CONSTRAINT",
-    "tag": "ALTER TABLE DROP CONSTRAINT",
-    "syntax": "ALTER TABLE table1 DROP CONSTRAINT nom",
-    "summary": "Supprime une contrainte.",
-    "description": "Supprime une contrainte d'intégrité existante par son nom (par exemple supprimer une règle CHECK devenue obsolète). Pour une clé primaire sans nom : ALTER TABLE table DROP PRIMARY KEY.",
-    "howToUse": "Spécifier le nom attribué à la contrainte lors de sa création : ALTER TABLE Eleve DROP CONSTRAINT chk_age.",
-    "values": [
-      "ALTER TABLE table DROP CONSTRAINT nom_contrainte",
-      "Pour clé primaire : ALTER TABLE table DROP PRIMARY KEY;",
-      "Pour clé étrangère : ALTER TABLE table DROP FOREIGN KEY nom_cle;"
-    ],
-    "code": "-- Supprimer la contrainte CHECK 'chk_age'\nALTER TABLE Eleve DROP CONSTRAINT chk_age;",
-    "simQuery": "SELECT 'Contrainte supprimée avec succès' AS Resultat;",
-    "simTable": "Eleve",
-    "simDescription": "Suppression d'une contrainte d'intégrité (DROP CONSTRAINT)."
-  },
-  {
-    "id": "sql-ldd-alter-enable-disable",
-    "category": "Définition des données",
-    "name": "ALTER TABLE ... ENABLE / DISABLE CONSTRAINT",
-    "tag": "ENABLE / DISABLE CONSTRAINT",
-    "syntax": "ALTER TABLE table1 ENABLE/ DISABLE CONSTRAINT nom",
-    "summary": "Active/Désactive une contrainte.",
-    "description": "Permet de désactiver temporairement la vérification d'une contrainte d'intégrité (par exemple lors de chargements massifs de données de test) sans devoir la supprimer, puis de la réactiver ensuite.",
-    "howToUse": "Syntaxe officielle de l'annexe : ALTER TABLE table1 DISABLE CONSTRAINT nom; puis ALTER TABLE table1 ENABLE CONSTRAINT nom;",
-    "values": [
-      "DISABLE CONSTRAINT : désactivation temporaire",
-      "ENABLE CONSTRAINT : réactivation et vérification",
-      "Mentionné textuellement dans l'annexe Bac STI"
-    ],
-    "code": "-- Désactiver la contrainte pour insérer des données de test\nALTER TABLE Eleve DISABLE CONSTRAINT chk_age;\n\n-- Réactiver la contrainte une fois terminé\nALTER TABLE Eleve ENABLE CONSTRAINT chk_age;",
-    "simQuery": "SELECT 'État contrainte : ACTIVÉE (ENABLE)' AS Statut;",
-    "simTable": "Eleve",
-    "simDescription": "Activation / Désactivation d'une contrainte (ENABLE / DISABLE)."
-  },
-  {
-    "id": "sql-ldd-drop-table",
-    "category": "Définition des données",
-    "name": "DROP TABLE",
-    "tag": "DROP TABLE",
-    "syntax": "DROP TABLE table1",
-    "summary": "Supprime une table.",
-    "description": "Supprime définitivement la table spécifiée, sa structure relationnelle et l'intégralité de ses enregistrements.",
-    "howToUse": "Attention : si la table est référencée par une clé étrangère (table mère), il faut d'abord supprimer la table fille ou retirer la contrainte de clé étrangère avant de pouvoir la supprimer.",
-    "values": [
-      "DROP TABLE nom_table",
-      "Action irréversible",
-      "Ordre de suppression : supprimer les tables filles avant les tables mères"
-    ],
-    "code": "-- Supprimer la table temporaire 'Test'\nDROP TABLE Test;",
-    "simQuery": "SELECT 'Table supprimée avec succès' AS Statut;",
-    "simTable": "Eleve",
-    "simDescription": "Suppression complète d'une table relationnelle (DROP TABLE)."
-  },
-  {
-    "id": "sql-fn-date",
-    "category": "Fonctions définies sur le type date",
-    "name": "DATE()",
-    "tag": "DATE()",
-    "syntax": "DATE(expression)",
-    "summary": "Retourne une date extraite à partir d'une chaîne contenant une valeur au format DATE ou DATETIME.",
-    "description": "Extrait la portion 'Date' (AAAA-MM-JJ) à partir d'une valeur ou chaîne représentant un DATETIME ou un horodatage avec heure.",
-    "howToUse": "Très utile lorsqu'une colonne est de type DATETIME ('2026-11-11 14:30:00') et que l'on souhaite uniquement comparer ou afficher la date '2026-11-11'.",
-    "values": [
-      "DATE('AAAA-MM-JJ HH:MM:SS') -> 'AAAA-MM-JJ'",
-      "Ex: DATE(NOW())",
-      "Ex: DATE('2026-11-11 12:45:00') -> '2026-11-11'"
-    ],
-    "code": "SELECT nom, DATE(NOW()) AS date_aujourdhui\nFROM Eleve\nLIMIT 3;",
-    "simQuery": "SELECT nom, prenom, DATE(NOW()) AS date_jour FROM Eleve LIMIT 3;",
-    "simTable": "Eleve",
-    "simDescription": "Extrait la date du jour sans les heures à l'aide de DATE(NOW())."
-  },
-  {
-    "id": "sql-fn-day",
-    "category": "Fonctions définies sur le type date",
-    "name": "DAY()",
-    "tag": "DAY()",
-    "syntax": "DAY(date)",
-    "summary": "Retourne le jour.",
-    "description": "Extrait le numéro du jour du mois (valeur entière de 1 à 31) à partir d'une date donnée.",
-    "howToUse": "S'écrit DAY(colonne_date). Équivalent à DAYOFMONTH(date) en MySQL.",
-    "values": [
-      "DAY(date) -> nombre entier (1 à 31)",
-      "Ex: DAY('2007-03-12') -> 12",
-      "Ex: DAY(NOW())"
-    ],
-    "code": "SELECT nom, prenom, date_naiss, DAY(date_naiss) AS jour_naissance\nFROM Eleve;",
-    "simQuery": "SELECT nom, prenom, date_naiss, DAY(date_naiss) AS jour FROM Eleve;",
-    "simTable": "Eleve",
-    "simDescription": "Extrait le numéro du jour de naissance pour chaque élève avec DAY()."
-  },
-  {
-    "id": "sql-fn-month",
-    "category": "Fonctions définies sur le type date",
-    "name": "MONTH()",
-    "tag": "MONTH()",
-    "syntax": "MONTH(date)",
-    "summary": "Retourne le mois.",
-    "description": "Extrait le numéro du mois (valeur entière de 1 pour Janvier à 12 pour Décembre) à partir d'une date.",
-    "howToUse": "Permet de filtrer des événements survenus pendant un mois particulier, par exemple les élèves nés au mois de mars : WHERE MONTH(date_naiss) = 3.",
-    "values": [
-      "MONTH(date) -> nombre entier (1 à 12)",
-      "Ex: MONTH('2007-03-12') -> 3",
-      "Ex: MONTH(NOW())"
-    ],
-    "code": "SELECT nom, prenom, date_naiss, MONTH(date_naiss) AS mois_naissance\nFROM Eleve\nWHERE MONTH(date_naiss) = 3;",
-    "simQuery": "SELECT nom, prenom, date_naiss, MONTH(date_naiss) AS mois FROM Eleve WHERE MONTH(date_naiss) = 3;",
-    "simTable": "Eleve",
-    "simDescription": "Filtre les élèves nés au mois de mars (MONTH(date_naiss) = 3)."
-  },
-  {
-    "id": "sql-fn-year",
-    "category": "Fonctions définies sur le type date",
-    "name": "YEAR()",
-    "tag": "YEAR()",
-    "syntax": "YEAR(date)",
-    "summary": "Retourne l'année.",
-    "description": "Extrait l'année sur 4 chiffres (ex: 2007, 2026) à partir d'une date valide.",
-    "howToUse": "Classique absolu du Bac STI pour calculer l'âge d'un élève : YEAR(NOW()) - YEAR(date_naiss).",
-    "values": [
-      "YEAR(date) -> entier sur 4 chiffres",
-      "Ex: YEAR('2007-03-12') -> 2007",
-      "Ex: YEAR(NOW()) -> 2026"
-    ],
-    "code": "SELECT nom, prenom, date_naiss,\n  YEAR(NOW()) - YEAR(date_naiss) AS age\nFROM Eleve;",
-    "simQuery": "SELECT nom, prenom, date_naiss, YEAR(NOW()) - YEAR(date_naiss) AS age FROM Eleve;",
-    "simTable": "Eleve",
-    "simDescription": "Calcule l'âge des élèves grâce à la formule Bac STI : YEAR(NOW()) - YEAR(date_naiss)."
-  },
-  {
-    "id": "sql-fn-now",
-    "category": "Fonctions définies sur le type date",
-    "name": "NOW()",
-    "tag": "NOW()",
-    "syntax": "NOW()",
-    "summary": "Retourne la date et l'heure courantes.",
-    "description": "Fonction système sans argument qui renvoie la date et l'heure actuelles de l'ordinateur/serveur au format 'AAAA-MM-JJ HH:MM:SS'.",
-    "howToUse": "S'emploie sans paramètre entre parenthèses. Très souvent combinée avec YEAR(NOW()) pour les calculs d'âge ou DEFAULT NOW() pour les dates d'enregistrement.",
-    "values": [
-      "NOW()",
-      "Renvoie 'AAAA-MM-JJ HH:MM:SS'",
-      "Ex: SELECT NOW();"
-    ],
-    "code": "SELECT NOW() AS date_heure_courante,\n       YEAR(NOW()) AS annee_courante;",
-    "simQuery": "SELECT NOW() AS date_et_heure_actuelle, YEAR(NOW()) AS annee_actuelle;",
-    "simTable": "Eleve",
-    "simDescription": "Appel de la fonction système NOW() retournant la date et l'heure actuelles."
-  },
-  {
-    "id": "sql-fn-adddate",
-    "category": "Fonctions définies sur le type date",
-    "name": "ADDDATE()",
-    "tag": "ADDDATE()",
-    "syntax": "ADDDATE(date, INTERVAL valeur unité)  ou  ADDDATE(date, nb_jours)",
-    "summary": "Ajoute un nombre de jours ou un intervalle de temps à une date.",
-    "description": "Effectue une addition arithmétique sur une date en lui ajoutant soit un nombre entier de jours (syntaxe simplifiée), soit un intervalle explicite (ex: INTERVAL 15 DAY, INTERVAL 3 MONTH, INTERVAL 1 YEAR).",
-    "howToUse": "Syntaxe 1 : ADDDATE(date, 7) ajoute 7 jours.\nSyntaxe 2 : ADDDATE(date, INTERVAL 1 YEAR) ajoute une année complète.",
-    "values": [
-      "ADDDATE(date, nb_jours)",
-      "ADDDATE(date, INTERVAL N DAY/MONTH/YEAR)",
-      "Ex: ADDDATE('2026-11-11', 10) -> '2026-11-21'"
-    ],
-    "code": "-- Ajouter 15 jours à la date du jour\nSELECT NOW() AS aujourdhui,\n       ADDDATE(NOW(), 15) AS dans_15_jours;\n\n-- Ajouter 1 an avec INTERVAL :\nSELECT ADDDATE('2007-06-15', INTERVAL 1 YEAR) AS date_plus_1an;",
-    "simQuery": "SELECT nom, date_naiss, ADDDATE(date_naiss, 365) AS naiss_plus_1an FROM Eleve LIMIT 3;",
-    "simTable": "Eleve",
-    "simDescription": "Ajout d'un intervalle de temps à une date avec ADDDATE()."
-  },
-  {
-    "id": "sql-fn-datediff",
-    "category": "Fonctions définies sur le type date",
-    "name": "DATEDIFF()",
-    "tag": "DATEDIFF()",
-    "syntax": "DATEDIFF(date1, date2)",
-    "summary": "Retourne la différence entre deux dates en jours.",
-    "description": "Calcule le nombre entier de jours écoulés entre deux dates (date1 - date2). Si date1 est postérieure à date2, le résultat est positif ; si date1 est antérieure, le résultat est négatif.",
-    "howToUse": "Toujours placer la date la plus récente en premier paramètre (ex: DATEDIFF(NOW(), date_naiss)) pour obtenir un nombre de jours positif.",
-    "values": [
-      "DATEDIFF(date1, date2) -> nombre de jours entier",
-      "Ex: DATEDIFF('2026-11-20', '2026-11-10') -> 10 jours",
-      "Ex: DATEDIFF(NOW(), date_naiss)"
-    ],
-    "code": "SELECT nom, prenom, date_naiss,\n       DATEDIFF(NOW(), date_naiss) AS jours_vecus\nFROM Eleve\nLIMIT 3;",
-    "simQuery": "SELECT nom, prenom, date_naiss, DATEDIFF(NOW(), date_naiss) AS jours_ecoules FROM Eleve LIMIT 3;",
-    "simTable": "Eleve",
-    "simDescription": "Calcul du nombre de jours de différence entre deux dates (DATEDIFF)."
-  },
-  {
-    "id": "sql-fn-avg",
-    "category": "Fonctions d'agrégation",
-    "name": "AVG()",
-    "tag": "AVG()",
-    "syntax": "AVG(colonne_numerique)",
-    "summary": "Retourne la moyenne.",
-    "description": "Fonction d'agrégation (statistique) calculant la moyenne arithmétique de toutes les valeurs numériques d'une colonne sélectionnée. Les valeurs NULL sont automatiquement ignorées.",
-    "howToUse": "S'utilise dans la clause SELECT. Peut être combinée avec WHERE pour filtrer les lignes à inclure, ou avec GROUP BY pour calculer la moyenne par groupe (ex: par section ou par classe).",
-    "values": [
-      "AVG(colonne)",
-      "Ignore les valeurs NULL",
-      "Ex: SELECT AVG(moyenne) FROM Eleve;",
-      "Ex: SELECT section, AVG(moyenne) FROM Eleve GROUP BY section;"
-    ],
-    "code": "-- Moyenne générale des élèves de la section STI\nSELECT AVG(moyenne) AS moyenne_generale_sti\nFROM Eleve\nWHERE section = 'STI';",
-    "simQuery": "SELECT section, AVG(moyenne) AS moyenne_section FROM Eleve GROUP BY section;",
-    "simTable": "Eleve",
-    "simDescription": "Calcule la moyenne arithmétique (AVG) groupée par section."
-  },
-  {
-    "id": "sql-fn-count",
-    "category": "Fonctions d'agrégation",
-    "name": "COUNT()",
-    "tag": "COUNT()",
-    "syntax": "COUNT(*)  ou  COUNT(colonne)  ou  COUNT(DISTINCT colonne)",
-    "summary": "Retourne le nombre d'enregistrements.",
-    "description": "Compte le nombre de lignes répondant aux critères de la requête. COUNT(*) compte toutes les lignes sans exception ; COUNT(colonne) compte les lignes où la colonne n'est pas NULL ; COUNT(DISTINCT colonne) compte les valeurs distinctes sans doublon.",
-    "howToUse": "La formule la plus fréquente au Bac STI : SELECT COUNT(*) FROM Eleve WHERE moyenne >= 10; pour connaître le nombre d'élèves admis.",
-    "values": [
-      "COUNT(*) : compte toutes les lignes",
-      "COUNT(colonne) : compte les valeurs non nulles",
-      "COUNT(DISTINCT col) : compte les valeurs uniques"
-    ],
-    "code": "-- Nombre total d'élèves admis (moyenne >= 10)\nSELECT COUNT(*) AS nb_admis\nFROM Eleve\nWHERE moyenne >= 10.00;",
-    "simQuery": "SELECT COUNT(*) AS total_eleves, COUNT(CASE WHEN moyenne >= 10 THEN 1 END) AS nb_admis FROM Eleve;",
-    "simTable": "Eleve",
-    "simDescription": "Compte le nombre total d'enregistrements avec COUNT(*)."
-  },
-  {
-    "id": "sql-fn-max",
-    "category": "Fonctions d'agrégation",
-    "name": "MAX()",
-    "tag": "MAX()",
-    "syntax": "MAX(colonne)",
-    "summary": "Retourne le maximum.",
-    "description": "Renvoie la valeur la plus élevée parmi toutes les valeurs d'une colonne (la meilleure note, le prix le plus cher, ou la date la plus récente).",
-    "howToUse": "S'applique aux colonnes numériques, monétaires ou temporelles. Exemple classique : SELECT MAX(moyenne) FROM Eleve; pour trouver la meilleure moyenne de la promotion.",
-    "values": [
-      "MAX(colonne)",
-      "Ex: MAX(moyenne)",
-      "Ex: MAX(date_naiss) -> le plus jeune"
-    ],
-    "code": "-- Trouver la meilleure moyenne de la section STI\nSELECT MAX(moyenne) AS meilleure_moyenne\nFROM Eleve\nWHERE section = 'STI';",
-    "simQuery": "SELECT MAX(moyenne) AS meilleure_moyenne, MIN(moyenne) AS plus_faible_moyenne FROM Eleve;",
-    "simTable": "Eleve",
-    "simDescription": "Détermine la note maximale (MAX) enregistrée dans la classe."
-  },
-  {
-    "id": "sql-fn-min",
-    "category": "Fonctions d'agrégation",
-    "name": "MIN()",
-    "tag": "MIN()",
-    "syntax": "MIN(colonne)",
-    "summary": "Retourne le minimum.",
-    "description": "Renvoie la valeur la plus basse parmi toutes les valeurs de la colonne sélectionnée (la note la plus faible, le prix le moins cher, ou la date la plus ancienne).",
-    "howToUse": "S'applique aux nombres, dates ou chaînes. Exemple : SELECT MIN(moyenne) FROM Eleve; pour trouver la note plancher.",
-    "values": [
-      "MIN(colonne)",
-      "Ex: MIN(moyenne)",
-      "Ex: MIN(date_naiss) -> le plus âgé"
-    ],
-    "code": "-- Trouver la plus faible moyenne enregistrée\nSELECT MIN(moyenne) AS moyenne_minimale\nFROM Eleve;",
-    "simQuery": "SELECT MIN(moyenne) AS moyenne_minimale FROM Eleve;",
-    "simTable": "Eleve",
-    "simDescription": "Trouve la note minimale (MIN) parmi tous les élèves."
-  },
-  {
-    "id": "sql-fn-sum",
-    "category": "Fonctions d'agrégation",
-    "name": "SUM()",
-    "tag": "SUM()",
-    "syntax": "SUM(colonne_numerique)",
-    "summary": "Retourne la somme.",
-    "description": "Additionne et totalise l'ensemble des valeurs numériques d'une colonne. Ignore automatiquement les valeurs NULL.",
-    "howToUse": "S'emploie pour totaliser des montants, des coefficients ou des points : par exemple, calculer le total des coefficients d'un ensemble de matières : SELECT SUM(coef) FROM Matiere.",
-    "values": [
-      "SUM(colonne_numerique)",
-      "Ignore les valeurs NULL",
-      "Ex: SUM(coef)",
-      "Ex: SUM(montant)"
-    ],
-    "code": "-- Totaliser les coefficients de toutes les matières obligatoires\nSELECT SUM(coef) AS total_coefficients\nFROM Matiere;",
-    "simQuery": "SELECT SUM(coef) AS total_coefficients_matieres FROM Matiere;",
-    "simTable": "Matiere",
-    "simDescription": "Calcule la somme totale (SUM) des coefficients des matières."
-  },
-  {
-    "id": "sql-lmd-select",
-    "category": "Manipulation des données",
-    "name": "SELECT",
-    "tag": "SELECT",
-    "syntax": "SELECT [DISTINCT] expression [, col, ... ou *] [[AS] alias]\nFROM table1 [[AS] alias] [, table2, ...]\n[WHERE condition]\n[GROUP BY critère]\n[HAVING condition]\n[ORDER BY expression [ASC/DESC]]",
-    "summary": "Spécification des colonnes du résultat, des tables, Condition, Organisation du résultat en groupes, Application d'un filtre, Tri du résultat.",
-    "description": "Commande centrale d'interrogation du Langage de Manipulation de Données (LMD). Permet d'extraire, filtrer, regrouper et trier les données d'une ou plusieurs tables relationnelles selon les 6 clauses officielles de l'annexe du Bac STI :\n• SELECT : choix des colonnes projetées (ou DISTINCT pour éliminer les doublons)\n• FROM : choix des tables sources et jointures\n• WHERE : condition de filtrage des lignes\n• GROUP BY : regroupement par critère (souvent avec fonctions d'agrégation)\n• HAVING : condition de filtrage appliquée aux groupes\n• ORDER BY : tri croissant (ASC par défaut) ou décroissant (DESC).",
-    "howToUse": "L'ordre des clauses doit être scrupuleusement respecté : SELECT ... FROM ... WHERE ... GROUP BY ... HAVING ... ORDER BY.",
-    "values": [
-      "SELECT : projection des colonnes",
-      "FROM : tables sources",
-      "WHERE : filtre sur lignes",
-      "GROUP BY : regroupement",
-      "HAVING : filtre sur groupes",
-      "ORDER BY [ASC/DESC] : tri"
-    ],
-    "code": "-- 1. Requête simple avec tri :\nSELECT nom, prenom, moyenne\nFROM Eleve\nWHERE section = 'STI'\nORDER BY moyenne DESC;\n\n-- 2. Requête avec agrégation et regroupement :\nSELECT ville, COUNT(*) AS nb_eleves, AVG(moyenne) AS moy_ville\nFROM Eleve\nGROUP BY ville\nHAVING COUNT(*) >= 1\nORDER BY moy_ville DESC;",
-    "simQuery": "SELECT nom, prenom, section, moyenne, ville FROM Eleve WHERE moyenne >= 10.00 ORDER BY moyenne DESC;",
-    "simTable": "Eleve",
-    "simDescription": "Interrogation complète avec sélection, condition WHERE et tri ORDER BY DESC."
-  },
-  {
-    "id": "sql-lmd-insert",
-    "category": "Manipulation des données",
-    "name": "INSERT INTO",
-    "tag": "INSERT INTO",
-    "syntax": "INSERT INTO table [(liste colonnes)] VALUES (liste valeurs)",
-    "summary": "Insertion des données dans une table.",
-    "description": "Commande LMD qui insère une nouvelle ligne (enregistrement) dans une table. Les valeurs doivent respecter l'ordre et le type des colonnes déclarées.",
-    "howToUse": "Deux manières équivalentes au Bac STI :\n1. En précisant les colonnes : INSERT INTO Eleve (num_inscr, nom, prenom, section, moyenne, date_naiss, ville) VALUES (107, 'Bouazizi', 'Amine', 'STI', 14.50, '2007-08-22', 'Kairouan');\n2. Sans préciser les colonnes : INSERT INTO Eleve VALUES (107, 'Bouazizi', 'Amine', 'STI', 14.50, '2007-08-22', 'Kairouan');",
-    "values": [
-      "INSERT INTO table (col1, col2) VALUES (val1, val2)",
-      "Chaînes et dates entre apostrophes",
-      "Nombres sans guillemets",
-      "Respecter les contraintes (PK, NOT NULL, CHECK)"
-    ],
-    "code": "INSERT INTO Eleve (num_inscr, nom, prenom, section, moyenne, date_naiss, ville)\nVALUES (107, 'Bouazizi', 'Amine', 'STI', 14.50, '2007-08-22', 'Kairouan');",
-    "simQuery": "SELECT * FROM Eleve WHERE num_inscr = 101;",
-    "simTable": "Eleve",
-    "simDescription": "Exemple d'enregistrement prêt à être inséré ou consulté dans la table Eleve."
-  },
-  {
-    "id": "sql-lmd-update",
-    "category": "Manipulation des données",
-    "name": "UPDATE",
-    "tag": "UPDATE",
-    "syntax": "UPDATE table1 SET colonne = expression [WHERE condition]",
-    "summary": "Modification des valeurs d'une colonne.",
-    "description": "Commande LMD permettant de modifier le contenu d'une ou plusieurs colonnes pour les lignes sélectionnées par la clause WHERE.",
-    "howToUse": "ATTENTION : Si la clause WHERE est omise, TOUTES les lignes de la table seront modifiées sans avertissement ! Au Bac STI, la clause WHERE est quasiment toujours obligatoire.",
-    "values": [
-      "UPDATE table SET col = nouvelle_valeur WHERE condition",
-      "Possibilité de modifier plusieurs colonnes séparées par une virgule",
-      "Ex: UPDATE Eleve SET moyenne = 16.00 WHERE num_inscr = 101;"
-    ],
-    "code": "-- Corriger la moyenne d'un élève après un recomptage\nUPDATE Eleve\nSET moyenne = 16.25\nWHERE num_inscr = 101;\n\n-- Mettre à jour plusieurs colonnes à la fois :\nUPDATE Eleve\nSET section = 'STI', ville = 'Sousse'\nWHERE num_inscr = 104;",
-    "simQuery": "SELECT num_inscr, nom, prenom, moyenne FROM Eleve WHERE num_inscr = 101;",
-    "simTable": "Eleve",
-    "simDescription": "Modification ciblée d'une ligne avec UPDATE ... SET ... WHERE."
-  },
-  {
-    "id": "sql-lmd-delete",
-    "category": "Manipulation des données",
-    "name": "DELETE FROM",
-    "tag": "DELETE FROM",
-    "syntax": "DELETE FROM table1 [WHERE condition]",
-    "summary": "Suppression des enregistrements d'une table.",
-    "description": "Commande LMD permettant d'effacer une ou plusieurs lignes d'une table selon une condition spécifiée dans la clause WHERE. Contrairement à DROP TABLE, DELETE supprime les données mais conserve intacte la structure de la table.",
-    "howToUse": "ATTENTION : Sans clause WHERE, DELETE FROM table1 vide entièrement la table ! Toujours cibler les lignes à effacer avec WHERE.",
-    "values": [
-      "DELETE FROM table WHERE condition",
-      "Conserve la structure de la table",
-      "Ex: DELETE FROM Eleve WHERE num_inscr = 106;",
-      "Ex: DELETE FROM Eleve WHERE moyenne < 08.00;"
-    ],
-    "code": "-- Supprimer l'élève dont le numéro est 106\nDELETE FROM Eleve\nWHERE num_inscr = 106;\n\n-- Supprimer tous les élèves ajournés avec moyenne < 8 :\nDELETE FROM Eleve\nWHERE moyenne < 08.00;",
-    "simQuery": "SELECT num_inscr, nom, prenom, moyenne FROM Eleve WHERE moyenne >= 10.00;",
-    "simTable": "Eleve",
-    "simDescription": "Suppression ciblée de lignes dans une table (DELETE FROM ... WHERE)."
-  }
-],
-  algo_pratique: [
-  {
-    "id": "qt-starter-template",
-    "category": "Démarrage & Architecture",
-    "name": "Squelette officiel Thonny / PyQt5 (loadUi)",
-    "qtWidget": "Fichier interface.ui",
-    "qtProperty": "Nom de fichier : interface.ui",
-    "thonnyCode": "from PyQt5.uic import loadUi\nfrom PyQt5.QtWidgets import QApplication\n\n# 1. Initialiser l'application Qt\napp = QApplication([])\n\n# 2. Charger le fichier .ui créé avec Qt Designer\nwindows = loadUi(\"interface.ui\")\n\n# 3. Lier les boutons aux fonctions de traitement\n# windows.btn_valider.clicked.connect(traiter)\n\n# 4. Afficher la fenêtre et lancer la boucle d'événements\nwindows.show()\napp.exec_()",
-    "summary": "Code indispensable à connaître par cœur pour lancer n'importe quelle interface Qt Designer dans Thonny.",
-    "description": "Au Bac Pratique tunisien, l'épreuve commence par la création de l'interface graphique sous Qt Designer enregistrée sous le nom 'interface.ui' dans le dossier de travail. Dans Thonny, ce code minimal permet de charger l'interface et de démarrer l'application.",
-    "howToUse": "1. Enregistrer le fichier .ui dans le MÊME dossier que votre script Python (.py) dans Thonny.\n2. Écrire ce squelette au tout début du fichier.\n3. Créer vos fonctions de traitement AVANT l'instruction windows.show().",
-    "examples": [
-      {
-        "label": "Chargement direct",
-        "code": "windows = loadUi('interface.ui')"
-      },
-      {
-        "label": "Connexion d'un bouton",
-        "code": "windows.btn_calculer.clicked.connect(calculer)"
-      },
-      {
-        "label": "Lancement",
-        "code": "windows.show()\napp.exec_()"
-      }
-    ],
-    "bacTips": "🚨 PIÈGE FRÉQUENT : Si Thonny affiche 'FileNotFoundError: [Errno 2] No such file or directory: interface.ui', c'est que votre script Python n'est pas enregistré dans le même dossier que le fichier .ui !"
-  },
-  {
-    "id": "qt-lineedit",
-    "category": "Widgets de Saisie",
-    "name": "QLineEdit (Zone de saisie de texte)",
-    "qtWidget": "QLineEdit",
-    "qtProperty": "objectName (ex: le_nom, le_age)",
-    "thonnyCode": "# 1. Lire la valeur saisie (toujours renvoyée sous forme de str)\ntexte = windows.le_nom.text()\n\n# 2. Convertir en nombre si nécessaire\nage = int(windows.le_age.text())\nmoyenne = float(windows.le_moy.text())\n\n# 3. Écrire ou modifier le texte par code\nwindows.le_resultat.setText(\"Admis\")\n\n# 4. Vider le champ\nwindows.le_nom.clear()\n\n# 5. Donner le focus au curseur\nwindows.le_nom.setFocus()",
-    "summary": "Permet à l'utilisateur de saisir une ligne de texte ou un nombre.",
-    "description": "Le QLineEdit est le widget de saisie le plus utilisé dans les examens pratiques du Bac. La méthode .text() renvoie TOUJOURS une chaîne de caractères (str). Pour effectuer des calculs arithmétiques, il est indispensable de convertir la valeur avec int() ou float().",
-    "howToUse": "Dans Qt Designer : glisser 'Line Edit', lui donner un objectName clair (ex: le_nom, le_note). Dans Thonny : windows.objectName.text() pour lire, windows.objectName.setText('...') pour écrire.",
-    "examples": [
-      {
-        "label": "Lecture de chaîne",
-        "code": "nom = windows.le_nom.text()"
-      },
-      {
-        "label": "Lecture d'entier",
-        "code": "n = int(windows.le_n.text())"
-      },
-      {
-        "label": "Affichage de résultat",
-        "code": "windows.le_res.setText(str(total))"
-      },
-      {
-        "label": "Vider le champ",
-        "code": "windows.le_nom.clear()"
-      }
-    ],
-    "bacTips": "⚠️ Attention : windows.le_nom.text() renvoie une chaîne vide \"\" si l'élève n'a rien saisi. Toujours tester `if nom == \"\":` avant d'appliquer int() pour éviter le plantage ValueError !"
-  },
-  {
-    "id": "qt-textedit",
-    "category": "Widgets de Saisie",
-    "name": "Text Edit (QTextEdit - Zone de texte multilignes)",
-    "qtWidget": "QTextEdit",
-    "qtProperty": "toPlainText() / setText()",
-    "thonnyCode": "# 1. Récupérer le contenu de la zone de saisie (multiligne)\ntexte = W.nomTextEdit.toPlainText()\n\n# 2. Modifier le contenu de la zone de texte\nW.nomTextEdit.setText(\"Nouveau texte multiligne...\")\n\n# 3. Vider la zone de texte\nW.nomTextEdit.clear()",
-    "summary": "Zone de saisie de texte multiligne pour saisir ou afficher de longs paragraphes ou plusieurs lignes.",
-    "description": "Dans Qt Designer, glissez 'Text Edit' (QTextEdit). Dans Thonny Python, attention : on n'utilise PAS .text(), mais .toPlainText() pour extraire le texte saisi !",
-    "howToUse": "Dans Qt Designer : glisser 'Text Edit', nommer son objectName (ex: nomTextEdit). Dans Thonny : W.nomTextEdit.toPlainText() pour lire le contenu et W.nomTextEdit.setText(chaine) pour le modifier.",
-    "examples": [
-      {
-        "label": "Récupérer le texte",
-        "code": "contenu = W.nomTextEdit.toPlainText()"
-      },
-      {
-        "label": "Modifier le texte",
-        "code": "W.nomTextEdit.setText('Résultat : Validé')"
-      }
-    ],
-    "bacTips": "🚨 PIÈGE MAJEUR BAC : Pour un Line Edit c'est .text(), mais pour un Text Edit c'est .toPlainText() ! Si vous écrivez .text() sur un TextEdit, Python plantera avec une erreur AttributeError."
-  },
-  {
-    "id": "qt-pushbutton",
-    "category": "Widgets d'Action & Affichage",
-    "name": "QPushButton (Bouton d'action / Clic)",
-    "qtWidget": "QPushButton",
-    "qtProperty": "objectName (ex: btn_valider, btn_quitter)",
-    "thonnyCode": "# Définir la fonction exécutée lors du clic\ndef valider():\n    nom = windows.le_nom.text()\n    if nom == \"\":\n        QMessageBox.critical(windows, \"Erreur\", \"Veuillez remplir le nom !\")\n        return\n    windows.lbl_res.setText(\"Bienvenue \" + nom)\n\n# Lier le signal 'clicked' du bouton à la fonction (SANS parenthèses !)\nwindows.btn_valider.clicked.connect(valider)\n\n# Activer ou désactiver le bouton\nwindows.btn_valider.setEnabled(True)   # Activé\nwindows.btn_valider.setEnabled(False)  # Grisé/Désactivé",
-    "summary": "Déclenche l'exécution d'une fonction Python quand le candidat clique dessus.",
-    "description": "Le QPushButton déclenche le signal .clicked. Dans Thonny, on connecte ce signal à notre fonction avec .connect(nom_fonction). C'est le cœur de l'interactivité au Bac Pratique.",
-    "howToUse": "Dans Qt Designer : glisser 'Push Button', régler objectName='btn_valider' et le texte 'Valider'. Dans Thonny : windows.btn_valider.clicked.connect(ma_fonction).",
-    "examples": [
-      {
-        "label": "Connexion",
-        "code": "windows.btn_calculer.clicked.connect(calculer)"
-      },
-      {
-        "label": "Désactiver bouton",
-        "code": "windows.btn_valider.setEnabled(False)"
-      },
-      {
-        "label": "Quitter l'application",
-        "code": "windows.btn_quitter.clicked.connect(windows.close)"
-      }
-    ],
-    "bacTips": "🚨 ERREUR CLASSIQUE DU BAC : Ne JAMAIS mettre de parenthèses lors du connect ! Écrire `windows.btn.clicked.connect(calculer)` et SURTOUT PAS `connect(calculer())` sinon la fonction s'exécute au lancement !"
-  },
-  {
-    "id": "qt-radiobutton",
-    "category": "Widgets de Choix & Sélection",
-    "name": "QRadioButton (Bouton radio - Choix exclusif unique)",
-    "qtWidget": "QRadioButton",
-    "qtProperty": "objectName (ex: rb_homme, rb_femme)",
-    "thonnyCode": "# 1. Tester quel bouton radio est coché\nif windows.rb_homme.isChecked():\n    genre = \"Masculin\"\nelif windows.rb_femme.isChecked():\n    genre = \"Féminin\"\nelse:\n    QMessageBox.warning(windows, \"Attention\", \"Veuillez sélectionner un genre !\")\n    return\n\n# 2. Cocher un bouton radio par programmation\nwindows.rb_homme.setChecked(True)",
-    "summary": "Permet de sélectionner UNE SEULE option parmi un groupe d'options exclusives.",
-    "description": "Utilisé pour le genre (Homme/Femme), le type d'opération (Cryptage/Décryptage), ou le mode de calcul. Pour que les boutons soient exclusifs, placez-les dans un même conteneur (QGroupBox) dans Qt Designer.",
-    "howToUse": "Dans Qt Designer : glisser 'Radio Button' dans une 'Group Box'. Dans Thonny : utiliser la méthode .isChecked() qui retourne True ou False.",
-    "examples": [
-      {
-        "label": "Vérifier si coché",
-        "code": "if windows.rb_facile.isChecked(): niveau = 1"
-      },
-      {
-        "label": "Cocher par défaut",
-        "code": "windows.rb_homme.setChecked(True)"
-      }
-    ],
-    "bacTips": "💡 Pensez toujours à vérifier si aucun bouton n'est coché en affichant une alerte QMessageBox si les deux renvoient False !"
-  },
-  {
-    "id": "qt-checkbox",
-    "category": "Widgets de Choix & Sélection",
-    "name": "QCheckBox (Case à cocher - Choix multiples)",
-    "qtWidget": "QCheckBox",
-    "qtProperty": "objectName (ex: cb_sport, cb_musique)",
-    "thonnyCode": "# Récupérer l'état de plusieurs cases indépendantes\ninterets = []\n\nif windows.cb_sport.isChecked():\n    interets.append(\"Sport\")\n\nif windows.cb_musique.isChecked():\n    interets.append(\"Musique\")\n\nif windows.cb_lecture.isChecked():\n    interets.append(\"Lecture\")\n\n# Forcer une case à être cochée ou décochée\nwindows.cb_sport.setChecked(False)",
-    "summary": "Permet de cocher zéro, une ou plusieurs options indépendantes.",
-    "description": "Contrairement aux radio buttons, les cases à cocher QCheckBox ne sont pas exclusives. L'élève peut en cocher plusieurs simultanément. Chaque case possède sa méthode .isChecked().",
-    "howToUse": "Dans Qt Designer : glisser 'Check Box'. Dans Thonny : tester `if windows.cb_nom.isChecked():` pour chaque case.",
-    "examples": [
-      {
-        "label": "Test d'une case",
-        "code": "if windows.cb_accepter.isChecked(): autoriser()"
-      },
-      {
-        "label": "Décocher",
-        "code": "windows.cb_option.setChecked(False)"
-      }
-    ],
-    "bacTips": "Au Bac, souvent utilisé pour les critères de filtre ou les options facultatives (ex: ajouter une remise de 10%)."
-  },
-  {
-    "id": "qt-combobox",
-    "category": "Widgets de Choix & Sélection",
-    "name": "QComboBox (Menu déroulant / Liste de sélection)",
-    "qtWidget": "QComboBox",
-    "qtProperty": "objectName (ex: combo_ville, combo_classe)",
-    "thonnyCode": "# 1. Récupérer le texte de l'élément sélectionné\nville = windows.combo_ville.currentText()\n\n# 2. Récupérer l'indice de l'élément sélectionné (0 pour le 1er, 1 pour le 2ème...)\nidx = windows.combo_ville.currentIndex()\n\n# 3. Réinitialiser la sélection (aucun choix sélectionné / vider liste)\nwindows.combo_ville.setCurrentIndex(-1)\n\n# 3. Vérifier qu'un choix a bien été fait (si le 1er élément est '-- Choisir --')\nif windows.combo_ville.currentIndex() == 0:\n    QMessageBox.critical(windows, \"Erreur\", \"Veuillez choisir une ville !\")\n    return\n\n# 4. Ajouter des éléments dynamiquement par code\nwindows.combo_ville.addItem(\"Sousse\")\nwindows.combo_ville.addItem(\"Sfax\")\n\n# 5. Vider le menu déroulant\nwindows.combo_ville.clear()",
-    "summary": "Affiche une liste déroulante où le candidat choisit une option parmi plusieurs.",
-    "description": "Dans Qt Designer, double-cliquez sur le QComboBox pour ajouter des éléments par défaut (ex: '-- Choisir --', 'Tunis', 'Sousse', 'Sfax'). Dans Thonny, .currentText() donne la chaîne et .currentIndex() donne la position numérique (commence à 0).",
-    "howToUse": "Dans Qt Designer : double-clic sur la ComboBox pour saisir les choix. Dans Thonny : windows.combo.currentText() pour lire le texte choisi.",
-    "examples": [
-      {
-        "label": "Lire le texte",
-        "code": "choix = windows.combo_pays.currentText()"
-      },
-      {
-        "label": "Lire l'indice",
-        "code": "position = windows.combo_pays.currentIndex()"
-      },
-      {
-        "label": "Ajouter un item",
-        "code": "windows.combo_pays.addItem('Tunisie')"
-      }
-    ],
-    "bacTips": "⭐ ASTUCE BAC : Si vous mettez '-- Sélectionner --' en premier élément dans Qt Designer, vérifiez toujours `if windows.combo.currentIndex() == 0:` pour forcer l'utilisateur à faire un vrai choix !"
-  },
-  {
-    "id": "qt-label",
-    "category": "Widgets d'Action & Affichage",
-    "name": "QLabel (Texte d'affichage / Résultat)",
-    "qtWidget": "QLabel",
-    "qtProperty": "objectName (ex: lbl_titre, lbl_resultat)",
-    "thonnyCode": "# 1. Afficher un texte simple ou un message\nwindows.lbl_resultat.setText(\"Le nombre 17 est Premier !\")\n\n# 2. Afficher une variable numérique (toujours convertir en str)\ntotal = 145.5\nwindows.lbl_resultat.setText(\"Total : \" + str(total) + \" DT\")\n\n# 3. Formater avec des f-strings en Python 3\nwindows.lbl_resultat.setText(f\"Moyenne : {moyenne:.2f} / 20\")\n\n# 4. Effacer le texte du label\nwindows.lbl_resultat.setText(\"\")",
-    "summary": "Utilisé pour afficher des titres, des instructions ou le résultat final d'un algorithme.",
-    "description": "Le QLabel est un widget passif d'affichage. Contrairement au QLineEdit, l'utilisateur ne peut pas modifier son contenu à la souris. La méthode .setText() attend obligatoirement une chaîne de caractères (str).",
-    "howToUse": "Dans Qt Designer : placer un 'Label', vider son texte par défaut si c'est un résultat, et lui donner un objectName='lbl_res'. Dans Thonny : windows.lbl_res.setText(str(valeur)).",
-    "examples": [
-      {
-        "label": "Texte simple",
-        "code": "windows.lbl_msg.setText('Opération réussie')"
-      },
-      {
-        "label": "Nombre converti",
-        "code": "windows.lbl_res.setText(str(pgcd_val))"
-      }
-    ],
-    "bacTips": "🚨 TypeError : Ne passez jamais un entier directement à setText ! `setText(42)` déclenche une erreur ; écrivez toujours `setText(str(42))`."
-  },
-  {
-    "id": "qt-spinbox",
-    "category": "Widgets de Saisie",
-    "name": "QSpinBox / QDoubleSpinBox (Compteur numérique)",
-    "qtWidget": "QSpinBox / QDoubleSpinBox",
-    "qtProperty": "minimum, maximum, value, objectName",
-    "thonnyCode": "# 1. Lire la valeur numérique (renvoie directement un int ou float, pas de str !)\nquantite = windows.sb_quantite.value()       # int pour QSpinBox\nprix = windows.dsb_prix.value()             # float pour QDoubleSpinBox\n\n# 2. Modifier la valeur par code\nwindows.sb_quantite.setValue(10)\n\n# 3. Calcul direct sans conversion str !\ntotal = quantite * prix\nwindows.lbl_total.setText(str(total) + \" DT\")",
-    "summary": "Champ de saisie numérique avec flèches haut/bas garantissant une valeur valide sans risque d'erreur de frappe.",
-    "description": "QSpinBox gère les entiers et QDoubleSpinBox gère les réels avec virgule. Le gros avantage est que la méthode .value() renvoie directement un int ou float, sans conversion nécessaire.",
-    "howToUse": "Dans Qt Designer : régler 'minimum' (ex: 1) et 'maximum' (ex: 100). Dans Thonny : `val = windows.sb_nb.value()`.",
-    "examples": [
-      {
-        "label": "Lire un entier",
-        "code": "n = windows.sb_n.value()"
-      },
-      {
-        "label": "Modifier la valeur",
-        "code": "windows.sb_n.setValue(25)"
-      }
-    ],
-    "bacTips": "Pratique pour les notes (0 à 20) ou les effectifs (N élèves entre 5 et 30) car il empêche automatiquement la saisie de texte !"
-  },
-  {
-    "id": "qt-dateedit",
-    "category": "Widgets de Saisie",
-    "name": "QDateEdit (Sélecteur de date)",
-    "qtWidget": "QDateEdit",
-    "qtProperty": "displayFormat, calendarPopup, objectName",
-    "thonnyCode": "# 1. Récupérer la date sous forme de texte formaté\ndate_str = windows.date_naiss.date().toString(\"yyyy-MM-dd\")  # Ex: '2006-05-14'\n\n# 2. Récupérer l'année, le mois ou le jour séparément\nannee = windows.date_naiss.date().year()\nmois = windows.date_naiss.date().month()\njour = windows.date_naiss.date().day()\n\n# 3. Calculer l'âge\nage = 2026 - annee\nif age < 18:\n    QMessageBox.critical(windows, \"Erreur\", \"Candidat mineur non autorisé !\")",
-    "summary": "Permet la saisie et la sélection d'une date via un calendrier ou des flèches.",
-    "description": "Le QDateEdit évite les erreurs de format de date. Dans Qt Designer, activez la case 'calendarPopup' pour afficher un calendrier déroulant. Dans Thonny, .date().toString('dd/MM/yyyy') extrait la date formatée.",
-    "howToUse": "Dans Qt Designer : cocher calendarPopup=True. Dans Thonny : `d = windows.date_widget.date().toString('yyyy-MM-dd')`.",
-    "examples": [
-      {
-        "label": "Format SQL standard",
-        "code": "d = windows.date_box.date().toString('yyyy-MM-dd')"
-      },
-      {
-        "label": "Extraire l'année",
-        "code": "annee = windows.date_box.date().year()"
-      }
-    ],
-    "bacTips": "Pour les bases de données SQL du Bac, utilisez le format 'yyyy-MM-dd' pour l'insérer directement dans une colonne de type DATE."
-  },
-  {
-    "id": "qt-msgbox-critical",
-    "category": "Boîtes de Dialogue (QMessageBox)",
-    "name": "QMessageBox.critical (Alerte d'erreur bloquante)",
-    "qtWidget": "QMessageBox",
-    "qtProperty": "Import : from PyQt5.QtWidgets import QMessageBox",
-    "thonnyCode": "from PyQt5.QtWidgets import QMessageBox\n\n# Afficher une boîte modale d'erreur bloquante avec icône rouge (X)\nQMessageBox.critical(\n    windows,           # Fenêtre parente\n    \"Erreur de saisie\",# Titre de la boîte de dialogue\n    \"Le code élève doit comporter exactement 8 chiffres !\" # Message\n)\n\n# Toujours arrêter la fonction après l'erreur :\nreturn",
-    "summary": "Ouvre une fenêtre pop-up d'erreur critique avec icône rouge et son d'alerte pour bloquer une saisie invalide.",
-    "description": "C'est l'instruction reine du contrôle de saisie au Bac Pratique. Dès qu'une condition n'est pas remplie (champ vide, valeur hors limites, longueur incorrecte), on affiche cette boîte et on stoppe le traitement avec 'return'.",
-    "howToUse": "Syntaxe : `QMessageBox.critical(windows, 'Titre', 'Texte de l\\'erreur')`.",
-    "examples": [
-      {
-        "label": "Champ obligatoire",
-        "code": "if nom == '':\n    QMessageBox.critical(windows, 'Erreur', 'Nom obligatoire !')\n    return"
-      },
-      {
-        "label": "Nombre hors limite",
-        "code": "if not (1 <= n <= 100):\n    QMessageBox.critical(windows, 'Erreur', 'N doit être entre 1 et 100 !')\n    return"
-      }
-    ],
-    "bacTips": "⭐ BARÈME DU BAC : Un point entier est souvent attribué au contrôle de saisie avec QMessageBox. N'oubliez jamais d'ajouter `return` immédiatement après le message pour ne pas continuer le calcul avec des données erronées !"
-  },
-  {
-    "id": "qt-msgbox-info",
-    "category": "Boîtes de Dialogue (QMessageBox)",
-    "name": "QMessageBox.information (Message de succès / Info)",
-    "qtWidget": "QMessageBox",
-    "qtProperty": "Import : from PyQt5.QtWidgets import QMessageBox",
-    "thonnyCode": "from PyQt5.QtWidgets import QMessageBox\n\n# Afficher un message d'information ou de succès avec icône bleue (i)\nQMessageBox.information(\n    windows,\n    \"Succès de l'enregistrement\",\n    f\"L'élève {nom} a été enregistré avec succès dans la base !\"\n)",
-    "summary": "Affiche une boîte d'information avec icône bleue pour confirmer la réussite d'un calcul ou d'une sauvegarde.",
-    "description": "Utilisé pour annoncer le résultat positif d'un traitement : enregistrement réussi dans un fichier/base, nombre premier validé, ou fin de traitement.",
-    "howToUse": "Syntaxe : `QMessageBox.information(windows, 'Titre', 'Message')`.",
-    "examples": [
-      {
-        "label": "Succès du traitement",
-        "code": "QMessageBox.information(windows, 'Bravo', 'Calcul terminé avec succès !')"
-      }
-    ],
-    "bacTips": "L'icône bleue rassure le correcteur et indique clairement que le scénario normal s'est déroulé jusqu'au bout."
-  },
-  {
-    "id": "qt-msgbox-warning",
-    "category": "Boîtes de Dialogue (QMessageBox)",
-    "name": "QMessageBox.warning (Boîte d'avertissement jaune)",
-    "qtWidget": "QMessageBox",
-    "qtProperty": "Import : from PyQt5.QtWidgets import QMessageBox",
-    "thonnyCode": "from PyQt5.QtWidgets import QMessageBox\n\n# Afficher un avertissement avec icône jaune triangulaire (!)\nQMessageBox.warning(\n    windows,\n    \"Attention\",\n    \"Attention : le tableau est déjà plein (N maximum atteint) !\"\n)",
-    "summary": "Affiche une boîte d'avertissement avec triangle jaune pour signaler une situation anormale non bloquante.",
-    "description": "Parfaite pour avertir l'utilisateur d'un doublon, d'une capacité maximale atteinte ou d'une confirmation requise.",
-    "howToUse": "Syntaxe : `QMessageBox.warning(windows, 'Titre', 'Message')`.",
-    "examples": [
-      {
-        "label": "Avertissement capacité",
-        "code": "QMessageBox.warning(windows, 'Attention', 'Nombre maximum atteint')"
-      }
-    ],
-    "bacTips": "Très appréciée dans les sujets demandant de vérifier si un élément existe déjà dans un tableau."
-  },
-  {
-    "id": "qt-tablewidget",
-    "category": "Widgets d'Action & Affichage",
-    "name": "QTableWidget (Grille / Tableau de données)",
-    "qtWidget": "QTableWidget",
-    "qtProperty": "objectName (ex: table_res)",
-    "thonnyCode": "from PyQt5.QtWidgets import QTableWidgetItem\n\n# 1. Définir le nombre de colonnes et de lignes\nwindows.table_res.setColumnCount(3)\nwindows.table_res.setHorizontalHeaderLabels([\"ID\", \"Nom\", \"Moyenne\"])\nwindows.table_res.setRowCount(len(liste_eleves))\n\n# 2. Remplir le tableau cellule par cellule\nfor row, eleve in enumerate(liste_eleves):\n    windows.table_res.setItem(row, 0, QTableWidgetItem(str(eleve['id'])))\n    windows.table_res.setItem(row, 1, QTableWidgetItem(eleve['nom']))\n    windows.table_res.setItem(row, 2, QTableWidgetItem(str(eleve['moyenne'])))\n\n# 3. Vider le tableau\nwindows.table_res.clearContents()\nwindows.table_res.setRowCount(0)",
-    "summary": "Affiche des données tabulaires sous forme de grille avec lignes et colonnes.",
-    "description": "Fréquent dans les épreuves pratiques de synthèse : afficher les résultats d'un tri, les élèves admis, ou des enregistrements extraits d'une base de données ou d'un fichier.",
-    "howToUse": "1. Importer `QTableWidgetItem` depuis `PyQt5.QtWidgets`.\n2. Fixer `setRowCount(n)`.\n3. Remplir avec `setItem(ligne, colonne, QTableWidgetItem(str(val)))`.",
-    "examples": [
-      {
-        "label": "Remplir une cellule",
-        "code": "windows.table.setItem(0, 0, QTableWidgetItem('Valeur'))"
-      },
-      {
-        "label": "Vider le tableau",
-        "code": "windows.table.setRowCount(0)"
-      }
-    ],
-    "bacTips": "⚠️ Chaque cellule attend obligatoirement un objet `QTableWidgetItem(str)`. N'oubliez pas d'importer QTableWidgetItem !"
-  },
-  {
-    "id": "qt-valid-empty",
-    "category": "Contrôles de Saisie Bac",
-    "name": "Contrôle 1 : Vérification champ obligatoire non vide",
-    "qtWidget": "QLineEdit / QComboBox",
-    "qtProperty": "Vérification if ch == '':",
-    "thonnyCode": "def valider_formulaire():\n    nom = windows.le_nom.text().strip()\n    \n    # Test si la chaîne est vide ou composée uniquement d'espaces\n    if nom == \"\":\n        QMessageBox.critical(windows, \"Erreur\", \"Le champ Nom est obligatoire !\")\n        windows.le_nom.setFocus() # Remet le curseur dans le champ\n        return False\n        \n    return True",
-    "summary": "Vérifie qu'un champ requis a bien été renseigné par le candidat.",
-    "description": "La méthode `.strip()` supprime les espaces au début et à la fin. Si la chaîne résultante est égale à \"\", on affiche un message d'erreur et on remet le curseur avec `.setFocus()`.",
-    "howToUse": "Toujours placer ce contrôle en premier avant toute autre validation ou conversion.",
-    "examples": [
-      {
-        "label": "Contrôle champ vide",
-        "code": "if windows.le_saisie.text().strip() == '':\n    QMessageBox.critical(windows, 'Erreur', 'Champ vide !')\n    return"
-      }
-    ],
-    "bacTips": "L'utilisation de `.strip()` évite que l'élève tape simplement des espaces pour tromper le test !"
-  },
-  {
-    "id": "qt-valid-alpha",
-    "category": "Contrôles de Saisie Bac",
-    "name": "Contrôle 2 : Chaîne purement alphabétique",
-    "qtWidget": "QLineEdit",
-    "qtProperty": "Test nom.isalpha() ou test caractère par caractère",
-    "thonnyCode": "def est_alphabetique(chaine):\n    # Vérifier que la chaîne ne contient que des lettres et des espaces\n    if len(chaine) == 0:\n        return False\n    for c in chaine:\n        if not (('A' <= c <= 'Z') or ('a' <= c <= 'z') or c == ' '):\n            return False\n    return True\n\n# Utilisation dans le bouton valider :\nnom = windows.le_nom.text().strip()\nif not est_alphabetique(nom):\n    QMessageBox.critical(windows, \"Erreur\", \"Le nom doit contenir uniquement des lettres !\")\n    return",
-    "summary": "Vérifie qu'un prénom ou nom ne contient aucun chiffre ni caractère spécial.",
-    "description": "Au Bac STI tunisien, le correcteur teste souvent d'entrer 'Ali123' ou 'Mohamed@'. Deux méthodes sont acceptées : la boucle caractère par caractère (conforme au pseudo-code Bac) ou la fonction Python `ch.replace(' ', '').isalpha()`.",
-    "howToUse": "Appliquer la fonction de validation sur le texte récupéré du QLineEdit.",
-    "examples": [
-      {
-        "label": "Méthode boucle Bac",
-        "code": "valide = all(('a'<=c<='z' or 'A'<=c<='Z' or c==' ') for c in ch)"
-      },
-      {
-        "label": "Méthode isalpha",
-        "code": "valide = ch.replace(' ', '').isalpha()"
-      }
-    ],
-    "bacTips": "N'oubliez pas d'autoriser l'espace `c == ' '` pour les prénoms composés comme 'Mohamed Ali' !"
-  },
-  {
-    "id": "qt-valid-numeric",
-    "category": "Contrôles de Saisie Bac",
-    "name": "Contrôle 3 : Nombre entier valide dans un intervalle",
-    "qtWidget": "QLineEdit",
-    "qtProperty": "isnumeric() et encadrement (ex: 15 <= age <= 30)",
-    "thonnyCode": "def valider_age():\n    ch_age = windows.le_age.text().strip()\n    \n    # 1. Vérifier que c'est composé de chiffres uniquement\n    if not ch_age.isnumeric():\n        QMessageBox.critical(windows, \"Erreur\", \"L'âge doit être un nombre entier !\")\n        return False\n        \n    # 2. Convertir et vérifier l'intervalle officiel\n    age = int(ch_age)\n    if not (15 <= age <= 30):\n        QMessageBox.critical(windows, \"Erreur\", \"L'âge doit être compris entre 15 et 30 ans !\")\n        return False\n        \n    return True",
-    "summary": "Vérifie qu'une saisie est un entier valide puis qu'il respecte l'intervalle demandé (ex: note entre 0 et 20, âge entre 15 et 30).",
-    "description": "Le test `.isnumeric()` empêche le plantage sur des lettres. Une fois le test réussi, on peut convertir sans risque avec `int()` et tester les bornes.",
-    "howToUse": "Test `.isnumeric()` d'abord, puis `int()`, puis test d'encadrement `min <= n <= max`.",
-    "examples": [
-      {
-        "label": "Note 0 à 20",
-        "code": "if not (0 <= float(note) <= 20): alerte()"
-      }
-    ],
-    "bacTips": "⭐ Formule favorite des épreuves pratiques : 'L'âge doit être un entier compris entre 15 et 30'."
-  },
-  {
-    "id": "qt-valid-length",
-    "category": "Contrôles de Saisie Bac",
-    "name": "Contrôle 4 : Longueur fixe (CIN 8 chiffres, Tél)",
-    "qtWidget": "QLineEdit",
-    "qtProperty": "len(cin) == 8 and cin.isnumeric()",
-    "thonnyCode": "def valider_cin():\n    cin = windows.le_cin.text().strip()\n    \n    # Le CIN tunisien doit comporter exactement 8 chiffres numériques\n    if len(cin) != 8 or not cin.isnumeric():\n        QMessageBox.critical(\n            windows, \n            \"Erreur CIN\", \n            \"Le Numéro de CIN doit comporter exactement 8 chiffres !\"\n        )\n        return False\n        \n    return True",
-    "summary": "Vérifie qu'un identifiant respecte une longueur fixe stricte (ex: Numéro CIN 8 chiffres, Numéro Téléphone 8 chiffres).",
-    "description": "Classique absolu des examens du Bac : tester `len(ch) == 8` combiné avec `ch.isnumeric()` pour s'assurer que le candidat a saisi exactement 8 chiffres.",
-    "howToUse": "Combiner `len(ch) == 8` et `ch.isnumeric()` avec un opérateur `and`.",
-    "examples": [
-      {
-        "label": "Test CIN",
-        "code": "if len(cin) != 8 or not cin.isnumeric(): QMessageBox.critical(...)"
-      }
-    ],
-    "bacTips": "Attention à bien utiliser `!= 8` pour bloquer si c'est plus court OU plus long !"
-  },
-  {
-    "id": "qt-clear-reset",
-    "category": "Widgets d'Action & Affichage",
-    "name": "Réinitialisation complète de l'interface (Vider)",
-    "qtWidget": "QPushButton 'Annuler / Nouveau'",
-    "qtProperty": "Remise à zéro des champs",
-    "thonnyCode": "def reinitialiser():\n    # Vider les zones de texte\n    windows.le_nom.clear()\n    windows.le_cin.clear()\n    windows.le_note.clear()\n    \n    # Décocher les boutons radio et cases\n    windows.rb_homme.setChecked(False)\n    windows.rb_femme.setChecked(False)\n    windows.cb_sport.setChecked(False)\n    \n    # Remettre la liste déroulante au premier choix\n    windows.combo_ville.setCurrentIndex(0)\n    \n    # Effacer le résultat affiché\n    windows.lbl_resultat.setText(\"\")\n    \n    # Replacer le curseur dans le premier champ\n    windows.le_nom.setFocus()\n\nwindows.btn_annuler.clicked.connect(reinitialiser)",
-    "summary": "Fonction liée au bouton Annuler/Nouveau qui remet tous les composants de l'interface à leur état initial.",
-    "description": "Très souvent demandée comme dernière question d'un sujet pratique : un bouton 'Annuler' ou 'Nouveau' qui efface toutes les saisies et repositionne le curseur dans le premier champ.",
-    "howToUse": "Appeler `.clear()` sur les QLineEdit, `.setChecked(False)` sur les radios/cases, et `.setCurrentIndex(0)` sur la ComboBox.",
-    "examples": [
-      {
-        "label": "Remise à zéro",
-        "code": "windows.btn_reset.clicked.connect(reinitialiser)"
-      }
-    ],
-    "bacTips": "Ajouter `windows.le_premier_champ.setFocus()` apporte une touche de finition très appréciée des correcteurs !"
-  },
-  {
-    "id": "qt-bac-workflow",
-    "category": "Modèles Types d'Examen",
-    "name": "Structure type complète d'un sujet pratique Bac (4 Étapes)",
-    "qtWidget": "Architecture de projet",
-    "qtProperty": "Qt Designer + Thonny Python",
-    "thonnyCode": "# ========================================================\n# ÉPREUVE PRATIQUE DU BACCALAURÉAT - ALGORITHMIQUE & PYTHON\n# ========================================================\nfrom PyQt5.uic import loadUi\nfrom PyQt5.QtWidgets import QApplication, QMessageBox\n\n# --- ÉTAPE 1 : FONCTIONS ALGORITHMIQUES PURES ---\ndef est_premier(n):\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\n# --- ÉTAPE 2 : FONCTION DE TRAITEMENT DU FORMULAIRE ---\ndef traiter():\n    # 2.1 Récupération des données\n    ch_n = windows.le_nombre.text().strip()\n    \n    # 2.2 Contrôles de validité avec QMessageBox\n    if ch_n == \"\" or not ch_n.isnumeric():\n        QMessageBox.critical(windows, \"Erreur\", \"Veuillez entrer un entier valide !\")\n        return\n    \n    n = int(ch_n)\n    if not (1 <= n <= 1000):\n        QMessageBox.critical(windows, \"Erreur\", \"Le nombre doit être entre 1 et 1000 !\")\n        return\n        \n    # 2.3 Appel de l'algorithme\n    if est_premier(n):\n        msg = f\"Le nombre {n} EST un nombre premier !\"\n        windows.lbl_res.setStyleSheet(\"color: #10b981; font-weight: bold;\")\n    else:\n        msg = f\"Le nombre {n} N'EST PAS premier.\"\n        windows.lbl_res.setStyleSheet(\"color: #ef4444; font-weight: bold;\")\n        \n    # 2.4 Affichage du résultat\n    windows.lbl_res.setText(msg)\n\n# --- ÉTAPE 3 : INITIALISATION DE L'INTERFACE ---\napp = QApplication([])\nwindows = loadUi(\"interface.ui\")\n\n# --- ÉTAPE 4 : CONNEXION DES SIGNAUX & LANCEMENT ---\nwindows.btn_verifier.clicked.connect(traiter)\nwindows.btn_quitter.clicked.connect(windows.close)\n\nwindows.show()\napp.exec_()",
-    "summary": "Le patron de conception universel qui garantit 20/20 à l'épreuve pratique en séparant l'algorithme, le contrôle de saisie et l'interface.",
-    "description": "Ce modèle structure proprement votre code en 4 étapes claires : 1. Fonctions de calcul 2. Contrôle et traitement 3. Initialisation 4. Événements et démarrage.",
-    "howToUse": "Copiez cette structure comme base de départ pour tous vos TPs et examens pratiques.",
-    "examples": [
-      {
-        "label": "Patron complet",
-        "code": "# Suivre les 4 étapes numérotées"
-      }
-    ],
-    "bacTips": "⭐ La séparation entre les fonctions algorithmiques pures et la fonction liée à Qt Designer est la marque des excellents candidats !"
-  }
-],
-  algo_theorique: [
-  {
-    "id": "algo-bin2oct",
-    "category": "Conversions de Bases",
-    "type": "fonction",
-    "name": "bin2oct(ch)",
-    "syntax": "fonction bin2oct(ch: chaîne): entier",
-    "summary": "Convertit un nombre binaire (base 2) en octal (base 8) par paquets de 3 bits.",
-    "description": "Complète la chaîne binaire avec des '0' à gauche pour atteindre une longueur multiple de 3. Découpe ensuite par tranches successives de 3 bits (valeur = b[0]*4 + b[1]*2 + b[2]) et concatène chaque chiffre octal obtenu.",
-    "pseudoCode": "0) fonction bin2oct(ch: chaîne): entier\n1) res <-- \"\"\n2) tant que (long(ch) mod 3 ≠ 0) faire\n     ch <-- \"0\" + ch\n   fin_tant_que\n3) tant que ch ≠ \"\" faire\n     b <-- sous_chaîne(ch, 0, 3)\n     ch <-- sous_chaîne(ch, 3, long(ch) - 1)\n     val <-- valeur(b[0]) * 4 + valeur(b[1]) * 2 + valeur(b[2])\n     res <-- res + convch(val)\n   fin_tant_que\n4) retourner valeur(res)\n5) fin",
-    "tdo": [
-      {
-        "objet": "res, b",
-        "type": "chaîne"
-      },
-      {
-        "objet": "val",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def bin2oct(ch):\n    while len(ch) % 3 != 0:\n        ch = \"0\" + ch\n    \n    res = \"\"\n    while ch != \"\":\n        b = ch[0:3]\n        ch = ch[3:]\n        val = int(b[0]) * 4 + int(b[1]) * 2 + int(b[2])\n        res = res + str(val)\n        \n    return int(res)",
-    "example": "bin2oct(\"1011011\") → 133"
-  },
-  {
-    "id": "algo-a2d",
-    "category": "Conversions de Bases",
-    "type": "fonction",
-    "name": "a2d(ch, bs)",
-    "syntax": "fonction a2d(ch: chaîne, bs: entier): entier",
-    "summary": "Convertit un nombre d'une base bs quelconque (2 à 16) vers la base 10 (décimale).",
-    "description": "Parcourt la chaîne de droite à gauche (poids faibles vers poids forts). Multiplie la valeur numérique de chaque symbole (0-9, A-F) par la puissance de base correspondante (p = bs^i) et accumule la somme.",
-    "pseudoCode": "0) fonction a2d(ch: chaîne, bs: entier): entier\n1) res <-- 0\n2) p <-- 1\n3) chh <-- \"0123456789ABCDEF\"\n4) pour i de long(ch) - 1 à 0 (pas = -1) faire\n     res <-- res + pos(ch[i], chh) * p\n     p <-- p * bs\n   fin_pour\n5) retourner res\n6) fin",
-    "tdo": [
-      {
-        "objet": "res, p, i",
-        "type": "entier"
-      },
-      {
-        "objet": "chh",
-        "type": "chaîne"
-      }
-    ],
-    "pythonCode": "def a2d(ch, bs):\n    chh = \"0123456789ABCDEF\"\n    res = 0\n    p = 1\n    for i in range(len(ch) - 1, -1, -1):\n        pos = chh.index(ch[i].upper())\n        res = res + pos * p\n        p = p * bs\n    return res",
-    "example": "a2d(\"1A55F\", 16) → 107871"
-  },
-  {
-    "id": "algo-a2dr",
-    "category": "Conversions de Bases",
-    "type": "fonction",
-    "name": "a2dR(ch, bs, p)",
-    "syntax": "fonction a2dR(ch: chaîne, bs, p: entier): entier",
-    "summary": "Conversion récursive d'un nombre en base bs quelconque vers la base 10 (décimale).",
-    "description": "Cas de base : chaîne vide renvoie 0. Cas général : évalue le premier symbole pondéré par p, additionné au résultat de l'appel récursif sur le reste de la chaîne avec p*bs.",
-    "pseudoCode": "0) fonction a2dR(ch: chaîne, bs, p: entier): entier\n1) chh <-- \"0123456789ABCDEF\"\n2) si long(ch) = 0 alors\n     retourner 0\n   sinon\n     retourner pos(ch[0], chh) * p + a2dR(sous_chaîne(ch, 1, long(ch) - 1), bs, p * bs)\n   fin_si\n3) fin",
-    "tdo": [
-      {
-        "objet": "chh",
-        "type": "chaîne"
-      }
-    ],
-    "pythonCode": "def a2dR(ch, bs, p):\n    chh = \"0123456789ABCDEF\"\n    if len(ch) == 0:\n        return 0\n    else:\n        return chh.index(ch[0].upper()) * p + a2dR(ch[1:], bs, p * bs)",
-    "example": "a2dR(\"1A55F\", 16, 1) → 107871"
-  },
-  {
-    "id": "algo-bin2hexa",
-    "category": "Conversions de Bases",
-    "type": "fonction",
-    "name": "bin2hexa(ch)",
-    "syntax": "fonction bin2hexa(ch: chaîne): chaîne",
-    "summary": "Convertit un nombre binaire (base 2) en hexadécimal (base 16) par blocs de 4 bits.",
-    "description": "Complète le binaire à gauche pour avoir une longueur multiple de 4. Découpe par paquets de 4 bits et traduit chaque quartet en son chiffre hexadécimal équivalent (b[0]*8 + b[1]*4 + b[2]*2 + b[3]).",
-    "pseudoCode": "0) fonction bin2hexa(ch: chaîne): chaîne\n1) res <-- \"\"\n2) chh <-- \"0123456789ABCDEF\"\n3) tant que (long(ch) mod 4 ≠ 0) faire\n     ch <-- \"0\" + ch\n   fin_tant_que\n4) tant que ch ≠ \"\" faire\n     b <-- sous_chaîne(ch, 0, 4)\n     ch <-- sous_chaîne(ch, 4, long(ch) - 1)\n     val <-- valeur(b[0])*8 + valeur(b[1])*4 + valeur(b[2])*2 + valeur(b[3])\n     res <-- res + chh[val]\n   fin_tant_que\n5) retourner res\n6) fin",
-    "tdo": [
-      {
-        "objet": "res, b, chh",
-        "type": "chaîne"
-      },
-      {
-        "objet": "val",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def bin2hexa(ch):\n    chh = \"0123456789ABCDEF\"\n    while len(ch) % 4 != 0:\n        ch = \"0\" + ch\n    res = \"\"\n    while ch != \"\":\n        b = ch[0:4]\n        ch = ch[4:]\n        val = int(b[0]) * 8 + int(b[1]) * 4 + int(b[2]) * 2 + int(b[3])\n        res = res + chh[val]\n    return res",
-    "example": "bin2hexa(\"1011011\") → \"5B\""
-  },
-  {
-    "id": "algo-octal2bin",
-    "category": "Conversions de Bases",
-    "type": "fonction",
-    "name": "octal2bin(ch)",
-    "syntax": "fonction octal2bin(ch: chaîne): chaîne",
-    "summary": "Convertit un nombre octal en son écriture binaire directe sur 3 bits par chiffre.",
-    "description": "Pour chaque chiffre octal, utilise dec2any(c, 2) puis ajuste la longueur à exactement 3 bits en préfixant des 0 si nécessaire.",
-    "pseudoCode": "0) fonction octal2bin(ch: chaîne): chaîne\n1) res <-- \"\"\n2) pour i de 0 à long(ch) - 1 faire\n     c <-- valeur(ch[i])\n     b <-- dec2any(c, 2)\n     tant que long(b) < 3 faire\n       b <-- \"0\" + b\n     fin_tant_que\n     res <-- res + b\n   fin_pour\n3) retourner res\n4) fin",
-    "tdo": [
-      {
-        "objet": "res, b",
-        "type": "chaîne"
-      },
-      {
-        "objet": "c, i",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def octal2bin(ch):\n    res = \"\"\n    for char in ch:\n        c = int(char)\n        b = dec2any(c, 2)\n        while len(b) < 3:\n            b = \"0\" + b\n        res = res + b\n    return res",
-    "example": "octal2bin(\"75401\") → \"111101100000001\""
-  },
-  {
-    "id": "algo-octal2hexa",
-    "category": "Conversions de Bases",
-    "type": "fonction",
-    "name": "octal2hexa(ch)",
-    "syntax": "fonction octal2hexa(ch: chaîne): chaîne",
-    "summary": "Convertit un nombre octal (base 8) en hexadécimal (base 16) via le binaire.",
-    "description": "Méthode directe sans division : transforme d'abord l'octal en binaire avec octal2bin, puis le binaire en hexadécimal avec bin2hexa.",
-    "pseudoCode": "0) fonction octal2hexa(ch: chaîne): chaîne\n1) b <-- octal2bin(ch)\n2) h <-- bin2hexa(b)\n3) retourner h\n4) fin",
-    "tdo": [
-      {
-        "objet": "b, h",
-        "type": "chaîne"
-      }
-    ],
-    "pythonCode": "def octal2hexa(ch):\n    b = octal2bin(ch)\n    h = bin2hexa(b)\n    return h",
-    "example": "octal2hexa(\"75401\") → \"7B01\""
-  },
-  {
-    "id": "algo-dec2any",
-    "category": "Conversions de Bases",
-    "type": "fonction",
-    "name": "dec2any(n, bd)",
-    "syntax": "fonction dec2any(n: entier, bd: entier): chaîne",
-    "summary": "Convertit un entier décimal (base 10) vers une base quelconque bd (2 à 16).",
-    "description": "Méthode des divisions successives par bd. Chaque reste correspond à un chiffre de la base cible (0-9, A-F) ajouté en tête du résultat.",
-    "pseudoCode": "0) fonction dec2any(n: entier, bd: entier): chaîne\n1) chh <-- \"0123456789ABCDEF\"\n2) res <-- \"\"\n3) tant que n ≠ 0 faire\n     res <-- chh[n mod bd] + res\n     n <-- n div bd\n   fin_tant_que\n4) si res = \"\" alors\n     res <-- \"0\"\n   fin_si\n5) retourner res\n6) fin",
-    "tdo": [
-      {
-        "objet": "res, chh",
-        "type": "chaîne"
-      }
-    ],
-    "pythonCode": "def dec2any(n, bd):\n    chh = \"0123456789ABCDEF\"\n    if n == 0:\n        return \"0\"\n    res = \"\"\n    while n != 0:\n        res = chh[n % bd] + res\n        n = n // bd\n    return res",
-    "example": "dec2any(2591, 16) → \"A1F\""
-  },
-  {
-    "id": "algo-dec2anyr",
-    "category": "Conversions de Bases",
-    "type": "fonction",
-    "name": "dec2anyR(n, bd)",
-    "syntax": "fonction dec2anyR(n: entier, bd: entier): chaîne",
-    "summary": "Conversion récursive d'un entier décimal vers une base destination bd.",
-    "description": "Cas d'arrêt : n = 0 renvoie la chaîne vide. Cas général : effectue la division entière (n div bd) récursivement et suffixe le reste (n mod bd).",
-    "pseudoCode": "0) fonction dec2anyR(n: entier, bd: entier): chaîne\n1) chh <-- \"0123456789ABCDEF\"\n2) si n = 0 alors\n     retourner \"\"\n   sinon\n     retourner dec2anyR(n div bd, bd) + chh[n mod bd]\n   fin_si\n3) fin",
-    "tdo": [
-      {
-        "objet": "chh",
-        "type": "chaîne"
-      }
-    ],
-    "pythonCode": "def dec2anyR(n, bd):\n    chh = \"0123456789ABCDEF\"\n    if n == 0:\n        return \"\"\n    return dec2anyR(n // bd, bd) + chh[n % bd]",
-    "example": "dec2anyR(46, 2) → \"101110\""
-  },
-  {
-    "id": "algo-hex2bin",
-    "category": "Conversions de Bases",
-    "type": "fonction",
-    "name": "hex2bin(ch)",
-    "syntax": "fonction hex2bin(ch: chaîne): chaîne",
-    "summary": "Convertit un nombre hexadécimal en binaire direct en remplaçant chaque digit par 4 bits.",
-    "description": "Pour chaque symbole hexadécimal, cherche sa position dans '0123456789ABCDEF', convertit en base 2 avec dec2any et remplit à 4 bits.",
-    "pseudoCode": "0) fonction hex2bin(ch: chaîne): chaîne\n1) res <-- \"\"\n2) chh <-- \"0123456789ABCDEF\"\n3) pour i de 0 à long(ch) - 1 faire\n     c <-- pos(ch[i], chh)\n     b <-- dec2any(c, 2)\n     tant que long(b) < 4 faire\n       b <-- \"0\" + b\n     fin_tant_que\n     res <-- res + b\n   fin_pour\n4) retourner res\n5) fin",
-    "tdo": [
-      {
-        "objet": "res, b, chh",
-        "type": "chaîne"
-      },
-      {
-        "objet": "c, i",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def hex2bin(ch):\n    res = \"\"\n    chh = \"0123456789ABCDEF\"\n    for char in ch:\n        c = chh.index(char.upper())\n        b = dec2any(c, 2)\n        while len(b) < 4:\n            b = \"0\" + b\n        res = res + b\n    return res",
-    "example": "hex2bin(\"1F5A\") → \"0001111101011010\""
-  },
-  {
-    "id": "algo-hex2octal",
-    "category": "Conversions de Bases",
-    "type": "fonction",
-    "name": "hex2octal(ch)",
-    "syntax": "fonction hex2octal(ch: chaîne): chaîne",
-    "summary": "Convertit un nombre hexadécimal en octal en passant par le binaire intermédiaire.",
-    "description": "Combine hex2bin pour convertir en binaire, puis bin2oct pour regrouper les bits par 3 en octal. Simple, direct et sans perte de précision.",
-    "pseudoCode": "0) fonction hex2octal(ch: chaîne): chaîne\n1) b <-- hex2bin(ch)\n2) o <-- convch(bin2oct(b))\n3) retourner o\n4) fin",
-    "tdo": [
-      {
-        "objet": "b, o",
-        "type": "chaîne"
-      }
-    ],
-    "pythonCode": "def hex2octal(ch):\n    b = hex2bin(ch)\n    o = str(bin2oct(b))\n    return o",
-    "example": "hex2octal(\"1F5A\") → \"17532\""
-  },
-  {
-    "id": "algo-any2any",
-    "category": "Conversions de Bases",
-    "type": "fonction",
-    "name": "any2any(ch, bs, bd)",
-    "syntax": "fonction any2any(ch: chaîne, bs, bd: entier): chaîne",
-    "summary": "Convertit un nombre d'une base bs vers une base bd quelconque via la base 10.",
-    "description": "Méthode pivot officielle : convertit d'abord ch de la base source bs en entier décimal via a2d, puis convertit cet entier décimal vers la base destination bd via dec2any.",
-    "pseudoCode": "0) fonction any2any(ch: chaîne, bs, bd: entier): chaîne\n1) n <-- a2d(ch, bs)\n2) res <-- dec2any(n, bd)\n3) retourner res\n4) fin",
-    "tdo": [
-      {
-        "objet": "n",
-        "type": "entier"
-      },
-      {
-        "objet": "res",
-        "type": "chaîne"
-      }
-    ],
-    "pythonCode": "def any2any(ch, bs, bd):\n    n = a2d(ch, bs)\n    res = dec2any(n, bd)\n    return res",
-    "example": "any2any(\"1FA2\", 16, 8) → \"17642\""
-  },
-  {
-    "id": "algo-aire-milieu",
-    "category": "Calcul d'Aires",
-    "type": "fonction",
-    "name": "aire_milieu(nb, a, b)",
-    "syntax": "fonction aire_milieu(nb: entier, a, b: réel): réel",
-    "summary": "Approximation de l'intégrale d'une fonction f par la méthode des rectangles au point médian.",
-    "description": "Découpe l'intervalle [a, b] en nb sous-intervalles de largeur h = |b - a| / nb. Évalue la fonction f(x) au centre de chaque intervalle x = a + h/2, puis somme les aires (f(x) * h).",
-    "pseudoCode": "0) fonction aire_milieu(nb: entier, a, b: réel): réel\n1) h <-- abs(b - a) / nb\n2) x <-- a + (h / 2)\n3) s <-- 0\n4) pour i de 0 à nb - 1 faire\n     s <-- s + (f(x) * h)\n     x <-- x + h\n   fin_pour\n5) retourner s\n6) fin",
-    "tdo": [
-      {
-        "objet": "h, x, s",
-        "type": "réel"
-      },
-      {
-        "objet": "i",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def f(x):\n    return x * x  # Exemple de fonction à intégrer\n\ndef aire_milieu(nb, a, b):\n    h = abs(b - a) / nb\n    x = a + (h / 2)\n    s = 0.0\n    for i in range(nb):\n        s = s + f(x) * h\n        x = x + h\n    return round(s, 6)",
-    "example": "aire_milieu(100, 0, 1) avec f(x)=x^2 → 0.333325"
-  },
-  {
-    "id": "algo-aire-droite",
-    "category": "Calcul d'Aires",
-    "type": "fonction",
-    "name": "aire_droite(nb, a, b)",
-    "syntax": "fonction aire_droite(nb: entier, a, b: réel): réel",
-    "summary": "Approximation de l'intégrale par la méthode des rectangles avec la borne droite.",
-    "description": "Découpe en nb subdivisions de pas h. Le point de calcul démarre à x = a + h (extrémité droite du premier rectangle) et avance de h à chaque pas.",
-    "pseudoCode": "0) fonction aire_droite(nb: entier, a, b: réel): réel\n1) h <-- abs(b - a) / nb\n2) x <-- a + h\n3) s <-- 0\n4) pour i de 0 à nb - 1 faire\n     s <-- s + (f(x) * h)\n     x <-- x + h\n   fin_pour\n5) retourner s\n6) fin",
-    "tdo": [
-      {
-        "objet": "h, x, s",
-        "type": "réel"
-      },
-      {
-        "objet": "i",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def f(x):\n    return x * x\n\ndef aire_droite(nb, a, b):\n    h = abs(b - a) / nb\n    x = a + h\n    s = 0.0\n    for i in range(nb):\n        s = s + f(x) * h\n        x = x + h\n    return round(s, 6)",
-    "example": "aire_droite(100, 0, 1) avec f(x)=x^2 → 0.338350"
-  },
-  {
-    "id": "algo-aire-gauche",
-    "category": "Calcul d'Aires",
-    "type": "fonction",
-    "name": "aire_gauche(nb, a, b)",
-    "syntax": "fonction aire_gauche(nb: entier, a, b: réel): réel",
-    "summary": "Approximation de l'intégrale par la méthode des rectangles avec la borne gauche.",
-    "description": "Démarre exactement à x = a (extrémité gauche du rectangle) et évalue f(x) avant d'incrémenter x de h à chaque itération.",
-    "pseudoCode": "0) fonction aire_gauche(nb: entier, a, b: réel): réel\n1) h <-- abs(b - a) / nb\n2) x <-- a\n3) s <-- 0\n4) pour i de 0 à nb - 1 faire\n     s <-- s + (f(x) * h)\n     x <-- x + h\n   fin_pour\n5) retourner s\n6) fin",
-    "tdo": [
-      {
-        "objet": "h, x, s",
-        "type": "réel"
-      },
-      {
-        "objet": "i",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def f(x):\n    return x * x\n\ndef aire_gauche(nb, a, b):\n    h = abs(b - a) / nb\n    x = a\n    s = 0.0\n    for i in range(nb):\n        s = s + f(x) * h\n        x = x + h\n    return round(s, 6)",
-    "example": "aire_gauche(100, 0, 1) avec f(x)=x^2 → 0.328350"
-  },
-  {
-    "id": "algo-aire-trapezes",
-    "category": "Calcul d'Aires",
-    "type": "fonction",
-    "name": "aire_trapezes(nb, a, b)",
-    "syntax": "fonction aire_trapezes(nb: entier, a, b: réel): réel",
-    "summary": "Calcul d'aire approchée par la formule des trapèzes sur [a, b].",
-    "description": "Chaque tranche est approximée par un trapèze d'aire ((f(x) + f(x+h)) * h) / 2. Cette méthode donne une convergence nettement plus rapide et précise.",
-    "pseudoCode": "0) fonction aire_trapezes(nb: entier, a, b: réel): réel\n1) h <-- abs(b - a) / nb\n2) x <-- a\n3) s <-- 0\n4) pour i de 0 à nb - 1 faire\n     s <-- s + (((f(x) + f(x + h)) * h) / 2)\n     x <-- x + h\n   fin_pour\n5) retourner s\n6) fin",
-    "tdo": [
-      {
-        "objet": "h, x, s",
-        "type": "réel"
-      },
-      {
-        "objet": "i",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def f(x):\n    return x * x\n\ndef aire_trapezes(nb, a, b):\n    h = abs(b - a) / nb\n    x = a\n    s = 0.0\n    for i in range(nb):\n        s = s + ((f(x) + f(x + h)) * h) / 2\n        x = x + h\n    return round(s, 6)",
-    "example": "aire_trapezes(100, 0, 1) avec f(x)=x^2 → 0.333350"
-  },
-  {
-    "id": "algo-premier",
-    "category": "Arithmétique & Nombres",
-    "type": "fonction",
-    "name": "premier(n)",
-    "syntax": "fonction premier(n: entier): booléen",
-    "summary": "Teste si un entier n est premier (optimisé jusqu'à n div 2).",
-    "description": "Initialise ok à (n > 1). Parcourt les diviseurs potentiels de 2 à n div 2. Dès qu'un diviseur strict est trouvé (n mod i = 0), ok devient faux.",
-    "pseudoCode": "0) fonction premier(n: entier): booléen\n1) ok <-- n > 1\n2) pour i de 2 à n div 2 faire\n     si n mod i = 0 alors\n       ok <-- faux\n     fin_si\n   fin_pour\n3) retourner ok\n4) fin",
-    "tdo": [
-      {
-        "objet": "ok",
-        "type": "booléen"
-      },
-      {
-        "objet": "i",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def premier(n):\n    if n <= 1:\n        return False\n    ok = True\n    for i in range(2, (n // 2) + 1):\n        if n % i == 0:\n            ok = False\n            break\n    return ok",
-    "example": "premier(17) → True, premier(21) → False"
-  },
-  {
-    "id": "algo-factorielle",
-    "category": "Arithmétique & Nombres",
-    "type": "fonction",
-    "name": "factorielle(N)",
-    "syntax": "fonction factorielle(N: entier): entier",
-    "summary": "Calcule le produit factoriel N! = 1 * 2 * ... * N.",
-    "description": "Initialise l'accumulateur f à 1, puis multiplie consécutivement par chaque entier i variant de 2 jusqu'à N.",
-    "pseudoCode": "0) fonction factorielle(N: entier): entier\n1) f <-- 1\n2) pour i de 2 à N faire\n     f <-- f * i\n   fin_pour\n3) retourner f\n4) fin",
-    "tdo": [
-      {
-        "objet": "f, i",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def factorielle(N):\n    f = 1\n    for i in range(2, N + 1):\n        f = f * i\n    return f",
-    "example": "factorielle(5) → 120"
-  },
-  {
-    "id": "algo-puissance",
-    "category": "Arithmétique & Nombres",
-    "type": "fonction",
-    "name": "puissance(x, n)",
-    "syntax": "fonction puissance(x: entier, n: entier): réel",
-    "summary": "Calcule la puissance x^n pour un exposant entier positif.",
-    "description": "Initialise p à 1, puis effectue n multiplications successives de la base x.",
-    "pseudoCode": "0) fonction puissance(x: entier, n: entier): réel\n1) p <-- 1\n2) pour i de 1 à n faire\n     p <-- p * x\n   fin_pour\n3) retourner p\n4) fin",
-    "tdo": [
-      {
-        "objet": "p",
-        "type": "réel"
-      },
-      {
-        "objet": "i",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def puissance(x, n):\n    p = 1\n    for i in range(1, n + 1):\n        p = p * x\n    return float(p)",
-    "example": "puissance(2, 5) → 32.0"
-  },
-  {
-    "id": "algo-puissance-va",
-    "category": "Arithmétique & Nombres",
-    "type": "fonction",
-    "name": "puissance_va(x, n)",
-    "syntax": "fonction puissance_va(x: entier, n: entier): réel",
-    "summary": "Calcule la puissance x^n pour n quelconque (positif, nul ou négatif).",
-    "description": "Calcule le produit sur abs(n) itérations. Si l'exposant n est strictement négatif, inverse la valeur finale p <-- 1 / p.",
-    "pseudoCode": "0) fonction puissance_va(x: entier, n: entier): réel\n1) p <-- 1\n2) pour i de 1 à abs(n) faire\n     p <-- p * x\n   fin_pour\n3) si n < 0 alors\n     p <-- 1 / p\n   fin_si\n4) retourner p\n5) fin",
-    "tdo": [
-      {
-        "objet": "p",
-        "type": "réel"
-      },
-      {
-        "objet": "i",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def puissance_va(x, n):\n    p = 1.0\n    for i in range(1, abs(n) + 1):\n        p = p * x\n    if n < 0:\n        p = 1.0 / p\n    return p",
-    "example": "puissance_va(2, -3) → 0.125"
-  },
-  {
-    "id": "algo-pgcd-ppcm",
-    "category": "Arithmétique & Nombres",
-    "type": "fonction",
-    "name": "pgcd_ppcm(a, b)",
-    "syntax": "fonction pgcd_ppcm(a, b: entier): entier",
-    "summary": "Méthode optimisée Bac pour déterminer le PPCM et le PGCD simultanément.",
-    "description": "Cherche le plus petit coefficient k ≥ 1 tel que (a * k) mod b = 0. Le PPCM vaut a * k, et le PGCD vaut b div k (car PGCD * PPCM = a * b).",
-    "pseudoCode": "0) fonction pgcd_ppcm(a, b: entier): entier\n1) k <-- 1\n2) tant que ((a * k) mod b ≠ 0) faire\n     k <-- k + 1\n   fin_tant_que\n3) // Pour obtenir le PPCM : retourner a * k\n4) // Pour obtenir le PGCD : retourner b div k\n5) retourner b div k\n6) fin",
-    "tdo": [
-      {
-        "objet": "k",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def pgcd_ppcm(a, b):\n    k = 1\n    while (a * k) % b != 0:\n        k = k + 1\n    ppcm = a * k\n    pgcd = (a * b) // ppcm\n    return pgcd, ppcm",
-    "example": "pgcd_ppcm(12, 18) → (PGCD: 6, PPCM: 36)"
-  },
-  {
-    "id": "algo-palindrome",
-    "category": "Traitement des Chaînes",
-    "type": "fonction",
-    "name": "palindrome(ch)",
-    "syntax": "fonction palindrome(ch: chaîne): booléen",
-    "summary": "Vérifie si une chaîne de caractères est symétrique (se lit de la même façon dans les deux sens).",
-    "description": "Compare chaque caractère ch[i] avec son symétrique ch[long(ch)-1-i] jusqu'au milieu long(ch) div 2. Renvoie faux au premier désaccord.",
-    "pseudoCode": "0) fonction palindrome(ch: chaîne): booléen\n1) res <-- vrai\n2) pour i de 0 à long(ch) div 2 faire\n     si ch[i] ≠ ch[long(ch) - 1 - i] alors\n       res <-- faux\n     fin_si\n   fin_pour\n3) retourner res\n4) fin",
-    "tdo": [
-      {
-        "objet": "res",
-        "type": "booléen"
-      },
-      {
-        "objet": "i",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def palindrome(ch):\n    i = 0\n    j = len(ch) - 1\n    ok = True\n    while i < j and ok:\n        if ch[i] != ch[j]:\n            ok = False\n        else:\n            i = i + 1\n            j = j - 1\n    return ok",
-    "example": "palindrome(\"radar\") → True, palindrome(\"bac\") → False"
-  },
-  {
-    "id": "algo-lirech",
-    "category": "Traitement des Chaînes",
-    "type": "procédure",
-    "name": "lirech(@ch)",
-    "syntax": "procédure lirech(@ch: chaîne)",
-    "summary": "Saisie contrôlée d'une chaîne dont tous les caractères sont distincts (aucun doublon).",
-    "description": "Boucle de répétition demandant la saisie de ch tant que la chaîne contient au moins un caractère en double (testé via pos(ch[i], ch) ≠ i).",
-    "pseudoCode": "0) procédure lirech(@ch: chaîne)\n1) répéter\n     ok <-- vrai\n     lire(ch)\n     pour i de 1 à long(ch) - 1 faire\n       si (pos(ch[i], ch) ≠ i) alors\n         ok <-- faux\n       fin_si\n     fin_pour\n   jusqu'à ok = vrai\n2) fin",
-    "tdo": [
-      {
-        "objet": "ok",
-        "type": "booléen"
-      },
-      {
-        "objet": "i",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def lirech():\n    while True:\n        ch = input(\"Donner une chaîne : \")\n        ok = True\n        for i in range(len(ch)):\n            if ch.count(ch[i]) > 1:\n                ok = False\n                break\n        if ok and len(ch) > 0:\n            return ch\n        print(\"Erreur : la chaîne contient des caractères répétés !\")",
-    "example": "lirech() avec \"bac\" → valide, avec \"test\" (2 fois t) → rejeté"
-  },
-  {
-    "id": "algo-remplir",
-    "category": "Tableaux & Vecteurs",
-    "type": "procédure",
-    "name": "remplir(@t, N)",
-    "syntax": "procédure remplir(@t: tab, N: entier)",
-    "summary": "Saisie séquentielle des N éléments d'un tableau.",
-    "description": "Parcourt les indices de 0 à N-1 et invite l'utilisateur à saisir chaque valeur t[i]. Passage de t par variable (@) obligatoire.",
-    "pseudoCode": "0) procédure remplir(@t: tab, N: entier)\n1) pour i de 0 à N - 1 faire\n     écrire(\"Taper t[\", i, \"] : \")\n     lire(t[i])\n   fin_pour\n2) fin",
-    "tdo": [
-      {
-        "objet": "i",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def remplir(t, N):\n    for i in range(N):\n        val = int(input(\"Taper t[\" + str(i) + \"] : \"))\n        t.append(val)",
-    "example": "remplir(t, 4) → t = [12, 45, 7, 88]"
-  },
-  {
-    "id": "algo-remplir-condition",
-    "category": "Tableaux & Vecteurs",
-    "type": "procédure",
-    "name": "remplir_condition(@t, N)",
-    "syntax": "procédure remplir_condition(@t: tab, N: entier)",
-    "summary": "Remplissage d'un tableau avec validation obligatoire de chaque élément saisi.",
-    "description": "Intègre une boucle Répéter ... Jusqu'à à l'intérieur de la boucle Pour pour s'assurer que chaque élément satisfait une condition stricte (ex: strictement positif ou intervalle valide).",
-    "pseudoCode": "0) procédure remplir_condition(@t: tab, N: entier)\n1) pour i de 0 à N - 1 faire\n     répéter\n       écrire(\"Taper t[\", i, \"] (> 0) : \")\n       lire(t[i])\n     jusqu'à (t[i] > 0)\n   fin_pour\n2) fin",
-    "tdo": [
-      {
-        "objet": "i",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def remplir_condition(t, N):\n    for i in range(N):\n        while True:\n            val = int(input(\"Taper t[\" + str(i) + \"] (> 0) : \"))\n            if val > 0:\n                t.append(val)\n                break\n            print(\"Erreur : la valeur doit être strictement positive !\")",
-    "example": "Force la saisie de nombres strictement positifs pour chaque case"
-  },
-  {
-    "id": "algo-remplir-distinct",
-    "category": "Tableaux & Vecteurs",
-    "type": "procédure",
-    "name": "remplir_distinct(@t, n)",
-    "syntax": "procédure remplir_distinct(@t: tab, n: entier)",
-    "summary": "Remplissage d'un tableau à éléments tous uniques et distincts (sans doublon).",
-    "description": "S'appuie sur une fonction auxiliaire existe(t, i) qui vérifie si la valeur saisie en t[i] figure déjà dans les cases précédentes 0 à i-1.",
-    "pseudoCode": "0) fonction existe(t: tab, n: entier): booléen\n1) ok <-- faux\n2) pour i de 0 à n - 1 faire\n     si t[i] = t[n] alors\n       ok <-- vrai\n     fin_si\n   fin_pour\n3) retourner ok\n4) fin\n\n0) procédure remplir_distinct(@t: tab, n: entier)\n1) pour i de 0 à n - 1 faire\n     répéter\n       écrire(\"t[\", i, \"] = \")\n       lire(t[i])\n     jusqu'à (existe(t, i) = faux)\n   fin_pour\n2) fin",
-    "tdo": [
-      {
-        "objet": "i",
-        "type": "entier"
-      },
-      {
-        "objet": "existe",
-        "type": "fonction"
-      }
-    ],
-    "pythonCode": "def existe(t, n):\n    for i in range(n):\n        if t[i] == t[n]:\n            return True\n    return False\n\ndef remplir_distinct(n):\n    t = []\n    for i in range(n):\n        while True:\n            val = int(input(\"t[\" + str(i) + \"] = \"))\n            if val not in t:\n                t.append(val)\n                break\n            print(\"Valeur déjà existante ! Entrez un nombre distinct.\")\n    return t",
-    "example": "Saisie t = [5, 12, 8, 99] (rejette tout doublon)"
-  },
-  {
-    "id": "algo-tri-bulle",
-    "category": "Algorithmes de Tri",
-    "type": "procédure",
-    "name": "tri_bulle(@t, n)",
-    "syntax": "procédure tri_bulle(@t: tab, n: entier)",
-    "summary": "Tri à bulles optimisé avec indicateur booléen de permutation et borne décroissante.",
-    "description": "Compare deux éléments consécutifs t[i] et t[i+1]. S'ils sont désordonnés, les permute et active le témoin p. Diminue n de 1 après chaque passage pour ne plus retester les éléments déjà triés.",
-    "pseudoCode": "0) procédure tri_bulle(@t: tab, n: entier)\n1) p <-- vrai\n2) tant que p faire\n     p <-- faux\n     pour i de 0 à n - 2 faire\n       si t[i] > t[i + 1] alors\n         aux <-- t[i]\n         t[i] <-- t[i + 1]\n         t[i + 1] <-- aux\n         p <-- vrai\n       fin_si\n     fin_pour\n     n <-- n - 1\n   fin_tant_que\n3) fin",
-    "tdo": [
-      {
-        "objet": "p",
-        "type": "booléen"
-      },
-      {
-        "objet": "i, aux",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def tri_bulle(t, n):\n    p = True\n    while p:\n        p = False\n        for i in range(n - 1):\n            if t[i] > t[i + 1]:\n                aux = t[i]\n                t[i] = t[i + 1]\n                t[i + 1] = aux\n                p = True\n        n = n - 1",
-    "example": "tri_bulle([64, 34, 25, 12, 22], 5) → [12, 22, 24, 34, 64]"
-  },
-  {
-    "id": "algo-tri-selection",
-    "category": "Algorithmes de Tri",
-    "type": "procédure",
-    "name": "tri_par_sélection(@T, N)",
-    "syntax": "procédure tri_par_sélection(@T: tab, N: entier)",
-    "summary": "Tri par sélection du minimum successif.",
-    "description": "À chaque étape i, cherche la position du plus petit élément restant pos_min entre i et N-1. Si pos_min ≠ i, permute T[i] et T[pos_min].",
-    "pseudoCode": "0) procédure tri_par_sélection(@T: tab, N: entier)\n1) pour i de 0 à N - 2 faire\n     // Recherche de la position du minimum\n     pos_min <-- i\n     pour j de i + 1 à N - 1 faire\n       si T[j] < T[pos_min] alors\n         pos_min <-- j\n       fin_si\n     fin_pour\n     // Permutation avec la case actuelle\n     si i ≠ pos_min alors\n       kes <-- T[i]\n       T[i] <-- T[pos_min]\n       T[pos_min] <-- kes\n     fin_si\n   fin_pour\n2) fin",
-    "tdo": [
-      {
-        "objet": "i, j, pos_min, kes",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def tri_par_selection(T, N):\n    for i in range(N - 1):\n        pos_min = i\n        for j in range(i + 1, N):\n            if T[j] < T[pos_min]:\n                pos_min = j\n        if i != pos_min:\n            aux = T[i]\n            T[i] = T[pos_min]\n            T[pos_min] = aux",
-    "example": "tri_par_selection([29, 10, 14, 37, 13], 5) → [10, 13, 14, 29, 37]"
-  },
-  {
-    "id": "algo-tri-insertion",
-    "category": "Algorithmes de Tri",
-    "type": "procédure",
-    "name": "tri_par_insertion(@T, N)",
-    "syntax": "procédure tri_par_insertion(@T: tab, N: entier)",
-    "summary": "Tri par insertion progressive avec décalage vers la droite.",
-    "description": "Pour chaque élément T[i], sauvegarde sa valeur dans backup, décale vers la droite tous les éléments plus grands que backup, puis insère backup à sa position libre.",
-    "pseudoCode": "0) procédure tri_par_insertion(@T: tab, N: entier)\n1) pour i de 1 à N - 1 faire\n     // Sauvegarder la valeur à insérer\n     backup <-- T[i]\n     inLibre <-- i\n     // Décalage à droite et recherche de position\n     tant que ((inLibre > 0) et (T[inLibre - 1] > backup)) faire\n       T[inLibre] <-- T[inLibre - 1]\n       inLibre <-- inLibre - 1\n     fin_tant_que\n     // Insertion de backup\n     T[inLibre] <-- backup\n   fin_pour\n2) fin",
-    "tdo": [
-      {
-        "objet": "i, inLibre, backup",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def tri_par_insertion(T, N):\n    for i in range(1, N):\n        backup = T[i]\n        inLibre = i\n        while inLibre > 0 and T[inLibre - 1] > backup:\n            T[inLibre] = T[inLibre - 1]\n            inLibre = inLibre - 1\n        T[inLibre] = backup",
-    "example": "tri_par_insertion([12, 11, 13, 5, 6], 5) → [5, 6, 11, 12, 13]"
-  },
-  {
-    "id": "algo-recherche-dicho",
-    "category": "Algorithmes de Tri",
-    "type": "fonction",
-    "name": "recherche_dichotomique(t, n, x)",
-    "syntax": "fonction recherche_dichotomique(t: tab, n, x: entier): entier",
-    "summary": "Recherche ultra-rapide par dichotomie dans un tableau préalablement trié.",
-    "description": "Divise par 2 l'espace de recherche à chaque itération en comparant x avec l'élément central t[milieu]. Renvoie l'indice trouvé ou -1 si absent.",
-    "pseudoCode": "0) fonction recherche_dichotomique(t: tab, n, x: entier): entier\n1) g <-- 0\n2) d <-- n - 1\n3) pos <-- -1\n4) tant que (g ≤ d) et (pos = -1) faire\n     m <-- (g + d) div 2\n     si t[m] = x alors\n       pos <-- m\n     sinon si t[m] < x alors\n       g <-- m + 1\n     sinon\n       d <-- m - 1\n     fin_si\n   fin_tant_que\n5) retourner pos\n6) fin",
-    "tdo": [
-      {
-        "objet": "g, d, m, pos",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def recherche_dichotomique(t, n, x):\n    g = 0\n    d = n - 1\n    pos = -1\n    while g <= d and pos == -1:\n        m = (g + d) // 2\n        if t[m] == x:\n            pos = m\n        elif t[m] < x:\n            g = m + 1\n        else:\n            d = m - 1\n    return pos",
-    "example": "recherche_dichotomique([10, 20, 30, 40, 50], 5, 30) → 2"
-  },
-  {
-    "id": "algo-tri-mat-colonne",
-    "category": "Matrices & Patterns",
-    "type": "procédure",
-    "name": "tri_mat_colonne(@m, n)",
-    "syntax": "procédure tri_mat_colonne(@m: mat, n: entier)",
-    "summary": "Trie chaque colonne d'une matrice carrée de façon indépendante.",
-    "description": "Fixe l'indice de colonne j de 0 à n-1, puis applique un tri à bulles sur les éléments de la colonne m[i, j] pour i allant de 0 à n-2.",
-    "pseudoCode": "0) procédure tri_mat_colonne(@m: mat, n: entier)\n1) pour j de 0 à n - 1 faire\n     p <-- vrai\n     tant que p faire\n       p <-- faux\n       pour i de 0 à n - 2 faire\n         si m[i, j] > m[i + 1, j] alors\n           aux <-- m[i, j]\n           m[i, j] <-- m[i + 1, j]\n           m[i + 1, j] <-- aux\n           p <-- vrai\n         fin_si\n       fin_pour\n       n <-- n - 1\n     fin_tant_que\n   fin_pour\n2) fin",
-    "tdo": [
-      {
-        "objet": "i, j, aux",
-        "type": "entier"
-      },
-      {
-        "objet": "p",
-        "type": "booléen"
-      }
-    ],
-    "pythonCode": "def tri_mat_colonne(m, n):\n    for j in range(n):\n        p = True\n        taille = n\n        while p:\n            p = False\n            for i in range(taille - 1):\n                if m[i][j] > m[i + 1][j]:\n                    aux = m[i][j]\n                    m[i][j] = m[i + 1][j]\n                    m[i + 1][j] = aux\n                    p = True\n            taille = taille - 1",
-    "example": "Chaque colonne de la matrice devient triée par ordre croissant"
-  },
-  {
-    "id": "algo-tri-mat-ligne",
-    "category": "Matrices & Patterns",
-    "type": "procédure",
-    "name": "tri_mat_ligne(@m, n)",
-    "syntax": "procédure tri_mat_ligne(@m: mat, n: entier)",
-    "summary": "Trie chaque ligne d'une matrice carrée de façon indépendante.",
-    "description": "Fixe l'indice de ligne i de 0 à n-1, puis applique un tri sur les éléments de la ligne m[i, j] pour j variant de 0 à n-2.",
-    "pseudoCode": "0) procédure tri_mat_ligne(@m: mat, n: entier)\n1) pour i de 0 à n - 1 faire\n     p <-- vrai\n     tant que p faire\n       p <-- faux\n       pour j de 0 à n - 2 faire\n         si m[i, j] > m[i, j + 1] alors\n           aux <-- m[i, j]\n           m[i, j] <-- m[i, j + 1]\n           m[i, j + 1] <-- aux\n           p <-- vrai\n         fin_si\n       fin_pour\n       n <-- n - 1\n     fin_tant_que\n   fin_pour\n2) fin",
-    "tdo": [
-      {
-        "objet": "i, j, aux",
-        "type": "entier"
-      },
-      {
-        "objet": "p",
-        "type": "booléen"
-      }
-    ],
-    "pythonCode": "def tri_mat_ligne(m, n):\n    for i in range(n):\n        p = True\n        taille = n\n        while p:\n            p = False\n            for j in range(taille - 1):\n                if m[i][j] > m[i][j + 1]:\n                    aux = m[i][j]\n                    m[i][j] = m[i][j + 1]\n                    m[i][j + 1] = aux\n                    p = True\n            taille = taille - 1",
-    "example": "Chaque ligne de la matrice devient triée par ordre croissant"
-  },
-  {
-    "id": "algo-mat-parcours-bas-haut",
-    "category": "Matrices & Patterns",
-    "type": "procédure",
-    "name": "mat_parcours_bas_haut(m, L, C)",
-    "syntax": "procédure mat_parcours_bas_haut(m: mat, L, C: entier)",
-    "summary": "Parcours de matrice colonne par colonne, de bas en haut et de droite à gauche.",
-    "description": "Règle d'or Bac IKODE : la variable qui bouge le plus vite est dans la boucle interne. Ici, la colonne j va de C-1 à 0 et la ligne i monte de L-1 à 0.",
-    "pseudoCode": "0) procédure mat_parcours_bas_haut(m: mat, L, C: entier)\n1) pour j de C - 1 à 0 (pas = -1) faire\n     pour i de L - 1 à 0 (pas = -1) faire\n       // Traitement de la case m[i, j]\n       écrire(m[i, j])\n     fin_pour\n   fin_pour\n2) fin",
-    "tdo": [
-      {
-        "objet": "i, j",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def mat_parcours_bas_haut(m, L, C):\n    for j in range(C - 1, -1, -1):\n        for i in range(L - 1, -1, -1):\n            print(\"Case [\" + str(i) + \", \" + str(j) + \"] = \" + str(m[i][j]))",
-    "example": "Explore m[L-1, C-1], m[L-2, C-1], ..., m[0, 0]"
-  },
-  {
-    "id": "algo-mat-parcours-ligne-inverse",
-    "category": "Matrices & Patterns",
-    "type": "procédure",
-    "name": "mat_parcours_ligne_inverse(m, L, C)",
-    "syntax": "procédure mat_parcours_ligne_inverse(m: mat, L, C: entier)",
-    "summary": "Parcours de matrice ligne par ligne, de droite à gauche et de bas en haut.",
-    "description": "La boucle externe gère les lignes i de L-1 à 0, et la boucle interne parcourt les colonnes j de C-1 à 0 à rebours.",
-    "pseudoCode": "0) procédure mat_parcours_ligne_inverse(m: mat, L, C: entier)\n1) pour i de L - 1 à 0 (pas = -1) faire\n     pour j de C - 1 à 0 (pas = -1) faire\n       // Traitement de la case m[i, j]\n       écrire(m[i, j])\n     fin_pour\n   fin_pour\n2) fin",
-    "tdo": [
-      {
-        "objet": "i, j",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def mat_parcours_ligne_inverse(m, L, C):\n    for i in range(L - 1, -1, -1):\n        for j in range(C - 1, -1, -1):\n            print(\"Case [\" + str(i) + \", \" + str(j) + \"] = \" + str(m[i][j]))",
-    "example": "Lecture inversée ligne par ligne complète"
-  },
-  {
-    "id": "algo-mat-pattern-sablier",
-    "category": "Matrices & Patterns",
-    "type": "procédure",
-    "name": "mat_pattern_sablier(m, L, C)",
-    "syntax": "procédure mat_pattern_sablier(m: mat, L, C: entier)",
-    "summary": "Parcours en motif sablier / triangle inversé avec bornes dynamiques d et f.",
-    "description": "Initialise d = 0 et f = C - 1. Pour chaque ligne i, la colonne j varie de d à f. À chaque changement de ligne, d s'incrémente de 1 et f se décrémente de 1.",
-    "pseudoCode": "0) procédure mat_pattern_sablier(m: mat, L, C: entier)\n1) d <-- 0\n2) f <-- C - 1\n3) pour i de 0 à L - 1 faire\n     pour j de d à f faire\n       // Traitement m[i, j]\n       écrire(m[i, j])\n     fin_pour\n     d <-- d + 1\n     f <-- f - 1\n   fin_pour\n4) fin",
-    "tdo": [
-      {
-        "objet": "i, j, d, f",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def mat_pattern_sablier(m, L, C):\n    d = 0\n    f = C - 1\n    for i in range(L):\n        if d <= f:\n            for j in range(d, f + 1):\n                print(\"[\" + str(i) + \",\" + str(j) + \"] = \" + str(m[i][j]), end=\" \")\n            print()\n            d = d + 1\n            f = f - 1",
-    "example": "Parcours des étoiles * formant un entonnoir dans la matrice"
-  },
-  {
-    "id": "algo-mat-pattern-diagonales",
-    "category": "Matrices & Patterns",
-    "type": "procédure",
-    "name": "mat_pattern_diagonales(m, L)",
-    "syntax": "procédure mat_pattern_diagonales(m: mat, L: entier)",
-    "summary": "Parcours de toutes les diagonales montantes d'une matrice carrée en deux temps.",
-    "description": "Partie 1 (triangle supérieur gauche) : boucle d de 0 à L-1, i descend de d à 0 pendant que j augmente de 0 à d. Partie 2 (triangle inférieur droit) : boucle d de 1 à L-1, i descend de L-1 à d pendant que j monte.",
-    "pseudoCode": "0) procédure mat_pattern_diagonales(m: mat, L: entier)\n1) // Partie 1 : Diagonales de la moitié supérieure gauche\n2) pour d de 0 à L - 1 faire\n     j <-- 0\n     pour i de d à 0 (pas = -1) faire\n       écrire(m[i, j])\n       j <-- j + 1\n     fin_pour\n   fin_pour\n3) // Partie 2 : Diagonales de la moitié inférieure droite\n4) pour d de 1 à L - 1 faire\n     j <-- d\n     pour i de L - 1 à d (pas = -1) faire\n       écrire(m[i, j])\n       j <-- j + 1\n     fin_pour\n   fin_pour\n5) fin",
-    "tdo": [
-      {
-        "objet": "d, i, j",
-        "type": "entier"
-      }
-    ],
-    "pythonCode": "def mat_pattern_diagonales(m, L):\n    # Partie 1 : Moitié supérieure\n    for d in range(L):\n        j = 0\n        for i in range(d, -1, -1):\n            print(\"[\" + str(i) + \",\" + str(j) + \"] = \" + str(m[i][j]), end=\" \")\n            j = j + 1\n        print()\n    \n    # Partie 2 : Moitié inférieure\n    for d in range(1, L):\n        j = d\n        for i in range(L - 1, d - 1, -1):\n            print(\"[\" + str(i) + \",\" + str(j) + \"] = \" + str(m[i][j]), end=\" \")\n            j = j + 1\n        print()",
-    "example": "Balaye toute la matrice par diagonales orientées vers le haut"
-  }
-]};
+    {
+      "id": "sql-type-int",
+      "category": "Type de données",
+      "name": "INT",
+      "tag": "INT",
+      "syntax": "colonne INT",
+      "summary": "Entier",
+      "description": "Type de données numérique représentant des nombres entiers (positifs, négatifs ou zéro). C'est le type privilégié au Bac STI pour les identifiants uniques, numéros d'inscription, codes postaux ou quantités entières.",
+      "howToUse": "S'utilise lors de la déclaration d'une colonne dans CREATE TABLE. Souvent associé à la contrainte PRIMARY KEY (et éventuellement AUTO_INCREMENT en MySQL).",
+      "values": [
+        "Entier signé ou non signé",
+        "Ex: 101, 2025, 0, -15",
+        "Taille standard : 4 octets"
+      ],
+      "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  age INT CHECK (age >= 15 AND age <= 30)\n);",
+      "simQuery": "SELECT num_inscr, nom, prenom FROM Eleve WHERE num_inscr > 102;",
+      "simTable": "Eleve",
+      "simDescription": "Filtre les élèves dont le numéro d'inscription entier (INT) est supérieur à 102."
+    },
+    {
+      "id": "sql-type-decimal",
+      "category": "Type de données",
+      "name": "DECIMAL",
+      "tag": "DECIMAL",
+      "syntax": "colonne DECIMAL(p, s)",
+      "summary": "Réel",
+      "description": "Type de données numérique à virgule fixe représentant un nombre réel exact. 'p' (précision) est le nombre total de chiffres, et 's' (échelle) est le nombre de chiffres après la virgule. Très utilisé pour les moyennes (ex: 15.75) et les prix.",
+      "howToUse": "Pour une moyenne au Bac STI de 0 à 20 avec deux décimales, on écrit : moyenne DECIMAL(4, 2). Par exemple, 17.50 occupe 4 chiffres au total dont 2 décimales.",
+      "values": [
+        "DECIMAL(taille_totale, decimales)",
+        "Ex: DECIMAL(4, 2) pour une moyenne (de 00.00 à 99.99)",
+        "Ex: DECIMAL(6, 3) pour un montant en dinars tunisiens (millimes)"
+      ],
+      "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  moyenne DECIMAL(4, 2) CHECK (moyenne BETWEEN 0 AND 20)\n);",
+      "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne >= 10.00 ORDER BY moyenne DESC;",
+      "simTable": "Eleve",
+      "simDescription": "Affiche les élèves ayant une moyenne réelle (DECIMAL) supérieure ou égale à 10.00."
+    },
+    {
+      "id": "sql-type-char",
+      "category": "Type de données",
+      "name": "CHAR",
+      "tag": "CHAR",
+      "syntax": "colonne CHAR(longueur_fixe)",
+      "summary": "Chaîne de caractères de longueur fixe.",
+      "howToUse": "À utiliser obligatoirement lorsque toutes les valeurs ont rigoureusement la même taille connue à l'avance : CIN (8 chiffres), code matière (4 lettres), code postal (4 chiffres), genre ('M'/'F').",
+      "description": "Chaîne de caractères dont la taille en mémoire est fixe. Si la chaîne saisie est plus courte que la longueur définie, MySQL la complète automatiquement par des espaces.",
+      "values": [
+        "CHAR(N) où N est le nombre fixe de caractères",
+        "Ex: cin CHAR(8)",
+        "Ex: code_mat CHAR(4)",
+        "Ex: genre CHAR(1)"
+      ],
+      "code": "CREATE TABLE Matiere (\n  code_mat CHAR(4) PRIMARY KEY,\n  libelle VARCHAR(30) NOT NULL,\n  coef INT NOT NULL\n);",
+      "simQuery": "SELECT * FROM Matiere WHERE code_mat = 'INFO';",
+      "simTable": "Matiere",
+      "simDescription": "Recherche la matière dont le code fixe (CHAR(4)) est exactement 'INFO'."
+    },
+    {
+      "id": "sql-type-varchar",
+      "category": "Type de données",
+      "name": "VARCHAR",
+      "tag": "VARCHAR",
+      "syntax": "colonne VARCHAR(longueur_max)",
+      "summary": "Chaîne de caractères de longueur variable dont la longueur maximale fixée.",
+      "description": "Chaîne de caractères de taille variable. Contrairement à CHAR, VARCHAR n'occupe en mémoire que la longueur réelle du texte saisi + 1 octet pour la taille. Idéal pour les noms, prénoms, adresses et villes.",
+      "howToUse": "Définir la longueur maximale autorisée entre parenthèses. Si l'élève saisit moins de caractères, aucun espace n'est gaspillé en mémoire.",
+      "values": [
+        "VARCHAR(N) où N est la limite maximale",
+        "Ex: nom VARCHAR(30)",
+        "Ex: email VARCHAR(50)",
+        "Ex: adresse VARCHAR(60)"
+      ],
+      "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  prenom VARCHAR(30) NOT NULL,\n  ville VARCHAR(25) DEFAULT 'Tunis'\n);",
+      "simQuery": "SELECT nom, prenom, ville FROM Eleve WHERE ville = 'Sousse';",
+      "simTable": "Eleve",
+      "simDescription": "Extrait les données textuelles variables (VARCHAR) des élèves résidant à Sousse."
+    },
+    {
+      "id": "sql-type-text",
+      "category": "Type de données",
+      "name": "TEXT",
+      "tag": "TEXT",
+      "syntax": "colonne TEXT",
+      "summary": "Chaîne de caractères de longueur variable.",
+      "description": "Type destiné au stockage de textes très longs sans avoir à spécifier une limite stricte lors de la création de la table (jusqu'à 65 535 caractères).",
+      "howToUse": "Utilisé pour les colonnes contenant des paragraphes, des observations de fin d'année, des résumés de TP ou des remarques d'enseignant.",
+      "values": [
+        "TEXT",
+        "Capacité maximale : 64 Ko",
+        "Pas besoin de spécifier de taille entre parenthèses"
+      ],
+      "code": "CREATE TABLE FicheObservation (\n  id_fiche INT PRIMARY KEY,\n  num_inscr INT,\n  remarque TEXT\n);",
+      "simQuery": "SELECT num_inscr, nom, ville FROM Eleve;",
+      "simTable": "Eleve",
+      "simDescription": "Exemple de colonnes textuelles dans la base de données relationnelle."
+    },
+    {
+      "id": "sql-type-date",
+      "category": "Type de données",
+      "name": "DATE",
+      "tag": "DATE",
+      "syntax": "colonne DATE",
+      "summary": "Date.",
+      "description": "Type de données temporel stockant une date civile au format international strict 'AAAA-MM-JJ' (Année sur 4 chiffres, Mois sur 2 chiffres, Jour sur 2 chiffres).",
+      "howToUse": "En SQL, toute valeur DATE doit être entourée d'apostrophes (ou guillemets), par exemple : '2007-06-15'. Compatible avec les fonctions YEAR(), MONTH(), DAY(), DATEDIFF().",
+      "values": [
+        "Format strict : 'AAAA-MM-JJ'",
+        "Ex: '2007-03-12'",
+        "Ex: '2026-11-11'"
+      ],
+      "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  date_naiss DATE NOT NULL\n);",
+      "simQuery": "SELECT nom, prenom, date_naiss FROM Eleve WHERE date_naiss >= '2007-01-01';",
+      "simTable": "Eleve",
+      "simDescription": "Sélectionne les élèves nés à partir du 1er janvier 2007 (type DATE au format 'AAAA-MM-JJ')."
+    },
+    {
+      "id": "sql-type-time",
+      "category": "Type de données",
+      "name": "TIME",
+      "tag": "TIME",
+      "syntax": "colonne TIME",
+      "summary": "Temps.",
+      "description": "Stocke une heure ou une durée au format standard 'HH:MM:SS' (Heures : Minutes : Secondes).",
+      "howToUse": "S'emploie pour enregistrer les heures d'épreuves du Bac STI (ex: heure début '08:00:00' et heure fin '10:00:00').",
+      "values": [
+        "Format standard : 'HH:MM:SS'",
+        "Ex: '08:30:00'",
+        "Ex: '14:00:00'"
+      ],
+      "code": "CREATE TABLE Seance (\n  id_seance INT PRIMARY KEY,\n  code_mat CHAR(4),\n  heure_debut TIME,\n  heure_fin TIME\n);",
+      "simQuery": "SELECT NOW() AS heure_actuelle;",
+      "simTable": "Eleve",
+      "simDescription": "Affiche l'heure courante du serveur SQL."
+    },
+    {
+      "id": "sql-type-datetime",
+      "category": "Type de données",
+      "name": "DATETIME",
+      "tag": "DATETIME",
+      "syntax": "colonne DATETIME",
+      "summary": "Date et Heure.",
+      "description": "Combine à la fois une date et une heure au format combiné 'AAAA-MM-JJ HH:MM:SS'. Permet un horodatage précis à la seconde près.",
+      "howToUse": "Utilisé pour enregistrer la date et l'heure exactes d'une inscription en ligne, du dépôt d'un devoir ou d'une modification.",
+      "values": [
+        "Format : 'AAAA-MM-JJ HH:MM:SS'",
+        "Ex: '2026-11-11 08:30:00'",
+        "Ex: NOW()"
+      ],
+      "code": "CREATE TABLE Inscription (\n  num_inscr INT PRIMARY KEY,\n  date_heure_inscr DATETIME DEFAULT NOW()\n);",
+      "simQuery": "SELECT nom, NOW() AS date_heure_consultation FROM Eleve LIMIT 3;",
+      "simTable": "Eleve",
+      "simDescription": "Exemple de valeur combinée Date et Heure (DATETIME)."
+    },
+    {
+      "id": "sql-constraint-not-null",
+      "category": "Contraintes d'intégrité",
+      "name": "NOT NULL",
+      "tag": "NOT NULL",
+      "syntax": "colonne type NOT NULL",
+      "summary": "Interdit une valeur nulle.",
+      "description": "Contrainte d'intégrité de niveau colonne qui oblige l'utilisateur à obligatoirement saisir une valeur. Le champ ne peut jamais être laissé vide ou indéfini (NULL).",
+      "howToUse": "Se place immédiatement après le type de la colonne dans CREATE TABLE ou ALTER TABLE ADD/MODIFY. Indispensable pour les noms, prénoms et mots de passe.",
+      "values": [
+        "NOT NULL",
+        "Obligatoire sur les attributs essentiels",
+        "Une clé primaire (PRIMARY KEY) est automatiquement NOT NULL"
+      ],
+      "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  prenom VARCHAR(30) NOT NULL\n);",
+      "simQuery": "SELECT nom, prenom FROM Eleve WHERE nom IS NOT NULL;",
+      "simTable": "Eleve",
+      "simDescription": "Garantit que tous les élèves retournés possèdent un nom non nul."
+    },
+    {
+      "id": "sql-constraint-default",
+      "category": "Contraintes d'intégrité",
+      "name": "DEFAULT",
+      "tag": "DEFAULT",
+      "syntax": "colonne type DEFAULT valeur_par_defaut",
+      "summary": "Attribut une valeur par défaut.",
+      "description": "Attribue automatiquement une valeur prédéfinie à la colonne si l'utilisateur ne spécifie aucune valeur lors de l'insertion (INSERT INTO).",
+      "howToUse": "Spécifier la constante par défaut après le mot-clé DEFAULT : un nombre (DEFAULT 0), un texte entre apostrophes (DEFAULT 'STI') ou une fonction (DEFAULT NOW()).",
+      "values": [
+        "DEFAULT valeur",
+        "Ex: section VARCHAR(10) DEFAULT 'STI'",
+        "Ex: ville VARCHAR(20) DEFAULT 'Tunis'",
+        "Ex: coef INT DEFAULT 3"
+      ],
+      "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  section VARCHAR(10) DEFAULT 'STI',\n  ville VARCHAR(20) DEFAULT 'Tunis'\n);",
+      "simQuery": "SELECT nom, section, ville FROM Eleve WHERE section = 'STI';",
+      "simTable": "Eleve",
+      "simDescription": "Affiche les élèves dont la section correspond à la valeur par défaut ('STI')."
+    },
+    {
+      "id": "sql-constraint-check",
+      "category": "Contraintes d'intégrité",
+      "name": "CHECK",
+      "tag": "CHECK",
+      "syntax": "CHECK (condition)",
+      "summary": "Spécifie que les valeurs de la colonne doivent respecter une condition.",
+      "description": "Contrainte d'intégrité du domaine qui valide les données insérées en vérifiant qu'elles satisfont une condition logique booléenne (comparaisons, encadrements, listes de valeurs).",
+      "howToUse": "Placer l'expression entre parenthèses. Par exemple pour une moyenne scolaire : CHECK (moyenne >= 0 AND moyenne <= 20) ou CHECK (moyenne BETWEEN 0 AND 20).",
+      "values": [
+        "CHECK (colonne >= min AND colonne <= max)",
+        "CHECK (colonne BETWEEN a AND b)",
+        "CHECK (section IN ('STI', 'Math', 'SI', 'Eco'))"
+      ],
+      "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  moyenne DECIMAL(4, 2),\n  CONSTRAINT chk_moy CHECK (moyenne BETWEEN 0 AND 20)\n);",
+      "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne BETWEEN 0 AND 20;",
+      "simTable": "Eleve",
+      "simDescription": "Valide que toutes les moyennes respectent la règle de gestion définie par le CHECK (0 à 20)."
+    },
+    {
+      "id": "sql-constraint-primary-key",
+      "category": "Contraintes d'intégrité",
+      "name": "PRIMARY KEY",
+      "tag": "PRIMARY KEY",
+      "syntax": "colonne type PRIMARY KEY  ou  PRIMARY KEY (colonne1, colonne2)",
+      "summary": "Définit une clé primaire.",
+      "description": "Identifie de manière unique et certaine chaque enregistrement (ligne) d'une table relationnelle. Une table ne peut avoir qu'une seule clé primaire. Elle garantit à la fois l'unicité et l'interdiction de valeur nulle (UNIQUE + NOT NULL).",
+      "howToUse": "Peut être déclarée au niveau colonne (pour une clé simple) ou au niveau table en bas de CREATE TABLE (obligatoire pour une clé primaire composée de plusieurs colonnes).",
+      "values": [
+        "PRIMARY KEY",
+        "Clé simple : num_inscr INT PRIMARY KEY",
+        "Clé composée : PRIMARY KEY (num_inscr, code_mat)"
+      ],
+      "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL\n);\n\n-- Clé primaire composée pour une table de liaison :\nCREATE TABLE Note (\n  num_inscr INT,\n  code_mat CHAR(4),\n  note_ds DECIMAL(4, 2),\n  PRIMARY KEY (num_inscr, code_mat)\n);",
+      "simQuery": "SELECT num_inscr, nom, prenom FROM Eleve WHERE num_inscr = 101;",
+      "simTable": "Eleve",
+      "simDescription": "Recherche un enregistrement unique garanti par sa clé primaire (PRIMARY KEY = 101)."
+    },
+    {
+      "id": "sql-constraint-unique",
+      "category": "Contraintes d'intégrité",
+      "name": "UNIQUE",
+      "tag": "UNIQUE",
+      "syntax": "colonne type UNIQUE",
+      "summary": "Spécifie l'unicité des valeurs d'une colonne.",
+      "description": "Interdit les doublons dans une colonne. Contrairement à la clé primaire, une table peut contenir plusieurs contraintes UNIQUE, et celles-ci peuvent autoriser la valeur NULL.",
+      "howToUse": "Indispensable pour des colonnes comme le numéro de carte d'identité nationale (CIN), l'adresse e-mail ou le numéro de téléphone.",
+      "values": [
+        "UNIQUE",
+        "Ex: cin CHAR(8) UNIQUE",
+        "Ex: email VARCHAR(50) UNIQUE",
+        "Ex: num_tel CHAR(8) UNIQUE"
+      ],
+      "code": "CREATE TABLE Candidat (\n  num_inscr INT PRIMARY KEY,\n  cin CHAR(8) NOT NULL UNIQUE,\n  email VARCHAR(50) UNIQUE\n);",
+      "simQuery": "SELECT num_inscr, nom, prenom FROM Eleve GROUP BY num_inscr;",
+      "simTable": "Eleve",
+      "simDescription": "Illustration de l'unicité des identifiants sans aucun doublon."
+    },
+    {
+      "id": "sql-constraint-foreign-key",
+      "category": "Contraintes d'intégrité",
+      "name": "FOREIGN KEY",
+      "tag": "FOREIGN KEY",
+      "syntax": "FOREIGN KEY (colonne) REFERENCES table_mere(colonne_pk)",
+      "summary": "Définit une clé étrangère.",
+      "description": "Établit un lien d'intégrité référentielle entre une colonne de la table fille et la clé primaire de la table mère. Empêche l'insertion d'une référence qui n'existe pas dans la table mère.",
+      "howToUse": "Déclarée dans la table fille qui pointe vers la table mère. Doit impérativement avoir le même type de données que la clé primaire référencée.",
+      "values": [
+        "FOREIGN KEY (col_fille) REFERENCES table_mere(col_mere)",
+        "Garantit la cohérence des liens relationnels",
+        "Peut être complétée par ON UPDATE CASCADE ou ON DELETE CASCADE"
+      ],
+      "code": "CREATE TABLE Note (\n  id_note INT PRIMARY KEY,\n  num_inscr INT,\n  code_mat CHAR(4),\n  note_ds DECIMAL(4, 2),\n  FOREIGN KEY (num_inscr) REFERENCES Eleve(num_inscr),\n  FOREIGN KEY (code_mat) REFERENCES Matiere(code_mat)\n);",
+      "simQuery": "SELECT Eleve.num_inscr, Eleve.nom, Matiere.libelle FROM Eleve, Matiere WHERE Eleve.num_inscr = 101 AND Matiere.code_mat = 'INFO';",
+      "simTable": "Eleve",
+      "simDescription": "Associe les tables par leurs clés relationnelles (FOREIGN KEY)."
+    },
+    {
+      "id": "sql-constraint-references",
+      "category": "Contraintes d'intégrité",
+      "name": "REFERENCES",
+      "tag": "REFERENCES",
+      "syntax": "REFERENCES table_mere (colonne_pk)",
+      "summary": "Fait référence à une clé primaire d'une autre table.",
+      "description": "Mot-clé inséparable de la déclaration de clé étrangère (FOREIGN KEY). Il indique explicitement le nom de la table parente ainsi que sa colonne clé primaire ciblée.",
+      "howToUse": "S'écrit sous la forme REFERENCES NomTable(NomColonne). La colonne cible doit obligatoirement être indexée ou clé primaire dans la table mère.",
+      "values": [
+        "REFERENCES table_parente(cle_primaire)",
+        "Ex: REFERENCES Eleve(num_inscr)",
+        "Ex: REFERENCES Matiere(code_mat)"
+      ],
+      "code": "ALTER TABLE Note\nADD CONSTRAINT fk_eleve\nFOREIGN KEY (num_inscr) REFERENCES Eleve(num_inscr)\nON DELETE CASCADE;",
+      "simQuery": "SELECT num_inscr, nom, prenom FROM Eleve WHERE num_inscr IN (SELECT num_inscr FROM Eleve);",
+      "simTable": "Eleve",
+      "simDescription": "Vérification des correspondances de clés avec REFERENCES."
+    },
+    {
+      "id": "sql-constraint-on-update-cascade",
+      "category": "Contraintes d'intégrité",
+      "name": "ON UPDATE CASCADE",
+      "tag": "ON UPDATE CASCADE",
+      "syntax": "FOREIGN KEY (...) REFERENCES ... ON UPDATE CASCADE",
+      "summary": "Met à jour la clé étrangère en cas de mise à jour de la clé primaire.",
+      "description": "Règle de propagation automatique des modifications : si la clé primaire de la table mère est modifiée par un UPDATE, toutes les clés étrangères correspondantes dans la table fille sont automatiquement mises à jour avec la nouvelle valeur.",
+      "howToUse": "S'ajoute à la suite de la clause FOREIGN KEY ... REFERENCES ... dans CREATE TABLE ou ALTER TABLE.",
+      "values": [
+        "ON UPDATE CASCADE",
+        "Évite les incohérences en cas de renommage d'identifiant",
+        "Alternative au blocage (RESTRICT)"
+      ],
+      "code": "CREATE TABLE Note (\n  num_inscr INT,\n  code_mat CHAR(4),\n  note_ds DECIMAL(4, 2),\n  PRIMARY KEY (num_inscr, code_mat),\n  FOREIGN KEY (num_inscr) REFERENCES Eleve(num_inscr)\n    ON UPDATE CASCADE\n    ON DELETE CASCADE\n);",
+      "simQuery": "SELECT num_inscr, nom, prenom FROM Eleve;",
+      "simTable": "Eleve",
+      "simDescription": "Règle de propagation de mise à jour en cascade (ON UPDATE CASCADE)."
+    },
+    {
+      "id": "sql-constraint-on-delete-cascade",
+      "category": "Contraintes d'intégrité",
+      "name": "ON DELETE CASCADE",
+      "tag": "ON DELETE CASCADE",
+      "syntax": "FOREIGN KEY (...) REFERENCES ... ON DELETE CASCADE",
+      "summary": "Supprime automatiquement tous les enregistrements de la table fille suite à la suppression de l'enregistrement correspondant de la table mère.",
+      "description": "Règle de suppression automatique : si un enregistrement parent est supprimé de la table mère (via DELETE FROM), tous ses enregistrements enfants associés dans la table fille sont automatiquement effacés du système pour éviter les données orphelines.",
+      "howToUse": "À spécifier à la fin de la déclaration FOREIGN KEY ... REFERENCES ... Indispensable pour nettoyer automatiquement les notes ou lignes de commande d'un élève ou client supprimé.",
+      "values": [
+        "ON DELETE CASCADE",
+        "Supprime les enregistrements fils automatiquement",
+        "Prévient les enregistrements orphelins dans la base"
+      ],
+      "code": "ALTER TABLE Inscription\nADD CONSTRAINT fk_inscr_eleve\nFOREIGN KEY (num_inscr) REFERENCES Eleve(num_inscr)\nON DELETE CASCADE;",
+      "simQuery": "SELECT num_inscr, nom, section FROM Eleve WHERE num_inscr = 101;",
+      "simTable": "Eleve",
+      "simDescription": "Démonstration de la règle de suppression en cascade (ON DELETE CASCADE)."
+    },
+    {
+      "id": "sql-op-equal",
+      "category": "Opérateurs de comparaison",
+      "name": "=",
+      "tag": "=",
+      "syntax": "colonne = valeur",
+      "summary": "Égale à",
+      "description": "Opérateur de comparaison qui teste la stricte égalité entre deux expressions, colonnes ou constantes dans une clause WHERE ou HAVING.",
+      "howToUse": "Pour les chaînes et dates, entourer la valeur d'apostrophes : WHERE section = 'STI' ou WHERE date_naiss = '2007-03-12'. Pour les nombres, écrire sans guillemets : WHERE num_inscr = 101.",
+      "values": [
+        "colonne = valeur",
+        "Sensible à la casse selon le classement (collation)",
+        "Ex: section = 'STI'"
+      ],
+      "code": "SELECT nom, prenom, moyenne FROM Eleve\nWHERE section = 'STI';",
+      "simQuery": "SELECT num_inscr, nom, prenom, section FROM Eleve WHERE section = 'STI';",
+      "simTable": "Eleve",
+      "simDescription": "Filtre les élèves dont la section est strictement égale à 'STI'."
+    },
+    {
+      "id": "sql-op-diff",
+      "category": "Opérateurs de comparaison",
+      "name": "<>",
+      "tag": "<>",
+      "syntax": "colonne <> valeur",
+      "summary": "Différent de",
+      "description": "Opérateur de comparaison standard du SQL pour vérifier qu'une valeur est différente d'une autre. En MySQL, != est également accepté comme synonyme.",
+      "howToUse": "S'utilise dans la clause WHERE pour exclure des enregistrements particuliers, par exemple : WHERE ville <> 'Tunis'.",
+      "values": [
+        "colonne <> valeur",
+        "Ex: section <> 'Math'",
+        "Ex: ville <> 'Tunis'"
+      ],
+      "code": "SELECT nom, prenom, ville FROM Eleve\nWHERE ville <> 'Tunis';",
+      "simQuery": "SELECT nom, prenom, ville FROM Eleve WHERE ville <> 'Tunis';",
+      "simTable": "Eleve",
+      "simDescription": "Sélectionne tous les élèves dont la ville est différente de 'Tunis'."
+    },
+    {
+      "id": "sql-op-gt",
+      "category": "Opérateurs de comparaison",
+      "name": ">",
+      "tag": ">",
+      "syntax": "colonne > valeur",
+      "summary": "Supérieur à",
+      "description": "Opérateur de comparaison stricte vérifiant si la valeur de gauche est strictement plus grande que la valeur de droite.",
+      "howToUse": "Applicable aux nombres (moyenne > 10), dates (date_naiss > '2007-01-01') et chaînes selon l'ordre alphabétique.",
+      "values": [
+        "colonne > valeur",
+        "Ex: moyenne > 10.00",
+        "Ex: age > 18"
+      ],
+      "code": "SELECT nom, prenom, moyenne FROM Eleve\nWHERE moyenne > 12.00\nORDER BY moyenne DESC;",
+      "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne > 12.00;",
+      "simTable": "Eleve",
+      "simDescription": "Affiche les élèves ayant une moyenne strictement supérieure à 12.00."
+    },
+    {
+      "id": "sql-op-lt",
+      "category": "Opérateurs de comparaison",
+      "name": "<",
+      "tag": "<",
+      "syntax": "colonne < valeur",
+      "summary": "Inférieur à",
+      "description": "Opérateur de comparaison stricte vérifiant si la valeur de gauche est strictement inférieure à la valeur de droite.",
+      "howToUse": "Très utilisé pour identifier les élèves ajournés (moyenne < 10) ou des dates antérieures à un seuil.",
+      "values": [
+        "colonne < valeur",
+        "Ex: moyenne < 10.00",
+        "Ex: coef < 3"
+      ],
+      "code": "SELECT nom, prenom, moyenne FROM Eleve\nWHERE moyenne < 10.00;",
+      "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne < 10.00;",
+      "simTable": "Eleve",
+      "simDescription": "Extrait les élèves dont la moyenne est strictement inférieure à 10.00."
+    },
+    {
+      "id": "sql-op-gte",
+      "category": "Opérateurs de comparaison",
+      "name": ">=",
+      "tag": ">=",
+      "syntax": "colonne >= valeur",
+      "summary": "Supérieur ou égale à",
+      "description": "Opérateur de comparaison large vérifiant si la valeur est supérieure ou égale à la borne spécifiée (la valeur borne est incluse).",
+      "howToUse": "Critère officiel d'admission au Baccalauréat tunisien : WHERE moyenne >= 10.00.",
+      "values": [
+        "colonne >= valeur",
+        "Borne incluse",
+        "Ex: moyenne >= 10.00",
+        "Ex: coef >= 3"
+      ],
+      "code": "SELECT nom, prenom, moyenne FROM Eleve\nWHERE moyenne >= 10.00\nORDER BY moyenne DESC;",
+      "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne >= 10.00 ORDER BY moyenne DESC;",
+      "simTable": "Eleve",
+      "simDescription": "Affiche tous les élèves admis au Bac STI (moyenne >= 10.00)."
+    },
+    {
+      "id": "sql-op-lte",
+      "category": "Opérateurs de comparaison",
+      "name": "<=",
+      "tag": "<=",
+      "syntax": "colonne <= valeur",
+      "summary": "Inférieur ou égale à",
+      "description": "Opérateur de comparaison large vérifiant si la valeur est inférieure ou égale à la borne spécifiée (borne incluse).",
+      "howToUse": "S'utilise pour borner des notes, des prix ou des dates : WHERE moyenne <= 15.00.",
+      "values": [
+        "colonne <= valeur",
+        "Borne incluse",
+        "Ex: moyenne <= 15.00",
+        "Ex: date_naiss <= '2007-12-31'"
+      ],
+      "code": "SELECT nom, prenom, moyenne FROM Eleve\nWHERE moyenne <= 12.00;",
+      "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne <= 12.00;",
+      "simTable": "Eleve",
+      "simDescription": "Affiche les élèves ayant une moyenne inférieure ou égale à 12.00."
+    },
+    {
+      "id": "sql-op-in",
+      "category": "Opérateurs de comparaison",
+      "name": "IN",
+      "tag": "IN",
+      "syntax": "colonne IN (valeur1, valeur2, ...)",
+      "summary": "Dans",
+      "description": "Vérifie si la valeur d'une colonne appartient à un ensemble de valeurs données entre parenthèses. Évite d'écrire de multiples conditions OR successives.",
+      "howToUse": "Lister les valeurs séparées par des virgules entre parenthèses : WHERE ville IN ('Tunis', 'Sousse', 'Sfax'). Peut également recevoir le résultat d'une sous-requête SQL.",
+      "values": [
+        "IN (val1, val2, ...)",
+        "Équivalent à (col = val1 OR col = val2 ...)",
+        "Peut être inversé avec NOT IN"
+      ],
+      "code": "SELECT nom, prenom, ville FROM Eleve\nWHERE ville IN ('Tunis', 'Sousse');",
+      "simQuery": "SELECT nom, prenom, ville FROM Eleve WHERE ville IN ('Tunis', 'Sousse');",
+      "simTable": "Eleve",
+      "simDescription": "Extrait les élèves résidant dans la liste de villes ('Tunis' ou 'Sousse')."
+    },
+    {
+      "id": "sql-op-between",
+      "category": "Opérateurs de comparaison",
+      "name": "BETWEEN",
+      "tag": "BETWEEN",
+      "syntax": "colonne BETWEEN borne_min AND borne_max",
+      "summary": "Entre deux valeurs d'un intervalle.",
+      "description": "Vérifie si une valeur est comprise dans un intervalle fermé (les deux bornes minimale et maximale sont incluses). Équivalent à : (colonne >= borne_min AND colonne <= borne_max).",
+      "howToUse": "Attention : la borne inférieure doit obligatoirement être écrite en premier, suivie du mot-clé AND puis de la borne supérieure : WHERE moyenne BETWEEN 10 AND 15.",
+      "values": [
+        "BETWEEN min AND max",
+        "Bornes min et max INCLUSES",
+        "Applicable aux nombres, dates et lettres"
+      ],
+      "code": "SELECT nom, prenom, moyenne FROM Eleve\nWHERE moyenne BETWEEN 10.00 AND 15.00\nORDER BY moyenne ASC;",
+      "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne BETWEEN 10.00 AND 15.00;",
+      "simTable": "Eleve",
+      "simDescription": "Filtre les élèves dont la moyenne est comprise entre 10.00 et 15.00 inclus."
+    },
+    {
+      "id": "sql-op-like",
+      "category": "Opérateurs de comparaison",
+      "name": "LIKE",
+      "tag": "LIKE",
+      "syntax": "colonne LIKE 'motif'",
+      "summary": "Recherche de motif/valeur.",
+      "description": "Recherche textuelle basée sur des caractères génériques (jokers) : le symbole '%' remplace zéro, un ou plusieurs caractères ; le symbole '_' remplace exactement un seul caractère.",
+      "howToUse": "Motifs classiques au Bac STI : LIKE 'A%' (commence par A), LIKE '%Ben%' (contient Ben), LIKE '%s' (finit par s), LIKE '_a%' (deuxième lettre est 'a').",
+      "values": [
+        "'%' : 0, 1 ou plusieurs caractères",
+        "'_' : exactement un seul caractère",
+        "Ex: nom LIKE 'B%'",
+        "Ex: nom LIKE '%Salah%'"
+      ],
+      "code": "SELECT nom, prenom FROM Eleve\nWHERE nom LIKE 'B%';\n\n-- Recherche contenant le mot 'Salah' :\nSELECT nom, prenom FROM Eleve\nWHERE nom LIKE '%Salah%';",
+      "simQuery": "SELECT num_inscr, nom, prenom FROM Eleve WHERE nom LIKE 'B%';",
+      "simTable": "Eleve",
+      "simDescription": "Recherche tous les élèves dont le nom commence par la lettre 'B' (LIKE 'B%')."
+    },
+    {
+      "id": "sql-op-is",
+      "category": "Opérateurs de comparaison",
+      "name": "IS",
+      "tag": "IS",
+      "syntax": "colonne IS NULL  ou  colonne IS NOT NULL",
+      "summary": "Filtre les résultats contenant la valeur NULL.",
+      "description": "En SQL, la valeur NULL représente l'absence d'information (valeur inconnue ou indéfinie). Elle ne peut jamais être testée avec l'opérateur '=' (écrire '= NULL' renvoie toujours false). On utilise impérativement l'opérateur IS.",
+      "howToUse": "Écrire 'colonne IS NULL' pour trouver les champs vides, ou 'colonne IS NOT NULL' pour trouver les champs renseignés.",
+      "values": [
+        "IS NULL : valeur non renseignée",
+        "IS NOT NULL : valeur renseignée",
+        "Interdiction d'utiliser '= NULL' !"
+      ],
+      "code": "SELECT nom, prenom FROM Eleve\nWHERE ville IS NOT NULL;\n\n-- Trouver les élèves sans remarque :\nSELECT nom, prenom FROM Eleve\nWHERE remarque IS NULL;",
+      "simQuery": "SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne IS NOT NULL;",
+      "simTable": "Eleve",
+      "simDescription": "Sélectionne les enregistrements dont la moyenne est bien renseignée (IS NOT NULL)."
+    },
+    {
+      "id": "sql-op-and",
+      "category": "Opérateurs logiques",
+      "name": "AND",
+      "tag": "AND",
+      "syntax": "condition1 AND condition2",
+      "summary": "ET",
+      "description": "Opérateur logique ET. Renvoie vrai si et seulement si toutes les conditions combinées sont simultanément vraies.",
+      "howToUse": "Utilisé pour restreindre les résultats en exigeant plusieurs critères simultanés : par exemple, être de la section STI ET avoir une moyenne >= 10.",
+      "values": [
+        "VRAI AND VRAI = VRAI",
+        "VRAI AND FAUX = FAUX",
+        "Ex: section = 'STI' AND moyenne >= 10"
+      ],
+      "code": "SELECT nom, prenom, moyenne FROM Eleve\nWHERE section = 'STI' AND moyenne >= 10.00;",
+      "simQuery": "SELECT nom, prenom, section, moyenne FROM Eleve WHERE section = 'STI' AND moyenne >= 10.00;",
+      "simTable": "Eleve",
+      "simDescription": "Combine deux critères avec AND : section = 'STI' ET moyenne >= 10.00."
+    },
+    {
+      "id": "sql-op-or",
+      "category": "Opérateurs logiques",
+      "name": "OR",
+      "tag": "OR",
+      "syntax": "condition1 OR condition2",
+      "summary": "OU",
+      "description": "Opérateur logique OU. Renvoie vrai dès qu'au moins l'une des conditions est vraie. Renvoie faux uniquement si toutes les conditions sont fausses.",
+      "howToUse": "Utilisé pour élargir la sélection à plusieurs alternatives : par exemple, habiter à Tunis OU habiter à Sousse.",
+      "values": [
+        "VRAI OR FAUX = VRAI",
+        "FAUX OR FAUX = FAUX",
+        "Ex: ville = 'Tunis' OR ville = 'Sousse'"
+      ],
+      "code": "SELECT nom, prenom, ville FROM Eleve\nWHERE ville = 'Tunis' OR ville = 'Sousse';",
+      "simQuery": "SELECT nom, prenom, ville FROM Eleve WHERE ville = 'Tunis' OR ville = 'Sousse';",
+      "simTable": "Eleve",
+      "simDescription": "Sélectionne les élèves satisfaisant au moins une condition (ville = 'Tunis' OR ville = 'Sousse')."
+    },
+    {
+      "id": "sql-op-not",
+      "category": "Opérateurs logiques",
+      "name": "NOT",
+      "tag": "NOT",
+      "syntax": "NOT condition",
+      "summary": "NON",
+      "description": "Opérateur logique de négation. Inverse le résultat booléen d'une condition : transforme vrai en faux, et faux en vrai.",
+      "howToUse": "Se place devant une condition, ou combiné avec des opérateurs comme NOT IN, NOT BETWEEN, NOT LIKE, IS NOT NULL.",
+      "values": [
+        "NOT (VRAI) = FAUX",
+        "NOT (FAUX) = VRAI",
+        "Ex: NOT (section = 'Math')",
+        "Ex: nom NOT LIKE 'B%'"
+      ],
+      "code": "SELECT nom, prenom, section FROM Eleve\nWHERE NOT (section = 'Math');",
+      "simQuery": "SELECT nom, prenom, section FROM Eleve WHERE NOT (section = 'Math');",
+      "simTable": "Eleve",
+      "simDescription": "Exclut les élèves de la section Math grâce à l'opérateur de négation NOT."
+    },
+    {
+      "id": "sql-ldd-create-db",
+      "category": "Définition des données",
+      "name": "CREATE DATABASE",
+      "tag": "CREATE DATABASE",
+      "syntax": "CREATE DATABASE nom",
+      "summary": "Crée une base de données.",
+      "description": "Instruction du Langage de Définition de Données (LDD) qui crée un nouvel espace de stockage de base de données vide avec le nom spécifié.",
+      "howToUse": "S'exécute une seule fois au tout début d'un projet informatique ou d'une épreuve pratique avant de créer les tables. En MySQL, on peut ajouter IF NOT EXISTS pour éviter les erreurs si la base existe déjà.",
+      "values": [
+        "CREATE DATABASE nom_base",
+        "Ex: CREATE DATABASE Gestion_Lycee;",
+        "Ex: CREATE DATABASE IF NOT EXISTS BacSTI_2026;"
+      ],
+      "code": "-- Création de la base de données du lycée\nCREATE DATABASE Gestion_Lycee;\nUSE Gestion_Lycee;",
+      "simQuery": "SELECT 'Base de données active : Gestion_Lycee' AS Statut;",
+      "simTable": "Eleve",
+      "simDescription": "Simulation de création d'une nouvelle base de données (CREATE DATABASE)."
+    },
+    {
+      "id": "sql-ldd-drop-db",
+      "category": "Définition des données",
+      "name": "DROP DATABASE",
+      "tag": "DROP DATABASE",
+      "syntax": "DROP DATABASE nom",
+      "summary": "Supprime une base de données.",
+      "description": "Supprime définitivement une base de données existante ainsi que l'intégralité des tables, enregistrements et index qu'elle contient.",
+      "howToUse": "Attention : action irréversible ! À manipuler avec précaution.",
+      "values": [
+        "DROP DATABASE nom_base",
+        "Supprime toutes les tables et données",
+        "Ex: DROP DATABASE Gestion_Lycee;"
+      ],
+      "code": "DROP DATABASE Gestion_Lycee;",
+      "simQuery": "SELECT 'Base de données supprimée avec succès' AS Statut;",
+      "simTable": "Eleve",
+      "simDescription": "Supprime définitivement une base de données (DROP DATABASE)."
+    },
+    {
+      "id": "sql-ldd-create-table",
+      "category": "Définition des données",
+      "name": "CREATE TABLE",
+      "tag": "CREATE TABLE",
+      "syntax": "CREATE TABLE table1 ( colonne1 type [contrainte], colonne2 type [contrainte], ... [[CONSTRAINT] [nom] [contrainte], ...] )",
+      "summary": "Crée une table.",
+      "description": "Instruction fondamentale du LDD pour concevoir la structure relationnelle d'une table : liste des colonnes, leurs types de données respectifs, et leurs contraintes d'intégrité (PRIMARY KEY, NOT NULL, DEFAULT, CHECK, FOREIGN KEY).",
+      "howToUse": "Ouvrir une parenthèse après le nom de table, déclarer chaque colonne séparée par une virgule, et refermer la parenthèse avec un point-virgule.",
+      "values": [
+        "CREATE TABLE nom (col1 type1, col2 type2, ...)",
+        "Définition des clés primaires et contraintes",
+        "Respecter l'ordre : tables mères créées avant les tables filles"
+      ],
+      "code": "CREATE TABLE Eleve (\n  num_inscr INT PRIMARY KEY,\n  nom VARCHAR(30) NOT NULL,\n  prenom VARCHAR(30) NOT NULL,\n  section VARCHAR(10) DEFAULT 'STI',\n  moyenne DECIMAL(4, 2) CHECK (moyenne BETWEEN 0 AND 20),\n  date_naiss DATE NOT NULL,\n  ville VARCHAR(25) DEFAULT 'Tunis'\n);",
+      "simQuery": "SELECT * FROM Eleve LIMIT 3;",
+      "simTable": "Eleve",
+      "simDescription": "Structure complète de la table Eleve créée avec CREATE TABLE."
+    },
+    {
+      "id": "sql-ldd-alter-add",
+      "category": "Définition des données",
+      "name": "ALTER TABLE ... ADD",
+      "tag": "ALTER TABLE ADD",
+      "syntax": "ALTER TABLE table1 ADD colonne type [contrainte]",
+      "summary": "Ajoute une colonne à une table.",
+      "description": "Permet d'ajouter une nouvelle colonne dans une table existante sans avoir à détruire ni recréer la table, préservant ainsi toutes les données déjà enregistrées.",
+      "howToUse": "Spécifier le nom de la table, le mot-clé ADD, puis le nom de la nouvelle colonne avec son type et ses contraintes éventuelles.",
+      "values": [
+        "ALTER TABLE nom_table ADD nom_colonne type [contraintes]",
+        "Ex: ALTER TABLE Eleve ADD email VARCHAR(50);",
+        "Ex: ALTER TABLE Eleve ADD mention VARCHAR(15);"
+      ],
+      "code": "-- Ajouter une colonne 'email' dans la table Eleve\nALTER TABLE Eleve ADD email VARCHAR(50);",
+      "simQuery": "SELECT num_inscr, nom, prenom, 'mohamed@lycee.tn' AS email FROM Eleve LIMIT 3;",
+      "simTable": "Eleve",
+      "simDescription": "Résultat après ajout de la colonne 'email' avec ALTER TABLE ADD."
+    },
+    {
+      "id": "sql-ldd-alter-drop",
+      "category": "Définition des données",
+      "name": "ALTER TABLE ... DROP colonne",
+      "tag": "ALTER TABLE DROP colonne",
+      "syntax": "ALTER TABLE table1 DROP colonne",
+      "summary": "Supprime une colonne.",
+      "description": "Supprime physiquement une colonne existante ainsi que toutes les valeurs qu'elle contenait dans la table.",
+      "howToUse": "Écrire ALTER TABLE nom_table DROP COLUMN nom_colonne (le mot-clé COLUMN est optionnel en MySQL).",
+      "values": [
+        "ALTER TABLE table DROP colonne",
+        "Action définitive pour les données de cette colonne",
+        "Ex: ALTER TABLE Eleve DROP ville;"
+      ],
+      "code": "-- Supprimer la colonne 'remarque' de la table Eleve\nALTER TABLE Eleve DROP remarque;",
+      "simQuery": "SELECT num_inscr, nom, prenom, moyenne FROM Eleve LIMIT 3;",
+      "simTable": "Eleve",
+      "simDescription": "Affichage de la table après suppression d'une colonne avec ALTER TABLE DROP."
+    },
+    {
+      "id": "sql-ldd-alter-modify",
+      "category": "Définition des données",
+      "name": "ALTER TABLE ... ALTER / MODIFY",
+      "tag": "ALTER TABLE MODIFY",
+      "syntax": "ALTER TABLE table1 ALTER* colonne type  (* on peut utiliser MODIFY au lieu de ALTER)",
+      "summary": "Modifie le type d'une colonne.",
+      "description": "Modifie le type de données ou la taille maximale d'une colonne existante (par exemple agrandir un VARCHAR(20) en VARCHAR(40)). En MySQL, la syntaxe la plus utilisée en TP au Bac STI est MODIFY.",
+      "howToUse": "Écrire ALTER TABLE nom_table MODIFY nom_colonne nouveau_type. Attention : si la table contient déjà des données, le nouveau type doit être compatible.",
+      "values": [
+        "ALTER TABLE table MODIFY colonne nouveau_type",
+        "Équivalent officiel : ALTER colonne type",
+        "Ex: ALTER TABLE Eleve MODIFY nom VARCHAR(45) NOT NULL;"
+      ],
+      "code": "-- Agrandir la taille du champ 'nom' de 30 à 45 caractères\nALTER TABLE Eleve MODIFY nom VARCHAR(45) NOT NULL;",
+      "simQuery": "SELECT num_inscr, nom, prenom FROM Eleve LIMIT 3;",
+      "simTable": "Eleve",
+      "simDescription": "Modification du type et de la taille d'une colonne (ALTER / MODIFY)."
+    },
+    {
+      "id": "sql-ldd-alter-rename",
+      "category": "Définition des données",
+      "name": "ALTER TABLE ... RENAME / CHANGE",
+      "tag": "ALTER TABLE RENAME / CHANGE",
+      "syntax": "ALTER TABLE table1 RENAME** nom1 TO nom2  (** on peut utiliser CHANGE au lieu de RENAME)",
+      "summary": "Modifie le nom d'une colonne.",
+      "description": "Permet de renommer une colonne existante. L'annexe officielle précise qu'on peut utiliser RENAME COLUMN ancien_nom TO nouveau_nom ou CHANGE ancien_nom nouveau_nom type.",
+      "howToUse": "Syntaxe 1 : ALTER TABLE table RENAME COLUMN ancien TO nouveau;\nSyntaxe 2 (MySQL classique) : ALTER TABLE table CHANGE ancien nouveau type;",
+      "values": [
+        "ALTER TABLE table RENAME col_ancien TO col_nouveau",
+        "ALTER TABLE table CHANGE col_ancien col_nouveau type",
+        "Ex: ALTER TABLE Eleve RENAME COLUMN moyenne TO moyenne_bac;"
+      ],
+      "code": "-- Renommer la colonne 'moyenne' en 'moyenne_bac'\nALTER TABLE Eleve RENAME COLUMN moyenne TO moyenne_bac;\n\n-- Variante MySQL avec CHANGE :\nALTER TABLE Eleve CHANGE moyenne moyenne_bac DECIMAL(4, 2);",
+      "simQuery": "SELECT num_inscr, nom, moyenne AS moyenne_bac FROM Eleve LIMIT 3;",
+      "simTable": "Eleve",
+      "simDescription": "Renommage d'une colonne de table (RENAME / CHANGE)."
+    },
+    {
+      "id": "sql-ldd-alter-add-constraint",
+      "category": "Définition des données",
+      "name": "ALTER TABLE ... ADD CONSTRAINT",
+      "tag": "ALTER TABLE ADD CONSTRAINT",
+      "syntax": "ALTER TABLE table1 ADD CONSTRAINT [nom] contrainte",
+      "summary": "Ajoute une contrainte sur une colonne d'une table.",
+      "description": "Permet d'ajouter a posteriori une contrainte d'intégrité nommée (PRIMARY KEY, UNIQUE, CHECK ou FOREIGN KEY) sur une table déjà existante.",
+      "howToUse": "Donner un nom explicite à la contrainte pour pouvoir la gérer facilement plus tard : par exemple, 'chk_moy' ou 'fk_inscr'.",
+      "values": [
+        "ADD CONSTRAINT nom PRIMARY KEY (...)",
+        "ADD CONSTRAINT nom FOREIGN KEY (...) REFERENCES ...",
+        "ADD CONSTRAINT nom CHECK (...)"
+      ],
+      "code": "-- Ajouter une clé étrangère avec contrainte nommée\nALTER TABLE Note\nADD CONSTRAINT fk_note_eleve\nFOREIGN KEY (num_inscr) REFERENCES Eleve(num_inscr)\nON DELETE CASCADE;\n\n-- Ajouter une contrainte CHECK :\nALTER TABLE Eleve\nADD CONSTRAINT chk_age\nCHECK (age >= 15 AND age <= 30);",
+      "simQuery": "SELECT 'Contrainte ajoutée avec succès sur la table' AS Resultat;",
+      "simTable": "Eleve",
+      "simDescription": "Ajout d'une contrainte d'intégrité nommée (ADD CONSTRAINT)."
+    },
+    {
+      "id": "sql-ldd-alter-drop-constraint",
+      "category": "Définition des données",
+      "name": "ALTER TABLE ... DROP CONSTRAINT",
+      "tag": "ALTER TABLE DROP CONSTRAINT",
+      "syntax": "ALTER TABLE table1 DROP CONSTRAINT nom",
+      "summary": "Supprime une contrainte.",
+      "description": "Supprime une contrainte d'intégrité existante par son nom (par exemple supprimer une règle CHECK devenue obsolète). Pour une clé primaire sans nom : ALTER TABLE table DROP PRIMARY KEY.",
+      "howToUse": "Spécifier le nom attribué à la contrainte lors de sa création : ALTER TABLE Eleve DROP CONSTRAINT chk_age.",
+      "values": [
+        "ALTER TABLE table DROP CONSTRAINT nom_contrainte",
+        "Pour clé primaire : ALTER TABLE table DROP PRIMARY KEY;",
+        "Pour clé étrangère : ALTER TABLE table DROP FOREIGN KEY nom_cle;"
+      ],
+      "code": "-- Supprimer la contrainte CHECK 'chk_age'\nALTER TABLE Eleve DROP CONSTRAINT chk_age;",
+      "simQuery": "SELECT 'Contrainte supprimée avec succès' AS Resultat;",
+      "simTable": "Eleve",
+      "simDescription": "Suppression d'une contrainte d'intégrité (DROP CONSTRAINT)."
+    },
+    {
+      "id": "sql-ldd-alter-enable-disable",
+      "category": "Définition des données",
+      "name": "ALTER TABLE ... ENABLE / DISABLE CONSTRAINT",
+      "tag": "ENABLE / DISABLE CONSTRAINT",
+      "syntax": "ALTER TABLE table1 ENABLE/ DISABLE CONSTRAINT nom",
+      "summary": "Active/Désactive une contrainte.",
+      "description": "Permet de désactiver temporairement la vérification d'une contrainte d'intégrité (par exemple lors de chargements massifs de données de test) sans devoir la supprimer, puis de la réactiver ensuite.",
+      "howToUse": "Syntaxe officielle de l'annexe : ALTER TABLE table1 DISABLE CONSTRAINT nom; puis ALTER TABLE table1 ENABLE CONSTRAINT nom;",
+      "values": [
+        "DISABLE CONSTRAINT : désactivation temporaire",
+        "ENABLE CONSTRAINT : réactivation et vérification",
+        "Mentionné textuellement dans l'annexe Bac STI"
+      ],
+      "code": "-- Désactiver la contrainte pour insérer des données de test\nALTER TABLE Eleve DISABLE CONSTRAINT chk_age;\n\n-- Réactiver la contrainte une fois terminé\nALTER TABLE Eleve ENABLE CONSTRAINT chk_age;",
+      "simQuery": "SELECT 'État contrainte : ACTIVÉE (ENABLE)' AS Statut;",
+      "simTable": "Eleve",
+      "simDescription": "Activation / Désactivation d'une contrainte (ENABLE / DISABLE)."
+    },
+    {
+      "id": "sql-ldd-drop-table",
+      "category": "Définition des données",
+      "name": "DROP TABLE",
+      "tag": "DROP TABLE",
+      "syntax": "DROP TABLE table1",
+      "summary": "Supprime une table.",
+      "description": "Supprime définitivement la table spécifiée, sa structure relationnelle et l'intégralité de ses enregistrements.",
+      "howToUse": "Attention : si la table est référencée par une clé étrangère (table mère), il faut d'abord supprimer la table fille ou retirer la contrainte de clé étrangère avant de pouvoir la supprimer.",
+      "values": [
+        "DROP TABLE nom_table",
+        "Action irréversible",
+        "Ordre de suppression : supprimer les tables filles avant les tables mères"
+      ],
+      "code": "-- Supprimer la table temporaire 'Test'\nDROP TABLE Test;",
+      "simQuery": "SELECT 'Table supprimée avec succès' AS Statut;",
+      "simTable": "Eleve",
+      "simDescription": "Suppression complète d'une table relationnelle (DROP TABLE)."
+    },
+    {
+      "id": "sql-fn-date",
+      "category": "Fonctions définies sur le type date",
+      "name": "DATE()",
+      "tag": "DATE()",
+      "syntax": "DATE(expression)",
+      "summary": "Retourne une date extraite à partir d'une chaîne contenant une valeur au format DATE ou DATETIME.",
+      "description": "Extrait la portion 'Date' (AAAA-MM-JJ) à partir d'une valeur ou chaîne représentant un DATETIME ou un horodatage avec heure.",
+      "howToUse": "Très utile lorsqu'une colonne est de type DATETIME ('2026-11-11 14:30:00') et que l'on souhaite uniquement comparer ou afficher la date '2026-11-11'.",
+      "values": [
+        "DATE('AAAA-MM-JJ HH:MM:SS') -> 'AAAA-MM-JJ'",
+        "Ex: DATE(NOW())",
+        "Ex: DATE('2026-11-11 12:45:00') -> '2026-11-11'"
+      ],
+      "code": "SELECT nom, DATE(NOW()) AS date_aujourdhui\nFROM Eleve\nLIMIT 3;",
+      "simQuery": "SELECT nom, prenom, DATE(NOW()) AS date_jour FROM Eleve LIMIT 3;",
+      "simTable": "Eleve",
+      "simDescription": "Extrait la date du jour sans les heures à l'aide de DATE(NOW())."
+    },
+    {
+      "id": "sql-fn-day",
+      "category": "Fonctions définies sur le type date",
+      "name": "DAY()",
+      "tag": "DAY()",
+      "syntax": "DAY(date)",
+      "summary": "Retourne le jour.",
+      "description": "Extrait le numéro du jour du mois (valeur entière de 1 à 31) à partir d'une date donnée.",
+      "howToUse": "S'écrit DAY(colonne_date). Équivalent à DAYOFMONTH(date) en MySQL.",
+      "values": [
+        "DAY(date) -> nombre entier (1 à 31)",
+        "Ex: DAY('2007-03-12') -> 12",
+        "Ex: DAY(NOW())"
+      ],
+      "code": "SELECT nom, prenom, date_naiss, DAY(date_naiss) AS jour_naissance\nFROM Eleve;",
+      "simQuery": "SELECT nom, prenom, date_naiss, DAY(date_naiss) AS jour FROM Eleve;",
+      "simTable": "Eleve",
+      "simDescription": "Extrait le numéro du jour de naissance pour chaque élève avec DAY()."
+    },
+    {
+      "id": "sql-fn-month",
+      "category": "Fonctions définies sur le type date",
+      "name": "MONTH()",
+      "tag": "MONTH()",
+      "syntax": "MONTH(date)",
+      "summary": "Retourne le mois.",
+      "description": "Extrait le numéro du mois (valeur entière de 1 pour Janvier à 12 pour Décembre) à partir d'une date.",
+      "howToUse": "Permet de filtrer des événements survenus pendant un mois particulier, par exemple les élèves nés au mois de mars : WHERE MONTH(date_naiss) = 3.",
+      "values": [
+        "MONTH(date) -> nombre entier (1 à 12)",
+        "Ex: MONTH('2007-03-12') -> 3",
+        "Ex: MONTH(NOW())"
+      ],
+      "code": "SELECT nom, prenom, date_naiss, MONTH(date_naiss) AS mois_naissance\nFROM Eleve\nWHERE MONTH(date_naiss) = 3;",
+      "simQuery": "SELECT nom, prenom, date_naiss, MONTH(date_naiss) AS mois FROM Eleve WHERE MONTH(date_naiss) = 3;",
+      "simTable": "Eleve",
+      "simDescription": "Filtre les élèves nés au mois de mars (MONTH(date_naiss) = 3)."
+    },
+    {
+      "id": "sql-fn-year",
+      "category": "Fonctions définies sur le type date",
+      "name": "YEAR()",
+      "tag": "YEAR()",
+      "syntax": "YEAR(date)",
+      "summary": "Retourne l'année.",
+      "description": "Extrait l'année sur 4 chiffres (ex: 2007, 2026) à partir d'une date valide.",
+      "howToUse": "Classique absolu du Bac STI pour calculer l'âge d'un élève : YEAR(NOW()) - YEAR(date_naiss).",
+      "values": [
+        "YEAR(date) -> entier sur 4 chiffres",
+        "Ex: YEAR('2007-03-12') -> 2007",
+        "Ex: YEAR(NOW()) -> 2026"
+      ],
+      "code": "SELECT nom, prenom, date_naiss,\n  YEAR(NOW()) - YEAR(date_naiss) AS age\nFROM Eleve;",
+      "simQuery": "SELECT nom, prenom, date_naiss, YEAR(NOW()) - YEAR(date_naiss) AS age FROM Eleve;",
+      "simTable": "Eleve",
+      "simDescription": "Calcule l'âge des élèves grâce à la formule Bac STI : YEAR(NOW()) - YEAR(date_naiss)."
+    },
+    {
+      "id": "sql-fn-now",
+      "category": "Fonctions définies sur le type date",
+      "name": "NOW()",
+      "tag": "NOW()",
+      "syntax": "NOW()",
+      "summary": "Retourne la date et l'heure courantes.",
+      "description": "Fonction système sans argument qui renvoie la date et l'heure actuelles de l'ordinateur/serveur au format 'AAAA-MM-JJ HH:MM:SS'.",
+      "howToUse": "S'emploie sans paramètre entre parenthèses. Très souvent combinée avec YEAR(NOW()) pour les calculs d'âge ou DEFAULT NOW() pour les dates d'enregistrement.",
+      "values": [
+        "NOW()",
+        "Renvoie 'AAAA-MM-JJ HH:MM:SS'",
+        "Ex: SELECT NOW();"
+      ],
+      "code": "SELECT NOW() AS date_heure_courante,\n       YEAR(NOW()) AS annee_courante;",
+      "simQuery": "SELECT NOW() AS date_et_heure_actuelle, YEAR(NOW()) AS annee_actuelle;",
+      "simTable": "Eleve",
+      "simDescription": "Appel de la fonction système NOW() retournant la date et l'heure actuelles."
+    },
+    {
+      "id": "sql-fn-adddate",
+      "category": "Fonctions définies sur le type date",
+      "name": "ADDDATE()",
+      "tag": "ADDDATE()",
+      "syntax": "ADDDATE(date, INTERVAL valeur unité)  ou  ADDDATE(date, nb_jours)",
+      "summary": "Ajoute un nombre de jours ou un intervalle de temps à une date.",
+      "description": "Effectue une addition arithmétique sur une date en lui ajoutant soit un nombre entier de jours (syntaxe simplifiée), soit un intervalle explicite (ex: INTERVAL 15 DAY, INTERVAL 3 MONTH, INTERVAL 1 YEAR).",
+      "howToUse": "Syntaxe 1 : ADDDATE(date, 7) ajoute 7 jours.\nSyntaxe 2 : ADDDATE(date, INTERVAL 1 YEAR) ajoute une année complète.",
+      "values": [
+        "ADDDATE(date, nb_jours)",
+        "ADDDATE(date, INTERVAL N DAY/MONTH/YEAR)",
+        "Ex: ADDDATE('2026-11-11', 10) -> '2026-11-21'"
+      ],
+      "code": "-- Ajouter 15 jours à la date du jour\nSELECT NOW() AS aujourdhui,\n       ADDDATE(NOW(), 15) AS dans_15_jours;\n\n-- Ajouter 1 an avec INTERVAL :\nSELECT ADDDATE('2007-06-15', INTERVAL 1 YEAR) AS date_plus_1an;",
+      "simQuery": "SELECT nom, date_naiss, ADDDATE(date_naiss, 365) AS naiss_plus_1an FROM Eleve LIMIT 3;",
+      "simTable": "Eleve",
+      "simDescription": "Ajout d'un intervalle de temps à une date avec ADDDATE()."
+    },
+    {
+      "id": "sql-fn-datediff",
+      "category": "Fonctions définies sur le type date",
+      "name": "DATEDIFF()",
+      "tag": "DATEDIFF()",
+      "syntax": "DATEDIFF(date1, date2)",
+      "summary": "Retourne la différence entre deux dates en jours.",
+      "description": "Calcule le nombre entier de jours écoulés entre deux dates (date1 - date2). Si date1 est postérieure à date2, le résultat est positif ; si date1 est antérieure, le résultat est négatif.",
+      "howToUse": "Toujours placer la date la plus récente en premier paramètre (ex: DATEDIFF(NOW(), date_naiss)) pour obtenir un nombre de jours positif.",
+      "values": [
+        "DATEDIFF(date1, date2) -> nombre de jours entier",
+        "Ex: DATEDIFF('2026-11-20', '2026-11-10') -> 10 jours",
+        "Ex: DATEDIFF(NOW(), date_naiss)"
+      ],
+      "code": "SELECT nom, prenom, date_naiss,\n       DATEDIFF(NOW(), date_naiss) AS jours_vecus\nFROM Eleve\nLIMIT 3;",
+      "simQuery": "SELECT nom, prenom, date_naiss, DATEDIFF(NOW(), date_naiss) AS jours_ecoules FROM Eleve LIMIT 3;",
+      "simTable": "Eleve",
+      "simDescription": "Calcul du nombre de jours de différence entre deux dates (DATEDIFF)."
+    },
+    {
+      "id": "sql-fn-avg",
+      "category": "Fonctions d'agrégation",
+      "name": "AVG()",
+      "tag": "AVG()",
+      "syntax": "AVG(colonne_numerique)",
+      "summary": "Retourne la moyenne.",
+      "description": "Fonction d'agrégation (statistique) calculant la moyenne arithmétique de toutes les valeurs numériques d'une colonne sélectionnée. Les valeurs NULL sont automatiquement ignorées.",
+      "howToUse": "S'utilise dans la clause SELECT. Peut être combinée avec WHERE pour filtrer les lignes à inclure, ou avec GROUP BY pour calculer la moyenne par groupe (ex: par section ou par classe).",
+      "values": [
+        "AVG(colonne)",
+        "Ignore les valeurs NULL",
+        "Ex: SELECT AVG(moyenne) FROM Eleve;",
+        "Ex: SELECT section, AVG(moyenne) FROM Eleve GROUP BY section;"
+      ],
+      "code": "-- Moyenne générale des élèves de la section STI\nSELECT AVG(moyenne) AS moyenne_generale_sti\nFROM Eleve\nWHERE section = 'STI';",
+      "simQuery": "SELECT section, AVG(moyenne) AS moyenne_section FROM Eleve GROUP BY section;",
+      "simTable": "Eleve",
+      "simDescription": "Calcule la moyenne arithmétique (AVG) groupée par section."
+    },
+    {
+      "id": "sql-fn-count",
+      "category": "Fonctions d'agrégation",
+      "name": "COUNT()",
+      "tag": "COUNT()",
+      "syntax": "COUNT(*)  ou  COUNT(colonne)  ou  COUNT(DISTINCT colonne)",
+      "summary": "Retourne le nombre d'enregistrements.",
+      "description": "Compte le nombre de lignes répondant aux critères de la requête. COUNT(*) compte toutes les lignes sans exception ; COUNT(colonne) compte les lignes où la colonne n'est pas NULL ; COUNT(DISTINCT colonne) compte les valeurs distinctes sans doublon.",
+      "howToUse": "La formule la plus fréquente au Bac STI : SELECT COUNT(*) FROM Eleve WHERE moyenne >= 10; pour connaître le nombre d'élèves admis.",
+      "values": [
+        "COUNT(*) : compte toutes les lignes",
+        "COUNT(colonne) : compte les valeurs non nulles",
+        "COUNT(DISTINCT col) : compte les valeurs uniques"
+      ],
+      "code": "-- Nombre total d'élèves admis (moyenne >= 10)\nSELECT COUNT(*) AS nb_admis\nFROM Eleve\nWHERE moyenne >= 10.00;",
+      "simQuery": "SELECT COUNT(*) AS total_eleves, COUNT(CASE WHEN moyenne >= 10 THEN 1 END) AS nb_admis FROM Eleve;",
+      "simTable": "Eleve",
+      "simDescription": "Compte le nombre total d'enregistrements avec COUNT(*)."
+    },
+    {
+      "id": "sql-fn-max",
+      "category": "Fonctions d'agrégation",
+      "name": "MAX()",
+      "tag": "MAX()",
+      "syntax": "MAX(colonne)",
+      "summary": "Retourne le maximum.",
+      "description": "Renvoie la valeur la plus élevée parmi toutes les valeurs d'une colonne (la meilleure note, le prix le plus cher, ou la date la plus récente).",
+      "howToUse": "S'applique aux colonnes numériques, monétaires ou temporelles. Exemple classique : SELECT MAX(moyenne) FROM Eleve; pour trouver la meilleure moyenne de la promotion.",
+      "values": [
+        "MAX(colonne)",
+        "Ex: MAX(moyenne)",
+        "Ex: MAX(date_naiss) -> le plus jeune"
+      ],
+      "code": "-- Trouver la meilleure moyenne de la section STI\nSELECT MAX(moyenne) AS meilleure_moyenne\nFROM Eleve\nWHERE section = 'STI';",
+      "simQuery": "SELECT MAX(moyenne) AS meilleure_moyenne, MIN(moyenne) AS plus_faible_moyenne FROM Eleve;",
+      "simTable": "Eleve",
+      "simDescription": "Détermine la note maximale (MAX) enregistrée dans la classe."
+    },
+    {
+      "id": "sql-fn-min",
+      "category": "Fonctions d'agrégation",
+      "name": "MIN()",
+      "tag": "MIN()",
+      "syntax": "MIN(colonne)",
+      "summary": "Retourne le minimum.",
+      "description": "Renvoie la valeur la plus basse parmi toutes les valeurs de la colonne sélectionnée (la note la plus faible, le prix le moins cher, ou la date la plus ancienne).",
+      "howToUse": "S'applique aux nombres, dates ou chaînes. Exemple : SELECT MIN(moyenne) FROM Eleve; pour trouver la note plancher.",
+      "values": [
+        "MIN(colonne)",
+        "Ex: MIN(moyenne)",
+        "Ex: MIN(date_naiss) -> le plus âgé"
+      ],
+      "code": "-- Trouver la plus faible moyenne enregistrée\nSELECT MIN(moyenne) AS moyenne_minimale\nFROM Eleve;",
+      "simQuery": "SELECT MIN(moyenne) AS moyenne_minimale FROM Eleve;",
+      "simTable": "Eleve",
+      "simDescription": "Trouve la note minimale (MIN) parmi tous les élèves."
+    },
+    {
+      "id": "sql-fn-sum",
+      "category": "Fonctions d'agrégation",
+      "name": "SUM()",
+      "tag": "SUM()",
+      "syntax": "SUM(colonne_numerique)",
+      "summary": "Retourne la somme.",
+      "description": "Additionne et totalise l'ensemble des valeurs numériques d'une colonne. Ignore automatiquement les valeurs NULL.",
+      "howToUse": "S'emploie pour totaliser des montants, des coefficients ou des points : par exemple, calculer le total des coefficients d'un ensemble de matières : SELECT SUM(coef) FROM Matiere.",
+      "values": [
+        "SUM(colonne_numerique)",
+        "Ignore les valeurs NULL",
+        "Ex: SUM(coef)",
+        "Ex: SUM(montant)"
+      ],
+      "code": "-- Totaliser les coefficients de toutes les matières obligatoires\nSELECT SUM(coef) AS total_coefficients\nFROM Matiere;",
+      "simQuery": "SELECT SUM(coef) AS total_coefficients_matieres FROM Matiere;",
+      "simTable": "Matiere",
+      "simDescription": "Calcule la somme totale (SUM) des coefficients des matières."
+    },
+    {
+      "id": "sql-lmd-select",
+      "category": "Manipulation des données",
+      "name": "SELECT",
+      "tag": "SELECT",
+      "syntax": "SELECT [DISTINCT] expression [, col, ... ou *] [[AS] alias]\nFROM table1 [[AS] alias] [, table2, ...]\n[WHERE condition]\n[GROUP BY critère]\n[HAVING condition]\n[ORDER BY expression [ASC/DESC]]",
+      "summary": "Spécification des colonnes du résultat, des tables, Condition, Organisation du résultat en groupes, Application d'un filtre, Tri du résultat.",
+      "description": "Commande centrale d'interrogation du Langage de Manipulation de Données (LMD). Permet d'extraire, filtrer, regrouper et trier les données d'une ou plusieurs tables relationnelles selon les 6 clauses officielles de l'annexe du Bac STI :\n• SELECT : choix des colonnes projetées (ou DISTINCT pour éliminer les doublons)\n• FROM : choix des tables sources et jointures\n• WHERE : condition de filtrage des lignes\n• GROUP BY : regroupement par critère (souvent avec fonctions d'agrégation)\n• HAVING : condition de filtrage appliquée aux groupes\n• ORDER BY : tri croissant (ASC par défaut) ou décroissant (DESC).",
+      "howToUse": "L'ordre des clauses doit être scrupuleusement respecté : SELECT ... FROM ... WHERE ... GROUP BY ... HAVING ... ORDER BY.",
+      "values": [
+        "SELECT : projection des colonnes",
+        "FROM : tables sources",
+        "WHERE : filtre sur lignes",
+        "GROUP BY : regroupement",
+        "HAVING : filtre sur groupes",
+        "ORDER BY [ASC/DESC] : tri"
+      ],
+      "code": "-- 1. Requête simple avec tri :\nSELECT nom, prenom, moyenne\nFROM Eleve\nWHERE section = 'STI'\nORDER BY moyenne DESC;\n\n-- 2. Requête avec agrégation et regroupement :\nSELECT ville, COUNT(*) AS nb_eleves, AVG(moyenne) AS moy_ville\nFROM Eleve\nGROUP BY ville\nHAVING COUNT(*) >= 1\nORDER BY moy_ville DESC;",
+      "simQuery": "SELECT nom, prenom, section, moyenne, ville FROM Eleve WHERE moyenne >= 10.00 ORDER BY moyenne DESC;",
+      "simTable": "Eleve",
+      "simDescription": "Interrogation complète avec sélection, condition WHERE et tri ORDER BY DESC."
+    },
+    {
+      "id": "sql-lmd-insert",
+      "category": "Manipulation des données",
+      "name": "INSERT INTO",
+      "tag": "INSERT INTO",
+      "syntax": "INSERT INTO table [(liste colonnes)] VALUES (liste valeurs)",
+      "summary": "Insertion des données dans une table.",
+      "description": "Commande LMD qui insère une nouvelle ligne (enregistrement) dans une table. Les valeurs doivent respecter l'ordre et le type des colonnes déclarées.",
+      "howToUse": "Deux manières équivalentes au Bac STI :\n1. En précisant les colonnes : INSERT INTO Eleve (num_inscr, nom, prenom, section, moyenne, date_naiss, ville) VALUES (107, 'Bouazizi', 'Amine', 'STI', 14.50, '2007-08-22', 'Kairouan');\n2. Sans préciser les colonnes : INSERT INTO Eleve VALUES (107, 'Bouazizi', 'Amine', 'STI', 14.50, '2007-08-22', 'Kairouan');",
+      "values": [
+        "INSERT INTO table (col1, col2) VALUES (val1, val2)",
+        "Chaînes et dates entre apostrophes",
+        "Nombres sans guillemets",
+        "Respecter les contraintes (PK, NOT NULL, CHECK)"
+      ],
+      "code": "INSERT INTO Eleve (num_inscr, nom, prenom, section, moyenne, date_naiss, ville)\nVALUES (107, 'Bouazizi', 'Amine', 'STI', 14.50, '2007-08-22', 'Kairouan');",
+      "simQuery": "SELECT * FROM Eleve WHERE num_inscr = 101;",
+      "simTable": "Eleve",
+      "simDescription": "Exemple d'enregistrement prêt à être inséré ou consulté dans la table Eleve."
+    },
+    {
+      "id": "sql-lmd-update",
+      "category": "Manipulation des données",
+      "name": "UPDATE",
+      "tag": "UPDATE",
+      "syntax": "UPDATE table1 SET colonne = expression [WHERE condition]",
+      "summary": "Modification des valeurs d'une colonne.",
+      "description": "Commande LMD permettant de modifier le contenu d'une ou plusieurs colonnes pour les lignes sélectionnées par la clause WHERE.",
+      "howToUse": "ATTENTION : Si la clause WHERE est omise, TOUTES les lignes de la table seront modifiées sans avertissement ! Au Bac STI, la clause WHERE est quasiment toujours obligatoire.",
+      "values": [
+        "UPDATE table SET col = nouvelle_valeur WHERE condition",
+        "Possibilité de modifier plusieurs colonnes séparées par une virgule",
+        "Ex: UPDATE Eleve SET moyenne = 16.00 WHERE num_inscr = 101;"
+      ],
+      "code": "-- Corriger la moyenne d'un élève après un recomptage\nUPDATE Eleve\nSET moyenne = 16.25\nWHERE num_inscr = 101;\n\n-- Mettre à jour plusieurs colonnes à la fois :\nUPDATE Eleve\nSET section = 'STI', ville = 'Sousse'\nWHERE num_inscr = 104;",
+      "simQuery": "SELECT num_inscr, nom, prenom, moyenne FROM Eleve WHERE num_inscr = 101;",
+      "simTable": "Eleve",
+      "simDescription": "Modification ciblée d'une ligne avec UPDATE ... SET ... WHERE."
+    },
+    {
+      "id": "sql-lmd-delete",
+      "category": "Manipulation des données",
+      "name": "DELETE FROM",
+      "tag": "DELETE FROM",
+      "syntax": "DELETE FROM table1 [WHERE condition]",
+      "summary": "Suppression des enregistrements d'une table.",
+      "description": "Commande LMD permettant d'effacer une ou plusieurs lignes d'une table selon une condition spécifiée dans la clause WHERE. Contrairement à DROP TABLE, DELETE supprime les données mais conserve intacte la structure de la table.",
+      "howToUse": "ATTENTION : Sans clause WHERE, DELETE FROM table1 vide entièrement la table ! Toujours cibler les lignes à effacer avec WHERE.",
+      "values": [
+        "DELETE FROM table WHERE condition",
+        "Conserve la structure de la table",
+        "Ex: DELETE FROM Eleve WHERE num_inscr = 106;",
+        "Ex: DELETE FROM Eleve WHERE moyenne < 08.00;"
+      ],
+      "code": "-- Supprimer l'élève dont le numéro est 106\nDELETE FROM Eleve\nWHERE num_inscr = 106;\n\n-- Supprimer tous les élèves ajournés avec moyenne < 8 :\nDELETE FROM Eleve\nWHERE moyenne < 08.00;",
+      "simQuery": "SELECT num_inscr, nom, prenom, moyenne FROM Eleve WHERE moyenne >= 10.00;",
+      "simTable": "Eleve",
+      "simDescription": "Suppression ciblée de lignes dans une table (DELETE FROM ... WHERE)."
+    }
+  ],
+  "algo_pratique": [
+    {
+      "id": "qt-starter-template",
+      "category": "Démarrage & Architecture",
+      "name": "Squelette officiel Thonny / PyQt5 (loadUi)",
+      "qtWidget": "Fichier interface.ui",
+      "qtProperty": "Nom de fichier : interface.ui",
+      "thonnyCode": "from PyQt5.uic import loadUi\nfrom PyQt5.QtWidgets import QApplication\n\n# 1. Initialiser l'application Qt\napp = QApplication([])\n\n# 2. Charger le fichier .ui créé avec Qt Designer\nwindows = loadUi(\"interface.ui\")\n\n# 3. Lier les boutons aux fonctions de traitement\n# windows.btn_valider.clicked.connect(traiter)\n\n# 4. Afficher la fenêtre et lancer la boucle d'événements\nwindows.show()\napp.exec_()",
+      "summary": "Code indispensable à connaître par cœur pour lancer n'importe quelle interface Qt Designer dans Thonny.",
+      "description": "Au Bac Pratique tunisien, l'épreuve commence par la création de l'interface graphique sous Qt Designer enregistrée sous le nom 'interface.ui' dans le dossier de travail. Dans Thonny, ce code minimal permet de charger l'interface et de démarrer l'application.",
+      "howToUse": "1. Enregistrer le fichier .ui dans le MÊME dossier que votre script Python (.py) dans Thonny.\n2. Écrire ce squelette au tout début du fichier.\n3. Créer vos fonctions de traitement AVANT l'instruction windows.show().",
+      "examples": [
+        {
+          "label": "Chargement direct",
+          "code": "windows = loadUi('interface.ui')"
+        },
+        {
+          "label": "Connexion d'un bouton",
+          "code": "windows.btn_calculer.clicked.connect(calculer)"
+        },
+        {
+          "label": "Lancement",
+          "code": "windows.show()\napp.exec_()"
+        }
+      ],
+      "bacTips": "🚨 PIÈGE FRÉQUENT : Si Thonny affiche 'FileNotFoundError: [Errno 2] No such file or directory: interface.ui', c'est que votre script Python n'est pas enregistré dans le même dossier que le fichier .ui !"
+    },
+    {
+      "id": "qt-lineedit",
+      "category": "Widgets de Saisie",
+      "name": "QLineEdit (Zone de saisie de texte)",
+      "qtWidget": "QLineEdit",
+      "qtProperty": "objectName (ex: le_nom, le_age)",
+      "thonnyCode": "# 1. Lire la valeur saisie (toujours renvoyée sous forme de str)\ntexte = windows.le_nom.text()\n\n# 2. Convertir en nombre si nécessaire\nage = int(windows.le_age.text())\nmoyenne = float(windows.le_moy.text())\n\n# 3. Écrire ou modifier le texte par code\nwindows.le_resultat.setText(\"Admis\")\n\n# 4. Vider le champ\nwindows.le_nom.clear()\n\n# 5. Donner le focus au curseur\nwindows.le_nom.setFocus()",
+      "summary": "Permet à l'utilisateur de saisir une ligne de texte ou un nombre.",
+      "description": "Le QLineEdit est le widget de saisie le plus utilisé dans les examens pratiques du Bac. La méthode .text() renvoie TOUJOURS une chaîne de caractères (str). Pour effectuer des calculs arithmétiques, il est indispensable de convertir la valeur avec int() ou float().",
+      "howToUse": "Dans Qt Designer : glisser 'Line Edit', lui donner un objectName clair (ex: le_nom, le_note). Dans Thonny : windows.objectName.text() pour lire, windows.objectName.setText('...') pour écrire.",
+      "examples": [
+        {
+          "label": "Lecture de chaîne",
+          "code": "nom = windows.le_nom.text()"
+        },
+        {
+          "label": "Lecture d'entier",
+          "code": "n = int(windows.le_n.text())"
+        },
+        {
+          "label": "Affichage de résultat",
+          "code": "windows.le_res.setText(str(total))"
+        },
+        {
+          "label": "Vider le champ",
+          "code": "windows.le_nom.clear()"
+        }
+      ],
+      "bacTips": "⚠️ Attention : windows.le_nom.text() renvoie une chaîne vide \"\" si l'élève n'a rien saisi. Toujours tester `if nom == \"\":` avant d'appliquer int() pour éviter le plantage ValueError !"
+    },
+    {
+      "id": "qt-textedit",
+      "category": "Widgets de Saisie",
+      "name": "Text Edit (QTextEdit - Zone de texte multilignes)",
+      "qtWidget": "QTextEdit",
+      "qtProperty": "toPlainText() / setText()",
+      "thonnyCode": "# 1. Récupérer le contenu de la zone de saisie (multiligne)\ntexte = W.nomTextEdit.toPlainText()\n\n# 2. Modifier le contenu de la zone de texte\nW.nomTextEdit.setText(\"Nouveau texte multiligne...\")\n\n# 3. Vider la zone de texte\nW.nomTextEdit.clear()",
+      "summary": "Zone de saisie de texte multiligne pour saisir ou afficher de longs paragraphes ou plusieurs lignes.",
+      "description": "Dans Qt Designer, glissez 'Text Edit' (QTextEdit). Dans Thonny Python, attention : on n'utilise PAS .text(), mais .toPlainText() pour extraire le texte saisi !",
+      "howToUse": "Dans Qt Designer : glisser 'Text Edit', nommer son objectName (ex: nomTextEdit). Dans Thonny : W.nomTextEdit.toPlainText() pour lire le contenu et W.nomTextEdit.setText(chaine) pour le modifier.",
+      "examples": [
+        {
+          "label": "Récupérer le texte",
+          "code": "contenu = W.nomTextEdit.toPlainText()"
+        },
+        {
+          "label": "Modifier le texte",
+          "code": "W.nomTextEdit.setText('Résultat : Validé')"
+        }
+      ],
+      "bacTips": "🚨 PIÈGE MAJEUR BAC : Pour un Line Edit c'est .text(), mais pour un Text Edit c'est .toPlainText() ! Si vous écrivez .text() sur un TextEdit, Python plantera avec une erreur AttributeError."
+    },
+    {
+      "id": "qt-pushbutton",
+      "category": "Widgets d'Action & Affichage",
+      "name": "QPushButton (Bouton d'action / Clic)",
+      "qtWidget": "QPushButton",
+      "qtProperty": "objectName (ex: btn_valider, btn_quitter)",
+      "thonnyCode": "# Définir la fonction exécutée lors du clic\ndef valider():\n    nom = windows.le_nom.text()\n    if nom == \"\":\n        QMessageBox.critical(windows, \"Erreur\", \"Veuillez remplir le nom !\")\n        return\n    windows.lbl_res.setText(\"Bienvenue \" + nom)\n\n# Lier le signal 'clicked' du bouton à la fonction (SANS parenthèses !)\nwindows.btn_valider.clicked.connect(valider)\n\n# Activer ou désactiver le bouton\nwindows.btn_valider.setEnabled(True)   # Activé\nwindows.btn_valider.setEnabled(False)  # Grisé/Désactivé",
+      "summary": "Déclenche l'exécution d'une fonction Python quand le candidat clique dessus.",
+      "description": "Le QPushButton déclenche le signal .clicked. Dans Thonny, on connecte ce signal à notre fonction avec .connect(nom_fonction). C'est le cœur de l'interactivité au Bac Pratique.",
+      "howToUse": "Dans Qt Designer : glisser 'Push Button', régler objectName='btn_valider' et le texte 'Valider'. Dans Thonny : windows.btn_valider.clicked.connect(ma_fonction).",
+      "examples": [
+        {
+          "label": "Connexion",
+          "code": "windows.btn_calculer.clicked.connect(calculer)"
+        },
+        {
+          "label": "Désactiver bouton",
+          "code": "windows.btn_valider.setEnabled(False)"
+        },
+        {
+          "label": "Quitter l'application",
+          "code": "windows.btn_quitter.clicked.connect(windows.close)"
+        }
+      ],
+      "bacTips": "🚨 ERREUR CLASSIQUE DU BAC : Ne JAMAIS mettre de parenthèses lors du connect ! Écrire `windows.btn.clicked.connect(calculer)` et SURTOUT PAS `connect(calculer())` sinon la fonction s'exécute au lancement !"
+    },
+    {
+      "id": "qt-radiobutton",
+      "category": "Widgets de Choix & Sélection",
+      "name": "QRadioButton (Bouton radio - Choix exclusif unique)",
+      "qtWidget": "QRadioButton",
+      "qtProperty": "objectName (ex: rb_homme, rb_femme)",
+      "thonnyCode": "# 1. Tester quel bouton radio est coché\nif windows.rb_homme.isChecked():\n    genre = \"Masculin\"\nelif windows.rb_femme.isChecked():\n    genre = \"Féminin\"\nelse:\n    QMessageBox.warning(windows, \"Attention\", \"Veuillez sélectionner un genre !\")\n    return\n\n# 2. Cocher un bouton radio par programmation\nwindows.rb_homme.setChecked(True)",
+      "summary": "Permet de sélectionner UNE SEULE option parmi un groupe d'options exclusives.",
+      "description": "Utilisé pour le genre (Homme/Femme), le type d'opération (Cryptage/Décryptage), ou le mode de calcul. Pour que les boutons soient exclusifs, placez-les dans un même conteneur (QGroupBox) dans Qt Designer.",
+      "howToUse": "Dans Qt Designer : glisser 'Radio Button' dans une 'Group Box'. Dans Thonny : utiliser la méthode .isChecked() qui retourne True ou False.",
+      "examples": [
+        {
+          "label": "Vérifier si coché",
+          "code": "if windows.rb_facile.isChecked(): niveau = 1"
+        },
+        {
+          "label": "Cocher par défaut",
+          "code": "windows.rb_homme.setChecked(True)"
+        }
+      ],
+      "bacTips": "💡 Pensez toujours à vérifier si aucun bouton n'est coché en affichant une alerte QMessageBox si les deux renvoient False !"
+    },
+    {
+      "id": "qt-checkbox",
+      "category": "Widgets de Choix & Sélection",
+      "name": "QCheckBox (Case à cocher - Choix multiples)",
+      "qtWidget": "QCheckBox",
+      "qtProperty": "objectName (ex: cb_sport, cb_musique)",
+      "thonnyCode": "# Récupérer l'état de plusieurs cases indépendantes\ninterets = []\n\nif windows.cb_sport.isChecked():\n    interets.append(\"Sport\")\n\nif windows.cb_musique.isChecked():\n    interets.append(\"Musique\")\n\nif windows.cb_lecture.isChecked():\n    interets.append(\"Lecture\")\n\n# Forcer une case à être cochée ou décochée\nwindows.cb_sport.setChecked(False)",
+      "summary": "Permet de cocher zéro, une ou plusieurs options indépendantes.",
+      "description": "Contrairement aux radio buttons, les cases à cocher QCheckBox ne sont pas exclusives. L'élève peut en cocher plusieurs simultanément. Chaque case possède sa méthode .isChecked().",
+      "howToUse": "Dans Qt Designer : glisser 'Check Box'. Dans Thonny : tester `if windows.cb_nom.isChecked():` pour chaque case.",
+      "examples": [
+        {
+          "label": "Test d'une case",
+          "code": "if windows.cb_accepter.isChecked(): autoriser()"
+        },
+        {
+          "label": "Décocher",
+          "code": "windows.cb_option.setChecked(False)"
+        }
+      ],
+      "bacTips": "Au Bac, souvent utilisé pour les critères de filtre ou les options facultatives (ex: ajouter une remise de 10%)."
+    },
+    {
+      "id": "qt-combobox",
+      "category": "Widgets de Choix & Sélection",
+      "name": "QComboBox (Menu déroulant / Liste de sélection)",
+      "qtWidget": "QComboBox",
+      "qtProperty": "objectName (ex: combo_ville, combo_classe)",
+      "thonnyCode": "# 1. Récupérer le texte de l'élément sélectionné\nville = windows.combo_ville.currentText()\n\n# 2. Récupérer l'indice de l'élément sélectionné (0 pour le 1er, 1 pour le 2ème...)\nidx = windows.combo_ville.currentIndex()\n\n# 3. Réinitialiser la sélection (aucun choix sélectionné / vider liste)\nwindows.combo_ville.setCurrentIndex(-1)\n\n# 3. Vérifier qu'un choix a bien été fait (si le 1er élément est '-- Choisir --')\nif windows.combo_ville.currentIndex() == 0:\n    QMessageBox.critical(windows, \"Erreur\", \"Veuillez choisir une ville !\")\n    return\n\n# 4. Ajouter des éléments dynamiquement par code\nwindows.combo_ville.addItem(\"Sousse\")\nwindows.combo_ville.addItem(\"Sfax\")\n\n# 5. Vider le menu déroulant\nwindows.combo_ville.clear()",
+      "summary": "Affiche une liste déroulante où le candidat choisit une option parmi plusieurs.",
+      "description": "Dans Qt Designer, double-cliquez sur le QComboBox pour ajouter des éléments par défaut (ex: '-- Choisir --', 'Tunis', 'Sousse', 'Sfax'). Dans Thonny, .currentText() donne la chaîne et .currentIndex() donne la position numérique (commence à 0).",
+      "howToUse": "Dans Qt Designer : double-clic sur la ComboBox pour saisir les choix. Dans Thonny : windows.combo.currentText() pour lire le texte choisi.",
+      "examples": [
+        {
+          "label": "Lire le texte",
+          "code": "choix = windows.combo_pays.currentText()"
+        },
+        {
+          "label": "Lire l'indice",
+          "code": "position = windows.combo_pays.currentIndex()"
+        },
+        {
+          "label": "Ajouter un item",
+          "code": "windows.combo_pays.addItem('Tunisie')"
+        }
+      ],
+      "bacTips": "⭐ ASTUCE BAC : Si vous mettez '-- Sélectionner --' en premier élément dans Qt Designer, vérifiez toujours `if windows.combo.currentIndex() == 0:` pour forcer l'utilisateur à faire un vrai choix !"
+    },
+    {
+      "id": "qt-label",
+      "category": "Widgets d'Action & Affichage",
+      "name": "QLabel (Texte d'affichage / Résultat)",
+      "qtWidget": "QLabel",
+      "qtProperty": "objectName (ex: lbl_titre, lbl_resultat)",
+      "thonnyCode": "# 1. Afficher un texte simple ou un message\nwindows.lbl_resultat.setText(\"Le nombre 17 est Premier !\")\n\n# 2. Afficher une variable numérique (toujours convertir en str)\ntotal = 145.5\nwindows.lbl_resultat.setText(\"Total : \" + str(total) + \" DT\")\n\n# 3. Formater avec des f-strings en Python 3\nwindows.lbl_resultat.setText(f\"Moyenne : {moyenne:.2f} / 20\")\n\n# 4. Effacer le texte du label\nwindows.lbl_resultat.setText(\"\")",
+      "summary": "Utilisé pour afficher des titres, des instructions ou le résultat final d'un algorithme.",
+      "description": "Le QLabel est un widget passif d'affichage. Contrairement au QLineEdit, l'utilisateur ne peut pas modifier son contenu à la souris. La méthode .setText() attend obligatoirement une chaîne de caractères (str).",
+      "howToUse": "Dans Qt Designer : placer un 'Label', vider son texte par défaut si c'est un résultat, et lui donner un objectName='lbl_res'. Dans Thonny : windows.lbl_res.setText(str(valeur)).",
+      "examples": [
+        {
+          "label": "Texte simple",
+          "code": "windows.lbl_msg.setText('Opération réussie')"
+        },
+        {
+          "label": "Nombre converti",
+          "code": "windows.lbl_res.setText(str(pgcd_val))"
+        }
+      ],
+      "bacTips": "🚨 TypeError : Ne passez jamais un entier directement à setText ! `setText(42)` déclenche une erreur ; écrivez toujours `setText(str(42))`."
+    },
+    {
+      "id": "qt-spinbox",
+      "category": "Widgets de Saisie",
+      "name": "QSpinBox / QDoubleSpinBox (Compteur numérique)",
+      "qtWidget": "QSpinBox / QDoubleSpinBox",
+      "qtProperty": "minimum, maximum, value, objectName",
+      "thonnyCode": "# 1. Lire la valeur numérique (renvoie directement un int ou float, pas de str !)\nquantite = windows.sb_quantite.value()       # int pour QSpinBox\nprix = windows.dsb_prix.value()             # float pour QDoubleSpinBox\n\n# 2. Modifier la valeur par code\nwindows.sb_quantite.setValue(10)\n\n# 3. Calcul direct sans conversion str !\ntotal = quantite * prix\nwindows.lbl_total.setText(str(total) + \" DT\")",
+      "summary": "Champ de saisie numérique avec flèches haut/bas garantissant une valeur valide sans risque d'erreur de frappe.",
+      "description": "QSpinBox gère les entiers et QDoubleSpinBox gère les réels avec virgule. Le gros avantage est que la méthode .value() renvoie directement un int ou float, sans conversion nécessaire.",
+      "howToUse": "Dans Qt Designer : régler 'minimum' (ex: 1) et 'maximum' (ex: 100). Dans Thonny : `val = windows.sb_nb.value()`.",
+      "examples": [
+        {
+          "label": "Lire un entier",
+          "code": "n = windows.sb_n.value()"
+        },
+        {
+          "label": "Modifier la valeur",
+          "code": "windows.sb_n.setValue(25)"
+        }
+      ],
+      "bacTips": "Pratique pour les notes (0 à 20) ou les effectifs (N élèves entre 5 et 30) car il empêche automatiquement la saisie de texte !"
+    },
+    {
+      "id": "qt-dateedit",
+      "category": "Widgets de Saisie",
+      "name": "QDateEdit (Sélecteur de date)",
+      "qtWidget": "QDateEdit",
+      "qtProperty": "displayFormat, calendarPopup, objectName",
+      "thonnyCode": "# 1. Récupérer la date sous forme de texte formaté\ndate_str = windows.date_naiss.date().toString(\"yyyy-MM-dd\")  # Ex: '2006-05-14'\n\n# 2. Récupérer l'année, le mois ou le jour séparément\nannee = windows.date_naiss.date().year()\nmois = windows.date_naiss.date().month()\njour = windows.date_naiss.date().day()\n\n# 3. Calculer l'âge\nage = 2026 - annee\nif age < 18:\n    QMessageBox.critical(windows, \"Erreur\", \"Candidat mineur non autorisé !\")",
+      "summary": "Permet la saisie et la sélection d'une date via un calendrier ou des flèches.",
+      "description": "Le QDateEdit évite les erreurs de format de date. Dans Qt Designer, activez la case 'calendarPopup' pour afficher un calendrier déroulant. Dans Thonny, .date().toString('dd/MM/yyyy') extrait la date formatée.",
+      "howToUse": "Dans Qt Designer : cocher calendarPopup=True. Dans Thonny : `d = windows.date_widget.date().toString('yyyy-MM-dd')`.",
+      "examples": [
+        {
+          "label": "Format SQL standard",
+          "code": "d = windows.date_box.date().toString('yyyy-MM-dd')"
+        },
+        {
+          "label": "Extraire l'année",
+          "code": "annee = windows.date_box.date().year()"
+        }
+      ],
+      "bacTips": "Pour les bases de données SQL du Bac, utilisez le format 'yyyy-MM-dd' pour l'insérer directement dans une colonne de type DATE."
+    },
+    {
+      "id": "qt-msgbox-critical",
+      "category": "Boîtes de Dialogue (QMessageBox)",
+      "name": "QMessageBox.critical (Alerte d'erreur bloquante)",
+      "qtWidget": "QMessageBox",
+      "qtProperty": "Import : from PyQt5.QtWidgets import QMessageBox",
+      "thonnyCode": "from PyQt5.QtWidgets import QMessageBox\n\n# Afficher une boîte modale d'erreur bloquante avec icône rouge (X)\nQMessageBox.critical(\n    windows,           # Fenêtre parente\n    \"Erreur de saisie\",# Titre de la boîte de dialogue\n    \"Le code élève doit comporter exactement 8 chiffres !\" # Message\n)\n\n# Toujours arrêter la fonction après l'erreur :\nreturn",
+      "summary": "Ouvre une fenêtre pop-up d'erreur critique avec icône rouge et son d'alerte pour bloquer une saisie invalide.",
+      "description": "C'est l'instruction reine du contrôle de saisie au Bac Pratique. Dès qu'une condition n'est pas remplie (champ vide, valeur hors limites, longueur incorrecte), on affiche cette boîte et on stoppe le traitement avec 'return'.",
+      "howToUse": "Syntaxe : `QMessageBox.critical(windows, 'Titre', 'Texte de l\\'erreur')`.",
+      "examples": [
+        {
+          "label": "Champ obligatoire",
+          "code": "if nom == '':\n    QMessageBox.critical(windows, 'Erreur', 'Nom obligatoire !')\n    return"
+        },
+        {
+          "label": "Nombre hors limite",
+          "code": "if not (1 <= n <= 100):\n    QMessageBox.critical(windows, 'Erreur', 'N doit être entre 1 et 100 !')\n    return"
+        }
+      ],
+      "bacTips": "⭐ BARÈME DU BAC : Un point entier est souvent attribué au contrôle de saisie avec QMessageBox. N'oubliez jamais d'ajouter `return` immédiatement après le message pour ne pas continuer le calcul avec des données erronées !"
+    },
+    {
+      "id": "qt-msgbox-info",
+      "category": "Boîtes de Dialogue (QMessageBox)",
+      "name": "QMessageBox.information (Message de succès / Info)",
+      "qtWidget": "QMessageBox",
+      "qtProperty": "Import : from PyQt5.QtWidgets import QMessageBox",
+      "thonnyCode": "from PyQt5.QtWidgets import QMessageBox\n\n# Afficher un message d'information ou de succès avec icône bleue (i)\nQMessageBox.information(\n    windows,\n    \"Succès de l'enregistrement\",\n    f\"L'élève {nom} a été enregistré avec succès dans la base !\"\n)",
+      "summary": "Affiche une boîte d'information avec icône bleue pour confirmer la réussite d'un calcul ou d'une sauvegarde.",
+      "description": "Utilisé pour annoncer le résultat positif d'un traitement : enregistrement réussi dans un fichier/base, nombre premier validé, ou fin de traitement.",
+      "howToUse": "Syntaxe : `QMessageBox.information(windows, 'Titre', 'Message')`.",
+      "examples": [
+        {
+          "label": "Succès du traitement",
+          "code": "QMessageBox.information(windows, 'Bravo', 'Calcul terminé avec succès !')"
+        }
+      ],
+      "bacTips": "L'icône bleue rassure le correcteur et indique clairement que le scénario normal s'est déroulé jusqu'au bout."
+    },
+    {
+      "id": "qt-msgbox-warning",
+      "category": "Boîtes de Dialogue (QMessageBox)",
+      "name": "QMessageBox.warning (Boîte d'avertissement jaune)",
+      "qtWidget": "QMessageBox",
+      "qtProperty": "Import : from PyQt5.QtWidgets import QMessageBox",
+      "thonnyCode": "from PyQt5.QtWidgets import QMessageBox\n\n# Afficher un avertissement avec icône jaune triangulaire (!)\nQMessageBox.warning(\n    windows,\n    \"Attention\",\n    \"Attention : le tableau est déjà plein (N maximum atteint) !\"\n)",
+      "summary": "Affiche une boîte d'avertissement avec triangle jaune pour signaler une situation anormale non bloquante.",
+      "description": "Parfaite pour avertir l'utilisateur d'un doublon, d'une capacité maximale atteinte ou d'une confirmation requise.",
+      "howToUse": "Syntaxe : `QMessageBox.warning(windows, 'Titre', 'Message')`.",
+      "examples": [
+        {
+          "label": "Avertissement capacité",
+          "code": "QMessageBox.warning(windows, 'Attention', 'Nombre maximum atteint')"
+        }
+      ],
+      "bacTips": "Très appréciée dans les sujets demandant de vérifier si un élément existe déjà dans un tableau."
+    },
+    {
+      "id": "qt-tablewidget",
+      "category": "Widgets d'Action & Affichage",
+      "name": "QTableWidget (Grille / Tableau de données)",
+      "qtWidget": "QTableWidget",
+      "qtProperty": "objectName (ex: table_res)",
+      "thonnyCode": "from PyQt5.QtWidgets import QTableWidgetItem\n\n# 1. Définir le nombre de colonnes et de lignes\nwindows.table_res.setColumnCount(3)\nwindows.table_res.setHorizontalHeaderLabels([\"ID\", \"Nom\", \"Moyenne\"])\nwindows.table_res.setRowCount(len(liste_eleves))\n\n# 2. Remplir le tableau cellule par cellule\nfor row, eleve in enumerate(liste_eleves):\n    windows.table_res.setItem(row, 0, QTableWidgetItem(str(eleve['id'])))\n    windows.table_res.setItem(row, 1, QTableWidgetItem(eleve['nom']))\n    windows.table_res.setItem(row, 2, QTableWidgetItem(str(eleve['moyenne'])))\n\n# 3. Vider le tableau\nwindows.table_res.clearContents()\nwindows.table_res.setRowCount(0)",
+      "summary": "Affiche des données tabulaires sous forme de grille avec lignes et colonnes.",
+      "description": "Fréquent dans les épreuves pratiques de synthèse : afficher les résultats d'un tri, les élèves admis, ou des enregistrements extraits d'une base de données ou d'un fichier.",
+      "howToUse": "1. Importer `QTableWidgetItem` depuis `PyQt5.QtWidgets`.\n2. Fixer `setRowCount(n)`.\n3. Remplir avec `setItem(ligne, colonne, QTableWidgetItem(str(val)))`.",
+      "examples": [
+        {
+          "label": "Remplir une cellule",
+          "code": "windows.table.setItem(0, 0, QTableWidgetItem('Valeur'))"
+        },
+        {
+          "label": "Vider le tableau",
+          "code": "windows.table.setRowCount(0)"
+        }
+      ],
+      "bacTips": "⚠️ Chaque cellule attend obligatoirement un objet `QTableWidgetItem(str)`. N'oubliez pas d'importer QTableWidgetItem !"
+    },
+    {
+      "id": "qt-valid-empty",
+      "category": "Contrôles de Saisie Bac",
+      "name": "Contrôle 1 : Vérification champ obligatoire non vide",
+      "qtWidget": "QLineEdit / QComboBox",
+      "qtProperty": "Vérification if ch == '':",
+      "thonnyCode": "def valider_formulaire():\n    nom = windows.le_nom.text().strip()\n    \n    # Test si la chaîne est vide ou composée uniquement d'espaces\n    if nom == \"\":\n        QMessageBox.critical(windows, \"Erreur\", \"Le champ Nom est obligatoire !\")\n        windows.le_nom.setFocus() # Remet le curseur dans le champ\n        return False\n        \n    return True",
+      "summary": "Vérifie qu'un champ requis a bien été renseigné par le candidat.",
+      "description": "La méthode `.strip()` supprime les espaces au début et à la fin. Si la chaîne résultante est égale à \"\", on affiche un message d'erreur et on remet le curseur avec `.setFocus()`.",
+      "howToUse": "Toujours placer ce contrôle en premier avant toute autre validation ou conversion.",
+      "examples": [
+        {
+          "label": "Contrôle champ vide",
+          "code": "if windows.le_saisie.text().strip() == '':\n    QMessageBox.critical(windows, 'Erreur', 'Champ vide !')\n    return"
+        }
+      ],
+      "bacTips": "L'utilisation de `.strip()` évite que l'élève tape simplement des espaces pour tromper le test !"
+    },
+    {
+      "id": "qt-valid-alpha",
+      "category": "Contrôles de Saisie Bac",
+      "name": "Contrôle 2 : Chaîne purement alphabétique",
+      "qtWidget": "QLineEdit",
+      "qtProperty": "Test nom.isalpha() ou test caractère par caractère",
+      "thonnyCode": "def est_alphabetique(chaine):\n    # Vérifier que la chaîne ne contient que des lettres et des espaces\n    if len(chaine) == 0:\n        return False\n    for c in chaine:\n        if not (('A' <= c <= 'Z') or ('a' <= c <= 'z') or c == ' '):\n            return False\n    return True\n\n# Utilisation dans le bouton valider :\nnom = windows.le_nom.text().strip()\nif not est_alphabetique(nom):\n    QMessageBox.critical(windows, \"Erreur\", \"Le nom doit contenir uniquement des lettres !\")\n    return",
+      "summary": "Vérifie qu'un prénom ou nom ne contient aucun chiffre ni caractère spécial.",
+      "description": "Au Bac STI tunisien, le correcteur teste souvent d'entrer 'Ali123' ou 'Mohamed@'. Deux méthodes sont acceptées : la boucle caractère par caractère (conforme au pseudo-code Bac) ou la fonction Python `ch.replace(' ', '').isalpha()`.",
+      "howToUse": "Appliquer la fonction de validation sur le texte récupéré du QLineEdit.",
+      "examples": [
+        {
+          "label": "Méthode boucle Bac",
+          "code": "valide = all(('a'<=c<='z' or 'A'<=c<='Z' or c==' ') for c in ch)"
+        },
+        {
+          "label": "Méthode isalpha",
+          "code": "valide = ch.replace(' ', '').isalpha()"
+        }
+      ],
+      "bacTips": "N'oubliez pas d'autoriser l'espace `c == ' '` pour les prénoms composés comme 'Mohamed Ali' !"
+    },
+    {
+      "id": "qt-valid-numeric",
+      "category": "Contrôles de Saisie Bac",
+      "name": "Contrôle 3 : Nombre entier valide dans un intervalle",
+      "qtWidget": "QLineEdit",
+      "qtProperty": "isnumeric() et encadrement (ex: 15 <= age <= 30)",
+      "thonnyCode": "def valider_age():\n    ch_age = windows.le_age.text().strip()\n    \n    # 1. Vérifier que c'est composé de chiffres uniquement\n    if not ch_age.isnumeric():\n        QMessageBox.critical(windows, \"Erreur\", \"L'âge doit être un nombre entier !\")\n        return False\n        \n    # 2. Convertir et vérifier l'intervalle officiel\n    age = int(ch_age)\n    if not (15 <= age <= 30):\n        QMessageBox.critical(windows, \"Erreur\", \"L'âge doit être compris entre 15 et 30 ans !\")\n        return False\n        \n    return True",
+      "summary": "Vérifie qu'une saisie est un entier valide puis qu'il respecte l'intervalle demandé (ex: note entre 0 et 20, âge entre 15 et 30).",
+      "description": "Le test `.isnumeric()` empêche le plantage sur des lettres. Une fois le test réussi, on peut convertir sans risque avec `int()` et tester les bornes.",
+      "howToUse": "Test `.isnumeric()` d'abord, puis `int()`, puis test d'encadrement `min <= n <= max`.",
+      "examples": [
+        {
+          "label": "Note 0 à 20",
+          "code": "if not (0 <= float(note) <= 20): alerte()"
+        }
+      ],
+      "bacTips": "⭐ Formule favorite des épreuves pratiques : 'L'âge doit être un entier compris entre 15 et 30'."
+    },
+    {
+      "id": "qt-valid-length",
+      "category": "Contrôles de Saisie Bac",
+      "name": "Contrôle 4 : Longueur fixe (CIN 8 chiffres, Tél)",
+      "qtWidget": "QLineEdit",
+      "qtProperty": "len(cin) == 8 and cin.isnumeric()",
+      "thonnyCode": "def valider_cin():\n    cin = windows.le_cin.text().strip()\n    \n    # Le CIN tunisien doit comporter exactement 8 chiffres numériques\n    if len(cin) != 8 or not cin.isnumeric():\n        QMessageBox.critical(\n            windows, \n            \"Erreur CIN\", \n            \"Le Numéro de CIN doit comporter exactement 8 chiffres !\"\n        )\n        return False\n        \n    return True",
+      "summary": "Vérifie qu'un identifiant respecte une longueur fixe stricte (ex: Numéro CIN 8 chiffres, Numéro Téléphone 8 chiffres).",
+      "description": "Classique absolu des examens du Bac : tester `len(ch) == 8` combiné avec `ch.isnumeric()` pour s'assurer que le candidat a saisi exactement 8 chiffres.",
+      "howToUse": "Combiner `len(ch) == 8` et `ch.isnumeric()` avec un opérateur `and`.",
+      "examples": [
+        {
+          "label": "Test CIN",
+          "code": "if len(cin) != 8 or not cin.isnumeric(): QMessageBox.critical(...)"
+        }
+      ],
+      "bacTips": "Attention à bien utiliser `!= 8` pour bloquer si c'est plus court OU plus long !"
+    },
+    {
+      "id": "qt-clear-reset",
+      "category": "Widgets d'Action & Affichage",
+      "name": "Réinitialisation complète de l'interface (Vider)",
+      "qtWidget": "QPushButton 'Annuler / Nouveau'",
+      "qtProperty": "Remise à zéro des champs",
+      "thonnyCode": "def reinitialiser():\n    # Vider les zones de texte\n    windows.le_nom.clear()\n    windows.le_cin.clear()\n    windows.le_note.clear()\n    \n    # Décocher les boutons radio et cases\n    windows.rb_homme.setChecked(False)\n    windows.rb_femme.setChecked(False)\n    windows.cb_sport.setChecked(False)\n    \n    # Remettre la liste déroulante au premier choix\n    windows.combo_ville.setCurrentIndex(0)\n    \n    # Effacer le résultat affiché\n    windows.lbl_resultat.setText(\"\")\n    \n    # Replacer le curseur dans le premier champ\n    windows.le_nom.setFocus()\n\nwindows.btn_annuler.clicked.connect(reinitialiser)",
+      "summary": "Fonction liée au bouton Annuler/Nouveau qui remet tous les composants de l'interface à leur état initial.",
+      "description": "Très souvent demandée comme dernière question d'un sujet pratique : un bouton 'Annuler' ou 'Nouveau' qui efface toutes les saisies et repositionne le curseur dans le premier champ.",
+      "howToUse": "Appeler `.clear()` sur les QLineEdit, `.setChecked(False)` sur les radios/cases, et `.setCurrentIndex(0)` sur la ComboBox.",
+      "examples": [
+        {
+          "label": "Remise à zéro",
+          "code": "windows.btn_reset.clicked.connect(reinitialiser)"
+        }
+      ],
+      "bacTips": "Ajouter `windows.le_premier_champ.setFocus()` apporte une touche de finition très appréciée des correcteurs !"
+    },
+    {
+      "id": "qt-bac-workflow",
+      "category": "Modèles Types d'Examen",
+      "name": "Structure type complète d'un sujet pratique Bac (4 Étapes)",
+      "qtWidget": "Architecture de projet",
+      "qtProperty": "Qt Designer + Thonny Python",
+      "thonnyCode": "# ========================================================\n# ÉPREUVE PRATIQUE DU BACCALAURÉAT - ALGORITHMIQUE & PYTHON\n# ========================================================\nfrom PyQt5.uic import loadUi\nfrom PyQt5.QtWidgets import QApplication, QMessageBox\n\n# --- ÉTAPE 1 : FONCTIONS ALGORITHMIQUES PURES ---\ndef est_premier(n):\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\n# --- ÉTAPE 2 : FONCTION DE TRAITEMENT DU FORMULAIRE ---\ndef traiter():\n    # 2.1 Récupération des données\n    ch_n = windows.le_nombre.text().strip()\n    \n    # 2.2 Contrôles de validité avec QMessageBox\n    if ch_n == \"\" or not ch_n.isnumeric():\n        QMessageBox.critical(windows, \"Erreur\", \"Veuillez entrer un entier valide !\")\n        return\n    \n    n = int(ch_n)\n    if not (1 <= n <= 1000):\n        QMessageBox.critical(windows, \"Erreur\", \"Le nombre doit être entre 1 et 1000 !\")\n        return\n        \n    # 2.3 Appel de l'algorithme\n    if est_premier(n):\n        msg = f\"Le nombre {n} EST un nombre premier !\"\n        windows.lbl_res.setStyleSheet(\"color: #10b981; font-weight: bold;\")\n    else:\n        msg = f\"Le nombre {n} N'EST PAS premier.\"\n        windows.lbl_res.setStyleSheet(\"color: #ef4444; font-weight: bold;\")\n        \n    # 2.4 Affichage du résultat\n    windows.lbl_res.setText(msg)\n\n# --- ÉTAPE 3 : INITIALISATION DE L'INTERFACE ---\napp = QApplication([])\nwindows = loadUi(\"interface.ui\")\n\n# --- ÉTAPE 4 : CONNEXION DES SIGNAUX & LANCEMENT ---\nwindows.btn_verifier.clicked.connect(traiter)\nwindows.btn_quitter.clicked.connect(windows.close)\n\nwindows.show()\napp.exec_()",
+      "summary": "Le patron de conception universel qui garantit 20/20 à l'épreuve pratique en séparant l'algorithme, le contrôle de saisie et l'interface.",
+      "description": "Ce modèle structure proprement votre code en 4 étapes claires : 1. Fonctions de calcul 2. Contrôle et traitement 3. Initialisation 4. Événements et démarrage.",
+      "howToUse": "Copiez cette structure comme base de départ pour tous vos TPs et examens pratiques.",
+      "examples": [
+        {
+          "label": "Patron complet",
+          "code": "# Suivre les 4 étapes numérotées"
+        }
+      ],
+      "bacTips": "⭐ La séparation entre les fonctions algorithmiques pures et la fonction liée à Qt Designer est la marque des excellents candidats !"
+    }
+  ],
+  "algo_theorique": [
+    {
+      "id": "algo-struct-si-sinonsi",
+      "category": "Structures de Contrôle",
+      "type": "structure",
+      "name": "Structure Conditionnelle : Si ... Sinon Si ... Sinon",
+      "syntax": "si (condition_1) alors ... sinon si (condition_2) alors ... sinon ... fin_si",
+      "summary": "Structure conditionnelle officielle à choix multiples du Bac tunisien (remplace définitivement l'ancienne structure Selon).",
+      "description": "Au programme officiel du Baccalauréat tunisien, toute alternative simple ou multiple s'exprime obligatoirement avec 'si', 'sinon si' et 'sinon' (la structure 'Selon' n'est plus utilisée). En pratique (Python), elle est traduite directement par 'if', 'elif' et 'else'.",
+      "pseudoCode": "0) Algorithme Exemple_Conditionnel\n1) si (moyenne ≥ 16) alors\n     mention <-- \"Très Bien\"\n   sinon si (moyenne ≥ 14) alors\n     mention <-- \"Bien\"\n   sinon si (moyenne ≥ 12) alors\n     mention <-- \"Assez Bien\"\n   sinon si (moyenne ≥ 10) alors\n     mention <-- \"Passable\"\n   sinon\n     mention <-- \"Ajourné\"\n   fin_si\n2) écrire(\"Mention obtenue : \", mention)\n3) fin",
+      "tdo": [
+        {
+          "objet": "moyenne",
+          "type": "réel"
+        },
+        {
+          "objet": "mention",
+          "type": "chaîne"
+        }
+      ],
+      "pythonCode": "if moyenne >= 16:\n    mention = \"Très Bien\"\nelif moyenne >= 14:\n    mention = \"Bien\"\nelif moyenne >= 12:\n    mention = \"Assez Bien\"\nelif moyenne >= 10:\n    mention = \"Passable\"\nelse:\n    mention = \"Ajourné\"\n\nprint(\"Mention obtenue : \" + mention)",
+      "example": "moyenne = 15.5 → mention = \"Bien\""
+    },
+    {
+      "id": "algo-struct-boucle-pour",
+      "category": "Structures de Contrôle",
+      "type": "structure",
+      "name": "Boucle Pour (Nombre d'itérations connu)",
+      "syntax": "pour i de début à fin [pas = p] faire ... fin_pour",
+      "summary": "Structure itérative à compteur officiel quand le nombre de répétitions est fixé d'avance.",
+      "description": "La boucle Pour permet de répéter un traitement pour un compteur i variant d'une borne de départ à une borne de fin. En Python, elle se traduit fidèlement par 'for i in range(debut, fin + 1):' (ne pas oublier le +1 car la borne supérieure est exclue en Python).",
+      "pseudoCode": "0) Algorithme Exemple_Pour\n1) s <-- 0\n2) pour i de 1 à N faire\n     s <-- s + i\n   fin_pour\n3) écrire(\"Somme = \", s)\n4) fin",
+      "tdo": [
+        {
+          "objet": "i, N, s",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "s = 0\nfor i in range(1, N + 1):\n    s = s + i\n\nprint(\"Somme = \" + str(s))",
+      "example": "N = 5 → Somme = 15"
+    },
+    {
+      "id": "algo-struct-boucle-tantque",
+      "category": "Structures de Contrôle",
+      "type": "structure",
+      "name": "Boucle Tant Que (Condition préalable)",
+      "syntax": "tant que (condition) faire ... fin_tant_que",
+      "summary": "Structure itérative répétée tant qu'une condition reste vraie (0 à N fois).",
+      "description": "La condition est testée AVANT chaque tour de boucle. Si la condition est fausse au départ, le corps n'est jamais exécuté. En pratique Python, elle se traduit directement par 'while condition:'.",
+      "pseudoCode": "0) Algorithme Exemple_TantQue\n1) tant que (n mod 2 = 0) faire\n     n <-- n div 2\n   fin_tant_que\n2) écrire(\"Résultat = \", n)\n3) fin",
+      "tdo": [
+        {
+          "objet": "n",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "while n % 2 == 0:\n    n = n // 2\n\nprint(\"Résultat = \" + str(n))",
+      "example": "n = 40 → Résultat = 5"
+    },
+    {
+      "id": "algo-struct-boucle-repeter",
+      "category": "Structures de Contrôle",
+      "type": "structure",
+      "name": "Boucle Répéter ... Jusqu'à (Arrêt sur condition)",
+      "syntax": "répéter ... jusqu'à (condition_arrêt)",
+      "summary": "Structure itérative répétée jusqu'à ce que la condition devienne vraie (au moins 1 fois).",
+      "description": "Très fréquente au Bac pour la validation de saisie d'un entier ou d'une chaîne. Le bloc est exécuté au moins une fois avant le test. En pratique Python, elle se traduit par une boucle 'while True:' avec un 'if condition: break'.",
+      "pseudoCode": "0) Algorithme Exemple_Repeter\n1) répéter\n     écrire(\"Donner N (entre 10 et 50) : \")\n     lire(N)\n   jusqu'à (N ≥ 10) et (N ≤ 50)\n2) fin",
+      "tdo": [
+        {
+          "objet": "N",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "while True:\n    N = int(input(\"Donner N (entre 10 et 50) : \"))\n    if N >= 10 and N <= 50:\n        break",
+      "example": "Saisie redemandée tant que N est hors de [10, 50]"
+    },
+    {
+      "id": "algo-struct-sousprogrammes",
+      "category": "Structures de Contrôle",
+      "type": "structure",
+      "name": "Sous-Programmes : Fonction & Procédure (VAR)",
+      "syntax": "fonction F(p: type): type_retour | procédure P(VAR p1: type, p2: type)",
+      "summary": "Règles d'or du Bac : paramètres obligatoirement typés en Théorique, AUCUN type en Pratique (Python), mot-clé VAR pour modifier une variable.",
+      "description": "En Théorique (Pseudo-code), les paramètres sont OBLIGATOIREMENT typés (ex: N: entier, ch: chaîne), et les paramètres modifiés par la procédure portent le mot-clé VAR. En Pratique (Python Thonny), AUCUN type n'est spécifié dans les parenthèses de def (ex: def calculer(a, b):).",
+      "pseudoCode": "0) fonction Somme(a, b: entier): entier\n1) retourner a + b\n2) fin\n\n0) procédure Permuter(VAR x, y: entier)\n1) aux <-- x\n2) x <-- y\n3) y <-- aux\n4) fin",
+      "tdo": [
+        {
+          "objet": "aux",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "# Fonction : calcule et retourne une valeur\ndef Somme(a, b):\n    return a + b\n\n# Procédure : modifie directement les éléments (ex: tableau)\ndef Permuter(t, i, j):\n    aux = t[i]\n    t[i] = t[j]\n    t[j] = aux",
+      "example": "Somme(4, 7) → 11"
+    },
+    {
+      "id": "algo-struct-tdo-tdnt",
+      "category": "Structures de Contrôle",
+      "type": "structure",
+      "name": "Conventions Officielles : T.D.O & T.D.N.T",
+      "syntax": "T.D.O (Objet | Type/Nature) & T.D.N.T (Type | Définition)",
+      "summary": "Tableaux indispensables exigés sur la copie d'examen théorique du Baccalauréat.",
+      "description": "Tout algorithme théorique au Bac doit être accompagné de son Tableau de Déclaration des Objets (T.D.O). Si un nouveau type de tableau ou de matrice est requis, il est défini dans le T.D.N.T (Tableau de Déclaration des Nouveaux Types).",
+      "pseudoCode": "// T.D.N.T (Nouveaux Types)\nType\n  tab = tableau de 50 entier\n  mat = tableau de 10, 10 réel\n\n// T.D.O (Objets Locaux / Globaux)\nObjet     | Type / Nature\n-------------------------\nT         | tab\nM         | mat\ni, j, n   | entier\nok        | booléen",
+      "tdo": [
+        {
+          "objet": "T",
+          "type": "tab"
+        },
+        {
+          "objet": "M",
+          "type": "mat"
+        },
+        {
+          "objet": "i, j, n",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "# En Python Thonny, les types sont dynamiques :\nT = [0] * 50\nM = [[0.0] * 10 for _ in range(10)]\ni = 0\nj = 0\nn = len(T)\nok = True",
+      "example": "T.D.O & T.D.N.T conformes au barème officiel de correction"
+    },
+    {
+      "id": "algo-bin2oct",
+      "category": "Conversions de Bases",
+      "type": "fonction",
+      "name": "bin2oct(ch)",
+      "syntax": "fonction bin2oct(ch: chaîne): entier",
+      "summary": "Convertit un nombre binaire (base 2) en octal (base 8) par paquets de 3 bits.",
+      "description": "Complète la chaîne binaire avec des '0' à gauche pour atteindre une longueur multiple de 3. Découpe ensuite par tranches successives de 3 bits (valeur = b[0]*4 + b[1]*2 + b[2]) et concatène chaque chiffre octal obtenu.",
+      "pseudoCode": "0) fonction bin2oct(ch: chaîne): entier\n1) res <-- \"\"\n2) tant que (long(ch) mod 3 ≠ 0) faire\n     ch <-- \"0\" + ch\n   fin_tant_que\n3) tant que ch ≠ \"\" faire\n     b <-- sous_chaîne(ch, 0, 3)\n     ch <-- sous_chaîne(ch, 3, long(ch) - 1)\n     val <-- valeur(b[0]) * 4 + valeur(b[1]) * 2 + valeur(b[2])\n     res <-- res + convch(val)\n   fin_tant_que\n4) retourner valeur(res)\n5) fin",
+      "tdo": [
+        {
+          "objet": "res, b",
+          "type": "chaîne"
+        },
+        {
+          "objet": "val",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def bin2oct(ch):\n    while len(ch) % 3 != 0:\n        ch = \"0\" + ch\n    \n    res = \"\"\n    while ch != \"\":\n        b = ch[0:3]\n        ch = ch[3:]\n        val = int(b[0]) * 4 + int(b[1]) * 2 + int(b[2])\n        res = res + str(val)\n        \n    return int(res)",
+      "example": "bin2oct(\"1011011\") → 133"
+    },
+    {
+      "id": "algo-a2d",
+      "category": "Conversions de Bases",
+      "type": "fonction",
+      "name": "a2d(ch, bs)",
+      "syntax": "fonction a2d(ch: chaîne, bs: entier): entier",
+      "summary": "Convertit un nombre d'une base bs quelconque (2 à 16) vers la base 10 (décimale).",
+      "description": "Parcourt la chaîne de droite à gauche (poids faibles vers poids forts). Multiplie la valeur numérique de chaque symbole (0-9, A-F) par la puissance de base correspondante (p = bs^i) et accumule la somme.",
+      "pseudoCode": "0) fonction a2d(ch: chaîne, bs: entier): entier\n1) res <-- 0\n2) p <-- 1\n3) chh <-- \"0123456789ABCDEF\"\n4) pour i de long(ch) - 1 à 0 (pas = -1) faire\n     res <-- res + pos(ch[i], chh) * p\n     p <-- p * bs\n   fin_pour\n5) retourner res\n6) fin",
+      "tdo": [
+        {
+          "objet": "res, p, i",
+          "type": "entier"
+        },
+        {
+          "objet": "chh",
+          "type": "chaîne"
+        }
+      ],
+      "pythonCode": "def a2d(ch, bs):\n    chh = \"0123456789ABCDEF\"\n    res = 0\n    p = 1\n    for i in range(len(ch) - 1, -1, -1):\n        pos = chh.index(ch[i].upper())\n        res = res + pos * p\n        p = p * bs\n    return res",
+      "example": "a2d(\"1A55F\", 16) → 107871"
+    },
+    {
+      "id": "algo-a2dr",
+      "category": "Conversions de Bases",
+      "type": "fonction",
+      "name": "a2dR(ch, bs, p)",
+      "syntax": "fonction a2dR(ch: chaîne, bs, p: entier): entier",
+      "summary": "Conversion récursive d'un nombre en base bs quelconque vers la base 10 (décimale).",
+      "description": "Cas de base : chaîne vide renvoie 0. Cas général : évalue le premier symbole pondéré par p, additionné au résultat de l'appel récursif sur le reste de la chaîne avec p*bs.",
+      "pseudoCode": "0) fonction a2dR(ch: chaîne, bs, p: entier): entier\n1) chh <-- \"0123456789ABCDEF\"\n2) si long(ch) = 0 alors\n     retourner 0\n   sinon\n     retourner pos(ch[0], chh) * p + a2dR(sous_chaîne(ch, 1, long(ch) - 1), bs, p * bs)\n   fin_si\n3) fin",
+      "tdo": [
+        {
+          "objet": "chh",
+          "type": "chaîne"
+        }
+      ],
+      "pythonCode": "def a2dR(ch, bs, p):\n    chh = \"0123456789ABCDEF\"\n    if len(ch) == 0:\n        return 0\n    else:\n        return chh.index(ch[0].upper()) * p + a2dR(ch[1:], bs, p * bs)",
+      "example": "a2dR(\"1A55F\", 16, 1) → 107871"
+    },
+    {
+      "id": "algo-bin2hexa",
+      "category": "Conversions de Bases",
+      "type": "fonction",
+      "name": "bin2hexa(ch)",
+      "syntax": "fonction bin2hexa(ch: chaîne): chaîne",
+      "summary": "Convertit un nombre binaire (base 2) en hexadécimal (base 16) par blocs de 4 bits.",
+      "description": "Complète le binaire à gauche pour avoir une longueur multiple de 4. Découpe par paquets de 4 bits et traduit chaque quartet en son chiffre hexadécimal équivalent (b[0]*8 + b[1]*4 + b[2]*2 + b[3]).",
+      "pseudoCode": "0) fonction bin2hexa(ch: chaîne): chaîne\n1) res <-- \"\"\n2) chh <-- \"0123456789ABCDEF\"\n3) tant que (long(ch) mod 4 ≠ 0) faire\n     ch <-- \"0\" + ch\n   fin_tant_que\n4) tant que ch ≠ \"\" faire\n     b <-- sous_chaîne(ch, 0, 4)\n     ch <-- sous_chaîne(ch, 4, long(ch) - 1)\n     val <-- valeur(b[0])*8 + valeur(b[1])*4 + valeur(b[2])*2 + valeur(b[3])\n     res <-- res + chh[val]\n   fin_tant_que\n5) retourner res\n6) fin",
+      "tdo": [
+        {
+          "objet": "res, b, chh",
+          "type": "chaîne"
+        },
+        {
+          "objet": "val",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def bin2hexa(ch):\n    chh = \"0123456789ABCDEF\"\n    while len(ch) % 4 != 0:\n        ch = \"0\" + ch\n    res = \"\"\n    while ch != \"\":\n        b = ch[0:4]\n        ch = ch[4:]\n        val = int(b[0]) * 8 + int(b[1]) * 4 + int(b[2]) * 2 + int(b[3])\n        res = res + chh[val]\n    return res",
+      "example": "bin2hexa(\"1011011\") → \"5B\""
+    },
+    {
+      "id": "algo-octal2bin",
+      "category": "Conversions de Bases",
+      "type": "fonction",
+      "name": "octal2bin(ch)",
+      "syntax": "fonction octal2bin(ch: chaîne): chaîne",
+      "summary": "Convertit un nombre octal en son écriture binaire directe sur 3 bits par chiffre.",
+      "description": "Pour chaque chiffre octal, utilise dec2any(c, 2) puis ajuste la longueur à exactement 3 bits en préfixant des 0 si nécessaire.",
+      "pseudoCode": "0) fonction octal2bin(ch: chaîne): chaîne\n1) res <-- \"\"\n2) pour i de 0 à long(ch) - 1 faire\n     c <-- valeur(ch[i])\n     b <-- dec2any(c, 2)\n     tant que long(b) < 3 faire\n       b <-- \"0\" + b\n     fin_tant_que\n     res <-- res + b\n   fin_pour\n3) retourner res\n4) fin",
+      "tdo": [
+        {
+          "objet": "res, b",
+          "type": "chaîne"
+        },
+        {
+          "objet": "c, i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def octal2bin(ch):\n    res = \"\"\n    for char in ch:\n        c = int(char)\n        b = dec2any(c, 2)\n        while len(b) < 3:\n            b = \"0\" + b\n        res = res + b\n    return res",
+      "example": "octal2bin(\"75401\") → \"111101100000001\""
+    },
+    {
+      "id": "algo-octal2hexa",
+      "category": "Conversions de Bases",
+      "type": "fonction",
+      "name": "octal2hexa(ch)",
+      "syntax": "fonction octal2hexa(ch: chaîne): chaîne",
+      "summary": "Convertit un nombre octal (base 8) en hexadécimal (base 16) via le binaire.",
+      "description": "Méthode directe sans division : transforme d'abord l'octal en binaire avec octal2bin, puis le binaire en hexadécimal avec bin2hexa.",
+      "pseudoCode": "0) fonction octal2hexa(ch: chaîne): chaîne\n1) b <-- octal2bin(ch)\n2) h <-- bin2hexa(b)\n3) retourner h\n4) fin",
+      "tdo": [
+        {
+          "objet": "b, h",
+          "type": "chaîne"
+        }
+      ],
+      "pythonCode": "def octal2hexa(ch):\n    b = octal2bin(ch)\n    h = bin2hexa(b)\n    return h",
+      "example": "octal2hexa(\"75401\") → \"7B01\""
+    },
+    {
+      "id": "algo-dec2any",
+      "category": "Conversions de Bases",
+      "type": "fonction",
+      "name": "dec2any(n, bd)",
+      "syntax": "fonction dec2any(n: entier, bd: entier): chaîne",
+      "summary": "Convertit un entier décimal (base 10) vers une base quelconque bd (2 à 16).",
+      "description": "Méthode des divisions successives par bd. Chaque reste correspond à un chiffre de la base cible (0-9, A-F) ajouté en tête du résultat.",
+      "pseudoCode": "0) fonction dec2any(n: entier, bd: entier): chaîne\n1) chh <-- \"0123456789ABCDEF\"\n2) res <-- \"\"\n3) tant que n ≠ 0 faire\n     res <-- chh[n mod bd] + res\n     n <-- n div bd\n   fin_tant_que\n4) si res = \"\" alors\n     res <-- \"0\"\n   fin_si\n5) retourner res\n6) fin",
+      "tdo": [
+        {
+          "objet": "res, chh",
+          "type": "chaîne"
+        }
+      ],
+      "pythonCode": "def dec2any(n, bd):\n    chh = \"0123456789ABCDEF\"\n    if n == 0:\n        return \"0\"\n    res = \"\"\n    while n != 0:\n        res = chh[n % bd] + res\n        n = n // bd\n    return res",
+      "example": "dec2any(2591, 16) → \"A1F\""
+    },
+    {
+      "id": "algo-dec2anyr",
+      "category": "Conversions de Bases",
+      "type": "fonction",
+      "name": "dec2anyR(n, bd)",
+      "syntax": "fonction dec2anyR(n: entier, bd: entier): chaîne",
+      "summary": "Conversion récursive d'un entier décimal vers une base destination bd.",
+      "description": "Cas d'arrêt : n = 0 renvoie la chaîne vide. Cas général : effectue la division entière (n div bd) récursivement et suffixe le reste (n mod bd).",
+      "pseudoCode": "0) fonction dec2anyR(n: entier, bd: entier): chaîne\n1) chh <-- \"0123456789ABCDEF\"\n2) si n = 0 alors\n     retourner \"\"\n   sinon\n     retourner dec2anyR(n div bd, bd) + chh[n mod bd]\n   fin_si\n3) fin",
+      "tdo": [
+        {
+          "objet": "chh",
+          "type": "chaîne"
+        }
+      ],
+      "pythonCode": "def dec2anyR(n, bd):\n    chh = \"0123456789ABCDEF\"\n    if n == 0:\n        return \"\"\n    return dec2anyR(n // bd, bd) + chh[n % bd]",
+      "example": "dec2anyR(46, 2) → \"101110\""
+    },
+    {
+      "id": "algo-hex2bin",
+      "category": "Conversions de Bases",
+      "type": "fonction",
+      "name": "hex2bin(ch)",
+      "syntax": "fonction hex2bin(ch: chaîne): chaîne",
+      "summary": "Convertit un nombre hexadécimal en binaire direct en remplaçant chaque digit par 4 bits.",
+      "description": "Pour chaque symbole hexadécimal, cherche sa position dans '0123456789ABCDEF', convertit en base 2 avec dec2any et remplit à 4 bits.",
+      "pseudoCode": "0) fonction hex2bin(ch: chaîne): chaîne\n1) res <-- \"\"\n2) chh <-- \"0123456789ABCDEF\"\n3) pour i de 0 à long(ch) - 1 faire\n     c <-- pos(ch[i], chh)\n     b <-- dec2any(c, 2)\n     tant que long(b) < 4 faire\n       b <-- \"0\" + b\n     fin_tant_que\n     res <-- res + b\n   fin_pour\n4) retourner res\n5) fin",
+      "tdo": [
+        {
+          "objet": "res, b, chh",
+          "type": "chaîne"
+        },
+        {
+          "objet": "c, i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def hex2bin(ch):\n    res = \"\"\n    chh = \"0123456789ABCDEF\"\n    for char in ch:\n        c = chh.index(char.upper())\n        b = dec2any(c, 2)\n        while len(b) < 4:\n            b = \"0\" + b\n        res = res + b\n    return res",
+      "example": "hex2bin(\"1F5A\") → \"0001111101011010\""
+    },
+    {
+      "id": "algo-hex2octal",
+      "category": "Conversions de Bases",
+      "type": "fonction",
+      "name": "hex2octal(ch)",
+      "syntax": "fonction hex2octal(ch: chaîne): chaîne",
+      "summary": "Convertit un nombre hexadécimal en octal en passant par le binaire intermédiaire.",
+      "description": "Combine hex2bin pour convertir en binaire, puis bin2oct pour regrouper les bits par 3 en octal. Simple, direct et sans perte de précision.",
+      "pseudoCode": "0) fonction hex2octal(ch: chaîne): chaîne\n1) b <-- hex2bin(ch)\n2) o <-- convch(bin2oct(b))\n3) retourner o\n4) fin",
+      "tdo": [
+        {
+          "objet": "b, o",
+          "type": "chaîne"
+        }
+      ],
+      "pythonCode": "def hex2octal(ch):\n    b = hex2bin(ch)\n    o = str(bin2oct(b))\n    return o",
+      "example": "hex2octal(\"1F5A\") → \"17532\""
+    },
+    {
+      "id": "algo-any2any",
+      "category": "Conversions de Bases",
+      "type": "fonction",
+      "name": "any2any(ch, bs, bd)",
+      "syntax": "fonction any2any(ch: chaîne, bs, bd: entier): chaîne",
+      "summary": "Convertit un nombre d'une base bs vers une base bd quelconque via la base 10.",
+      "description": "Méthode pivot officielle : convertit d'abord ch de la base source bs en entier décimal via a2d, puis convertit cet entier décimal vers la base destination bd via dec2any.",
+      "pseudoCode": "0) fonction any2any(ch: chaîne, bs, bd: entier): chaîne\n1) n <-- a2d(ch, bs)\n2) res <-- dec2any(n, bd)\n3) retourner res\n4) fin",
+      "tdo": [
+        {
+          "objet": "n",
+          "type": "entier"
+        },
+        {
+          "objet": "res",
+          "type": "chaîne"
+        }
+      ],
+      "pythonCode": "def any2any(ch, bs, bd):\n    n = a2d(ch, bs)\n    res = dec2any(n, bd)\n    return res",
+      "example": "any2any(\"1FA2\", 16, 8) → \"17642\""
+    },
+    {
+      "id": "algo-aire-milieu",
+      "category": "Calcul d'Aires",
+      "type": "fonction",
+      "name": "aire_milieu(nb, a, b)",
+      "syntax": "fonction aire_milieu(nb: entier, a, b: réel): réel",
+      "summary": "Approximation de l'intégrale d'une fonction f par la méthode des rectangles au point médian.",
+      "description": "Découpe l'intervalle [a, b] en nb sous-intervalles de largeur h = |b - a| / nb. Évalue la fonction f(x) au centre de chaque intervalle x = a + h/2, puis somme les aires (f(x) * h).",
+      "pseudoCode": "0) fonction aire_milieu(nb: entier, a, b: réel): réel\n1) h <-- abs(b - a) / nb\n2) x <-- a + (h / 2)\n3) s <-- 0\n4) pour i de 0 à nb - 1 faire\n     s <-- s + (f(x) * h)\n     x <-- x + h\n   fin_pour\n5) retourner s\n6) fin",
+      "tdo": [
+        {
+          "objet": "h, x, s",
+          "type": "réel"
+        },
+        {
+          "objet": "i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def f(x):\n    return x * x  # Exemple de fonction à intégrer\n\ndef aire_milieu(nb, a, b):\n    h = abs(b - a) / nb\n    x = a + (h / 2)\n    s = 0.0\n    for i in range(nb):\n        s = s + f(x) * h\n        x = x + h\n    return round(s, 6)",
+      "example": "aire_milieu(100, 0, 1) avec f(x)=x^2 → 0.333325"
+    },
+    {
+      "id": "algo-aire-droite",
+      "category": "Calcul d'Aires",
+      "type": "fonction",
+      "name": "aire_droite(nb, a, b)",
+      "syntax": "fonction aire_droite(nb: entier, a, b: réel): réel",
+      "summary": "Approximation de l'intégrale par la méthode des rectangles avec la borne droite.",
+      "description": "Découpe en nb subdivisions de pas h. Le point de calcul démarre à x = a + h (extrémité droite du premier rectangle) et avance de h à chaque pas.",
+      "pseudoCode": "0) fonction aire_droite(nb: entier, a, b: réel): réel\n1) h <-- abs(b - a) / nb\n2) x <-- a + h\n3) s <-- 0\n4) pour i de 0 à nb - 1 faire\n     s <-- s + (f(x) * h)\n     x <-- x + h\n   fin_pour\n5) retourner s\n6) fin",
+      "tdo": [
+        {
+          "objet": "h, x, s",
+          "type": "réel"
+        },
+        {
+          "objet": "i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def f(x):\n    return x * x\n\ndef aire_droite(nb, a, b):\n    h = abs(b - a) / nb\n    x = a + h\n    s = 0.0\n    for i in range(nb):\n        s = s + f(x) * h\n        x = x + h\n    return round(s, 6)",
+      "example": "aire_droite(100, 0, 1) avec f(x)=x^2 → 0.338350"
+    },
+    {
+      "id": "algo-aire-gauche",
+      "category": "Calcul d'Aires",
+      "type": "fonction",
+      "name": "aire_gauche(nb, a, b)",
+      "syntax": "fonction aire_gauche(nb: entier, a, b: réel): réel",
+      "summary": "Approximation de l'intégrale par la méthode des rectangles avec la borne gauche.",
+      "description": "Démarre exactement à x = a (extrémité gauche du rectangle) et évalue f(x) avant d'incrémenter x de h à chaque itération.",
+      "pseudoCode": "0) fonction aire_gauche(nb: entier, a, b: réel): réel\n1) h <-- abs(b - a) / nb\n2) x <-- a\n3) s <-- 0\n4) pour i de 0 à nb - 1 faire\n     s <-- s + (f(x) * h)\n     x <-- x + h\n   fin_pour\n5) retourner s\n6) fin",
+      "tdo": [
+        {
+          "objet": "h, x, s",
+          "type": "réel"
+        },
+        {
+          "objet": "i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def f(x):\n    return x * x\n\ndef aire_gauche(nb, a, b):\n    h = abs(b - a) / nb\n    x = a\n    s = 0.0\n    for i in range(nb):\n        s = s + f(x) * h\n        x = x + h\n    return round(s, 6)",
+      "example": "aire_gauche(100, 0, 1) avec f(x)=x^2 → 0.328350"
+    },
+    {
+      "id": "algo-aire-trapezes",
+      "category": "Calcul d'Aires",
+      "type": "fonction",
+      "name": "aire_trapezes(nb, a, b)",
+      "syntax": "fonction aire_trapezes(nb: entier, a, b: réel): réel",
+      "summary": "Calcul d'aire approchée par la formule des trapèzes sur [a, b].",
+      "description": "Chaque tranche est approximée par un trapèze d'aire ((f(x) + f(x+h)) * h) / 2. Cette méthode donne une convergence nettement plus rapide et précise.",
+      "pseudoCode": "0) fonction aire_trapezes(nb: entier, a, b: réel): réel\n1) h <-- abs(b - a) / nb\n2) x <-- a\n3) s <-- 0\n4) pour i de 0 à nb - 1 faire\n     s <-- s + (((f(x) + f(x + h)) * h) / 2)\n     x <-- x + h\n   fin_pour\n5) retourner s\n6) fin",
+      "tdo": [
+        {
+          "objet": "h, x, s",
+          "type": "réel"
+        },
+        {
+          "objet": "i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def f(x):\n    return x * x\n\ndef aire_trapezes(nb, a, b):\n    h = abs(b - a) / nb\n    x = a\n    s = 0.0\n    for i in range(nb):\n        s = s + ((f(x) + f(x + h)) * h) / 2\n        x = x + h\n    return round(s, 6)",
+      "example": "aire_trapezes(100, 0, 1) avec f(x)=x^2 → 0.333350"
+    },
+    {
+      "id": "algo-premier",
+      "category": "Arithmétique & Nombres",
+      "type": "fonction",
+      "name": "premier(n)",
+      "syntax": "fonction premier(n: entier): booléen",
+      "summary": "Teste si un entier n est premier (optimisé jusqu'à n div 2).",
+      "description": "Initialise ok à (n > 1). Parcourt les diviseurs potentiels de 2 à n div 2. Dès qu'un diviseur strict est trouvé (n mod i = 0), ok devient faux.",
+      "pseudoCode": "0) fonction premier(n: entier): booléen\n1) ok <-- n > 1\n2) pour i de 2 à n div 2 faire\n     si n mod i = 0 alors\n       ok <-- faux\n     fin_si\n   fin_pour\n3) retourner ok\n4) fin",
+      "tdo": [
+        {
+          "objet": "ok",
+          "type": "booléen"
+        },
+        {
+          "objet": "i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def premier(n):\n    if n <= 1:\n        return False\n    ok = True\n    for i in range(2, (n // 2) + 1):\n        if n % i == 0:\n            ok = False\n            break\n    return ok",
+      "example": "premier(17) → True, premier(21) → False"
+    },
+    {
+      "id": "algo-factorielle",
+      "category": "Arithmétique & Nombres",
+      "type": "fonction",
+      "name": "factorielle(N)",
+      "syntax": "fonction factorielle(N: entier): entier",
+      "summary": "Calcule le produit factoriel N! = 1 * 2 * ... * N.",
+      "description": "Initialise l'accumulateur f à 1, puis multiplie consécutivement par chaque entier i variant de 2 jusqu'à N.",
+      "pseudoCode": "0) fonction factorielle(N: entier): entier\n1) f <-- 1\n2) pour i de 2 à N faire\n     f <-- f * i\n   fin_pour\n3) retourner f\n4) fin",
+      "tdo": [
+        {
+          "objet": "f, i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def factorielle(N):\n    f = 1\n    for i in range(2, N + 1):\n        f = f * i\n    return f",
+      "example": "factorielle(5) → 120"
+    },
+    {
+      "id": "algo-puissance",
+      "category": "Arithmétique & Nombres",
+      "type": "fonction",
+      "name": "puissance(x, n)",
+      "syntax": "fonction puissance(x: entier, n: entier): réel",
+      "summary": "Calcule la puissance x^n pour un exposant entier positif.",
+      "description": "Initialise p à 1, puis effectue n multiplications successives de la base x.",
+      "pseudoCode": "0) fonction puissance(x: entier, n: entier): réel\n1) p <-- 1\n2) pour i de 1 à n faire\n     p <-- p * x\n   fin_pour\n3) retourner p\n4) fin",
+      "tdo": [
+        {
+          "objet": "p",
+          "type": "réel"
+        },
+        {
+          "objet": "i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def puissance(x, n):\n    p = 1\n    for i in range(1, n + 1):\n        p = p * x\n    return float(p)",
+      "example": "puissance(2, 5) → 32.0"
+    },
+    {
+      "id": "algo-puissance-va",
+      "category": "Arithmétique & Nombres",
+      "type": "fonction",
+      "name": "puissance_va(x, n)",
+      "syntax": "fonction puissance_va(x: entier, n: entier): réel",
+      "summary": "Calcule la puissance x^n pour n quelconque (positif, nul ou négatif).",
+      "description": "Calcule le produit sur abs(n) itérations. Si l'exposant n est strictement négatif, inverse la valeur finale p <-- 1 / p.",
+      "pseudoCode": "0) fonction puissance_va(x: entier, n: entier): réel\n1) p <-- 1\n2) pour i de 1 à abs(n) faire\n     p <-- p * x\n   fin_pour\n3) si n < 0 alors\n     p <-- 1 / p\n   fin_si\n4) retourner p\n5) fin",
+      "tdo": [
+        {
+          "objet": "p",
+          "type": "réel"
+        },
+        {
+          "objet": "i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def puissance_va(x, n):\n    p = 1.0\n    for i in range(1, abs(n) + 1):\n        p = p * x\n    if n < 0:\n        p = 1.0 / p\n    return p",
+      "example": "puissance_va(2, -3) → 0.125"
+    },
+    {
+      "id": "algo-pgcd-ppcm",
+      "category": "Arithmétique & Nombres",
+      "type": "fonction",
+      "name": "pgcd_ppcm(a, b)",
+      "syntax": "fonction pgcd_ppcm(a, b: entier): entier",
+      "summary": "Méthode optimisée Bac pour déterminer le PPCM et le PGCD simultanément.",
+      "description": "Cherche le plus petit coefficient k ≥ 1 tel que (a * k) mod b = 0. Le PPCM vaut a * k, et le PGCD vaut b div k (car PGCD * PPCM = a * b).",
+      "pseudoCode": "0) fonction pgcd_ppcm(a, b: entier): entier\n1) k <-- 1\n2) tant que ((a * k) mod b ≠ 0) faire\n     k <-- k + 1\n   fin_tant_que\n3) // Pour obtenir le PPCM : retourner a * k\n4) // Pour obtenir le PGCD : retourner b div k\n5) retourner b div k\n6) fin",
+      "tdo": [
+        {
+          "objet": "k",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def pgcd_ppcm(a, b):\n    k = 1\n    while (a * k) % b != 0:\n        k = k + 1\n    ppcm = a * k\n    pgcd = (a * b) // ppcm\n    return pgcd, ppcm",
+      "example": "pgcd_ppcm(12, 18) → (PGCD: 6, PPCM: 36)"
+    },
+    {
+      "id": "algo-palindrome",
+      "category": "Traitement des Chaînes",
+      "type": "fonction",
+      "name": "palindrome(ch)",
+      "syntax": "fonction palindrome(ch: chaîne): booléen",
+      "summary": "Vérifie si une chaîne de caractères est symétrique (se lit de la même façon dans les deux sens).",
+      "description": "Compare chaque caractère ch[i] avec son symétrique ch[long(ch)-1-i] jusqu'au milieu long(ch) div 2. Renvoie faux au premier désaccord.",
+      "pseudoCode": "0) fonction palindrome(ch: chaîne): booléen\n1) res <-- vrai\n2) pour i de 0 à long(ch) div 2 faire\n     si ch[i] ≠ ch[long(ch) - 1 - i] alors\n       res <-- faux\n     fin_si\n   fin_pour\n3) retourner res\n4) fin",
+      "tdo": [
+        {
+          "objet": "res",
+          "type": "booléen"
+        },
+        {
+          "objet": "i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def palindrome(ch):\n    i = 0\n    j = len(ch) - 1\n    ok = True\n    while i < j and ok:\n        if ch[i] != ch[j]:\n            ok = False\n        else:\n            i = i + 1\n            j = j - 1\n    return ok",
+      "example": "palindrome(\"radar\") → True, palindrome(\"bac\") → False"
+    },
+    {
+      "id": "algo-lirech",
+      "category": "Traitement des Chaînes",
+      "type": "procédure",
+      "name": "lirech(VAR ch)",
+      "syntax": "procédure lirech(VAR ch: chaîne)",
+      "summary": "Saisie contrôlée d'une chaîne dont tous les caractères sont distincts (aucun doublon).",
+      "description": "Boucle de répétition demandant la saisie de ch tant que la chaîne contient au moins un caractère en double (testé via pos(ch[i], ch) ≠ i).",
+      "pseudoCode": "0) procédure lirech(VAR ch: chaîne)\n1) répéter\n     ok <-- vrai\n     lire(ch)\n     pour i de 1 à long(ch) - 1 faire\n       si (pos(ch[i], ch) ≠ i) alors\n         ok <-- faux\n       fin_si\n     fin_pour\n   jusqu'à ok = vrai\n2) fin",
+      "tdo": [
+        {
+          "objet": "ok",
+          "type": "booléen"
+        },
+        {
+          "objet": "i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def lirech():\n    while True:\n        ch = input(\"Donner une chaîne : \")\n        ok = True\n        for i in range(len(ch)):\n            if ch.count(ch[i]) > 1:\n                ok = False\n                break\n        if ok and len(ch) > 0:\n            return ch\n        print(\"Erreur : la chaîne contient des caractères répétés !\")",
+      "example": "lirech() avec \"bac\" → valide, avec \"test\" (2 fois t) → rejeté"
+    },
+    {
+      "id": "algo-remplir",
+      "category": "Tableaux & Vecteurs",
+      "type": "procédure",
+      "name": "remplir(VAR t, N)",
+      "syntax": "procédure remplir(VAR t: tab, N: entier)",
+      "summary": "Saisie séquentielle des N éléments d'un tableau.",
+      "description": "Parcourt les indices de 0 à N-1 et invite l'utilisateur à saisir chaque valeur t[i]. Passage de t par variable (mot-clé VAR) obligatoire.",
+      "pseudoCode": "0) procédure remplir(VAR t: tab, N: entier)\n1) pour i de 0 à N - 1 faire\n     écrire(\"Taper t[\", i, \"] : \")\n     lire(t[i])\n   fin_pour\n2) fin",
+      "tdo": [
+        {
+          "objet": "i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def remplir(t, N):\n    for i in range(N):\n        val = int(input(\"Taper t[\" + str(i) + \"] : \"))\n        t.append(val)",
+      "example": "remplir(t, 4) → t = [12, 45, 7, 88]"
+    },
+    {
+      "id": "algo-remplir-condition",
+      "category": "Tableaux & Vecteurs",
+      "type": "procédure",
+      "name": "remplir_condition(VAR t, N)",
+      "syntax": "procédure remplir_condition(VAR t: tab, N: entier)",
+      "summary": "Remplissage d'un tableau avec validation obligatoire de chaque élément saisi.",
+      "description": "Intègre une boucle Répéter ... Jusqu'à à l'intérieur de la boucle Pour pour s'assurer que chaque élément satisfait une condition stricte (ex: strictement positif ou intervalle valide).",
+      "pseudoCode": "0) procédure remplir_condition(VAR t: tab, N: entier)\n1) pour i de 0 à N - 1 faire\n     répéter\n       écrire(\"Taper t[\", i, \"] (> 0) : \")\n       lire(t[i])\n     jusqu'à (t[i] > 0)\n   fin_pour\n2) fin",
+      "tdo": [
+        {
+          "objet": "i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def remplir_condition(t, N):\n    for i in range(N):\n        while True:\n            val = int(input(\"Taper t[\" + str(i) + \"] (> 0) : \"))\n            if val > 0:\n                t.append(val)\n                break\n            print(\"Erreur : la valeur doit être strictement positive !\")",
+      "example": "Force la saisie de nombres strictement positifs pour chaque case"
+    },
+    {
+      "id": "algo-remplir-distinct",
+      "category": "Tableaux & Vecteurs",
+      "type": "procédure",
+      "name": "remplir_distinct(VAR t, n)",
+      "syntax": "procédure remplir_distinct(VAR t: tab, n: entier)",
+      "summary": "Remplissage d'un tableau à éléments tous uniques et distincts (sans doublon).",
+      "description": "S'appuie sur une fonction auxiliaire existe(t, i) qui vérifie si la valeur saisie en t[i] figure déjà dans les cases précédentes 0 à i-1.",
+      "pseudoCode": "0) fonction existe(t: tab, n: entier): booléen\n1) ok <-- faux\n2) pour i de 0 à n - 1 faire\n     si t[i] = t[n] alors\n       ok <-- vrai\n     fin_si\n   fin_pour\n3) retourner ok\n4) fin\n\n0) procédure remplir_distinct(VAR t: tab, n: entier)\n1) pour i de 0 à n - 1 faire\n     répéter\n       écrire(\"t[\", i, \"] = \")\n       lire(t[i])\n     jusqu'à (existe(t, i) = faux)\n   fin_pour\n2) fin",
+      "tdo": [
+        {
+          "objet": "i",
+          "type": "entier"
+        },
+        {
+          "objet": "existe",
+          "type": "fonction"
+        }
+      ],
+      "pythonCode": "def existe(t, n):\n    for i in range(n):\n        if t[i] == t[n]:\n            return True\n    return False\n\ndef remplir_distinct(n):\n    t = []\n    for i in range(n):\n        while True:\n            val = int(input(\"t[\" + str(i) + \"] = \"))\n            if val not in t:\n                t.append(val)\n                break\n            print(\"Valeur déjà existante ! Entrez un nombre distinct.\")\n    return t",
+      "example": "Saisie t = [5, 12, 8, 99] (rejette tout doublon)"
+    },
+    {
+      "id": "algo-tri-bulle",
+      "category": "Algorithmes de Tri",
+      "type": "procédure",
+      "name": "tri_bulle(VAR t, n)",
+      "syntax": "procédure tri_bulle(VAR t: tab, n: entier)",
+      "summary": "Tri à bulles optimisé avec indicateur booléen de permutation et borne décroissante.",
+      "description": "Compare deux éléments consécutifs t[i] et t[i+1]. S'ils sont désordonnés, les permute et active le témoin p. Diminue n de 1 après chaque passage pour ne plus retester les éléments déjà triés.",
+      "pseudoCode": "0) procédure tri_bulle(VAR t: tab, n: entier)\n1) p <-- vrai\n2) tant que p faire\n     p <-- faux\n     pour i de 0 à n - 2 faire\n       si t[i] > t[i + 1] alors\n         aux <-- t[i]\n         t[i] <-- t[i + 1]\n         t[i + 1] <-- aux\n         p <-- vrai\n       fin_si\n     fin_pour\n     n <-- n - 1\n   fin_tant_que\n3) fin",
+      "tdo": [
+        {
+          "objet": "p",
+          "type": "booléen"
+        },
+        {
+          "objet": "i, aux",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def tri_bulle(t, n):\n    p = True\n    while p:\n        p = False\n        for i in range(n - 1):\n            if t[i] > t[i + 1]:\n                aux = t[i]\n                t[i] = t[i + 1]\n                t[i + 1] = aux\n                p = True\n        n = n - 1",
+      "example": "tri_bulle([64, 34, 25, 12, 22], 5) → [12, 22, 24, 34, 64]"
+    },
+    {
+      "id": "algo-tri-selection",
+      "category": "Algorithmes de Tri",
+      "type": "procédure",
+      "name": "tri_par_sélection(VAR T, N)",
+      "syntax": "procédure tri_par_sélection(VAR T: tab, N: entier)",
+      "summary": "Tri par sélection du minimum successif.",
+      "description": "À chaque étape i, cherche la position du plus petit élément restant pos_min entre i et N-1. Si pos_min ≠ i, permute T[i] et T[pos_min].",
+      "pseudoCode": "0) procédure tri_par_sélection(VAR T: tab, N: entier)\n1) pour i de 0 à N - 2 faire\n     // Recherche de la position du minimum\n     pos_min <-- i\n     pour j de i + 1 à N - 1 faire\n       si T[j] < T[pos_min] alors\n         pos_min <-- j\n       fin_si\n     fin_pour\n     // Permutation avec la case actuelle\n     si i ≠ pos_min alors\n       kes <-- T[i]\n       T[i] <-- T[pos_min]\n       T[pos_min] <-- kes\n     fin_si\n   fin_pour\n2) fin",
+      "tdo": [
+        {
+          "objet": "i, j, pos_min, kes",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def tri_par_selection(T, N):\n    for i in range(N - 1):\n        pos_min = i\n        for j in range(i + 1, N):\n            if T[j] < T[pos_min]:\n                pos_min = j\n        if i != pos_min:\n            aux = T[i]\n            T[i] = T[pos_min]\n            T[pos_min] = aux",
+      "example": "tri_par_selection([29, 10, 14, 37, 13], 5) → [10, 13, 14, 29, 37]"
+    },
+    {
+      "id": "algo-tri-insertion",
+      "category": "Algorithmes de Tri",
+      "type": "procédure",
+      "name": "tri_par_insertion(VAR T, N)",
+      "syntax": "procédure tri_par_insertion(VAR T: tab, N: entier)",
+      "summary": "Tri par insertion progressive avec décalage vers la droite.",
+      "description": "Pour chaque élément T[i], sauvegarde sa valeur dans backup, décale vers la droite tous les éléments plus grands que backup, puis insère backup à sa position libre.",
+      "pseudoCode": "0) procédure tri_par_insertion(VAR T: tab, N: entier)\n1) pour i de 1 à N - 1 faire\n     // Sauvegarder la valeur à insérer\n     backup <-- T[i]\n     inLibre <-- i\n     // Décalage à droite et recherche de position\n     tant que ((inLibre > 0) et (T[inLibre - 1] > backup)) faire\n       T[inLibre] <-- T[inLibre - 1]\n       inLibre <-- inLibre - 1\n     fin_tant_que\n     // Insertion de backup\n     T[inLibre] <-- backup\n   fin_pour\n2) fin",
+      "tdo": [
+        {
+          "objet": "i, inLibre, backup",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def tri_par_insertion(T, N):\n    for i in range(1, N):\n        backup = T[i]\n        inLibre = i\n        while inLibre > 0 and T[inLibre - 1] > backup:\n            T[inLibre] = T[inLibre - 1]\n            inLibre = inLibre - 1\n        T[inLibre] = backup",
+      "example": "tri_par_insertion([12, 11, 13, 5, 6], 5) → [5, 6, 11, 12, 13]"
+    },
+    {
+      "id": "algo-recherche-dicho",
+      "category": "Algorithmes de Tri",
+      "type": "fonction",
+      "name": "recherche_dichotomique(t, n, x)",
+      "syntax": "fonction recherche_dichotomique(t: tab, n, x: entier): entier",
+      "summary": "Recherche ultra-rapide par dichotomie dans un tableau préalablement trié.",
+      "description": "Divise par 2 l'espace de recherche à chaque itération en comparant x avec l'élément central t[milieu]. Renvoie l'indice trouvé ou -1 si absent.",
+      "pseudoCode": "0) fonction recherche_dichotomique(t: tab, n, x: entier): entier\n1) g <-- 0\n2) d <-- n - 1\n3) pos <-- -1\n4) tant que (g ≤ d) et (pos = -1) faire\n     m <-- (g + d) div 2\n     si t[m] = x alors\n       pos <-- m\n     sinon si t[m] < x alors\n       g <-- m + 1\n     sinon\n       d <-- m - 1\n     fin_si\n   fin_tant_que\n5) retourner pos\n6) fin",
+      "tdo": [
+        {
+          "objet": "g, d, m, pos",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def recherche_dichotomique(t, n, x):\n    g = 0\n    d = n - 1\n    pos = -1\n    while g <= d and pos == -1:\n        m = (g + d) // 2\n        if t[m] == x:\n            pos = m\n        elif t[m] < x:\n            g = m + 1\n        else:\n            d = m - 1\n    return pos",
+      "example": "recherche_dichotomique([10, 20, 30, 40, 50], 5, 30) → 2"
+    },
+    {
+      "id": "algo-tri-mat-colonne",
+      "category": "Matrices & Patterns",
+      "type": "procédure",
+      "name": "tri_mat_colonne(VAR m, n)",
+      "syntax": "procédure tri_mat_colonne(VAR m: mat, n: entier)",
+      "summary": "Trie chaque colonne d'une matrice carrée de façon indépendante.",
+      "description": "Fixe l'indice de colonne j de 0 à n-1, puis applique un tri à bulles sur les éléments de la colonne m[i, j] pour i allant de 0 à n-2.",
+      "pseudoCode": "0) procédure tri_mat_colonne(VAR m: mat, n: entier)\n1) pour j de 0 à n - 1 faire\n     p <-- vrai\n     tant que p faire\n       p <-- faux\n       pour i de 0 à n - 2 faire\n         si m[i, j] > m[i + 1, j] alors\n           aux <-- m[i, j]\n           m[i, j] <-- m[i + 1, j]\n           m[i + 1, j] <-- aux\n           p <-- vrai\n         fin_si\n       fin_pour\n       n <-- n - 1\n     fin_tant_que\n   fin_pour\n2) fin",
+      "tdo": [
+        {
+          "objet": "i, j, aux",
+          "type": "entier"
+        },
+        {
+          "objet": "p",
+          "type": "booléen"
+        }
+      ],
+      "pythonCode": "def tri_mat_colonne(m, n):\n    for j in range(n):\n        p = True\n        taille = n\n        while p:\n            p = False\n            for i in range(taille - 1):\n                if m[i][j] > m[i + 1][j]:\n                    aux = m[i][j]\n                    m[i][j] = m[i + 1][j]\n                    m[i + 1][j] = aux\n                    p = True\n            taille = taille - 1",
+      "example": "Chaque colonne de la matrice devient triée par ordre croissant"
+    },
+    {
+      "id": "algo-tri-mat-ligne",
+      "category": "Matrices & Patterns",
+      "type": "procédure",
+      "name": "tri_mat_ligne(VAR m, n)",
+      "syntax": "procédure tri_mat_ligne(VAR m: mat, n: entier)",
+      "summary": "Trie chaque ligne d'une matrice carrée de façon indépendante.",
+      "description": "Fixe l'indice de ligne i de 0 à n-1, puis applique un tri sur les éléments de la ligne m[i, j] pour j variant de 0 à n-2.",
+      "pseudoCode": "0) procédure tri_mat_ligne(VAR m: mat, n: entier)\n1) pour i de 0 à n - 1 faire\n     p <-- vrai\n     tant que p faire\n       p <-- faux\n       pour j de 0 à n - 2 faire\n         si m[i, j] > m[i, j + 1] alors\n           aux <-- m[i, j]\n           m[i, j] <-- m[i, j + 1]\n           m[i, j + 1] <-- aux\n           p <-- vrai\n         fin_si\n       fin_pour\n       n <-- n - 1\n     fin_tant_que\n   fin_pour\n2) fin",
+      "tdo": [
+        {
+          "objet": "i, j, aux",
+          "type": "entier"
+        },
+        {
+          "objet": "p",
+          "type": "booléen"
+        }
+      ],
+      "pythonCode": "def tri_mat_ligne(m, n):\n    for i in range(n):\n        p = True\n        taille = n\n        while p:\n            p = False\n            for j in range(taille - 1):\n                if m[i][j] > m[i][j + 1]:\n                    aux = m[i][j]\n                    m[i][j] = m[i][j + 1]\n                    m[i][j + 1] = aux\n                    p = True\n            taille = taille - 1",
+      "example": "Chaque ligne de la matrice devient triée par ordre croissant"
+    },
+    {
+      "id": "algo-mat-parcours-bas-haut",
+      "category": "Matrices & Patterns",
+      "type": "procédure",
+      "name": "mat_parcours_bas_haut(m, L, C)",
+      "syntax": "procédure mat_parcours_bas_haut(m: mat, L, C: entier)",
+      "summary": "Parcours de matrice colonne par colonne, de bas en haut et de droite à gauche.",
+      "description": "Règle d'or Bac IKODE : la variable qui bouge le plus vite est dans la boucle interne. Ici, la colonne j va de C-1 à 0 et la ligne i monte de L-1 à 0.",
+      "pseudoCode": "0) procédure mat_parcours_bas_haut(m: mat, L, C: entier)\n1) pour j de C - 1 à 0 (pas = -1) faire\n     pour i de L - 1 à 0 (pas = -1) faire\n       // Traitement de la case m[i, j]\n       écrire(m[i, j])\n     fin_pour\n   fin_pour\n2) fin",
+      "tdo": [
+        {
+          "objet": "i, j",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def mat_parcours_bas_haut(m, L, C):\n    for j in range(C - 1, -1, -1):\n        for i in range(L - 1, -1, -1):\n            print(\"Case [\" + str(i) + \", \" + str(j) + \"] = \" + str(m[i][j]))",
+      "example": "Explore m[L-1, C-1], m[L-2, C-1], ..., m[0, 0]"
+    },
+    {
+      "id": "algo-mat-parcours-ligne-inverse",
+      "category": "Matrices & Patterns",
+      "type": "procédure",
+      "name": "mat_parcours_ligne_inverse(m, L, C)",
+      "syntax": "procédure mat_parcours_ligne_inverse(m: mat, L, C: entier)",
+      "summary": "Parcours de matrice ligne par ligne, de droite à gauche et de bas en haut.",
+      "description": "La boucle externe gère les lignes i de L-1 à 0, et la boucle interne parcourt les colonnes j de C-1 à 0 à rebours.",
+      "pseudoCode": "0) procédure mat_parcours_ligne_inverse(m: mat, L, C: entier)\n1) pour i de L - 1 à 0 (pas = -1) faire\n     pour j de C - 1 à 0 (pas = -1) faire\n       // Traitement de la case m[i, j]\n       écrire(m[i, j])\n     fin_pour\n   fin_pour\n2) fin",
+      "tdo": [
+        {
+          "objet": "i, j",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def mat_parcours_ligne_inverse(m, L, C):\n    for i in range(L - 1, -1, -1):\n        for j in range(C - 1, -1, -1):\n            print(\"Case [\" + str(i) + \", \" + str(j) + \"] = \" + str(m[i][j]))",
+      "example": "Lecture inversée ligne par ligne complète"
+    },
+    {
+      "id": "algo-mat-pattern-sablier",
+      "category": "Matrices & Patterns",
+      "type": "procédure",
+      "name": "mat_pattern_sablier(m, L, C)",
+      "syntax": "procédure mat_pattern_sablier(m: mat, L, C: entier)",
+      "summary": "Parcours en motif sablier / triangle inversé avec bornes dynamiques d et f.",
+      "description": "Initialise d = 0 et f = C - 1. Pour chaque ligne i, la colonne j varie de d à f. À chaque changement de ligne, d s'incrémente de 1 et f se décrémente de 1.",
+      "pseudoCode": "0) procédure mat_pattern_sablier(m: mat, L, C: entier)\n1) d <-- 0\n2) f <-- C - 1\n3) pour i de 0 à L - 1 faire\n     pour j de d à f faire\n       // Traitement m[i, j]\n       écrire(m[i, j])\n     fin_pour\n     d <-- d + 1\n     f <-- f - 1\n   fin_pour\n4) fin",
+      "tdo": [
+        {
+          "objet": "i, j, d, f",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def mat_pattern_sablier(m, L, C):\n    d = 0\n    f = C - 1\n    for i in range(L):\n        if d <= f:\n            for j in range(d, f + 1):\n                print(\"[\" + str(i) + \",\" + str(j) + \"] = \" + str(m[i][j]), end=\" \")\n            print()\n            d = d + 1\n            f = f - 1",
+      "example": "Parcours des étoiles * formant un entonnoir dans la matrice"
+    },
+    {
+      "id": "algo-mat-pattern-diagonales",
+      "category": "Matrices & Patterns",
+      "type": "procédure",
+      "name": "mat_pattern_diagonales(m, L)",
+      "syntax": "procédure mat_pattern_diagonales(m: mat, L: entier)",
+      "summary": "Parcours de toutes les diagonales montantes d'une matrice carrée en deux temps.",
+      "description": "Partie 1 (triangle supérieur gauche) : boucle d de 0 à L-1, i descend de d à 0 pendant que j augmente de 0 à d. Partie 2 (triangle inférieur droit) : boucle d de 1 à L-1, i descend de L-1 à d pendant que j monte.",
+      "pseudoCode": "0) procédure mat_pattern_diagonales(m: mat, L: entier)\n1) // Partie 1 : Diagonales de la moitié supérieure gauche\n2) pour d de 0 à L - 1 faire\n     j <-- 0\n     pour i de d à 0 (pas = -1) faire\n       écrire(m[i, j])\n       j <-- j + 1\n     fin_pour\n   fin_pour\n3) // Partie 2 : Diagonales de la moitié inférieure droite\n4) pour d de 1 à L - 1 faire\n     j <-- d\n     pour i de L - 1 à d (pas = -1) faire\n       écrire(m[i, j])\n       j <-- j + 1\n     fin_pour\n   fin_pour\n5) fin",
+      "tdo": [
+        {
+          "objet": "d, i, j",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def mat_pattern_diagonales(m, L):\n    # Partie 1 : Moitié supérieure\n    for d in range(L):\n        j = 0\n        for i in range(d, -1, -1):\n            print(\"[\" + str(i) + \",\" + str(j) + \"] = \" + str(m[i][j]), end=\" \")\n            j = j + 1\n        print()\n    \n    # Partie 2 : Moitié inférieure\n    for d in range(1, L):\n        j = d\n        for i in range(L - 1, d - 1, -1):\n            print(\"[\" + str(i) + \",\" + str(j) + \"] = \" + str(m[i][j]), end=\" \")\n            j = j + 1\n        print()",
+      "example": "Balaye toute la matrice par diagonales orientées vers le haut"
+    }
+  ]
+};

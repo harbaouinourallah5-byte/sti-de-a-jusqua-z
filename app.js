@@ -7854,11 +7854,12 @@ function renderAlgoTheoriqueCards() {
   }
 
   filtered.forEach(item => {
-    const isProcedure = item.name.toLowerCase().startsWith('procédure') || item.type === 'procedure';
-    const typeLabel = isProcedure ? 'Procédure' : 'Fonction';
-    const typeBadgeColor = isProcedure ? '#38bdf8' : '#f59e0b';
-    const typeBadgeBg = isProcedure ? 'rgba(56, 189, 248, 0.15)' : 'rgba(245, 158, 11, 0.15)';
-    const typeBadgeBorder = isProcedure ? 'rgba(56, 189, 248, 0.35)' : 'rgba(245, 158, 11, 0.35)';
+    const isStructure = item.type === 'structure';
+    const isProcedure = item.name.toLowerCase().startsWith('procédure') || item.type === 'procedure' || item.type === 'procédure';
+    const typeLabel = isStructure ? 'Structure' : (isProcedure ? 'Procédure' : 'Fonction');
+    const typeBadgeColor = isStructure ? '#c084fc' : (isProcedure ? '#38bdf8' : '#f59e0b');
+    const typeBadgeBg = isStructure ? 'rgba(192, 132, 252, 0.15)' : (isProcedure ? 'rgba(56, 189, 248, 0.15)' : 'rgba(245, 158, 11, 0.15)');
+    const typeBadgeBorder = isStructure ? 'rgba(192, 132, 252, 0.35)' : (isProcedure ? 'rgba(56, 189, 248, 0.35)' : 'rgba(245, 158, 11, 0.35)');
 
     const card = document.createElement('div');
     card.className = 'item-card card-theorique';
