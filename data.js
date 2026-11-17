@@ -4467,7 +4467,7 @@ const DATA = {
       "syntax": "si (condition_1) alors ... sinon si (condition_2) alors ... sinon ... fin_si",
       "summary": "Structure conditionnelle officielle à choix multiples du Bac tunisien (remplace définitivement l'ancienne structure Selon).",
       "description": "Au programme officiel du Baccalauréat tunisien, toute alternative simple ou multiple s'exprime obligatoirement avec 'si', 'sinon si' et 'sinon' (la structure 'Selon' n'est plus utilisée). En pratique (Python), elle est traduite directement par 'if', 'elif' et 'else'.",
-      "pseudoCode": "0) Algorithme Exemple_Conditionnel\n1) si (moyenne ≥ 16) alors\n     mention <-- \"Très Bien\"\n   sinon si (moyenne ≥ 14) alors\n     mention <-- \"Bien\"\n   sinon si (moyenne ≥ 12) alors\n     mention <-- \"Assez Bien\"\n   sinon si (moyenne ≥ 10) alors\n     mention <-- \"Passable\"\n   sinon\n     mention <-- \"Ajourné\"\n   fin_si\n2) écrire(\"Mention obtenue : \", mention)\n3) fin",
+      "pseudoCode": "0) Algorithme Exemple_Conditionnel\n1) si (moyenne ≥ 16) alors\n     mention <-- \"Très Bien\"\n   sinon si (moyenne ≥ 14) alors\n     mention <-- \"Bien\"\n   sinon si (moyenne ≥ 12) alors\n     mention <-- \"Assez Bien\"\n   sinon si (moyenne ≥ 10) alors\n     mention <-- \"Passable\"\n   sinon\n     mention <-- \"Ajourné\"\n   fin_si\n2) écrire(mention)\n3) fin",
       "tdo": [
         {
           "objet": "moyenne",
@@ -4478,7 +4478,7 @@ const DATA = {
           "type": "chaîne"
         }
       ],
-      "pythonCode": "if moyenne >= 16:\n    mention = \"Très Bien\"\nelif moyenne >= 14:\n    mention = \"Bien\"\nelif moyenne >= 12:\n    mention = \"Assez Bien\"\nelif moyenne >= 10:\n    mention = \"Passable\"\nelse:\n    mention = \"Ajourné\"\n\nprint(\"Mention obtenue : \" + mention)",
+      "pythonCode": "if moyenne >= 16:\n    mention = \"Très Bien\"\nelif moyenne >= 14:\n    mention = \"Bien\"\nelif moyenne >= 12:\n    mention = \"Assez Bien\"\nelif moyenne >= 10:\n    mention = \"Passable\"\nelse:\n    mention = \"Ajourné\"\n\nprint(mention)",
       "example": "moyenne = 15.5 → mention = \"Bien\""
     },
     {
@@ -4524,15 +4524,15 @@ const DATA = {
       "name": "Boucle Répéter ... Jusqu'à (Arrêt sur condition)",
       "syntax": "répéter ... jusqu'à (condition_arrêt)",
       "summary": "Structure itérative répétée jusqu'à ce que la condition devienne vraie (au moins 1 fois).",
-      "description": "Très fréquente au Bac pour la validation de saisie d'un entier ou d'une chaîne. Le bloc est exécuté au moins une fois avant le test. En pratique Python, elle se traduit par une boucle 'while True:' avec un 'if condition: break'.",
-      "pseudoCode": "0) Algorithme Exemple_Repeter\n1) répéter\n     écrire(\"Donner N (entre 10 et 50) : \")\n     lire(N)\n   jusqu'à (N ≥ 10) et (N ≤ 50)\n2) fin",
+      "description": "Au programme officiel du Baccalauréat tunisien, la structure Répéter ... Jusqu'à (condition) se traduit en Python par une première lecture suivie d'une boucle 'while not (condition):' (on n'utilise pas while True ni break, non admis dans la programmation structurée du Bac).",
+      "pseudoCode": "0) Algorithme Exemple_Repeter\n1) répéter\n     écrire(\"N=\")\n     lire(N)\n   jusqu'à (N ≥ 10) et (N ≤ 50)\n2) fin",
       "tdo": [
         {
           "objet": "N",
           "type": "entier"
         }
       ],
-      "pythonCode": "while True:\n    N = int(input(\"Donner N (entre 10 et 50) : \"))\n    if N >= 10 and N <= 50:\n        break",
+      "pythonCode": "N = int(input(\"N=\"))\nwhile not (10 <= N <= 50):\n    N = int(input(\"N=\"))",
       "example": "Saisie redemandée tant que N est hors de [10, 50]"
     },
     {
@@ -5021,7 +5021,7 @@ const DATA = {
       "syntax": "procédure lirech(VAR ch: chaîne)",
       "summary": "Saisie contrôlée d'une chaîne dont tous les caractères sont distincts (aucun doublon).",
       "description": "Boucle de répétition demandant la saisie de ch tant que la chaîne contient au moins un caractère en double (testé via pos(ch[i], ch) ≠ i).",
-      "pseudoCode": "0) procédure lirech(VAR ch: chaîne)\n1) répéter\n     ok <-- vrai\n     lire(ch)\n     pour i de 1 à long(ch) - 1 faire\n       si (pos(ch[i], ch) ≠ i) alors\n         ok <-- faux\n       fin_si\n     fin_pour\n   jusqu'à ok = vrai\n2) fin",
+      "pseudoCode": "0) fonction verif(ch: chaîne): booléen\n1) ok <-- long(ch) > 0\n2) pour i de 0 à long(ch) - 1 faire\n     si (pos(ch[i], ch) ≠ i) alors\n       ok <-- faux\n     fin_si\n   fin_pour\n3) retourner ok\n4) fin\n\n0) fonction lirech(): chaîne\n1) répéter\n     écrire(\"ch=\")\n     lire(ch)\n   jusqu'à verif(ch) = vrai\n2) retourner ch\n3) fin",
       "tdo": [
         {
           "objet": "ok",
@@ -5032,7 +5032,7 @@ const DATA = {
           "type": "entier"
         }
       ],
-      "pythonCode": "def lirech():\n    while True:\n        ch = input(\"Donner une chaîne : \")\n        ok = True\n        for i in range(len(ch)):\n            if ch.count(ch[i]) > 1:\n                ok = False\n                break\n        if ok and len(ch) > 0:\n            return ch\n        print(\"Erreur : la chaîne contient des caractères répétés !\")",
+      "pythonCode": "def verif(ch):\n    if len(ch) == 0:\n        return False\n    for i in range(len(ch)):\n        if ch.find(ch[i]) != i:\n            return False\n    return True\n\ndef lirech():\n    ch = input(\"ch=\")\n    while not verif(ch):\n        ch = input(\"ch=\")\n    return ch",
       "example": "lirech() avec \"bac\" → valide, avec \"test\" (2 fois t) → rejeté"
     },
     {
@@ -5043,14 +5043,14 @@ const DATA = {
       "syntax": "procédure remplir(VAR t: tab, N: entier)",
       "summary": "Saisie séquentielle des N éléments d'un tableau.",
       "description": "Parcourt les indices de 0 à N-1 et invite l'utilisateur à saisir chaque valeur t[i]. Passage de t par variable (mot-clé VAR) obligatoire.",
-      "pseudoCode": "0) procédure remplir(VAR t: tab, N: entier)\n1) pour i de 0 à N - 1 faire\n     écrire(\"Taper t[\", i, \"] : \")\n     lire(t[i])\n   fin_pour\n2) fin",
+      "pseudoCode": "0) procédure remplir(VAR t: tab, N: entier)\n1) pour i de 0 à N - 1 faire\n     écrire(\"t[\", i, \"]=\")\n     lire(t[i])\n   fin_pour\n2) fin",
       "tdo": [
         {
           "objet": "i",
           "type": "entier"
         }
       ],
-      "pythonCode": "def remplir(t, N):\n    for i in range(N):\n        val = int(input(\"Taper t[\" + str(i) + \"] : \"))\n        t.append(val)",
+      "pythonCode": "def remplir(t, N):\n    for i in range(N):\n        x = int(input(\"t[\" + str(i) + \"]=\"))\n        t.append(x)",
       "example": "remplir(t, 4) → t = [12, 45, 7, 88]"
     },
     {
@@ -5061,14 +5061,14 @@ const DATA = {
       "syntax": "procédure remplir_condition(VAR t: tab, N: entier)",
       "summary": "Remplissage d'un tableau avec validation obligatoire de chaque élément saisi.",
       "description": "Intègre une boucle Répéter ... Jusqu'à à l'intérieur de la boucle Pour pour s'assurer que chaque élément satisfait une condition stricte (ex: strictement positif ou intervalle valide).",
-      "pseudoCode": "0) procédure remplir_condition(VAR t: tab, N: entier)\n1) pour i de 0 à N - 1 faire\n     répéter\n       écrire(\"Taper t[\", i, \"] (> 0) : \")\n       lire(t[i])\n     jusqu'à (t[i] > 0)\n   fin_pour\n2) fin",
+      "pseudoCode": "0) procédure remplir_condition(VAR t: tab, N: entier)\n1) pour i de 0 à N - 1 faire\n     répéter\n       écrire(\"t[\", i, \"]=\")\n       lire(t[i])\n     jusqu'à (t[i] > 0)\n   fin_pour\n2) fin",
       "tdo": [
         {
           "objet": "i",
           "type": "entier"
         }
       ],
-      "pythonCode": "def remplir_condition(t, N):\n    for i in range(N):\n        while True:\n            val = int(input(\"Taper t[\" + str(i) + \"] (> 0) : \"))\n            if val > 0:\n                t.append(val)\n                break\n            print(\"Erreur : la valeur doit être strictement positive !\")",
+      "pythonCode": "def remplir_condition(t, N):\n    for i in range(N):\n        x = int(input(\"t[\" + str(i) + \"]=\"))\n        while not (x > 0):\n            x = int(input(\"t[\" + str(i) + \"]=\"))\n        t.append(x)",
       "example": "Force la saisie de nombres strictement positifs pour chaque case"
     },
     {
@@ -5079,7 +5079,7 @@ const DATA = {
       "syntax": "procédure remplir_distinct(VAR t: tab, n: entier)",
       "summary": "Remplissage d'un tableau à éléments tous uniques et distincts (sans doublon).",
       "description": "S'appuie sur une fonction auxiliaire existe(t, i) qui vérifie si la valeur saisie en t[i] figure déjà dans les cases précédentes 0 à i-1.",
-      "pseudoCode": "0) fonction existe(t: tab, n: entier): booléen\n1) ok <-- faux\n2) pour i de 0 à n - 1 faire\n     si t[i] = t[n] alors\n       ok <-- vrai\n     fin_si\n   fin_pour\n3) retourner ok\n4) fin\n\n0) procédure remplir_distinct(VAR t: tab, n: entier)\n1) pour i de 0 à n - 1 faire\n     répéter\n       écrire(\"t[\", i, \"] = \")\n       lire(t[i])\n     jusqu'à (existe(t, i) = faux)\n   fin_pour\n2) fin",
+      "pseudoCode": "0) fonction existe(t: tab, n: entier, x: entier): booléen\n1) ok <-- faux\n2) pour i de 0 à n - 1 faire\n     si t[i] = x alors\n       ok <-- vrai\n     fin_si\n   fin_pour\n3) retourner ok\n4) fin\n\n0) procédure remplir_distinct(VAR t: tab, n: entier)\n1) pour i de 0 à n - 1 faire\n     répéter\n       écrire(\"t[\", i, \"]=\")\n       lire(x)\n     jusqu'à not existe(t, i, x)\n     t[i] <-- x\n   fin_pour\n2) fin",
       "tdo": [
         {
           "objet": "i",
@@ -5090,7 +5090,7 @@ const DATA = {
           "type": "fonction"
         }
       ],
-      "pythonCode": "def existe(t, n):\n    for i in range(n):\n        if t[i] == t[n]:\n            return True\n    return False\n\ndef remplir_distinct(n):\n    t = []\n    for i in range(n):\n        while True:\n            val = int(input(\"t[\" + str(i) + \"] = \"))\n            if val not in t:\n                t.append(val)\n                break\n            print(\"Valeur déjà existante ! Entrez un nombre distinct.\")\n    return t",
+      "pythonCode": "def existe(t, n, x):\n    for i in range(n):\n        if t[i] == x:\n            return True\n    return False\n\ndef remplir_distinct(t, n):\n    for i in range(n):\n        x = int(input(\"t[\" + str(i) + \"]=\"))\n        while not (not existe(t, i, x)):\n            x = int(input(\"t[\" + str(i) + \"]=\"))\n        t.append(x)",
       "example": "Saisie t = [5, 12, 8, 99] (rejette tout doublon)"
     },
     {
@@ -5221,14 +5221,14 @@ const DATA = {
       "syntax": "procédure mat_parcours_bas_haut(m: mat, L, C: entier)",
       "summary": "Parcours de matrice colonne par colonne, de bas en haut et de droite à gauche.",
       "description": "Règle d'or Bac IKODE : la variable qui bouge le plus vite est dans la boucle interne. Ici, la colonne j va de C-1 à 0 et la ligne i monte de L-1 à 0.",
-      "pseudoCode": "0) procédure mat_parcours_bas_haut(m: mat, L, C: entier)\n1) pour j de C - 1 à 0 (pas = -1) faire\n     pour i de L - 1 à 0 (pas = -1) faire\n       // Traitement de la case m[i, j]\n       écrire(m[i, j])\n     fin_pour\n   fin_pour\n2) fin",
+      "pseudoCode": "0) procédure mat_parcours_bas_haut(m: mat, L, C: entier)\n1) pour j de C - 1 à 0 (pas = -1) faire\n     pour i de L - 1 à 0 (pas = -1) faire\n       écrire(m[i, j])\n     fin_pour\n   fin_pour\n2) fin",
       "tdo": [
         {
           "objet": "i, j",
           "type": "entier"
         }
       ],
-      "pythonCode": "def mat_parcours_bas_haut(m, L, C):\n    for j in range(C - 1, -1, -1):\n        for i in range(L - 1, -1, -1):\n            print(\"Case [\" + str(i) + \", \" + str(j) + \"] = \" + str(m[i][j]))",
+      "pythonCode": "def mat_parcours_bas_haut(m, L, C):\n    for j in range(C - 1, -1, -1):\n        for i in range(L - 1, -1, -1):\n            print(m[i][j])",
       "example": "Explore m[L-1, C-1], m[L-2, C-1], ..., m[0, 0]"
     },
     {
@@ -5239,14 +5239,14 @@ const DATA = {
       "syntax": "procédure mat_parcours_ligne_inverse(m: mat, L, C: entier)",
       "summary": "Parcours de matrice ligne par ligne, de droite à gauche et de bas en haut.",
       "description": "La boucle externe gère les lignes i de L-1 à 0, et la boucle interne parcourt les colonnes j de C-1 à 0 à rebours.",
-      "pseudoCode": "0) procédure mat_parcours_ligne_inverse(m: mat, L, C: entier)\n1) pour i de L - 1 à 0 (pas = -1) faire\n     pour j de C - 1 à 0 (pas = -1) faire\n       // Traitement de la case m[i, j]\n       écrire(m[i, j])\n     fin_pour\n   fin_pour\n2) fin",
+      "pseudoCode": "0) procédure mat_parcours_ligne_inverse(m: mat, L, C: entier)\n1) pour i de L - 1 à 0 (pas = -1) faire\n     pour j de C - 1 à 0 (pas = -1) faire\n       écrire(m[i, j])\n     fin_pour\n   fin_pour\n2) fin",
       "tdo": [
         {
           "objet": "i, j",
           "type": "entier"
         }
       ],
-      "pythonCode": "def mat_parcours_ligne_inverse(m, L, C):\n    for i in range(L - 1, -1, -1):\n        for j in range(C - 1, -1, -1):\n            print(\"Case [\" + str(i) + \", \" + str(j) + \"] = \" + str(m[i][j]))",
+      "pythonCode": "def mat_parcours_ligne_inverse(m, L, C):\n    for i in range(L - 1, -1, -1):\n        for j in range(C - 1, -1, -1):\n            print(m[i][j])",
       "example": "Lecture inversée ligne par ligne complète"
     },
     {
@@ -5257,14 +5257,14 @@ const DATA = {
       "syntax": "procédure mat_pattern_sablier(m: mat, L, C: entier)",
       "summary": "Parcours en motif sablier / triangle inversé avec bornes dynamiques d et f.",
       "description": "Initialise d = 0 et f = C - 1. Pour chaque ligne i, la colonne j varie de d à f. À chaque changement de ligne, d s'incrémente de 1 et f se décrémente de 1.",
-      "pseudoCode": "0) procédure mat_pattern_sablier(m: mat, L, C: entier)\n1) d <-- 0\n2) f <-- C - 1\n3) pour i de 0 à L - 1 faire\n     pour j de d à f faire\n       // Traitement m[i, j]\n       écrire(m[i, j])\n     fin_pour\n     d <-- d + 1\n     f <-- f - 1\n   fin_pour\n4) fin",
+      "pseudoCode": "0) procédure mat_pattern_sablier(m: mat, L, C: entier)\n1) d <-- 0\n2) f <-- C - 1\n3) pour i de 0 à L - 1 faire\n     pour j de d à f faire\n       écrire(m[i, j])\n     fin_pour\n     d <-- d + 1\n     f <-- f - 1\n   fin_pour\n4) fin",
       "tdo": [
         {
           "objet": "i, j, d, f",
           "type": "entier"
         }
       ],
-      "pythonCode": "def mat_pattern_sablier(m, L, C):\n    d = 0\n    f = C - 1\n    for i in range(L):\n        if d <= f:\n            for j in range(d, f + 1):\n                print(\"[\" + str(i) + \",\" + str(j) + \"] = \" + str(m[i][j]), end=\" \")\n            print()\n            d = d + 1\n            f = f - 1",
+      "pythonCode": "def mat_pattern_sablier(m, L, C):\n    d = 0\n    f = C - 1\n    for i in range(L):\n        if d <= f:\n            for j in range(d, f + 1):\n                print(m[i][j], end=\" \")\n            print()\n            d = d + 1\n            f = f - 1",
       "example": "Parcours des étoiles * formant un entonnoir dans la matrice"
     },
     {
@@ -5275,14 +5275,14 @@ const DATA = {
       "syntax": "procédure mat_pattern_diagonales(m: mat, L: entier)",
       "summary": "Parcours de toutes les diagonales montantes d'une matrice carrée en deux temps.",
       "description": "Partie 1 (triangle supérieur gauche) : boucle d de 0 à L-1, i descend de d à 0 pendant que j augmente de 0 à d. Partie 2 (triangle inférieur droit) : boucle d de 1 à L-1, i descend de L-1 à d pendant que j monte.",
-      "pseudoCode": "0) procédure mat_pattern_diagonales(m: mat, L: entier)\n1) // Partie 1 : Diagonales de la moitié supérieure gauche\n2) pour d de 0 à L - 1 faire\n     j <-- 0\n     pour i de d à 0 (pas = -1) faire\n       écrire(m[i, j])\n       j <-- j + 1\n     fin_pour\n   fin_pour\n3) // Partie 2 : Diagonales de la moitié inférieure droite\n4) pour d de 1 à L - 1 faire\n     j <-- d\n     pour i de L - 1 à d (pas = -1) faire\n       écrire(m[i, j])\n       j <-- j + 1\n     fin_pour\n   fin_pour\n5) fin",
+      "pseudoCode": "0) procédure mat_pattern_diagonales(m: mat, L: entier)\n1) pour d de 0 à L - 1 faire\n     j <-- 0\n     pour i de d à 0 (pas = -1) faire\n       écrire(m[i, j])\n       j <-- j + 1\n     fin_pour\n   fin_pour\n2) pour d de 1 à L - 1 faire\n     j <-- d\n     pour i de L - 1 à d (pas = -1) faire\n       écrire(m[i, j])\n       j <-- j + 1\n     fin_pour\n   fin_pour\n3) fin",
       "tdo": [
         {
           "objet": "d, i, j",
           "type": "entier"
         }
       ],
-      "pythonCode": "def mat_pattern_diagonales(m, L):\n    # Partie 1 : Moitié supérieure\n    for d in range(L):\n        j = 0\n        for i in range(d, -1, -1):\n            print(\"[\" + str(i) + \",\" + str(j) + \"] = \" + str(m[i][j]), end=\" \")\n            j = j + 1\n        print()\n    \n    # Partie 2 : Moitié inférieure\n    for d in range(1, L):\n        j = d\n        for i in range(L - 1, d - 1, -1):\n            print(\"[\" + str(i) + \",\" + str(j) + \"] = \" + str(m[i][j]), end=\" \")\n            j = j + 1\n        print()",
+      "pythonCode": "def mat_pattern_diagonales(m, L):\n    # Partie 1 : Moitié supérieure\n    for d in range(L):\n        j = 0\n        for i in range(d, -1, -1):\n            print(m[i][j], end=\" \")\n            j = j + 1\n        print()\n    \n    # Partie 2 : Moitié inférieure\n    for d in range(1, L):\n        j = d\n        for i in range(L - 1, d - 1, -1):\n            print(m[i][j], end=\" \")\n            j = j + 1\n        print()",
       "example": "Balaye toute la matrice par diagonales orientées vers le haut"
     }
   ]
