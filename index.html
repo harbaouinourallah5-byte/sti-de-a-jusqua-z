@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20.0">
+  <link rel="stylesheet" href="style.css?v=21.0">
 </head>
 <body>
 
@@ -41,10 +41,26 @@
       <!-- 1. En-tête de marque -->
       <div class="sidebar-brand-header">
         <div class="sidebar-brand-logo" onclick="switchView('home')">
-          <div class="sidebar-brand-badge">BAC</div>
+          <div class="brand-emblem-wrap">
+            <svg class="brand-emblem-svg" width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="brandShieldGrad" x1="0" y1="0" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#4F46E5"/>
+                  <stop offset="0.5" stop-color="#06B6D4"/>
+                  <stop offset="1" stop-color="#10B981"/>
+                </linearGradient>
+              </defs>
+              <rect width="38" height="38" rx="10" fill="url(#brandShieldGrad)"/>
+              <path d="M10 26V14C10 12.8954 10.8954 12 12 12H18C18.5523 12 19 12.4477 19 13V27C19 26.4477 18.5523 26 18 26H12C10.8954 26 10 26.8954 10 28V26Z" fill="white" fill-opacity="0.95"/>
+              <path d="M28 26V14C28 12.8954 27.1046 12 26 12H20C19.4477 12 19 12.4477 19 13V27C19 26.4477 19.4477 26 20 26H26C27.1046 26 28 26.8954 28 28V26Z" fill="#E0E7FF"/>
+              <path d="M13.5 16.5L11.5 18.5L13.5 20.5" stroke="#4F46E5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M24.5 16.5L26.5 18.5L24.5 20.5" stroke="#059669" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="brand-badge-pill">BAC</span>
+          </div>
           <div class="sidebar-brand-text">
             <span class="brand-title">STI de A à Z</span>
-            <span class="brand-sub">Baccalauréat Tunisie</span>
+            <span class="brand-sub">Baccalauréat Tunisie • Étude Calme</span>
           </div>
         </div>
         <button class="sidebar-close-btn" onclick="toggleSidebarDrawer(false)" aria-label="Fermer le menu">✕</button>
@@ -53,13 +69,54 @@
       <!-- 2. Bascule instantanée de module (1 CLIC STI <-> ALGO) -->
       <div class="sidebar-module-switch-box">
         <div class="sidebar-module-tabs">
-          <button class="sidebar-module-tab active-sti" id="sidebarTabSti" onclick="switchModule('sti')" title="Basculer vers le module STI Web & BD">
-            <span class="tab-icon">🌐</span>
-            <span class="tab-title">STI Web &amp; BD</span>
+          <!-- BOUTON 1 : STI WEB & BD AVEC LOGO VECTORIEL -->
+          <button class="sidebar-module-tab active-sti" id="sidebarTabSti" onclick="switchModule('sti')" title="Basculer vers le module STI Web & BD (HTML5, CSS3, JS, SQL)">
+            <div class="tab-logo-box sti">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="stiIconGrad" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#06B6D4"/>
+                    <stop offset="0.55" stop-color="#3B82F6"/>
+                    <stop offset="1" stop-color="#4F46E5"/>
+                  </linearGradient>
+                </defs>
+                <rect width="28" height="28" rx="8" fill="url(#stiIconGrad)"/>
+                <path d="M9.5 9.5L5.5 13.5L9.5 17.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18.5 9.5L22.5 13.5L18.5 17.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M15.5 8L12.5 19" stroke="#A5F3FC" stroke-width="1.8" stroke-linecap="round"/>
+                <ellipse cx="14" cy="21.5" rx="4.5" ry="1.5" stroke="#FFFFFF" stroke-width="1.2" fill="rgba(255,255,255,0.25)"/>
+              </svg>
+            </div>
+            <div class="tab-text-box">
+              <span class="tab-title">STI Web &amp; BD</span>
+              <span class="tab-caption">HTML • CSS • JS • SQL</span>
+            </div>
+            <span class="tab-active-pill"></span>
           </button>
-          <button class="sidebar-module-tab" id="sidebarTabAlgo" onclick="switchModule('algo')" title="Basculer vers le module Algorithme">
-            <span class="tab-icon">🐍</span>
-            <span class="tab-title">Algorithme</span>
+
+          <!-- BOUTON 2 : ALGORITHME AVEC LOGO VECTORIEL -->
+          <button class="sidebar-module-tab" id="sidebarTabAlgo" onclick="switchModule('algo')" title="Basculer vers le module Algorithme (Qt Designer, Thonny Python, 6 Chapitres)">
+            <div class="tab-logo-box algo">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="algoIconGrad" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#10B981"/>
+                    <stop offset="0.5" stop-color="#F59E0B"/>
+                    <stop offset="1" stop-color="#EA580C"/>
+                  </linearGradient>
+                </defs>
+                <rect width="28" height="28" rx="8" fill="url(#algoIconGrad)"/>
+                <path d="M13.5 7.5C9.5 7.5 7.5 9.2 7.5 11.5C7.5 13.8 9.5 14.3 11.8 14.7C14 15.1 16.5 15.5 16.5 18C16.5 20.2 14.5 21.5 11.5 21.5" stroke="white" stroke-width="1.9" stroke-linecap="round"/>
+                <path d="M14.5 20.5C18.5 20.5 20.5 18.8 20.5 16.5C20.5 14.2 18.5 13.7 16.2 13.3C14 12.9 11.5 12.5 11.5 10C11.5 7.8 13.5 6.5 16.5 6.5" stroke="#FDE047" stroke-width="1.9" stroke-linecap="round"/>
+                <circle cx="10" cy="10" r="1.1" fill="white"/>
+                <circle cx="18" cy="17" r="1.1" fill="white"/>
+              </svg>
+            </div>
+            <div class="tab-text-box">
+              <span class="tab-title">Algorithme</span>
+              <span class="tab-caption">Qt • Thonny Python</span>
+            </div>
+            <span class="tab-active-pill"></span>
           </button>
         </div>
       </div>
@@ -143,12 +200,18 @@
         <!-- GROUPE TRANSVERSAL : COURS & EXAMENS -->
         <div class="sidebar-group">
           <div class="sidebar-group-header">
-            <span class="group-title">Ressources &amp; Documents</span>
+            <span class="group-title">Ressources &amp; Concentration</span>
           </div>
           <div class="sidebar-group-links">
             <a class="sidebar-link" data-view="lessons" onclick="switchView('lessons')">
               <span class="nav-icon">📚</span>
               <span class="nav-label">Cours &amp; Séries PDF</span>
+            </a>
+            <!-- LIEN MINUTEUR POMODORO & AMBIANCE MUSICALE -->
+            <a class="sidebar-link pomodoro-nav-link" onclick="PomodoroEngine.openDrawer()" title="Ouvrir le Minuteur Pomodoro et la Musique d'Étude">
+              <span class="nav-icon">🎧</span>
+              <span class="nav-label">Pomodoro &amp; Musique</span>
+              <span class="pomodoro-nav-badge" id="sidebarPomodoroTimerDisplay">25:00</span>
             </a>
           </div>
         </div>
@@ -179,7 +242,16 @@
           <span class="breadcrumb-sep">/</span>
           <span class="breadcrumb-current" id="breadcrumbCurrent">Accueil &amp; Vue d'ensemble</span>
         </div>
-        <span class="breadcrumb-module-badge sti" id="breadcrumbModule">STI Web &amp; BD</span>
+        <div class="breadcrumb-right-tools">
+          <!-- BOUTON DÉCLENCHEUR RAPIDE DU POMODORO DANS LE TOPBAR -->
+          <button class="breadcrumb-pomodoro-btn" id="breadcrumbPomodoroBtn" onclick="PomodoroEngine.openDrawer()" title="Ouvrir le Minuteur Pomodoro (25/50 min) & Musique YouTube">
+            <span class="pomo-pulse-dot"></span>
+            <span class="pomo-btn-icon">⏱️</span>
+            <span class="pomo-btn-label">Pomodoro</span>
+            <span class="pomo-btn-timer" id="breadcrumbPomodoroTime">25:00</span>
+          </button>
+          <span class="breadcrumb-module-badge sti" id="breadcrumbModule">STI Web &amp; BD</span>
+        </div>
       </nav>
 
       <main class="app-main-body">
@@ -199,6 +271,16 @@
           <p class="home-calm-subtitle">
             Un espace d'étude calme, clair et structuré pour maîtriser l'intégralité du programme officiel de STI (Web &amp; Bases de données) et d'Algorithmique.
           </p>
+          <div class="home-hero-actions" style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap;">
+            <button type="button" onclick="PomodoroEngine.openDrawer()" style="background: linear-gradient(135deg, #ea580c, #f97316); color: #fff; border: none; padding: 10px 22px; border-radius: 25px; font-weight: 700; font-size: 0.92rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 16px rgba(234, 88, 12, 0.35); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
+              <span>🎧</span>
+              <span>Lancer une Session Pomodoro &amp; Musique</span>
+            </button>
+            <button type="button" onclick="openGlobalSearchModal()" style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-soft); padding: 10px 18px; border-radius: 25px; font-weight: 600; font-size: 0.9rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
+              <span>🔍</span>
+              <span>Rechercher une notion (Ctrl+K)</span>
+            </button>
+          </div>
         </div>
 
         <!-- CARTE "CONTINUER OÙ J'AI ARRÊTÉ" (LOCALSTORAGE) -->
@@ -3400,10 +3482,185 @@ app.exec_()</code></pre>
     </div>
   </div>
 
+  
+  <!-- =============================================================
+       ESPACE CONCENTRATION : POMODORO & LECTEUR YOUTUBE
+       ============================================================= -->
+  <div id="pomodoroModal" class="pomo-drawer-overlay">
+    <div class="pomo-drawer-card">
+      <div class="pomo-drawer-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div class="pomo-header-icon-box">🎧</div>
+          <div>
+            <h3 class="pomo-header-title">Espace Concentration &amp; Pomodoro</h3>
+            <span class="pomo-header-sub">Minuteur de révision • Objectifs d'heures • Ambiance sonore YouTube</span>
+          </div>
+        </div>
+        <button class="pomo-drawer-close-btn" onclick="PomodoroEngine.closeDrawer()" aria-label="Fermer">✕</button>
+      </div>
+
+      <div class="pomo-drawer-body">
+        
+        <!-- SECTION 1 : MINUTEUR POMODORO -->
+        <div class="pomo-card-section timer-section">
+          <div class="pomo-timer-topbar">
+            <div class="pomo-status-wrap">
+              <span id="pomoModalStatusBadge" class="pomo-status-pill work">🎯 Session d'Étude</span>
+              <span id="pomoModalCycleText" class="pomo-cycle-text">Session 1 sur 4 • Objectif : 2h</span>
+            </div>
+            <div id="pomoModalCycleDots" class="pomo-cycle-dots"></div>
+          </div>
+
+          <!-- Affichage Central de l'Heure -->
+          <div class="pomo-timer-clock-wrap">
+            <div class="pomo-clock-number" id="pomoModalTimeDisplay">25:00</div>
+            <div class="pomo-progress-track">
+              <div class="pomo-progress-fill" id="pomoModalProgressBar" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <!-- Configuration : Durée (25m vs 50m) & Heures d'étude -->
+          <div class="pomo-config-grid">
+            <div class="pomo-config-item">
+              <label class="pomo-config-label">⏱️ Rythme de session :</label>
+              <div class="pomo-duration-switch">
+                <button type="button" class="pomo-duration-btn active" id="pomoBtnDuration25" onclick="PomodoroEngine.setDurationOption(25)">
+                  <strong>25 min</strong>
+                  <span>(Classique • 5m pause)</span>
+                </button>
+                <button type="button" class="pomo-duration-btn" id="pomoBtnDuration50" onclick="PomodoroEngine.setDurationOption(50)">
+                  <strong>50 min</strong>
+                  <span>(Deep Work • 10m pause)</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="pomo-config-item">
+              <label class="pomo-config-label" for="pomoHoursSelect">🎯 Objectif d'étude total :</label>
+              <select id="pomoHoursSelect" class="pomo-select-hours" onchange="PomodoroEngine.setTargetHours(this.value)">
+                <option value="1">1 Heure d'étude</option>
+                <option value="2" selected>2 Heures d'étude</option>
+                <option value="3">3 Heures d'étude</option>
+                <option value="4">4 Heures d'étude</option>
+                <option value="5">5 Heures d'étude</option>
+                <option value="6">6 Heures d'étude</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Contrôles du Minuteur -->
+          <div class="pomo-actions-row">
+            <button type="button" class="pomo-ctl-btn primary" id="pomoModalPlayBtn" onclick="PomodoroEngine.toggleTimer()">
+              <span>▶️</span>
+              <span>Démarrer</span>
+            </button>
+            <button type="button" class="pomo-ctl-btn secondary" onclick="PomodoroEngine.resetTimer()">
+              <span>🔄</span>
+              <span>Réinitialiser</span>
+            </button>
+            <button type="button" class="pomo-ctl-btn skip" onclick="PomodoroEngine.skipSession()" title="Passer au cycle suivant ou à la pause">
+              <span>⏭️</span>
+              <span>Passer</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- SECTION 2 : AMBIANCE SONORE YOUTUBE -->
+        <div class="pomo-card-section music-section">
+          <div class="pomo-music-header">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 1.3rem;">🎵</span>
+              <div>
+                <h4 style="margin: 0; color: #38bdf8; font-size: 1rem; font-weight: 700;">Ambiance Musicale &amp; YouTube</h4>
+                <div id="pomoMusicStatus" style="font-size: 0.78rem; color: var(--text-muted);">
+                  🔇 Musique en pause
+                </div>
+              </div>
+            </div>
+            <button type="button" class="pomo-toggle-music-btn" id="pomoToggleMusicBtn" onclick="PomodoroEngine.toggleYouTubeMusic()">
+              Lancer la musique ▶️
+            </button>
+          </div>
+
+          <!-- Morceau actif -->
+          <div class="pomo-current-track-card">
+            <div class="track-info">
+              <span class="track-badge">En écoute :</span>
+              <span class="track-title" id="pomoMusicCurrentTitle">Lofi Girl — Beats to relax/study to</span>
+            </div>
+          </div>
+
+          <!-- Saisie d'un Lien YouTube Personnalisé -->
+          <div class="pomo-custom-url-box">
+            <label class="pomo-config-label" for="pomoCustomYtInput">🔗 Écouter votre propre vidéo / musique YouTube :</label>
+            <div class="pomo-input-action-group">
+              <input type="text" id="pomoCustomYtInput" class="pomo-url-input" placeholder="Collez un lien YouTube (ex: lofi, coran, piano, podcast...)" />
+              <button type="button" class="pomo-load-url-btn" onclick="PomodoroEngine.handleCustomYouTubeSubmit(document.getElementById('pomoCustomYtInput').value)">
+                Charger ▶️
+              </button>
+            </div>
+          </div>
+
+          <!-- Sélections 1-Clic Recommandées -->
+          <div class="pomo-presets-wrap">
+            <span class="pomo-config-label" style="display: block; margin-bottom: 8px;">🌟 Ambiances calmes d'étude recommandées :</span>
+            <div class="pomo-presets-grid">
+              <button type="button" class="pomo-preset-chip active" data-preset="lofi" onclick="PomodoroEngine.selectPresetStream('lofi')">
+                <span class="preset-emoji">☕</span>
+                <span class="preset-name">Lofi Girl Chill</span>
+              </button>
+              <button type="button" class="pomo-preset-chip" data-preset="piano" onclick="PomodoroEngine.selectPresetStream('piano')">
+                <span class="preset-emoji">🎹</span>
+                <span class="preset-name">Piano Calme</span>
+              </button>
+              <button type="button" class="pomo-preset-chip" data-preset="rain" onclick="PomodoroEngine.selectPresetStream('rain')">
+                <span class="preset-emoji">🌧️</span>
+                <span class="preset-name">Pluie &amp; Cozy</span>
+              </button>
+              <button type="button" class="pomo-preset-chip" data-preset="synthwave" onclick="PomodoroEngine.selectPresetStream('synthwave')">
+                <span class="preset-emoji">🌌</span>
+                <span class="preset-name">Synthwave Focus</span>
+              </button>
+              <button type="button" class="pomo-preset-chip" data-preset="quran" onclick="PomodoroEngine.selectPresetStream('quran')">
+                <span class="preset-emoji">📖</span>
+                <span class="preset-name">Coran Sérénité</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="pomo-tip-footer">
+            💡 <em>La musique continue de jouer en arrière-plan pendant que vous naviguez et révisez vos cours HTML, CSS, JS, SQL et Algorithme sur le site !</em>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- DOCK FLOTTANT MINI-POMODORO -->
+  <div id="pomodoroFloatingWidget" class="pomodoro-floating-dock" style="display: none;">
+    <div class="pomodoro-dock-main" onclick="PomodoroEngine.openDrawer()" title="Cliquer pour agrandir le minuteur">
+      <div class="pomodoro-dock-pulse" id="pomodoroDockPulse"></div>
+      <div style="display: flex; flex-direction: column;">
+        <span class="pomodoro-dock-time" id="pomodoroDockTime">25:00</span>
+        <span class="pomodoro-dock-status" id="pomodoroDockStatus">Étude (1/4)</span>
+      </div>
+      <span class="pomodoro-dock-music-icon" id="pomodoroDockMusicIcon" style="display: none;" title="Musique active">
+        <span class="audio-wave-bars mini"><span></span><span></span><span></span></span>
+      </span>
+    </div>
+    <div class="pomodoro-dock-actions">
+      <button class="dock-action-btn" id="dockPlayPauseBtn" onclick="PomodoroEngine.toggleTimer()" title="Démarrer / Pause">▶️</button>
+      <button class="dock-action-btn" onclick="PomodoroEngine.openDrawer()" title="Agrandir">↗️</button>
+      <button class="dock-action-btn close" onclick="PomodoroEngine.hideFloatingWidget(event)" title="Masquer">✕</button>
+    </div>
+  </div>
+
   <!-- Fichiers Scripts -->
-  <script src="data.js?v=20.0"></script>
-  <script src="css_engine.js?v=20.0"></script>
-  <script src="algo_pratique_engine.js?v=20.0"></script>
-  <script src="app.js?v=20.0"></script>
+  <script src="data.js?v=21.0"></script>
+  <script src="css_engine.js?v=21.0"></script>
+  <script src="algo_pratique_engine.js?v=21.0"></script>
+  <script src="pomodoro_engine.js?v=21.0"></script>
+  <script src="app.js?v=21.0"></script>
 </body>
 </html>
