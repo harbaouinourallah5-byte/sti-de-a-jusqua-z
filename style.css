@@ -8382,3 +8382,87 @@ button.topbar-action-btn svg {
     display: flex !important;
   }
 }
+
+
+/* =============================================================
+   STYLES SÉRIES AVEC CORRIGÉ TYPE ATTACHÉ (v24.0)
+   ============================================================= */
+.badge-corrigé-pill {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(5, 150, 105, 0.28)) !important;
+  border: 1px solid rgba(16, 185, 129, 0.5) !important;
+  color: #34d399 !important;
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  padding: 3px 8px !important;
+  border-radius: 9999px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  letter-spacing: 0.2px !important;
+}
+
+[data-theme="light"] .badge-corrigé-pill {
+  background: rgba(16, 185, 129, 0.12) !important;
+  border-color: #10b981 !important;
+  color: #047857 !important;
+}
+
+.lesson-btn-correction {
+  background: linear-gradient(135deg, #059669, #10b981) !important;
+  color: #ffffff !important;
+  border: none !important;
+  padding: 9px 14px !important;
+  border-radius: 6px !important;
+  font-weight: 700 !important;
+  font-size: 0.88rem !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35) !important;
+}
+
+.lesson-btn-correction:hover {
+  background: linear-gradient(135deg, #047857, #059669) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.5) !important;
+}
+
+.lesson-btn-correction:active {
+  transform: scale(0.97) !important;
+}
+
+/* Onglets de bascule dans la modale PDF : Énoncé vs Corrigé */
+.pdf-modal-tabs-bar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pdf-viewer-tab-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pdf-viewer-tab-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+}
+
+.pdf-viewer-tab-btn.active {
+  background: #10b981;
+  border-color: #10b981;
+  color: #000000;
+}

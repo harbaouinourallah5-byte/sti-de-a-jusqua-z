@@ -6262,6 +6262,7 @@ let currentLessonType = 'all';
 let currentLessonSearch = '';
 let isAdminLoggedIn = true;
 let selectedAdminFile = null;
+let selectedAdminCorrectionFile = null;
 let adminFilterSubject = 'all';
 
 // -------------------------------------------------------------
@@ -6652,6 +6653,7 @@ function renderLessons() {
 
   grid.innerHTML = filtered.map(lesson => {
     const subjClass = lesson.subject || 'html';
+    const hasCorr = Boolean(lesson.hasCorrection || lesson.correctionUrl || lesson.correctionData);
     return `
       <div class="lesson-card ${subjClass}">
         <div>
@@ -6660,6 +6662,7 @@ function renderLessons() {
             <span style="background: rgba(255,255,255,0.08); font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; color: #cbd5e1; font-weight: 600;">
               ${escapeHtml(lesson.typeLabel || lesson.type)}
             </span>
+            ${hasCorr ? `<span class="badge-corrigé-pill" title="Cette série contient son corrigé type officiel">🎯 Corrigé inclus</span>` : ''}
           </div>
 
           <h3 class="lesson-card-title">${escapeHtml(lesson.title)}</h3>
@@ -6673,11 +6676,16 @@ function renderLessons() {
           </div>
 
           <div class="lesson-card-actions">
-            <button class="lesson-btn-view" onclick="openPdfModal('${lesson.id}')">
+            <button class="lesson-btn-view" onclick="openPdfModal('${lesson.id}', 'enonce')" title="Consulter le document ou l'énoncé">
               <span>👁️</span>
-              <span>Consulter le PDF</span>
+              <span>${hasCorr ? "Énoncé Série" : "Consulter le PDF"}</span>
             </button>
-            <button class="lesson-btn-download" onclick="downloadLessonPdf('${lesson.id}')" title="Télécharger le fichier PDF sur votre appareil">
+            ${hasCorr ? `
+            <button class="lesson-btn-correction" onclick="openPdfModal('${lesson.id}', 'corrige')" title="Consulter directement le corrigé officiel de cette série">
+              <span>🎯</span>
+              <span>Voir le Corrigé</span>
+            </button>` : ''}
+            <button class="lesson-btn-download" onclick="downloadLessonPdf('${lesson.id}', 'enonce')" title="Télécharger le fichier PDF sur votre appareil">
               <span>⬇️</span>
               <span>Télécharger</span>
             </button>
@@ -6731,23 +6739,31 @@ function dataUrlToBlob(dataUrl) {
   }
 }
 
-function openPdfModal(lessonId) {
+function openPdfModal(lessonId, variant = 'enonce') {
   const lesson = allLessons.find(l => l.id === lessonId);
   if (!lesson) return;
 
   const modal = document.getElementById('pdfViewerModal');
-  const title = document.getElementById('pdfModalTitle');
-  const cat = document.getElementById('pdfModalCategory');
+  const titleEl = document.getElementById('pdfModalTitle');
+  const catEl = document.getElementById('pdfModalCategory');
   const body = document.getElementById('pdfModalBody');
   const downloadBtn = document.getElementById('pdfModalDownloadBtn');
 
-  if (title) title.textContent = lesson.title;
-  if (cat) {
-    cat.textContent = `PDF • ${lesson.subjectLabel || lesson.subject} • ${lesson.typeLabel || lesson.type}`;
-    cat.className = `category-label ${lesson.subject}`;
+  const hasCorr = Boolean(lesson.hasCorrection || lesson.correctionUrl || lesson.correctionData);
+  const isCorrige = (variant === 'corrige' && hasCorr);
+
+  const displayTitle = isCorrige 
+    ? (lesson.correctionTitle || `${lesson.title} — Corrigé Officiel`)
+    : lesson.title;
+
+  if (titleEl) titleEl.textContent = displayTitle;
+  if (catEl) {
+    const typeTxt = isCorrige ? "🎯 Corrigé Officiel" : (lesson.typeLabel || lesson.type);
+    catEl.textContent = `PDF • ${lesson.subjectLabel || lesson.subject} • ${typeTxt}`;
+    catEl.className = `category-label ${lesson.subject}`;
   }
   if (downloadBtn) {
-    downloadBtn.onclick = () => downloadLessonPdf(lesson.id);
+    downloadBtn.onclick = () => downloadLessonPdf(lesson.id, isCorrige ? 'corrige' : 'enonce');
   }
 
   // Nettoyage de l'éventuel Blob URL précédent pour libérer la mémoire
@@ -6756,56 +6772,66 @@ function openPdfModal(lessonId) {
     currentActivePdfBlobUrl = null;
   }
 
-  // 1. Si c'est un fichier PDF réel téléversé par le prof (data URL base64)
-  if (lesson.fileData) {
-    let pdfSrc = lesson.fileData;
-    if (lesson.fileData.startsWith('data:')) {
-      const blob = dataUrlToBlob(lesson.fileData);
+  // Barre d'onglets si la série dispose d'un corrigé
+  const tabsBarHtml = hasCorr ? `
+    <div style="background: #0f172a; padding: 10px 16px; border-bottom: 1px solid #334155; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+      <div class="pdf-modal-tabs-bar">
+        <button class="pdf-viewer-tab-btn ${!isCorrige ? 'active' : ''}" onclick="openPdfModal('${lesson.id}', 'enonce')">
+          <span>📄</span>
+          <span>Énoncé de la Série</span>
+        </button>
+        <button class="pdf-viewer-tab-btn ${isCorrige ? 'active' : ''}" onclick="openPdfModal('${lesson.id}', 'corrige')">
+          <span>🎯</span>
+          <span>Corrigé Type Officiel</span>
+        </button>
+      </div>
+      <span style="font-size: 0.78rem; color: #34d399; font-weight: 600;">
+        ✓ Baccalauréat STI & Algorithme
+      </span>
+    </div>
+  ` : '';
+
+  const activeSrc = isCorrige 
+    ? (lesson.correctionData || lesson.correctionUrl)
+    : (lesson.fileData || lesson.pdfUrl);
+
+  const activeSize = isCorrige
+    ? (lesson.correctionSize || 'PDF Corrigé')
+    : (lesson.fileSize || 'PDF');
+
+  if (activeSrc) {
+    let pdfSrc = activeSrc;
+    if (activeSrc.startsWith('data:')) {
+      const blob = dataUrlToBlob(activeSrc);
       if (blob) {
         currentActivePdfBlobUrl = URL.createObjectURL(blob);
         pdfSrc = currentActivePdfBlobUrl;
       }
     }
+
     body.innerHTML = `
+      ${tabsBarHtml}
       <div style="background: #1e293b; padding: 10px 18px; border-bottom: 1px solid #334155; display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; color: #94a3b8; flex-wrap: wrap; gap: 10px;">
         <span style="display:flex; align-items:center; gap:6px;">
-          <span>📄</span>
-          <strong style="color:#f8fafc;">${escapeHtml(lesson.title)}</strong>
-          <span style="color:#64748b;">(${escapeHtml(lesson.fileSize || 'PDF')})</span>
+          <span>${isCorrige ? '🎯' : '📄'}</span>
+          <strong style="color:#f8fafc;">${escapeHtml(displayTitle)}</strong>
+          <span style="color:#64748b;">(${escapeHtml(activeSize)})</span>
         </span>
         <div style="display: flex; gap: 10px; align-items: center;">
           <a href="${pdfSrc}" target="_blank" style="color: #38bdf8; text-decoration: none; font-weight: 700; padding: 5px 12px; background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.3); border-radius: 4px; display: inline-flex; align-items: center; gap: 6px;">
             <span>🗗</span> Plein écran
           </a>
-          <button onclick="downloadLessonPdf('${lesson.id}')" style="background: #10b981; color: #000; font-weight: 700; padding: 5px 14px; border-radius: 4px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+          <button onclick="downloadLessonPdf('${lesson.id}', '${isCorrige ? 'corrige' : 'enonce'}')" style="background: #10b981; color: #000; font-weight: 700; padding: 5px 14px; border-radius: 4px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
             <span>⬇️</span> Télécharger PDF
           </button>
         </div>
       </div>
-      <iframe src="${pdfSrc}" class="pdf-reader-frame" style="width:100%; height:calc(100% - 46px); border:none;" title="${escapeHtml(lesson.title)}"></iframe>
-    `;
-  } else if (lesson.pdfUrl) {
-    body.innerHTML = `
-      <div style="background: #1e293b; padding: 10px 18px; border-bottom: 1px solid #334155; display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; color: #94a3b8; flex-wrap: wrap; gap: 10px;">
-        <span style="display:flex; align-items:center; gap:6px;">
-          <span>🌐</span>
-          <strong style="color:#f8fafc;">${escapeHtml(lesson.title)}</strong>
-          <span style="color:#64748b;">(${escapeHtml(lesson.fileSize || 'Lien Web')})</span>
-        </span>
-        <div style="display: flex; gap: 10px; align-items: center;">
-          <a href="${lesson.pdfUrl}" target="_blank" style="color: #38bdf8; text-decoration: none; font-weight: 700; padding: 5px 12px; background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.3); border-radius: 4px; display: inline-flex; align-items: center; gap: 6px;">
-            <span>🗗</span> Plein écran
-          </a>
-          <button onclick="downloadLessonPdf('${lesson.id}')" style="background: #10b981; color: #000; font-weight: 700; padding: 5px 14px; border-radius: 4px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
-            <span>⬇️</span> Télécharger
-          </button>
-        </div>
-      </div>
-      <iframe src="${lesson.pdfUrl}" class="pdf-reader-frame" style="width:100%; height:calc(100% - 46px); border:none;" title="${escapeHtml(lesson.title)}"></iframe>
+      <iframe src="${pdfSrc}" class="pdf-reader-frame" style="width:100%; height:calc(100% - ${hasCorr ? '88px' : '46px'}); border:none;" title="${escapeHtml(displayTitle)}"></iframe>
     `;
   } else {
-    // Rendu haute fidélité format document d'examen imprimable
+    // Printable sheet fallback
     body.innerHTML = `
+      ${tabsBarHtml}
       <div style="flex: 1; overflow-y: auto; padding: 24px; background: #0f172a;">
         <div class="pdf-print-sheet">
           <div style="border-bottom: 2px solid #0f172a; padding-bottom: 14px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
@@ -6820,7 +6846,7 @@ function openPdfModal(lessonId) {
             </div>
           </div>
 
-          <h2 style="color: #1e3a8a; font-size: 1.4rem; margin-bottom: 12px; font-weight: 800;">${escapeHtml(lesson.title)}</h2>
+          <h2 style="color: #1e3a8a; font-size: 1.4rem; margin-bottom: 12px; font-weight: 800;">${escapeHtml(displayTitle)}</h2>
           
           <div style="background: #f8fafc; border-left: 4px solid #2563eb; padding: 14px 16px; border-radius: 4px; margin-bottom: 22px; font-size: 0.95rem; color: #334155; line-height: 1.6;">
             <strong>Résumé du cours :</strong> ${escapeHtml(lesson.summary || lesson.description)}
@@ -6872,19 +6898,25 @@ function closePdfModal() {
   }
 }
 
-function downloadLessonPdf(lessonId) {
+function downloadLessonPdf(lessonId, variant = 'enonce') {
   const lesson = allLessons.find(l => l.id === lessonId);
   if (!lesson) return;
 
-  let fileName = lesson.downloadName || `BacSTI_${lesson.subject}_${lesson.id}.pdf`;
+  const isCorrige = (variant === 'corrige');
+  const targetData = isCorrige ? (lesson.correctionData || lesson.fileData) : lesson.fileData;
+  const targetUrl = isCorrige ? (lesson.correctionUrl || lesson.pdfUrl) : lesson.pdfUrl;
+
+  let fileName = isCorrige
+    ? (lesson.correctionName || `${lesson.title} - Corrige Officiel.pdf`)
+    : (lesson.downloadName || `BacSTI_${lesson.subject}_${lesson.id}.pdf`);
   if (!fileName.toLowerCase().endsWith('.pdf')) {
     fileName += '.pdf';
   }
 
-  // 1. Si c'est un fichier réel téléversé par le prof (data URL base64)
-  if (lesson.fileData) {
-    if (lesson.fileData.startsWith('data:')) {
-      const blob = dataUrlToBlob(lesson.fileData);
+  // 1. Si c'est un fichier réel téléversé (data URL base64)
+  if (targetData) {
+    if (targetData.startsWith('data:')) {
+      const blob = dataUrlToBlob(targetData);
       if (blob) {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -6900,10 +6932,9 @@ function downloadLessonPdf(lessonId) {
         return;
       }
     }
-    // Fallback standard
     const a = document.createElement('a');
     a.style.display = 'none';
-    a.href = lesson.fileData;
+    a.href = targetData;
     a.download = fileName;
     document.body.appendChild(a);
     a.click();
@@ -6913,9 +6944,9 @@ function downloadLessonPdf(lessonId) {
     return;
   }
 
-  // 2. Si c'est un lien URL (ex: pdf/Conversion_Bases_Numeration.pdf ou web)
-  if (lesson.pdfUrl) {
-    fetch(lesson.pdfUrl)
+  // 2. Si c'est un lien URL
+  if (targetUrl) {
+    fetch(targetUrl)
       .then(res => {
         if (!res.ok) throw new Error("HTTP error " + res.status);
         return res.blob();
@@ -6934,10 +6965,9 @@ function downloadLessonPdf(lessonId) {
         }, 2000);
       })
       .catch(() => {
-        // Fallback si fetch bloqué (CORS ou drive direct)
         const a = document.createElement('a');
         a.style.display = 'none';
-        a.href = lesson.pdfUrl;
+        a.href = targetUrl;
         a.target = '_blank';
         a.download = fileName;
         document.body.appendChild(a);
@@ -7002,6 +7032,49 @@ function handleAdminLogin(e) {
 
 function handleAdminLogout() {
   switchView('home');
+}
+
+
+function handleAdminTypeChange(typeVal) {
+  const wrap = document.getElementById('adminSerieCorrectionWrap');
+  if (wrap) {
+    wrap.style.display = (typeVal === 'serie') ? 'block' : 'none';
+  }
+}
+
+function toggleAdminCorrectionMode(mode) {
+  const fileZone = document.getElementById('adminCorrectionFileZone');
+  const linkZone = document.getElementById('adminCorrectionLinkZone');
+  if (mode === 'file') {
+    if (fileZone) fileZone.style.display = 'block';
+    if (linkZone) linkZone.style.display = 'none';
+  } else {
+    if (fileZone) fileZone.style.display = 'none';
+    if (linkZone) linkZone.style.display = 'block';
+  }
+}
+
+function handleAdminCorrectionFileSelected(e) {
+  const file = e.target.files[0];
+  const label = document.getElementById('adminCorrectionFileLabel');
+  if (file) {
+    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+      alert("Attention : Le fichier du corrigé doit être un document PDF (.pdf) !");
+      e.target.value = '';
+      selectedAdminCorrectionFile = null;
+      if (label) label.style.display = 'none';
+      return;
+    }
+    selectedAdminCorrectionFile = file;
+    const sizeMo = (file.size / (1024 * 1024)).toFixed(2);
+    if (label) {
+      label.style.display = 'inline-block';
+      label.textContent = `✓ Corrigé sélectionné : ${file.name} (${sizeMo} Mo)`;
+    }
+  } else {
+    selectedAdminCorrectionFile = null;
+    if (label) label.style.display = 'none';
+  }
 }
 
 function toggleAdminPdfMode(mode) {
@@ -7182,6 +7255,38 @@ async function handleUploadLesson(e) {
       dlName += '.pdf';
     }
 
+    let hasCorrection = false;
+    let correctionUrl = null;
+    let correctionData = null;
+    let correctionSize = null;
+    let correctionName = null;
+
+    if (type === 'serie') {
+      let isCorrFileMode = true;
+      const corrRadios = document.getElementsByName('adminCorrectionMode');
+      for (let r of corrRadios) {
+        if (r.checked && r.value === 'link') isCorrFileMode = false;
+      }
+      const corrLinkInput = document.getElementById('adminCorrectionLinkInput');
+
+      if (isCorrFileMode && selectedAdminCorrectionFile) {
+        hasCorrection = true;
+        correctionSize = `${(selectedAdminCorrectionFile.size / (1024 * 1024)).toFixed(2)} Mo`;
+        correctionName = selectedAdminCorrectionFile.name;
+        try {
+          correctionUrl = await uploadPdfToSupabase(selectedAdminCorrectionFile, `${lessonId}_corrige`);
+        } catch (cErr) {
+          console.warn("Téléversement corrigé cloud direct non disponible, enregistrement local :", cErr);
+          correctionData = await readFileAsDataUrl(selectedAdminCorrectionFile);
+        }
+      } else if (!isCorrFileMode && corrLinkInput && corrLinkInput.value.trim()) {
+        hasCorrection = true;
+        correctionUrl = corrLinkInput.value.trim();
+        correctionSize = "Lien Web";
+        correctionName = `${title} — Corrigé Officiel.pdf`;
+      }
+    }
+
     const newLesson = {
       id: lessonId,
       title: title,
@@ -7199,7 +7304,12 @@ async function handleUploadLesson(e) {
       pdfUrl: pdfUrl,
       downloadName: dlName,
       isCustom: true,
-      isCloud: !!pdfUrl
+      isCloud: !!pdfUrl,
+      hasCorrection: hasCorrection,
+      correctionUrl: correctionUrl,
+      correctionData: correctionData,
+      correctionSize: correctionSize,
+      correctionName: correctionName
     };
 
     // 2. Enregistrement en base de données Cloud Supabase
@@ -7226,7 +7336,15 @@ async function handleUploadLesson(e) {
     const label = document.getElementById('adminSelectedFileName');
     if (label) label.style.display = 'none';
     selectedAdminFile = null;
-
+    selectedAdminCorrectionFile = null;
+    const corrLabel = document.getElementById('adminCorrectionFileLabel');
+    if (corrLabel) { corrLabel.style.display = 'none'; corrLabel.textContent = ''; }
+    const corrFileInput = document.getElementById('adminCorrectionFileInput');
+    if (corrFileInput) corrFileInput.value = '';
+    const corrLinkInput = document.getElementById('adminCorrectionLinkInput');
+    if (corrLinkInput) corrLinkInput.value = '';
+    const corrWrap = document.getElementById('adminSerieCorrectionWrap');
+    if (corrWrap) corrWrap.style.display = 'none';
     alert(`✓ Document "${title}" publié avec succès dans le Cloud Supabase (${subjectLabels[subject]}) !\nIl est immédiatement accessible par tous les élèves sans consommer d'espace sur Vercel.`);
 
     renderAdminLessonsTable();
@@ -7293,7 +7411,7 @@ function renderAdminLessonsTable() {
           ${escapeHtml(l.title)}
         </td>
         <td style="padding:10px 12px; color:#cbd5e1;">
-          ${escapeHtml(l.typeLabel || l.type)}
+          ${escapeHtml(l.typeLabel || l.type)}${l.hasCorrection ? ' <span style="background:rgba(16,185,129,0.2); color:#34d399; font-size:0.72rem; padding:2px 6px; border-radius:4px; font-weight:700; margin-left:4px;">🎯 + Corrigé</span>' : ''}
         </td>
         <td style="padding:10px 12px; font-size:0.8rem; color:#94a3b8;">
           ${escapeHtml(l.fileSize || 'PDF')}
@@ -9213,17 +9331,10 @@ function navigateGlobalSearchResult(index) {
 function checkAdminAuth() {
   const gate = document.getElementById('adminAuthGate');
   const dash = document.getElementById('adminDashboard');
-  const isAuth = sessionStorage.getItem('sti_admin_auth') === 'true';
-
-  if (isAuth) {
-    if (gate) gate.style.display = 'none';
-    if (dash) dash.style.display = 'block';
-    renderAdminLessonsTable();
-    setupAdminDragAndDrop();
-  } else {
-    if (gate) gate.style.display = 'block';
-    if (dash) dash.style.display = 'none';
-  }
+  if (gate) gate.style.display = 'none';
+  if (dash) dash.style.display = 'block';
+  if (typeof renderAdminLessonsTable === 'function') renderAdminLessonsTable();
+  if (typeof setupAdminDragAndDrop === 'function') setupAdminDragAndDrop();
 }
 
 function handleAdminLogin(e) {
@@ -9334,3 +9445,8 @@ if (typeof window !== 'undefined') {
   window.applyTheme = applyTheme;
   window.setupThemeToggle = setupThemeToggle;
 }
+
+
+window.handleAdminTypeChange = handleAdminTypeChange;
+window.toggleAdminCorrectionMode = toggleAdminCorrectionMode;
+window.handleAdminCorrectionFileSelected = handleAdminCorrectionFileSelected;

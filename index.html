@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=23.2">
+  <link rel="stylesheet" href="style.css?v=24.0">
   <!-- INITIALISATION IMMÉDIATE DU THÈME & TOGGLE SANS LATENCE -->
   <script>
     (function() {
@@ -288,11 +288,7 @@
           <span class="footer-icon">🌙</span>
           <span class="footer-text">Mode Sombre</span>
         </button>
-        <button class="sidebar-footer-btn admin" onclick="switchView('admin')" title="Espace Enseignant">
-          <span class="footer-icon">⚙️</span>
-          <span class="footer-text">Espace Professeur</span>
-        </button>
-      </div>
+        </div>
     </aside>
 
     <!-- CONTENU PRINCIPAL DE L'APPLICATION -->
@@ -2455,37 +2451,16 @@
             <span class="hero-tag-badge">PROF</span>
           </div>
           <div class="view-hero-text">
-            <h1 class="view-hero-title">Espace Enseignant — Dépôt des Leçons &amp; Séries PDF</h1>
+            <h1 class="view-hero-title">Gestion &amp; Dépôt des Documents, Séries &amp; Corrigés</h1>
             <p class="view-hero-subtitle">Publication et distribution sécurisée des supports pédagogiques pour les élèves de Bac STI &amp; Bac Informatique</p>
             <div class="view-hero-badges">
-              <span class="hero-pill">Accès Réservé aux Enseignants</span>
+              <span class="hero-pill">Gestionnaire /admin</span>
               <span class="hero-pill success">✓ Synchronisation Supabase Cloud &amp; Local</span>
             </div>
           </div>
         </div>
 
-        <!-- PORTE D'ACCÈS MOT DE PASSE ENSEIGNANT -->
-        <div id="adminAuthGate" class="admin-auth-card" style="max-width: 480px; margin: 40px auto; padding: 36px 28px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center;">
-          <div style="width: 64px; height: 64px; margin: 0 auto 16px; border-radius: 50%; background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center; font-size: 2rem;">
-            🔒
-          </div>
-          <h3 style="color: var(--text-primary); font-size: 1.35rem; font-weight: 700; margin-bottom: 8px;">Accès Réservé aux Enseignants</h3>
-          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5;">
-            Veuillez saisir le mot de passe enseignant pour accéder au dépôt et à la gestion des documents PDF.
-          </p>
-          <form onsubmit="handleAdminLogin(event)" style="display: flex; flex-direction: column; gap: 14px;">
-            <div style="position: relative;">
-              <input type="password" id="adminPasswordInput" class="admin-input-field" placeholder="Mot de passe enseignant..." autocomplete="current-password" required style="width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-card-sub); color: var(--text-primary); font-size: 1rem; box-sizing: border-box;">
-            </div>
-            <div id="adminAuthErrorMsg" style="display: none; color: #ef4444; font-size: 0.85rem; font-weight: 600;"></div>
-            <button type="submit" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 700; font-size: 1rem; cursor: pointer;">
-              Déverrouiller l'Espace Enseignant
-            </button>
-            <span style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">
-              💡 Mot de passe de démonstration : <code>prof2025</code>
-            </span>
-          </form>
-        </div>
+        <!-- Accès direct sans mot de passe via /admin -->
         
         <!-- TABLEAU DE BORD ENSEIGNANT (Accès direct sans mot de passe) -->
         <!-- TABLEAU DE BORD ENSEIGNANT (Accès direct sans mot de passe) -->
@@ -2558,13 +2533,56 @@
                   <label style="display: block; font-size: 0.88rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">
                     Type de document * :
                   </label>
-                  <select id="adminLessonType" class="sti-select" style="width: 100%; padding: 10px 12px; font-size: 0.92rem;" required>
+                  <select id="adminLessonType" class="sti-select" onchange="handleAdminTypeChange(this.value)" style="width: 100%; padding: 10px 12px; font-size: 0.92rem;" required>
                     <option value="cours">📖 Cours / Leçon théorique</option>
                     <option value="serie">📝 Série d'exercices d'application</option>
                     <option value="devoir">📑 Devoir de Contrôle / Synthèse</option>
                     <option value="corrige">🎯 Corrigé type officiel</option>
                     <option value="resume">📌 Fiche Résumé / Mémo révision</option>
                   </select>
+                </div>
+
+                <!-- SECTION CORRIGÉ TYPE (AFFICHÉE AUTOMATIQUEMENT SI TYPE === 'SERIE') -->
+                <div id="adminSerieCorrectionWrap" style="display: none; background: rgba(16, 185, 129, 0.08); border: 1.5px dashed #10b981; border-radius: var(--radius-md); padding: 16px 18px; margin-top: 14px; margin-bottom: 14px;">
+                  <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
+                    <div style="font-weight: 700; font-size: 0.95rem; color: #10b981; display: flex; align-items: center; gap: 8px;">
+                      <span>🎯</span>
+                      <span>Corrigé Type associé à cette Série</span>
+                    </div>
+                    <span style="font-size: 0.76rem; padding: 3px 8px; border-radius: 10px; background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 700;">
+                      Consultation 1-Clic Élève
+                    </span>
+                  </div>
+                  <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 12px 0; line-height: 1.5;">
+                    En associant le corrigé ici, les élèves accèdent à la fois à l'énoncé de la série et à sa correction détaillée sur la même fiche !
+                  </p>
+
+                  <!-- Choix mode de corrigé (Fichier local PDF ou Lien Web) -->
+                  <div style="display: flex; gap: 16px; margin-bottom: 12px; font-size: 0.88rem; flex-wrap: wrap;">
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text-primary); font-weight: 600;">
+                      <input type="radio" name="adminCorrectionMode" value="file" checked onchange="toggleAdminCorrectionMode('file')">
+                      <span>📄 Téléverser le PDF du Corrigé</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text-primary); font-weight: 600;">
+                      <input type="radio" name="adminCorrectionMode" value="link" onchange="toggleAdminCorrectionMode('link')">
+                      <span>🔗 Lien Web / Drive du Corrigé</span>
+                    </label>
+                  </div>
+
+                  <!-- Zone Fichier local corrigé -->
+                  <div id="adminCorrectionFileZone">
+                    <input type="file" id="adminCorrectionFileInput" accept="application/pdf" style="display: none;" onchange="handleAdminCorrectionFileSelected(event)">
+                    <button type="button" onclick="document.getElementById('adminCorrectionFileInput').click()" style="background: var(--bg-card); border: 1px solid #10b981; color: var(--text-primary); padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.88rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                      <span>📁</span>
+                      <span>Sélectionner le PDF du Corrigé</span>
+                    </button>
+                    <span id="adminCorrectionFileLabel" style="font-size: 0.85rem; color: #10b981; font-weight: 600; margin-left: 10px; display: none;"></span>
+                  </div>
+
+                  <!-- Zone Lien corrigé -->
+                  <div id="adminCorrectionLinkZone" style="display: none;">
+                    <input type="url" id="adminCorrectionLinkInput" class="sti-input" placeholder="https://drive.google.com/... ou URL directe du corrigé PDF" style="width: 100%; padding: 10px 12px; font-size: 0.9rem;">
+                  </div>
                 </div>
 
                 <!-- Nom de l'enseignant / Auteur -->
@@ -3779,8 +3797,8 @@ app.exec_()</code></pre>
   <script src="data.js?v=21.0"></script>
   <script src="css_engine.js?v=21.0"></script>
   <script src="algo_pratique_engine.js?v=21.0"></script>
-  <script src="pomodoro_engine.js?v=23.2"></script>
-  <script src="app.js?v=23.2"></script>
+  <script src="pomodoro_engine.js?v=24.0"></script>
+  <script src="app.js?v=24.0"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {

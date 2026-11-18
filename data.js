@@ -3074,7 +3074,7 @@ const DATA = {
       "summary": "Calculs approchés d'intégrales définies et convergence de suites d'aires.",
       "downloadName": "Support_Officiel_Ch5_Approximation.pdf"
     },
-    {
+        {
       "id": "lesson-algo-ch6-matrices",
       "title": "Support Officiel : Ch 6 - Matrices & Tableaux à Deux Dimensions",
       "subject": "algo-ch6-matrices",
@@ -3088,6 +3088,46 @@ const DATA = {
       "description": "Création, parcours par lignes et colonnes, calculs sur diagonales (principale, secondaire), recherche de point-selle, tri et motifs d'affichage (sablier, diagonales).",
       "summary": "Cours complet sur les matrices carrées et rectangulaires avec sujets types d'examen.",
       "downloadName": "Support_Officiel_Ch6_Matrices.pdf"
+    },
+    {
+      "id": "serie-js-validation-corrige",
+      "title": "Série d'Exercices N°1 : Validation des Formulaires avec verif()",
+      "subject": "js",
+      "subjectLabel": "JavaScript",
+      "type": "serie",
+      "typeLabel": "📝 Série d'exercices",
+      "date": "2026-04-20",
+      "author": "Coordination Pédagogique STI",
+      "fileSize": "3.6 Mo",
+      "pdfUrl": "pdf/Support_Officiel_JavaScript_BacSTI.pdf",
+      "downloadName": "Serie_Validation_Formulaires_JS.pdf",
+      "description": "Série d'application officielle : validation stricte des formulaires (fonction verif(), vérification d'identifiants, longueur et regex). Fournie avec son corrigé officiel détaillé.",
+      "summary": "Série d'exercices d'application avec Corrigé Type officiel inclus.",
+      "hasCorrection": true,
+      "correctionTitle": "Corrigé Officiel — Série N°1 Validation Formulaires verif()",
+      "correctionUrl": "pdf/Support_Officiel_JavaScript_BacSTI.pdf",
+      "correctionName": "Corrige_Officiel_Serie_Validation_JS.pdf",
+      "correctionSize": "3.6 Mo"
+    },
+    {
+      "id": "serie-algo-matrices-corrige",
+      "title": "Série d'Exercices N°2 : Algorithmes Avancés sur les Matrices (Diagonales & Sablier)",
+      "subject": "algo-ch6-matrices",
+      "subjectLabel": "Ch 6 : Matrices",
+      "type": "serie",
+      "typeLabel": "📝 Série d'exercices",
+      "date": "2026-04-22",
+      "author": "Inspection Générale de l'Informatique",
+      "fileSize": "5.1 Mo",
+      "pdfUrl": "pdf/Support_Officiel_Matrices_Patterns.pdf",
+      "downloadName": "Serie_Matrices_Diagonales_Sablier.pdf",
+      "description": "Série d'entraînement intensive : extraction de diagonale principale/secondaire, parcours par motif sablier et recherche de maximum. Fournie avec son corrigé officiel détaillé.",
+      "summary": "Série d'exercices sur les matrices avec Corrigé Type officiel inclus.",
+      "hasCorrection": true,
+      "correctionTitle": "Corrigé Officiel — Série N°2 Matrices & Motifs",
+      "correctionUrl": "pdf/Support_Officiel_Matrices_Patterns.pdf",
+      "correctionName": "Corrige_Officiel_Serie_Matrices.pdf",
+      "correctionSize": "5.1 Mo"
     }
   ],
   "sql": [

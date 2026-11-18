@@ -196,20 +196,22 @@ const PomodoroEngine = (function () {
   }
 
   function skipSession() {
-    const wasRunning = state.isRunning;
-    pauseTimer();
+    if (state.intervalId) {
+      clearInterval(state.intervalId);
+      state.intervalId = null;
+    }
+    state.isRunning = false;
+
     if (state.mode === 'work') {
-      // Passer à la pause automatiquement
+      // Passer directement à la pause et lancer immédiatement le minuteur
       state.mode = 'break';
       state.timeLeft = state.breakDuration * 60;
       state.totalSecondsForCurrent = state.timeLeft;
       playNotificationChime();
       showNotificationToast(`☕ Pause relaxante de ${state.breakDuration} min démarrée automatiquement !`);
-      if (wasRunning) {
-        startTimer();
-      }
+      startTimer();
     } else {
-      // Passer au cycle d'étude suivant automatiquement
+      // Passer au cycle d'étude suivant et lancer immédiatement le minuteur
       if (state.currentCycle < state.totalCycles) {
         state.currentCycle++;
       } else {
@@ -219,16 +221,20 @@ const PomodoroEngine = (function () {
       state.timeLeft = state.durationOption * 60;
       state.totalSecondsForCurrent = state.timeLeft;
       playNotificationChime();
-      showNotificationToast(`🚀 Session d'étude ${state.currentCycle}/${state.totalCycles} (${state.durationOption} min) démarrée !`);
-      if (wasRunning) {
-        startTimer();
-      }
+      showNotificationToast(`🚀 Session d'étude ${state.currentCycle}/${state.totalCycles} (${state.durationOption} min) démarrée automatiquement !`);
+      startTimer();
     }
-    updateAllDisplays();
   }
 
   function handleSessionComplete() {
     playNotificationChime();
+
+    // Arrêter et réinitialiser complètement l'intervalle actuel
+    if (state.intervalId) {
+      clearInterval(state.intervalId);
+      state.intervalId = null;
+    }
+    state.isRunning = false;
 
     if (state.mode === 'work') {
       // 1. Fin de session d'étude (25 min ou 50 min) -> Démarrage AUTOMATIQUE de la pause
@@ -236,28 +242,20 @@ const PomodoroEngine = (function () {
       state.timeLeft = state.breakDuration * 60;
       state.totalSecondsForCurrent = state.timeLeft;
       showNotificationToast(`☕ Session d'étude terminée ! Votre pause relaxante de ${state.breakDuration} minutes a démarré automatiquement.`);
-      updateAllDisplays();
-      
-      // S'assurer que le minuteur tourne bien automatiquement
-      if (!state.isRunning) {
-        startTimer();
-      }
+      // Démarrage immédiat sans avoir à cliquer sur Démarrer
+      startTimer();
     } else {
-      // 2. Fin de la pause -> Démarrage AUTOMATIQUE du cycle suivant
+      // 2. Fin de la pause -> Démarrage AUTOMATIQUE de la session d'étude suivante (2ème session, etc.)
       if (state.currentCycle < state.totalCycles) {
         state.currentCycle++;
         state.mode = 'work';
         state.timeLeft = state.durationOption * 60;
         state.totalSecondsForCurrent = state.timeLeft;
         showNotificationToast(`🎯 Pause terminée ! Début automatique de la session d'étude ${state.currentCycle}/${state.totalCycles} (${state.durationOption} min).`);
-        updateAllDisplays();
-        
-        if (!state.isRunning) {
-          startTimer();
-        }
+        // Démarrage immédiat sans avoir à cliquer sur Démarrer
+        startTimer();
       } else {
         // 3. Objectif total accompli (toutes les heures choisies sont terminées)
-        pauseTimer();
         state.currentCycle = 1;
         state.mode = 'work';
         state.timeLeft = state.durationOption * 60;

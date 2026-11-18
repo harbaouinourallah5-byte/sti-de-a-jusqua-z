@@ -1,13 +1,13 @@
-const CACHE_NAME = 'sti-de-a-z-v22';
+const CACHE_NAME = 'sti-de-a-z-v24';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
-  '/style.css?v=22.0',
-  '/data.js?v=22.0',
-  '/app.js?v=22.0',
-  '/css_engine.js?v=22.0',
-  '/algo_pratique_engine.js?v=22.0',
-  '/pomodoro_engine.js?v=22.0',
+  '/style.css?v=24.0',
+  '/data.js?v=24.0',
+  '/app.js?v=24.0',
+  '/css_engine.js?v=24.0',
+  '/algo_pratique_engine.js?v=24.0',
+  '/pomodoro_engine.js?v=24.0',
   '/favicon.svg',
   '/manifest.webmanifest'
 ];
@@ -39,27 +39,40 @@ self.addEventListener('activate', (e) => {
 });
 
 self.addEventListener('fetch', (e) => {
-  // Ignorer les requêtes non-GET et les requêtes Supabase/YouTube/externes
   if (e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
   if (url.origin !== self.location.origin) return;
 
-  // Stale-while-revalidate pour les assets statiques
-  e.respondWith(
-    caches.match(e.request).then((cachedResponse) => {
-      const fetchPromise = fetch(e.request)
+  // Stratégie Network-First pour HTML, JS et CSS : garantit la réception immédiate des dernières mises à jour
+  if (e.request.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname.endsWith('.js') || url.pathname.endsWith('.css') || url.pathname === '/') {
+    e.respondWith(
+      fetch(e.request)
         .then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
-            const responseToCache = networkResponse.clone();
+          if (networkResponse && networkResponse.status === 200) {
+            const responseClone = networkResponse.clone();
             caches.open(CACHE_NAME).then((cache) => {
-              cache.put(e.request, responseToCache);
+              cache.put(e.request, responseClone);
             });
           }
           return networkResponse;
         })
-        .catch(() => cachedResponse);
+        .catch(() => caches.match(e.request))
+    );
+    return;
+  }
 
-      return cachedResponse || fetchPromise;
+  // Cache-First pour les autres fichiers (favicons, images, sons)
+  e.respondWith(
+    caches.match(e.request).then((cachedResponse) => {
+      return cachedResponse || fetch(e.request).then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const responseClone = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(e.request, responseClone);
+          });
+        }
+        return networkResponse;
+      });
     })
   );
 });
