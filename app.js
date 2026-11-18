@@ -1953,20 +1953,7 @@ function openLessonsForModule(moduleName) {
 // -------------------------------------------------------------
 // 2. Gestion du Thème Clair / Sombre
 // -------------------------------------------------------------
-function setupThemeToggle() {
-  const toggleBtn = document.getElementById('themeToggleBtn');
-  const savedTheme = localStorage.getItem('sti_theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', savedTheme);
-  toggleBtn.innerHTML = savedTheme === 'light' ? '🌙' : '☀️';
-
-  toggleBtn.addEventListener('click', () => {
-    const current = document.documentElement.getAttribute('data-theme');
-    const newTheme = current === 'light' ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('sti_theme', newTheme);
-    toggleBtn.innerHTML = newTheme === 'light' ? '🌙' : '☀️';
-  });
-}
+// (Ancien setupThemeToggle obsolète retiré)
 
 // -------------------------------------------------------------
 // 3. Rendu & Filtres HTML5
@@ -8742,30 +8729,70 @@ let currentSearchFilter = 'all';
 let currentSearchResults = [];
 let selectedSearchIndex = 0;
 
-// 1. GESTION DU THÈME AVEC MODE ÉTUDE CALME PAR DÉFAUT
-function setupThemeToggle() {
-  const savedTheme = localStorage.getItem('sti_theme') || 'light';
-  document.documentElement.setAttribute('data-theme', savedTheme);
-  updateThemeVisuals(savedTheme);
+// =============================================================
+// GESTION DU THÈME CLAIR / SOMBRE (CALM STUDY MODE HAUTE DÉFINITION)
+// =============================================================
+const SVG_THEME_SUN = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>`;
+const SVG_THEME_MOON = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>`;
+
+function getSiteTheme() {
+  return localStorage.getItem('sti_theme') || 'dark'; // Mode sombre par défaut pour le confort d'étude
+}
+
+function applyTheme(theme) {
+  const isDark = (theme === 'dark');
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('sti_theme', theme);
+
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) {
+    metaTheme.setAttribute('content', isDark ? '#0F172A' : '#4F46E5');
+  }
+
+  // 1. Bouton mobile
+  const mobileBtn = document.getElementById('mobileThemeToggleBtn');
+  if (mobileBtn) {
+    mobileBtn.innerHTML = isDark ? SVG_THEME_SUN : SVG_THEME_MOON;
+    mobileBtn.title = isDark ? "Passer en Mode Clair" : "Passer en Mode Sombre";
+    mobileBtn.setAttribute('aria-label', mobileBtn.title);
+  }
+
+  // 2. Bouton topbar desktop
+  const desktopBtn = document.getElementById('desktopThemeToggleBtn');
+  if (desktopBtn) {
+    desktopBtn.innerHTML = isDark ? SVG_THEME_SUN : SVG_THEME_MOON;
+    desktopBtn.title = isDark ? "Passer en Mode Clair" : "Passer en Mode Sombre";
+    desktopBtn.setAttribute('aria-label', desktopBtn.title);
+  }
+
+  // 3. Bouton pied de barre latérale
+  const sidebarBtn = document.getElementById('sidebarThemeBtn');
+  if (sidebarBtn) {
+    const iconSpan = sidebarBtn.querySelector('.footer-icon');
+    const textSpan = sidebarBtn.querySelector('.footer-text');
+    if (iconSpan) {
+      iconSpan.innerHTML = isDark ? SVG_THEME_SUN : SVG_THEME_MOON;
+    }
+    if (textSpan) {
+      textSpan.textContent = isDark ? "Mode Clair" : "Mode Sombre";
+    }
+    sidebarBtn.title = isDark ? "Passer en Mode Clair" : "Passer en Mode Sombre";
+  }
+}
+
+function toggleThemeMode() {
+  const current = document.documentElement.getAttribute('data-theme') || 'light';
+  const newTheme = (current === 'light') ? 'dark' : 'light';
+  applyTheme(newTheme);
 }
 
 function toggleSiteTheme() {
-  const current = document.documentElement.getAttribute('data-theme') || 'light';
-  const newTheme = (current === 'light') ? 'dark' : 'light';
-  document.documentElement.setAttribute('data-theme', newTheme);
-  localStorage.setItem('sti_theme', newTheme);
-  updateThemeVisuals(newTheme);
+  toggleThemeMode();
 }
 
-function updateThemeVisuals(theme) {
-  const icon = document.getElementById('themeToggleIcon');
-  const label = document.getElementById('themeToggleLabel');
-  const mobileBtn = document.getElementById('mobileThemeToggleBtn');
-  const isDark = (theme === 'dark');
-
-  if (icon) icon.textContent = isDark ? '☀️' : '🌙';
-  if (label) label.textContent = isDark ? 'Mode Clair' : 'Mode Sombre';
-  if (mobileBtn) mobileBtn.textContent = isDark ? '☀️' : '🌙';
+function setupThemeToggle() {
+  const currentTheme = getSiteTheme();
+  applyTheme(currentTheme);
 }
 
 // 2. CONTRÔLE DE LA SIDEBAR SUR MOBILE (TIROIR COULISSANT)
@@ -9297,4 +9324,13 @@ function updatePageMeta(viewName) {
     document.head.appendChild(metaTag);
   }
   metaTag.content = item.desc;
+}
+
+
+// Exporter explicitement les fonctions de thème sur window
+if (typeof window !== 'undefined') {
+  window.toggleThemeMode = toggleThemeMode;
+  window.toggleSiteTheme = toggleSiteTheme;
+  window.applyTheme = applyTheme;
+  window.setupThemeToggle = setupThemeToggle;
 }
