@@ -1855,10 +1855,10 @@ const DATA = {
       "id": "js-comp-egal",
       "section": "Opérateurs de comparaison",
       "category": "Opérateurs de comparaison",
-      "name": "== (Egal)",
+      "name": "== (Égal)",
       "tag": "==",
       "syntax": "a == b",
-      "summary": "Egal",
+      "summary": "Égal",
       "description": "Teste l'égalité de valeur entre deux expressions. Renvoie true si les deux valeurs sont équivalentes après conversion implicite de type.",
       "howToUse": "Attention à ne pas confondre avec le simple signe d'affectation =. Dans un test if, utiliser toujours ==.",
       "values": [
@@ -3843,7 +3843,7 @@ const DATA = {
     {
       "id": "sql-ldd-alter-enable-disable",
       "category": "Définition des données",
-      "name": "ALTER TABLE ... ENABLE / DISABLE CONSTRAINT",
+      "name": "ALTER TABLE ... ENABLE / DISABLE CONSTRAINT (non supporté sous MySQL)",
       "tag": "ENABLE / DISABLE CONSTRAINT",
       "syntax": "ALTER TABLE table1 ENABLE/ DISABLE CONSTRAINT nom",
       "summary": "Active/Désactive une contrainte.",

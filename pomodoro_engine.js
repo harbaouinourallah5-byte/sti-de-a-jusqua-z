@@ -323,7 +323,7 @@ const PomodoroEngine = (function () {
     if (!container) return;
 
     // IFrame officielle YouTube avec autoplay & loop
-    const embedUrl = `https://www.youtube.com/embed/${state.currentVideoId}?autoplay=1&enablejsapi=1&loop=1&playlist=${state.currentVideoId}&origin=${encodeURIComponent(window.location.origin)}`;
+    const embedUrl = `https://www.youtube-nocookie.com/embed/${state.currentVideoId}?autoplay=1&enablejsapi=1&loop=1&playlist=${state.currentVideoId}&origin=${encodeURIComponent(window.location.origin)}`;
     container.innerHTML = `
       <iframe id="youtubeEmbedIframe"
         width="320" height="180"

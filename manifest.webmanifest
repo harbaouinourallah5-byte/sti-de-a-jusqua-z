@@ -1,0 +1,21 @@
+{
+  "name": "STI de A à Z — Révision Baccalauréat Tunisie",
+  "short_name": "STI de A à Z",
+  "description": "Portail complet de révision pour le Bac STI et Algorithmique Bac Tunisie (HTML5, CSS3, JS, SQL, Qt Designer, Thonny Python, 6 chapitres théoriques et PDF).",
+  "start_url": "/#/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F7F7FB",
+  "theme_color": "#4F46E5",
+  "lang": "fr",
+  "categories": ["education", "books", "productivity"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "64x64 128x128 192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1519,6 +1519,156 @@ const SQL_DATABASE_INIT = {
 let virtualSqlDb = JSON.parse(JSON.stringify(SQL_DATABASE_INIT));
 
 // Initialisation au chargement
+
+// =============================================================
+// ROUTEUR HASH NATIVE & NAVIGATION SANS RECHARGEMENT (Mobile-First)
+// =============================================================
+const OFFICIAL_ALGO_CHAPTER_LIST = [
+  "Chapitre 1 : Les structures de données (Fichiers & Enregistrements)",
+  "Chapitre 2 : La récursivité",
+  "Chapitre 3 : Conversion entre les bases",
+  "Chapitre 4 : Arithmétique",
+  "Chapitre 5 : Approximation et optimisation",
+  "Chapitre 6 : Matrices"
+];
+
+const VIEW_TO_HASH_MAP = {
+  'home': '#/',
+  'html': '#/html5',
+  'css': '#/css3',
+  'js': '#/javascript',
+  'sql': '#/sql',
+  'lessons': '#/lessons',
+  'admin': '#/admin',
+  'algo-home': '#/algo',
+  'algo-pratique': '#/algo/pratique',
+  'algo-theorique': '#/algo/theorique'
+};
+
+function getHashForView(viewName) {
+  return VIEW_TO_HASH_MAP[viewName] || ('#/' + viewName);
+}
+
+function parseAppHash(hash) {
+  let clean = (hash || '').replace(/^#[\/]?/, '').trim().toLowerCase();
+  if (!clean || clean === 'home') return { view: 'home' };
+
+  if (clean.startsWith('algo/theorique/ch') || clean.startsWith('theorique/ch') || clean.startsWith('algo-theorique/ch')) {
+    const match = clean.match(/ch([1-6])/);
+    if (match) {
+      const idx = parseInt(match[1], 10) - 1;
+      return { view: 'algo-theorique', chapter: OFFICIAL_ALGO_CHAPTER_LIST[idx] };
+    }
+  }
+
+  const map = {
+    '': 'home',
+    '/': 'home',
+    'html': 'html',
+    'html5': 'html',
+    'css': 'css',
+    'css3': 'css',
+    'js': 'js',
+    'javascript': 'js',
+    'sql': 'sql',
+    'mysql': 'sql',
+    'lessons': 'lessons',
+    'cours': 'lessons',
+    'cours-pdf': 'lessons',
+    'admin': 'admin',
+    'algo': 'algo-home',
+    'algo-home': 'algo-home',
+    'algo/pratique': 'algo-pratique',
+    'algo-pratique': 'algo-pratique',
+    'pratique': 'algo-pratique',
+    'algo/theorique': 'algo-theorique',
+    'algo-theorique': 'algo-theorique',
+    'theorique': 'algo-theorique'
+  };
+
+  return { view: map[clean] || 'home' };
+}
+
+let isRouterNavigating = false;
+
+function handleRouteFromHash() {
+  const currentHash = window.location.hash;
+  const route = parseAppHash(currentHash);
+  isRouterNavigating = true;
+
+  if (['algo-home', 'algo-pratique', 'algo-theorique'].includes(route.view)) {
+    if (typeof switchModule === 'function') switchModule('algo', true);
+  } else if (['html', 'css', 'js', 'sql'].includes(route.view)) {
+    if (typeof switchModule === 'function') switchModule('sti', true);
+  }
+
+  switchView(route.view, true);
+
+  if (route.view === 'algo-theorique' && route.chapter) {
+    if (typeof setAlgoTheoriqueCategory === 'function') {
+      setAlgoTheoriqueCategory(route.chapter);
+    }
+  }
+
+  isRouterNavigating = false;
+}
+
+function navigateToHash(hash) {
+  if (window.location.hash === hash) {
+    handleRouteFromHash();
+  } else {
+    window.location.hash = hash;
+  }
+}
+
+function handleAppBack() {
+  if (window.history.length > 1 && window.location.hash && window.location.hash !== '#/' && window.location.hash !== '#') {
+    window.history.back();
+  } else {
+    navigateToHash('#/');
+  }
+}
+
+function updateDataCountersUI() {
+  try {
+    const htmlCount = (typeof DATA !== 'undefined' && DATA.html) ? DATA.html.length : 56;
+    const cssCount = (typeof DATA !== 'undefined' && DATA.css) ? DATA.css.length : 61;
+    const jsCount = (typeof DATA !== 'undefined' && DATA.js) ? DATA.js.length : 63;
+    const sqlCount = (typeof DATA !== 'undefined' && DATA.sql) ? DATA.sql.length : 57;
+    const qtCount = (typeof DATA !== 'undefined' && DATA.algo_pratique) ? DATA.algo_pratique.length : 20;
+    const algoTheoriqueCount = (typeof DATA !== 'undefined' && DATA.algo_theorique) ? DATA.algo_theorique.length : 59;
+
+    const elHtmlBadge = document.getElementById('htmlBadgeCount');
+    if (elHtmlBadge) elHtmlBadge.textContent = htmlCount;
+    const elCssBadge = document.getElementById('cssBadgeCount');
+    if (elCssBadge) elCssBadge.textContent = cssCount;
+    const elJsBadge = document.getElementById('jsBadgeCount');
+    if (elJsBadge) elJsBadge.textContent = jsCount;
+    const elSqlBadge = document.getElementById('sqlBadgeCount');
+    if (elSqlBadge) elSqlBadge.textContent = sqlCount;
+    const elQtBadge = document.getElementById('algoPratiqueBadgeCount');
+    if (elQtBadge) elQtBadge.textContent = qtCount;
+    const elThBadge = document.getElementById('algoTheoriqueBadgeCount');
+    if (elThBadge) elThBadge.textContent = algoTheoriqueCount;
+
+    // Badges sidebar
+    const sideHtml = document.getElementById('sideBadgeHtml');
+    if (sideHtml) sideHtml.textContent = htmlCount;
+    const sideCss = document.getElementById('sideBadgeCss');
+    if (sideCss) sideCss.textContent = cssCount;
+    const sideJs = document.getElementById('sideBadgeJs');
+    if (sideJs) sideJs.textContent = jsCount;
+    const sideSql = document.getElementById('sideBadgeSql');
+    if (sideSql) sideSql.textContent = sqlCount;
+    const sideQt = document.getElementById('sideBadgeQt');
+    if (sideQt) sideQt.textContent = qtCount;
+    const sideTheorique = document.getElementById('sideBadgeTheorique');
+    if (sideTheorique) sideTheorique.textContent = algoTheoriqueCount;
+  } catch (err) {
+    console.warn('Erreur mise à jour des compteurs:', err);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   setupNavigation();
   setupThemeToggle();
@@ -1532,10 +1682,22 @@ document.addEventListener('DOMContentLoaded', () => {
   renderJsCards();
   renderSqlCards();
   initLessonsModule();
+  if (typeof renderAlgoPratiqueCategories === 'function') renderAlgoPratiqueCategories();
+  if (typeof renderAlgoPratiqueCards === 'function') renderAlgoPratiqueCards();
+  if (typeof renderAlgoTheoriqueCategories === 'function') renderAlgoTheoriqueCategories();
+  if (typeof renderAlgoTheoriqueCards === 'function') renderAlgoTheoriqueCards();
+  if (typeof updateDataCountersUI === 'function') updateDataCountersUI();
   if (typeof setupGlobalSearch === 'function') setupGlobalSearch();
   if (typeof setupReadingProgressBarAndBackToTop === 'function') setupReadingProgressBarAndBackToTop();
   if (typeof updateResumeStudyCard === 'function') updateResumeStudyCard();
   if (typeof updateBreadcrumbBar === 'function') updateBreadcrumbBar(currentView || 'home');
+
+  // Gestion de l'historique et routage hash au démarrage
+  window.addEventListener('hashchange', handleRouteFromHash);
+  window.addEventListener('popstate', handleRouteFromHash);
+  if (window.location.hash && window.location.hash !== '#/' && window.location.hash !== '#') {
+    handleRouteFromHash();
+  }
 });
 
 // -------------------------------------------------------------
@@ -1581,9 +1743,10 @@ function setupNavigation() {
   });
 }
 
-function switchView(viewName) {
+function switchView(viewName, skipHashUpdate = false) {
   if (typeof updatePageMeta === 'function') updatePageMeta(viewName);
   if (!viewName) return;
+
   // Normaliser les alias éventuels (cours, cours-pdf, etc.)
   if (viewName === 'cours' || viewName === 'cours-pdf' || viewName === 'cours-series') {
     viewName = 'lessons';
@@ -1593,8 +1756,15 @@ function switchView(viewName) {
   currentCategory = 'all';
   currentSearch = '';
 
-  // Mise à jour des vues
-  document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+  // Fermer immédiatement le tiroir mobile
+  if (typeof toggleSidebarDrawer === 'function') {
+    toggleSidebarDrawer(false);
+  }
+
+  // Mise à jour des vues actives (display:none strict sur les autres)
+  document.querySelectorAll('.view-section').forEach(sec => {
+    sec.classList.remove('active');
+  });
   const targetSection = document.getElementById(`view-${viewName}`);
   if (targetSection) {
     targetSection.classList.add('active');
@@ -1611,7 +1781,7 @@ function switchView(viewName) {
     }
   });
 
-  // Mise à jour des liens de la nouvelle sidebar
+  // Mise à jour des liens de la sidebar
   document.querySelectorAll('.sidebar-link').forEach(link => {
     if (link.getAttribute('data-view') === viewName) {
       link.classList.add('active');
@@ -1630,9 +1800,45 @@ function switchView(viewName) {
     saveStudySession(viewName);
   }
 
-  // Fermer le tiroir mobile s'il était ouvert
-  if (typeof toggleSidebarDrawer === 'function') {
-    toggleSidebarDrawer(false);
+  // Mise à jour des boutons de la barre mobile supérieure
+  const mobileBackBtn = document.getElementById('mobileBackBtn');
+  if (mobileBackBtn) {
+    mobileBackBtn.style.display = (viewName === 'home') ? 'none' : 'inline-flex';
+  }
+  const mobileBrandTitle = document.getElementById('mobileBrandTitle');
+  if (mobileBrandTitle) {
+    const titles = {
+      'home': 'STI & ALGO',
+      'html': 'HTML5',
+      'css': 'CSS3',
+      'js': 'JavaScript',
+      'sql': 'SQL (MySQL)',
+      'lessons': 'Cours & Séries',
+      'admin': 'Espace Prof',
+      'algo-home': 'Algorithme',
+      'algo-pratique': 'Pratique Qt',
+      'algo-theorique': 'Théorique'
+    };
+    mobileBrandTitle.textContent = titles[viewName] || 'STI de A à Z';
+  }
+  const mobileModuleChip = document.getElementById('mobileModuleChip');
+  if (mobileModuleChip) {
+    if (['html', 'css', 'js', 'sql'].includes(viewName)) {
+      mobileModuleChip.textContent = 'STI';
+      mobileModuleChip.className = 'mobile-module-chip sti';
+    } else if (['algo-home', 'algo-pratique', 'algo-theorique'].includes(viewName)) {
+      mobileModuleChip.textContent = 'ALGO';
+      mobileModuleChip.className = 'mobile-module-chip algo';
+    } else if (viewName === 'lessons') {
+      mobileModuleChip.textContent = 'PDF';
+      mobileModuleChip.className = 'mobile-module-chip sti';
+    } else if (viewName === 'admin') {
+      mobileModuleChip.textContent = 'PROF';
+      mobileModuleChip.className = 'mobile-module-chip algo';
+    } else {
+      mobileModuleChip.textContent = 'BAC';
+      mobileModuleChip.className = 'mobile-module-chip sti';
+    }
   }
 
   // Mise à jour de la barre inférieure mobile
@@ -1647,7 +1853,7 @@ function switchView(viewName) {
     else bottomLessons.classList.remove('active');
   }
 
-  // Forcer le défilement vers le haut de la zone principale et de la fenêtre
+  // Défilement immédiat vers le haut sans saccade
   window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   document.documentElement.scrollTop = 0;
   document.body.scrollTop = 0;
@@ -1656,29 +1862,35 @@ function switchView(viewName) {
   const mainBodyEl = document.querySelector('.app-main-body');
   if (mainBodyEl) mainBodyEl.scrollTop = 0;
 
-  // Réinitialiser les champs de recherche
+  // Mise à jour de l'URL hash pour l'historique du navigateur
+  if (!skipHashUpdate && typeof getHashForView === 'function') {
+    const targetHash = getHashForView(viewName);
+    if (window.location.hash !== targetHash) {
+      window.location.hash = targetHash;
+    }
+  }
+
+  // Initialisation et rafraîchissement des vues spécifiques
   if (viewName === 'html') {
-    document.getElementById('htmlSearchInput').value = '';
+    const htmlInput = document.getElementById('htmlSearchInput');
+    if (htmlInput) htmlInput.value = '';
     renderHtmlCategories();
     renderHtmlCards();
-    history.replaceState(null, '', '#html');
   } else if (viewName === 'css') {
-    document.getElementById('cssSearchInput').value = '';
+    const cssInput = document.getElementById('cssSearchInput');
+    if (cssInput) cssInput.value = '';
     renderCssCategories();
     renderCssCards();
-    history.replaceState(null, '', '#css');
   } else if (viewName === 'js') {
     const jsInput = document.getElementById('jsSearchInput');
     if (jsInput) jsInput.value = '';
     renderJsCategories();
     renderJsCards();
-    history.replaceState(null, '', '#js');
   } else if (viewName === 'sql') {
     const sqlInput = document.getElementById('sqlSearchInput');
     if (sqlInput) sqlInput.value = '';
     renderSqlCategories();
     renderSqlCards();
-    history.replaceState(null, '', '#sql');
   } else if (viewName === 'lessons') {
     const lInput = document.getElementById('lessonSearchInput');
     if (lInput) lInput.value = '';
@@ -1694,14 +1906,10 @@ function switchView(viewName) {
     } catch (err) {
       console.error('Erreur lors du rendu des leçons:', err);
     }
-    history.replaceState(null, '', '#lessons');
   } else if (viewName === 'admin') {
     if (typeof checkAdminAuth === 'function') {
       checkAdminAuth();
     }
-    history.replaceState(null, '', '/admin');
-  } else if (viewName === 'algo-home') {
-    history.replaceState(null, '', '#algo-home');
   } else if (viewName === 'algo-pratique') {
     const input = document.getElementById('algoPratiqueSearchInput');
     if (input) input.value = '';
@@ -1709,19 +1917,12 @@ function switchView(viewName) {
     currentAlgoPratiqueSearch = '';
     renderAlgoPratiqueCategories();
     renderAlgoPratiqueCards();
-    initQtTranslator();
-    switchAlgoPratiqueTab('cards');
-    history.replaceState(null, '', '#algo-pratique');
+    if (typeof initQtTranslator === 'function') initQtTranslator();
   } else if (viewName === 'algo-theorique') {
     const input = document.getElementById('algoTheoriqueSearchInput');
     if (input) input.value = '';
-    currentAlgoTheoriqueCategory = 'all';
-    currentAlgoTheoriqueSearch = '';
     renderAlgoTheoriqueCategories();
     renderAlgoTheoriqueCards();
-    history.replaceState(null, '', '#algo-theorique');
-  } else if (viewName === 'home') {
-    history.replaceState(null, '', window.location.pathname.replace(/\/admin|\/lessons|\/cours/gi, '') || '/');
   }
 }
 
@@ -6423,16 +6624,23 @@ function renderLessons() {
     counterBadge.textContent = filtered.length === 0 ? "Aucun document" : `${filtered.length} document${filtered.length > 1 ? 's' : ''}`;
   }
 
-  // Si aucun document n'a été publié (tous les cours retirés)
   // Si aucun document n'a été publié par le professeur
   if (allLessons.length === 0) {
     grid.innerHTML = `
-      <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: #64748b;">
-        <span style="font-size: 2.5rem; display: block; margin-bottom: 10px; opacity: 0.6;">📁</span>
-        <h4 style="color: #94a3b8; font-size: 1.1rem; margin-bottom: 6px;">Aucun document disponible pour le moment</h4>
-        <p style="color: #64748b; font-size: 0.88rem; margin: 0;">
-          Les cours, devoirs et fiches PDF partagés par votre professeur apparaîtront ici dès leur publication.
+      <div class="pdf-empty-state-card" style="grid-column: 1 / -1; text-align: center; padding: 50px 24px; background: var(--bg-card); border: 1px dashed var(--border-color); border-radius: 16px; margin: 20px 0;">
+        <div style="width: 72px; height: 72px; margin: 0 auto 16px; border-radius: 50%; background: rgba(79, 70, 229, 0.12); display: flex; align-items: center; justify-content: center; font-size: 2.2rem;">
+          📚
+        </div>
+        <h3 style="color: var(--text-primary); font-size: 1.25rem; font-weight: 700; margin-bottom: 8px;">
+          Aucun document pour le moment
+        </h3>
+        <p style="color: var(--text-secondary); font-size: 0.95rem; max-width: 480px; margin: 0 auto 20px; line-height: 1.6;">
+          Votre professeur ajoutera les séries, devoirs et résumés de cours au format PDF très bientôt. En attendant, toutes les leçons interactives sont disponibles en ligne !
         </p>
+        <button type="button" onclick="navigateToHash('#/html5')" style="background: linear-gradient(135deg, #4f46e5, #06b6d4); color: #fff; border: none; padding: 12px 24px; border-radius: 25px; font-weight: 600; font-size: 0.95rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);">
+          <span>💻</span>
+          <span>Consulter les cours en ligne (HTML, CSS...)</span>
+        </button>
       </div>
     `;
     return;
@@ -8598,7 +8806,7 @@ function setupReadingProgressBarAndBackToTop() {
 
 // 4. FIL D'ARIANE DYNAMIQUE (BREADCRUMB)
 const VIEW_METAS = {
-  'home': { module: 'sti', modLabel: 'STI Web & BD', title: 'Accueil & Vue d\'ensemble' },
+  'home': { module: 'sti', modLabel: 'STI Web & BD', title: 'Vue d\'ensemble' },
   'html': { module: 'sti', modLabel: 'STI Web & BD', title: 'HTML5 (Structure & Balises)' },
   'css': { module: 'sti', modLabel: 'STI Web & BD', title: 'CSS3 (Sélecteurs & Styles)' },
   'js': { module: 'sti', modLabel: 'STI Web & BD', title: 'JavaScript (Contrôles & DOM)' },
@@ -8978,18 +9186,43 @@ function navigateGlobalSearchResult(index) {
 function checkAdminAuth() {
   const gate = document.getElementById('adminAuthGate');
   const dash = document.getElementById('adminDashboard');
-  if (gate) gate.style.display = 'none';
-  if (dash) dash.style.display = 'block';
-  renderAdminLessonsTable();
-  setupAdminDragAndDrop();
+  const isAuth = sessionStorage.getItem('sti_admin_auth') === 'true';
+
+  if (isAuth) {
+    if (gate) gate.style.display = 'none';
+    if (dash) dash.style.display = 'block';
+    renderAdminLessonsTable();
+    setupAdminDragAndDrop();
+  } else {
+    if (gate) gate.style.display = 'block';
+    if (dash) dash.style.display = 'none';
+  }
 }
 
 function handleAdminLogin(e) {
   if (e && e.preventDefault) e.preventDefault();
-  checkAdminAuth();
+  const pwdInput = document.getElementById('adminPasswordInput');
+  const errEl = document.getElementById('adminAuthErrorMsg');
+  const pwd = pwdInput ? pwdInput.value.trim().toLowerCase() : '';
+
+  const validPasswords = ['prof2025', 'sti2025', 'bac2025', 'admin', 'prof', 'professeur'];
+  if (validPasswords.includes(pwd)) {
+    sessionStorage.setItem('sti_admin_auth', 'true');
+    if (errEl) errEl.style.display = 'none';
+    if (pwdInput) pwdInput.value = '';
+    checkAdminAuth();
+  } else {
+    if (errEl) {
+      errEl.style.display = 'block';
+      errEl.textContent = "❌ Mot de passe incorrect. (Indice enseignant : prof2025)";
+    } else {
+      alert("❌ Mot de passe incorrect. (Indice enseignant : prof2025)");
+    }
+  }
 }
 
 function handleAdminLogout() {
+  sessionStorage.removeItem('sti_admin_auth');
   checkAdminAuth();
 }
 

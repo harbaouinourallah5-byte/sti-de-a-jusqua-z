@@ -3,11 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#4F46E5">
+  <meta name="description" content="Site de révision interactif complet pour le Baccalauréat Tunisie : STI (Web & BD : HTML5, CSS3, JS, SQL) et Algorithmique (Qt Designer, Thonny Python, 6 chapitres).">
   <title>STI de A à Z — Mode Étude Calme (STI & Algorithme Bac Info)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=21.0">
+  <link rel="stylesheet" href="style.css?v=22.0">
 </head>
 <body>
 
@@ -20,10 +24,20 @@
   <!-- EN-TÊTE MOBILE TOP (< 1024px) -->
   <header class="mobile-top-header" id="mobileTopHeader">
     <div class="mobile-header-inner">
-      <button class="mobile-menu-btn" onclick="toggleSidebarDrawer()" aria-label="Ouvrir le menu">☰</button>
-      <div class="mobile-brand" onclick="switchView('home')">
-        <span class="mobile-brand-icon">📚</span>
-        <span class="mobile-brand-title">STI &amp; ALGO</span>
+      <div class="mobile-header-left">
+        <button class="mobile-action-btn mobile-back-btn" id="mobileBackBtn" onclick="handleAppBack()" aria-label="Retour" title="Retour" style="display:none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleSidebarDrawer()" aria-label="Ouvrir le menu">☰</button>
+      </div>
+      <div class="mobile-brand" onclick="navigateToHash('#/')">
+        <svg class="mobile-brand-svg" width="26" height="26" viewBox="0 0 38 38" fill="none">
+          <rect width="38" height="38" rx="8" fill="url(#brandShieldGrad)"/>
+          <path d="M10 26V14C10 12.8954 10.8954 12 12 12H18C18.5523 12 19 12.4477 19 13V27C19 26.4477 18.5523 26 18 26H12C10.8954 26 10 26.8954 10 28V26Z" fill="white" fill-opacity="0.95"/>
+          <path d="M28 26V14C28 12.8954 27.1046 12 26 12H20C19.4477 12 19 12.4477 19 13V27C19 26.4477 19.4477 26 20 26H26C27.1046 26 28 26.8954 28 28V26Z" fill="#E0E7FF"/>
+        </svg>
+        <span class="mobile-brand-title" id="mobileBrandTitle">STI de A à Z</span>
+        <span class="mobile-module-chip sti" id="mobileModuleChip">STI</span>
       </div>
       <div class="mobile-header-actions">
         <button class="mobile-action-btn" onclick="openGlobalSearchModal()" title="Recherche (Ctrl+K)">🔍</button>
@@ -399,7 +413,22 @@
          VUE 2 : PAGE DÉDIÉE HTML5
          ========================================== -->
     <section id="view-html" class="view-section">
-      <div class="container">
+      <div class="container" style="padding-top: 24px;">
+        <!-- EN-TÊTE UNIFIÉ HTML5 -->
+        <div class="view-hero-header orange-theme">
+          <div class="view-hero-icon-box">
+            <span class="hero-tag-badge">HTML5</span>
+          </div>
+          <div class="view-hero-text">
+            <h1 class="view-hero-title">Annexe Officielle HTML5</h1>
+            <p class="view-hero-subtitle">Programme officiel du Bac STI • Structure sémantique, balises de contenu, multimédia et formulaires interactifs</p>
+            <div class="view-hero-badges">
+              <span class="hero-pill"><strong id="htmlBadgeCount">56</strong> Balises Référencées</span>
+              <span class="hero-pill success">✓ Conforme Programme Bac STI</span>
+              <span class="hero-pill cyan">Exemples Interactifs</span>
+            </div>
+          </div>
+        </div>
 
         <!-- Onglets de bascule d'affichage HTML5 -->
         <div class="view-tabs-bar">
@@ -811,7 +840,22 @@
          VUE 3 : PAGE DÉDIÉE CSS3
          ========================================== -->
     <section id="view-css" class="view-section">
-      <div class="container">
+      <div class="container" style="padding-top: 24px;">
+        <!-- EN-TÊTE UNIFIÉ CSS3 -->
+        <div class="view-hero-header blue-theme">
+          <div class="view-hero-icon-box">
+            <span class="hero-tag-badge">CSS3</span>
+          </div>
+          <div class="view-hero-text">
+            <h1 class="view-hero-title">Annexe Officielle CSS3</h1>
+            <p class="view-hero-subtitle">Programme officiel du Bac STI • Sélecteurs, mise en forme du texte, modèle de boîte (Box Model), Flexbox et animations</p>
+            <div class="view-hero-badges">
+              <span class="hero-pill"><strong id="cssBadgeCount">61</strong> Propriétés Référencées</span>
+              <span class="hero-pill success">✓ Conforme Programme Bac STI</span>
+              <span class="hero-pill cyan">Simulateur Visuel Live</span>
+            </div>
+          </div>
+        </div>
 
         <!-- Onglets de bascule d'affichage CSS3 -->
         <div class="view-tabs-bar">
@@ -1206,26 +1250,22 @@
          VUE 4 : PAGE DÉDIÉE JAVASCRIPT
          ========================================== -->
     <section id="view-js" class="view-section">
-      <div class="page-header-banner">
-        <div class="container">
-          <div class="breadcrumb">
-            <a onclick="switchView('home')">Accueil</a>
-            <span>/</span>
-            <span style="color: #10b981; font-weight: 600;">JavaScript</span>
+      <div class="container" style="padding-top: 24px;">
+        <!-- EN-TÊTE UNIFIÉ JAVASCRIPT -->
+        <div class="view-hero-header yellow-theme">
+          <div class="view-hero-icon-box">
+            <span class="hero-tag-badge">JS</span>
           </div>
-          <div class="subpage-title-row">
-            <h2 class="subpage-title">
-              <span style="color: #10b981;">⚡</span> Annexe Complète JavaScript (Bac STI)
-            </h2>
-            <button class="back-to-home-btn">
-              <span>←</span>
-              <span>Retour à l'accueil</span>
-            </button>
+          <div class="view-hero-text">
+            <h1 class="view-hero-title">Annexe Officielle JavaScript</h1>
+            <p class="view-hero-subtitle">Programme officiel du Bac STI • Contrôle de saisie des formulaires, manipulation du DOM, objets Date et événements</p>
+            <div class="view-hero-badges">
+              <span class="hero-pill"><strong id="jsBadgeCount">63</strong> Notions &amp; Méthodes</span>
+              <span class="hero-pill success">✓ Conforme Programme Bac STI</span>
+              <span class="hero-pill cyan">Console Interactive ES6</span>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div class="container">
         
         <!-- Onglets de bascule d'affichage -->
         <div class="view-tabs-bar">
@@ -1287,7 +1327,7 @@
                 <table class="annexe-table">
                   <tr onclick="openJsModalById('js-comp-egal')" title="Cliquer pour afficher la fiche complète">
                     <td class="syntax-col">==</td>
-                    <td class="desc-col">Egal</td>
+                    <td class="desc-col">Égal</td>
                   </tr>
                   <tr onclick="openJsModalById('js-comp-diff')" title="Cliquer pour afficher la fiche complète">
                     <td class="syntax-col">!=</td>
@@ -1758,31 +1798,22 @@
          VUE 4 : PAGE DÉDIÉE SQL (BASE DE DONNÉES)
          ========================================== -->
     <section id="view-sql" class="view-section">
-      <div class="page-header-banner" style="background: linear-gradient(135deg, rgba(124, 58, 237, 0.16), rgba(80, 140, 50, 0.12)); border-bottom: 1px solid rgba(168, 85, 247, 0.3);">
-        <div class="container">
-          <div class="breadcrumb">
-            <a onclick="switchView('home')">Accueil</a>
-            <span>/</span>
-            <span style="color: #c084fc; font-weight: 600;">SQL (Bases de Données Relationnelles)</span>
+      <div class="container" style="padding-top: 24px;">
+        <!-- EN-TÊTE UNIFIÉ SQL -->
+        <div class="view-hero-header purple-theme">
+          <div class="view-hero-icon-box">
+            <span class="hero-tag-badge">SQL</span>
           </div>
-          <div class="subpage-title-row" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
-            <div>
-              <h2 class="subpage-title" style="margin:0; font-size:1.6rem; color:#f8fafc;">
-                <span style="color: #c084fc;">🗄️</span> Annexe Officielle SQL (Bac STI)
-              </h2>
-              <p style="font-size:0.88rem; color:var(--text-secondary); margin:6px 0 0 0;">
-                Les 8 sections indispensables du programme tunisien (Types de données, Contraintes d'intégrité, LDD, LMD, Fonctions date et agrégation) avec console SQL interactive !
-              </p>
+          <div class="view-hero-text">
+            <h1 class="view-hero-title">Annexe Officielle SQL (MySQL)</h1>
+            <p class="view-hero-subtitle">Programme officiel du Bac STI • Définition (LDD), Manipulation (LMD), contraintes d'intégrité et console MySQL live</p>
+            <div class="view-hero-badges">
+              <span class="hero-pill"><strong id="sqlBadgeCount">57</strong> Commandes &amp; Fonctions</span>
+              <span class="hero-pill success">✓ Conforme Programme Bac STI</span>
+              <span class="hero-pill cyan">Simulateur MySQL 8</span>
             </div>
-            <button class="back-to-home-btn" onclick="switchView('home')">
-              <span>←</span>
-              <span>Retour à l'accueil</span>
-            </button>
           </div>
         </div>
-      </div>
-
-      <div class="container">
         
         <!-- Onglets de bascule d'affichage -->
         <div class="view-tabs-bar">
@@ -2179,28 +2210,22 @@
          VUE 4 : PAGE DÉDIÉE COURS & SÉRIES PDF
          ========================================== -->
     <section id="view-lessons" class="view-section">
-      <div class="page-header-banner" id="lessonsHeaderBanner" style="background: linear-gradient(135deg, rgba(124, 58, 237, 0.18), rgba(16, 185, 129, 0.12)); border-bottom: 1px solid rgba(168, 85, 247, 0.3);">
-        <div class="container">
-          <div class="breadcrumb">
-            <a onclick="handleLogoClick()">Accueil</a>
-            <span>/</span>
-            <span style="color: #c084fc; font-weight: 600;" id="lessonsBreadcrumbText">Cours & Séries PDF</span>
+      <div class="container" style="padding-top: 24px; padding-bottom: 50px;">
+        <!-- EN-TÊTE UNIFIÉ COURS & SÉRIES PDF -->
+        <div class="view-hero-header indigo-theme">
+          <div class="view-hero-icon-box">
+            <span class="hero-tag-badge">PDF</span>
           </div>
-          <div class="subpage-title-row">
-            <h2 class="subpage-title" id="lessonsPageTitle">
-              <span style="color: #a855f7;">📚</span> Cours, Séries & Documents PDF (STI & Algorithme)
-            </h2>
-            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <button class="back-to-home-btn" onclick="handleLogoClick()">
-                <span>←</span>
-                <span>Retour à l'accueil</span>
-              </button>
+          <div class="view-hero-text">
+            <h1 class="view-hero-title">Cours, Séries &amp; Documents PDF</h1>
+            <p class="view-hero-subtitle">Bibliothèque numérique officielle • Polycopiés officiels, devoirs de synthèse, corrigés types et résumés STI &amp; Algorithme</p>
+            <div class="view-hero-badges">
+              <span class="hero-pill" id="lessonsCounterBadge">Chargement...</span>
+              <span class="hero-pill success">✓ Téléchargement &amp; Prévisualisation Directe</span>
+              <span class="hero-pill cyan">Cache Hors-ligne (IndexedDB)</span>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="container" style="padding-top: 24px; padding-bottom: 50px;">
         
         <!-- LES 2 GRANDES SECTIONS CLAIREMENT VISIBLES (ALGORITHME & STI) -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 24px;">
@@ -2364,32 +2389,44 @@
          VUE 5 : ESPACE ENSEIGNANT / ADMIN (/admin)
          ========================================== -->
     <section id="view-admin" class="view-section">
-      <div class="page-header-banner" style="background: linear-gradient(135deg, rgba(5, 150, 105, 0.2), rgba(16, 185, 129, 0.1)); border-bottom: 1px solid rgba(16, 185, 129, 0.35);">
-        <div class="container">
-          <div class="breadcrumb">
-            <a onclick="switchView('home')">Accueil</a>
-            <span>/</span>
-            <span style="color: #34d399; font-weight: 600;">Espace Enseignant (/admin)</span>
+      <div class="container" style="padding-top: 24px; padding-bottom: 50px;">
+        <!-- EN-TÊTE UNIFIÉ ESPACE ENSEIGNANT -->
+        <div class="view-hero-header emerald-theme">
+          <div class="view-hero-icon-box">
+            <span class="hero-tag-badge">PROF</span>
           </div>
-          <div class="subpage-title-row">
-            <h2 class="subpage-title">
-              <span style="color: #10b981;">⚙️</span> Espace Enseignant — Dépôt des Leçons & Séries PDF
-            </h2>
-            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <button class="nav-btn" onclick="switchView('lessons')" style="color: #c084fc; border: 1px solid #7c3aed;">
-                <span>📚</span>
-                <span>Voir l'espace Élèves</span>
-              </button>
-              <button class="back-to-home-btn" onclick="switchView('home')">
-                <span>←</span>
-                <span>Accueil</span>
-              </button>
+          <div class="view-hero-text">
+            <h1 class="view-hero-title">Espace Enseignant — Dépôt des Leçons &amp; Séries PDF</h1>
+            <p class="view-hero-subtitle">Publication et distribution sécurisée des supports pédagogiques pour les élèves de Bac STI &amp; Bac Informatique</p>
+            <div class="view-hero-badges">
+              <span class="hero-pill">Accès Réservé aux Enseignants</span>
+              <span class="hero-pill success">✓ Synchronisation Supabase Cloud &amp; Local</span>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="container" style="padding-top: 28px; padding-bottom: 50px;">
+        <!-- PORTE D'ACCÈS MOT DE PASSE ENSEIGNANT -->
+        <div id="adminAuthGate" class="admin-auth-card" style="max-width: 480px; margin: 40px auto; padding: 36px 28px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center;">
+          <div style="width: 64px; height: 64px; margin: 0 auto 16px; border-radius: 50%; background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+            🔒
+          </div>
+          <h3 style="color: var(--text-primary); font-size: 1.35rem; font-weight: 700; margin-bottom: 8px;">Accès Réservé aux Enseignants</h3>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5;">
+            Veuillez saisir le mot de passe enseignant pour accéder au dépôt et à la gestion des documents PDF.
+          </p>
+          <form onsubmit="handleAdminLogin(event)" style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="position: relative;">
+              <input type="password" id="adminPasswordInput" class="admin-input-field" placeholder="Mot de passe enseignant..." autocomplete="current-password" required style="width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-card-sub); color: var(--text-primary); font-size: 1rem; box-sizing: border-box;">
+            </div>
+            <div id="adminAuthErrorMsg" style="display: none; color: #ef4444; font-size: 0.85rem; font-weight: 600;"></div>
+            <button type="submit" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 700; font-size: 1rem; cursor: pointer;">
+              Déverrouiller l'Espace Enseignant
+            </button>
+            <span style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">
+              💡 Mot de passe de démonstration : <code>prof2025</code>
+            </span>
+          </form>
+        </div>
         
         <!-- TABLEAU DE BORD ENSEIGNANT (Accès direct sans mot de passe) -->
         <!-- TABLEAU DE BORD ENSEIGNANT (Accès direct sans mot de passe) -->
@@ -2656,7 +2693,7 @@
               La boîte à outils indispensable du Bac pratique : charger une interface <code>.ui</code>, lire les <code>QLineEdit</code>, détecter les clics <code>QPushButton</code>, gérer les <code>QRadioButton</code> et <code>QCheckBox</code>, remplir <code>QComboBox</code> et <code>QTableWidget</code>, et déclencher les alertes <code>QMessageBox</code> sans aucun plantage.
             </p>
             <div class="card-badges">
-              <span class="pill-badge" style="color: #34d399;">19 Fiches &amp; Composants Qt</span>
+              <span class="pill-badge" style="color: #34d399;"><strong id="algoPratiqueHomeBadge">20</strong> Fiches &amp; Composants Qt</span>
               <span class="pill-badge" style="color: #38bdf8;">🎛️ Traducteur Live Qt ➔ Thonny</span>
               <span class="pill-badge" style="color: #facc15;">🛡️ Règles Anti-Plantage Bac</span>
             </div>
@@ -3382,21 +3419,44 @@ app.exec_()</code></pre>
       </div>
     </section>
 
-        </main>
+        
+      <!-- PIED DE PAGE GLOBAL MODE ÉTUDE CALME -->
+      <footer class="app-global-footer">
+        <div class="container footer-content-wrap">
+          <div class="footer-badge-box">
+            <span class="footer-badge-pill">🎓 STI de A à Z • Baccalauréat Tunisie</span>
+          </div>
+          <p class="footer-disclaimer-text">
+            Site de révision interactif réalisé par des élèves, basé sur les annexes officielles de l'Inspection Générale de la République Tunisienne. Vérifie toujours avec ton professeur.
+          </p>
+          <div class="footer-links-row">
+            <a onclick="navigateToHash('#/')">Accueil</a>
+            <span>•</span>
+            <a onclick="navigateToHash('#/html5')">HTML5</a>
+            <span>•</span>
+            <a onclick="navigateToHash('#/css3')">CSS3</a>
+            <span>•</span>
+            <a onclick="navigateToHash('#/javascript')">JavaScript</a>
+            <span>•</span>
+            <a onclick="navigateToHash('#/sql')">SQL</a>
+            <span>•</span>
+            <a onclick="navigateToHash('#/algo')">Algorithme</a>
+            <span>•</span>
+            <a onclick="navigateToHash('#/lessons')">Cours PDF</a>
+          </div>
+        </div>
+      </footer>
+    </main>
     </div> <!-- fin .app-main-content -->
   </div> <!-- fin .app-shell -->
 
   <!-- BARRE DE NAVIGATION INFÉRIEURE MOBILE (< 1024px) -->
   <nav class="mobile-bottom-nav" id="mobileBottomNav">
-    <button class="mobile-bottom-item active" id="bottomNavHome" onclick="handleHomeBottomNav()">
+    <button class="mobile-bottom-item active" id="bottomNavHome" onclick="navigateToHash('#/')">
       <span class="icon">🏠</span>
       <span>Accueil</span>
     </button>
-    <button class="mobile-bottom-item" id="bottomNavSearch" onclick="openGlobalSearchModal()">
-      <span class="icon">🔍</span>
-      <span>Recherche</span>
-    </button>
-    <button class="mobile-bottom-item" id="bottomNavLessons" onclick="switchView('lessons')">
+    <button class="mobile-bottom-item" id="bottomNavLessons" onclick="navigateToHash('#/lessons')">
       <span class="icon">📚</span>
       <span>Cours PDF</span>
     </button>
@@ -3660,7 +3720,14 @@ app.exec_()</code></pre>
   <script src="data.js?v=21.0"></script>
   <script src="css_engine.js?v=21.0"></script>
   <script src="algo_pratique_engine.js?v=21.0"></script>
-  <script src="pomodoro_engine.js?v=21.0"></script>
-  <script src="app.js?v=21.0"></script>
+  <script src="pomodoro_engine.js?v=22.0"></script>
+  <script src="app.js?v=22.0"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      });
+    }
+  </script>
 </body>
 </html>
