@@ -196,16 +196,20 @@ const PomodoroEngine = (function () {
   }
 
   function skipSession() {
+    const wasRunning = state.isRunning;
     pauseTimer();
     if (state.mode === 'work') {
-      // Passer à la pause
+      // Passer à la pause automatiquement
       state.mode = 'break';
       state.timeLeft = state.breakDuration * 60;
       state.totalSecondsForCurrent = state.timeLeft;
       playNotificationChime();
-      showNotificationToast('☕ Pause méritée ! Reposez vos yeux quelques minutes.');
+      showNotificationToast(`☕ Pause relaxante de ${state.breakDuration} min démarrée automatiquement !`);
+      if (wasRunning) {
+        startTimer();
+      }
     } else {
-      // Passer au cycle d'étude suivant
+      // Passer au cycle d'étude suivant automatiquement
       if (state.currentCycle < state.totalCycles) {
         state.currentCycle++;
       } else {
@@ -215,37 +219,53 @@ const PomodoroEngine = (function () {
       state.timeLeft = state.durationOption * 60;
       state.totalSecondsForCurrent = state.timeLeft;
       playNotificationChime();
-      showNotificationToast('🚀 Nouveau cycle d\'étude démarré ! Concentration maximale.');
+      showNotificationToast(`🚀 Session d'étude ${state.currentCycle}/${state.totalCycles} (${state.durationOption} min) démarrée !`);
+      if (wasRunning) {
+        startTimer();
+      }
     }
     updateAllDisplays();
   }
 
   function handleSessionComplete() {
-    pauseTimer();
     playNotificationChime();
 
     if (state.mode === 'work') {
+      // 1. Fin de session d'étude (25 min ou 50 min) -> Démarrage AUTOMATIQUE de la pause
       state.mode = 'break';
       state.timeLeft = state.breakDuration * 60;
       state.totalSecondsForCurrent = state.timeLeft;
-      showNotificationToast(`☕ Session ${state.currentCycle}/${state.totalCycles} terminée ! Prenez ${state.breakDuration} min de pause.`);
+      showNotificationToast(`☕ Session d'étude terminée ! Votre pause relaxante de ${state.breakDuration} minutes a démarré automatiquement.`);
+      updateAllDisplays();
+      
+      // S'assurer que le minuteur tourne bien automatiquement
+      if (!state.isRunning) {
+        startTimer();
+      }
     } else {
+      // 2. Fin de la pause -> Démarrage AUTOMATIQUE du cycle suivant
       if (state.currentCycle < state.totalCycles) {
         state.currentCycle++;
         state.mode = 'work';
         state.timeLeft = state.durationOption * 60;
         state.totalSecondsForCurrent = state.timeLeft;
-        showNotificationToast(`🎯 Pause terminée. Début de la session ${state.currentCycle}/${state.totalCycles}.`);
+        showNotificationToast(`🎯 Pause terminée ! Début automatique de la session d'étude ${state.currentCycle}/${state.totalCycles} (${state.durationOption} min).`);
+        updateAllDisplays();
+        
+        if (!state.isRunning) {
+          startTimer();
+        }
       } else {
-        // Objectif total atteint !
+        // 3. Objectif total accompli (toutes les heures choisies sont terminées)
+        pauseTimer();
         state.currentCycle = 1;
         state.mode = 'work';
         state.timeLeft = state.durationOption * 60;
         state.totalSecondsForCurrent = state.timeLeft;
-        showNotificationToast(`🏆 Félicitations ! Vous avez complété votre objectif de ${state.targetHours}h d'étude.`);
+        showNotificationToast(`🏆 Félicitations ! Vous avez accompli votre objectif de ${state.targetHours}h d'étude avec brio.`);
+        updateAllDisplays();
       }
     }
-    updateAllDisplays();
   }
 
   // -------------------------------------------------------------
