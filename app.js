@@ -1523,14 +1523,18 @@ let virtualSqlDb = JSON.parse(JSON.stringify(SQL_DATABASE_INIT));
 // =============================================================
 // ROUTEUR HASH NATIVE & NAVIGATION SANS RECHARGEMENT (Mobile-First)
 // =============================================================
-const OFFICIAL_ALGO_CHAPTER_LIST = [
-  "Chapitre 1 : Les structures de données (Fichiers & Enregistrements)",
-  "Chapitre 2 : La récursivité",
-  "Chapitre 3 : Conversion entre les bases",
-  "Chapitre 4 : Arithmétique",
-  "Chapitre 5 : Approximation et optimisation",
-  "Chapitre 6 : Matrices"
-];
+const OFFICIAL_ALGO_CHAPTER_LIST = (typeof CURRICULUM !== 'undefined')
+  ? CURRICULUM.chapters.map(c => c.fullTitle)
+  : [
+      "Chapitre 1 : Les fichiers binaires et fichiers texte",
+      "Chapitre 2 : Récursivité",
+      "Chapitre 3 : Conversion entre les bases",
+      "Chapitre 4 : Arithmétique",
+      "Chapitre 5 : Approximation et optimisation",
+      "Chapitre 6 : Les tableaux",
+      "Chapitre 7 : Matrices",
+      "Chapitre 8 : Les suites"
+    ];
 
 const VIEW_TO_HASH_MAP = {
   'home': '#/',
@@ -1553,11 +1557,23 @@ function parseAppHash(hash) {
   let clean = (hash || '').replace(/^#[\/]?/, '').trim().toLowerCase();
   if (!clean || clean === 'home') return { view: 'home' };
 
-  if (clean.startsWith('algo/theorique/ch') || clean.startsWith('theorique/ch') || clean.startsWith('algo-theorique/ch')) {
-    const match = clean.match(/ch([1-6])/);
-    if (match) {
-      const idx = parseInt(match[1], 10) - 1;
-      return { view: 'algo-theorique', chapter: OFFICIAL_ALGO_CHAPTER_LIST[idx] };
+  // Algo Théorique routes avec slugs: #/algo/theorique/<slug>, #/algo/theorique/chX, etc.
+  if (clean.startsWith('algo/theorique') || clean.startsWith('theorique') || clean.startsWith('algo-theorique')) {
+    const sub = clean.replace(/^(algo\/theorique|theorique|algo-theorique)\/?/, '').trim();
+    if (sub) {
+      const ch = (typeof CURRICULUM !== 'undefined') ? (CURRICULUM.getChapterBySlug(sub) || CURRICULUM.getChapterByCategory(sub)) : null;
+      if (ch) {
+        return { view: 'algo-theorique', chapter: ch.fullTitle, chapterSlug: ch.slug, chapterObj: ch };
+      }
+    }
+    return { view: 'algo-theorique', chapter: null, chapterSlug: 'all' };
+  }
+
+  // Support direct des slugs ou ch1..ch8 (ex: #/tableaux, #/recursivite, #/ch2, #/matrices, #/ch6, #/suites)
+  if (typeof CURRICULUM !== 'undefined') {
+    const directCh = CURRICULUM.getChapterBySlug(clean);
+    if (directCh) {
+      return { view: 'algo-theorique', chapter: directCh.fullTitle, chapterSlug: directCh.slug, chapterObj: directCh };
     }
   }
 
@@ -1604,10 +1620,10 @@ function handleRouteFromHash() {
 
   switchView(route.view, true);
 
-  if (route.view === 'algo-theorique' && route.chapter) {
-    if (typeof setAlgoTheoriqueCategory === 'function') {
-      setAlgoTheoriqueCategory(route.chapter);
-    }
+  if (route.view === 'algo-theorique') {
+    currentAlgoTheoriqueCategory = route.chapterSlug || route.chapter || 'all';
+    if (typeof renderAlgoTheoriqueCategories === 'function') renderAlgoTheoriqueCategories();
+    if (typeof renderAlgoTheoriqueCards === 'function') renderAlgoTheoriqueCards();
   }
 
   isRouterNavigating = false;
@@ -1631,12 +1647,13 @@ function handleAppBack() {
 
 function updateDataCountersUI() {
   try {
-    const htmlCount = (typeof DATA !== 'undefined' && DATA.html) ? DATA.html.length : 56;
+    const htmlCount = (typeof DATA !== 'undefined' && DATA.html) ? DATA.html.length : 57;
     const cssCount = (typeof DATA !== 'undefined' && DATA.css) ? DATA.css.length : 61;
     const jsCount = (typeof DATA !== 'undefined' && DATA.js) ? DATA.js.length : 63;
     const sqlCount = (typeof DATA !== 'undefined' && DATA.sql) ? DATA.sql.length : 57;
     const qtCount = (typeof DATA !== 'undefined' && DATA.algo_pratique) ? DATA.algo_pratique.length : 20;
     const algoTheoriqueCount = (typeof DATA !== 'undefined' && DATA.algo_theorique) ? DATA.algo_theorique.length : 59;
+    const totalChapters = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getTotalAlgoChapters() : 8;
 
     const elHtmlBadge = document.getElementById('htmlBadgeCount');
     if (elHtmlBadge) elHtmlBadge.textContent = htmlCount;
@@ -1650,6 +1667,44 @@ function updateDataCountersUI() {
     if (elQtBadge) elQtBadge.textContent = qtCount;
     const elThBadge = document.getElementById('algoTheoriqueBadgeCount');
     if (elThBadge) elThBadge.textContent = algoTheoriqueCount;
+
+    // Badges page d'accueil
+    const homeHtml = document.getElementById('homeHtmlBadge');
+    if (homeHtml) homeHtml.textContent = `${htmlCount} notions & balises`;
+    const homeCss = document.getElementById('homeCssBadge');
+    if (homeCss) homeCss.textContent = `${cssCount} propriétés (#id)`;
+    const homeJs = document.getElementById('homeJsBadge');
+    if (homeJs) homeJs.textContent = `${jsCount} fonctions & DOM`;
+    const homeSql = document.getElementById('homeSqlBadge');
+    if (homeSql) homeSql.textContent = `${sqlCount} commandes & requêtes`;
+    const homeQt = document.getElementById('homeAlgoPratiqueBadge');
+    if (homeQt) homeQt.textContent = `${qtCount} notions & simulateur`;
+    const homeAlgoTheorique = document.getElementById('homeAlgoTheoriqueBadge');
+    if (homeAlgoTheorique) homeAlgoTheorique.textContent = `${algoTheoriqueCount} algorithmes complets`;
+    const homeAlgoTitle = document.getElementById('homeAlgoTheoriqueTitle');
+    if (homeAlgoTitle) homeAlgoTitle.textContent = `Théorique (${totalChapters} Chapitres Officiels)`;
+
+    // Badges onglets fiches détaillées
+    const tabHtml = document.getElementById('tabBtnHtmlCards');
+    if (tabHtml && tabHtml.querySelector('span:last-child')) {
+      tabHtml.querySelector('span:last-child').textContent = `Fiches Détaillées & Recherche (${htmlCount} notions)`;
+    }
+    const tabCss = document.getElementById('tabBtnCssCards');
+    if (tabCss && tabCss.querySelector('span:last-child')) {
+      tabCss.querySelector('span:last-child').textContent = `Fiches Détaillées & Recherche (${cssCount} propriétés)`;
+    }
+    const tabJs = document.getElementById('tabBtnCardsGrid');
+    if (tabJs && tabJs.querySelector('span:last-child')) {
+      tabJs.querySelector('span:last-child').textContent = `Fiches Détaillées & Recherche (${jsCount} fonctions)`;
+    }
+    const tabSql = document.getElementById('tabBtnSqlCards');
+    if (tabSql && tabSql.querySelector('span:last-child')) {
+      tabSql.querySelector('span:last-child').textContent = `Fiches Détaillées & Recherche (${sqlCount} commandes)`;
+    }
+
+    // Badges accueil Algo
+    const algoHomeTh = document.getElementById('algoHomeTheoriqueBadge');
+    if (algoHomeTh) algoHomeTh.textContent = `${algoTheoriqueCount} Algorithmes & Modules`;
 
     // Badges sidebar
     const sideHtml = document.getElementById('sideBadgeHtml');
@@ -7177,7 +7232,7 @@ async function handleUploadLesson(e) {
     if (r.checked && r.value === 'link') isFileMode = false;
   }
 
-  const subjectLabels = {
+  const subjectLabels = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getSubjectLabelsMap() : {
     html: "HTML5",
     css: "CSS3",
     js: "JavaScript",
@@ -7185,26 +7240,24 @@ async function handleUploadLesson(e) {
     "algo-pratique": "Pratique (Qt ➔ Thonny)",
     "algo-theorique": "Théorique (Algorithme)",
     "algo-ch1-fichiers": "Ch 1 : Fichiers Binaires & Texte",
-    "algo-ch2-recurrence": "Ch 2 : Récurrence",
-    "algo-ch2-recurrence": "Ch 2 : Récurrence",
+    "algo-ch2-recursivite": "Ch 2 : Récursivité",
+    "algo-ch2-recurrence": "Ch 2 : Récursivité",
     "algo-ch3-bases": "Ch 3 : Conversion entre les bases",
-    "algo-ch6-matrices": "Ch 6 : Matrices",
     "algo-ch4-arithmetique": "Ch 4 : Arithmétique",
-    "algo-ch5-approximation": "Ch 5 : Approximation & Optimisation"
+    "algo-ch5-approximation": "Ch 5 : Approximation & Optimisation",
+    "algo-ch6-tableaux": "Ch 6 : Les tableaux",
+    "algo-ch6-matrices": "Ch 7 : Matrices",
+    "algo-ch7-matrices": "Ch 7 : Matrices",
+    "algo-ch8-suites": "Ch 8 : Les suites"
   };
 
-  const subjectTags = {
+  const subjectTags = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getSubjectTagsMap() : {
     html: ["html", "html5", "web", "balise", "formulaire"],
     css: ["css", "css3", "style", "design", "animation"],
     js: ["js", "javascript", "script", "controle", "validation"],
     sql: ["sql", "bdd", "base", "table", "requete", "select"],
     "algo-pratique": ["algo", "algorithme", "pratique", "qt", "designer", "thonny", "python", "interface"],
-    "algo-theorique": ["algo", "algorithme", "theorique", "bac", "tri", "matrice", "pattern", "bases", "recursivite"],
-    "algo-ch1-fichiers": ["algo", "algorithme", "fichiers", "texte", "binaire", "pickle", "dump", "load", "eof", "recréer", "ouvrir", "associer"],
-    "algo-ch2-recurrence": ["algo", "algorithme", "recurrence", "recursivite", "base", "general"],
-    "algo-ch3-bases": ["algo", "algorithme", "bases", "conversion", "binaire", "octal", "hexadecimal", "decimal"],
-    "algo-ch4-arithmetique": ["algo", "algorithme", "arithmetique", "premier", "pgcd", "ppcm", "factorielle", "puissance"],
-    "algo-ch5-approximation": ["algo", "algorithme", "approximation", "optimisation", "aires", "rectangles", "trapezes", "integration"]
+    "algo-theorique": ["algo", "algorithme", "theorique", "bac", "tri", "matrice", "pattern", "bases", "recursivite", "tableaux", "suites"]
   };
 
   const typeLabels = {
@@ -7472,7 +7525,7 @@ function importLessonsBackup(e) {
         return;
       }
 
-      const validSubjects = ['html', 'css', 'js', 'sql', 'algo-pratique', 'algo-theorique', 'algo-ch1-fichiers', 'algo-ch2-recurrence', 'algo-ch3-bases', 'algo-ch4-arithmetique', 'algo-ch5-approximation', 'algo-ch6-matrices'];
+      const validSubjects = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getValidSubjects() : ['html', 'css', 'js', 'sql', 'algo-pratique', 'algo-theorique', 'algo-ch1-fichiers', 'algo-ch2-recursivite', 'algo-ch2-recurrence', 'algo-ch3-bases', 'algo-ch4-arithmetique', 'algo-ch5-approximation', 'algo-ch6-tableaux', 'algo-ch6-matrices', 'algo-ch7-matrices', 'algo-ch8-suites'];
       let importedCount = 0;
 
       for (let l of data.customLessons) {
@@ -7522,7 +7575,8 @@ async function loadOfficialAlgoPdfPacks() {
     await STILessonsDB.save(l);
   }
   await initLessonsModule();
-  alert(`✓ Les ${packs.length} cours officiels Baccalauréat (STI & 6 Chapitres d'Algorithme dont Matrices) ont été chargés avec succès !`);
+  const totalAlgoCh = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getTotalAlgoChapters() : 8;
+  alert(`✓ Les ${packs.length} cours officiels Baccalauréat (STI & ${totalAlgoCh} Chapitres d'Algorithme) ont été chargés avec succès !`);
 }
 
 async function resetToDefaultLessons() {
@@ -8207,41 +8261,64 @@ const ALGO_CHAPTER_METAS = {
   }
 };
 
-const OFFICIAL_ALGO_CHAPTERS = [
-  "Chapitre 1 : Les fichiers binaires et fichiers texte",
-  "Chapitre 2 : Récurrence",
-  "Chapitre 3 : Conversion entre les bases",
-  "Chapitre 4 : Arithmétique",
-  "Chapitre 5 : Approximation et optimisation",
-  "Chapitre 6 : Matrices"
-];
+const OFFICIAL_ALGO_CHAPTERS = (typeof CURRICULUM !== 'undefined')
+  ? CURRICULUM.chapters.map(c => c.fullTitle)
+  : [
+      "Chapitre 1 : Les fichiers binaires et fichiers texte",
+      "Chapitre 2 : Récursivité",
+      "Chapitre 3 : Conversion entre les bases",
+      "Chapitre 4 : Arithmétique",
+      "Chapitre 5 : Approximation et optimisation",
+      "Chapitre 6 : Les tableaux",
+      "Chapitre 7 : Matrices",
+      "Chapitre 8 : Les suites"
+    ];
 
 function renderAlgoTheoriqueCategories() {
   const bar = document.getElementById('algoTheoriqueCategories');
   if (!bar) return;
 
   const items = (typeof DATA !== 'undefined' && DATA && DATA.algo_theorique) ? DATA.algo_theorique : [];
-  const categories = ['all', ...OFFICIAL_ALGO_CHAPTERS];
+  const chapters = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.chapters : [];
 
-  bar.innerHTML = categories.map(cat => {
-    const isAct = cat === currentAlgoTheoriqueCategory;
-    const count = cat === 'all' ? items.length : items.filter(x => x.category === cat).length;
-    let label = '✨ Tout afficher';
-    if (cat !== 'all') {
-      const meta = ALGO_CHAPTER_METAS[cat];
-      label = meta ? `${meta.icon} ${meta.shortName}` : cat;
-    }
+  const allActive = !currentAlgoTheoriqueCategory || currentAlgoTheoriqueCategory === 'all';
+  let html = `<button type="button" class="cat-pill ${allActive ? 'active' : ''}" onclick="setAlgoTheoriqueCategory('all')">
+    <span>✨ Tout afficher</span>
+    <span class="cat-pill-count">${items.length}</span>
+  </button>`;
 
-    const safeCat = cat.replace(/'/g, "\\'");
-    return `<button type="button" class="cat-pill ${isAct ? 'active' : ''}" onclick="setAlgoTheoriqueCategory('${safeCat}')">
-      <span>${label}</span>
+  chapters.forEach(ch => {
+    const isAct = !allActive && (
+      currentAlgoTheoriqueCategory === ch.slug ||
+      currentAlgoTheoriqueCategory === ch.fullTitle ||
+      (typeof CURRICULUM !== 'undefined' && CURRICULUM.matchesCategory(currentAlgoTheoriqueCategory, ch))
+    );
+    const count = items.filter(x => {
+      return (typeof CURRICULUM !== 'undefined') ? CURRICULUM.matchesCategory(x.category, ch) : (x.category === ch.fullTitle);
+    }).length;
+
+    html += `<button type="button" class="cat-pill ${isAct ? 'active' : ''}" onclick="setAlgoTheoriqueCategory('${ch.slug}')">
+      <span>${ch.iconEmoji} ${ch.shortTitle}</span>
       <span class="cat-pill-count">${count}</span>
     </button>`;
-  }).join('');
+  });
+
+  bar.innerHTML = html;
 }
 
 function setAlgoTheoriqueCategory(cat) {
   currentAlgoTheoriqueCategory = cat;
+  if (cat === 'all') {
+    if (window.location.hash !== '#/algo/theorique') {
+      history.replaceState(null, '', '#/algo/theorique');
+    }
+  } else {
+    const ch = (typeof CURRICULUM !== 'undefined') ? (CURRICULUM.getChapterBySlug(cat) || CURRICULUM.getChapterByCategory(cat)) : null;
+    const slug = ch ? ch.slug : cat;
+    if (window.location.hash !== `#/algo/theorique/${slug}`) {
+      history.replaceState(null, '', `#/algo/theorique/${slug}`);
+    }
+  }
   renderAlgoTheoriqueCategories();
   renderAlgoTheoriqueCards();
 }
@@ -8421,8 +8498,35 @@ function renderAlgoTheoriqueCards() {
   const items = (typeof DATA !== 'undefined' && DATA && DATA.algo_theorique) ? DATA.algo_theorique : [];
   const q = currentAlgoTheoriqueSearch.toLowerCase();
 
+  const allChapters = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.chapters : [];
+
+  let chaptersToShow = allChapters;
+  if (currentAlgoTheoriqueCategory && currentAlgoTheoriqueCategory !== 'all') {
+    const selectedCh = (typeof CURRICULUM !== 'undefined')
+      ? (CURRICULUM.getChapterBySlug(currentAlgoTheoriqueCategory) || CURRICULUM.getChapterByCategory(currentAlgoTheoriqueCategory))
+      : null;
+    if (selectedCh) {
+      chaptersToShow = [selectedCh];
+    }
+  }
+
   const filteredAll = items.filter(item => {
-    const matchCat = (currentAlgoTheoriqueCategory === 'all' || item.category === currentAlgoTheoriqueCategory);
+    let matchCat = false;
+    if (!currentAlgoTheoriqueCategory || currentAlgoTheoriqueCategory === 'all') {
+      matchCat = true;
+    } else {
+      const selectedCh = (typeof CURRICULUM !== 'undefined')
+        ? (CURRICULUM.getChapterBySlug(currentAlgoTheoriqueCategory) || CURRICULUM.getChapterByCategory(currentAlgoTheoriqueCategory))
+        : null;
+      if (selectedCh) {
+        matchCat = (typeof CURRICULUM !== 'undefined')
+          ? CURRICULUM.matchesCategory(item.category, selectedCh)
+          : (item.category === selectedCh.fullTitle);
+      } else {
+        matchCat = (item.category === currentAlgoTheoriqueCategory);
+      }
+    }
+
     const matchSearch = (!q || 
       item.name.toLowerCase().includes(q) ||
       (item.summary && item.summary.toLowerCase().includes(q)) ||
@@ -8442,24 +8546,23 @@ function renderAlgoTheoriqueCards() {
     return;
   }
 
-  const chaptersToShow = (currentAlgoTheoriqueCategory === 'all')
-    ? OFFICIAL_ALGO_CHAPTERS
-    : [currentAlgoTheoriqueCategory];
-
-  chaptersToShow.forEach(catName => {
-    const chapterItems = filteredAll.filter(x => x.category === catName);
+  chaptersToShow.forEach(ch => {
+    const chapterItems = filteredAll.filter(x => {
+      return (typeof CURRICULUM !== 'undefined')
+        ? CURRICULUM.matchesCategory(x.category, ch)
+        : (x.category === ch.fullTitle || x.category === ch.title);
+    });
     if (chapterItems.length === 0) return;
 
-    const meta = ALGO_CHAPTER_METAS[catName] || {
-      icon: "📖",
-      shortName: catName,
-      color: "#fbbf24",
-      border: "#f59e0b",
-      desc: catName
+    const meta = {
+      icon: ch.iconEmoji || "📖",
+      shortName: ch.shortTitle || ch.title,
+      color: ch.color || "#fbbf24",
+      border: ch.borderColor || "#f59e0b",
+      desc: ch.description || ""
     };
 
-    
-    const isMatricesCat = (catName === 'Chapitre 6 : Matrices');
+    const isMatricesCat = (ch.slug === 'matrices');
     let matrixGuideHtml = '';
     if (isMatricesCat && !currentAlgoTheoriqueSearch) {
       matrixGuideHtml = `
@@ -8505,7 +8608,7 @@ function renderAlgoTheoriqueCards() {
             ${meta.icon}
           </div>
           <div>
-            <h3 style="margin: 0; font-size: 1.15rem; color: ${meta.color}; font-weight: 800;">${escapeHtml(catName)}</h3>
+            <h3 style="margin: 0; font-size: 1.15rem; color: ${meta.color}; font-weight: 800;">${escapeHtml(ch.fullTitle)}</h3>
             <span style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4;">${escapeHtml(meta.desc)}</span>
           </div>
         </div>
@@ -8960,7 +9063,7 @@ const VIEW_METAS = {
   'admin': { module: 'admin', modLabel: 'Administration', title: 'Espace Enseignant' },
   'algo-home': { module: 'algo', modLabel: 'Algorithme', title: 'Accueil Algorithme' },
   'algo-pratique': { module: 'algo', modLabel: 'Algorithme', title: 'Pratique (Qt ➔ Thonny Python)' },
-  'algo-theorique': { module: 'algo', modLabel: 'Algorithme', title: 'Théorique (6 Chapitres Bac Info)' }
+  'algo-theorique': { module: 'algo', modLabel: 'Algorithme', title: (typeof CURRICULUM !== 'undefined') ? `Théorique (${CURRICULUM.getTotalAlgoChapters()} Chapitres Bac Info)` : 'Théorique (8 Chapitres Bac Info)' }
 };
 
 function updateBreadcrumbBar(viewName) {
@@ -9383,14 +9486,15 @@ async function clearAllLessonsFromDB() {
 // Mise à jour dynamique du Titre de la page et de la Description Meta
 // -------------------------------------------------------------
 function updatePageMeta(viewName) {
+  const totalAlgoCh = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getTotalAlgoChapters() : 8;
   const metaMap = {
     'home': {
       title: "Accueil • STI de A à Z — Portail de Révision Bac STI & Algorithme Bac Info",
-      desc: "Portail complet d'étude pour le Baccalauréat tunisien : STI (HTML5, CSS3, JavaScript, SQL) et Algorithmique (Qt Designer, Thonny Python, 6 chapitres théoriques)."
+      desc: `Portail complet d'étude pour le Baccalauréat tunisien : STI (HTML5, CSS3, JavaScript, SQL) et Algorithmique (Qt Designer, Thonny Python, ${totalAlgoCh} chapitres théoriques).`
     },
     'html': {
       title: "HTML5 • STI de A à Z — Annexe Officielle & Balises Bac STI",
-      desc: "Guide exhaustif des 57 balises HTML5 officielles du Bac STI avec aperçu visuel, formulaire d'examen et exemples conformes."
+      desc: "Guide exhaustif des balises HTML5 officielles du Bac STI avec aperçu visuel, formulaire d'examen et exemples conformes."
     },
     'css': {
       title: "CSS3 • STI de A à Z — Annexe Officielle & Propriétés Bac STI",
@@ -9410,15 +9514,15 @@ function updatePageMeta(viewName) {
     },
     'algo-home': {
       title: "Algorithme & Programmation • Accueil Module Bac Informatique",
-      desc: "Espace de révision officiel pour l'algorithmique au Bac tunisien : pratique Qt Designer & Thonny et 6 chapitres théoriques."
+      desc: `Espace de révision officiel pour l'algorithmique au Bac tunisien : pratique Qt Designer & Thonny et ${totalAlgoCh} chapitres théoriques.`
     },
     'algo-pratique': {
       title: "Pratique Qt Designer ➔ Thonny Python • Algorithme Bac Info",
       desc: "Simulateur visuel interactif et fiches pratiques des 20 notions Qt Designer et Python pour l'épreuve pratique du Bac."
     },
     'algo-theorique': {
-      title: "Algorithmique Théorique • 6 Chapitres Officiels Bac Informatique",
-      desc: "Les 6 chapitres théoriques officiels (Fichiers, Récurrence, Bases, Arithmétique, Approximation, Matrices) avec algorithmes et Python."
+      title: `Algorithmique Théorique • ${totalAlgoCh} Chapitres Officiels Bac Informatique`,
+      desc: `Les ${totalAlgoCh} chapitres théoriques officiels avec algorithmes complets, T.D.O et scripts Python conformes Bac.`
     },
     'admin': {
       title: "Espace Enseignant • Dépôt & Gestion Sécurisée des Documents PDF",

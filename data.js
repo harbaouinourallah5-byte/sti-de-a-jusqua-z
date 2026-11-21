@@ -558,6 +558,23 @@ const DATA = {
       "previewHtml": "<div>\n        <label style=\"display:block; font-size:12px; margin-bottom:4px; font-weight:600;\">Menu déroulant &lt;select&gt; :</label>\n        <select style=\"padding:5px; border:1px solid #cbd5e1; border-radius:4px; width:100%; font-size:12px;\">\n          <option selected>Sciences & Technologies (STI)</option>\n          <option>Mathématiques</option>\n          <option>Informatique</option>\n        </select>\n      </div>"
     },
     {
+      "id": "tag-button",
+      "category": "Éléments de formulaire",
+      "tag": "<button>",
+      "name": "Bouton d'action et soumission",
+      "summary": "Définit un bouton cliquable pouvant contenir du texte enrichi, des icônes ou des éléments graphiques.",
+      "howToUse": "L'attribut type peut valoir 'submit' (par défaut, envoi du formulaire), 'reset' (remise à zéro des champs) ou 'button' (bouton neutre exécutant du JavaScript via onclick).",
+      "attributes": [
+        "type (button | submit | reset)",
+        "name (nom du bouton)",
+        "value (valeur transmise lors de la soumission)",
+        "disabled (désactive le bouton)",
+        "form (associe le bouton à un formulaire précis par son id)"
+      ],
+      "code": "<!-- Bouton d'action JavaScript -->\n<button type=\"button\" onclick=\"calculerMoyenne()\">\n  📊 Calculer la moyenne\n</button>\n\n<!-- Bouton de soumission du formulaire -->\n<button type=\"submit\">\n  🚀 Envoyer le formulaire\n</button>",
+      "previewHtml": "<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">\n        <button type=\"button\" style=\"padding:6px 14px; background:#4f46e5; color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer; font-size:12px; display:inline-flex; align-items:center; gap:6px;\">\n          <span>📊</span> Calculer\n        </button>\n        <button type=\"submit\" style=\"padding:6px 14px; background:#10b981; color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer; font-size:12px; display:inline-flex; align-items:center; gap:6px;\">\n          <span>🚀</span> Soumettre\n        </button>\n      </div>"
+    },
+    {
       "id": "event-onclick",
       "category": "Évènements",
       "tag": "onclick",

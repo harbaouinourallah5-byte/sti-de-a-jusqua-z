@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=24.0">
+  <link rel="stylesheet" href="style.css?v=25.0">
   <!-- INITIALISATION IMMÉDIATE DU THÈME & TOGGLE SANS LATENCE -->
   <script>
     (function() {
@@ -239,7 +239,7 @@
         <div class="sidebar-group" id="sidebarGroupAlgo">
           <div class="sidebar-group-header">
             <span class="group-title">Algorithmique</span>
-            <span class="group-badge">6 Chapitres</span>
+            <span class="group-badge">8 Chapitres</span>
           </div>
           <div class="sidebar-group-links">
             <a class="sidebar-link" data-view="algo-home" onclick="switchView('algo-home')">
@@ -256,7 +256,7 @@
             <a class="sidebar-link" data-view="algo-theorique" onclick="switchView('algo-theorique')">
               <span class="nav-bullet algo"></span>
               <span class="nav-icon">📖</span>
-              <span class="nav-label">Théorique (6 Chapitres)</span>
+              <span class="nav-label">Théorique (8 Chapitres)</span>
               <span class="nav-count">59</span>
             </a>
           </div>
@@ -388,28 +388,28 @@
                   <span>🌐</span>
                   <span>HTML5</span>
                 </div>
-                <span class="big-module-topic-badge">57 notions &amp; balises</span>
+                <span class="big-module-topic-badge" id="homeHtmlBadge">56 notions &amp; balises</span>
               </li>
               <li class="big-module-topic-item" onclick="event.stopPropagation(); switchView('css')">
                 <div class="big-module-topic-name">
                   <span>🎨</span>
                   <span>CSS3</span>
                 </div>
-                <span class="big-module-topic-badge">61 propriétés (#id)</span>
+                <span class="big-module-topic-badge" id="homeCssBadge">61 propriétés (#id)</span>
               </li>
               <li class="big-module-topic-item" onclick="event.stopPropagation(); switchView('js')">
                 <div class="big-module-topic-name">
                   <span>⚡</span>
                   <span>JavaScript</span>
                 </div>
-                <span class="big-module-topic-badge">63 fonctions &amp; DOM</span>
+                <span class="big-module-topic-badge" id="homeJsBadge">63 fonctions &amp; DOM</span>
               </li>
               <li class="big-module-topic-item" onclick="event.stopPropagation(); switchView('sql')">
                 <div class="big-module-topic-name">
                   <span>🗄️</span>
                   <span>SQL MySQL</span>
                 </div>
-                <span class="big-module-topic-badge">57 commandes &amp; requêtes</span>
+                <span class="big-module-topic-badge" id="homeSqlBadge">57 commandes &amp; requêtes</span>
               </li>
             </ul>
             <button class="big-module-cta-btn" onclick="event.stopPropagation(); switchView('html')">
@@ -428,7 +428,7 @@
               </div>
             </div>
             <p class="big-module-desc">
-              Le programme officiel tunisien structuré en 5 chapitres rigoureux et son laboratoire interactif :
+              Le programme officiel tunisien structuré en 8 chapitres rigoureux et son laboratoire interactif :
             </p>
             <ul class="big-module-topics-list">
               <li class="big-module-topic-item" onclick="event.stopPropagation(); switchView('algo-pratique')">
@@ -436,14 +436,14 @@
                   <span>🛠️</span>
                   <span>Pratique (Qt Designer ➔ Thonny)</span>
                 </div>
-                <span class="big-module-topic-badge">20 notions &amp; simulateur</span>
+                <span class="big-module-topic-badge" id="homeAlgoPratiqueBadge">20 notions &amp; simulateur</span>
               </li>
               <li class="big-module-topic-item" onclick="event.stopPropagation(); switchView('algo-theorique')">
                 <div class="big-module-topic-name">
                   <span>📖</span>
-                  <span>Théorique (5 Chapitres Officiels)</span>
+                  <span id="homeAlgoTheoriqueTitle">Théorique (8 Chapitres Officiels)</span>
                 </div>
-                <span class="big-module-topic-badge">47 algorithmes complets</span>
+                <span class="big-module-topic-badge" id="homeAlgoTheoriqueBadge">59 algorithmes complets</span>
               </li>
               <li class="big-module-topic-item" onclick="event.stopPropagation(); openLessonsForModule('algo')">
                 <div class="big-module-topic-name">
@@ -2304,21 +2304,14 @@
               <button class="cat-btn" onclick="filterLessonsBySubject('algo-theorique')" style="border-color: rgba(245, 158, 11, 0.5); color: #fbbf24; font-size: 0.82rem; padding: 6px 12px; font-weight:700;">
                 📖 Tous les cours Algo
               </button>
-              <button class="cat-btn" onclick="filterLessonsBySubject('algo-ch1-fichiers')" style="border-color: rgba(245, 158, 11, 0.35); color: #fbbf24; font-size: 0.8rem; padding: 5px 10px;">
-                📁 Ch 1 : Fichiers
-              </button>
-              <button class="cat-btn" onclick="filterLessonsBySubject('algo-ch2-recurrence')" style="border-color: rgba(245, 158, 11, 0.35); color: #fbbf24; font-size: 0.8rem; padding: 5px 10px;">
-                🔄 Ch 2 : Récurrence
-              </button>
-              <button class="cat-btn" onclick="filterLessonsBySubject('algo-ch3-bases')" style="border-color: rgba(245, 158, 11, 0.35); color: #fbbf24; font-size: 0.8rem; padding: 5px 10px;">
-                🔢 Ch 3 : Bases
-              </button>
-              <button class="cat-btn" onclick="filterLessonsBySubject('algo-ch4-arithmetique')" style="border-color: rgba(245, 158, 11, 0.35); color: #fbbf24; font-size: 0.8rem; padding: 5px 10px;">
-                🧮 Ch 4 : Arithmétique
-              </button>
-              <button class="cat-btn" onclick="filterLessonsBySubject('algo-ch5-approximation')" style="border-color: rgba(245, 158, 11, 0.35); color: #fbbf24; font-size: 0.8rem; padding: 5px 10px;">
-                📈 Ch 5 : Approx
-              </button>
+              <button class="cat-btn" onclick="filterLessonsBySubject('algo-ch1-fichiers')" style="border-color: rgba(245, 158, 11, 0.35); color: #fbbf24; font-size: 0.8rem; padding: 5px 10px;">📁 Ch 1 : Fichiers</button>
+              <button class="cat-btn" onclick="filterLessonsBySubject('algo-ch2-recursivite')" style="border-color: rgba(245, 158, 11, 0.35); color: #fbbf24; font-size: 0.8rem; padding: 5px 10px;">🔄 Ch 2 : Récursivité</button>
+              <button class="cat-btn" onclick="filterLessonsBySubject('algo-ch3-bases')" style="border-color: rgba(245, 158, 11, 0.35); color: #fbbf24; font-size: 0.8rem; padding: 5px 10px;">🔢 Ch 3 : Bases</button>
+              <button class="cat-btn" onclick="filterLessonsBySubject('algo-ch4-arithmetique')" style="border-color: rgba(245, 158, 11, 0.35); color: #fbbf24; font-size: 0.8rem; padding: 5px 10px;">🧮 Ch 4 : Arithmétique</button>
+              <button class="cat-btn" onclick="filterLessonsBySubject('algo-ch5-approximation')" style="border-color: rgba(245, 158, 11, 0.35); color: #fbbf24; font-size: 0.8rem; padding: 5px 10px;">📈 Ch 5 : Approx</button>
+              <button class="cat-btn" onclick="filterLessonsBySubject('algo-ch6-tableaux')" style="border-color: rgba(245, 158, 11, 0.35); color: #fbbf24; font-size: 0.8rem; padding: 5px 10px;">📊 Ch 6 : Tableaux</button>
+              <button class="cat-btn" onclick="filterLessonsBySubject('algo-ch7-matrices')" style="border-color: rgba(245, 158, 11, 0.35); color: #fbbf24; font-size: 0.8rem; padding: 5px 10px;">📐 Ch 7 : Matrices</button>
+              <button class="cat-btn" onclick="filterLessonsBySubject('algo-ch8-suites')" style="border-color: rgba(245, 158, 11, 0.35); color: #fbbf24; font-size: 0.8rem; padding: 5px 10px;">🧬 Ch 8 : Suites</button>
             </div>
           </div>
 
@@ -2363,9 +2356,9 @@
               <span>📁</span>
               <span>Ch 1 Fichiers</span>
             </button>
-            <button class="subject-tab algo-ch2-recurrence" data-subject="algo-ch2-recurrence" onclick="filterLessonsBySubject('algo-ch2-recurrence')">
+            <button class="subject-tab algo-ch2-recursivite" data-subject="algo-ch2-recursivite" onclick="filterLessonsBySubject('algo-ch2-recursivite')">
               <span>🔄</span>
-              <span>Ch 2 Récurrence</span>
+              <span>Ch 2 Récursivité</span>
             </button>
             <button class="subject-tab algo-ch3-bases" data-subject="algo-ch3-bases" onclick="filterLessonsBySubject('algo-ch3-bases')">
               <span>🔢</span>
@@ -2379,9 +2372,17 @@
               <span>📈</span>
               <span>Ch 5 Approx</span>
             </button>
-            <button class="subject-tab algo-ch6-matrices" data-subject="algo-ch6-matrices" onclick="filterLessonsBySubject('algo-ch6-matrices')">
+            <button class="subject-tab algo-ch6-tableaux" data-subject="algo-ch6-tableaux" onclick="filterLessonsBySubject('algo-ch6-tableaux')">
+              <span>📊</span>
+              <span>Ch 6 Tableaux</span>
+            </button>
+            <button class="subject-tab algo-ch7-matrices" data-subject="algo-ch7-matrices" onclick="filterLessonsBySubject('algo-ch7-matrices')">
               <span>📐</span>
-              <span>Ch 6 Matrices</span>
+              <span>Ch 7 Matrices</span>
+            </button>
+            <button class="subject-tab algo-ch8-suites" data-subject="algo-ch8-suites" onclick="filterLessonsBySubject('algo-ch8-suites')">
+              <span>🧬</span>
+              <span>Ch 8 Suites</span>
             </button>
             <button class="subject-tab html" data-subject="html" onclick="filterLessonsBySubject('html')">
               <span>🌐</span>
@@ -2518,12 +2519,14 @@
                     <optgroup label="Programme Algorithme (Bac Informatique)">
                       <option value="algo-pratique">🛠️ Algorithme Pratique (Qt Designer ➔ Thonny)</option>
                       <option value="algo-theorique">📖 Algorithme Théorique (Général / Révision)</option>
-                      <option value="algo-ch1-fichiers">📁 Ch 1 : Fichiers Binaires & Texte</option>
-                      <option value="algo-ch2-recurrence">🔄 Ch 2 : Récurrence</option>
+                      <option value="algo-ch1-fichiers">📁 Ch 1 : Fichiers (binaires & texte)</option>
+                      <option value="algo-ch2-recursivite">🔄 Ch 2 : Récursivité</option>
                       <option value="algo-ch3-bases">🔢 Ch 3 : Conversion entre les bases</option>
                       <option value="algo-ch4-arithmetique">🧮 Ch 4 : Arithmétique</option>
                       <option value="algo-ch5-approximation">📈 Ch 5 : Approximation & Optimisation</option>
-                      <option value="algo-ch6-matrices">📐 Ch 6 : Matrices & Tableaux 2D</option>
+                      <option value="algo-ch6-tableaux">📊 Ch 6 : Les tableaux</option>
+                      <option value="algo-ch7-matrices">📐 Ch 7 : Les matrices</option>
+                      <option value="algo-ch8-suites">🧬 Ch 8 : Les suites</option>
                     </optgroup>
                   </select>
                 </div>
@@ -2667,11 +2670,13 @@
                 <button class="cat-btn" onclick="filterAdminTable('algo-pratique')">Algo Pratique</button>
                 <button class="cat-btn" onclick="filterAdminTable('algo-theorique')">Algo Théorique</button>
                 <button class="cat-btn" onclick="filterAdminTable('algo-ch1-fichiers')">Ch 1 Fichiers</button>
-                <button class="cat-btn" onclick="filterAdminTable('algo-ch2-recurrence')">Ch 2 Récurrence</button>
+                <button class="cat-btn" onclick="filterAdminTable('algo-ch2-recursivite')">Ch 2 Récursivité</button>
                 <button class="cat-btn" onclick="filterAdminTable('algo-ch3-bases')">Ch 3 Bases</button>
                 <button class="cat-btn" onclick="filterAdminTable('algo-ch4-arithmetique')">Ch 4 Arithmétique</button>
                 <button class="cat-btn" onclick="filterAdminTable('algo-ch5-approximation')">Ch 5 Approx</button>
-                <button class="cat-btn" onclick="filterAdminTable('algo-ch6-matrices')">Ch 6 Matrices</button>
+                <button class="cat-btn" onclick="filterAdminTable('algo-ch6-tableaux')">Ch 6 Tableaux</button>
+                <button class="cat-btn" onclick="filterAdminTable('algo-ch7-matrices')">Ch 7 Matrices</button>
+                <button class="cat-btn" onclick="filterAdminTable('algo-ch8-suites')">Ch 8 Suites</button>
               </div>
             </div>
 
@@ -2785,10 +2790,10 @@
             <div class="card-icon-wrap" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #fff;">📖</div>
             <h2 class="card-title">Épreuve Théorique (Algorithmique Bac)</h2>
             <p class="card-subtitle">
-              Les 6 grands chapitres officiels du programme tunisien : <strong>1) Fichiers binaires &amp; texte</strong>, <strong>2) Récurrence</strong>, <strong>3) Conversion entre les bases</strong>, <strong>4) Arithmétique</strong>, <strong>5) Approximation &amp; optimisation</strong> et <strong>6) Matrices</strong>.
+              Les 8 grands chapitres officiels du programme tunisien : <strong>1) Fichiers</strong>, <strong>2) Récursivité</strong>, <strong>3) Conversion des bases</strong>, <strong>4) Arithmétique</strong>, <strong>5) Approximation</strong>, <strong>6) Tableaux</strong>, <strong>7) Matrices</strong> et <strong>8) Suites</strong>.
             </p>
             <div class="card-badges">
-              <span class="pill-badge" style="color: #fbbf24;">59 Algorithmes &amp; Modules</span>
+              <span class="pill-badge" id="algoHomeTheoriqueBadge" style="color: #fbbf24;">59 Algorithmes &amp; Modules</span>
               <span class="pill-badge" style="color: #38bdf8;">📋 T.D.O &amp; T.D.N.T Officiels</span>
               <span class="pill-badge" style="color: #34d399;">⚡ Pseudo-Code &amp; Python Côte à Côte</span>
             </div>
@@ -2806,7 +2811,7 @@
               Supports officiels et fiches de révision de l'Algorithme : Pratique (Qt Designer ➔ Thonny) et Théorique (Fichiers, Bases de numération, Calcul d'aires, Matrices &amp; Patterns, Fiches de révision).
             </p>
             <div class="card-badges">
-              <span class="pill-badge" style="color: #c084fc;">5 Chapitres &amp; Pratique</span>
+              <span class="pill-badge" id="algoHomeLessonsCardBadge" style="color: #c084fc;">8 Chapitres &amp; Pratique</span>
               <span class="pill-badge" style="color: #34d399;">🛠️ Fiches Qt ➔ Thonny</span>
               <span class="pill-badge" style="color: #fbbf24;">📖 Supports Officiels Bac</span>
             </div>
@@ -2824,7 +2829,7 @@
             <div style="display: flex; align-items: center; gap: 10px;">
               <span style="font-size: 1.5rem;">📚</span>
               <div>
-                <h3 style="margin: 0; font-size: 1.2rem; color: #fbbf24;">Les 6 Chapitres Officiels d'Algorithmique (Bac Tunisie)</h3>
+                <h3 id="algoHomeChaptersTitle" style="margin: 0; font-size: 1.2rem; color: #fbbf24;">Les 8 Chapitres Officiels d'Algorithmique (Bac Tunisie)</h3>
                 <span style="font-size: 0.82rem; color: var(--text-secondary);">Accès direct aux algorithmes types, T.D.O et implémentations Python Thonny</span>
               </div>
             </div>
@@ -2832,41 +2837,54 @@
           </div>
 
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;">
+            <!-- Grille officielle des 8 chapitres (Générée depuis CURRICULUM) -->
             <!-- Ch 1 -->
-            <div onclick="switchView('algo-theorique'); setAlgoTheoriqueCategory('Chapitre 1 : Les fichiers binaires et fichier text');" style="cursor: pointer; background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border: 1px solid rgba(245, 158, 11, 0.25); border-left: 4px solid #f59e0b; transition: all 0.2s ease;">
-              <div style="font-size: 0.78rem; font-weight: 800; color: #fbbf24; text-transform: uppercase;">Chapitre 1</div>
+            <div onclick="navigateToHash('#/algo/theorique/fichiers')" style="cursor: pointer; background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border: 1px solid rgba(16, 185, 129, 0.25); border-left: 4px solid #10b981; transition: all 0.2s ease;">
+              <div style="font-size: 0.78rem; font-weight: 800; color: #34d399; text-transform: uppercase;">Chapitre 1</div>
               <strong style="color: #f8fafc; font-size: 0.95rem; display: block; margin: 4px 0 6px 0;">📁 Fichiers Binaires &amp; Texte</strong>
-              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Fichiers texte (associer, recréer, ouvrir) et binaires (module pickle dump / load, EOF).</p>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Fichiers texte (ouvrir, lire, écrire) et enregistrements binaires (module pickle dump/load, EOF).</p>
             </div>
             <!-- Ch 2 -->
-            <div onclick="switchView('algo-theorique'); setAlgoTheoriqueCategory('Chapitre 2 : Récurrence');" style="cursor: pointer; background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border: 1px solid rgba(168, 85, 247, 0.25); border-left: 4px solid #a855f7; transition: all 0.2s ease;">
-              <div style="font-size: 0.78rem; font-weight: 800; color: #c084fc; text-transform: uppercase;">Chapitre 2</div>
-              <strong style="color: #f8fafc; font-size: 0.95rem; display: block; margin: 4px 0 6px 0;">🔄 Récurrence</strong>
-              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Principe de récursion : cas d'arrêt / cas de base et appel récursif général.</p>
+            <div onclick="navigateToHash('#/algo/theorique/recursivite')" style="cursor: pointer; background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border: 1px solid rgba(59, 130, 246, 0.25); border-left: 4px solid #3b82f6; transition: all 0.2s ease;">
+              <div style="font-size: 0.78rem; font-weight: 800; color: #60a5fa; text-transform: uppercase;">Chapitre 2</div>
+              <strong style="color: #f8fafc; font-size: 0.95rem; display: block; margin: 4px 0 6px 0;">🔄 Récursivité</strong>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Cas de base, condition d'arrêt, appels récursifs et comparaison avec l'itération.</p>
             </div>
             <!-- Ch 3 -->
-            <div onclick="switchView('algo-theorique'); setAlgoTheoriqueCategory('Chapitre 3 : Conversion entre les bases');" style="cursor: pointer; background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border: 1px solid rgba(56, 189, 248, 0.25); border-left: 4px solid #38bdf8; transition: all 0.2s ease;">
-              <div style="font-size: 0.78rem; font-weight: 800; color: #38bdf8; text-transform: uppercase;">Chapitre 3</div>
+            <div onclick="navigateToHash('#/algo/theorique/bases')" style="cursor: pointer; background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border: 1px solid rgba(168, 85, 247, 0.25); border-left: 4px solid #a855f7; transition: all 0.2s ease;">
+              <div style="font-size: 0.78rem; font-weight: 800; color: #c084fc; text-transform: uppercase;">Chapitre 3</div>
               <strong style="color: #f8fafc; font-size: 0.95rem; display: block; margin: 4px 0 6px 0;">🔢 Conversion des Bases</strong>
               <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Binaire, Octal, Décimal, Hexadécimal (divisions et puissances pondérées).</p>
             </div>
             <!-- Ch 4 -->
-            <div onclick="switchView('algo-theorique'); setAlgoTheoriqueCategory('Chapitre 4 : Arithmétique');" style="cursor: pointer; background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border: 1px solid rgba(16, 185, 129, 0.25); border-left: 4px solid #10b981; transition: all 0.2s ease;">
-              <div style="font-size: 0.78rem; font-weight: 800; color: #34d399; text-transform: uppercase;">Chapitre 4</div>
+            <div onclick="navigateToHash('#/algo/theorique/arithmetique')" style="cursor: pointer; background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border: 1px solid rgba(236, 72, 153, 0.25); border-left: 4px solid #ec4899; transition: all 0.2s ease;">
+              <div style="font-size: 0.78rem; font-weight: 800; color: #f472b6; text-transform: uppercase;">Chapitre 4</div>
               <strong style="color: #f8fafc; font-size: 0.95rem; display: block; margin: 4px 0 6px 0;">🧮 Arithmétique</strong>
-              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Nombres premiers, factorielle, puissances et PGCD / PPCM (Euclide).</p>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Nombres premiers, factorielle, puissances, PGCD / PPCM et facteurs premiers.</p>
             </div>
             <!-- Ch 5 -->
-            <div onclick="switchView('algo-theorique'); setAlgoTheoriqueCategory('Chapitre 5 : Approximation et optimisation');" style="cursor: pointer; background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border: 1px solid rgba(239, 68, 68, 0.25); border-left: 4px solid #f87171; transition: all 0.2s ease;">
-              <div style="font-size: 0.78rem; font-weight: 800; color: #f87171; text-transform: uppercase;">Chapitre 5</div>
+            <div onclick="navigateToHash('#/algo/theorique/approximation')" style="cursor: pointer; background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border: 1px solid rgba(245, 158, 11, 0.25); border-left: 4px solid #f59e0b; transition: all 0.2s ease;">
+              <div style="font-size: 0.78rem; font-weight: 800; color: #fbbf24; text-transform: uppercase;">Chapitre 5</div>
               <strong style="color: #f8fafc; font-size: 0.95rem; display: block; margin: 4px 0 6px 0;">📈 Approx &amp; Optimisation</strong>
-              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Calcul d'aires par intégration numérique (rectangles, trapèzes, milieu).</p>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Calcul d'aires par intégration numérique (rectangles, trapèzes) et dichotomie.</p>
             </div>
             <!-- Ch 6 -->
-            <div onclick="switchView('algo-theorique'); setAlgoTheoriqueCategory('Chapitre 6 : Matrices');" style="cursor: pointer; background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border: 1px solid rgba(234, 88, 12, 0.35); border-left: 4px solid #ea580c; transition: all 0.2s ease;">
-              <div style="font-size: 0.78rem; font-weight: 800; color: #fb923c; text-transform: uppercase;">Chapitre 6</div>
-              <strong style="color: #f8fafc; font-size: 0.95rem; display: block; margin: 4px 0 6px 0;">📐 Matrices &amp; Tableaux 2D</strong>
-              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Remplissage, diagonales, symétrie, produit matriciel, recherche de min/max, persistence binaire.</p>
+            <div onclick="navigateToHash('#/algo/theorique/tableaux')" style="cursor: pointer; background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border: 1px solid rgba(16, 185, 129, 0.25); border-left: 4px solid #10b981; transition: all 0.2s ease;">
+              <div style="font-size: 0.78rem; font-weight: 800; color: #34d399; text-transform: uppercase;">Chapitre 6</div>
+              <strong style="color: #f8fafc; font-size: 0.95rem; display: block; margin: 4px 0 6px 0;">📊 Les Tableaux</strong>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Tableaux 1D (vecteurs) : saisie contrôlée, tris, recherche, décalages et algorithmes types.</p>
+            </div>
+            <!-- Ch 7 -->
+            <div onclick="navigateToHash('#/algo/theorique/matrices')" style="cursor: pointer; background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border: 1px solid rgba(56, 189, 248, 0.25); border-left: 4px solid #0284c7; transition: all 0.2s ease;">
+              <div style="font-size: 0.78rem; font-weight: 800; color: #38bdf8; text-transform: uppercase;">Chapitre 7</div>
+              <strong style="color: #f8fafc; font-size: 0.95rem; display: block; margin: 4px 0 6px 0;">📐 Les Matrices</strong>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Tableaux 2D : parcours lignes/colonnes, diagonales, point-selle, tri et motifs sablier.</p>
+            </div>
+            <!-- Ch 8 -->
+            <div onclick="navigateToHash('#/algo/theorique/suites')" style="cursor: pointer; background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 10px; border: 1px solid rgba(168, 85, 247, 0.25); border-left: 4px solid #9333ea; transition: all 0.2s ease;">
+              <div style="font-size: 0.78rem; font-weight: 800; color: #c084fc; text-transform: uppercase;">Chapitre 8</div>
+              <strong style="color: #f8fafc; font-size: 0.95rem; display: block; margin: 4px 0 6px 0;">🧬 Les Suites</strong>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Suites arithmétiques, géométriques, récurrentes (Fibonacci, Syracuse, Héron) et convergence.</p>
             </div>
           </div>
         </div>
@@ -3794,11 +3812,12 @@ app.exec_()</code></pre>
   </div>
 
   <!-- Fichiers Scripts -->
-  <script src="data.js?v=21.0"></script>
+  <script src="data.js?v=25.0"></script>
+  <script src="data/curriculum.js?v=25.0"></script>
   <script src="css_engine.js?v=21.0"></script>
   <script src="algo_pratique_engine.js?v=21.0"></script>
-  <script src="pomodoro_engine.js?v=24.0"></script>
-  <script src="app.js?v=24.0"></script>
+  <script src="pomodoro_engine.js?v=25.0"></script>
+  <script src="app.js?v=25.0"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
