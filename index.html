@@ -257,7 +257,13 @@
               <span class="nav-bullet algo"></span>
               <span class="nav-icon">📖</span>
               <span class="nav-label">Théorique (8 Chapitres)</span>
-              <span class="nav-count">59</span>
+              <span class="nav-count" id="sideBadgeTheorique">59</span>
+            </a>
+            <a class="sidebar-link" data-view="algo-devoirs" onclick="navigateToHash('#/algo/theorique/devoirs')">
+              <span class="nav-bullet algo"></span>
+              <span class="nav-icon">📑</span>
+              <span class="nav-label">Devoirs (DC &amp; DS)</span>
+              <span class="nav-count" id="sideBadgeDevoirs" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4);">7</span>
             </a>
           </div>
         </div>
@@ -3484,20 +3490,71 @@ app.exec_()</code></pre>
           </div>
         </div>
 
-        <!-- BARRE DE RECHERCHE & CATÉGORIES THÉORIQUES -->
-        <div class="filter-search-bar" style="margin-bottom: 24px;">
-          <div class="search-box-wrap">
-            <span class="search-icon-inside">🔍</span>
-            <input type="text" id="algoTheoriqueSearchInput" class="search-input" placeholder="Rechercher un algorithme, structure, fonction (ex: TDO, Tri bulles, PGCD, Premier, Répéter, Pour, Fonction...)" oninput="handleAlgoTheoriqueSearch(this.value)">
+        <!-- BASCULE THÉORIQUE : 1) CHAPITRES & ALGORITHMES  VS  2) DEVOIRS & EXAMENS DU BAC -->
+        <div class="view-tabs-bar" style="margin-bottom: 24px;">
+          <button id="tabBtnAlgoChapitres" class="view-mode-tab active orange" onclick="switchAlgoTheoriqueTab('chapitres')">
+            <span>📖</span>
+            <span id="labelAlgoTabChapitres">Chapitres &amp; Algorithmes (8 Chapitres)</span>
+          </button>
+          <button id="tabBtnAlgoDevoirs" class="view-mode-tab" onclick="switchAlgoTheoriqueTab('devoirs')">
+            <span>📑</span>
+            <span>Devoirs &amp; Examens (DC1, DC2, DS)</span>
+          </button>
+        </div>
+
+        <!-- 1. VUE PRINCIPALE : CHAPITRES & ALGORITHMES -->
+        <div id="algoTheoriqueChapitresView">
+          <!-- BARRE DE RECHERCHE & CATÉGORIES THÉORIQUES -->
+          <div class="filter-search-bar" style="margin-bottom: 24px;">
+            <div class="search-box-wrap">
+              <span class="search-icon-inside">🔍</span>
+              <input type="text" id="algoTheoriqueSearchInput" class="search-input" placeholder="Rechercher un algorithme, structure, fonction (ex: TDO, Tri bulles, PGCD, Premier, Répéter, Pour, Fonction...)" oninput="handleAlgoTheoriqueSearch(this.value)">
+            </div>
+            <div class="categories-bar" id="algoTheoriqueCategories">
+              <!-- Rempli dynamiquement par JS -->
+            </div>
           </div>
-          <div class="categories-bar" id="algoTheoriqueCategories">
+
+          <!-- GRILLE DES FICHES THÉORIQUES (DOUBLE COLONNE PSEUDO-CODE & PYTHON + TDO) -->
+          <div class="items-grid" id="algoTheoriqueGrid">
             <!-- Rempli dynamiquement par JS -->
           </div>
         </div>
 
-        <!-- GRILLE DES FICHES THÉORIQUES (DOUBLE COLONNE PSEUDO-CODE & PYTHON + TDO) -->
-        <div class="items-grid" id="algoTheoriqueGrid">
-          <!-- Rempli dynamiquement par JS -->
+        <!-- 2. VUE DÉDIÉE : DEVOIRS DE CONTRÔLE & DEVOIRS DE SYNTHÈSE DU BACCALAURÉAT -->
+        <div id="algoTheoriqueDevoirsView" style="display: none;">
+          <!-- BANNIÈRE EXPLICATIVE DES DEVOIRS -->
+          <div class="annexe-tip-box" style="margin-bottom: 20px; background: rgba(56, 189, 248, 0.08); border-left: 4px solid #38bdf8; padding: 14px 18px; border-radius: var(--radius-md);">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <h4 style="margin: 0; color: #38bdf8; font-size: 1.05rem; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                  <span>📑</span> Évaluations Sommatives &amp; Épreuves Officielles du Baccalauréat
+                </h4>
+                <p style="margin: 4px 0 0 0; color: var(--text-secondary); font-size: 0.85rem; line-height: 1.45;">
+                  Les devoirs regroupent plusieurs chapitres conformément au calendrier officiel des lycées tunisiens : <strong>Devoir de Contrôle N°1</strong> (1er Trimestre), <strong>Devoir de Contrôle N°2</strong> (2ème Trimestre) et <strong>Devoirs de Synthèse</strong> (DS1, DS2, DS3 / Bac Blanc).
+                </p>
+              </div>
+              <span style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 800;" id="devoirsTotalCountBadge">
+                7 Épreuves Disponibles
+              </span>
+            </div>
+          </div>
+
+          <!-- BARRE DE RECHERCHE ET FILTRES DES DEVOIRS -->
+          <div class="filter-search-bar" style="margin-bottom: 24px;">
+            <div class="search-box-wrap">
+              <span class="search-icon-inside">🔍</span>
+              <input type="text" id="algoDevoirsSearchInput" class="search-input" placeholder="Rechercher une épreuve, un lycée ou une notion (ex: Lycée Pilote, DC1, Fichiers, Matrices, 2025...)" oninput="handleAlgoDevoirsSearch(this.value)">
+            </div>
+            <div class="categories-bar" id="algoDevoirsFilterBar">
+              <!-- Rempli dynamiquement par JS -->
+            </div>
+          </div>
+
+          <!-- LISTE DES CARTES DE DEVOIRS (DC1, DC2, DS) -->
+          <div class="devoirs-list-container" id="algoDevoirsGrid">
+            <!-- Rempli dynamiquement par JS -->
+          </div>
         </div>
 
         <!-- Pagination bas de page Théorique -->
@@ -3814,6 +3871,7 @@ app.exec_()</code></pre>
   <!-- Fichiers Scripts -->
   <script src="data.js?v=25.0"></script>
   <script src="data/curriculum.js?v=25.0"></script>
+  <script src="data/documents.js?v=25.0"></script>
   <script src="css_engine.js?v=21.0"></script>
   <script src="algo_pratique_engine.js?v=21.0"></script>
   <script src="pomodoro_engine.js?v=25.0"></script>

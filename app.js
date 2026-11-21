@@ -1557,23 +1557,32 @@ function parseAppHash(hash) {
   let clean = (hash || '').replace(/^#[\/]?/, '').trim().toLowerCase();
   if (!clean || clean === 'home') return { view: 'home' };
 
-  // Algo Théorique routes avec slugs: #/algo/theorique/<slug>, #/algo/theorique/chX, etc.
+  // Algo Théorique routes : devoirs, slugs de chapitres, etc.
   if (clean.startsWith('algo/theorique') || clean.startsWith('theorique') || clean.startsWith('algo-theorique')) {
     const sub = clean.replace(/^(algo\/theorique|theorique|algo-theorique)\/?/, '').trim();
+    if (sub.startsWith('devoirs') || sub.startsWith('devoir')) {
+      const devSub = sub.replace(/^devoirs?\/?/, '').trim();
+      return { view: 'algo-theorique', subTab: 'devoirs', filter: devSub || 'all' };
+    }
     if (sub) {
       const ch = (typeof CURRICULUM !== 'undefined') ? (CURRICULUM.getChapterBySlug(sub) || CURRICULUM.getChapterByCategory(sub)) : null;
       if (ch) {
-        return { view: 'algo-theorique', chapter: ch.fullTitle, chapterSlug: ch.slug, chapterObj: ch };
+        return { view: 'algo-theorique', subTab: 'chapitres', chapter: ch.fullTitle, chapterSlug: ch.slug, chapterObj: ch };
       }
     }
-    return { view: 'algo-theorique', chapter: null, chapterSlug: 'all' };
+    return { view: 'algo-theorique', subTab: 'chapitres', chapter: null, chapterSlug: 'all' };
+  }
+
+  // Raccourcis directs de devoirs
+  if (clean === 'devoirs' || clean === 'devoir' || clean === 'algo/devoirs') {
+    return { view: 'algo-theorique', subTab: 'devoirs', filter: 'all' };
   }
 
   // Support direct des slugs ou ch1..ch8 (ex: #/tableaux, #/recursivite, #/ch2, #/matrices, #/ch6, #/suites)
   if (typeof CURRICULUM !== 'undefined') {
     const directCh = CURRICULUM.getChapterBySlug(clean);
     if (directCh) {
-      return { view: 'algo-theorique', chapter: directCh.fullTitle, chapterSlug: directCh.slug, chapterObj: directCh };
+      return { view: 'algo-theorique', subTab: 'chapitres', chapter: directCh.fullTitle, chapterSlug: directCh.slug, chapterObj: directCh };
     }
   }
 
@@ -1621,9 +1630,21 @@ function handleRouteFromHash() {
   switchView(route.view, true);
 
   if (route.view === 'algo-theorique') {
-    currentAlgoTheoriqueCategory = route.chapterSlug || route.chapter || 'all';
-    if (typeof renderAlgoTheoriqueCategories === 'function') renderAlgoTheoriqueCategories();
-    if (typeof renderAlgoTheoriqueCards === 'function') renderAlgoTheoriqueCards();
+    if (route.subTab === 'devoirs') {
+      if (typeof switchAlgoTheoriqueTab === 'function') {
+        switchAlgoTheoriqueTab('devoirs', true);
+      }
+      if (route.filter && typeof handleAlgoDevoirFilter === 'function') {
+        handleAlgoDevoirFilter(route.filter);
+      }
+    } else {
+      if (typeof switchAlgoTheoriqueTab === 'function') {
+        switchAlgoTheoriqueTab('chapitres', true);
+      }
+      currentAlgoTheoriqueCategory = route.chapterSlug || route.chapter || 'all';
+      if (typeof renderAlgoTheoriqueCategories === 'function') renderAlgoTheoriqueCategories();
+      if (typeof renderAlgoTheoriqueCards === 'function') renderAlgoTheoriqueCards();
+    }
   }
 
   isRouterNavigating = false;
@@ -1719,6 +1740,11 @@ function updateDataCountersUI() {
     if (sideQt) sideQt.textContent = qtCount;
     const sideTheorique = document.getElementById('sideBadgeTheorique');
     if (sideTheorique) sideTheorique.textContent = algoTheoriqueCount;
+    const devoirsCount = (typeof DOCUMENTS_DATA !== 'undefined') ? DOCUMENTS_DATA.getAllDevoirs().length : 7;
+    const sideDevoirs = document.getElementById('sideBadgeDevoirs');
+    if (sideDevoirs) sideDevoirs.textContent = devoirsCount;
+    const badgeDevoirsTotal = document.getElementById('devoirsTotalCountBadge');
+    if (badgeDevoirsTotal) badgeDevoirsTotal.textContent = `${devoirsCount} Épreuves Disponibles`;
   } catch (err) {
     console.warn('Erreur mise à jour des compteurs:', err);
   }
@@ -1741,6 +1767,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof renderAlgoPratiqueCards === 'function') renderAlgoPratiqueCards();
   if (typeof renderAlgoTheoriqueCategories === 'function') renderAlgoTheoriqueCategories();
   if (typeof renderAlgoTheoriqueCards === 'function') renderAlgoTheoriqueCards();
+  if (typeof renderAlgoDevoirsFilterBar === 'function') renderAlgoDevoirsFilterBar();
+  if (typeof renderAlgoDevoirs === 'function') renderAlgoDevoirs();
   if (typeof updateDataCountersUI === 'function') updateDataCountersUI();
   if (typeof setupGlobalSearch === 'function') setupGlobalSearch();
   if (typeof setupReadingProgressBarAndBackToTop === 'function') setupReadingProgressBarAndBackToTop();
@@ -8859,6 +8887,328 @@ function switchAlgoPratiqueTab(tabName) {
       renderAlgoPratiqueCards();
     }
   }
+}
+
+// =============================================================
+// GESTIONNAIRE DES ONGLETS THÉORIQUES (CHAPITRES VS DEVOIRS BAC)
+// =============================================================
+let currentAlgoTheoriqueMainTab = 'chapitres';
+let currentAlgoDevoirFilter = 'all';
+let currentAlgoDevoirSearch = '';
+const openDevoirCorrigeSet = new Set();
+
+function switchAlgoTheoriqueTab(tabName, skipHash) {
+  currentAlgoTheoriqueMainTab = tabName;
+  const tabChapitres = document.getElementById('tabBtnAlgoChapitres');
+  const tabDevoirs = document.getElementById('tabBtnAlgoDevoirs');
+  const viewChapitres = document.getElementById('algoTheoriqueChapitresView');
+  const viewDevoirs = document.getElementById('algoTheoriqueDevoirsView');
+
+  if (tabChapitres) tabChapitres.classList.remove('active');
+  if (tabDevoirs) tabDevoirs.classList.remove('active');
+
+  if (tabName === 'devoirs') {
+    if (tabDevoirs) tabDevoirs.classList.add('active');
+    if (viewChapitres) viewChapitres.style.display = 'none';
+    if (viewDevoirs) viewDevoirs.style.display = 'block';
+
+    renderAlgoDevoirsFilterBar();
+    renderAlgoDevoirs();
+
+    if (!skipHash && !isRouterNavigating) {
+      const targetHash = currentAlgoDevoirFilter && currentAlgoDevoirFilter !== 'all' 
+        ? `#/algo/theorique/devoirs/${currentAlgoDevoirFilter}`
+        : '#/algo/theorique/devoirs';
+      if (window.location.hash !== targetHash) {
+        history.replaceState(null, '', targetHash);
+      }
+    }
+  } else {
+    if (tabChapitres) tabChapitres.classList.add('active');
+    if (viewDevoirs) viewDevoirs.style.display = 'none';
+    if (viewChapitres) viewChapitres.style.display = 'block';
+
+    renderAlgoTheoriqueCategories();
+    renderAlgoTheoriqueCards();
+
+    if (!skipHash && !isRouterNavigating) {
+      const targetHash = (currentAlgoTheoriqueCategory && currentAlgoTheoriqueCategory !== 'all')
+        ? `#/algo/theorique/${currentAlgoTheoriqueCategory}`
+        : '#/algo/theorique';
+      if (window.location.hash !== targetHash) {
+        history.replaceState(null, '', targetHash);
+      }
+    }
+  }
+}
+
+function renderAlgoDevoirsFilterBar() {
+  const bar = document.getElementById('algoDevoirsFilterBar');
+  if (!bar) return;
+
+  const docs = (typeof DOCUMENTS_DATA !== 'undefined') ? DOCUMENTS_DATA : null;
+  const counts = docs ? docs.getDevoirsCounts() : { all: 0, dc1: 0, dc2: 0, ds: 0 };
+
+  const filters = [
+    { id: 'all', label: '✨ Tous les Devoirs', count: counts.all },
+    { id: 'dc1', label: '📝 Devoir de Contrôle N°1', count: counts.dc1 },
+    { id: 'dc2', label: '📝 Devoir de Contrôle N°2', count: counts.dc2 },
+    { id: 'ds', label: '🏆 Devoir de Synthèse', count: counts.ds }
+  ];
+
+  bar.innerHTML = filters.map(f => {
+    const isAct = currentAlgoDevoirFilter === f.id;
+    return `
+      <button type="button" class="cat-pill ${isAct ? 'active' : ''}" onclick="handleAlgoDevoirFilter('${f.id}')">
+        <span>${f.label}</span>
+        <span class="cat-pill-count">${f.count}</span>
+      </button>
+    `;
+  }).join('');
+}
+
+function handleAlgoDevoirFilter(filterType) {
+  currentAlgoDevoirFilter = filterType || 'all';
+  renderAlgoDevoirsFilterBar();
+  renderAlgoDevoirs();
+  if (currentAlgoTheoriqueMainTab === 'devoirs' && !isRouterNavigating) {
+    const targetHash = (currentAlgoDevoirFilter === 'all') 
+      ? '#/algo/theorique/devoirs' 
+      : `#/algo/theorique/devoirs/${currentAlgoDevoirFilter}`;
+    if (window.location.hash !== targetHash) {
+      history.replaceState(null, '', targetHash);
+    }
+  }
+}
+
+function handleAlgoDevoirsSearch(val) {
+  currentAlgoDevoirSearch = (val || '').trim().toLowerCase();
+  renderAlgoDevoirs();
+}
+
+function toggleDevoirCorrige(devoirId) {
+  if (openDevoirCorrigeSet.has(devoirId)) {
+    openDevoirCorrigeSet.delete(devoirId);
+  } else {
+    openDevoirCorrigeSet.add(devoirId);
+  }
+  const panel = document.getElementById(`devoirCorrigePanel_${devoirId}`);
+  const btn = document.getElementById(`devoirCorrigeBtn_${devoirId}`);
+  if (panel && btn) {
+    const isOpen = openDevoirCorrigeSet.has(devoirId);
+    panel.style.display = isOpen ? 'block' : 'none';
+    btn.innerHTML = isOpen ? '<span>🙈</span><span>Masquer le corrigé</span>' : '<span>🎯</span><span>Voir le Corrigé Type</span>';
+  }
+}
+
+function renderAlgoDevoirs() {
+  const container = document.getElementById('algoDevoirsGrid');
+  if (!container) return;
+
+  const docs = (typeof DOCUMENTS_DATA !== 'undefined') ? DOCUMENTS_DATA : null;
+  if (!docs) {
+    container.innerHTML = '<div style="padding: 30px; text-align: center; color: var(--text-muted);">Modules de devoirs en cours de chargement...</div>';
+    return;
+  }
+
+  let list = docs.getAllDevoirs();
+  if (currentAlgoDevoirFilter && currentAlgoDevoirFilter !== 'all') {
+    list = list.filter(d => d.type === currentAlgoDevoirFilter);
+  }
+
+  if (currentAlgoDevoirSearch) {
+    const q = currentAlgoDevoirSearch;
+    list = list.filter(d => 
+      d.title.toLowerCase().includes(q) ||
+      (d.summary && d.summary.toLowerCase().includes(q)) ||
+      (d.lycee && d.lycee.toLowerCase().includes(q)) ||
+      (d.chapters && d.chapters.some(c => c.toLowerCase().includes(q))) ||
+      (d.annee && d.annee.toLowerCase().includes(q))
+    );
+  }
+
+  if (list.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 40px; color: var(--text-muted); background: var(--bg-card); border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
+        🔍 Aucune épreuve trouvée pour cette recherche ou ce filtre.
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = list.map(d => {
+    const isCorrigeOpen = openDevoirCorrigeSet.has(d.id);
+    const typeMeta = docs.devoirTypes[d.type] || { color: '#38bdf8', label: d.typeLabel };
+
+    // Chapitres évalués avec badges
+    const chaptersHtml = (d.chapters || []).map(chSlug => {
+      const ch = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getChapterBySlug(chSlug) : null;
+      const chTitle = ch ? `${ch.iconEmoji} ${ch.shortTitle}` : chSlug;
+      return `<span class="devoir-chapter-chip">${chTitle}</span>`;
+    }).join('');
+
+    // Énoncés d'exercices
+    const enoncesHtml = (d.enonce || []).map(ex => `
+      <div class="devoir-exercise-item">
+        <div class="devoir-exercise-title">
+          <span>📌</span>
+          <span>${escapeHtml(ex.titre)}</span>
+        </div>
+        <div class="devoir-exercise-details">${escapeHtml(ex.details)}</div>
+      </div>
+    `).join('');
+
+    // Corrigé Type
+    let corrigeHtml = '';
+    if (d.corrige) {
+      let tdoRows = '';
+      if (d.corrige.tdo && Array.isArray(d.corrige.tdo)) {
+        tdoRows = `
+          <div style="margin-bottom: 12px;">
+            <div style="font-weight: 800; font-size: 0.86rem; color: #34d399; margin-bottom: 6px;">
+              📋 Tableau de Déclaration des Objets (T.D.O)
+            </div>
+            <table class="devoir-tdo-table">
+              <thead>
+                <tr>
+                  <th style="width: 35%;">Objet</th>
+                  <th>Type / Nature</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${d.corrige.tdo.map(t => `
+                  <tr>
+                    <td style="color: #34d399; font-weight: 700; font-family: monospace;">${escapeHtml(t.objet)}</td>
+                    <td style="color: #cbd5e1; font-family: monospace;">${escapeHtml(t.type)}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      let pyCodeHtml = '';
+      if (d.corrige.codePython) {
+        const highlighted = (typeof highlightPythonCode === 'function')
+          ? highlightPythonCode(d.corrige.codePython)
+          : escapeHtml(d.corrige.codePython);
+        const rawJson = JSON.stringify(d.corrige.codePython);
+        pyCodeHtml = `
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+              <span style="font-weight: 800; font-size: 0.86rem; color: #38bdf8;">⚡ Implémentation Python 3 (Thonny Conforme)</span>
+              <button type="button" class="devoir-btn" style="padding: 3px 10px; font-size: 0.74rem;" onclick="navigator.clipboard.writeText(${rawJson}); alert('Code Python du corrigé copié !');">📋 Copier</button>
+            </div>
+            <div class="code-container" style="background: #0f172a; border-radius: 6px; padding: 12px; font-family: monospace; font-size: 0.82rem; overflow-x: auto; color: #e2e8f0; line-height: 1.45;">
+              <pre style="margin: 0;"><code>${highlighted}</code></pre>
+            </div>
+          </div>
+        `;
+      }
+
+      corrigeHtml = `
+        <div class="devoir-corrige-panel" id="devoirCorrigePanel_${d.id}" style="display: ${isCorrigeOpen ? 'block' : 'none'};">
+          <div class="devoir-corrige-header">
+            <span style="color: #34d399; font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+              <span>🎯</span> Corrigé Type Officiel &amp; Barème
+            </span>
+            <span style="font-size: 0.78rem; color: var(--text-secondary);">${escapeHtml(d.corrige.resume || '')}</span>
+          </div>
+          ${tdoRows}
+          ${pyCodeHtml}
+        </div>
+      `;
+    }
+
+    return `
+      <div class="devoir-card ${d.type}">
+        <div class="devoir-card-header">
+          <div class="devoir-meta-badges">
+            <span class="devoir-type-pill ${d.type}">
+              <span>${typeMeta.icon || '📝'}</span>
+              <span>${escapeHtml(d.typeLabel)}</span>
+            </span>
+            <span class="devoir-sub-badge">🏫 ${escapeHtml(d.lycee || 'Lycée Pilote')}</span>
+            <span class="devoir-sub-badge">📅 ${escapeHtml(d.annee || '2024 / 2025')}</span>
+            <span class="devoir-sub-badge">⏱️ ${escapeHtml(d.duree || '2 heures')}</span>
+            <span class="devoir-sub-badge">⚖️ Coef ${d.coef || 3}</span>
+          </div>
+          <span style="font-size: 0.78rem; font-weight: 700; color: ${typeMeta.color}; background: ${typeMeta.bgTint}; padding: 3px 10px; border-radius: 12px; border: 1px solid ${typeMeta.border}55;">
+            ${escapeHtml(d.trimestre)}
+          </span>
+        </div>
+
+        <h3 class="devoir-title">${escapeHtml(d.title)}</h3>
+        <p class="devoir-desc">${escapeHtml(d.summary)}</p>
+
+        <div class="devoir-chapters-row">
+          <span style="font-size: 0.76rem; color: var(--text-secondary); font-weight: 600;">Chapitres évalués :</span>
+          ${chaptersHtml}
+        </div>
+
+        <div class="devoir-exercises-box">
+          ${enoncesHtml}
+        </div>
+
+        <div class="devoir-actions-bar">
+          <button type="button" class="devoir-btn corrige" id="devoirCorrigeBtn_${d.id}" onclick="toggleDevoirCorrige('${d.id}')">
+            <span>${isCorrigeOpen ? '🙈' : '🎯'}</span>
+            <span>${isCorrigeOpen ? 'Masquer le corrigé' : 'Voir le Corrigé Type'}</span>
+          </button>
+          <button type="button" class="devoir-btn download" onclick="downloadDevoirSheet('${d.id}')">
+            <span>📥</span>
+            <span>Télécharger Sujet &amp; Corrigé</span>
+          </button>
+        </div>
+
+        ${corrigeHtml}
+      </div>
+    `;
+  }).join('');
+}
+
+function downloadDevoirSheet(devoirId) {
+  const docs = (typeof DOCUMENTS_DATA !== 'undefined') ? DOCUMENTS_DATA : null;
+  const d = docs ? docs.getDevoirById(devoirId) : null;
+  if (!d) return;
+
+  let text = `============================================================\n`;
+  text += `STI DE A À Z — BACCALAURÉAT TUNISIE\n`;
+  text += `${d.title.toUpperCase()}\n`;
+  text += `Établissement : ${d.lycee} | Année : ${d.annee}\n`;
+  text += `Durée : ${d.duree} | Trimestre : ${d.trimestre}\n`;
+  text += `============================================================\n\n`;
+
+  text += `--- ÉNONCÉ DU SUJET ---\n\n`;
+  (d.enonce || []).forEach(ex => {
+    text += `[${ex.titre}]\n${ex.details}\n\n`;
+  });
+
+  if (d.corrige) {
+    text += `============================================================\n`;
+    text += `--- CORRIGÉ TYPE OFFICIEL & T.D.O ---\n`;
+    text += `============================================================\n\n`;
+    if (d.corrige.tdo) {
+      text += `TABLEAU DE DÉCLARATION DES OBJETS (T.D.O) :\n`;
+      d.corrige.tdo.forEach(t => {
+        text += `- ${t.objet} : ${t.type}\n`;
+      });
+      text += `\n`;
+    }
+    if (d.corrige.codePython) {
+      text += `CODE PYTHON 3 :\n`;
+      text += d.corrige.codePython + `\n\n`;
+    }
+  }
+
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${d.id}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 function loadIntoTranslator(widget, objName, action) {

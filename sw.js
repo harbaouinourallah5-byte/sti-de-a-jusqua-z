@@ -5,6 +5,7 @@ const STATIC_ASSETS = [
   '/style.css?v=25.0',
   '/data.js?v=25.0',
   '/data/curriculum.js?v=25.0',
+  '/data/documents.js?v=25.0',
   '/app.js?v=25.0',
   '/css_engine.js?v=25.0',
   '/algo_pratique_engine.js?v=25.0',
