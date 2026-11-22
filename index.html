@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=26.2">
+  <link rel="stylesheet" href="style.css?v=26.3">
   <!-- INITIALISATION IMMÉDIATE DU THÈME & TOGGLE SANS LATENCE -->
   <script>
     (function() {
@@ -2984,6 +2984,23 @@
           </div>
         </div>
 
+        <!-- SECTION EXERCICES À REVOIR (LOCALSTORAGE) -->
+        <div id="algoHubARevoirSection" style="margin-top: 36px; padding: 22px; background: var(--surface-elevated); border: 1px solid var(--border-color); border-radius: 14px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px;">
+            <div>
+              <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: #fbbf24; display: flex; align-items: center; gap: 8px;">
+                <span>⭐</span> Exercices d'examens marqués "À revoir" (<span id="algoARevoirCount">0</span>)
+              </h3>
+              <p style="margin: 3px 0 0 0; font-size: 0.82rem; color: var(--text-secondary);">
+                Retrouvez rapidement les exercices que vous avez cochés comme difficiles lors de vos examens blancs ou de votre navigation.
+              </p>
+            </div>
+          </div>
+          <div id="algoARevoirList" style="display: grid; gap: 10px;">
+            <!-- Rempli dynamiquement -->
+          </div>
+        </div>
+
         <!-- Astuce pour les révisions -->
         <div class="page-pagination-bar">
           <div class="pagination-card prev" onclick="switchView('home')">
@@ -3740,7 +3757,91 @@ app.exec_()</code></pre>
       </div>
     </section>
 
+    <!-- ==========================================
+         VUE ALGO : SIMULATEUR D'EXAMEN BAC (#/examens/simulateur/:id)
+         ========================================== -->
+    <section id="view-exam-simulator" class="view-section">
+      <div class="exam-sim-container">
+        <!-- Top bar sticky -->
+        <div class="exam-sim-topbar">
+          <div class="exam-sim-title-group">
+            <span class="exam-sim-badge" id="simModeBadge">⏱️ ÉPREUVE SIMULÉE</span>
+            <h3 class="exam-sim-title" id="simExamTitle">Chargement de l'épreuve...</h3>
+            <span class="exam-sim-subinfo" id="simExamSubinfo"></span>
+          </div>
+
+          <!-- Minuteur persistant -->
+          <div class="exam-sim-timer-group">
+            <div class="sim-timer-box" id="simTimerBox">
+              <span class="sim-timer-label">TEMPS RESTANT</span>
+              <span class="sim-timer-clock" id="simTimerClock">00:00:00</span>
+            </div>
+            <div class="sim-alert-pill" id="simAlertPill" style="display: none;"></div>
+          </div>
+
+          <!-- Actions -->
+          <div class="exam-sim-actions">
+            <button type="button" class="sim-action-finish-btn" onclick="openExamSimulatorReview()">
+              <span>🏁 Terminer l'épreuve</span>
+            </button>
+            <button type="button" class="sim-action-abandon-btn" onclick="abandonExamSimulator()">
+              <span>✕ Abandonner</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Alerte visuelle 30, 10, 5 min -->
+        <div class="sim-visual-alert-banner" id="simVisualAlertBanner" style="display: none;"></div>
+
+        <!-- Visionneuse PDF.js -->
+        <div class="exam-sim-pdf-wrap">
+          <div class="exam-sim-pdf-toolbar">
+            <div class="pdf-tb-group">
+              <button type="button" class="pdf-tb-btn" onclick="changePdfPage(-1)" title="Page précédente">◀ Précédente</button>
+              <span class="pdf-tb-page-info">Page <strong id="pdfPageNum">1</strong> / <strong id="pdfTotalPages">1</strong></span>
+              <button type="button" class="pdf-tb-btn" onclick="changePdfPage(1)" title="Page suivante">Suivante ▶</button>
+            </div>
+            <div class="pdf-tb-group">
+              <button type="button" class="pdf-tb-btn" onclick="changePdfZoom(-0.15)" title="Zoom arrière">🔍 -</button>
+              <span class="pdf-tb-zoom-info" id="pdfZoomLevel">100%</span>
+              <button type="button" class="pdf-tb-btn" onclick="changePdfZoom(0.15)" title="Zoom avant">🔍 +</button>
+            </div>
+            <div class="pdf-tb-group">
+              <a id="pdfExternalLink" href="#" target="_blank" rel="noopener" class="pdf-tb-external-btn">
+                📄 Ouvrir dans un nouvel onglet
+              </a>
+            </div>
+          </div>
+
+          <!-- Zone Canvas PDF -->
+          <div class="exam-sim-canvas-viewport" id="pdfCanvasViewport">
+            <div id="pdfLoadingState" style="text-align: center; padding: 50px 20px; color: var(--text-secondary);">
+              <div class="loading-spinner" style="margin: 0 auto 16px auto; width: 36px; height: 36px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #10b981; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+              <p style="font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">Chargement du sujet avec PDF.js...</p>
+              <span style="font-size: 0.82rem;">Si le document ne s'affiche pas, utilisez le bouton "Ouvrir dans un nouvel onglet" ci-dessus.</span>
+            </div>
+            <canvas id="pdfViewerCanvas" style="display: none;"></canvas>
+          </div>
+        </div>
+
+        <!-- Overlay Temps Écoulé 00:00 -->
+        <div class="sim-times-up-overlay" id="simTimesUpOverlay" style="display: none;">
+          <div class="sim-times-up-modal">
+            <div style="font-size: 3rem; margin-bottom: 12px;">⏰</div>
+            <h2 style="margin: 0 0 10px 0; color: #f87171; font-size: 1.5rem; font-weight: 800;">Temps Écoulé !</h2>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; margin-bottom: 24px;">
+              Le temps alloué pour cette épreuve est terminé. Remplissez maintenant votre auto-évaluation exercice par exercice pour mesurer vos compétences.
+            </p>
+            <button type="button" onclick="closeTimesUpAndProceedToReview()" style="padding: 12px 28px; border-radius: 10px; background: linear-gradient(135deg, #10b981, #059669); color: #fff; font-size: 1rem; font-weight: 800; border: none; cursor: pointer; box-shadow: 0 4px 18px rgba(16,185,129,0.35);">
+              Procéder à l'auto-évaluation →
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- PIED DE PAGE GLOBAL -->
+
     <footer class="app-global-footer">
       <div class="container">
         <p class="footer-credit">
@@ -4035,16 +4136,162 @@ app.exec_()</code></pre>
     </div>
   </div>
 
+  <!-- ========================================================
+       MODALES DU SIMULATEUR D'EXAMEN (SETUP, REVIEW, HISTORIQUE)
+       ======================================================== -->
+
+  <!-- 1. MODALE CONFIGURATION DU SIMULATEUR -->
+  <div id="examSimulatorSetupModal" class="custom-modal-backdrop" style="display: none;">
+    <div class="custom-modal-dialog" style="max-width: 580px;">
+      <div class="custom-modal-header">
+        <div>
+          <span style="font-size: 0.76rem; font-weight: 800; color: #10b981; text-transform: uppercase;">Simulateur d'épreuve officielle</span>
+          <h3 id="setupModalExamTitle" style="margin: 4px 0 0 0; font-size: 1.2rem; font-weight: 800; color: var(--text-primary);">...</h3>
+        </div>
+        <button type="button" class="custom-modal-close" onclick="closeExamSimulatorSetup()">✕</button>
+      </div>
+      <div class="custom-modal-body" style="padding: 20px 24px;">
+        <div id="setupModalWarning" style="display: none; padding: 12px 14px; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); border-radius: 8px; color: #f87171; font-size: 0.84rem; margin-bottom: 18px;">
+          ⚠️ <strong>Attention :</strong> Ce sujet est partiel ou incomplet. Vous pouvez vous entraîner sur les exercices disponibles.
+        </div>
+
+        <!-- Choix du mode : Complet vs Un seul exercice -->
+        <div style="margin-bottom: 20px;">
+          <label style="font-weight: 700; font-size: 0.9rem; color: var(--text-primary); display: block; margin-bottom: 8px;">Mode d'entraînement :</label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <label style="display: flex; align-items: center; gap: 8px; padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; cursor: pointer; background: var(--surface-bg);">
+              <input type="radio" name="simModeChoice" value="full" checked onchange="toggleSimSetupMode('full')">
+              <div>
+                <strong style="font-size: 0.88rem; display: block; color: var(--text-primary);">Examen complet</strong>
+                <span style="font-size: 0.76rem; color: var(--text-secondary);">Tous les exercices</span>
+              </div>
+            </label>
+            <label id="simSingleExRadioOption" style="display: flex; align-items: center; gap: 8px; padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; cursor: pointer; background: var(--surface-bg);">
+              <input type="radio" name="simModeChoice" value="single" onchange="toggleSimSetupMode('single')">
+              <div>
+                <strong style="font-size: 0.88rem; display: block; color: var(--text-primary);">Un seul exercice</strong>
+                <span style="font-size: 0.76rem; color: var(--text-secondary);">Entraînement ciblé</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Sélecteur d'exercice si mode single -->
+        <div id="setupSingleExSelectWrap" style="display: none; margin-bottom: 20px;">
+          <label for="setupSingleExSelect" style="font-weight: 700; font-size: 0.86rem; color: var(--text-primary); display: block; margin-bottom: 6px;">Exercice ciblé :</label>
+          <select id="setupSingleExSelect" onchange="updateSimSetupSuggestedTime()" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--surface-bg); color: var(--text-primary); font-size: 0.9rem;">
+          </select>
+        </div>
+
+        <!-- Choix de la durée -->
+        <div style="margin-bottom: 20px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <label for="setupDurationInput" style="font-weight: 700; font-size: 0.86rem; color: var(--text-primary);">Durée allouée (minutes) :</label>
+            <span id="setupSuggestedTimeBadge" style="font-size: 0.78rem; color: #10b981; font-weight: 700;"></span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <input type="number" id="setupDurationInput" min="10" max="240" step="5" value="180" style="width: 110px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--surface-bg); color: var(--text-primary); font-size: 1rem; font-weight: 700; text-align: center;">
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <button type="button" class="cat-pill" onclick="setSetupDuration(180)">3h (180 min)</button>
+              <button type="button" class="cat-pill" onclick="setSetupDuration(90)">1h30 (90 min)</button>
+              <button type="button" class="cat-pill" onclick="setSetupDuration(60)">1h (60 min)</button>
+              <button type="button" class="cat-pill" onclick="setSetupDuration(45)">45 min</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Règles de l'épreuve -->
+        <div style="background: rgba(15,23,42,0.6); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; margin-bottom: 24px;">
+          <div style="font-size: 0.82rem; font-weight: 800; color: #f59e0b; text-transform: uppercase; margin-bottom: 8px;">🛡️ Conditions réelles du Bac :</div>
+          <ul style="margin: 0; padding-left: 18px; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5;">
+            <li>Travaillez sur feuille blanche, sans calculatrice ni aide extérieure.</li>
+            <li>Le compte à rebours continue en direct (résiste au rafraîchissement).</li>
+            <li>À la fin du temps, auto-évaluez votre travail exercice par exercice.</li>
+          </ul>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" onclick="closeExamSimulatorSetup()" style="padding: 10px 18px; border-radius: 8px; border: 1px solid var(--border-color); background: transparent; color: var(--text-secondary); cursor: pointer; font-weight: 600;">Annuler</button>
+          <button type="button" onclick="confirmStartExamSimulator()" style="padding: 10px 24px; border-radius: 8px; background: linear-gradient(135deg, #10b981, #059669); color: #fff; font-size: 0.95rem; font-weight: 800; border: none; cursor: pointer; box-shadow: 0 4px 16px rgba(16,185,129,0.35);">🚀 Commencer l'épreuve</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. MODALE D'AUTO-ÉVALUATION (REVIEW) -->
+  <div id="examSimulatorReviewModal" class="custom-modal-backdrop" style="display: none;">
+    <div class="custom-modal-dialog" style="max-width: 680px;">
+      <div class="custom-modal-header">
+        <div>
+          <span style="font-size: 0.76rem; font-weight: 800; color: #10b981; text-transform: uppercase;">Épreuve terminée</span>
+          <h3 style="margin: 4px 0 0 0; font-size: 1.25rem; font-weight: 800; color: var(--text-primary);">🎯 Auto-évaluation de votre copie</h3>
+        </div>
+        <button type="button" class="custom-modal-close" onclick="closeExamSimulatorReview()">✕</button>
+      </div>
+      <div class="custom-modal-body" style="padding: 20px 24px;">
+        <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <strong id="reviewExamTitle" style="color: var(--text-primary); font-size: 1rem; display: block;">...</strong>
+            <span id="reviewExamTimeUsed" style="font-size: 0.82rem; color: var(--text-secondary);">Temps utilisé : ...</span>
+          </div>
+          <div style="text-align: right;">
+            <span style="font-size: 0.76rem; color: var(--text-secondary); display: block;">Note globale estimée</span>
+            <strong id="reviewTotalScoreDisplay" style="font-size: 1.4rem; color: #10b981;">0.00 / 20</strong>
+          </div>
+        </div>
+
+        <!-- Table des exercices pour auto-évaluation -->
+        <div style="margin-bottom: 20px;">
+          <h4 style="margin: 0 0 10px 0; font-size: 0.92rem; font-weight: 800; color: var(--text-primary);">Points obtenus par exercice (pas de 0.25 pt) :</h4>
+          <div id="reviewExercisesContainer" style="display: grid; gap: 10px;">
+            <!-- Rempli dynamiquement -->
+          </div>
+        </div>
+
+        <!-- Corrigé officiel si disponible -->
+        <div id="reviewCorrectionWrap" style="display: none; margin-bottom: 20px; padding: 14px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 10px;">
+          <p style="margin: 0 0 8px 0; font-size: 0.86rem; color: var(--text-primary);">🎉 <strong>Un corrigé est disponible pour cet examen !</strong></p>
+          <a id="reviewCorrectionLink" href="#" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: #38bdf8; color: #000; font-weight: 800; font-size: 0.85rem; text-decoration: none;">
+            📄 Consulter le corrigé
+          </a>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" onclick="closeExamSimulatorReview()" style="padding: 10px 18px; border-radius: 8px; border: 1px solid var(--border-color); background: transparent; color: var(--text-secondary); cursor: pointer; font-weight: 600;">Fermer sans enregistrer</button>
+          <button type="button" onclick="saveExamSimulatorEvaluation()" style="padding: 10px 24px; border-radius: 8px; background: linear-gradient(135deg, #10b981, #059669); color: #fff; font-size: 0.95rem; font-weight: 800; border: none; cursor: pointer; box-shadow: 0 4px 16px rgba(16,185,129,0.35);">💾 Enregistrer mon auto-évaluation</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. MODALE D'HISTORIQUE DES ESSAIS -->
+  <div id="examSimulatorHistoryModal" class="custom-modal-backdrop" style="display: none;">
+    <div class="custom-modal-dialog" style="max-width: 540px;">
+      <div class="custom-modal-header">
+        <div>
+          <span style="font-size: 0.76rem; font-weight: 800; color: #38bdf8; text-transform: uppercase;">Historique d'entraînement</span>
+          <h3 id="historyModalExamTitle" style="margin: 4px 0 0 0; font-size: 1.15rem; font-weight: 800; color: var(--text-primary);">...</h3>
+        </div>
+        <button type="button" class="custom-modal-close" onclick="closeExamHistoryModal()">✕</button>
+      </div>
+      <div class="custom-modal-body" style="padding: 20px 24px;">
+        <div id="historyModalListContainer" style="display: grid; gap: 10px; max-height: 360px; overflow-y: auto;">
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Fichiers Scripts -->
-  <script src="store.js?v=26.2"></script>
-  <script src="data.js?v=26.2"></script>
-  <script src="data/curriculum.js?v=26.2"></script>
-  <script src="data/documents.js?v=26.2"></script>
-  <script src="data/exercises.js?v=26.2"></script>
-  <script src="css_engine.js?v=26.2"></script>
-  <script src="algo_pratique_engine.js?v=26.2"></script>
-  <script src="pomodoro_engine.js?v=26.2"></script>
-  <script src="app.js?v=26.2"></script>
+
+  <script src="store.js?v=26.3"></script>
+  <script src="data.js?v=26.3"></script>
+  <script src="data/curriculum.js?v=26.3"></script>
+  <script src="data/documents.js?v=26.3"></script>
+  <script src="data/exercises.js?v=26.3"></script>
+  <script src="css_engine.js?v=26.3"></script>
+  <script src="algo_pratique_engine.js?v=26.3"></script>
+  <script src="pomodoro_engine.js?v=26.3"></script>
+  <script src="app.js?v=26.3"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {

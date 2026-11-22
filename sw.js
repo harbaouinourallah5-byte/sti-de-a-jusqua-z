@@ -1,17 +1,17 @@
-const CACHE_NAME = 'sti-de-a-z-v26.2';
+const CACHE_NAME = 'sti-de-a-z-v26.3';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
-  '/style.css?v=26.2',
-  '/store.js?v=26.2',
-  '/data.js?v=26.2',
-  '/data/curriculum.js?v=26.2',
-  '/data/documents.js?v=26.2',
-  '/data/exercises.js?v=26.2',
-  '/app.js?v=26.2',
-  '/css_engine.js?v=26.2',
-  '/algo_pratique_engine.js?v=26.2',
-  '/pomodoro_engine.js?v=26.2',
+  '/style.css?v=26.3',
+  '/store.js?v=26.3',
+  '/data.js?v=26.3',
+  '/data/curriculum.js?v=26.3',
+  '/data/documents.js?v=26.3',
+  '/data/exercises.js?v=26.3',
+  '/app.js?v=26.3',
+  '/css_engine.js?v=26.3',
+  '/algo_pratique_engine.js?v=26.3',
+  '/pomodoro_engine.js?v=26.3',
   '/favicon.svg',
   '/manifest.webmanifest'
 ];

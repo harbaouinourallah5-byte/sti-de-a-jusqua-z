@@ -1549,7 +1549,8 @@ const VIEW_TO_HASH_MAP = {
   'algo-pratique': '#/algo/pratique',
   'algo-theorique': '#/algo/theorique',
   'algo-types': '#/algo/types',
-  'algo-methodes': '#/algo/methodes'
+  'algo-methodes': '#/algo/methodes',
+  'exam-simulator': '#/examens/simulateur'
 };
 
 function getHashForView(viewName) {
@@ -1560,7 +1561,14 @@ function parseAppHash(hash) {
   let clean = (hash || '').replace(/^#[\/]?/, '').trim().toLowerCase();
   if (!clean || clean === 'home') return { view: 'home' };
 
+  // Simulateur d'examen (#/examens/simulateur/:id ou #/simulateur/:id)
+  if (clean.startsWith('examens/simulateur') || clean.startsWith('simulateur')) {
+    const examId = clean.replace(/^(examens\/simulateur|simulateur)\/?/, '').trim();
+    return { view: 'exam-simulator', examId: examId || null };
+  }
+
   // Algo Théorique routes : devoirs, slugs de chapitres, etc.
+
   if (clean.startsWith('algo/theorique') || clean.startsWith('theorique') || clean.startsWith('algo-theorique')) {
     const sub = clean.replace(/^(algo\/theorique|theorique|algo-theorique)\/?/, '').trim();
     if (sub.startsWith('devoirs') || sub.startsWith('devoir')) {
@@ -1620,6 +1628,7 @@ function parseAppHash(hash) {
     'examens-bac': 'examens',
     'algo': 'algo-home',
     'algo-home': 'algo-home',
+    'algo/home': 'algo-home',
     'algo/pratique': 'algo-pratique',
     'algo-pratique': 'algo-pratique',
     'pratique': 'algo-pratique',
@@ -1638,13 +1647,20 @@ function handleRouteFromHash() {
   const route = parseAppHash(currentHash);
   isRouterNavigating = true;
 
-  if (['algo-home', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes'].includes(route.view)) {
+  if (['algo-home', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes', 'exam-simulator'].includes(route.view)) {
     if (typeof switchModule === 'function') switchModule('algo', true);
   } else if (['html', 'css', 'js', 'sql'].includes(route.view)) {
     if (typeof switchModule === 'function') switchModule('sti', true);
   }
 
   switchView(route.view, true);
+
+  if (route.view === 'exam-simulator') {
+    if (route.examId && typeof initExamSimulatorScreen === 'function') {
+      initExamSimulatorScreen(route.examId);
+    }
+  }
+
 
   if (route.view === 'algo-types') {
     if (route.typeSlug && typeof openTypeDetailView === 'function') {
@@ -9265,6 +9281,9 @@ function updateAllProgressUI() {
     renderSidebarChapterRings();
     updateHubChapterProgressBars();
     updateResumeStudyCard();
+    if (typeof renderAlgoHubARevoirSection === 'function') {
+      renderAlgoHubARevoirSection();
+    }
   } catch (e) {
     console.warn('[updateAllProgressUI] error', e);
   }
@@ -10027,6 +10046,14 @@ function renderExamensPage() {
          </div>`
       : '';
 
+    const lastScore = (typeof STI_STORE !== 'undefined') ? STI_STORE.getLastExamScore(doc.id) : null;
+    const lastScoreHtml = lastScore
+      ? `<div style="display:flex;align-items:center;gap:6px;margin-top:2px;">
+           <span style="font-size:0.75rem;font-weight:700;color:#10b981;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25);padding:2px 8px;border-radius:6px;">Dernier essai : ${lastScore.score}/${lastScore.maxScore}</span>
+           <button type="button" onclick="openExamHistoryModal('${doc.id}')" style="background:none;border:none;color:#38bdf8;font-size:0.75rem;cursor:pointer;text-decoration:underline;">📜 Historique</button>
+         </div>`
+      : '';
+
     return `
     <div style="background:var(--surface-elevated);border:1px solid var(--border-color);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px;">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
@@ -10048,11 +10075,18 @@ function renderExamensPage() {
           ${incompleteHtml}
           <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:4px;">${chapHtml}</div>
         </div>
-        <div style="flex-shrink:0;">
-          <a href="${doc.file}" target="_blank" rel="noopener"
-             style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:10px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;font-weight:600;font-size:0.88rem;text-decoration:none;white-space:nowrap;">
-            📄 Sujet
-          </a>
+        <div style="flex-shrink:0; display:flex; flex-direction:column; gap:8px; align-items:flex-end;">
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <a href="${doc.file}" target="_blank" rel="noopener"
+               style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;background:rgba(255,255,255,0.08);border:1px solid var(--border-color);color:var(--text-primary);font-weight:600;font-size:0.84rem;text-decoration:none;white-space:nowrap;">
+              📄 Sujet PDF
+            </a>
+            <button type="button" onclick="openExamSimulatorSetup('${doc.id}')"
+               style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-weight:700;font-size:0.84rem;border:none;cursor:pointer;white-space:nowrap;box-shadow:0 2px 10px rgba(16,185,129,0.3);">
+              ⏱️ Passer cet examen
+            </button>
+          </div>
+          ${lastScoreHtml}
         </div>
       </div>
     </div>`;
@@ -10060,6 +10094,744 @@ function renderExamensPage() {
 }
 
 window.renderExamensPage = renderExamensPage;
+
+
+// ===================================================================
+// SIMULATEUR D'EXAMEN BAC (RUN 6 FEATURE 3)
+// ===================================================================
+
+let currentSimExamId = null;
+let currentSimDoc = null;
+let currentSimSession = null;
+let simCountdownInterval = null;
+let simPdfDoc = null;
+let simPdfPage = 1;
+let simPdfZoom = 1.0;
+let isPdfJsLoading = false;
+
+function openExamSimulatorSetup(examId) {
+  if (typeof DOCUMENTS_DATA === 'undefined') return;
+  const doc = DOCUMENTS_DATA.getDocumentById(examId);
+  if (!doc) return;
+
+  currentSimExamId = examId;
+  currentSimDoc = doc;
+
+  const modal = document.getElementById('examSimulatorSetupModal');
+  const titleEl = document.getElementById('setupModalExamTitle');
+  const warningEl = document.getElementById('setupModalWarning');
+  const durationInput = document.getElementById('setupDurationInput');
+  const singleExOption = document.getElementById('simSingleExRadioOption');
+  const singleExSelect = document.getElementById('setupSingleExSelect');
+  const singleExWrap = document.getElementById('setupSingleExSelectWrap');
+  const suggestedBadge = document.getElementById('setupSuggestedTimeBadge');
+
+  if (!modal) return;
+
+  const dateStr = (!doc.date || doc.date === 'inconnue') ? 'Année non précisée' : doc.date;
+  if (titleEl) titleEl.textContent = `${doc.title} (${dateStr})`;
+
+  if (warningEl) {
+    if (doc.incomplete) {
+      warningEl.style.display = 'block';
+      warningEl.innerHTML = `⚠️ <strong>Attention :</strong> Ce sujet est incomplet / partiel (${escapeHtml(doc.notes || 'sujet partiel')}). Vous pouvez tout de même passer les exercices disponibles.`;
+    } else {
+      warningEl.style.display = 'none';
+    }
+  }
+
+  // Exercices disponibles avec points
+  let examExercises = [];
+  if (typeof EXERCISES_DATA !== 'undefined') {
+    examExercises = EXERCISES_DATA.getByExam(examId);
+  }
+
+  // Filtrer les exercices qui ont des points non nulls
+  const validExercises = examExercises.filter(ex => ex.points !== null && ex.points !== undefined);
+
+  if (singleExOption) {
+    if (validExercises.length > 0) {
+      singleExOption.style.display = 'flex';
+    } else {
+      singleExOption.style.display = 'none';
+    }
+  }
+
+  if (singleExSelect) {
+    singleExSelect.innerHTML = validExercises.map(ex => {
+      const min = Math.round(ex.points * (doc.duration === '1h30' ? 4.5 : 9));
+      return `<option value="${ex.exNum}" data-points="${ex.points}" data-min="${min}">
+        ${escapeHtml(ex.exNum)} — ${ex.points} pts (conseillé : ${min} min)
+      </option>`;
+    }).join('');
+  }
+
+  // Réinitialiser mode
+  const fullRadio = modal.querySelector('input[name="simModeChoice"][value="full"]');
+  if (fullRadio) fullRadio.checked = true;
+  if (singleExWrap) singleExWrap.style.display = 'none';
+  if (suggestedBadge) suggestedBadge.textContent = '';
+
+  // Durée par défaut
+  let defMin = 180;
+  if (doc.duration === '1h30') defMin = 90;
+  else if (doc.duration === '2h') defMin = 120;
+  else if (doc.duration === '1h') defMin = 60;
+  if (durationInput) durationInput.value = defMin;
+
+  modal.style.display = 'flex';
+}
+
+function closeExamSimulatorSetup() {
+  const modal = document.getElementById('examSimulatorSetupModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function setSetupDuration(minutes) {
+  const input = document.getElementById('setupDurationInput');
+  if (input) input.value = minutes;
+}
+
+function toggleSimSetupMode(mode) {
+  const singleExWrap = document.getElementById('setupSingleExSelectWrap');
+  const suggestedBadge = document.getElementById('setupSuggestedTimeBadge');
+  const durationInput = document.getElementById('setupDurationInput');
+
+  if (mode === 'single') {
+    if (singleExWrap) singleExWrap.style.display = 'block';
+    updateSimSetupSuggestedTime();
+  } else {
+    if (singleExWrap) singleExWrap.style.display = 'none';
+    if (suggestedBadge) suggestedBadge.textContent = '';
+    let defMin = 180;
+    if (currentSimDoc && currentSimDoc.duration === '1h30') defMin = 90;
+    if (durationInput) durationInput.value = defMin;
+  }
+}
+
+function updateSimSetupSuggestedTime() {
+  const select = document.getElementById('setupSingleExSelect');
+  const durationInput = document.getElementById('setupDurationInput');
+  const suggestedBadge = document.getElementById('setupSuggestedTimeBadge');
+  if (!select) return;
+
+  const opt = select.selectedOptions[0];
+  if (opt) {
+    const min = opt.getAttribute('data-min') || '45';
+    const pts = opt.getAttribute('data-points') || '';
+    if (durationInput) durationInput.value = min;
+    if (suggestedBadge) suggestedBadge.textContent = `Temps conseillé : ${min} min (${pts} pts)`;
+  }
+}
+
+function confirmStartExamSimulator() {
+  if (!currentSimExamId) return;
+  const modal = document.getElementById('examSimulatorSetupModal');
+  const durationInput = document.getElementById('setupDurationInput');
+  const modeRadio = modal ? modal.querySelector('input[name="simModeChoice"]:checked') : null;
+  const singleExSelect = document.getElementById('setupSingleExSelect');
+
+  const mode = modeRadio ? modeRadio.value : 'full';
+  const durationMin = durationInput ? Math.max(5, parseInt(durationInput.value, 10) || 180) : 180;
+  const exNum = (mode === 'single' && singleExSelect) ? singleExSelect.value : null;
+
+  closeExamSimulatorSetup();
+  startExamSimulator(currentSimExamId, durationMin, exNum);
+}
+
+function startExamSimulator(examId, durationMin, exNum) {
+  if (typeof STI_STORE === 'undefined') return;
+
+  const durationSec = durationMin * 60;
+  currentSimSession = STI_STORE.setActiveExamSession(examId, durationSec, exNum);
+
+  navigateToHash(`#/examens/simulateur/${examId}`);
+}
+
+function initExamSimulatorScreen(examId) {
+  if (typeof DOCUMENTS_DATA === 'undefined' || typeof STI_STORE === 'undefined') return;
+  const doc = DOCUMENTS_DATA.getDocumentById(examId);
+  if (!doc) {
+    alert("Examen non trouvé.");
+    navigateToHash('#/examens');
+    return;
+  }
+
+  currentSimExamId = examId;
+  currentSimDoc = doc;
+
+  // Récupérer la session active existante ou en créer une par défaut
+  let sess = STI_STORE.getActiveExamSession();
+  if (!sess || sess.examId !== examId) {
+    let defMin = (doc.duration === '1h30') ? 90 : 180;
+    sess = STI_STORE.setActiveExamSession(examId, defMin * 60, null);
+  }
+  currentSimSession = sess;
+
+  // Remplir l'en-tête du simulateur
+  const titleEl = document.getElementById('simExamTitle');
+  const subinfoEl = document.getElementById('simExamSubinfo');
+  const modeBadge = document.getElementById('simModeBadge');
+  const externalLink = document.getElementById('pdfExternalLink');
+
+  if (titleEl) titleEl.textContent = doc.title;
+  if (subinfoEl) {
+    const parts = [
+      doc.school,
+      doc.teacher ? 'Prof. ' + doc.teacher : null,
+      doc.date && doc.date !== 'inconnue' ? doc.date : null,
+      sess.exNum ? `🎯 Exercice ciblé : ${sess.exNum}` : 'Épreuve complète'
+    ].filter(Boolean);
+    subinfoEl.textContent = parts.join(' • ');
+  }
+  if (modeBadge) {
+    modeBadge.textContent = sess.exNum ? `⏱️ ENTRAÎNEMENT CIBLÉ : ${sess.exNum}` : '⏱️ ÉPREUVE OFFICIELLE';
+  }
+  if (externalLink) {
+    externalLink.href = doc.file;
+  }
+
+  // Cacher l'overlay de temps écoulé
+  const timesUpOverlay = document.getElementById('simTimesUpOverlay');
+  if (timesUpOverlay) timesUpOverlay.style.display = 'none';
+
+  // Lancer le minuteur
+  startSimulatorTimerLoop();
+
+  // Charger et afficher le PDF
+  simPdfPage = 1;
+  simPdfZoom = 1.0;
+  loadAndRenderPdf(doc.file);
+}
+
+function startSimulatorTimerLoop() {
+  if (simCountdownInterval) clearInterval(simCountdownInterval);
+
+  updateSimulatorCountdown();
+  simCountdownInterval = setInterval(updateSimulatorCountdown, 1000);
+}
+
+function updateSimulatorCountdown() {
+  if (!currentSimSession) return;
+  const now = Date.now();
+  const remainingSec = Math.max(0, Math.round((currentSimSession.endTimestamp - now) / 1000));
+
+  const clockEl = document.getElementById('simTimerClock');
+  const alertBanner = document.getElementById('simVisualAlertBanner');
+
+  // Format HH:MM:SS
+  const h = Math.floor(remainingSec / 3600);
+  const m = Math.floor((remainingSec % 3600) / 60);
+  const s = remainingSec % 60;
+  const pad = n => (n < 10 ? '0' : '') + n;
+  const timeStr = `${pad(h)}:${pad(m)}:${pad(s)}`;
+
+  if (clockEl) {
+    clockEl.textContent = timeStr;
+    clockEl.className = 'sim-timer-clock';
+  }
+
+  if (alertBanner) {
+    alertBanner.style.display = 'none';
+    alertBanner.className = 'sim-visual-alert-banner';
+  }
+
+  if (remainingSec === 0) {
+    // TEMPS ÉCOULÉ
+    if (clockEl) clockEl.classList.add('alert-red');
+    const overlay = document.getElementById('simTimesUpOverlay');
+    if (overlay && overlay.style.display !== 'flex') {
+      overlay.style.display = 'flex';
+      try {
+        if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 300]);
+      } catch (e) {}
+    }
+    if (simCountdownInterval) clearInterval(simCountdownInterval);
+    return;
+  }
+
+  // Alertes visuelles : 5 min, 10 min, 30 min
+  if (remainingSec <= 300) {
+    if (clockEl) clockEl.classList.add('alert-red');
+    if (alertBanner) {
+      alertBanner.style.display = 'block';
+      alertBanner.classList.add('alert-red');
+      alertBanner.textContent = '🚨 ATTENTION : Il reste moins de 5 minutes ! Concluez vos réponses et vérifiez votre T.D.O.';
+    }
+  } else if (remainingSec <= 600) {
+    if (clockEl) clockEl.classList.add('alert-orange');
+    if (alertBanner) {
+      alertBanner.style.display = 'block';
+      alertBanner.classList.add('alert-orange');
+      alertBanner.textContent = '⚠️ Attention : Moins de 10 minutes restantes. Commencez votre relecture.';
+    }
+  } else if (remainingSec <= 1800) {
+    if (clockEl) clockEl.classList.add('alert-amber');
+    if (alertBanner) {
+      alertBanner.style.display = 'block';
+      alertBanner.classList.add('alert-amber');
+      alertBanner.textContent = '⏱️ Il reste 30 minutes. Gérez votre temps pour les derniers exercices.';
+    }
+  }
+}
+
+function abandonExamSimulator() {
+  const ok = confirm("Abandonner l'épreuve en cours ? Votre temps ne sera pas enregistré.");
+  if (!ok) return;
+
+  if (simCountdownInterval) clearInterval(simCountdownInterval);
+  if (typeof STI_STORE !== 'undefined') {
+    STI_STORE.clearActiveExamSession();
+  }
+  currentSimSession = null;
+  navigateToHash('#/examens');
+}
+
+function closeTimesUpAndProceedToReview() {
+  const overlay = document.getElementById('simTimesUpOverlay');
+  if (overlay) overlay.style.display = 'none';
+  openExamSimulatorReview();
+}
+
+function openExamSimulatorReview() {
+  if (simCountdownInterval) clearInterval(simCountdownInterval);
+
+  const doc = currentSimDoc;
+  const sess = currentSimSession;
+  if (!doc) return;
+
+  const modal = document.getElementById('examSimulatorReviewModal');
+  const titleEl = document.getElementById('reviewExamTitle');
+  const timeUsedEl = document.getElementById('reviewExamTimeUsed');
+  const container = document.getElementById('reviewExercisesContainer');
+  const correctionWrap = document.getElementById('reviewCorrectionWrap');
+  const correctionLink = document.getElementById('reviewCorrectionLink');
+
+  if (!modal) return;
+
+  // Calcul du temps utilisé
+  const startTs = sess ? sess.startTimestamp : Date.now();
+  const timeUsedSec = Math.max(0, Math.round((Date.now() - startTs) / 1000));
+  const usedMin = Math.floor(timeUsedSec / 60);
+  const usedSec = timeUsedSec % 60;
+  const timeStr = `${usedMin} min ${usedSec < 10 ? '0' : ''}${usedSec} s`;
+
+  if (titleEl) titleEl.textContent = doc.title;
+  if (timeUsedEl) timeUsedEl.textContent = `Temps utilisé : ${timeStr} • Date : ${new Date().toLocaleDateString('fr-FR')}`;
+
+  // Exercices de l'examen depuis EXERCISES_DATA
+  let examExercises = [];
+  if (typeof EXERCISES_DATA !== 'undefined') {
+    examExercises = EXERCISES_DATA.getByExam(doc.id);
+  }
+
+  // Si mode un seul exercice
+  if (sess && sess.exNum) {
+    examExercises = examExercises.filter(ex => ex.exNum === sess.exNum);
+  }
+
+  if (container) {
+    if (examExercises.length === 0) {
+      container.innerHTML = `
+        <div style="background:var(--surface-bg);border:1px solid var(--border-color);border-radius:10px;padding:16px;text-align:center;">
+          <p style="margin:0 0 10px 0;color:var(--text-primary);font-size:0.9rem;">Auto-évaluation globale sur 20 points :</p>
+          <div style="display:flex;align-items:center;justify-content:center;gap:12px;">
+            <input type="number" id="manualReviewScoreInput" min="0" max="20" step="0.25" value="10" onchange="updateLiveReviewTotal()" style="width:100px;padding:8px 12px;border-radius:8px;border:1px solid var(--border-color);background:var(--surface-elevated);color:var(--text-primary);font-size:1.1rem;font-weight:700;text-align:center;">
+            <span style="font-weight:800;color:var(--text-secondary);">/ 20</span>
+          </div>
+        </div>
+      `;
+    } else {
+      container.innerHTML = examExercises.map((ex, idx) => {
+        const maxPts = (ex.points !== null && ex.points !== undefined) ? ex.points : 5;
+        const typeBadges = (ex.types || []).map(t => {
+          const m = (typeof EXERCISES_DATA !== 'undefined') ? EXERCISES_DATA.getTypeMeta(t) : null;
+          return `<span style="font-size:0.72rem;padding:2px 6px;border-radius:4px;background:rgba(99,102,241,0.12);color:#818cf8;">${escapeHtml(m ? m.label : t)}</span>`;
+        }).join(' ');
+
+        return `
+          <div class="sim-review-exercise-row" data-exnum="${escapeHtml(ex.exNum)}" data-max="${maxPts}" style="background:var(--surface-bg);border:1px solid var(--border-color);border-radius:10px;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+            <div style="flex:1;min-width:200px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                <span style="font-size:0.85rem;font-weight:800;color:#10b981;background:rgba(16,185,129,0.12);padding:2px 8px;border-radius:6px;">
+                  ${escapeHtml(ex.exNum)}
+                </span>
+                <span style="font-size:0.8rem;font-weight:700;color:#f59e0b;">
+                  Barème : ${maxPts} pts
+                </span>
+              </div>
+              <div style="display:flex;gap:4px;flex-wrap:wrap;">${typeBadges}</div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <label style="font-size:0.8rem;color:var(--text-secondary);">Note :</label>
+                <input type="number" class="sim-ex-score-input" min="0" max="${maxPts}" step="0.25" value="${maxPts}" onchange="updateLiveReviewTotal()" style="width:80px;padding:6px 10px;border-radius:6px;border:1px solid var(--border-color);background:var(--surface-elevated);color:var(--text-primary);font-size:0.95rem;font-weight:700;text-align:center;">
+                <span style="font-size:0.8rem;color:var(--text-secondary);">/ ${maxPts}</span>
+              </div>
+              <button type="button" onclick="setRowScoreZero(this)" style="background:rgba(255,255,255,0.06);border:1px solid var(--border-color);color:var(--text-secondary);font-size:0.75rem;padding:6px 10px;border-radius:6px;cursor:pointer;">
+                0 (Pas fait)
+              </button>
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:0.8rem;font-weight:700;color:#fbbf24;">
+                <input type="checkbox" class="sim-ex-arevoir-check">
+                <span>⭐ À revoir</span>
+              </label>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+
+  // Corrigé officiel si existant
+  if (correctionWrap && correctionLink) {
+    if (doc.correction) {
+      correctionWrap.style.display = 'block';
+      correctionLink.href = doc.correction;
+    } else {
+      correctionWrap.style.display = 'none';
+    }
+  }
+
+  updateLiveReviewTotal();
+  modal.style.display = 'flex';
+}
+
+function setRowScoreZero(btn) {
+  const row = btn.closest('.sim-review-exercise-row');
+  if (row) {
+    const input = row.querySelector('.sim-ex-score-input');
+    if (input) {
+      input.value = '0';
+      updateLiveReviewTotal();
+    }
+  }
+}
+
+function updateLiveReviewTotal() {
+  const display = document.getElementById('reviewTotalScoreDisplay');
+  if (!display) return;
+
+  const rows = document.querySelectorAll('.sim-review-exercise-row');
+  if (!rows.length) {
+    const manualInput = document.getElementById('manualReviewScoreInput');
+    const val = manualInput ? parseFloat(manualInput.value) || 0 : 0;
+    display.textContent = `${val.toFixed(2)} / 20`;
+    return;
+  }
+
+  let totalObtained = 0;
+  let totalMax = 0;
+
+  rows.forEach(r => {
+    const max = parseFloat(r.getAttribute('data-max')) || 0;
+    const input = r.querySelector('.sim-ex-score-input');
+    const val = input ? parseFloat(input.value) || 0 : 0;
+    totalObtained += val;
+    totalMax += max;
+  });
+
+  display.textContent = `${totalObtained.toFixed(2)} / ${totalMax.toFixed(2)}`;
+}
+
+function closeExamSimulatorReview() {
+  const modal = document.getElementById('examSimulatorReviewModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function saveExamSimulatorEvaluation() {
+  if (typeof STI_STORE === 'undefined' || !currentSimDoc) return;
+
+  const doc = currentSimDoc;
+  const sess = currentSimSession;
+  const startTs = sess ? sess.startTimestamp : Date.now();
+  const timeUsedSec = Math.max(0, Math.round((Date.now() - startTs) / 1000));
+
+  const rows = document.querySelectorAll('.sim-review-exercise-row');
+  let score = 0;
+  let maxScore = 20;
+  const exercisesData = [];
+
+  if (rows.length > 0) {
+    score = 0;
+    maxScore = 0;
+    rows.forEach(r => {
+      const exNum = r.getAttribute('data-exnum');
+      const max = parseFloat(r.getAttribute('data-max')) || 0;
+      const input = r.querySelector('.sim-ex-score-input');
+      const val = input ? parseFloat(input.value) || 0 : 0;
+      const aRevoir = !!(r.querySelector('.sim-ex-arevoir-check') && r.querySelector('.sim-ex-arevoir-check').checked);
+
+      score += val;
+      maxScore += max;
+      exercisesData.push({
+        exNum: exNum,
+        points: val,
+        maxPoints: max,
+        aRevoir: aRevoir
+      });
+
+      // Si marqué à revoir, ajouter au bookmark
+      if (aRevoir) {
+        STI_STORE.addBookmark('exercise', `${doc.id}_${exNum}`, {
+          examId: doc.id,
+          exNum: exNum,
+          date: new Date().toISOString().substring(0, 10),
+          title: doc.title
+        });
+      }
+    });
+  } else {
+    const manualInput = document.getElementById('manualReviewScoreInput');
+    score = manualInput ? parseFloat(manualInput.value) || 0 : 0;
+    maxScore = 20;
+  }
+
+  const attempt = {
+    examId: doc.id,
+    date: new Date().toLocaleDateString('fr-FR'),
+    timeUsedSec: timeUsedSec,
+    score: parseFloat(score.toFixed(2)),
+    maxScore: parseFloat(maxScore.toFixed(2)),
+    exercises: exercisesData
+  };
+
+  STI_STORE.saveExamAttempt(attempt);
+  STI_STORE.clearActiveExamSession();
+  currentSimSession = null;
+
+  closeExamSimulatorReview();
+
+  // Actualiser la page d'examens et la section "À revoir"
+  if (typeof renderExamensPage === 'function') renderExamensPage();
+  if (typeof renderAlgoHubARevoirSection === 'function') renderAlgoHubARevoirSection();
+
+  alert(`🎉 Essai enregistré avec succès !\nScore obtenu : ${attempt.score} / ${attempt.maxScore}\nTemps utilisé : ${Math.floor(timeUsedSec / 60)} min.`);
+  navigateToHash('#/examens');
+}
+
+function openExamHistoryModal(examId) {
+  if (typeof DOCUMENTS_DATA === 'undefined' || typeof STI_STORE === 'undefined') return;
+  const doc = DOCUMENTS_DATA.getDocumentById(examId);
+  const modal = document.getElementById('examSimulatorHistoryModal');
+  const titleEl = document.getElementById('historyModalExamTitle');
+  const container = document.getElementById('historyModalListContainer');
+
+  if (!modal || !doc) return;
+  if (titleEl) titleEl.textContent = `${doc.title} — Historique`;
+
+  const history = STI_STORE.getExamHistory(examId);
+
+  if (container) {
+    if (!history.length) {
+      container.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:20px;">Aucun essai enregistré pour cet examen.</p>';
+    } else {
+      container.innerHTML = history.map((att, idx) => {
+        const minUsed = Math.floor((att.timeUsedSec || 0) / 60);
+        return `
+          <div class="sim-history-row">
+            <div>
+              <strong style="color:var(--text-primary);font-size:0.92rem;display:block;">Essai #${history.length - idx} • 📅 ${escapeHtml(att.date)}</strong>
+              <span style="font-size:0.78rem;color:var(--text-secondary);">Temps : ${minUsed} min</span>
+            </div>
+            <div style="font-size:1.15rem;font-weight:800;color:#10b981;">
+              ${att.score} / ${att.maxScore}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+
+  modal.style.display = 'flex';
+}
+
+function closeExamHistoryModal() {
+  const modal = document.getElementById('examSimulatorHistoryModal');
+  if (modal) modal.style.display = 'none';
+}
+
+// ── GESTION DE PDF.JS (CHARGEMENT LAZY ET RENDU CANVAS) ──
+function loadAndRenderPdf(pdfUrl) {
+  const loadingEl = document.getElementById('pdfLoadingState');
+  const canvas = document.getElementById('pdfViewerCanvas');
+
+  if (loadingEl) loadingEl.style.display = 'block';
+  if (canvas) canvas.style.display = 'none';
+
+  if (window.pdfjsLib) {
+    initPdfDocument(pdfUrl);
+  } else {
+    if (isPdfJsLoading) return;
+    isPdfJsLoading = true;
+
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    script.onload = () => {
+      isPdfJsLoading = false;
+      if (window.pdfjsLib) {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        initPdfDocument(pdfUrl);
+      }
+    };
+    script.onerror = () => {
+      isPdfJsLoading = false;
+      if (loadingEl) {
+        loadingEl.innerHTML = `
+          <p style="color:#f87171;font-weight:700;">Impossible de charger la visionneuse PDF intégrée.</p>
+          <a href="${pdfUrl}" target="_blank" class="sim-action-finish-btn" style="display:inline-block;margin-top:10px;">📄 Ouvrir le sujet PDF directement</a>
+        `;
+      }
+    };
+    document.head.appendChild(script);
+  }
+}
+
+function initPdfDocument(pdfUrl) {
+  if (!window.pdfjsLib) return;
+  const loadingEl = document.getElementById('pdfLoadingState');
+  const canvas = document.getElementById('pdfViewerCanvas');
+
+  window.pdfjsLib.getDocument(pdfUrl).promise.then(pdf => {
+    simPdfDoc = pdf;
+    simPdfPage = 1;
+    const totalPagesEl = document.getElementById('pdfTotalPages');
+    if (totalPagesEl) totalPagesEl.textContent = pdf.numPages;
+
+    if (loadingEl) loadingEl.style.display = 'none';
+    if (canvas) canvas.style.display = 'block';
+
+    renderPdfPage(simPdfPage);
+  }).catch(err => {
+    console.warn('[PDF.js] Erreur de chargement du PDF:', err);
+    if (loadingEl) {
+      loadingEl.innerHTML = `
+        <p style="color:#f87171;font-weight:700;">Le PDF n'a pas pu être affiché dans le lecteur intégré.</p>
+        <a href="${pdfUrl}" target="_blank" class="sim-action-finish-btn" style="display:inline-block;margin-top:10px;">📄 Ouvrir le sujet PDF</a>
+      `;
+    }
+  });
+}
+
+function renderPdfPage(pageNum) {
+  if (!simPdfDoc) return;
+  simPdfDoc.getPage(pageNum).then(page => {
+    const canvas = document.getElementById('pdfViewerCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const viewportWrap = document.getElementById('pdfCanvasViewport');
+    const availableWidth = viewportWrap ? Math.min(viewportWrap.clientWidth - 20, 860) : 800;
+    const unscaledViewport = page.getViewport({ scale: 1 });
+    const fitScale = (availableWidth / unscaledViewport.width) * simPdfZoom;
+    const viewport = page.getViewport({ scale: fitScale });
+
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.floor(viewport.width * dpr);
+    canvas.height = Math.floor(viewport.height * dpr);
+    canvas.style.width = Math.floor(viewport.width) + 'px';
+    canvas.style.height = Math.floor(viewport.height) + 'px';
+
+    ctx.scale(dpr, dpr);
+
+    const renderContext = {
+      canvasContext: ctx,
+      viewport: viewport
+    };
+    page.render(renderContext);
+
+    const pageNumEl = document.getElementById('pdfPageNum');
+    if (pageNumEl) pageNumEl.textContent = pageNum;
+    const zoomEl = document.getElementById('pdfZoomLevel');
+    if (zoomEl) zoomEl.textContent = Math.round(simPdfZoom * 100) + '%';
+  });
+}
+
+function changePdfPage(delta) {
+  if (!simPdfDoc) return;
+  const newPage = simPdfPage + delta;
+  if (newPage >= 1 && newPage <= simPdfDoc.numPages) {
+    simPdfPage = newPage;
+    renderPdfPage(simPdfPage);
+  }
+}
+
+function changePdfZoom(delta) {
+  simPdfZoom = Math.max(0.6, Math.min(2.5, simPdfZoom + delta));
+  renderPdfPage(simPdfPage);
+}
+
+// ── BLOC "À REVOIR" SUR LE HUB ALGORITHMIQUE ──
+function renderAlgoHubARevoirSection() {
+  const container = document.getElementById('algoARevoirList');
+  const countEl = document.getElementById('algoARevoirCount');
+  if (!container || typeof STI_STORE === 'undefined') return;
+
+  const bookmarks = STI_STORE.getBookmarks('exercise');
+  if (countEl) countEl.textContent = bookmarks.length;
+
+  if (bookmarks.length === 0) {
+    container.innerHTML = `
+      <div style="background:var(--surface-bg);border:1px dashed var(--border-color);border-radius:10px;padding:24px;text-align:center;color:var(--text-secondary);font-size:0.86rem;">
+        ✨ Aucun exercice marqué "À revoir" pour l'instant !
+        <span style="display:block;margin-top:4px;color:var(--text-muted);font-size:0.78rem;">
+          Cochez l'étoile ⭐ sur un exercice d'examen ou lors de vos simulations pour le retrouver ici.
+        </span>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = bookmarks.map(b => {
+    let exMeta = null;
+    let doc = null;
+    if (typeof EXERCISES_DATA !== 'undefined') {
+      exMeta = EXERCISES_DATA.getAllExercises().find(x => x.id === b.id || (b.meta && x.examId === b.meta.examId && x.exNum === b.meta.exNum));
+    }
+    if (typeof DOCUMENTS_DATA !== 'undefined' && b.meta && b.meta.examId) {
+      doc = DOCUMENTS_DATA.getDocumentById(b.meta.examId);
+    }
+
+    const exNum = (exMeta && exMeta.exNum) ? exMeta.exNum : (b.meta ? b.meta.exNum : 'Ex');
+    const examTitle = doc ? doc.title : (b.meta && b.meta.title ? b.meta.title : 'Examen Bac');
+    const pdfUrl = doc ? `${doc.file}#page=${(exMeta && exMeta.pdfPage) ? exMeta.pdfPage : 1}` : '#';
+    const mainChapter = (exMeta && exMeta.chapters && exMeta.chapters.length) ? exMeta.chapters[0] : null;
+
+    return `
+      <div style="background:var(--surface-bg);border:1px solid var(--border-color);border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:220px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <span style="font-size:0.82rem;font-weight:800;color:#f59e0b;background:rgba(245,158,11,0.12);padding:2px 8px;border-radius:6px;">
+              ⭐ ${escapeHtml(exNum)}
+            </span>
+            <span style="font-size:0.88rem;font-weight:700;color:var(--text-primary);">${escapeHtml(examTitle)}</span>
+          </div>
+          <span style="font-size:0.78rem;color:var(--text-secondary);">Marqué le ${new Date(b.addedAt).toLocaleDateString('fr-FR')}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          ${mainChapter ? `
+            <a href="#/algo/theorique/${mainChapter}" style="font-size:0.8rem;color:#38bdf8;text-decoration:none;padding:6px 10px;border-radius:6px;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.25);">
+              📖 Chapitre
+            </a>
+          ` : ''}
+          <a href="${pdfUrl}" target="_blank" rel="noopener" style="font-size:0.8rem;color:#10b981;text-decoration:none;padding:6px 12px;border-radius:6px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);font-weight:700;">
+            📄 Ouvrir le sujet
+          </a>
+          <button type="button" onclick="removeExerciseBookmark('${b.id}')" title="Retirer de la liste" style="background:none;border:none;color:var(--text-muted);font-size:1.1rem;cursor:pointer;padding:4px;">
+            ✕
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function removeExerciseBookmark(bId) {
+  if (typeof STI_STORE === 'undefined') return;
+  STI_STORE.removeBookmark('exercise', bId);
+  renderAlgoHubARevoirSection();
+}
+
 
 
 // ===================================================================
@@ -10297,6 +11069,27 @@ window.updateHubChapterProgressBars = updateHubChapterProgressBars;
 window.updateResumeStudyCard = updateResumeStudyCard;
 window.resumeLastStudySession = resumeLastStudySession;
 window.updateAllProgressUI = updateAllProgressUI;
+
+// Simulateur d'examen
+window.openExamSimulatorSetup = openExamSimulatorSetup;
+window.closeExamSimulatorSetup = closeExamSimulatorSetup;
+window.setSetupDuration = setSetupDuration;
+window.toggleSimSetupMode = toggleSimSetupMode;
+window.updateSimSetupSuggestedTime = updateSimSetupSuggestedTime;
+window.confirmStartExamSimulator = confirmStartExamSimulator;
+window.abandonExamSimulator = abandonExamSimulator;
+window.closeTimesUpAndProceedToReview = closeTimesUpAndProceedToReview;
+window.openExamSimulatorReview = openExamSimulatorReview;
+window.setRowScoreZero = setRowScoreZero;
+window.updateLiveReviewTotal = updateLiveReviewTotal;
+window.closeExamSimulatorReview = closeExamSimulatorReview;
+window.saveExamSimulatorEvaluation = saveExamSimulatorEvaluation;
+window.openExamHistoryModal = openExamHistoryModal;
+window.closeExamHistoryModal = closeExamHistoryModal;
+window.changePdfPage = changePdfPage;
+window.changePdfZoom = changePdfZoom;
+window.renderAlgoHubARevoirSection = renderAlgoHubARevoirSection;
+window.removeExerciseBookmark = removeExerciseBookmark;
 
 
 
