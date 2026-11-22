@@ -596,6 +596,13 @@ var EXERCISES_DATA = (function () {
     return EXERCISES;
   }
 
+  function getById(id) {
+    for (var i = 0; i < EXERCISES.length; i++) {
+      if (EXERCISES[i].id === id) return EXERCISES[i];
+    }
+    return null;
+  }
+
   function getByType(typeSlug) {
     return EXERCISES.filter(function (ex) {
       return ex.types && ex.types.indexOf(typeSlug) !== -1;
@@ -626,6 +633,7 @@ var EXERCISES_DATA = (function () {
     getAllTypes: getAllTypes,
     getTypeMeta: getTypeMeta,
     getAllExercises: getAllExercises,
+    getById: getById,
     getByType: getByType,
     getByChapter: getByChapter,
     getByExam: getByExam,

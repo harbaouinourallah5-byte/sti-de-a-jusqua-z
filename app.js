@@ -1551,7 +1551,11 @@ const VIEW_TO_HASH_MAP = {
   'algo-types': '#/algo/types',
   'algo-methodes': '#/algo/methodes',
   'algo-quiz': '#/algo/quiz',
-  'exam-simulator': '#/examens/simulateur'
+  'exam-simulator': '#/examens/simulateur',
+  'revision': '#/revision',
+  'revision-cartes': '#/revision/cartes',
+  'revision-plan': '#/revision/plan',
+  'algo-statistiques': '#/algo/statistiques'
 };
 
 function getHashForView(viewName) {
@@ -1561,6 +1565,23 @@ function getHashForView(viewName) {
 function parseAppHash(hash) {
   let clean = (hash || '').replace(/^#[\/]?/, '').trim().toLowerCase();
   if (!clean || clean === 'home') return { view: 'home' };
+
+  // Espace Ma Révision (#/revision, #/revision/cartes, #/revision/plan)
+  if (clean === 'revision' || clean.startsWith('revision/')) {
+    const revSub = clean.replace(/^revision\/?/, '').trim();
+    if (revSub.startsWith('cartes')) {
+      return { view: 'revision-cartes' };
+    }
+    if (revSub.startsWith('plan')) {
+      return { view: 'revision-plan' };
+    }
+    return { view: 'revision' };
+  }
+
+  // Statistiques (#/algo/statistiques)
+  if (clean.startsWith('algo/statistiques') || clean === 'statistiques') {
+    return { view: 'algo-statistiques' };
+  }
 
   // Simulateur d'examen (#/examens/simulateur/:id ou #/simulateur/:id)
   if (clean.startsWith('examens/simulateur') || clean.startsWith('simulateur')) {
@@ -1672,6 +1693,12 @@ function handleRouteFromHash() {
   if (route.view === 'algo-quiz') {
     if (typeof initAlgoQuizScreen === 'function') {
       initAlgoQuizScreen(route.chapterSlug);
+    }
+  }
+
+  if (route.view === 'revision' || route.view === 'revision-cartes' || route.view === 'revision-plan' || route.view === 'algo-statistiques') {
+    if (typeof renderRevisionPage === 'function') {
+      renderRevisionPage();
     }
   }
 
@@ -1815,6 +1842,14 @@ function updateDataCountersUI() {
     if (typeof EXERCISES_DATA !== 'undefined') {
       const sideTypes = document.getElementById('sideBadgeTypes');
       if (sideTypes) sideTypes.textContent = EXERCISES_DATA.getAllTypes().length;
+    }
+    if (typeof STI_STORE !== 'undefined') {
+      const bmCount = STI_STORE.getBookmarksCount();
+      const sideRev = document.getElementById('sideBadgeRevision');
+      if (sideRev) sideRev.textContent = bmCount;
+      if (typeof updateHomeRevisionWidget === 'function') {
+        updateHomeRevisionWidget();
+      }
     }
     if (typeof updateAllProgressUI === 'function') {
       updateAllProgressUI();
@@ -8847,10 +8882,13 @@ function renderAlgoTheoriqueCards() {
           <div class="item-card card-theorique ${isStudied ? 'studied' : ''}" style="cursor: pointer;" onclick="openAlgoTheoriqueModalById('${item.id}')">
             <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px;">
               <span class="card-cat-badge" style="color: ${meta.color};">${escapeHtml(meta.shortName)}</span>
-              <button type="button" class="algo-studied-btn ${isStudied ? 'studied' : ''}" onclick="event.stopPropagation(); toggleAlgoStudied('${item.id}', '${ch.slug}', this)" title="${isStudied ? 'Marqué comme étudié' : 'Marquer comme étudié'}">
-                <span>${isStudied ? '✓' : '○'}</span>
-                <span>${isStudied ? 'Étudié' : 'Étudier'}</span>
-              </button>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                ${renderBookmarkBtn('algo', item.id, { title: item.name, chapter: ch.slug })}
+                <button type="button" class="algo-studied-btn ${isStudied ? 'studied' : ''}" onclick="event.stopPropagation(); toggleAlgoStudied('${item.id}', '${ch.slug}', this)" title="${isStudied ? 'Marqué comme étudié' : 'Marquer comme étudié'}">
+                  <span>${isStudied ? '✓' : '○'}</span>
+                  <span>${isStudied ? 'Étudié' : 'Étudier'}</span>
+                </button>
+              </div>
             </div>
             <div class="item-card-title">
               <span>${escapeHtml(item.name)}</span>
@@ -9484,10 +9522,13 @@ function openAlgoTheoriqueModal(item) {
   const isStudied = (typeof STI_STORE !== 'undefined') ? STI_STORE.isAlgoStudied(item.id) : false;
   body.innerHTML += `
     <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
-      <button type="button" class="algo-studied-btn ${isStudied ? 'studied' : ''}" style="padding: 8px 16px; font-size: 0.88rem; border-radius: 8px;" onclick="toggleAlgoStudied('${item.id}', null, this); closeModal();">
-        <span>${isStudied ? '✓' : '○'}</span>
-        <span>${isStudied ? 'Marqué comme étudié' : 'Marquer comme étudié'}</span>
-      </button>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button type="button" class="algo-studied-btn ${isStudied ? 'studied' : ''}" style="padding: 8px 16px; font-size: 0.88rem; border-radius: 8px;" onclick="toggleAlgoStudied('${item.id}', null, this); closeModal();">
+          <span>${isStudied ? '✓' : '○'}</span>
+          <span>${isStudied ? 'Marqué comme étudié' : 'Marquer comme étudié'}</span>
+        </button>
+        ${renderBookmarkBtn('algo', item.id, { title: item.name })}
+      </div>
       <span style="font-size: 0.8rem; color: var(--text-secondary);">Progression synchronisée dans votre navigateur</span>
     </div>
   `;
@@ -10120,6 +10161,7 @@ function renderExamensPage() {
         </div>
         <div style="flex-shrink:0; display:flex; flex-direction:column; gap:8px; align-items:flex-end;">
           <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            ${renderBookmarkBtn('exam', doc.id, { title: doc.title, duration: doc.duration })}
             <a href="${doc.file}" target="_blank" rel="noopener"
                style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;background:rgba(255,255,255,0.08);border:1px solid var(--border-color);color:var(--text-primary);font-weight:600;font-size:0.84rem;text-decoration:none;white-space:nowrap;">
               📄 Sujet PDF
@@ -11172,6 +11214,7 @@ function renderAlgoMethodesPage(targetSlug = null) {
             </div>
           </div>
           <div class="no-print" style="display:flex;align-items:center;gap:8px;">
+            ${renderBookmarkBtn('method', m.slug, { title: m.title, category: m.category })}
             <button type="button" onclick="printSingleMethodSheet('${m.slug}')" class="cat-pill"
                     style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;font-size:0.8rem;font-weight:700;cursor:pointer;background:rgba(255,255,255,0.06);border:1px solid var(--border-color);color:var(--text-secondary);border-radius:8px;"
                     title="Imprimer cette fiche seule">
@@ -11436,7 +11479,7 @@ function renderQuizChapterPicker() {
     html += `
       <div class="quiz-chapter-card ${isSelected ? 'selected' : ''}"
            onclick="selectQuizChapter('${ch.slug}', this)">
-        <span style="font-size:1.4rem;">${ch.icon || '📁'}</span>
+        <span style="font-size:1.4rem;">${ch.iconEmoji || ch.icon || '📁'}</span>
         <div style="flex:1;">
           <strong style="font-size:0.86rem;color:var(--text-primary);display:block;">${escapeHtml(ch.shortTitle)}</strong>
           <span style="font-size:0.75rem;color:var(--text-secondary);">${chQuestions.length} questions</span>
@@ -11749,7 +11792,10 @@ function finishQuizSession() {
               <span style="font-size:1.1rem;">${a.isCorrect ? '✅' : '❌'}</span>
               <strong style="font-size:0.88rem;color:var(--text-primary);">Question ${i + 1}</strong>
             </div>
-            <span style="font-size:0.75rem;padding:2px 8px;border-radius:4px;background:rgba(255,255,255,0.06);color:var(--text-secondary);">${q.chapter}</span>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="font-size:0.75rem;padding:2px 8px;border-radius:4px;background:rgba(255,255,255,0.06);color:var(--text-secondary);">${q.chapter}</span>
+              ${renderBookmarkBtn('quiz', q.id, { title: q.question.substring(0, 70), chapter: q.chapter, question: q.question, explanation: q.explanation })}
+            </div>
           </div>
           <p style="font-size:0.86rem;color:var(--text-secondary);margin:0;line-height:1.4;">${escapeHtml(q.question)}</p>
           <div style="font-size:0.82rem;margin-top:2px;">
@@ -12483,6 +12529,18 @@ function updatePageMeta(viewName) {
       title: `Algorithmique Théorique • ${totalAlgoCh} Chapitres Officiels Bac Informatique`,
       desc: `Les ${totalAlgoCh} chapitres théoriques officiels avec algorithmes complets, T.D.O et scripts Python conformes Bac.`
     },
+    'revision': {
+      title: "Ma Révision • Notions à Revoir, Simulateur & Progression Bac Info",
+      desc: "Espace d'étude personnalisé pour le Bac Informatique : notions bookmarkées à revoir, historique des examens simulés et suivi de maîtrise."
+    },
+    'revision-cartes': {
+      title: "Cartes Mémoire • Flashcards Système Leitner Bac Info",
+      desc: "Révisez les notions clés, syntaxes et complexités avec le système de répétition espacée Leitner."
+    },
+    'algo-statistiques': {
+      title: "Statistiques & Fréquence des Chapitres • Bac Informatique",
+      desc: "Cartographie interactive et fréquence d'apparition des 8 chapitres et 11 types d'exercices dans les sujets d'examens."
+    },
     'admin': {
       title: "Espace Enseignant • Dépôt & Gestion Sécurisée des Documents PDF",
       desc: "Interface réservée aux enseignants pour le téléversement et la gestion des documents PDF de cours et devoirs."
@@ -12513,3 +12571,742 @@ if (typeof window !== 'undefined') {
 window.handleAdminTypeChange = handleAdminTypeChange;
 window.toggleAdminCorrectionMode = toggleAdminCorrectionMode;
 window.handleAdminCorrectionFileSelected = handleAdminCorrectionFileSelected;
+
+// ===================================================================
+// RUN 7 FEATURE 2 : ESPACE MA RÉVISION & DASHBOARD (#/revision)
+// ===================================================================
+
+let currentRevisionBmFilter = 'all';
+
+function showToast(msg) {
+  let toast = document.getElementById('globalAppToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'globalAppToast';
+    toast.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:999999;background:#1e293b;border:1px solid #f59e0b;color:#f8fafc;padding:10px 18px;border-radius:10px;font-size:0.88rem;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,0.4);display:flex;align-items:center;gap:8px;pointer-events:none;transition:opacity 0.3s ease, transform 0.3s ease;transform:translateY(10px);opacity:0;';
+    document.body.appendChild(toast);
+  }
+  toast.innerHTML = msg;
+  toast.style.opacity = '1';
+  toast.style.transform = 'translateY(0)';
+  if (toast._timer) clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(10px)';
+  }, 2200);
+}
+
+function renderBookmarkBtn(type, id, extraMeta) {
+  const isBm = (typeof STI_STORE !== 'undefined') ? STI_STORE.isBookmarked(type, id) : false;
+  const metaAttr = extraMeta ? JSON.stringify(extraMeta).replace(/"/g, '&quot;') : 'null';
+  return `
+    <button type="button" class="bookmark-star-btn ${isBm ? 'bookmarked' : ''}" onclick="event.stopPropagation(); toggleBookmarkItem('${type}', '${id}', this, ${metaAttr})" title="${isBm ? 'Retirer des favoris' : 'Marquer comme À revoir'}">
+      <span>${isBm ? '⭐' : '☆'}</span>
+      <span>À revoir</span>
+    </button>
+  `;
+}
+
+function toggleBookmarkItem(type, id, btnEl, extraMeta) {
+  if (typeof STI_STORE === 'undefined') return;
+  const isNow = STI_STORE.toggleBookmark(type, id, extraMeta);
+  if (btnEl) {
+    if (btnEl.classList.contains('bookmark-star-btn')) {
+      btnEl.classList.toggle('bookmarked', isNow);
+      const star = btnEl.querySelector('span:first-child');
+      if (star) star.textContent = isNow ? '⭐' : '☆';
+      btnEl.title = isNow ? 'Retirer des favoris' : 'Marquer comme À revoir';
+    } else {
+      btnEl.textContent = isNow ? '★' : '☆';
+      btnEl.style.color = isNow ? '#fbbf24' : 'var(--text-muted)';
+      btnEl.title = isNow ? 'Retirer des favoris' : 'Marquer À revoir';
+    }
+  }
+  updateDataCountersUI();
+  showToast(isNow ? '⭐ Ajouté aux notions à revoir !' : 'Retiré de vos favoris');
+}
+
+function toggleExerciseBookmark(exId, btn) {
+  toggleBookmarkItem('exercise', exId, btn);
+}
+
+function updateHomeRevisionWidget() {
+  const widget = document.getElementById('homeRevisionWidget');
+  if (!widget || typeof STI_STORE === 'undefined') return;
+
+  const bmCount = STI_STORE.getBookmarksCount();
+  const studiedAlgos = STI_STORE.getStudiedAlgosCount();
+  const examHistory = STI_STORE.getExamHistory();
+  const quizStats = STI_STORE.getQuizStats();
+
+  const countBadge = document.getElementById('homeRevBadgeCount');
+  if (countBadge) {
+    countBadge.innerHTML = `<strong>${bmCount}</strong> à revoir`;
+  }
+
+  const pillsWrap = document.getElementById('homeRevStatsPills');
+  if (pillsWrap) {
+    pillsWrap.innerHTML = `
+      <span class="home-revision-pill">📖 <strong>${studiedAlgos}</strong> / 59 algos</span>
+      <span class="home-revision-pill">⏱️ <strong>${examHistory.length}</strong> simulation${examHistory.length > 1 ? 's' : ''}</span>
+      <span class="home-revision-pill">⚡ <strong>${quizStats.overallPercent}%</strong> quiz</span>
+    `;
+  }
+}
+
+function renderRevisionPage() {
+  if (typeof STI_STORE === 'undefined') return;
+
+  // 1. Mise à jour des compteurs et badge sidebar
+  const totalAlgos = (typeof DATA !== 'undefined' && DATA.algo_theorique) ? DATA.algo_theorique.length : 59;
+  const studiedAlgos = STI_STORE.getStudiedAlgosCount();
+  const examHistory = STI_STORE.getExamHistory();
+  const quizStats = STI_STORE.getQuizStats();
+  const allBookmarks = STI_STORE.getBookmarks();
+  const totalBookmarks = allBookmarks.length;
+
+  let totalChapters = 8;
+  let masteredChapters = 0;
+  if (typeof CURRICULUM !== 'undefined') {
+    CURRICULUM.chapters.forEach(ch => {
+      const p = STI_STORE.getChapterPercentage(ch.slug);
+      if (p >= 80) masteredChapters++;
+    });
+  }
+
+  // Calcul moyenne des simulations
+  let avgExamScore = null;
+  if (examHistory.length > 0) {
+    const sum = examHistory.reduce((acc, h) => acc + (h.score || 0), 0);
+    const sumMax = examHistory.reduce((acc, h) => acc + (h.maxScore || 20), 0);
+    avgExamScore = sumMax > 0 ? (sum / sumMax * 20).toFixed(1) : null;
+  }
+
+  // Grille des statistiques résumées
+  const summaryGrid = document.getElementById('revStatsSummaryGrid');
+  if (summaryGrid) {
+    summaryGrid.innerHTML = `
+      <div class="revision-stat-card">
+        <div class="revision-stat-icon-val">
+          <span style="font-size:1.5rem;">📖</span>
+          <span class="revision-stat-val">${studiedAlgos} <span style="font-size:1rem;color:var(--text-secondary);font-weight:600;">/ ${totalAlgos}</span></span>
+        </div>
+        <span class="revision-stat-label">Algorithmes Étudiés</span>
+        <span class="revision-stat-sub">${Math.round((studiedAlgos / totalAlgos) * 100)}% du programme</span>
+      </div>
+
+      <div class="revision-stat-card">
+        <div class="revision-stat-icon-val">
+          <span style="font-size:1.5rem;">🎓</span>
+          <span class="revision-stat-val">${masteredChapters} <span style="font-size:1rem;color:var(--text-secondary);font-weight:600;">/ ${totalChapters}</span></span>
+        </div>
+        <span class="revision-stat-label">Chapitres Maîtrisés (≥80%)</span>
+        <span class="revision-stat-sub">${totalChapters - masteredChapters} chapitres en cours</span>
+      </div>
+
+      <div class="revision-stat-card">
+        <div class="revision-stat-icon-val">
+          <span style="font-size:1.5rem;">⏱️</span>
+          <span class="revision-stat-val">${examHistory.length}</span>
+        </div>
+        <span class="revision-stat-label">Épreuves Simulées</span>
+        <span class="revision-stat-sub">${avgExamScore !== null ? `Moyenne : ${avgExamScore} / 20` : 'Aucun essai pour l\'instant'}</span>
+      </div>
+
+      <div class="revision-stat-card">
+        <div class="revision-stat-icon-val">
+          <span style="font-size:1.5rem;">⚡</span>
+          <span class="revision-stat-val">${quizStats.overallPercent}%</span>
+        </div>
+        <span class="revision-stat-label">Taux de Réussite Quiz</span>
+        <span class="revision-stat-sub">${quizStats.totalQuestions} questions répondues</span>
+      </div>
+
+      <div class="revision-stat-card" style="border-color: rgba(245, 158, 11, 0.4);">
+        <div class="revision-stat-icon-val">
+          <span style="font-size:1.5rem;">⭐</span>
+          <span class="revision-stat-val" style="color:#fbbf24;">${totalBookmarks}</span>
+        </div>
+        <span class="revision-stat-label">Notions « À revoir »</span>
+        <span class="revision-stat-sub">Marquées pour révision ciblée</span>
+      </div>
+    `;
+  }
+
+  // 2. Section Aujourd'hui & Plan d'étude
+  const todayContainer = document.getElementById('revTodayContent');
+  if (todayContainer) {
+    const lastNav = STI_STORE.getLastNav();
+    const ch = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getChapterBySlug(lastNav.chapterSlug) : null;
+    const chName = ch ? ch.fullTitle : 'Fichiers';
+    const firstUnfinished = ch ? STI_STORE.getFirstUnfinishedStep(ch.slug) : 1;
+    const stepNames = { 1: 'Cours en bref', 2: 'Algorithmes types', 3: 'Séries & Extraits', 4: 'Devoirs de synthèse', 5: 'Exercices d\'examens', 6: 'Quiz rapide' };
+
+    todayContainer.innerHTML = `
+      <div style="background:var(--surface-bg);border:1px solid var(--border-color);border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:14px;flex:1;min-width:240px;">
+          <div style="font-size:2rem;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            🚀
+          </div>
+          <div>
+            <div style="font-size:0.75rem;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:0.5px;">Prochaine étape conseillée</div>
+            <h4 style="margin:2px 0 4px 0;font-size:1.05rem;font-weight:700;color:var(--text-primary);">
+              ${escapeHtml(chName)} • Étape ${firstUnfinished} (${escapeHtml(stepNames[firstUnfinished] || '')})
+            </h4>
+            <p style="margin:0;font-size:0.84rem;color:var(--text-secondary);">
+              Reprenez là où vous en étiez pour maintenir votre rythme de révision régulier.
+            </p>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <a href="#/algo/theorique/${lastNav.chapterSlug}" onclick="navigateToHash('#/algo/theorique/${lastNav.chapterSlug}')" style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:8px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;font-weight:700;font-size:0.88rem;text-decoration:none;">
+            <span>Reprendre l'étude</span>
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+    `;
+  }
+
+  // 3. Section Progression par Chapitre
+  const chapGrid = document.getElementById('revChaptersProgressGrid');
+  const chapPercentHeader = document.getElementById('revChaptersGlobalPercent');
+  if (chapGrid && typeof CURRICULUM !== 'undefined') {
+    let totalP = 0;
+    chapGrid.innerHTML = CURRICULUM.chapters.map(c => {
+      const p = STI_STORE.getChapterPercentage(c.slug);
+      totalP += p;
+      const bestQuiz = STI_STORE.getBestQuizScore(c.slug);
+      const isMastered = p >= 80;
+
+      return `
+        <div style="background:var(--surface-bg);border:1px solid var(--border-color);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:1.2rem;">${c.iconEmoji || '📁'}</span>
+              <strong style="font-size:0.92rem;color:var(--text-primary);">${escapeHtml(c.shortTitle)}</strong>
+            </div>
+            <span style="font-size:0.85rem;font-weight:800;color:${isMastered ? '#10b981' : (p > 0 ? '#f59e0b' : 'var(--text-secondary)')};">${p}%</span>
+          </div>
+
+          <!-- Barre de progression -->
+          <div style="width:100%;height:6px;background:rgba(255,255,255,0.08);border-radius:10px;overflow:hidden;">
+            <div style="width:${p}%;height:100%;background:${isMastered ? 'linear-gradient(90deg,#10b981,#059669)' : 'linear-gradient(90deg,#f59e0b,#10b981)'};border-radius:10px;transition:width 0.3s ease;"></div>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:2px;">
+            ${bestQuiz !== null ? `
+              <span style="font-size:0.75rem;padding:2px 8px;border-radius:6px;background:rgba(16,185,129,0.12);color:#10b981;font-weight:700;">
+                🏆 Quiz : ${bestQuiz}%
+              </span>
+            ` : `
+              <span style="font-size:0.75rem;color:var(--text-muted);">Quiz non tenté</span>
+            `}
+            <a href="#/algo/theorique/${c.slug}" onclick="navigateToHash('#/algo/theorique/${c.slug}')" style="font-size:0.8rem;font-weight:700;color:#38bdf8;text-decoration:none;">
+              Consulter →
+            </a>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    const globalAvg = Math.round(totalP / CURRICULUM.chapters.length);
+    if (chapPercentHeader) {
+      chapPercentHeader.textContent = `${globalAvg}% du programme global`;
+    }
+  }
+
+  // 4. Section Derniers Examens & Graphique SVG
+  renderExamSimulatorHistorySection();
+
+  // 5. Section Notions "À revoir" (Bookmarks)
+  renderRevisionBookmarksSection();
+
+  // 6. Section Quiz Récents & Points Faibles
+  renderQuizRecentSection();
+}
+
+function renderExamSimulatorHistorySection() {
+  const container = document.getElementById('revExamHistoryWrap');
+  if (!container || typeof STI_STORE === 'undefined') return;
+
+  const history = STI_STORE.getExamHistory();
+
+  if (history.length === 0) {
+    container.innerHTML = `
+      <div class="revision-empty-state">
+        <div class="revision-empty-icon">⏱️</div>
+        <h4 style="margin:0 0 6px 0;font-size:1.05rem;color:var(--text-primary);font-weight:700;">Aucune épreuve simulée enregistrée</h4>
+        <p class="revision-empty-text">
+          Passez un examen complet avec compte à rebours, consignes réelles et auto-évaluation guidée pour mesurer votre niveau exact.
+        </p>
+        <button type="button" class="btn-primary" onclick="navigateToHash('#/examens')" style="padding:10px 22px;border-radius:10px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-weight:700;font-size:0.88rem;border:none;cursor:pointer;">
+          🚀 Découvrir les sujets d'examens
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  // Graphique SVG
+  const svgHtml = renderExamScoreSvgChart(history);
+
+  // Liste des essais récents
+  const listHtml = history.slice(0, 5).map((att) => {
+    const doc = (typeof DOCUMENTS_DATA !== 'undefined') ? DOCUMENTS_DATA.getDocumentById(att.examId) : null;
+    const title = doc ? doc.title : att.examId;
+    const durationMin = att.timeUsedSec ? Math.round(att.timeUsedSec / 60) : null;
+    const scorePct = Math.round((att.score / (att.maxScore || 20)) * 100);
+    const scoreColor = (att.score >= 14) ? '#10b981' : (att.score >= 10 ? '#f59e0b' : '#ef4444');
+
+    return `
+      <div style="background:var(--surface-bg);border:1px solid var(--border-color);border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:200px;">
+          <strong style="font-size:0.92rem;color:var(--text-primary);">${escapeHtml(title)}</strong>
+          <div style="display:flex;gap:12px;font-size:0.78rem;color:var(--text-secondary);margin-top:2px;">
+            <span>📅 ${att.date || 'Récemment'}</span>
+            ${durationMin !== null ? `<span>⏱️ Temps passé : ${durationMin} min</span>` : ''}
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="text-align:right;">
+            <div style="font-size:1.15rem;font-weight:800;color:${scoreColor};">${att.score} / ${att.maxScore || 20}</div>
+            <span style="font-size:0.75rem;color:var(--text-secondary);">${scorePct}%</span>
+          </div>
+          <button type="button" onclick="openExamSimulatorSetup('${att.examId}')" class="btn-sm" style="background:rgba(255,255,255,0.06);border:1px solid var(--border-color);color:var(--text-secondary);padding:6px 10px;border-radius:6px;font-size:0.78rem;cursor:pointer;">
+            🔄 Refaire
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    <div style="margin-bottom:18px;">
+      <div style="font-size:0.85rem;font-weight:700;color:var(--text-primary);margin-bottom:6px;">📈 Évolution de vos notes (/20)</div>
+      <div class="revision-chart-wrap">
+        ${svgHtml}
+      </div>
+    </div>
+    <div style="display:grid;gap:8px;">
+      <div style="font-size:0.85rem;font-weight:700;color:var(--text-primary);margin-bottom:4px;">📋 Dernières tentatives</div>
+      ${listHtml}
+    </div>
+  `;
+}
+
+function renderExamScoreSvgChart(history) {
+  // Chronologique : inverser history (les plus anciens d'abord)
+  const items = [...history].reverse();
+  const W = 600;
+  const H = 180;
+  const padLeft = 40;
+  const padRight = 30;
+  const padTop = 20;
+  const padBottom = 30;
+
+  const chartW = W - padLeft - padRight;
+  const chartH = H - padTop - padBottom;
+
+  // Seuil 10/20
+  const y10 = padTop + chartH * (1 - 10 / 20);
+
+  // Points
+  const pts = items.map((item, idx) => {
+    const x = items.length === 1 ? (padLeft + chartW / 2) : (padLeft + (idx / (items.length - 1)) * chartW);
+    const scoreVal = Math.min(20, Math.max(0, item.score || 0));
+    const y = padTop + chartH * (1 - scoreVal / 20);
+    return { x, y, score: item.score, date: item.date || '' };
+  });
+
+  const polylinePoints = pts.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+
+  const gridLines = [0, 5, 10, 15, 20].map(val => {
+    const yVal = padTop + chartH * (1 - val / 20);
+    const isMoyenne = val === 10;
+    return `
+      <line x1="${padLeft}" y1="${yVal}" x2="${W - padRight}" y2="${yVal}" stroke="${isMoyenne ? '#f59e0b' : 'rgba(255,255,255,0.08)'}" stroke-width="${isMoyenne ? '1.5' : '1'}" stroke-dasharray="${isMoyenne ? '4,4' : 'none'}" />
+      <text x="${padLeft - 8}" y="${yVal + 4}" fill="${isMoyenne ? '#f59e0b' : 'var(--text-secondary, #94a3b8)'}" font-size="10" font-weight="${isMoyenne ? 'bold' : 'normal'}" text-anchor="end">${val}</text>
+    `;
+  }).join('');
+
+  const circles = pts.map(p => `
+    <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4.5" fill="#10b981" stroke="#fff" stroke-width="2" />
+    <text x="${p.x.toFixed(1)}" y="${(p.y - 8).toFixed(1)}" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">${p.score}</text>
+  `).join('');
+
+  return `
+    <svg class="revision-chart-svg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+      <!-- Grille et axes -->
+      ${gridLines}
+      <!-- Seuil label -->
+      <text x="${W - padRight}" y="${y10 - 6}" fill="#f59e0b" font-size="10" font-weight="bold" text-anchor="end">Seuil admis (10/20)</text>
+      <!-- Ligne de tendance -->
+      ${items.length > 1 ? `<polyline fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="${polylinePoints}" />` : ''}
+      <!-- Points et valeurs -->
+      ${circles}
+    </svg>
+  `;
+}
+
+function renderRevisionBookmarksSection() {
+  const container = document.getElementById('revBookmarksGrid');
+  if (!container || typeof STI_STORE === 'undefined') return;
+
+  const allBookmarks = STI_STORE.getBookmarks();
+
+  // Mise à jour des compteurs de filtres
+  const countAll = allBookmarks.length;
+  const countAlgo = allBookmarks.filter(b => b.type === 'algo').length;
+  const countEx = allBookmarks.filter(b => b.type === 'exercise').length;
+  const countExam = allBookmarks.filter(b => b.type === 'exam').length;
+  const countMethod = allBookmarks.filter(b => b.type === 'method').length;
+  const countQuiz = allBookmarks.filter(b => b.type === 'quiz').length;
+
+  const elAll = document.getElementById('bmCountAll'); if (elAll) elAll.textContent = countAll;
+  const elAlgo = document.getElementById('bmCountAlgo'); if (elAlgo) elAlgo.textContent = countAlgo;
+  const elEx = document.getElementById('bmCountEx'); if (elEx) elEx.textContent = countEx;
+  const elExam = document.getElementById('bmCountExam'); if (elExam) elExam.textContent = countExam;
+  const elMethod = document.getElementById('bmCountMethod'); if (elMethod) elMethod.textContent = countMethod;
+  const elQuiz = document.getElementById('bmCountQuiz'); if (elQuiz) elQuiz.textContent = countQuiz;
+
+  // Filtrer selon currentRevisionBmFilter
+  let list = allBookmarks;
+  if (currentRevisionBmFilter !== 'all') {
+    list = allBookmarks.filter(b => b.type === currentRevisionBmFilter);
+  }
+
+  if (list.length === 0) {
+    container.innerHTML = `
+      <div class="revision-empty-state" style="grid-column: 1 / -1;">
+        <div class="revision-empty-icon">⭐</div>
+        <h4 style="margin:0 0 6px 0;font-size:1.05rem;color:var(--text-primary);font-weight:700;">Aucune notion dans cette catégorie</h4>
+        <p class="revision-empty-text">
+          Cliquez sur le bouton ⭐ « À revoir » sur les algorithmes, exercices d'examens, sujets ou fiches pour les regrouper ici.
+        </p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = list.map(b => {
+    let badgeClass = b.type;
+    let badgeLabel = 'NOTION';
+    let title = b.id;
+    let desc = '';
+    let openActionHtml = '';
+
+    if (b.type === 'algo') {
+      badgeLabel = 'Algorithme';
+      const item = (typeof DATA !== 'undefined' && DATA.algo_theorique) ? DATA.algo_theorique.find(x => x.id === b.id) : null;
+      if (item) {
+        title = item.name;
+        desc = item.summary || item.description || '';
+      }
+      openActionHtml = `<button type="button" class="revision-bm-open-btn" onclick="openAlgoTheoriqueModalById('${b.id}')">📖 Ouvrir l'algo →</button>`;
+    } else if (b.type === 'exercise') {
+      badgeLabel = 'Exercice Examen';
+      const ex = (typeof EXERCISES_DATA !== 'undefined') ? (EXERCISES_DATA.getById ? EXERCISES_DATA.getById(b.id) : EXERCISES_DATA.getAllExercises().find(x => x.id === b.id)) : null;
+      if (ex) {
+        const doc = (typeof DOCUMENTS_DATA !== 'undefined') ? DOCUMENTS_DATA.getDocumentById(ex.examId) : null;
+        title = `${doc ? doc.title : ex.examId} • ${ex.exNum}`;
+        desc = `Exercice de type : ${(ex.types || []).join(', ')} • Points : ${ex.points || 'Non précisé'}`;
+        const pdfUrl = doc ? `${doc.file}#page=${ex.pdfPage || 1}` : '#';
+        openActionHtml = `<a href="${pdfUrl}" target="_blank" rel="noopener" class="revision-bm-open-btn" style="text-decoration:none;">📄 Ouvrir à la page ${ex.pdfPage || 1} →</a>`;
+      } else if (b.meta) {
+        title = `Examen ${b.meta.examId || ''} • ${b.meta.exNum || ''}`;
+        desc = `Exercice simulé marqué à revoir (${b.meta.score || 0}/${b.meta.max || 0} pts)`;
+        openActionHtml = `<button type="button" class="revision-bm-open-btn" onclick="openExamSimulatorSetup('${b.meta.examId}')">⏱️ Relancer →</button>`;
+      }
+    } else if (b.type === 'exam') {
+      badgeLabel = 'Sujet Examen';
+      const doc = (typeof DOCUMENTS_DATA !== 'undefined') ? DOCUMENTS_DATA.getDocumentById(b.id) : null;
+      if (doc) {
+        title = doc.title;
+        desc = `Année : ${doc.date} • Durée : ${doc.duration || '2h'} • ${doc.pages || 1} pages`;
+        openActionHtml = `<a href="${doc.file}" target="_blank" rel="noopener" class="revision-bm-open-btn" style="text-decoration:none;">📄 Ouvrir le sujet →</a>`;
+      }
+    } else if (b.type === 'method') {
+      badgeLabel = 'Fiche Méthode';
+      const m = (typeof METHODS_DATA !== 'undefined') ? METHODS_DATA.find(x => x.slug === b.id) : null;
+      if (m) {
+        title = m.title;
+        desc = m.subtitle || m.category;
+      }
+      openActionHtml = `<a href="#/algo/methodes/${b.id}" onclick="navigateToHash('#/algo/methodes/${b.id}')" class="revision-bm-open-btn" style="text-decoration:none;">💡 Voir la fiche →</a>`;
+    } else if (b.type === 'quiz') {
+      badgeLabel = 'Question Quiz';
+      const q = (typeof QUIZ_DATA !== 'undefined') ? (QUIZ_DATA.getById ? QUIZ_DATA.getById(b.id) : QUIZ_DATA.getQuestionById(b.id)) : null;
+      if (q) {
+        title = q.question;
+        desc = `Chapitre : ${q.chapter} • ${q.explanation}`;
+      } else if (b.meta && b.meta.question) {
+        title = b.meta.question;
+        desc = `Chapitre : ${b.meta.chapter || 'Mixte'}`;
+      }
+      openActionHtml = `<button type="button" class="revision-bm-open-btn" onclick="startQuizForSingleQuestion('${b.id}')">⚡ Refaire ce quiz →</button>`;
+    }
+
+    return `
+      <div class="revision-bm-card">
+        <div class="revision-bm-top">
+          <span class="revision-bm-badge ${badgeClass}">${badgeLabel}</span>
+          <button type="button" class="revision-bm-remove-btn" onclick="removeBookmarkFromDashboard('${b.type}', '${b.id}')" title="Retirer des favoris">
+            ✕ Retirer
+          </button>
+        </div>
+        <h4 class="revision-bm-title">${escapeHtml(title)}</h4>
+        ${desc ? `<p class="revision-bm-desc">${escapeHtml(desc)}</p>` : ''}
+        <div class="revision-bm-note-box">
+          <span style="font-size:0.8rem;">📝</span>
+          <input type="text" class="revision-bm-note-input" placeholder="Ajouter une note de révision..." value="${escapeHtml(b.note || '')}" onchange="saveBookmarkNote('${b.type}', '${b.id}', this.value)" />
+        </div>
+        <div class="revision-bm-actions">
+          ${openActionHtml}
+          <span style="font-size:0.72rem;color:var(--text-muted);">${new Date(b.addedAt).toLocaleDateString('fr-FR')}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function filterRevisionBookmarks(filterName, btnEl) {
+  currentRevisionBmFilter = filterName;
+  document.querySelectorAll('#revBookmarksFilterBar .revision-filter-btn').forEach(b => b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+  renderRevisionBookmarksSection();
+}
+
+function removeBookmarkFromDashboard(type, id) {
+  if (typeof STI_STORE === 'undefined') return;
+  STI_STORE.removeBookmark(type, id);
+  renderRevisionBookmarksSection();
+  updateDataCountersUI();
+  showToast('Retiré de vos favoris');
+}
+
+function saveBookmarkNote(type, id, noteVal) {
+  if (typeof STI_STORE === 'undefined') return;
+  STI_STORE.setBookmarkNote(type, id, noteVal);
+  showToast('✓ Note enregistrée');
+}
+
+function openAllBookmarksSequentially() {
+  const bookmarks = (typeof STI_STORE !== 'undefined') ? STI_STORE.getBookmarks() : [];
+  if (bookmarks.length === 0) {
+    alert("Vous n'avez aucune notion dans « À revoir ». Cliquez sur ⭐ sur les algorithmes ou exercices pour les ajouter.");
+    return;
+  }
+  let currentIndex = 0;
+
+  function showItem(idx) {
+    if (idx < 0 || idx >= bookmarks.length) return;
+    currentIndex = idx;
+    const b = bookmarks[idx];
+    if (b.type === 'algo') {
+      openAlgoTheoriqueModalById(b.id);
+    } else if (b.type === 'method') {
+      navigateToHash('#/algo/methodes/' + b.id);
+    } else if (b.type === 'exam') {
+      const doc = (typeof DOCUMENTS_DATA !== 'undefined') ? DOCUMENTS_DATA.getDocumentById(b.id) : null;
+      if (doc) window.open(doc.file, '_blank');
+    } else if (b.type === 'exercise') {
+      const ex = (typeof EXERCISES_DATA !== 'undefined') ? (EXERCISES_DATA.getById ? EXERCISES_DATA.getById(b.id) : EXERCISES_DATA.getAllExercises().find(x => x.id === b.id)) : null;
+      if (ex) {
+        const doc = (typeof DOCUMENTS_DATA !== 'undefined') ? DOCUMENTS_DATA.getDocumentById(ex.examId) : null;
+        if (doc) window.open(`${doc.file}#page=${ex.pdfPage || 1}`, '_blank');
+      }
+    } else if (b.type === 'quiz') {
+      startQuizForSingleQuestion(b.id);
+    }
+  }
+
+  showItem(0);
+}
+
+function startQuizRevisionErrors() {
+  if (typeof QUIZ_DATA === 'undefined') return;
+  const bookmarks = (typeof STI_STORE !== 'undefined') ? STI_STORE.getBookmarks('quiz') : [];
+  const wrongIds = bookmarks.map(b => b.id);
+  const allQ = (typeof QUIZ_DATA.getAll === 'function') ? QUIZ_DATA.getAll() : QUIZ_DATA.getAllQuestions();
+  const questions = allQ.filter(q => wrongIds.includes(q.id));
+
+  if (questions.length === 0) {
+    alert("Aucune question de quiz dans « À revoir ». Vos erreurs lors des sessions de quiz y sont ajoutées automatiquement.");
+    return;
+  }
+
+  navigateToHash('#/algo/quiz');
+  if (typeof startQuizSession === 'function') {
+    startQuizSession(questions);
+  }
+}
+
+function startQuizForSingleQuestion(qId) {
+  if (typeof QUIZ_DATA === 'undefined') return;
+  const q = (typeof QUIZ_DATA.getById === 'function') ? QUIZ_DATA.getById(qId) : QUIZ_DATA.getQuestionById(qId);
+  if (!q) return;
+  navigateToHash('#/algo/quiz');
+  if (typeof startQuizSession === 'function') {
+    startQuizSession([q]);
+  }
+}
+
+function renderQuizRecentSection() {
+  const container = document.getElementById('revQuizRecentWrap');
+  if (!container || typeof STI_STORE === 'undefined') return;
+
+  const history = STI_STORE.getQuizHistory();
+  const quizStats = STI_STORE.getQuizStats();
+
+  if (history.length === 0) {
+    container.innerHTML = `
+      <div class="revision-empty-state">
+        <div class="revision-empty-icon">⚡</div>
+        <h4 style="margin:0 0 6px 0;font-size:1.05rem;color:var(--text-primary);font-weight:700;">Aucun quiz effectué pour le moment</h4>
+        <p class="revision-empty-text">
+          Entraînez-vous en format express (2 à 5 minutes) sur les 80 questions certifiées conformes aux exercices types du Bac.
+        </p>
+        <button type="button" onclick="navigateToHash('#/algo/quiz')" class="btn-primary" style="padding:10px 22px;border-radius:10px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;font-weight:700;font-size:0.88rem;border:none;cursor:pointer;">
+          🚀 Lancer mon premier Quiz
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  // Identifier le chapitre le plus fragile (score moyen le plus faible)
+  let weakestSlug = null;
+  let lowestPct = 101;
+  Object.keys(quizStats.byChapter || {}).forEach(slug => {
+    const ch = quizStats.byChapter[slug];
+    const avg = ch.totalQuestions > 0 ? Math.round((ch.totalScore / ch.totalQuestions) * 100) : 100;
+    if (avg < lowestPct) {
+      lowestPct = avg;
+      weakestSlug = slug;
+    }
+  });
+
+  const weakestCh = (weakestSlug && typeof CURRICULUM !== 'undefined') ? CURRICULUM.getChapterBySlug(weakestSlug) : null;
+
+  const historyList = history.slice(0, 5).map(h => {
+    const chObj = (h.chapterSlug && typeof CURRICULUM !== 'undefined') ? CURRICULUM.getChapterBySlug(h.chapterSlug) : null;
+    const name = chObj ? chObj.shortTitle : (h.chapterSlug === 'mixte' || h.chapterSlug === 'all' ? 'Mixte (Tous chapitres)' : h.chapterSlug);
+    const col = (h.pct >= 80) ? '#10b981' : (h.pct >= 50 ? '#f59e0b' : '#ef4444');
+
+    return `
+      <div style="background:var(--surface-bg);border:1px solid var(--border-color);border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <div>
+          <strong style="font-size:0.9rem;color:var(--text-primary);">${escapeHtml(name)}</strong>
+          <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:2px;">
+            Mode : ${escapeHtml(h.mode || 'standard')} • 📅 ${h.date || 'Récemment'}
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:1.1rem;font-weight:800;color:${col};">${h.score} / ${h.total}</div>
+          <span style="font-size:0.74rem;color:var(--text-secondary);">${h.pct}%</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    ${weakestCh ? `
+      <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <div>
+          <span style="font-size:0.78rem;font-weight:800;color:#f87171;text-transform:uppercase;">⚠️ Chapitre à consolider en priorité</span>
+          <div style="font-size:0.95rem;font-weight:700;color:var(--text-primary);margin-top:2px;">
+            ${weakestCh.iconEmoji || '📁'} ${escapeHtml(weakestCh.fullTitle)} (${lowestPct}% de réussite)
+          </div>
+        </div>
+        <button type="button" onclick="navigateToHash('#/algo/quiz/${weakestSlug}')" class="btn-sm" style="background:#ef4444;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-weight:700;font-size:0.82rem;cursor:pointer;">
+          S'entraîner sur ce chapitre →
+        </button>
+      </div>
+    ` : ''}
+    <div style="display:grid;gap:8px;">
+      ${historyList}
+    </div>
+  `;
+}
+
+function exportStudentData() {
+  if (typeof STI_STORE === 'undefined') return;
+  const jsonStr = STI_STORE.exportAllData();
+  const dateStr = new Date().toISOString().substring(0, 10);
+  const blob = new Blob([jsonStr], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `sti-de-a-a-z-sauvegarde-${dateStr}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('📥 Progression exportée avec succès !');
+}
+
+function triggerImportStudentData() {
+  const input = document.getElementById('revisionImportFileInput');
+  if (input) input.click();
+}
+
+function handleImportRevisionFile(e) {
+  const file = e.target && e.target.files && e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    try {
+      const content = evt.target.result;
+      if (typeof STI_STORE !== 'undefined') {
+        const ok = STI_STORE.importAllData(content);
+        if (ok) {
+          alert("✓ Données importées avec succès ! Votre progression a été restaurée.");
+          renderRevisionPage();
+          updateDataCountersUI();
+        } else {
+          alert("Erreur : Le fichier sélectionné ne semble pas être une sauvegarde STI valide.");
+        }
+      }
+    } catch(err) {
+      console.error(err);
+      alert("Erreur lors de la lecture du fichier de sauvegarde.");
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+function confirmResetAllStudentData() {
+  if (!confirm("⚠️ ATTENTION : Voulez-vous vraiment effacer TOUTES vos données locales (progression, historique des simulateurs, favoris, quiz) ?\n\nCette action est irréversible. Pensez à faire un export au préalable.")) {
+    return;
+  }
+  if (typeof STI_STORE !== 'undefined') {
+    STI_STORE.resetAllData();
+    alert("Vos données locales ont été réinitialisées.");
+    renderRevisionPage();
+    updateDataCountersUI();
+  }
+}
+
+// Window bindings
+if (typeof window !== 'undefined') {
+  window.renderBookmarkBtn = renderBookmarkBtn;
+  window.toggleBookmarkItem = toggleBookmarkItem;
+  window.toggleExerciseBookmark = toggleExerciseBookmark;
+  window.renderRevisionPage = renderRevisionPage;
+  window.filterRevisionBookmarks = filterRevisionBookmarks;
+  window.removeBookmarkFromDashboard = removeBookmarkFromDashboard;
+  window.saveBookmarkNote = saveBookmarkNote;
+  window.openAllBookmarksSequentially = openAllBookmarksSequentially;
+  window.startQuizRevisionErrors = startQuizRevisionErrors;
+  window.startQuizForSingleQuestion = startQuizForSingleQuestion;
+  window.exportStudentData = exportStudentData;
+  window.triggerImportStudentData = triggerImportStudentData;
+  window.handleImportRevisionFile = handleImportRevisionFile;
+  window.confirmResetAllStudentData = confirmResetAllStudentData;
+  window.updateHomeRevisionWidget = updateHomeRevisionWidget;
+  window.showToast = showToast;
+}
+

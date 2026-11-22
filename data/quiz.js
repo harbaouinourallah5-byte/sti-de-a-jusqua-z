@@ -57,6 +57,14 @@ const QUIZ_DATA = {
 
   getQuestionById(id) {
     return this.getAllQuestions().find(q => q.id === id) || null;
+  },
+
+  getById(id) {
+    return this.getQuestionById(id);
+  },
+
+  getAll() {
+    return this.getAllQuestions();
   }
 };
 

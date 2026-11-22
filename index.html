@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=27.0">
+  <link rel="stylesheet" href="style.css?v=29.0">
   <!-- INITIALISATION IMMÉDIATE DU THÈME & TOGGLE SANS LATENCE -->
   <script>
     (function() {
@@ -210,6 +210,13 @@
           <span class="nav-label">Accueil &amp; Vue d'ensemble</span>
         </a>
 
+        <!-- Espace Personnel : Ma révision -->
+        <a class="sidebar-link" data-view="revision" onclick="navigateToHash('#/revision')">
+          <span class="nav-icon">⭐</span>
+          <span class="nav-label">Ma révision</span>
+          <span class="nav-count" id="sideBadgeRevision" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4);">0</span>
+        </a>
+
         <!-- GROUPE MODULE 1 : STI WEB & BASES DE DONNÉES -->
         <div class="sidebar-group" id="sidebarGroupSti">
           <div class="sidebar-group-header">
@@ -279,6 +286,18 @@
               <span class="nav-icon">⚡</span>
               <span class="nav-label">Quiz V/F &amp; QCM</span>
               <span class="nav-count" id="sideBadgeQuiz">80</span>
+            </a>
+            <a class="sidebar-link" data-view="revision-cartes" onclick="navigateToHash('#/revision/cartes')">
+              <span class="nav-bullet algo"></span>
+              <span class="nav-icon">🗂️</span>
+              <span class="nav-label">Cartes mémoire</span>
+              <span class="nav-count" id="sideBadgeCartes" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">Box 1</span>
+            </a>
+            <a class="sidebar-link" data-view="algo-statistiques" onclick="navigateToHash('#/algo/statistiques')">
+              <span class="nav-bullet algo"></span>
+              <span class="nav-icon">📊</span>
+              <span class="nav-label">Statistiques</span>
+              <span class="nav-count" id="sideBadgeStats" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">Bac</span>
             </a>
             <a class="sidebar-link" data-view="algo-theorique" onclick="switchView('algo-theorique')">
               <span class="nav-bullet algo"></span>
@@ -414,6 +433,31 @@
             <span>Reprendre</span>
             <span>→</span>
           </button>
+        </div>
+
+        <!-- WIDGET "MA RÉVISION" (COMPACT) -->
+        <div class="home-revision-widget" id="homeRevisionWidget">
+          <div class="home-revision-widget-left">
+            <div class="home-revision-widget-icon">⭐</div>
+            <div>
+              <div class="home-revision-widget-title">
+                <span>Ma Révision &amp; Notions à revoir</span>
+                <span class="home-revision-pill" id="homeRevBadgeCount"><strong>0</strong> à revoir</span>
+              </div>
+              <p class="home-revision-widget-desc" id="homeRevDesc">
+                Simulateur d'examen, notions bookmarkées, quiz et suivi de progression 100% privé.
+              </p>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <div class="home-revision-widget-stats" id="homeRevStatsPills">
+              <!-- Rempli dynamiquement -->
+            </div>
+            <button type="button" class="home-revision-btn" onclick="navigateToHash('#/revision')">
+              <span>Ouvrir Ma Révision</span>
+              <span>→</span>
+            </button>
+          </div>
         </div>
 
         <!-- LES DEUX GRANDES CARTES DE MODULES (STI vs ALGO) -->
@@ -4056,6 +4100,157 @@ app.exec_()</code></pre>
       </div>
     </section>
 
+    <!-- ==========================================
+         VUE TRANSVERSALE : MA RÉVISION DASHBOARD (#/revision)
+         ========================================== -->
+    <section id="view-revision" class="view-section">
+      <div class="revision-container">
+        <!-- En-tête -->
+        <div class="revision-header">
+          <div class="revision-badge-header">
+            <span>⭐</span>
+            <span>Espace Personnel de Révision Bac</span>
+          </div>
+          <h2 class="revision-title">Ma Révision &amp; Notions à revoir</h2>
+          <p class="revision-subtitle">
+            Suivi de progression, simulateur d'examen, notions bookmarkées et synchronisation locale (100% privé, sans compte, stocké dans votre navigateur).
+          </p>
+        </div>
+
+        <!-- 1. GRILLE DE STATISTIQUES GLOBALES -->
+        <div class="revision-stats-grid" id="revStatsSummaryGrid">
+          <!-- Injecté dynamiquement par app.js -->
+        </div>
+
+        <!-- 2. SECTION : AUJOURD'HUI & PLAN D'ÉTUDE -->
+        <div class="revision-section-card" id="revTodaySection">
+          <div class="revision-section-header">
+            <h3 class="revision-section-title">
+              <span>📅</span>
+              <span>Aujourd'hui &amp; Plan d'étude</span>
+            </h3>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button type="button" class="btn-sm" onclick="navigateToHash('#/revision/plan')" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 8px; padding: 6px 12px; font-weight: 700; cursor: pointer;">
+                📅 Configurer mon Planning
+              </button>
+              <button type="button" class="btn-sm" onclick="PomodoroEngine.openDrawer()" style="background: rgba(234, 88, 12, 0.15); color: #fb923c; border: 1px solid rgba(234, 88, 12, 0.35); border-radius: 8px; padding: 6px 12px; font-weight: 700; cursor: pointer;">
+                ⏱️ Pomodoro
+              </button>
+            </div>
+          </div>
+          <div id="revTodayContent">
+            <!-- Injecté dynamiquement -->
+          </div>
+        </div>
+
+        <!-- 3. SECTION : PROGRESSION PAR CHAPITRE (8 CHAPITRES) -->
+        <div class="revision-section-card">
+          <div class="revision-section-header">
+            <h3 class="revision-section-title">
+              <span>📖</span>
+              <span>Progression par Chapitre (Programme Officiel 4SI)</span>
+            </h3>
+            <span style="font-size: 0.85rem; color: var(--text-secondary);" id="revChaptersGlobalPercent">0% global</span>
+          </div>
+          <div class="items-grid" id="revChaptersProgressGrid" style="grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px;">
+            <!-- Injecté dynamiquement -->
+          </div>
+        </div>
+
+        <!-- 4. SECTION : DERNIERS EXAMENS & GRAPHIQUE SVG -->
+        <div class="revision-section-card">
+          <div class="revision-section-header">
+            <h3 class="revision-section-title">
+              <span>⏱️</span>
+              <span>Épreuves Simulées &amp; Historique des Notes</span>
+            </h3>
+            <button type="button" class="btn-sm" onclick="navigateToHash('#/examens')" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 8px; padding: 6px 12px; font-weight: 700; cursor: pointer;">
+              🚀 Simuler un examen
+            </button>
+          </div>
+          <div id="revExamHistoryWrap">
+            <!-- Injecté dynamiquement (graphique SVG + liste des essais) -->
+          </div>
+        </div>
+
+        <!-- 5. SECTION : NOTIONS "À REVOIR" (BOOKMARKS ⭐) -->
+        <div class="revision-section-card" id="revBookmarksSection">
+          <div class="revision-section-header">
+            <h3 class="revision-section-title">
+              <span>⭐</span>
+              <span>Notions &amp; Exercices « À revoir »</span>
+            </h3>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button type="button" id="revReviseErrorsBtn" class="btn-sm" onclick="startQuizRevisionErrors()" style="background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.35); border-radius: 8px; padding: 6px 12px; font-weight: 700; cursor: pointer;">
+                🎯 Réviser mes erreurs de quiz
+              </button>
+              <button type="button" id="revOpenAllSeqBtn" class="btn-sm" onclick="openAllBookmarksSequentially()" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 8px; padding: 6px 12px; font-weight: 700; cursor: pointer;">
+                📖 Tout ouvrir un par un
+              </button>
+            </div>
+          </div>
+
+          <!-- Filtres par catégorie -->
+          <div class="revision-filters-bar" id="revBookmarksFilterBar">
+            <button type="button" class="revision-filter-btn active" data-bmfilter="all" onclick="filterRevisionBookmarks('all', this)">Tous (<span id="bmCountAll">0</span>)</button>
+            <button type="button" class="revision-filter-btn" data-bmfilter="algo" onclick="filterRevisionBookmarks('algo', this)">Algorithmes (<span id="bmCountAlgo">0</span>)</button>
+            <button type="button" class="revision-filter-btn" data-bmfilter="exercise" onclick="filterRevisionBookmarks('exercise', this)">Exercices d'examen (<span id="bmCountEx">0</span>)</button>
+            <button type="button" class="revision-filter-btn" data-bmfilter="exam" onclick="filterRevisionBookmarks('exam', this)">Examens (<span id="bmCountExam">0</span>)</button>
+            <button type="button" class="revision-filter-btn" data-bmfilter="method" onclick="filterRevisionBookmarks('method', this)">Fiches méthode (<span id="bmCountMethod">0</span>)</button>
+            <button type="button" class="revision-filter-btn" data-bmfilter="quiz" onclick="filterRevisionBookmarks('quiz', this)">Quiz (<span id="bmCountQuiz">0</span>)</button>
+          </div>
+
+          <!-- Grille des cartes -->
+          <div class="revision-bookmarks-grid" id="revBookmarksGrid">
+            <!-- Injecté dynamiquement -->
+          </div>
+        </div>
+
+        <!-- 6. SECTION : QUIZ RÉCENTS & POINTS FRAGILES -->
+        <div class="revision-section-card">
+          <div class="revision-section-header">
+            <h3 class="revision-section-title">
+              <span>⚡</span>
+              <span>Quiz Récents &amp; Analyse des Points Faibles</span>
+            </h3>
+            <button type="button" class="btn-sm" onclick="navigateToHash('#/algo/quiz')" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 8px; padding: 6px 12px; font-weight: 700; cursor: pointer;">
+              ⚡ Lancer un Quiz V/F &amp; QCM
+            </button>
+          </div>
+          <div id="revQuizRecentWrap">
+            <!-- Injecté dynamiquement -->
+          </div>
+        </div>
+
+        <!-- 7. SECTION : SYNCHRONISATION, EXPORT / IMPORT ET RÉINITIALISATION -->
+        <div class="revision-section-card">
+          <div class="revision-section-header">
+            <h3 class="revision-section-title">
+              <span>💾</span>
+              <span>Sauvegarde Locale &amp; Changement d'Appareil</span>
+            </h3>
+            <span style="font-size: 0.8rem; color: var(--text-secondary);">100% hors-ligne &bull; Fichier JSON standard</span>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin: 0 0 16px 0;">
+            Vos données de révision restent stockées localement dans votre navigateur. Vous pouvez exporter un fichier de sauvegarde pour transférer votre progression sur votre smartphone ou un autre ordinateur.
+          </p>
+          <div class="revision-backup-grid">
+            <button type="button" class="revision-backup-btn" onclick="exportStudentData()">
+              <span>📥 Exporter ma progression (JSON)</span>
+            </button>
+            <button type="button" class="revision-backup-btn" onclick="triggerImportStudentData()">
+              <span>📤 Importer un fichier de sauvegarde</span>
+            </button>
+            <button type="button" class="revision-backup-btn danger" onclick="confirmResetAllStudentData()">
+              <span>🗑️ Tout effacer (Réinitialiser)</span>
+            </button>
+            <input type="file" id="revisionImportFileInput" style="display: none;" accept=".json" onchange="handleImportRevisionFile(event)">
+          </div>
+        </div>
+
+      </div>
+    </section>
+
     <!-- PIED DE PAGE GLOBAL -->
 
     <footer class="app-global-footer">
@@ -4499,25 +4694,25 @@ app.exec_()</code></pre>
 
   <!-- Fichiers Scripts -->
 
-  <script src="store.js?v=27.0"></script>
-  <script src="data.js?v=27.0"></script>
-  <script src="data/curriculum.js?v=27.0"></script>
-  <script src="data/documents.js?v=27.0"></script>
-  <script src="data/exercises.js?v=27.0"></script>
-  <script src="data/methods.js?v=27.0"></script>
-  <script src="data/quiz/fichiers.js?v=27.0"></script>
-  <script src="data/quiz/recursivite.js?v=27.0"></script>
-  <script src="data/quiz/bases.js?v=27.0"></script>
-  <script src="data/quiz/arithmetique.js?v=27.0"></script>
-  <script src="data/quiz/approximation.js?v=27.0"></script>
-  <script src="data/quiz/tableaux.js?v=27.0"></script>
-  <script src="data/quiz/matrices.js?v=27.0"></script>
-  <script src="data/quiz/suites.js?v=27.0"></script>
-  <script src="data/quiz.js?v=27.0"></script>
-  <script src="css_engine.js?v=27.0"></script>
-  <script src="algo_pratique_engine.js?v=27.0"></script>
-  <script src="pomodoro_engine.js?v=27.0"></script>
-  <script src="app.js?v=27.0"></script>
+  <script src="store.js?v=29.0"></script>
+  <script src="data.js?v=29.0"></script>
+  <script src="data/curriculum.js?v=29.0"></script>
+  <script src="data/documents.js?v=29.0"></script>
+  <script src="data/exercises.js?v=29.0"></script>
+  <script src="data/methods.js?v=29.0"></script>
+  <script src="data/quiz/fichiers.js?v=29.0"></script>
+  <script src="data/quiz/recursivite.js?v=29.0"></script>
+  <script src="data/quiz/bases.js?v=29.0"></script>
+  <script src="data/quiz/arithmetique.js?v=29.0"></script>
+  <script src="data/quiz/approximation.js?v=29.0"></script>
+  <script src="data/quiz/tableaux.js?v=29.0"></script>
+  <script src="data/quiz/matrices.js?v=29.0"></script>
+  <script src="data/quiz/suites.js?v=29.0"></script>
+  <script src="data/quiz.js?v=29.0"></script>
+  <script src="css_engine.js?v=29.0"></script>
+  <script src="algo_pratique_engine.js?v=29.0"></script>
+  <script src="pomodoro_engine.js?v=29.0"></script>
+  <script src="app.js?v=29.0"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {

@@ -249,11 +249,16 @@ var STI_STORE = (function () {
   }
 
   // ── 5. FAVORIS & "À REVOIR" (BOOKMARKS ⭐) ─────────────────────────────────
-  // Clé: bookmarks -> Array<{ type: 'algo'|'exercise'|'exam'|'method'|'quiz', id, addedAt, meta? }>
+  // Clé: bookmarks -> Array<{ type: 'algo'|'exercise'|'exam'|'method'|'quiz', id, addedAt, note?, meta? }>
   function getBookmarks(type) {
     var list = _safeGet('bookmarks', []);
     if (!type) return list;
     return list.filter(function (b) { return b.type === type; });
+  }
+
+  function getBookmarksCount(type) {
+    var list = getBookmarks(type);
+    return list.length;
   }
 
   function isBookmarked(type, id) {
@@ -261,17 +266,30 @@ var STI_STORE = (function () {
     return list.some(function (b) { return b.type === type && b.id === id; });
   }
 
-  function addBookmark(type, id, meta) {
+  function addBookmark(type, id, meta, note) {
     var list = _safeGet('bookmarks', []);
     if (!isBookmarked(type, id)) {
       list.unshift({
         type: type,
         id: id,
         addedAt: Date.now(),
+        note: note || (meta && meta.note) || '',
         meta: meta || null
       });
       _safeSet('bookmarks', list);
     }
+    return true;
+  }
+
+  function setBookmarkNote(type, id, note) {
+    var list = _safeGet('bookmarks', []);
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].type === type && list[i].id === id) {
+        list[i].note = note;
+        break;
+      }
+    }
+    _safeSet('bookmarks', list);
     return true;
   }
 
@@ -282,12 +300,12 @@ var STI_STORE = (function () {
     return true;
   }
 
-  function toggleBookmark(type, id, meta) {
+  function toggleBookmark(type, id, meta, note) {
     if (isBookmarked(type, id)) {
       removeBookmark(type, id);
       return false;
     } else {
-      addBookmark(type, id, meta);
+      addBookmark(type, id, meta, note);
       return true;
     }
   }
@@ -437,10 +455,12 @@ var STI_STORE = (function () {
     getLastExamScore: getLastExamScore,
     // Favoris / À revoir
     getBookmarks: getBookmarks,
+    getBookmarksCount: getBookmarksCount,
     isBookmarked: isBookmarked,
     addBookmark: addBookmark,
     removeBookmark: removeBookmark,
     toggleBookmark: toggleBookmark,
+    setBookmarkNote: setBookmarkNote,
     // Quiz
     getQuizHistory: getQuizHistory,
     saveQuizResult: saveQuizResult,
