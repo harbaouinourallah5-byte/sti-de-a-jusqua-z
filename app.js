@@ -6878,7 +6878,7 @@ function renderLessons() {
               <span>${hasCorr ? "Énoncé Série" : "Consulter le PDF"}</span>
             </button>
             ${hasCorr ? `
-            <button class="lesson-btn-correction" onclick="openPdfModal('${lesson.id}', 'corrige')" title="Consulter directement le corrigé officiel de cette série">
+            <button class="lesson-btn-correction" onclick="openPdfModal('${lesson.id}', 'corrige')" title="Consulter le corrigé type de cette série">
               <span>🎯</span>
               <span>Voir le Corrigé</span>
             </button>` : ''}
@@ -6950,13 +6950,14 @@ function openPdfModal(lessonId, variant = 'enonce') {
   const isCorrige = (variant === 'corrige' && hasCorr);
 
   const displayTitle = isCorrige 
-    ? (lesson.correctionTitle || `${lesson.title} — Corrigé Officiel`)
+    ? (lesson.correctionTitle || `${lesson.title} — Corrigé Type`)
     : lesson.title;
 
   if (titleEl) titleEl.textContent = displayTitle;
   if (catEl) {
     const typeTxt = isCorrige ? "🎯 Corrigé Type" : (lesson.typeLabel || lesson.type);
-    catEl.textContent = `PDF • ${lesson.subjectLabel || lesson.subject} • ${typeTxt}`;
+    const modLabel = (lesson.subject && (lesson.subject.startsWith('algo') || lesson.subject === 'algo')) ? 'Algorithmique' : 'STI Web & BD';
+    catEl.textContent = `${modLabel} • ${lesson.subjectLabel || lesson.subject} • ${typeTxt}`;
     catEl.className = `category-label ${lesson.subject}`;
   }
   if (downloadBtn) {
