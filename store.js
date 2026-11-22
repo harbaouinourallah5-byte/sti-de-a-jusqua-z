@@ -31,17 +31,22 @@ var STI_STORE = (function () {
     }
   }
 
-  // ── 1. PROGRESSION PAR CHAPITRE (5 étapes standardisées) ────────────────
-  // Clé: progress -> { [chapterSlug]: { step1: bool, step2: bool, step3: bool, step4: bool, step5: bool } }
+  // ── 1. PROGRESSION PAR CHAPITRE (4 étapes standardisées) ────────────────
+  // Clé: progress -> { [chapterSlug]: { step1: bool, step2: bool, step3: bool, step4: bool } }
   function getChapterProgress(slug) {
     var all = _safeGet('progress', {});
-    return all[slug] || { step1: false, step2: false, step3: false, step4: false, step5: false };
+    var cur = all[slug] || { step1: false, step2: false, step3: false, step4: false };
+    // Migration : si l'ancienne étape 5 (exercices) était cochée, la reporter sur l'étape 4
+    if (cur.step5 && !cur.step4) {
+      cur.step4 = true;
+    }
+    return cur;
   }
 
   function setChapterStep(slug, stepNum, isDone) {
     var all = _safeGet('progress', {});
     if (!all[slug]) {
-      all[slug] = { step1: false, step2: false, step3: false, step4: false, step5: false };
+      all[slug] = { step1: false, step2: false, step3: false, step4: false };
     }
     all[slug]['step' + stepNum] = !!isDone;
     _safeSet('progress', all);
@@ -55,8 +60,7 @@ var STI_STORE = (function () {
     var step1 = true;
     var step2 = false; // Algorithmes types
     var step3 = false; // Séries & Extraits
-    var step4 = false; // Devoirs
-    var step5 = false; // Exercices d'examens
+    var step4 = false; // Exercices d'examens
 
     try {
       if (typeof DATA !== 'undefined' && DATA && DATA.algo_theorique && typeof CURRICULUM !== 'undefined') {
@@ -71,21 +75,15 @@ var STI_STORE = (function () {
         });
         step3 = sList.length > 0;
       }
-      if (typeof DOCUMENTS_DATA !== 'undefined' && typeof DOCUMENTS_DATA.getAllDevoirs === 'function') {
-        var dList = DOCUMENTS_DATA.getAllDevoirs().filter(function(d) {
-          return d.chapters && d.chapters.indexOf(slug) !== -1;
-        });
-        step4 = dList.length > 0;
-      }
       if (typeof EXERCISES_DATA !== 'undefined' && typeof EXERCISES_DATA.getByChapter === 'function') {
         var exList = EXERCISES_DATA.getByChapter(slug);
-        step5 = exList.length > 0;
+        step4 = exList.length > 0;
       }
     } catch (e) {
       console.warn('[STI_STORE] getChapterStepAvailability error', e);
     }
 
-    return { 1: step1, 2: step2, 3: step3, 4: step4, 5: step5 };
+    return { 1: step1, 2: step2, 3: step3, 4: step4 };
   }
 
   function getChapterPercentage(slug) {
@@ -94,7 +92,7 @@ var STI_STORE = (function () {
     var availableCount = 0;
     var doneCount = 0;
 
-    for (var i = 1; i <= 5; i++) {
+    for (var i = 1; i <= 4; i++) {
       if (avail[i]) {
         availableCount++;
         if (p['step' + i]) doneCount++;
@@ -107,7 +105,7 @@ var STI_STORE = (function () {
   function getFirstUnfinishedStep(slug) {
     var avail = getChapterStepAvailability(slug);
     var p = getChapterProgress(slug);
-    for (var i = 1; i <= 5; i++) {
+    for (var i = 1; i <= 4; i++) {
       if (avail[i] && !p['step' + i]) {
         return i;
       }
@@ -122,7 +120,7 @@ var STI_STORE = (function () {
     var doneCount = 0;
     var steps = {};
 
-    for (var i = 1; i <= 5; i++) {
+    for (var i = 1; i <= 4; i++) {
       var isAvail = !!avail[i];
       var isDone = !!p['step' + i];
       if (isAvail) {

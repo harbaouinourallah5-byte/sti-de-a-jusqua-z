@@ -1595,8 +1595,7 @@ function parseAppHash(hash) {
   if (clean.startsWith('algo/theorique') || clean.startsWith('theorique') || clean.startsWith('algo-theorique')) {
     const sub = clean.replace(/^(algo\/theorique|theorique|algo-theorique)\/?/, '').trim();
     if (sub.startsWith('devoirs') || sub.startsWith('devoir')) {
-      const devSub = sub.replace(/^devoirs?\/?/, '').trim();
-      return { view: 'algo-theorique', subTab: 'devoirs', filter: devSub || 'all' };
+      return { view: 'examens' };
     }
     if (sub.endsWith('/resume') || sub.endsWith('-resume') || sub.startsWith('resume/') || sub === 'resumes' || sub === 'fiches') {
       const slug = sub.replace(/[\/-]resume$/, '').replace(/^resume\/?/, '').trim();
@@ -1611,9 +1610,9 @@ function parseAppHash(hash) {
     return { view: 'algo-theorique', subTab: 'chapitres', chapter: null, chapterSlug: 'all' };
   }
 
-  // Raccourcis directs de devoirs
+  // Raccourcis directs de devoirs (redirigé vers la page officielle des examens)
   if (clean === 'devoirs' || clean === 'devoir' || clean === 'algo/devoirs') {
-    return { view: 'algo-theorique', subTab: 'devoirs', filter: 'all' };
+    return { view: 'examens' };
   }
 
   // Raccourcis directs résumés et fiches (#/resume/:slug ou #/fiches)
@@ -1744,21 +1743,9 @@ function handleRouteFromHash() {
   }
 
   if (route.view === 'algo-theorique') {
-    if (route.subTab === 'devoirs') {
-      if (typeof switchAlgoTheoriqueTab === 'function') {
-        switchAlgoTheoriqueTab('devoirs', true);
-      }
-      if (route.filter && typeof handleAlgoDevoirFilter === 'function') {
-        handleAlgoDevoirFilter(route.filter);
-      }
-    } else {
-      if (typeof switchAlgoTheoriqueTab === 'function') {
-        switchAlgoTheoriqueTab('chapitres', true);
-      }
-      currentAlgoTheoriqueCategory = route.chapterSlug || route.chapter || 'all';
-      if (typeof renderAlgoTheoriqueCategories === 'function') renderAlgoTheoriqueCategories();
-      if (typeof renderAlgoTheoriqueCards === 'function') renderAlgoTheoriqueCards();
-    }
+    currentAlgoTheoriqueCategory = route.chapterSlug || route.chapter || 'all';
+    if (typeof renderAlgoTheoriqueCategories === 'function') renderAlgoTheoriqueCategories();
+    if (typeof renderAlgoTheoriqueCards === 'function') renderAlgoTheoriqueCards();
   }
 
   isRouterNavigating = false;
@@ -1854,16 +1841,11 @@ function updateDataCountersUI() {
     if (sideQt) sideQt.textContent = qtCount;
     const sideTheorique = document.getElementById('sideBadgeTheorique');
     if (sideTheorique) sideTheorique.textContent = algoTheoriqueCount;
-    // Compteur devoirs (placeholder)
-    const sideDevoirs = document.getElementById('sideBadgeDevoirs');
-    if (sideDevoirs && sideDevoirs.textContent === '0') sideDevoirs.textContent = '7';
-    const badgeDevoirsTotal = document.getElementById('devoirsTotalCountBadge');
     // Compteur examens
     if (typeof DOCUMENTS_DATA !== 'undefined') {
       const examensCount = DOCUMENTS_DATA.getExamens().length;
       const sideExamens = document.getElementById('sideBadgeExamens');
       if (sideExamens) sideExamens.textContent = examensCount;
-      if (badgeDevoirsTotal) badgeDevoirsTotal.textContent = `${examensCount} Épreuves`;
     }
     if (typeof EXERCISES_DATA !== 'undefined') {
       const sideTypes = document.getElementById('sideBadgeTypes');
@@ -8873,7 +8855,7 @@ function renderAlgoTheoriqueCards() {
       <div class="chapter-step-block ${summary.steps[1].done ? 'is-done' : ''}" id="ch-step-1-${ch.slug}">
         <div class="chapter-step-header">
           <div class="chapter-step-title-wrap">
-            <span class="chapter-step-num-badge">Étape 1 / 5</span>
+            <span class="chapter-step-num-badge">Étape 1 / 4</span>
             <h4 class="chapter-step-title">📖 Cours en bref &amp; Règles fondamentales</h4>
           </div>
           <button type="button" class="chapter-step-toggle-btn ${summary.steps[1].done ? 'done' : ''}" onclick="toggleChapterStep('${ch.slug}', 1)">
@@ -8968,7 +8950,7 @@ function renderAlgoTheoriqueCards() {
       <div class="chapter-step-block ${summary.steps[2].done ? 'is-done' : ''}" id="ch-step-2-${ch.slug}">
         <div class="chapter-step-header">
           <div class="chapter-step-title-wrap">
-            <span class="chapter-step-num-badge">Étape 2 / 5</span>
+            <span class="chapter-step-num-badge">Étape 2 / 4</span>
             <h4 class="chapter-step-title">⚡ Algorithmes types officiels (${chapterItems.length})</h4>
             ${chapterItems.length > 0 ? `<span style="font-size: 0.78rem; color: #10b981; font-weight: 700;">(${studiedCount}/${chapterItems.length} étudiés)</span>` : ''}
           </div>
@@ -9028,7 +9010,7 @@ function renderAlgoTheoriqueCards() {
       <div class="chapter-step-block ${summary.steps[3].done ? 'is-done' : ''}" id="ch-step-3-${ch.slug}">
         <div class="chapter-step-header">
           <div class="chapter-step-title-wrap">
-            <span class="chapter-step-num-badge">Étape 3 / 5</span>
+            <span class="chapter-step-num-badge">Étape 3 / 4</span>
             <h4 class="chapter-step-title">📋 Séries &amp; Extraits de travaux pratiques (${combinedSeries.length})</h4>
           </div>
           ${combinedSeries.length > 0 ? `
@@ -9043,61 +9025,7 @@ function renderAlgoTheoriqueCards() {
       </div>
     `;
 
-    // ── ÉTAPE 4 : DEVOIRS (DC & DS) HTML ──
-    let devoirsCardsHtml = '';
-    if (chapterDevoirs.length === 0) {
-      devoirsCardsHtml = `
-        <div style="padding: 20px; border-radius: 10px; background: var(--surface-bg); color: var(--text-secondary); font-size: 0.86rem; text-align: center; border: 1px dashed var(--border-color);">
-          📝 Aucun devoir interactif enregistré ciblant directement ce chapitre.
-        </div>
-      `;
-    } else {
-      devoirsCardsHtml = chapterDevoirs.map(dev => {
-        const typeLabels = { 'dc1': '📌 Devoir de Contrôle N°1', 'dc2': '📌 Devoir de Contrôle N°2', 'ds': '📝 Devoir de Synthèse' };
-        const typeBadgeColor = dev.type === 'ds' ? '#f59e0b' : '#38bdf8';
-        return `
-          <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
-            <div style="flex: 1; min-width: 220px;">
-              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
-                <span style="font-size: 0.76rem; font-weight: 700; color: ${typeBadgeColor}; background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); padding: 2px 8px; border-radius: 6px;">
-                  ${typeLabels[dev.type] || dev.type}
-                </span>
-                <span style="font-size: 0.78rem; color: var(--text-secondary);">📅 ${escapeHtml(dev.date)}</span>
-                <span style="font-size: 0.78rem; color: var(--text-secondary);">👥 ${escapeHtml(dev.classes)}</span>
-              </div>
-              <h5 style="margin: 0 0 4px 0; font-size: 0.95rem; font-weight: 700; color: var(--text-primary);">${escapeHtml(dev.title)}</h5>
-              <p style="margin: 0; font-size: 0.8rem; color: var(--text-secondary);">${escapeHtml(dev.preview || '')}</p>
-            </div>
-            <div>
-              <button type="button" onclick="navigateToHash('#/algo/theorique/devoirs')" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: linear-gradient(135deg, #d97706, #f59e0b); color: #000; font-size: 0.84rem; font-weight: 700; border: none; cursor: pointer; white-space: nowrap;">
-                📑 Ouvrir le Devoir
-              </button>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    const step4Html = `
-      <div class="chapter-step-block ${summary.steps[4].done ? 'is-done' : ''}" id="ch-step-4-${ch.slug}">
-        <div class="chapter-step-header">
-          <div class="chapter-step-title-wrap">
-            <span class="chapter-step-num-badge">Étape 4 / 5</span>
-            <h4 class="chapter-step-title">📝 Devoirs surveillés &amp; de synthèse (${chapterDevoirs.length})</h4>
-          </div>
-          ${chapterDevoirs.length > 0 ? `
-            <button type="button" class="chapter-step-toggle-btn ${summary.steps[4].done ? 'done' : ''}" onclick="toggleChapterStep('${ch.slug}', 4)">
-              <span>${summary.steps[4].done ? '✓ Validé' : '○ Marquer comme terminé'}</span>
-            </button>
-          ` : `<span style="font-size: 0.76rem; font-weight: 700; color: #f59e0b; background: rgba(245,158,11,0.15); border: 1px dashed rgba(245,158,11,0.3); padding: 4px 10px; border-radius: 6px;">⏳ Bientôt</span>`}
-        </div>
-        <div style="display: grid; gap: 10px;">
-          ${devoirsCardsHtml}
-        </div>
-      </div>
-    `;
-
-    // ── ÉTAPE 5 : EXERCICES D'EXAMENS HTML ──
+    // ── ÉTAPE 4 : EXERCICES D'EXAMENS HTML ──
     let exercisesHtml = '';
     if (chapterExercises.length === 0) {
       exercisesHtml = `
@@ -9155,16 +9083,16 @@ function renderAlgoTheoriqueCards() {
       }).join('');
     }
 
-    const step5Html = `
-      <div class="chapter-step-block ${summary.steps[5].done ? 'is-done' : ''}" id="ch-step-5-${ch.slug}">
+    const step4Html = `
+      <div class="chapter-step-block ${summary.steps[4].done ? 'is-done' : ''}" id="ch-step-4-${ch.slug}">
         <div class="chapter-step-header">
           <div class="chapter-step-title-wrap">
-            <span class="chapter-step-num-badge">Étape 5 / 5</span>
+            <span class="chapter-step-num-badge">Étape 4 / 4</span>
             <h4 class="chapter-step-title">🎯 Exercices d'examens de ce chapitre (${chapterExercises.length})</h4>
           </div>
           ${chapterExercises.length > 0 ? `
-            <button type="button" class="chapter-step-toggle-btn ${summary.steps[5].done ? 'done' : ''}" onclick="toggleChapterStep('${ch.slug}', 5)">
-              <span>${summary.steps[5].done ? '✓ Validé' : '○ Marquer comme terminé'}</span>
+            <button type="button" class="chapter-step-toggle-btn ${summary.steps[4].done ? 'done' : ''}" onclick="toggleChapterStep('${ch.slug}', 4)">
+              <span>${summary.steps[4].done ? '✓ Validé' : '○ Marquer comme terminé'}</span>
             </button>
           ` : `<span style="font-size: 0.76rem; font-weight: 700; color: #f59e0b; background: rgba(245,158,11,0.15); border: 1px dashed rgba(245,158,11,0.3); padding: 4px 10px; border-radius: 6px;">⏳ Bientôt</span>`}
         </div>
@@ -9179,7 +9107,6 @@ function renderAlgoTheoriqueCards() {
       coursCount: 1,
       algosCount: chapterItems.length,
       seriesCount: combinedSeries.length,
-      devoirsCount: chapterDevoirs.length,
       exercisesCount: chapterExercises.length
     });
 
@@ -9221,7 +9148,7 @@ function renderAlgoTheoriqueCards() {
         </div>
       </div>
 
-      <!-- STEPPER EN 5 ÉTAPES -->
+      <!-- STEPPER EN 4 ÉTAPES -->
       <div class="chapter-stepper-bar" id="ch-stepper-${ch.slug}">
         ${stepperHtml}
       </div>
@@ -9238,11 +9165,8 @@ function renderAlgoTheoriqueCards() {
       <!-- ÉTAPE 3 : SÉRIES & EXTRAITS -->
       ${step3Html}
 
-      <!-- ÉTAPE 4 : DEVOIRS (DC & DS) -->
+      <!-- ÉTAPE 4 : EXERCICES D'EXAMENS -->
       ${step4Html}
-
-      <!-- ÉTAPE 5 : EXERCICES D'EXAMENS -->
-      ${step5Html}
     `;
 
     container.appendChild(chapterSection);
@@ -9262,8 +9186,7 @@ function renderChapterStepperPills(slug, summary, counts) {
     { num: 1, icon: '📖', label: '1. Cours', count: counts.coursCount },
     { num: 2, icon: '⚡', label: '2. Algorithmes', count: counts.algosCount },
     { num: 3, icon: '📋', label: '3. Séries', count: counts.seriesCount },
-    { num: 4, icon: '📝', label: '4. Devoirs', count: counts.devoirsCount },
-    { num: 5, icon: '🎯', label: '5. Exercices', count: counts.exercisesCount }
+    { num: 4, icon: '🎯', label: '4. Exercices', count: counts.exercisesCount }
   ];
 
   return steps.map(st => {
@@ -9691,46 +9614,23 @@ let currentAlgoDevoirSearch = '';
 const openDevoirCorrigeSet = new Set();
 
 function switchAlgoTheoriqueTab(tabName, skipHash) {
-  currentAlgoTheoriqueMainTab = tabName;
-  const tabChapitres = document.getElementById('tabBtnAlgoChapitres');
-  const tabDevoirs = document.getElementById('tabBtnAlgoDevoirs');
-  const viewChapitres = document.getElementById('algoTheoriqueChapitresView');
-  const viewDevoirs = document.getElementById('algoTheoriqueDevoirsView');
-
-  if (tabChapitres) tabChapitres.classList.remove('active');
-  if (tabDevoirs) tabDevoirs.classList.remove('active');
-
   if (tabName === 'devoirs') {
-    if (tabDevoirs) tabDevoirs.classList.add('active');
-    if (viewChapitres) viewChapitres.style.display = 'none';
-    if (viewDevoirs) viewDevoirs.style.display = 'block';
+    navigateToHash('#/examens');
+    return;
+  }
+  currentAlgoTheoriqueMainTab = 'chapitres';
+  const viewChapitres = document.getElementById('algoTheoriqueChapitresView');
+  if (viewChapitres) viewChapitres.style.display = 'block';
 
-    renderAlgoDevoirsFilterBar();
-    renderAlgoDevoirs();
+  renderAlgoTheoriqueCategories();
+  renderAlgoTheoriqueCards();
 
-    if (!skipHash && !isRouterNavigating) {
-      const targetHash = currentAlgoDevoirFilter && currentAlgoDevoirFilter !== 'all' 
-        ? `#/algo/theorique/devoirs/${currentAlgoDevoirFilter}`
-        : '#/algo/theorique/devoirs';
-      if (window.location.hash !== targetHash) {
-        history.replaceState(null, '', targetHash);
-      }
-    }
-  } else {
-    if (tabChapitres) tabChapitres.classList.add('active');
-    if (viewDevoirs) viewDevoirs.style.display = 'none';
-    if (viewChapitres) viewChapitres.style.display = 'block';
-
-    renderAlgoTheoriqueCategories();
-    renderAlgoTheoriqueCards();
-
-    if (!skipHash && !isRouterNavigating) {
-      const targetHash = (currentAlgoTheoriqueCategory && currentAlgoTheoriqueCategory !== 'all')
-        ? `#/algo/theorique/${currentAlgoTheoriqueCategory}`
-        : '#/algo/theorique';
-      if (window.location.hash !== targetHash) {
-        history.replaceState(null, '', targetHash);
-      }
+  if (!skipHash && !isRouterNavigating) {
+    const targetHash = (currentAlgoTheoriqueCategory && currentAlgoTheoriqueCategory !== 'all')
+      ? `#/algo/theorique/${currentAlgoTheoriqueCategory}`
+      : '#/algo/theorique';
+    if (window.location.hash !== targetHash) {
+      history.replaceState(null, '', targetHash);
     }
   }
 }
@@ -12093,8 +11993,7 @@ function updateResumeStudyCard() {
     1: 'Cours en bref',
     2: 'Algorithmes types',
     3: 'Séries & Extraits',
-    4: 'Devoirs (DC & DS)',
-    5: "Exercices d'examens"
+    4: "Exercices d'examens"
   };
 
   let titleText = 'Continuer votre révision';
@@ -13641,7 +13540,7 @@ function generatePlanSchedule(config, preservedDoneTaskIds = []) {
         chapterTitle: ch.shortTitle,
         iconEmoji: ch.iconEmoji,
         taskType: 'exam-exos',
-        stepNum: 5,
+        stepNum: 4,
         badge: '25 min • Bac',
         title: `${ch.iconEmoji} ${ch.shortTitle} : Exercices d'examens sous chrono (${b}/${examBlocks})`,
         link: `#/algo/theorique/${ch.slug}`,
