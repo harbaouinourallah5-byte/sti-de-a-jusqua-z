@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=29.0">
+  <link rel="stylesheet" href="style.css?v=30.0">
   <!-- INITIALISATION IMMÉDIATE DU THÈME & TOGGLE SANS LATENCE -->
   <script>
     (function() {
@@ -4251,6 +4251,196 @@ app.exec_()</code></pre>
       </div>
     </section>
 
+    <!-- ==========================================
+         VUE PLANNING D'ÉTUDE PERSONNALISÉ (#/revision/plan)
+         ========================================== -->
+    <section id="view-revision-plan" class="view-section">
+      <div class="plan-container">
+        <!-- En-tête -->
+        <div class="plan-header">
+          <div class="plan-badge-header">
+            <span>📅</span>
+            <span>Planning d'étude personnalisé</span>
+          </div>
+          <h2 class="plan-title">Générateur de Planning de Révision Bac</h2>
+          <p class="plan-subtitle">
+            Un calendrier honnête et réaliste découpé en blocs Pomodoro (25 min). L'ordre des chapitres est guidé par leur fréquence dans les examens du site. Synchronisé en direct avec votre progression.
+          </p>
+        </div>
+
+        <!-- Alerte globale si tâches en retard -->
+        <div id="planOverdueBanner" class="plan-overdue-alert" style="display: none;">
+          <div>
+            <strong style="color: #ef4444; font-size: 0.95rem; display: block; margin-bottom: 2px;">⚠️ Des tâches en retard ont été détectées</strong>
+            <span class="plan-overdue-text" id="planOverdueMessage">Vous avez des tâches des jours précédents non complétées. Vous pouvez recalculer le planning sans perdre vos acquis.</span>
+          </div>
+          <button type="button" class="plan-overdue-btn" onclick="recalculatePlanFromToday()">
+            🔄 Recalculer à partir d'aujourd'hui
+          </button>
+        </div>
+
+        <!-- 1. ZONE FORMULAIRE DE CONFIGURATION -->
+        <div id="planConfigWrap" class="plan-config-card" style="display: none;">
+          <h3 style="margin: 0 0 16px 0; font-size: 1.15rem; color: var(--text-primary); font-weight: 800;">
+            ⚙️ Paramétrez votre rythme d'étude
+          </h3>
+          <form id="planConfigForm" onsubmit="handleGenerateStudyPlan(event)">
+            <div class="plan-config-grid">
+              <!-- Date de l'examen -->
+              <div class="plan-form-group">
+                <label class="plan-label" for="planExamDateInput">🎯 Date de l'épreuve du Bac :</label>
+                <input type="date" id="planExamDateInput" class="plan-input" required />
+                <span class="plan-hint">Indiquez la date cible de votre examen d'Algorithme.</span>
+              </div>
+
+              <!-- Date de début -->
+              <div class="plan-form-group">
+                <label class="plan-label" for="planStartDateInput">🚀 Date de début des révisions :</label>
+                <input type="date" id="planStartDateInput" class="plan-input" required />
+                <span class="plan-hint">Par défaut aujourd'hui.</span>
+              </div>
+
+              <!-- Jours par semaine -->
+              <div class="plan-form-group">
+                <label class="plan-label">📆 Jours d'étude par semaine :</label>
+                <div class="plan-pills-selector" id="planDaysSelector">
+                  <button type="button" class="plan-pill-opt" data-days="3" onclick="setPlanDaysChoice(3)">3 j/semaine</button>
+                  <button type="button" class="plan-pill-opt" data-days="4" onclick="setPlanDaysChoice(4)">4 j/semaine</button>
+                  <button type="button" class="plan-pill-opt active" data-days="5" onclick="setPlanDaysChoice(5)">5 j/semaine</button>
+                  <button type="button" class="plan-pill-opt" data-days="6" onclick="setPlanDaysChoice(6)">6 j/semaine</button>
+                  <button type="button" class="plan-pill-opt" data-days="7" onclick="setPlanDaysChoice(7)">7 j (Intensif)</button>
+                </div>
+                <input type="hidden" id="planDaysInput" value="5" />
+              </div>
+
+              <!-- Temps par jour -->
+              <div class="plan-form-group">
+                <label class="plan-label">⏱️ Temps d'étude quotidien disponible :</label>
+                <div class="plan-pills-selector" id="planMinutesSelector">
+                  <button type="button" class="plan-pill-opt" data-min="30" onclick="setPlanMinutesChoice(30)">30 min (1 bloc)</button>
+                  <button type="button" class="plan-pill-opt active" data-min="60" onclick="setPlanMinutesChoice(60)">1h (2 blocs)</button>
+                  <button type="button" class="plan-pill-opt" data-min="90" onclick="setPlanMinutesChoice(90)">1h30 (3 blocs)</button>
+                  <button type="button" class="plan-pill-opt" data-min="120" onclick="setPlanMinutesChoice(120)">2h (4 blocs)</button>
+                </div>
+                <input type="hidden" id="planMinutesInput" value="60" />
+              </div>
+            </div>
+
+            <!-- Profil de départ -->
+            <div class="plan-form-group" style="margin-bottom: 22px;">
+              <label class="plan-label">🧠 Votre niveau de départ :</label>
+              <div class="plan-mode-options">
+                <label class="plan-mode-card" id="planModeZeroCard" onclick="selectPlanLevelMode('zero')">
+                  <input type="radio" name="planLevelRadio" value="zero" style="margin-top: 3px;" />
+                  <div>
+                    <strong style="color: var(--text-primary); font-size: 0.9rem; display: block;">🌱 Je démarre de zéro</strong>
+                    <span style="color: var(--text-secondary); font-size: 0.78rem;">Revue pas à pas : Cours en bref + Algorithmes types + Séries + Quiz + Exercices Bac.</span>
+                  </div>
+                </label>
+                <label class="plan-mode-card active" id="planModeReviseCard" onclick="selectPlanLevelMode('revise')">
+                  <input type="radio" name="planLevelRadio" value="revise" checked style="margin-top: 3px;" />
+                  <div>
+                    <strong style="color: var(--text-primary); font-size: 0.9rem; display: block;">🚀 Je révise les acquis</strong>
+                    <span style="color: var(--text-secondary); font-size: 0.78rem;">Rythme accéléré axé sur les exercices d'examens, le simulateur et les quiz.</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Note pédagogique honnête -->
+            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px 16px; margin-bottom: 22px; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
+              ℹ️ <strong>Transparence de l'algorithme :</strong> L'ordre des chapitres et les volumes horaires sont basés sur la fréquence observée dans les 13 sujets disponibles sur le site. Les 25% finaux du calendrier sont automatiquement alloués aux simulations d'examen et au rattrapage de vos points faibles (« À revoir »).
+            </div>
+
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+              <button type="submit" class="plan-btn-generate">
+                <span>🚀</span>
+                <span>Générer mon planning personnalisé</span>
+              </button>
+              <button type="button" id="planCancelEditBtn" onclick="togglePlanEditMode(false)" class="cat-pill" style="display: none; padding: 10px 18px; cursor: pointer;">
+                Annuler les modifications
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- 2. ZONE PLANNING ACTIF -->
+        <div id="planActiveWrap" style="display: none;">
+          <!-- Barre de synthèse KPI -->
+          <div class="plan-summary-bar">
+            <div class="plan-summary-kpis">
+              <div class="plan-kpi-item">
+                <span class="plan-kpi-label">Échéance</span>
+                <span class="plan-kpi-val" id="planKpiTargetDate">-</span>
+              </div>
+              <div class="plan-kpi-item">
+                <span class="plan-kpi-label">Compte à rebours</span>
+                <span class="plan-kpi-val" id="planKpiDaysRemaining" style="color: #f59e0b;">-</span>
+              </div>
+              <div class="plan-kpi-item">
+                <span class="plan-kpi-label">Total Pomodoros</span>
+                <span class="plan-kpi-val" id="planKpiTotalPomodoros" style="color: #38bdf8;">-</span>
+              </div>
+              <div class="plan-kpi-item">
+                <span class="plan-kpi-label">Progression</span>
+                <span class="plan-kpi-val" id="planKpiProgressPct" style="color: #10b981;">0%</span>
+              </div>
+            </div>
+
+            <div class="plan-actions-group">
+              <button type="button" class="plan-action-btn" onclick="exportPlanToIcs()" title="Télécharger le fichier .ics compatible Google Calendar / Apple Calendar">
+                <span>📅</span>
+                <span>Ajouter à mon agenda (.ics)</span>
+              </button>
+              <button type="button" class="plan-action-btn" onclick="togglePlanEditMode(true)" title="Modifier les paramètres">
+                <span>⚙️</span>
+                <span>Modifier</span>
+              </button>
+              <button type="button" class="plan-action-btn danger" onclick="confirmResetStudyPlan()" title="Supprimer ce planning">
+                <span>🗑️</span>
+                <span>Réinitialiser</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Message d'ajustement de capacité (si allègement nécessaire) -->
+          <div id="planCapacityNotice" style="display: none; margin-bottom: 20px; padding: 12px 16px; border-radius: 10px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); font-size: 0.84rem; color: #38bdf8;">
+            <!-- Message dynamique -->
+          </div>
+
+          <!-- FOCUS AUJOURD'HUI -->
+          <div class="plan-today-card" id="planTodayFocusCard">
+            <div class="plan-today-header">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="plan-today-badge">⭐ Tâches d'aujourd'hui</span>
+                <span id="planTodayDateLabel" style="font-size: 0.88rem; font-weight: 700; color: var(--text-primary);">-</span>
+              </div>
+              <span id="planTodayTimeBadge" style="font-size: 0.78rem; color: var(--text-secondary);">-</span>
+            </div>
+            <div id="planTodayTasksContainer" class="plan-task-list">
+              <!-- Injecté par JS -->
+            </div>
+          </div>
+
+          <!-- CALENDRIER COMPLET (GROUPÉ PAR SEMAINES) -->
+          <div style="margin-top: 32px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+              <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--text-primary);">
+                📆 Calendrier détaillé des séances
+              </h3>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">
+                Cochez les tâches au fur et à mesure • Synchronisé avec la progression par chapitre
+              </span>
+            </div>
+            <div id="planWeeksAccordion" class="plan-calendar-wrap">
+              <!-- Injecté par JS -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
     <!-- PIED DE PAGE GLOBAL -->
 
     <footer class="app-global-footer">
@@ -4694,25 +4884,25 @@ app.exec_()</code></pre>
 
   <!-- Fichiers Scripts -->
 
-  <script src="store.js?v=29.0"></script>
-  <script src="data.js?v=29.0"></script>
-  <script src="data/curriculum.js?v=29.0"></script>
-  <script src="data/documents.js?v=29.0"></script>
-  <script src="data/exercises.js?v=29.0"></script>
-  <script src="data/methods.js?v=29.0"></script>
-  <script src="data/quiz/fichiers.js?v=29.0"></script>
-  <script src="data/quiz/recursivite.js?v=29.0"></script>
-  <script src="data/quiz/bases.js?v=29.0"></script>
-  <script src="data/quiz/arithmetique.js?v=29.0"></script>
-  <script src="data/quiz/approximation.js?v=29.0"></script>
-  <script src="data/quiz/tableaux.js?v=29.0"></script>
-  <script src="data/quiz/matrices.js?v=29.0"></script>
-  <script src="data/quiz/suites.js?v=29.0"></script>
-  <script src="data/quiz.js?v=29.0"></script>
-  <script src="css_engine.js?v=29.0"></script>
-  <script src="algo_pratique_engine.js?v=29.0"></script>
-  <script src="pomodoro_engine.js?v=29.0"></script>
-  <script src="app.js?v=29.0"></script>
+  <script src="store.js?v=30.0"></script>
+  <script src="data.js?v=30.0"></script>
+  <script src="data/curriculum.js?v=30.0"></script>
+  <script src="data/documents.js?v=30.0"></script>
+  <script src="data/exercises.js?v=30.0"></script>
+  <script src="data/methods.js?v=30.0"></script>
+  <script src="data/quiz/fichiers.js?v=30.0"></script>
+  <script src="data/quiz/recursivite.js?v=30.0"></script>
+  <script src="data/quiz/bases.js?v=30.0"></script>
+  <script src="data/quiz/arithmetique.js?v=30.0"></script>
+  <script src="data/quiz/approximation.js?v=30.0"></script>
+  <script src="data/quiz/tableaux.js?v=30.0"></script>
+  <script src="data/quiz/matrices.js?v=30.0"></script>
+  <script src="data/quiz/suites.js?v=30.0"></script>
+  <script src="data/quiz.js?v=30.0"></script>
+  <script src="css_engine.js?v=30.0"></script>
+  <script src="algo_pratique_engine.js?v=30.0"></script>
+  <script src="pomodoro_engine.js?v=30.0"></script>
+  <script src="app.js?v=30.0"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {

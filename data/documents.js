@@ -895,6 +895,7 @@ def filtrer_matrice(m, l, c):
 
     getAllDocuments:    getAllDocuments,
     getExamens:        getExamens,
+    getAllExams:       getExamens,
     getSeries:         getSeries,
     getExtraits:       getExtraits,
     getByChapter:      getByChapter,

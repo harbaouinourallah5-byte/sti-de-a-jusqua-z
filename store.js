@@ -419,7 +419,8 @@ var STI_STORE = (function () {
     try {
       var keysToRemove = [
         'progress', 'algo_studied', 'last_nav', 'sim_active',
-        'sim_history', 'bookmarks', 'quiz_history', 'quiz_bests'
+        'sim_history', 'bookmarks', 'quiz_history', 'quiz_bests',
+        'study_plan'
       ];
       keysToRemove.forEach(function (k) {
         localStorage.removeItem(PREFIX + k);
@@ -429,6 +430,96 @@ var STI_STORE = (function () {
       console.warn('[STI_STORE] Erreur lors de la réinitialisation', e);
       return false;
     }
+  }
+
+  // ── 7. PLANNING DE RÉVISION PERSONNALISÉ (FEATURE 3) ──────────────────
+  function getStudyPlan() {
+    return _safeGet('study_plan', null);
+  }
+
+  function saveStudyPlan(plan) {
+    return _safeSet('study_plan', plan);
+  }
+
+  function clearStudyPlan() {
+    return _safeSet('study_plan', null);
+  }
+
+  function togglePlanTask(taskId, isDone) {
+    var plan = getStudyPlan();
+    if (!plan || !plan.days) return null;
+    var foundTask = null;
+
+    for (var d = 0; d < plan.days.length; d++) {
+      var day = plan.days[d];
+      if (day.tasks) {
+        for (var t = 0; t < day.tasks.length; t++) {
+          if (day.tasks[t].id === taskId) {
+            day.tasks[t].done = !!isDone;
+            foundTask = day.tasks[t];
+            break;
+          }
+        }
+      }
+      if (foundTask) break;
+    }
+
+    if (foundTask) {
+      saveStudyPlan(plan);
+      // Synchronisation avec les étapes du chapitre
+      if (foundTask.chapter) {
+        if (foundTask.stepNum) {
+          setChapterStep(foundTask.chapter, foundTask.stepNum, isDone);
+        } else if (foundTask.taskType === 'cours') {
+          setChapterStep(foundTask.chapter, 1, isDone);
+        } else if (foundTask.taskType === 'algos') {
+          setChapterStep(foundTask.chapter, 2, isDone);
+        } else if (foundTask.taskType === 'series') {
+          setChapterStep(foundTask.chapter, 3, isDone);
+        } else if (foundTask.taskType === 'exam-exos') {
+          setChapterStep(foundTask.chapter, 5, isDone);
+        }
+      }
+    }
+    return plan;
+  }
+
+  function getTodayPlan() {
+    var plan = getStudyPlan();
+    if (!plan || !plan.days || plan.days.length === 0) return null;
+    var todayStr = new Date().toISOString().split('T')[0];
+    for (var i = 0; i < plan.days.length; i++) {
+      if (plan.days[i].date === todayStr) {
+        return { day: plan.days[i], index: i, totalDays: plan.days.length };
+      }
+    }
+    // Si la date exacte n'est pas trouvée (ex: jour de repos ou hors plage), chercher le prochain jour avec tâches non faites
+    for (var j = 0; j < plan.days.length; j++) {
+      var hasUndone = (plan.days[j].tasks || []).some(function (t) { return !t.done; });
+      if (hasUndone) {
+        return { day: plan.days[j], index: j, totalDays: plan.days.length, isNextAvailable: true };
+      }
+    }
+    return { day: plan.days[0], index: 0, totalDays: plan.days.length };
+  }
+
+  function getOverduePlanTasks() {
+    var plan = getStudyPlan();
+    if (!plan || !plan.days) return [];
+    var todayStr = new Date().toISOString().split('T')[0];
+    var overdue = [];
+
+    for (var i = 0; i < plan.days.length; i++) {
+      var d = plan.days[i];
+      if (d.date < todayStr && d.tasks) {
+        for (var t = 0; t < d.tasks.length; t++) {
+          if (!d.tasks[t].done) {
+            overdue.push(d.tasks[t]);
+          }
+        }
+      }
+    }
+    return overdue;
   }
 
   return {
@@ -466,6 +557,13 @@ var STI_STORE = (function () {
     saveQuizResult: saveQuizResult,
     getBestQuizScore: getBestQuizScore,
     getQuizStats: getQuizStats,
+    // Planning d'étude
+    getStudyPlan: getStudyPlan,
+    saveStudyPlan: saveStudyPlan,
+    clearStudyPlan: clearStudyPlan,
+    togglePlanTask: togglePlanTask,
+    getTodayPlan: getTodayPlan,
+    getOverduePlanTasks: getOverduePlanTasks,
     // Sauvegarde globale
     exportAllData: exportAllData,
     importAllData: importAllData,

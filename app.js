@@ -1700,6 +1700,9 @@ function handleRouteFromHash() {
     if (typeof renderRevisionPage === 'function') {
       renderRevisionPage();
     }
+    if (route.view === 'revision-plan' && typeof renderStudyPlanPage === 'function') {
+      renderStudyPlanPage();
+    }
   }
 
 
@@ -2133,6 +2136,14 @@ function switchView(viewName, skipHashUpdate = false) {
     if (input) input.value = '';
     renderAlgoTheoriqueCategories();
     renderAlgoTheoriqueCards();
+  } else if (viewName === 'revision') {
+    if (typeof renderRevisionPage === 'function') {
+      renderRevisionPage();
+    }
+  } else if (viewName === 'revision-plan') {
+    if (typeof renderStudyPlanPage === 'function') {
+      renderStudyPlanPage();
+    }
   }
 }
 
@@ -12533,6 +12544,10 @@ function updatePageMeta(viewName) {
       title: "Ma Révision • Notions à Revoir, Simulateur & Progression Bac Info",
       desc: "Espace d'étude personnalisé pour le Bac Informatique : notions bookmarkées à revoir, historique des examens simulés et suivi de maîtrise."
     },
+    'revision-plan': {
+      title: "Planning de Révision • Calendrier Personnalisé Pomodoro Bac Info",
+      desc: "Planning d'étude personnalisé découpé en blocs Pomodoro (25 min) calculé selon la fréquence réelle des chapitres au Bac."
+    },
     'revision-cartes': {
       title: "Cartes Mémoire • Flashcards Système Leitner Bac Info",
       desc: "Révisez les notions clés, syntaxes et complexités avec le système de répétition espacée Leitner."
@@ -12736,36 +12751,77 @@ function renderRevisionPage() {
   // 2. Section Aujourd'hui & Plan d'étude
   const todayContainer = document.getElementById('revTodayContent');
   if (todayContainer) {
-    const lastNav = STI_STORE.getLastNav();
-    const ch = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getChapterBySlug(lastNav.chapterSlug) : null;
-    const chName = ch ? ch.fullTitle : 'Fichiers';
-    const firstUnfinished = ch ? STI_STORE.getFirstUnfinishedStep(ch.slug) : 1;
-    const stepNames = { 1: 'Cours en bref', 2: 'Algorithmes types', 3: 'Séries & Extraits', 4: 'Devoirs de synthèse', 5: 'Exercices d\'examens', 6: 'Quiz rapide' };
+    const studyPlan = STI_STORE.getStudyPlan();
+    const todayInfo = STI_STORE.getTodayPlan();
 
-    todayContainer.innerHTML = `
-      <div style="background:var(--surface-bg);border:1px solid var(--border-color);border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
-        <div style="display:flex;align-items:center;gap:14px;flex:1;min-width:240px;">
-          <div style="font-size:2rem;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            🚀
+    if (studyPlan && todayInfo && todayInfo.day && todayInfo.day.tasks && todayInfo.day.tasks.length > 0) {
+      const dayTasks = todayInfo.day.tasks;
+      const completedCount = dayTasks.filter(t => t.done).length;
+      todayContainer.innerHTML = `
+        <div style="background:var(--surface-bg);border:1px solid var(--border-color);border-radius:12px;padding:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:1.15rem;">📅</span>
+              <strong style="color:var(--text-primary);font-size:0.95rem;">${escapeHtml(todayInfo.day.dateFormatted || todayInfo.day.date)}</strong>
+              <span style="font-size:0.75rem;padding:2px 8px;border-radius:6px;background:rgba(245,158,11,0.15);color:#f59e0b;font-weight:700;">${escapeHtml(todayInfo.day.theme || 'Révision')}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:0.8rem;color:var(--text-secondary);font-weight:700;">${completedCount} / ${dayTasks.length} blocs terminés</span>
+              <a href="#/revision/plan" onclick="navigateToHash('#/revision/plan')" style="font-size:0.8rem;color:#f59e0b;text-decoration:none;font-weight:700;">Voir tout le planning →</a>
+            </div>
           </div>
-          <div>
-            <div style="font-size:0.75rem;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:0.5px;">Prochaine étape conseillée</div>
-            <h4 style="margin:2px 0 4px 0;font-size:1.05rem;font-weight:700;color:var(--text-primary);">
-              ${escapeHtml(chName)} • Étape ${firstUnfinished} (${escapeHtml(stepNames[firstUnfinished] || '')})
-            </h4>
-            <p style="margin:0;font-size:0.84rem;color:var(--text-secondary);">
-              Reprenez là où vous en étiez pour maintenir votre rythme de révision régulier.
-            </p>
+          <div style="display:grid;gap:8px;">
+            ${dayTasks.map(t => `
+              <div class="plan-task-row ${t.done ? 'done' : ''}">
+                <div class="plan-task-left">
+                  <input type="checkbox" class="plan-task-checkbox" ${t.done ? 'checked' : ''} onchange="togglePlanTaskCheckbox('${t.id}', this.checked)" />
+                  <span class="plan-task-tag">${escapeHtml(t.badge || '25 min')}</span>
+                  <span class="plan-task-title">${escapeHtml(t.title)}</span>
+                </div>
+                <div class="plan-task-actions">
+                  <button type="button" class="plan-pomo-trigger-btn" onclick="startPomodoroForPlanTask('${escapeHtml(t.title)}')">
+                    <span>⏱️</span>
+                    <span>25 min</span>
+                  </button>
+                  ${t.link ? `<a href="${t.link}" onclick="navigateToHash('${t.link}')" class="revision-bm-open-btn" style="text-decoration:none;padding:4px 8px;font-size:0.75rem;">Ouvrir →</a>` : ''}
+                </div>
+              </div>
+            `).join('')}
           </div>
         </div>
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-          <a href="#/algo/theorique/${lastNav.chapterSlug}" onclick="navigateToHash('#/algo/theorique/${lastNav.chapterSlug}')" style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:8px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;font-weight:700;font-size:0.88rem;text-decoration:none;">
-            <span>Reprendre l'étude</span>
-            <span>→</span>
-          </a>
+      `;
+    } else {
+      const lastNav = STI_STORE.getLastNav();
+      const ch = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getChapterBySlug(lastNav.chapterSlug) : null;
+      const chName = ch ? ch.fullTitle : 'Fichiers';
+      const firstUnfinished = ch ? STI_STORE.getFirstUnfinishedStep(ch.slug) : 1;
+      const stepNames = { 1: 'Cours en bref', 2: 'Algorithmes types', 3: 'Séries & Extraits', 4: 'Devoirs de synthèse', 5: 'Exercices d\'examens', 6: 'Quiz rapide' };
+
+      todayContainer.innerHTML = `
+        <div style="background:var(--surface-bg);border:1px solid var(--border-color);border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:14px;flex:1;min-width:240px;">
+            <div style="font-size:2rem;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              🚀
+            </div>
+            <div>
+              <div style="font-size:0.75rem;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:0.5px;">Prochaine étape conseillée</div>
+              <h4 style="margin:2px 0 4px 0;font-size:1.05rem;font-weight:700;color:var(--text-primary);">
+                ${escapeHtml(chName)} • Étape ${firstUnfinished} (${escapeHtml(stepNames[firstUnfinished] || '')})
+              </h4>
+              <p style="margin:0;font-size:0.84rem;color:var(--text-secondary);">
+                Créez un planning d'étude personnalisé découpé en blocs Pomodoro (25 min) jusqu'au Bac !
+              </p>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <a href="#/revision/plan" onclick="navigateToHash('#/revision/plan')" style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:8px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;font-weight:800;font-size:0.88rem;text-decoration:none;">
+              <span>📅 Configurer mon Planning</span>
+              <span>→</span>
+            </a>
+          </div>
         </div>
-      </div>
-    `;
+      `;
+    }
   }
 
   // 3. Section Progression par Chapitre
@@ -13290,6 +13346,743 @@ function confirmResetAllStudentData() {
   }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// RUN 7 FEATURE 3 : PLANNING D'ÉTUDE PERSONNALISÉ (#/revision/plan)
+// ─────────────────────────────────────────────────────────────────────────────
+
+var currentPlanDaysChoice = 5;
+var currentPlanMinutesChoice = 60;
+var currentPlanLevelMode = 'revise';
+
+function setPlanDaysChoice(days) {
+  currentPlanDaysChoice = parseInt(days, 10);
+  const input = document.getElementById('planDaysInput');
+  if (input) input.value = currentPlanDaysChoice;
+  document.querySelectorAll('#planDaysSelector .plan-pill-opt').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.getAttribute('data-days'), 10) === currentPlanDaysChoice);
+  });
+}
+
+function setPlanMinutesChoice(minutes) {
+  currentPlanMinutesChoice = parseInt(minutes, 10);
+  const input = document.getElementById('planMinutesInput');
+  if (input) input.value = currentPlanMinutesChoice;
+  document.querySelectorAll('#planMinutesSelector .plan-pill-opt').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.getAttribute('data-min'), 10) === currentPlanMinutesChoice);
+  });
+}
+
+function selectPlanLevelMode(mode) {
+  currentPlanLevelMode = mode;
+  const zeroCard = document.getElementById('planModeZeroCard');
+  const reviseCard = document.getElementById('planModeReviseCard');
+  if (zeroCard && reviseCard) {
+    zeroCard.classList.toggle('active', mode === 'zero');
+    reviseCard.classList.toggle('active', mode === 'revise');
+    const zeroRadio = zeroCard.querySelector('input');
+    const reviseRadio = reviseCard.querySelector('input');
+    if (zeroRadio) zeroRadio.checked = (mode === 'zero');
+    if (reviseRadio) reviseRadio.checked = (mode === 'revise');
+  }
+}
+
+function togglePlanEditMode(showEdit) {
+  const configWrap = document.getElementById('planConfigWrap');
+  const activeWrap = document.getElementById('planActiveWrap');
+  const cancelBtn = document.getElementById('planCancelEditBtn');
+  if (configWrap && activeWrap) {
+    configWrap.style.display = showEdit ? 'block' : 'none';
+    activeWrap.style.display = showEdit ? 'none' : 'block';
+    if (cancelBtn) cancelBtn.style.display = showEdit ? 'inline-block' : 'none';
+  }
+}
+
+function initStudyPlanForm(existingConfig) {
+  const examDateInput = document.getElementById('planExamDateInput');
+  const startDateInput = document.getElementById('planStartDateInput');
+
+  const todayStr = new Date().toISOString().split('T')[0];
+  const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+
+  if (startDateInput) {
+    startDateInput.value = (existingConfig && existingConfig.startDate) ? existingConfig.startDate : todayStr;
+    startDateInput.min = todayStr;
+  }
+  if (examDateInput) {
+    if (existingConfig && existingConfig.examDate) {
+      examDateInput.value = existingConfig.examDate;
+    }
+    examDateInput.min = tomorrow;
+  }
+
+  if (existingConfig) {
+    if (existingConfig.daysPerWeek) setPlanDaysChoice(existingConfig.daysPerWeek);
+    if (existingConfig.minutesPerDay) setPlanMinutesChoice(existingConfig.minutesPerDay);
+    if (existingConfig.mode) selectPlanLevelMode(existingConfig.mode);
+  } else {
+    setPlanDaysChoice(5);
+    setPlanMinutesChoice(60);
+    selectPlanLevelMode('revise');
+  }
+}
+
+/**
+ * ALGORITHME DÉTERMINISTE DE GÉNÉRATION DU PLANNING
+ */
+function generatePlanSchedule(config, preservedDoneTaskIds = []) {
+  const start = new Date(config.startDate + 'T00:00:00');
+  const exam = new Date(config.examDate + 'T00:00:00');
+  const diffTime = exam.getTime() - start.getTime();
+  const totalCalendarDays = Math.max(1, Math.round(diffTime / (1000 * 3600 * 24)));
+
+  const blocksPerDay = Math.max(1, Math.floor(config.minutesPerDay / 30));
+  const daysPerWeek = parseInt(config.daysPerWeek, 10) || 5;
+
+  // 1. Filtrer les jours d'étude selon daysPerWeek
+  const studyDates = [];
+  let curr = new Date(start);
+  while (curr < exam) {
+    const dayOfWeek = curr.getDay(); // 0 = Dimanche, 1 = Lundi, ...
+    let isStudyDay = false;
+    if (daysPerWeek === 7) {
+      isStudyDay = true;
+    } else if (daysPerWeek === 6) {
+      isStudyDay = (dayOfWeek !== 0);
+    } else if (daysPerWeek === 5) {
+      isStudyDay = (dayOfWeek >= 1 && dayOfWeek <= 5);
+    } else if (daysPerWeek === 4) {
+      isStudyDay = (dayOfWeek === 1 || dayOfWeek === 2 || dayOfWeek === 4 || dayOfWeek === 6);
+    } else if (daysPerWeek === 3) {
+      isStudyDay = (dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5);
+    } else {
+      isStudyDay = (dayOfWeek >= 1 && dayOfWeek <= daysPerWeek);
+    }
+
+    if (isStudyDay) {
+      studyDates.push(new Date(curr));
+    }
+    curr.setDate(curr.getDate() + 1);
+  }
+
+  if (studyDates.length === 0) {
+    studyDates.push(new Date(start));
+  }
+
+  // 2. Découpage en Phase 1 (75% chapitres) et Phase 2 (25% simulations & révision)
+  const totalStudyDays = studyDates.length;
+  const phase1DaysCount = Math.max(1, Math.floor(totalStudyDays * 0.75));
+  const phase2DaysCount = Math.max(0, totalStudyDays - phase1DaysCount);
+
+  // 3. Classement des 8 chapitres par fréquence réelle d'apparition
+  let rankedChapters = [];
+  if (typeof CURRICULUM !== 'undefined' && CURRICULUM.chapters) {
+    rankedChapters = CURRICULUM.chapters.map(c => {
+      const exCount = (typeof EXERCISES_DATA !== 'undefined' && EXERCISES_DATA.getByChapter) ? EXERCISES_DATA.getByChapter(c.slug).length : 5;
+      return {
+        slug: c.slug,
+        title: c.fullTitle,
+        shortTitle: c.shortTitle,
+        iconEmoji: c.iconEmoji || '📁',
+        count: exCount
+      };
+    }).sort((a, b) => b.count - a.count);
+  }
+
+  // 4. Constitution de la pile de tâches (Phase 1)
+  const phase1TaskPool = [];
+  rankedChapters.forEach((ch, idx) => {
+    // Tâche 1 : Cours en bref (1 bloc)
+    phase1TaskPool.push({
+      id: `task-${ch.slug}-cours`,
+      chapter: ch.slug,
+      chapterTitle: ch.shortTitle,
+      iconEmoji: ch.iconEmoji,
+      taskType: 'cours',
+      stepNum: 1,
+      badge: '25 min • Cours',
+      title: `${ch.iconEmoji} ${ch.shortTitle} : Synthèse du cours & Définitions`,
+      link: `#/algo/theorique/${ch.slug}`,
+      priority: idx * 5 + 1
+    });
+
+    // Tâche 2 : Algorithmes types (1 bloc)
+    phase1TaskPool.push({
+      id: `task-${ch.slug}-algos`,
+      chapter: ch.slug,
+      chapterTitle: ch.shortTitle,
+      iconEmoji: ch.iconEmoji,
+      taskType: 'algos',
+      stepNum: 2,
+      badge: '25 min • Algos',
+      title: `${ch.iconEmoji} ${ch.shortTitle} : Algorithmes types & Trace`,
+      link: `#/algo/theorique/${ch.slug}`,
+      priority: idx * 5 + 2
+    });
+
+    // Tâche 3 : Séries (si mode zéro ou chapitre à haute fréquence)
+    if (config.mode === 'zero' || ch.count >= 8) {
+      phase1TaskPool.push({
+        id: `task-${ch.slug}-series`,
+        chapter: ch.slug,
+        chapterTitle: ch.shortTitle,
+        iconEmoji: ch.iconEmoji,
+        taskType: 'series',
+        stepNum: 3,
+        badge: '25 min • Séries',
+        title: `${ch.iconEmoji} ${ch.shortTitle} : Série d'exercices d'application`,
+        link: `#/algo/theorique/${ch.slug}`,
+        priority: idx * 5 + 3
+      });
+    }
+
+    // Tâche 4 : Quiz de validation (1 bloc)
+    phase1TaskPool.push({
+      id: `task-${ch.slug}-quiz`,
+      chapter: ch.slug,
+      chapterTitle: ch.shortTitle,
+      iconEmoji: ch.iconEmoji,
+      taskType: 'quiz',
+      stepNum: 6,
+      badge: '25 min • Quiz',
+      title: `${ch.iconEmoji} ${ch.shortTitle} : Quiz V/F & QCM d'auto-évaluation`,
+      link: `#/algo/quiz/${ch.slug}`,
+      priority: idx * 5 + 4
+    });
+
+    // Tâche 5 : Exercices d'examens
+    const examBlocks = Math.max(1, Math.min(2, Math.ceil(ch.count / 4)));
+    for (let b = 1; b <= examBlocks; b++) {
+      phase1TaskPool.push({
+        id: `task-${ch.slug}-exam-${b}`,
+        chapter: ch.slug,
+        chapterTitle: ch.shortTitle,
+        iconEmoji: ch.iconEmoji,
+        taskType: 'exam-exos',
+        stepNum: 5,
+        badge: '25 min • Bac',
+        title: `${ch.iconEmoji} ${ch.shortTitle} : Exercices d'examens sous chrono (${b}/${examBlocks})`,
+        link: `#/algo/theorique/${ch.slug}`,
+        priority: idx * 5 + 5
+      });
+    }
+  });
+
+  // Calcul capacité théorique vs disponible
+  const availableBlocksP1 = phase1DaysCount * blocksPerDay;
+  let capacityNotice = null;
+  if (phase1TaskPool.length > availableBlocksP1) {
+    capacityNotice = `Capacité ajustée : ${availableBlocksP1} blocs disponibles pour ${phase1TaskPool.length} blocs théoriques. Les exercices secondaires des chapitres les moins fréquents ont été allégés pour préserver l'essentiel.`;
+    // Conserver en priorité les tâches à plus haute priorité
+    phase1TaskPool.sort((a, b) => a.priority - b.priority);
+    phase1TaskPool.splice(availableBlocksP1);
+  }
+
+  // 5. Répartition dans les jours du planning
+  const days = [];
+  let taskPoolIdx = 0;
+
+  for (let i = 0; i < totalStudyDays; i++) {
+    const dDate = studyDates[i];
+    const dateStr = dDate.toISOString().split('T')[0];
+    const dayName = dDate.toLocaleDateString('fr-FR', { weekday: 'long' });
+    const formattedDate = dDate.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+    const isBufferDay = (i > 0 && (i + 1) % 7 === 0);
+
+    const dayObj = {
+      dayIndex: i + 1,
+      date: dateStr,
+      dateFormatted: formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1),
+      isBufferDay: isBufferDay,
+      theme: '',
+      tasks: []
+    };
+
+    if (isBufferDay) {
+      dayObj.theme = 'Consolidation & Repos';
+      dayObj.tasks.push({
+        id: `task-buffer-${dateStr}`,
+        badge: 'Tampon',
+        title: '🛡️ Séance de consolidation : Rattrapage des retards ou repos mérité',
+        done: false,
+        link: '#/revision'
+      });
+    } else if (i < phase1DaysCount) {
+      // Phase 1 : Distribution des blocs de cours / algos / quiz
+      const dayTasksCount = Math.min(blocksPerDay, phase1TaskPool.length - taskPoolIdx);
+      const dayThemeChapters = [];
+
+      for (let k = 0; k < dayTasksCount; k++) {
+        if (taskPoolIdx < phase1TaskPool.length) {
+          const t = Object.assign({}, phase1TaskPool[taskPoolIdx]);
+          // Vérifier si cette tâche était déjà complétée
+          if (preservedDoneTaskIds.includes(t.id)) {
+            t.done = true;
+          } else if (typeof STI_STORE !== 'undefined' && t.chapter && t.stepNum) {
+            const p = STI_STORE.getChapterProgress(t.chapter);
+            t.done = !!p['step' + t.stepNum];
+          } else {
+            t.done = false;
+          }
+          dayObj.tasks.push(t);
+          if (t.chapterTitle && !dayThemeChapters.includes(t.chapterTitle)) {
+            dayThemeChapters.push(t.chapterTitle);
+          }
+          taskPoolIdx++;
+        }
+      }
+      dayObj.theme = dayThemeChapters.length > 0 ? dayThemeChapters.join(' & ') : 'Algorithmique';
+    } else {
+      // Phase 2 : Simulations d'examen & Révision "À revoir"
+      const simIdx = (i - phase1DaysCount) + 1;
+      dayObj.theme = `Phase Finale : Simulation Bac ${simIdx}`;
+
+      if (blocksPerDay >= 3) {
+        dayObj.tasks.push({
+          id: `task-sim-${dateStr}-full`,
+          badge: 'Simulation 1h30',
+          title: `📝 Épreuve blanche n°${simIdx} : Devoir ou Sujet Bac complet sous chrono`,
+          link: '#/examens',
+          done: preservedDoneTaskIds.includes(`task-sim-${dateStr}-full`)
+        });
+        dayObj.tasks.push({
+          id: `task-sim-${dateStr}-review`,
+          badge: 'Correction',
+          title: `🎯 Auto-évaluation & Révision des exercices de la copie`,
+          link: '#/revision',
+          done: preservedDoneTaskIds.includes(`task-sim-${dateStr}-review`)
+        });
+      } else {
+        dayObj.tasks.push({
+          id: `task-sim-${dateStr}-single`,
+          badge: '25 min • Ciblé',
+          title: `⏱️ Simulation ciblée n°${simIdx} : 1 exercice type Bac sous chrono réel`,
+          link: '#/examens',
+          done: preservedDoneTaskIds.includes(`task-sim-${dateStr}-single`)
+        });
+        dayObj.tasks.push({
+          id: `task-sim-${dateStr}-errors`,
+          badge: '25 min • À revoir',
+          title: `⭐ Reprise de vos notions et erreurs marquées dans « À revoir »`,
+          link: '#/revision',
+          done: preservedDoneTaskIds.includes(`task-sim-${dateStr}-errors`)
+        });
+      }
+    }
+
+    days.push(dayObj);
+  }
+
+  return {
+    config: config,
+    totalCalendarDays: totalCalendarDays,
+    totalStudyDays: totalStudyDays,
+    blocksPerDay: blocksPerDay,
+    capacityNotice: capacityNotice,
+    days: days,
+    generatedAt: new Date().toISOString()
+  };
+}
+
+function handleGenerateStudyPlan(e) {
+  if (e) e.preventDefault();
+
+  const examDateInput = document.getElementById('planExamDateInput');
+  const startDateInput = document.getElementById('planStartDateInput');
+  const daysInput = document.getElementById('planDaysInput');
+  const minutesInput = document.getElementById('planMinutesInput');
+
+  const examDate = examDateInput ? examDateInput.value : '';
+  const startDate = (startDateInput && startDateInput.value) ? startDateInput.value : new Date().toISOString().split('T')[0];
+  const daysPerWeek = daysInput ? parseInt(daysInput.value, 10) : 5;
+  const minutesPerDay = minutesInput ? parseInt(minutesInput.value, 10) : 60;
+
+  if (!examDate) {
+    alert("Veuillez sélectionner la date de votre épreuve du Baccalauréat.");
+    return;
+  }
+
+  const startD = new Date(startDate + 'T00:00:00');
+  const examD = new Date(examDate + 'T00:00:00');
+
+  if (examD <= startD) {
+    alert("La date de l'examen doit être strictement postérieure à la date de début.");
+    return;
+  }
+
+  const diffDays = Math.round((examD - startD) / (1000 * 3600 * 24));
+  if (diffDays < 3) {
+    alert("Veuillez prévoir au moins 3 jours pour générer un planning réaliste.");
+    return;
+  }
+
+  const config = {
+    examDate: examDate,
+    startDate: startDate,
+    daysPerWeek: daysPerWeek,
+    minutesPerDay: minutesPerDay,
+    mode: currentPlanLevelMode
+  };
+
+  const plan = generatePlanSchedule(config);
+  if (typeof STI_STORE !== 'undefined') {
+    STI_STORE.saveStudyPlan(plan);
+  }
+
+  togglePlanEditMode(false);
+  renderStudyPlanPage();
+  showToast("✓ Planning de révision personnalisé généré !");
+}
+
+function renderStudyPlanPage() {
+  const plan = (typeof STI_STORE !== 'undefined') ? STI_STORE.getStudyPlan() : null;
+  const configWrap = document.getElementById('planConfigWrap');
+  const activeWrap = document.getElementById('planActiveWrap');
+  const overdueBanner = document.getElementById('planOverdueBanner');
+
+  if (!plan) {
+    if (configWrap) configWrap.style.display = 'block';
+    if (activeWrap) activeWrap.style.display = 'none';
+    if (overdueBanner) overdueBanner.style.display = 'none';
+    initStudyPlanForm();
+    return;
+  }
+
+  if (configWrap) configWrap.style.display = 'none';
+  if (activeWrap) activeWrap.style.display = 'block';
+
+  // 1. Mise à jour des KPIs
+  const examD = new Date(plan.config.examDate + 'T00:00:00');
+  const now = new Date();
+  const diffDays = Math.max(0, Math.ceil((examD - now) / (1000 * 3600 * 24)));
+
+  const kpiTarget = document.getElementById('planKpiTargetDate');
+  if (kpiTarget) {
+    kpiTarget.textContent = examD.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  const kpiDays = document.getElementById('planKpiDaysRemaining');
+  if (kpiDays) {
+    kpiDays.textContent = `J-${diffDays}`;
+  }
+
+  // Calcul du nombre total de tâches et complétées
+  let totalTasks = 0;
+  let doneTasks = 0;
+  plan.days.forEach(d => {
+    (d.tasks || []).forEach(t => {
+      totalTasks++;
+      if (t.done) doneTasks++;
+    });
+  });
+
+  const progressPct = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
+
+  const kpiPomo = document.getElementById('planKpiTotalPomodoros');
+  if (kpiPomo) {
+    kpiPomo.textContent = `${totalTasks} blocs (25 min)`;
+  }
+
+  const kpiPct = document.getElementById('planKpiProgressPct');
+  if (kpiPct) {
+    kpiPct.textContent = `${progressPct}% (${doneTasks}/${totalTasks})`;
+  }
+
+  // 2. Alerte de capacité éventuelle
+  const capNotice = document.getElementById('planCapacityNotice');
+  if (capNotice) {
+    if (plan.capacityNotice) {
+      capNotice.textContent = 'ℹ️ ' + plan.capacityNotice;
+      capNotice.style.display = 'block';
+    } else {
+      capNotice.style.display = 'none';
+    }
+  }
+
+  // 3. Alerte tâches en retard
+  const overdueTasks = (typeof STI_STORE !== 'undefined') ? STI_STORE.getOverduePlanTasks() : [];
+  if (overdueBanner) {
+    if (overdueTasks.length > 0) {
+      overdueBanner.style.display = 'flex';
+      const msg = document.getElementById('planOverdueMessage');
+      if (msg) {
+        msg.textContent = `Vous avez ${overdueTasks.length} tâche(s) des séances précédentes non complétée(s). Vous pouvez réajuster le planning sans perdre les tâches faites.`;
+      }
+    } else {
+      overdueBanner.style.display = 'none';
+    }
+  }
+
+  // 4. Rendu de la carte Aujourd'hui
+  renderPlanTodayCard(plan);
+
+  // 5. Rendu du calendrier par semaines
+  renderPlanWeeksAccordion(plan);
+}
+
+function renderPlanTodayCard(plan) {
+  const container = document.getElementById('planTodayTasksContainer');
+  const dateLabel = document.getElementById('planTodayDateLabel');
+  const timeBadge = document.getElementById('planTodayTimeBadge');
+  if (!container) return;
+
+  const todayInfo = (typeof STI_STORE !== 'undefined') ? STI_STORE.getTodayPlan() : null;
+
+  if (todayInfo && todayInfo.day) {
+    const day = todayInfo.day;
+    if (dateLabel) dateLabel.textContent = day.dateFormatted || day.date;
+    if (timeBadge) timeBadge.textContent = `${day.tasks.length * 25} min (${day.tasks.length} blocs Pomodoro)`;
+
+    if (day.tasks.length === 0) {
+      container.innerHTML = `
+        <div style="padding:14px;text-align:center;color:var(--text-secondary);font-size:0.88rem;">
+          Aucune tâche prévue aujourd'hui. Profitez-en pour vous reposer ou relire vos fiches méthode.
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = day.tasks.map(t => `
+      <div class="plan-task-row ${t.done ? 'done' : ''}">
+        <div class="plan-task-left">
+          <input type="checkbox" class="plan-task-checkbox" ${t.done ? 'checked' : ''} onchange="togglePlanTaskCheckbox('${t.id}', this.checked)" title="Marquer comme fait" />
+          <span class="plan-task-tag">${escapeHtml(t.badge || '25 min')}</span>
+          <span class="plan-task-title">${escapeHtml(t.title)}</span>
+        </div>
+        <div class="plan-task-actions">
+          <button type="button" class="plan-pomo-trigger-btn" onclick="startPomodoroForPlanTask('${escapeHtml(t.title)}')" title="Démarrer un Pomodoro de 25 min">
+            <span>⏱️</span>
+            <span>25 min</span>
+          </button>
+          ${t.link ? `<a href="${t.link}" onclick="navigateToHash('${t.link}')" class="revision-bm-open-btn" style="text-decoration:none;padding:4px 8px;font-size:0.75rem;">Ouvrir →</a>` : ''}
+        </div>
+      </div>
+    `).join('');
+  } else {
+    if (dateLabel) dateLabel.textContent = "Aucune session";
+    if (timeBadge) timeBadge.textContent = "0 min";
+    container.innerHTML = `
+      <div style="padding:14px;text-align:center;color:var(--text-secondary);font-size:0.88rem;">
+        Vous êtes à jour ou en dehors de la période d'étude prévue.
+      </div>
+    `;
+  }
+}
+
+function renderPlanWeeksAccordion(plan) {
+  const container = document.getElementById('planWeeksAccordion');
+  if (!container || !plan.days) return;
+
+  // Découper en tranches de 7 jours (Semaines)
+  const weeks = [];
+  let currentWeek = [];
+  plan.days.forEach((day, idx) => {
+    currentWeek.push(day);
+    if (currentWeek.length === 7 || idx === plan.days.length - 1) {
+      weeks.push([...currentWeek]);
+      currentWeek = [];
+    }
+  });
+
+  const todayStr = new Date().toISOString().split('T')[0];
+
+  container.innerHTML = weeks.map((wDays, wIdx) => {
+    const weekNum = wIdx + 1;
+    const startDate = wDays[0].dateFormatted;
+    const endDate = wDays[wDays.length - 1].dateFormatted;
+
+    let wTotalTasks = 0;
+    let wDoneTasks = 0;
+    wDays.forEach(d => {
+      (d.tasks || []).forEach(t => {
+        wTotalTasks++;
+        if (t.done) wDoneTasks++;
+      });
+    });
+
+    const isCurrentWeek = wDays.some(d => d.date === todayStr);
+
+    return `
+      <div class="plan-week-block">
+        <button type="button" class="plan-week-toggle" onclick="togglePlanWeekBlock(this)">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:1.1rem;">📅</span>
+            <strong>Semaine ${weekNum}</strong>
+            <span style="font-size:0.8rem;color:var(--text-muted);font-weight:400;">(${startDate} au ${endDate})</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="font-size:0.8rem;padding:2px 8px;border-radius:6px;background:${wDoneTasks === wTotalTasks && wTotalTasks > 0 ? 'rgba(16,185,129,0.15);color:#10b981;' : 'rgba(255,255,255,0.06);color:var(--text-secondary);'}font-weight:700;">
+              ${wDoneTasks} / ${wTotalTasks} complétés
+            </span>
+            <span style="font-size:0.85rem;color:var(--text-muted);">${isCurrentWeek ? '▼' : '▶'}</span>
+          </div>
+        </button>
+
+        <div class="plan-week-content" style="display:${isCurrentWeek || weekNum === 1 ? 'flex' : 'none'};">
+          ${wDays.map(d => {
+            const isToday = (d.date === todayStr);
+            return `
+              <div class="plan-day-box ${isToday ? 'is-today' : ''}">
+                <div class="plan-day-box-header">
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    ${isToday ? '<span style="font-size:0.75rem;padding:1px 6px;border-radius:4px;background:#f59e0b;color:#000;font-weight:800;">AUJOURD\'HUI</span>' : ''}
+                    <span class="plan-day-title">${escapeHtml(d.dateFormatted)}</span>
+                  </div>
+                  <span class="plan-day-theme">${escapeHtml(d.theme || '')}</span>
+                </div>
+                <div class="plan-task-list">
+                  ${(d.tasks || []).map(t => `
+                    <div class="plan-task-row ${t.done ? 'done' : ''}">
+                      <div class="plan-task-left">
+                        <input type="checkbox" class="plan-task-checkbox" ${t.done ? 'checked' : ''} onchange="togglePlanTaskCheckbox('${t.id}', this.checked)" />
+                        <span class="plan-task-tag">${escapeHtml(t.badge || '25 min')}</span>
+                        <span class="plan-task-title">${escapeHtml(t.title)}</span>
+                      </div>
+                      <div class="plan-task-actions">
+                        <button type="button" class="plan-pomo-trigger-btn" onclick="startPomodoroForPlanTask('${escapeHtml(t.title)}')">
+                          <span>⏱️</span>
+                          <span>25 min</span>
+                        </button>
+                        ${t.link ? `<a href="${t.link}" onclick="navigateToHash('${t.link}')" class="revision-bm-open-btn" style="text-decoration:none;padding:4px 8px;font-size:0.75rem;">Ouvrir →</a>` : ''}
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function togglePlanWeekBlock(btn) {
+  const content = btn.nextElementSibling;
+  if (!content) return;
+  const isHidden = (content.style.display === 'none');
+  content.style.display = isHidden ? 'flex' : 'none';
+  const arrow = btn.querySelector('span:last-child');
+  if (arrow) arrow.textContent = isHidden ? '▼' : '▶';
+}
+
+function togglePlanTaskCheckbox(taskId, isChecked) {
+  if (typeof STI_STORE === 'undefined') return;
+  STI_STORE.togglePlanTask(taskId, isChecked);
+  renderStudyPlanPage();
+  renderRevisionPage();
+  updateDataCountersUI();
+  showToast(isChecked ? '✓ Tâche validée (+ progression mise à jour)' : 'Tâche décochée');
+}
+
+function startPomodoroForPlanTask(taskTitle) {
+  if (typeof PomodoroEngine !== 'undefined') {
+    if (typeof PomodoroEngine.setDurationOption === 'function') {
+      PomodoroEngine.setDurationOption(25);
+    }
+    if (typeof PomodoroEngine.openDrawer === 'function') {
+      PomodoroEngine.openDrawer();
+    }
+    showToast(`⏱️ Minuteur Pomodoro 25 min prêt pour : ${taskTitle}`);
+  }
+}
+
+function recalculatePlanFromToday() {
+  if (typeof STI_STORE === 'undefined') return;
+  const plan = STI_STORE.getStudyPlan();
+  if (!plan) return;
+
+  if (!confirm("Voulez-vous réajuster votre calendrier à partir d'aujourd'hui ?\n\nToutes les tâches déjà accomplies seront précieusement conservées.")) {
+    return;
+  }
+
+  // Collecter les tâches déjà faites
+  const doneIds = [];
+  plan.days.forEach(d => {
+    (d.tasks || []).forEach(t => {
+      if (t.done) doneIds.push(t.id);
+    });
+  });
+
+  const todayStr = new Date().toISOString().split('T')[0];
+  const updatedConfig = Object.assign({}, plan.config, {
+    startDate: todayStr
+  });
+
+  const newPlan = generatePlanSchedule(updatedConfig, doneIds);
+  STI_STORE.saveStudyPlan(newPlan);
+  renderStudyPlanPage();
+  renderRevisionPage();
+  showToast("✓ Planning recalculé à partir d'aujourd'hui !");
+}
+
+function exportPlanToIcs() {
+  if (typeof STI_STORE === 'undefined') return;
+  const plan = STI_STORE.getStudyPlan();
+  if (!plan || !plan.days) {
+    alert("Aucun planning actif à exporter.");
+    return;
+  }
+
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//STI de A a Z//Planning Revision Bac Informatique//FR',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH'
+  ];
+
+  const nowStamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+
+  plan.days.forEach((day, idx) => {
+    if (!day.tasks || day.tasks.length === 0) return;
+    const dateFormatted = day.date.replace(/-/g, '');
+    const nextDateObj = new Date(day.date + 'T00:00:00');
+    nextDateObj.setDate(nextDateObj.getDate() + 1);
+    const nextDateStr = nextDateObj.toISOString().split('T')[0].replace(/-/g, '');
+
+    const taskBulletList = day.tasks.map(t => `- [${t.done ? 'X' : ' '}] ${t.title}`).join('\\n');
+    const summary = `STI Bac Révision : ${day.theme || 'Algorithme'} (${day.tasks.length * 25} min)`;
+    const description = `Séance de révision Bac Informatique (STI de A à Z) :\\n${taskBulletList}\\n\\nAccéder au portail : http://localhost:3000/#/revision/plan`;
+
+    lines.push('BEGIN:VEVENT');
+    lines.push(`UID:sti-plan-${day.date}-${idx}@stideaz.tn`);
+    lines.push(`DTSTAMP:${nowStamp}`);
+    lines.push(`DTSTART;VALUE=DATE:${dateFormatted}`);
+    lines.push(`DTEND;VALUE=DATE:${nextDateStr}`);
+    lines.push(`SUMMARY:${summary}`);
+    lines.push(`DESCRIPTION:${description}`);
+    lines.push('STATUS:CONFIRMED');
+    lines.push('TRANSP:TRANSPARENT');
+    lines.push('END:VEVENT');
+  });
+
+  lines.push('END:VCALENDAR');
+
+  const icsBlob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+  const downloadUrl = URL.createObjectURL(icsBlob);
+  const a = document.createElement('a');
+  a.href = downloadUrl;
+  a.download = `planning-revision-bac-sti-${plan.config.examDate}.ics`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(downloadUrl);
+
+  showToast("✓ Fichier iCalendar (.ics) téléchargé pour votre agenda !");
+}
+
+function confirmResetStudyPlan() {
+  if (!confirm("Voulez-vous vraiment réinitialiser votre planning d'étude ?\n\nVos chapitres complétés dans le cours resteront intacts.")) {
+    return;
+  }
+  if (typeof STI_STORE !== 'undefined') {
+    STI_STORE.clearStudyPlan();
+    renderStudyPlanPage();
+    renderRevisionPage();
+    showToast("Planning réinitialisé.");
+  }
+}
+
 // Window bindings
 if (typeof window !== 'undefined') {
   window.renderBookmarkBtn = renderBookmarkBtn;
@@ -13308,5 +14101,19 @@ if (typeof window !== 'undefined') {
   window.confirmResetAllStudentData = confirmResetAllStudentData;
   window.updateHomeRevisionWidget = updateHomeRevisionWidget;
   window.showToast = showToast;
+  // Feature 3 Plan bindings
+  window.setPlanDaysChoice = setPlanDaysChoice;
+  window.setPlanMinutesChoice = setPlanMinutesChoice;
+  window.selectPlanLevelMode = selectPlanLevelMode;
+  window.togglePlanEditMode = togglePlanEditMode;
+  window.initStudyPlanForm = initStudyPlanForm;
+  window.handleGenerateStudyPlan = handleGenerateStudyPlan;
+  window.renderStudyPlanPage = renderStudyPlanPage;
+  window.togglePlanWeekBlock = togglePlanWeekBlock;
+  window.togglePlanTaskCheckbox = togglePlanTaskCheckbox;
+  window.startPomodoroForPlanTask = startPomodoroForPlanTask;
+  window.recalculatePlanFromToday = recalculatePlanFromToday;
+  window.exportPlanToIcs = exportPlanToIcs;
+  window.confirmResetStudyPlan = confirmResetStudyPlan;
 }
 
