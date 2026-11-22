@@ -1844,7 +1844,12 @@ function updateDataCountersUI() {
     if (typeof DOCUMENTS_DATA !== 'undefined') {
       const examensCount = DOCUMENTS_DATA.getExamens().length;
       const sideExamens = document.getElementById('sideBadgeExamens');
-      if (sideExamens) sideExamens.textContent = examensCount;
+      if (sideExamens) {
+        sideExamens.textContent = examensCount;
+        sideExamens.style.display = examensCount > 0 ? '' : 'none';
+      }
+      const planExamEl = document.getElementById('planExamensCount');
+      if (planExamEl) planExamEl.textContent = examensCount;
     }
     if (typeof EXERCISES_DATA !== 'undefined') {
       const sideTypes = document.getElementById('sideBadgeTypes');
@@ -1853,7 +1858,10 @@ function updateDataCountersUI() {
     if (typeof STI_STORE !== 'undefined') {
       const bmCount = STI_STORE.getBookmarksCount();
       const sideRev = document.getElementById('sideBadgeRevision');
-      if (sideRev) sideRev.textContent = bmCount;
+      if (sideRev) {
+        sideRev.textContent = bmCount;
+        sideRev.style.display = bmCount > 0 ? '' : 'none';
+      }
       if (typeof updateHomeRevisionWidget === 'function') {
         updateHomeRevisionWidget();
       }

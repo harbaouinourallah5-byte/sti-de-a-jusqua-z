@@ -6,12 +6,12 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#4F46E5">
-  <meta name="description" content="Site de révision interactif complet pour le Baccalauréat Tunisie : STI (Web & BD : HTML5, CSS3, JS, SQL) et Algorithmique (Qt Designer, Thonny Python, 6 chapitres).">
+  <meta name="description" content="Site de révision interactif complet pour le Baccalauréat Tunisie : STI (Web & BD : HTML5, CSS3, JS, SQL) et Algorithmique (Qt Designer, Thonny Python, 8 chapitres).">
   <title>STI de A à Z — Mode Étude Calme (STI & Algorithme Bac Info)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=35.2">
+  <link rel="stylesheet" href="style.css?v=35.3">
   <!-- INITIALISATION IMMÉDIATE DU THÈME & TOGGLE SANS LATENCE -->
   <script>
     (function() {
@@ -169,7 +169,7 @@
           </button>
 
           <!-- BOUTON 2 : ALGORITHME AVEC LOGO VECTORIEL -->
-          <button class="sidebar-module-tab" id="sidebarTabAlgo" onclick="switchModule('algo')" title="Basculer vers le module Algorithme (Qt Designer, Thonny Python, 6 Chapitres)">
+          <button class="sidebar-module-tab" id="sidebarTabAlgo" onclick="switchModule('algo')" title="Basculer vers le module Algorithme (Qt Designer, Thonny Python, 8 Chapitres)">
             <div class="tab-logo-box algo">
               <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
@@ -214,7 +214,7 @@
         <a class="sidebar-link" data-view="revision" onclick="navigateToHash('#/revision')">
           <span class="nav-icon">⭐</span>
           <span class="nav-label">Ma révision</span>
-          <span class="nav-count" id="sideBadgeRevision" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4);">0</span>
+          <span class="nav-count" id="sideBadgeRevision" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); display: none;">0</span>
         </a>
 
         <!-- GROUPE MODULE 1 : STI WEB & BASES DE DONNÉES -->
@@ -303,7 +303,7 @@
               <span class="nav-bullet algo"></span>
               <span class="nav-icon">📖</span>
               <span class="nav-label">Théorique (8 Chapitres)</span>
-              <span class="nav-count" id="sideBadgeTheorique">59</span>
+              <span class="nav-count" id="sideBadgeTheorique">80</span>
             </a>
             <!-- SUB-TREE DES 8 CHAPITRES AVEC ANNEAUX DE PROGRESSION SVG -->
             <div class="sidebar-chapters-subnav" id="sidebarChaptersSubnav"></div>
@@ -323,7 +323,7 @@
             <a class="sidebar-link" data-view="examens" onclick="switchView('examens')">
               <span class="nav-icon">📋</span>
               <span class="nav-label">Examens &amp; Sujets</span>
-              <span class="nav-count" id="sideBadgeExamens">0</span>
+              <span class="nav-count" id="sideBadgeExamens">11</span>
             </a>
             <!-- LIEN MINUTEUR POMODORO & AMBIANCE MUSICALE -->
             <a class="sidebar-link pomodoro-nav-link" onclick="PomodoroEngine.openDrawer()" title="Ouvrir le Minuteur Pomodoro et la Musique d'Étude">
@@ -475,7 +475,7 @@
                   <span>🌐</span>
                   <span>HTML5</span>
                 </div>
-                <span class="big-module-topic-badge" id="homeHtmlBadge">56 notions &amp; balises</span>
+                <span class="big-module-topic-badge" id="homeHtmlBadge">57 notions &amp; balises</span>
               </li>
               <li class="big-module-topic-item" onclick="event.stopPropagation(); switchView('css')">
                 <div class="big-module-topic-name">
@@ -565,7 +565,7 @@
             <h1 class="view-hero-title">Annexe HTML5</h1>
             <p class="view-hero-subtitle">Basé sur les annexes du Bac STI • Structure sémantique, balises de contenu, multimédia et formulaires interactifs</p>
             <div class="view-hero-badges">
-              <span class="hero-pill"><strong id="htmlBadgeCount">56</strong> Balises Référencées</span>
+              <span class="hero-pill"><strong id="htmlBadgeCount">57</strong> Balises Référencées</span>
               <span class="hero-pill success">✓ Basé sur les annexes du programme</span>
               <span class="hero-pill cyan">Exemples Interactifs</span>
             </div>
@@ -3979,7 +3979,7 @@ app.exec_()</code></pre>
 
             <!-- Note pédagogique honnête -->
             <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px 16px; margin-bottom: 22px; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
-              ℹ️ <strong>Transparence de l'algorithme :</strong> L'ordre des chapitres et les volumes horaires sont basés sur la fréquence observée dans les 13 sujets disponibles sur le site. Les 25% finaux du calendrier sont automatiquement alloués aux simulations d'examen et au rattrapage de vos points faibles (« À revoir »).
+              ℹ️ <strong>Transparence de l'algorithme :</strong> L'ordre des chapitres et les volumes horaires sont basés sur la fréquence observée dans les <span id="planExamensCount">11</span> sujets disponibles sur le site. Les 25% finaux du calendrier sont automatiquement alloués aux simulations d'examen et au rattrapage de vos points faibles (« À revoir »).
             </div>
 
             <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
@@ -4915,25 +4915,25 @@ app.exec_()</code></pre>
 
   <!-- Fichiers Scripts -->
 
-  <script src="store.js?v=35.2"></script>
-  <script src="data.js?v=35.2"></script>
-  <script src="data/curriculum.js?v=35.2"></script>
-  <script src="data/documents.js?v=35.2"></script>
-  <script src="data/exercises.js?v=35.2"></script>
-  <script src="data/methods.js?v=35.2"></script>
-  <script src="data/quiz/fichiers.js?v=35.2"></script>
-  <script src="data/quiz/recursivite.js?v=35.2"></script>
-  <script src="data/quiz/bases.js?v=35.2"></script>
-  <script src="data/quiz/arithmetique.js?v=35.2"></script>
-  <script src="data/quiz/approximation.js?v=35.2"></script>
-  <script src="data/quiz/tableaux.js?v=35.2"></script>
-  <script src="data/quiz/matrices.js?v=35.2"></script>
-  <script src="data/quiz/suites.js?v=35.2"></script>
-  <script src="data/quiz.js?v=35.2"></script>
-  <script src="css_engine.js?v=35.2"></script>
-  <script src="algo_pratique_engine.js?v=35.2"></script>
-  <script src="pomodoro_engine.js?v=35.2"></script>
-  <script src="app.js?v=35.2"></script>
+  <script src="store.js?v=35.3"></script>
+  <script src="data.js?v=35.3"></script>
+  <script src="data/curriculum.js?v=35.3"></script>
+  <script src="data/documents.js?v=35.3"></script>
+  <script src="data/exercises.js?v=35.3"></script>
+  <script src="data/methods.js?v=35.3"></script>
+  <script src="data/quiz/fichiers.js?v=35.3"></script>
+  <script src="data/quiz/recursivite.js?v=35.3"></script>
+  <script src="data/quiz/bases.js?v=35.3"></script>
+  <script src="data/quiz/arithmetique.js?v=35.3"></script>
+  <script src="data/quiz/approximation.js?v=35.3"></script>
+  <script src="data/quiz/tableaux.js?v=35.3"></script>
+  <script src="data/quiz/matrices.js?v=35.3"></script>
+  <script src="data/quiz/suites.js?v=35.3"></script>
+  <script src="data/quiz.js?v=35.3"></script>
+  <script src="css_engine.js?v=35.3"></script>
+  <script src="algo_pratique_engine.js?v=35.3"></script>
+  <script src="pomodoro_engine.js?v=35.3"></script>
+  <script src="app.js?v=35.3"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
