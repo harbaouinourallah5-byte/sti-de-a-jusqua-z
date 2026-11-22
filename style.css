@@ -9742,4 +9742,88 @@ button.topbar-action-btn svg {
   }
 }
 
+/* ===================================================================
+   QUIZ V/F & QCM (#/algo/quiz)
+   =================================================================== */
+
+.quiz-chapter-card {
+  background: var(--surface-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.quiz-chapter-card:hover {
+  border-color: rgba(245, 158, 11, 0.4);
+  transform: translateY(-1px);
+}
+
+.quiz-chapter-card.selected {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
+}
+
+.quiz-option-btn {
+  background: var(--surface-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 14px 18px;
+  text-align: left;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.quiz-option-btn:hover:not(:disabled) {
+  border-color: rgba(56, 189, 248, 0.4);
+  background: var(--surface-elevated);
+  transform: translateX(3px);
+}
+
+.quiz-option-btn.correct {
+  border-color: #10b981 !important;
+  background: rgba(16, 185, 129, 0.12) !important;
+  color: #10b981 !important;
+}
+
+.quiz-option-btn.wrong {
+  border-color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.12) !important;
+  color: #ef4444 !important;
+}
+
+.quiz-option-btn.revealed {
+  border-color: #10b981 !important;
+  background: rgba(16, 185, 129, 0.06) !important;
+  color: #10b981 !important;
+}
+
+.quiz-option-btn:disabled {
+  cursor: default;
+}
+
+.quiz-recap-row {
+  background: var(--surface-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 

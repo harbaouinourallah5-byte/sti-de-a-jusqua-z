@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=26.4">
+  <link rel="stylesheet" href="style.css?v=27.0">
   <!-- INITIALISATION IMMÉDIATE DU THÈME & TOGGLE SANS LATENCE -->
   <script>
     (function() {
@@ -273,6 +273,12 @@
               <span class="nav-icon">💡</span>
               <span class="nav-label">Fiches méthode</span>
               <span class="nav-count">6</span>
+            </a>
+            <a class="sidebar-link" data-view="algo-quiz" onclick="switchView('algo-quiz')">
+              <span class="nav-bullet algo"></span>
+              <span class="nav-icon">⚡</span>
+              <span class="nav-label">Quiz V/F &amp; QCM</span>
+              <span class="nav-count" id="sideBadgeQuiz">80</span>
             </a>
             <a class="sidebar-link" data-view="algo-theorique" onclick="switchView('algo-theorique')">
               <span class="nav-bullet algo"></span>
@@ -3761,6 +3767,171 @@ app.exec_()</code></pre>
     </section>
 
     <!-- ==========================================
+         VUE QUIZ RAPIDE V/F & QCM (#/algo/quiz)
+         ========================================== -->
+    <section id="view-algo-quiz" class="view-section">
+      <div class="container" style="max-width: 860px;">
+
+        <!-- En-tête -->
+        <div class="page-header-banner" style="margin-bottom:20px; padding:24px 0 10px 0;">
+          <div class="annexe-title-wrap" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div class="annexe-logo-shield" style="background:linear-gradient(135deg,#f59e0b,#ef4444);width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">
+                ⚡
+              </div>
+              <div>
+                <h2 class="annexe-title-text" style="font-size:1.6rem;color:#f59e0b;">Quiz V/F &amp; QCM • Algorithmique Bac</h2>
+                <span style="font-size:0.9rem;color:var(--text-secondary);">Entraînement express format Exercice 1 • Rétroaction immédiate • 80 questions certifiées</span>
+              </div>
+            </div>
+            <div id="quizGlobalStatsBadge" style="font-size:0.82rem;font-weight:700;padding:6px 14px;border-radius:20px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);color:#f59e0b;">
+              🎯 Taux de réussite : <span id="quizGlobalPct">--%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1. ÉCRAN DE CONFIGURATION DU QUIZ -->
+        <div id="quizSetupScreen" style="background:var(--surface-elevated);border:1px solid var(--border-color);border-radius:16px;padding:26px;display:flex;flex-direction:column;gap:22px;">
+          <div>
+            <label style="display:block;font-size:0.92rem;font-weight:800;color:var(--text-primary);margin-bottom:10px;">
+              1. Choisir le chapitre :
+            </label>
+            <div id="quizChapterPicker" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));gap:10px;">
+              <!-- Rempli dynamiquement en JS (Tous + 8 chapitres) -->
+            </div>
+          </div>
+
+          <div>
+            <label style="display:block;font-size:0.92rem;font-weight:800;color:var(--text-primary);margin-bottom:10px;">
+              2. Niveau de difficulté :
+            </label>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button type="button" class="cat-pill active" data-level="all" onclick="setQuizLevel('all', this)">✨ Tous les niveaux</button>
+              <button type="button" class="cat-pill" data-level="base" onclick="setQuizLevel('base', this)">🌱 Base</button>
+              <button type="button" class="cat-pill" data-level="moyen" onclick="setQuizLevel('moyen', this)">⚡ Moyen</button>
+              <button type="button" class="cat-pill" data-level="bac" onclick="setQuizLevel('bac', this)">🎓 Bac</button>
+            </div>
+          </div>
+
+          <div>
+            <label style="display:block;font-size:0.92rem;font-weight:800;color:var(--text-primary);margin-bottom:10px;">
+              3. Format de session :
+            </label>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button type="button" class="cat-pill active" data-count="5" onclick="setQuizCount(5, this)">⏱️ 5 questions (Express 2 min)</button>
+              <button type="button" class="cat-pill" data-count="10" onclick="setQuizCount(10, this)">🎯 10 questions (Standard 5 min)</button>
+              <button type="button" class="cat-pill" data-count="all" onclick="setQuizCount('all', this)">📚 Tout le chapitre</button>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--border-color);flex-wrap:wrap;gap:14px;">
+            <div style="font-size:0.86rem;color:var(--text-secondary);">
+              Questions prêtes : <strong id="quizPoolCount" style="color:var(--text-primary);">--</strong>
+            </div>
+            <button type="button" onclick="startQuizSession()"
+                    style="padding:12px 28px;border-radius:10px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;font-weight:800;font-size:0.95rem;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(245,158,11,0.35);">
+              🚀 Démarrer le Quiz
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. ÉCRAN ACTIF DE QUESTION EN COURS -->
+        <div id="quizActiveScreen" style="display:none;background:var(--surface-elevated);border:1px solid var(--border-color);border-radius:16px;padding:26px;flex-direction:column;gap:20px;">
+          <!-- Barre d'avancement & Quitter -->
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span id="quizQuestionCounter" style="font-size:0.88rem;font-weight:800;color:#f59e0b;">Question 1 / 5</span>
+              <span id="quizBadgeChapter" class="cat-pill" style="font-size:0.75rem;padding:3px 8px;">Chapitre</span>
+              <span id="quizBadgeLevel" class="cat-pill" style="font-size:0.75rem;padding:3px 8px;">Base</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <span id="quizLiveScore" style="font-size:0.88rem;font-weight:800;color:#10b981;">Score : 0</span>
+              <button type="button" onclick="quitQuizSession()" style="background:none;border:none;color:var(--text-muted);font-size:0.82rem;cursor:pointer;text-decoration:underline;">Quitter</button>
+            </div>
+          </div>
+
+          <!-- Jauge de progression -->
+          <div style="width:100%;height:6px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;">
+            <div id="quizProgressBar" style="width:20%;height:100%;background:linear-gradient(90deg,#f59e0b,#10b981);transition:width 0.3s ease;"></div>
+          </div>
+
+          <!-- Énoncé de la question -->
+          <div id="quizQuestionBody" style="background:var(--surface-bg);border:1px solid var(--border-color);border-radius:12px;padding:20px;">
+            <p id="quizQuestionText" style="font-size:1.05rem;font-weight:700;color:var(--text-primary);line-height:1.5;margin:0;white-space:pre-wrap;"></p>
+          </div>
+
+          <!-- Liste des options de réponse -->
+          <div id="quizOptionsContainer" style="display:flex;flex-direction:column;gap:10px;">
+            <!-- Rempli dynamiquement -->
+          </div>
+
+          <!-- Bloc Explication immédiate (affiché après réponse) -->
+          <div id="quizExplanationBox" style="display:none;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);border-radius:12px;padding:18px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+              <span id="quizFeedbackIcon" style="font-size:1.3rem;">💡</span>
+              <strong id="quizFeedbackTitle" style="color:#38bdf8;font-size:0.95rem;">Explication détaillée</strong>
+            </div>
+            <p id="quizExplanationText" style="font-size:0.88rem;color:var(--text-primary);line-height:1.5;margin:0 0 10px 0;"></p>
+            <div id="quizExplanationLinks" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;"></div>
+            <div style="display:flex;justify-content:flex-end;">
+              <button type="button" id="quizNextBtn" onclick="nextQuizQuestion()"
+                      style="padding:10px 22px;border-radius:8px;background:#38bdf8;color:#000;font-weight:800;font-size:0.9rem;border:none;cursor:pointer;">
+                Question suivante →
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. ÉCRAN DES RÉSULTATS DU QUIZ -->
+        <div id="quizResultsScreen" style="display:none;background:var(--surface-elevated);border:1px solid var(--border-color);border-radius:16px;padding:32px 24px;text-align:center;flex-direction:column;gap:24px;">
+          <div>
+            <div id="quizResultTrophy" style="font-size:3.5rem;margin-bottom:10px;">🎉</div>
+            <h3 id="quizResultTitle" style="font-size:1.5rem;font-weight:800;color:var(--text-primary);margin:0 0 6px 0;">Quiz Terminé !</h3>
+            <p id="quizResultSubtitle" style="font-size:0.92rem;color:var(--text-secondary);margin:0;"></p>
+          </div>
+
+          <!-- Score Card -->
+          <div style="display:inline-flex;align-self:center;align-items:center;gap:20px;padding:16px 28px;background:var(--surface-bg);border:1px solid var(--border-color);border-radius:14px;">
+            <div>
+              <span style="display:block;font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;font-weight:700;">Score obtenu</span>
+              <span id="quizResultScore" style="font-size:1.8rem;font-weight:900;color:#10b981;">0 / 5</span>
+            </div>
+            <div style="width:1px;height:40px;background:var(--border-color);"></div>
+            <div>
+              <span style="display:block;font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;font-weight:700;">Taux de réussite</span>
+              <span id="quizResultPct" style="font-size:1.8rem;font-weight:900;color:#f59e0b;">0%</span>
+            </div>
+          </div>
+
+          <!-- Actions de fin -->
+          <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;">
+            <button type="button" onclick="restartQuizSession()"
+                    style="padding:10px 20px;border-radius:8px;background:var(--surface-bg);border:1px solid var(--border-color);color:var(--text-primary);font-weight:700;font-size:0.88rem;cursor:pointer;">
+              🔄 Recommencer
+            </button>
+            <button type="button" id="quizRetryMistakesBtn" onclick="retryQuizMistakes()" style="display:none;padding:10px 20px;border-radius:8px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#ef4444;font-weight:700;font-size:0.88rem;cursor:pointer;">
+              🎯 Refaire les erreurs (<span id="quizMistakesCount">0</span>)
+            </button>
+            <button type="button" id="quizBookmarkMistakesBtn" onclick="bookmarkQuizMistakes()" style="display:none;padding:10px 20px;border-radius:8px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);color:#f59e0b;font-weight:700;font-size:0.88rem;cursor:pointer;">
+              ⭐ Ajouter les ratés à Ma Révision
+            </button>
+            <button type="button" onclick="resetQuizToSetup()"
+                    style="padding:10px 20px;border-radius:8px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;font-weight:800;font-size:0.88rem;border:none;cursor:pointer;">
+              📋 Autre chapitre
+            </button>
+          </div>
+
+          <!-- Récapitulatif des questions -->
+          <div style="text-align:left;border-top:1px solid var(--border-color);padding-top:20px;">
+            <h4 style="font-size:0.95rem;font-weight:800;color:var(--text-primary);margin:0 0 14px 0;">Détail de vos réponses :</h4>
+            <div id="quizResultRecapList" style="display:flex;flex-direction:column;gap:10px;"></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
          VUE EXAMENS : SUJETS & EXAMENS BAC
          ========================================== -->
     <section id="view-examens" class="view-section">
@@ -4328,16 +4499,25 @@ app.exec_()</code></pre>
 
   <!-- Fichiers Scripts -->
 
-  <script src="store.js?v=26.4"></script>
-  <script src="data.js?v=26.4"></script>
-  <script src="data/curriculum.js?v=26.4"></script>
-  <script src="data/documents.js?v=26.4"></script>
-  <script src="data/exercises.js?v=26.4"></script>
-  <script src="data/methods.js?v=26.4"></script>
-  <script src="css_engine.js?v=26.4"></script>
-  <script src="algo_pratique_engine.js?v=26.4"></script>
-  <script src="pomodoro_engine.js?v=26.4"></script>
-  <script src="app.js?v=26.4"></script>
+  <script src="store.js?v=27.0"></script>
+  <script src="data.js?v=27.0"></script>
+  <script src="data/curriculum.js?v=27.0"></script>
+  <script src="data/documents.js?v=27.0"></script>
+  <script src="data/exercises.js?v=27.0"></script>
+  <script src="data/methods.js?v=27.0"></script>
+  <script src="data/quiz/fichiers.js?v=27.0"></script>
+  <script src="data/quiz/recursivite.js?v=27.0"></script>
+  <script src="data/quiz/bases.js?v=27.0"></script>
+  <script src="data/quiz/arithmetique.js?v=27.0"></script>
+  <script src="data/quiz/approximation.js?v=27.0"></script>
+  <script src="data/quiz/tableaux.js?v=27.0"></script>
+  <script src="data/quiz/matrices.js?v=27.0"></script>
+  <script src="data/quiz/suites.js?v=27.0"></script>
+  <script src="data/quiz.js?v=27.0"></script>
+  <script src="css_engine.js?v=27.0"></script>
+  <script src="algo_pratique_engine.js?v=27.0"></script>
+  <script src="pomodoro_engine.js?v=27.0"></script>
+  <script src="app.js?v=27.0"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {

@@ -332,6 +332,37 @@ var STI_STORE = (function () {
     return bests[chapterSlug] || null;
   }
 
+  function getQuizStats() {
+    var history = getQuizHistory();
+    var totalQuizzes = history.length;
+    var totalScore = 0;
+    var totalQuestions = 0;
+    var byChapter = {};
+
+    history.forEach(function (h) {
+      totalScore += (h.score || 0);
+      totalQuestions += (h.total || 0);
+      if (h.chapterSlug) {
+        if (!byChapter[h.chapterSlug]) {
+          byChapter[h.chapterSlug] = { attempts: 0, totalScore: 0, totalQuestions: 0, bestPct: 0 };
+        }
+        var ch = byChapter[h.chapterSlug];
+        ch.attempts++;
+        ch.totalScore += (h.score || 0);
+        ch.totalQuestions += (h.total || 0);
+        if (h.pct > ch.bestPct) ch.bestPct = h.pct;
+      }
+    });
+
+    return {
+      totalQuizzes: totalQuizzes,
+      totalScore: totalScore,
+      totalQuestions: totalQuestions,
+      overallPercent: totalQuestions > 0 ? Math.round((totalScore / totalQuestions) * 100) : 0,
+      byChapter: byChapter
+    };
+  }
+
   // ── 7. EXPORT / IMPORT ET RÉINITIALISATION COMPLÈTE ────────────────────────
   function exportAllData() {
     var data = {
@@ -414,6 +445,7 @@ var STI_STORE = (function () {
     getQuizHistory: getQuizHistory,
     saveQuizResult: saveQuizResult,
     getBestQuizScore: getBestQuizScore,
+    getQuizStats: getQuizStats,
     // Sauvegarde globale
     exportAllData: exportAllData,
     importAllData: importAllData,

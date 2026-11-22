@@ -1550,6 +1550,7 @@ const VIEW_TO_HASH_MAP = {
   'algo-theorique': '#/algo/theorique',
   'algo-types': '#/algo/types',
   'algo-methodes': '#/algo/methodes',
+  'algo-quiz': '#/algo/quiz',
   'exam-simulator': '#/examens/simulateur'
 };
 
@@ -1609,6 +1610,12 @@ function parseAppHash(hash) {
     return { view: 'algo-methodes', sheetSlug: subMethod || null };
   }
 
+  // Quiz rapide (#/algo/quiz ou #/algo/quiz/:slug)
+  if (clean.startsWith('algo/quiz') || clean === 'quiz' || clean.startsWith('quiz/')) {
+    const subQuiz = clean.replace(/^(algo\/quiz|quiz)\/?/, '').trim();
+    return { view: 'algo-quiz', chapterSlug: subQuiz || null };
+  }
+
   const map = {
     '': 'home',
     '/': 'home',
@@ -1648,7 +1655,7 @@ function handleRouteFromHash() {
   const route = parseAppHash(currentHash);
   isRouterNavigating = true;
 
-  if (['algo-home', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes', 'exam-simulator'].includes(route.view)) {
+  if (['algo-home', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes', 'algo-quiz', 'exam-simulator'].includes(route.view)) {
     if (typeof switchModule === 'function') switchModule('algo', true);
   } else if (['html', 'css', 'js', 'sql'].includes(route.view)) {
     if (typeof switchModule === 'function') switchModule('sti', true);
@@ -1659,6 +1666,12 @@ function handleRouteFromHash() {
   if (route.view === 'exam-simulator') {
     if (route.examId && typeof initExamSimulatorScreen === 'function') {
       initExamSimulatorScreen(route.examId);
+    }
+  }
+
+  if (route.view === 'algo-quiz') {
+    if (typeof initAlgoQuizScreen === 'function') {
+      initAlgoQuizScreen(route.chapterSlug);
     }
   }
 
@@ -1966,7 +1979,8 @@ function switchView(viewName, skipHashUpdate = false) {
       'algo-pratique': 'Pratique Qt',
       'algo-theorique': 'Théorique',
       'algo-types': 'Types d\'exercices',
-      'algo-methodes': 'Fiches méthode'
+      'algo-methodes': 'Fiches méthode',
+      'algo-quiz': 'Quiz V/F & QCM'
     };
     mobileBrandTitle.textContent = titles[viewName] || 'STI de A à Z';
   }
@@ -1975,7 +1989,7 @@ function switchView(viewName, skipHashUpdate = false) {
     if (['html', 'css', 'js', 'sql'].includes(viewName)) {
       mobileModuleChip.textContent = 'STI';
       mobileModuleChip.className = 'mobile-module-chip sti';
-    } else if (['algo-home', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes'].includes(viewName)) {
+    } else if (['algo-home', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes', 'algo-quiz'].includes(viewName)) {
       mobileModuleChip.textContent = 'ALGO';
       mobileModuleChip.className = 'mobile-module-chip algo';
     } else if (viewName === 'lessons') {
@@ -2062,6 +2076,10 @@ function switchView(viewName, skipHashUpdate = false) {
   } else if (viewName === 'algo-methodes') {
     if (typeof renderAlgoMethodesPage === 'function') {
       renderAlgoMethodesPage();
+    }
+  } else if (viewName === 'algo-quiz') {
+    if (typeof initAlgoQuizScreen === 'function') {
+      initAlgoQuizScreen();
     }
   } else if (viewName === 'admin') {
     if (typeof checkAdminAuth === 'function') {
@@ -11346,6 +11364,472 @@ window.scrollToMethodTop = scrollToMethodTop;
 window.printSingleMethodSheet = printSingleMethodSheet;
 window.copyCodeFromPre = copyCodeFromPre;
 window.copyCodeText = copyCodeText;
+
+// ===================================================================
+// MODULE QUIZ RAPIDE V/F & QCM (#/algo/quiz)
+// ===================================================================
+
+let currentQuizState = {
+  selectedChapter: 'all',
+  selectedLevel: 'all',
+  selectedCount: 5,
+  questions: [],
+  currentIndex: 0,
+  score: 0,
+  answers: [],
+  isAnswered: false
+};
+
+function initAlgoQuizScreen(targetChapter = null) {
+  if (typeof QUIZ_DATA === 'undefined') return;
+
+  if (targetChapter) {
+    currentQuizState.selectedChapter = targetChapter;
+  }
+
+  // Mettre à jour les stats globales dans le badge
+  updateQuizGlobalStatsUI();
+
+  // Rendu de la grille des chapitres
+  renderQuizChapterPicker();
+
+  // Mettre à jour le compteur de questions disponibles
+  updateQuizPoolCountUI();
+
+  // Afficher l'écran de configuration et masquer les autres
+  const setupEl = document.getElementById('quizSetupScreen');
+  const activeEl = document.getElementById('quizActiveScreen');
+  const resultsEl = document.getElementById('quizResultsScreen');
+
+  if (setupEl) setupEl.style.display = 'flex';
+  if (activeEl) activeEl.style.display = 'none';
+  if (resultsEl) resultsEl.style.display = 'none';
+}
+
+function updateQuizGlobalStatsUI() {
+  const pctEl = document.getElementById('quizGlobalPct');
+  if (!pctEl || typeof STI_STORE === 'undefined') return;
+
+  const stats = STI_STORE.getQuizStats();
+  pctEl.textContent = stats.totalQuizzes > 0 ? `${stats.overallPercent}% (${stats.totalScore}/${stats.totalQuestions})` : 'Non débuté';
+}
+
+function renderQuizChapterPicker() {
+  const container = document.getElementById('quizChapterPicker');
+  if (!container || typeof CURRICULUM === 'undefined' || typeof QUIZ_DATA === 'undefined') return;
+
+  const totalAll = QUIZ_DATA.getAllQuestions().length;
+  let html = `
+    <div class="quiz-chapter-card ${currentQuizState.selectedChapter === 'all' ? 'selected' : ''}"
+         onclick="selectQuizChapter('all', this)">
+      <span style="font-size:1.4rem;">🌟</span>
+      <div style="flex:1;">
+        <strong style="font-size:0.86rem;color:var(--text-primary);display:block;">Tous les chapitres</strong>
+        <span style="font-size:0.75rem;color:var(--text-secondary);">${totalAll} questions (Mixte)</span>
+      </div>
+    </div>
+  `;
+
+  CURRICULUM.chapters.forEach(ch => {
+    const chQuestions = QUIZ_DATA.getQuestionsByChapter(ch.slug);
+    const isSelected = (currentQuizState.selectedChapter === ch.slug);
+    html += `
+      <div class="quiz-chapter-card ${isSelected ? 'selected' : ''}"
+           onclick="selectQuizChapter('${ch.slug}', this)">
+        <span style="font-size:1.4rem;">${ch.icon || '📁'}</span>
+        <div style="flex:1;">
+          <strong style="font-size:0.86rem;color:var(--text-primary);display:block;">${escapeHtml(ch.shortTitle)}</strong>
+          <span style="font-size:0.75rem;color:var(--text-secondary);">${chQuestions.length} questions</span>
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+function selectQuizChapter(slug, el) {
+  currentQuizState.selectedChapter = slug;
+  document.querySelectorAll('#quizChapterPicker .quiz-chapter-card').forEach(c => c.classList.remove('selected'));
+  if (el) el.classList.add('selected');
+  updateQuizPoolCountUI();
+}
+
+function setQuizLevel(level, btn) {
+  currentQuizState.selectedLevel = level;
+  if (btn && btn.parentElement) {
+    btn.parentElement.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  updateQuizPoolCountUI();
+}
+
+function setQuizCount(count, btn) {
+  currentQuizState.selectedCount = count;
+  if (btn && btn.parentElement) {
+    btn.parentElement.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+}
+
+function updateQuizPoolCountUI() {
+  const el = document.getElementById('quizPoolCount');
+  if (!el || typeof QUIZ_DATA === 'undefined') return;
+
+  const pool = QUIZ_DATA.getQuestionsFiltered(currentQuizState.selectedChapter, currentQuizState.selectedLevel);
+  el.textContent = `${pool.length} question${pool.length > 1 ? 's' : ''}`;
+}
+
+function startQuizSession(overrideQuestions = null) {
+  if (typeof QUIZ_DATA === 'undefined') return;
+
+  let batch = [];
+  if (Array.isArray(overrideQuestions) && overrideQuestions.length > 0) {
+    batch = [...overrideQuestions];
+  } else {
+    const limit = (currentQuizState.selectedCount === 'all') ? 999 : parseInt(currentQuizState.selectedCount, 10);
+    batch = QUIZ_DATA.getRandomBatch(currentQuizState.selectedChapter, currentQuizState.selectedLevel, limit);
+  }
+
+  if (batch.length === 0) {
+    alert("Aucune question ne correspond à vos filtres. Veuillez sélectionner d'autres critères.");
+    return;
+  }
+
+  currentQuizState.questions = batch;
+  currentQuizState.currentIndex = 0;
+  currentQuizState.score = 0;
+  currentQuizState.answers = [];
+  currentQuizState.isAnswered = false;
+
+  const setupEl = document.getElementById('quizSetupScreen');
+  const activeEl = document.getElementById('quizActiveScreen');
+  const resultsEl = document.getElementById('quizResultsScreen');
+
+  if (setupEl) setupEl.style.display = 'none';
+  if (resultsEl) resultsEl.style.display = 'none';
+  if (activeEl) {
+    activeEl.style.display = 'flex';
+    renderCurrentQuizQuestion();
+  }
+}
+
+function renderCurrentQuizQuestion() {
+  const q = currentQuizState.questions[currentQuizState.currentIndex];
+  if (!q) return;
+
+  currentQuizState.isAnswered = false;
+
+  // Compteurs & Badges
+  const counterEl = document.getElementById('quizQuestionCounter');
+  const chBadge = document.getElementById('quizBadgeChapter');
+  const lvlBadge = document.getElementById('quizBadgeLevel');
+  const scoreEl = document.getElementById('quizLiveScore');
+  const progressEl = document.getElementById('quizProgressBar');
+
+  const curr = currentQuizState.currentIndex + 1;
+  const tot = currentQuizState.questions.length;
+
+  if (counterEl) counterEl.textContent = `Question ${curr} / ${tot}`;
+  if (scoreEl) scoreEl.textContent = `Score : ${currentQuizState.score}`;
+  if (progressEl) progressEl.style.width = `${Math.round((curr / tot) * 100)}%`;
+
+  if (chBadge) {
+    const chObj = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getChapterBySlug(q.chapter) : null;
+    chBadge.textContent = chObj ? chObj.shortTitle : q.chapter;
+  }
+  if (lvlBadge) {
+    const lvlNames = { base: 'Base 🌱', moyen: 'Moyen ⚡', bac: 'Bac 🎓' };
+    lvlBadge.textContent = lvlNames[q.level] || q.level;
+  }
+
+  // Énoncé
+  const textEl = document.getElementById('quizQuestionText');
+  if (textEl) textEl.textContent = q.question;
+
+  // Masquer l'explication
+  const expBox = document.getElementById('quizExplanationBox');
+  if (expBox) expBox.style.display = 'none';
+
+  // Options
+  const optContainer = document.getElementById('quizOptionsContainer');
+  if (optContainer) {
+    optContainer.innerHTML = (q.options || []).map((opt, optIdx) => {
+      return `
+        <button type="button" class="quiz-option-btn" onclick="selectQuizAnswer(${optIdx}, this)">
+          <span>${escapeHtml(opt)}</span>
+          <span class="quiz-opt-state-icon"></span>
+        </button>
+      `;
+    }).join('');
+  }
+}
+
+function selectQuizAnswer(optIdx, btn) {
+  if (currentQuizState.isAnswered) return;
+  currentQuizState.isAnswered = true;
+
+  const q = currentQuizState.questions[currentQuizState.currentIndex];
+  if (!q) return;
+
+  // Déterminer la correction
+  let isCorrect = false;
+  let correctOptIdx = -1;
+
+  if (q.type === 'vf' || q.type === 'qcm') {
+    correctOptIdx = q.answer;
+    isCorrect = (optIdx === correctOptIdx);
+  } else if (q.type === 'trace') {
+    // Si la trace a des options, chercher l'option égale à answer
+    correctOptIdx = (q.options || []).findIndex(o => String(o).replace(/\s+/g, '') === String(q.answer).replace(/\s+/g, ''));
+    if (correctOptIdx === -1 && typeof q.answer === 'number') correctOptIdx = q.answer;
+    isCorrect = (optIdx === correctOptIdx);
+  }
+
+  if (isCorrect) {
+    currentQuizState.score++;
+    if (btn) btn.classList.add('correct');
+  } else {
+    if (btn) btn.classList.add('wrong');
+  }
+
+  // Révéler la bonne réponse si erreur
+  const allBtns = document.querySelectorAll('#quizOptionsContainer .quiz-option-btn');
+  allBtns.forEach((b, idx) => {
+    b.disabled = true;
+    if (idx === correctOptIdx && !isCorrect) {
+      b.classList.add('revealed');
+      const icon = b.querySelector('.quiz-opt-state-icon');
+      if (icon) icon.textContent = '✓ Bonne réponse';
+    }
+  });
+
+  // Mettre à jour le score live
+  const scoreEl = document.getElementById('quizLiveScore');
+  if (scoreEl) scoreEl.textContent = `Score : ${currentQuizState.score}`;
+
+  // Enregistrer la réponse
+  currentQuizState.answers.push({
+    question: q,
+    userChoice: optIdx,
+    isCorrect: isCorrect
+  });
+
+  // Afficher la boîte d'explication
+  const expBox = document.getElementById('quizExplanationBox');
+  const titleEl = document.getElementById('quizFeedbackTitle');
+  const iconEl = document.getElementById('quizFeedbackIcon');
+  const textEl = document.getElementById('quizExplanationText');
+  const linksEl = document.getElementById('quizExplanationLinks');
+  const nextBtn = document.getElementById('quizNextBtn');
+
+  if (titleEl) titleEl.textContent = isCorrect ? "Bravo ! Réponse exacte" : "Réponse incorrecte";
+  if (titleEl) titleEl.style.color = isCorrect ? "#10b981" : "#ef4444";
+  if (iconEl) iconEl.textContent = isCorrect ? "🎉" : "❌";
+  if (textEl) textEl.textContent = q.explanation;
+
+  if (linksEl) {
+    let linkHtml = '';
+    if (q.links) {
+      if (q.links.methodSheet) {
+        linkHtml += `
+          <a href="#/algo/methodes/${q.links.methodSheet}" target="_blank"
+             style="font-size:0.78rem;color:#c084fc;padding:4px 10px;border-radius:6px;background:rgba(192,132,252,0.1);border:1px solid rgba(192,132,252,0.3);text-decoration:none;font-weight:700;">
+            📖 Voir la Fiche Méthode
+          </a>
+        `;
+      }
+      if (q.links.exerciseType) {
+        linkHtml += `
+          <a href="#/algo/types/${q.links.exerciseType}" target="_blank"
+             style="font-size:0.78rem;color:#38bdf8;padding:4px 10px;border-radius:6px;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);text-decoration:none;font-weight:700;">
+            🎯 Exercice type associé
+          </a>
+        `;
+      }
+    }
+    linksEl.innerHTML = linkHtml;
+  }
+
+  const isLast = (currentQuizState.currentIndex + 1 >= currentQuizState.questions.length);
+  if (nextBtn) {
+    nextBtn.textContent = isLast ? "Voir mes résultats 🏁" : "Question suivante →";
+  }
+
+  if (expBox) {
+    expBox.style.display = 'block';
+    expBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+function nextQuizQuestion() {
+  if (currentQuizState.currentIndex + 1 < currentQuizState.questions.length) {
+    currentQuizState.currentIndex++;
+    renderCurrentQuizQuestion();
+  } else {
+    finishQuizSession();
+  }
+}
+
+function finishQuizSession() {
+  const activeEl = document.getElementById('quizActiveScreen');
+  const resultsEl = document.getElementById('quizResultsScreen');
+
+  if (activeEl) activeEl.style.display = 'none';
+  if (!resultsEl) return;
+
+  resultsEl.style.display = 'flex';
+
+  const tot = currentQuizState.questions.length;
+  const sc = currentQuizState.score;
+  const pct = tot > 0 ? Math.round((sc / tot) * 100) : 0;
+
+  // Sauvegarder dans STI_STORE
+  const wrongList = currentQuizState.answers.filter(a => !a.isCorrect).map(a => a.question.id);
+  if (typeof STI_STORE !== 'undefined') {
+    STI_STORE.saveQuizResult(currentQuizState.selectedChapter, currentQuizState.selectedLevel, sc, tot, wrongList);
+    updateQuizGlobalStatsUI();
+  }
+
+  // Mettre à jour l'en-tête de résultats
+  const trophyEl = document.getElementById('quizResultTrophy');
+  const titleEl = document.getElementById('quizResultTitle');
+  const subEl = document.getElementById('quizResultSubtitle');
+  const scoreEl = document.getElementById('quizResultScore');
+  const pctEl = document.getElementById('quizResultPct');
+
+  if (scoreEl) scoreEl.textContent = `${sc} / ${tot}`;
+  if (pctEl) {
+    pctEl.textContent = `${pct}%`;
+    pctEl.style.color = pct >= 80 ? '#10b981' : (pct >= 50 ? '#f59e0b' : '#ef4444');
+  }
+
+  if (pct >= 80) {
+    if (trophyEl) trophyEl.textContent = '🏆';
+    if (titleEl) titleEl.textContent = 'Excellent travail !';
+    if (subEl) subEl.textContent = 'Notions parfaitement assimilées pour le Bac Informatique.';
+  } else if (pct >= 50) {
+    if (trophyEl) trophyEl.textContent = '👍';
+    if (titleEl) titleEl.textContent = 'Bon résultat !';
+    if (subEl) subEl.textContent = 'Quelques notions à consolider. Revois les explications ci-dessous.';
+  } else {
+    if (trophyEl) trophyEl.textContent = '💪';
+    if (titleEl) titleEl.textContent = 'Entraînement à poursuivre !';
+    if (subEl) subEl.textContent = 'Révise les fiches méthode correspondantes et réessaie pour progresser.';
+  }
+
+  // Boutons d'erreurs
+  const retryBtn = document.getElementById('quizRetryMistakesBtn');
+  const bookmarkBtn = document.getElementById('quizBookmarkMistakesBtn');
+  const countEl = document.getElementById('quizMistakesCount');
+
+  if (wrongList.length > 0) {
+    if (countEl) countEl.textContent = wrongList.length;
+    if (retryBtn) retryBtn.style.display = 'inline-flex';
+    if (bookmarkBtn) bookmarkBtn.style.display = 'inline-flex';
+  } else {
+    if (retryBtn) retryBtn.style.display = 'none';
+    if (bookmarkBtn) bookmarkBtn.style.display = 'none';
+  }
+
+  // Récapitulatif détaillé
+  const recapContainer = document.getElementById('quizResultRecapList');
+  if (recapContainer) {
+    recapContainer.innerHTML = currentQuizState.answers.map((a, i) => {
+      const q = a.question;
+      const userChoiceStr = (q.options && q.options[a.userChoice]) ? q.options[a.userChoice] : 'Non répondu';
+      const rightChoiceStr = (q.type === 'vf' || q.type === 'qcm')
+        ? (q.options ? q.options[q.answer] : q.answer)
+        : (q.options ? q.options.find(o => String(o).replace(/\s+/g, '') === String(q.answer).replace(/\s+/g, '')) || q.answer : q.answer);
+
+      return `
+        <div class="quiz-recap-row">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:1.1rem;">${a.isCorrect ? '✅' : '❌'}</span>
+              <strong style="font-size:0.88rem;color:var(--text-primary);">Question ${i + 1}</strong>
+            </div>
+            <span style="font-size:0.75rem;padding:2px 8px;border-radius:4px;background:rgba(255,255,255,0.06);color:var(--text-secondary);">${q.chapter}</span>
+          </div>
+          <p style="font-size:0.86rem;color:var(--text-secondary);margin:0;line-height:1.4;">${escapeHtml(q.question)}</p>
+          <div style="font-size:0.82rem;margin-top:2px;">
+            ${!a.isCorrect ? `<span style="color:#ef4444;display:block;margin-bottom:2px;">Votre réponse : ${escapeHtml(userChoiceStr)}</span>` : ''}
+            <span style="color:#10b981;font-weight:700;">Bonne réponse : ${escapeHtml(rightChoiceStr)}</span>
+          </div>
+          <div style="font-size:0.8rem;color:var(--text-muted);border-top:1px dashed var(--border-color);padding-top:6px;margin-top:4px;">
+            💡 ${escapeHtml(q.explanation)}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+function quitQuizSession() {
+  if (confirm("Quitter le quiz en cours ? Votre session ne sera pas enregistrée.")) {
+    resetQuizToSetup();
+  }
+}
+
+function restartQuizSession() {
+  startQuizSession();
+}
+
+function retryQuizMistakes() {
+  const wrongQuestions = currentQuizState.answers.filter(a => !a.isCorrect).map(a => a.question);
+  if (wrongQuestions.length > 0) {
+    startQuizSession(wrongQuestions);
+  }
+}
+
+function bookmarkQuizMistakes() {
+  if (typeof STI_STORE === 'undefined') return;
+
+  let count = 0;
+  currentQuizState.answers.forEach(a => {
+    if (!a.isCorrect && a.question) {
+      STI_STORE.addBookmark('quiz', a.question.id, {
+        chapter: a.question.chapter,
+        question: a.question.question.slice(0, 100)
+      });
+      count++;
+    }
+  });
+
+  alert(`${count} question(s) ajoutée(s) à votre espace "Ma révision" ! ⭐`);
+  const btn = document.getElementById('quizBookmarkMistakesBtn');
+  if (btn) {
+    btn.textContent = '✓ Ajouté aux favoris';
+    btn.disabled = true;
+  }
+}
+
+function resetQuizToSetup() {
+  const setupEl = document.getElementById('quizSetupScreen');
+  const activeEl = document.getElementById('quizActiveScreen');
+  const resultsEl = document.getElementById('quizResultsScreen');
+
+  if (setupEl) setupEl.style.display = 'flex';
+  if (activeEl) activeEl.style.display = 'none';
+  if (resultsEl) resultsEl.style.display = 'none';
+
+  updateQuizGlobalStatsUI();
+  updateQuizPoolCountUI();
+}
+
+// Window exports
+window.initAlgoQuizScreen = initAlgoQuizScreen;
+window.selectQuizChapter = selectQuizChapter;
+window.setQuizLevel = setQuizLevel;
+window.setQuizCount = setQuizCount;
+window.startQuizSession = startQuizSession;
+window.selectQuizAnswer = selectQuizAnswer;
+window.nextQuizQuestion = nextQuizQuestion;
+window.quitQuizSession = quitQuizSession;
+window.restartQuizSession = restartQuizSession;
+window.retryQuizMistakes = retryQuizMistakes;
+window.bookmarkQuizMistakes = bookmarkQuizMistakes;
+window.resetQuizToSetup = resetQuizToSetup;
 
 
 
