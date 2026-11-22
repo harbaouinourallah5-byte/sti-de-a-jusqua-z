@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=33.0">
+  <link rel="stylesheet" href="style.css?v=33.1">
   <!-- INITIALISATION IMMÉDIATE DU THÈME & TOGGLE SANS LATENCE -->
   <script>
     (function() {
@@ -5025,11 +5025,15 @@ app.exec_()</code></pre>
 
           <!-- Contrôles du Minuteur -->
           <div class="pomo-actions-row">
-            <button type="button" class="pomo-ctl-btn primary" id="pomoModalPlayBtn" onclick="PomodoroEngine.toggleTimer()">
+            <button type="button" class="pomo-ctl-btn primary" id="pomoModalPlayBtn" onclick="PomodoroEngine.toggleTimer()" title="Démarrer ou mettre en pause">
               <span>▶️</span>
               <span>Démarrer</span>
             </button>
-            <button type="button" class="pomo-ctl-btn secondary" onclick="PomodoroEngine.resetTimer()">
+            <button type="button" class="pomo-ctl-btn stop-btn" id="pomoModalStopBtn" onclick="PomodoroEngine.stopTimer()" title="Arrêter à la fois le minuteur et la musique">
+              <span>⏹️</span>
+              <span>Arrêter</span>
+            </button>
+            <button type="button" class="pomo-ctl-btn secondary" onclick="PomodoroEngine.resetTimer()" title="Réinitialiser le cycle actuel">
               <span>🔄</span>
               <span>Réinitialiser</span>
             </button>
@@ -5125,7 +5129,8 @@ app.exec_()</code></pre>
       </span>
     </div>
     <div class="pomodoro-dock-actions">
-      <button class="dock-action-btn" id="dockPlayPauseBtn" onclick="PomodoroEngine.toggleTimer()" title="Démarrer / Pause">▶️</button>
+      <button class="dock-action-btn" id="dockPlayPauseBtn" onclick="PomodoroEngine.toggleTimer()" title="Démarrer / Pause (arrête aussi la musique)">▶️</button>
+      <button class="dock-action-btn stop" id="dockStopBtn" onclick="PomodoroEngine.stopTimer()" title="Arrêter à la fois le minuteur et la musique">⏹️</button>
       <button class="dock-action-btn" onclick="PomodoroEngine.openDrawer()" title="Agrandir">↗️</button>
       <button class="dock-action-btn close" onclick="PomodoroEngine.hideFloatingWidget(event)" title="Masquer">✕</button>
     </div>
@@ -5278,25 +5283,25 @@ app.exec_()</code></pre>
 
   <!-- Fichiers Scripts -->
 
-  <script src="store.js?v=33.0"></script>
-  <script src="data.js?v=33.0"></script>
-  <script src="data/curriculum.js?v=33.0"></script>
-  <script src="data/documents.js?v=33.0"></script>
-  <script src="data/exercises.js?v=33.0"></script>
-  <script src="data/methods.js?v=33.0"></script>
-  <script src="data/quiz/fichiers.js?v=33.0"></script>
-  <script src="data/quiz/recursivite.js?v=33.0"></script>
-  <script src="data/quiz/bases.js?v=33.0"></script>
-  <script src="data/quiz/arithmetique.js?v=33.0"></script>
-  <script src="data/quiz/approximation.js?v=33.0"></script>
-  <script src="data/quiz/tableaux.js?v=33.0"></script>
-  <script src="data/quiz/matrices.js?v=33.0"></script>
-  <script src="data/quiz/suites.js?v=33.0"></script>
-  <script src="data/quiz.js?v=33.0"></script>
-  <script src="css_engine.js?v=33.0"></script>
-  <script src="algo_pratique_engine.js?v=33.0"></script>
-  <script src="pomodoro_engine.js?v=33.0"></script>
-  <script src="app.js?v=33.0"></script>
+  <script src="store.js?v=33.1"></script>
+  <script src="data.js?v=33.1"></script>
+  <script src="data/curriculum.js?v=33.1"></script>
+  <script src="data/documents.js?v=33.1"></script>
+  <script src="data/exercises.js?v=33.1"></script>
+  <script src="data/methods.js?v=33.1"></script>
+  <script src="data/quiz/fichiers.js?v=33.1"></script>
+  <script src="data/quiz/recursivite.js?v=33.1"></script>
+  <script src="data/quiz/bases.js?v=33.1"></script>
+  <script src="data/quiz/arithmetique.js?v=33.1"></script>
+  <script src="data/quiz/approximation.js?v=33.1"></script>
+  <script src="data/quiz/tableaux.js?v=33.1"></script>
+  <script src="data/quiz/matrices.js?v=33.1"></script>
+  <script src="data/quiz/suites.js?v=33.1"></script>
+  <script src="data/quiz.js?v=33.1"></script>
+  <script src="css_engine.js?v=33.1"></script>
+  <script src="algo_pratique_engine.js?v=33.1"></script>
+  <script src="pomodoro_engine.js?v=33.1"></script>
+  <script src="app.js?v=33.1"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {

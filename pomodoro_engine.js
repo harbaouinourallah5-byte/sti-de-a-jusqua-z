@@ -25,6 +25,8 @@ const PomodoroEngine = (function () {
     currentVideoId: 'jfKfPfyJRdk', // Lofi Girl par défaut
     currentVideoTitle: 'Lofi Girl — Beats to relax/study to',
     isMusicPlaying: false,
+    wantsMusic: true,
+    wasMusicPlayingBeforePause: false,
     ytPlayer: null
   };
 
@@ -143,16 +145,17 @@ const PomodoroEngine = (function () {
   }
 
   // -------------------------------------------------------------
-  // Gestion du Minuteur (Start, Pause, Reset, Skip)
+  // Gestion du Minuteur (Start, Pause, Stop, Reset, Skip)
   // -------------------------------------------------------------
   function startTimer() {
     if (state.isRunning) return;
     state.isRunning = true;
     
-    // Auto-démarrage de la musique si présente et en pause
-    if (!state.isMusicPlaying && state.currentVideoId) {
+    // Auto-démarrage / reprise de la musique si souhaitée
+    if (state.wantsMusic && !state.isMusicPlaying && state.currentVideoId) {
       playYouTubeMusic();
     }
+    state.wasMusicPlayingBeforePause = false;
 
     state.intervalId = setInterval(() => {
       if (state.timeLeft > 0) {
@@ -174,7 +177,28 @@ const PomodoroEngine = (function () {
       clearInterval(state.intervalId);
       state.intervalId = null;
     }
+    // Arrêter également la musique quand le minuteur est mis en pause
+    if (state.isMusicPlaying) {
+      state.wasMusicPlayingBeforePause = true;
+      stopYouTubeMusic();
+    }
     updateAllDisplays();
+  }
+
+  function stopTimer() {
+    state.isRunning = false;
+    if (state.intervalId) {
+      clearInterval(state.intervalId);
+      state.intervalId = null;
+    }
+    // Arrêter simultanément le minuteur et la musique
+    stopYouTubeMusic();
+    state.wasMusicPlayingBeforePause = false;
+    state.mode = 'work';
+    state.timeLeft = state.durationOption * 60;
+    state.totalSecondsForCurrent = state.timeLeft;
+    updateAllDisplays();
+    showNotificationToast('⏹️ Minuteur et musique arrêtés.');
   }
 
   function toggleTimer() {
@@ -187,8 +211,15 @@ const PomodoroEngine = (function () {
 
   function resetTimer(stopRunning = true) {
     if (stopRunning) {
-      pauseTimer();
+      if (state.intervalId) {
+        clearInterval(state.intervalId);
+        state.intervalId = null;
+      }
+      state.isRunning = false;
     }
+    // Arrêter simultanément la musique lors de la réinitialisation
+    stopYouTubeMusic();
+    state.wasMusicPlayingBeforePause = false;
     state.mode = 'work';
     state.timeLeft = state.durationOption * 60;
     state.totalSecondsForCurrent = state.timeLeft;
@@ -256,6 +287,8 @@ const PomodoroEngine = (function () {
         startTimer();
       } else {
         // 3. Objectif total accompli (toutes les heures choisies sont terminées)
+        stopYouTubeMusic();
+        state.wasMusicPlayingBeforePause = false;
         state.currentCycle = 1;
         state.mode = 'work';
         state.timeLeft = state.durationOption * 60;
@@ -331,6 +364,7 @@ const PomodoroEngine = (function () {
     if (!videoId) return;
     state.currentVideoId = videoId;
     state.currentVideoTitle = title;
+    state.wantsMusic = true;
     savePreferences();
     playYouTubeMusic();
   }
@@ -369,8 +403,10 @@ const PomodoroEngine = (function () {
 
   function toggleYouTubeMusic() {
     if (state.isMusicPlaying) {
+      state.wantsMusic = false;
       stopYouTubeMusic();
     } else {
+      state.wantsMusic = true;
       playYouTubeMusic();
     }
   }
@@ -588,6 +624,7 @@ const PomodoroEngine = (function () {
     init,
     startTimer,
     pauseTimer,
+    stopTimer,
     toggleTimer,
     resetTimer,
     skipSession,
