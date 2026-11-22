@@ -1547,7 +1547,9 @@ const VIEW_TO_HASH_MAP = {
   'admin': '#/admin',
   'algo-home': '#/algo',
   'algo-pratique': '#/algo/pratique',
-  'algo-theorique': '#/algo/theorique'
+  'algo-theorique': '#/algo/theorique',
+  'algo-types': '#/algo/types',
+  'algo-methodes': '#/algo/methodes'
 };
 
 function getHashForView(viewName) {
@@ -1585,6 +1587,17 @@ function parseAppHash(hash) {
     if (directCh) {
       return { view: 'algo-theorique', subTab: 'chapitres', chapter: directCh.fullTitle, chapterSlug: directCh.slug, chapterObj: directCh };
     }
+  }
+
+  // Types d'exercices (#/algo/types ou #/algo/types/:slug)
+  if (clean.startsWith('algo/types') || clean.startsWith('types')) {
+    const subType = clean.replace(/^(algo\/types|types)\/?/, '').trim();
+    return { view: 'algo-types', typeSlug: subType || null };
+  }
+
+  // Fiches méthode (#/algo/methodes)
+  if (clean.startsWith('algo/methodes') || clean.startsWith('methodes') || clean === 'algo/methode' || clean === 'methode') {
+    return { view: 'algo-methodes' };
   }
 
   const map = {
@@ -1625,13 +1638,21 @@ function handleRouteFromHash() {
   const route = parseAppHash(currentHash);
   isRouterNavigating = true;
 
-  if (['algo-home', 'algo-pratique', 'algo-theorique'].includes(route.view)) {
+  if (['algo-home', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes'].includes(route.view)) {
     if (typeof switchModule === 'function') switchModule('algo', true);
   } else if (['html', 'css', 'js', 'sql'].includes(route.view)) {
     if (typeof switchModule === 'function') switchModule('sti', true);
   }
 
   switchView(route.view, true);
+
+  if (route.view === 'algo-types') {
+    if (route.typeSlug && typeof openTypeDetailView === 'function') {
+      openTypeDetailView(route.typeSlug);
+    } else if (typeof closeTypeDetailView === 'function') {
+      closeTypeDetailView();
+    }
+  }
 
   if (route.view === 'algo-theorique') {
     if (route.subTab === 'devoirs') {
@@ -1754,6 +1775,10 @@ function updateDataCountersUI() {
       const sideExamens = document.getElementById('sideBadgeExamens');
       if (sideExamens) sideExamens.textContent = examensCount;
       if (badgeDevoirsTotal) badgeDevoirsTotal.textContent = `${examensCount} Épreuves`;
+    }
+    if (typeof EXERCISES_DATA !== 'undefined') {
+      const sideTypes = document.getElementById('sideBadgeTypes');
+      if (sideTypes) sideTypes.textContent = EXERCISES_DATA.getAllTypes().length;
     }
   } catch (err) {
     console.warn('Erreur mise à jour des compteurs:', err);
@@ -1911,7 +1936,9 @@ function switchView(viewName, skipHashUpdate = false) {
       'admin': 'Espace Prof',
       'algo-home': 'Algorithme',
       'algo-pratique': 'Pratique Qt',
-      'algo-theorique': 'Théorique'
+      'algo-theorique': 'Théorique',
+      'algo-types': 'Types d\'exercices',
+      'algo-methodes': 'Fiches méthode'
     };
     mobileBrandTitle.textContent = titles[viewName] || 'STI de A à Z';
   }
@@ -1920,7 +1947,7 @@ function switchView(viewName, skipHashUpdate = false) {
     if (['html', 'css', 'js', 'sql'].includes(viewName)) {
       mobileModuleChip.textContent = 'STI';
       mobileModuleChip.className = 'mobile-module-chip sti';
-    } else if (['algo-home', 'algo-pratique', 'algo-theorique'].includes(viewName)) {
+    } else if (['algo-home', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes'].includes(viewName)) {
       mobileModuleChip.textContent = 'ALGO';
       mobileModuleChip.className = 'mobile-module-chip algo';
     } else if (viewName === 'lessons') {
@@ -2002,6 +2029,8 @@ function switchView(viewName, skipHashUpdate = false) {
     }
   } else if (viewName === 'examens') {
     renderExamensPage();
+  } else if (viewName === 'algo-types') {
+    renderAlgoTypesPage();
   } else if (viewName === 'admin') {
     if (typeof checkAdminAuth === 'function') {
       checkAdminAuth();
@@ -8739,38 +8768,57 @@ function renderAlgoTheoriqueCards() {
       setTimeout(() => selectMatrixGuideTab(currentMatrixGuideTab), 10);
     }
 
-    // ── 1. SECTION EXERCICES D'EXAMENS DU CHAPITRE ──────────────────────────
-    if (filteredChExams.length > 0) {
+    // ── 1. SECTION EXERCICES D'EXAMENS DU CHAPITRE (COMPUTED DEPUIS EXERCISES_DATA) ──
+    const chapterExercises = (typeof EXERCISES_DATA !== 'undefined') ? EXERCISES_DATA.getByChapter(ch.slug) : [];
+    if (chapterExercises.length > 0 || filteredChExams.length > 0) {
       const examsSection = document.createElement('div');
       examsSection.style.cssText = 'grid-column: 1 / -1; margin: -16px 0 24px 0; padding: 20px; background: var(--surface-elevated); border: 1px solid var(--border-color); border-radius: 14px;';
 
       const typeLabels = { 'bac': '🎓 Bac', 'devoir-synthese': '📝 D. Synthèse', 'devoir-controle': '📌 D. Contrôle', 'inconnu': '❓ Inconnu' };
 
-      const examsCardsHtml = filteredChExams.map(doc => {
-        const dateStr = (!doc.date || doc.date === 'inconnue') ? 'Année non précisée' : doc.date;
-        const credit = doc.teacher ? `Prof. ${doc.teacher}` : (doc.source || '');
-        const incompleteHtml = doc.incomplete
-          ? `<span style="padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3);">⚠️ Incomplet${doc.notes ? ' : ' + escapeHtml(doc.notes) : ''}</span>`
-          : '';
+      const exercisesHtml = chapterExercises.map(ex => {
+        const doc = (typeof DOCUMENTS_DATA !== 'undefined') ? DOCUMENTS_DATA.getDocumentById(ex.examId) : null;
+        const examTitle = doc ? doc.title : ex.examId;
+        const examDate = (doc && doc.date && doc.date !== 'inconnue') ? doc.date : 'Année non précisée';
+        const examCredit = (doc && (doc.teacher || doc.school)) ? [doc.school, doc.teacher ? 'Prof. ' + doc.teacher : ''].filter(Boolean).join(' · ') : '';
+        const pointsStr = (ex.points !== null && ex.points !== undefined) ? `${ex.points} pts` : 'Points non précisés';
+        const filePath = doc ? doc.file : '';
+        const pdfUrl = `${filePath}#page=${ex.pdfPage || 1}`;
+
+        const typeBadges = (ex.types || []).map(tSlug => {
+          const tMeta = (typeof EXERCISES_DATA !== 'undefined') ? EXERCISES_DATA.getTypeMeta(tSlug) : null;
+          const label = tMeta ? tMeta.label : tSlug;
+          return `<span style="font-size:0.74rem;padding:2px 8px;border-radius:6px;background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.25);color:#818cf8;">${escapeHtml(label)}</span>`;
+        }).join(' ');
+
+        const isBookmarked = (typeof STI_STORE !== 'undefined') ? STI_STORE.isBookmarked('exercise', ex.id) : false;
+
         return `
         <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
           <div style="flex: 1; min-width: 220px;">
             <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
-              <span style="font-size: 0.78rem; font-weight: 700; color: #10b981;">${typeLabels[doc.examType] || '📝 Examen'}</span>
-              ${incompleteHtml}
+              <span style="font-size: 0.85rem; font-weight: 800; color: #10b981; background: rgba(16,185,129,0.12); padding: 2px 8px; border-radius: 6px;">
+                ${escapeHtml(ex.exNum)}
+              </span>
+              <span style="font-size: 0.78rem; font-weight: 700; color: #f59e0b; background: rgba(245,158,11,0.12); padding: 2px 8px; border-radius: 6px;">
+                ⭐ ${pointsStr}
+              </span>
+              <span style="font-size: 0.78rem; color: var(--text-secondary);">📅 ${examDate}</span>
             </div>
-            <h5 style="margin: 0 0 4px 0; font-size: 0.95rem; font-weight: 700; color: var(--text-primary);">${escapeHtml(doc.title)}</h5>
-            <div style="font-size: 0.8rem; color: var(--text-secondary); display: flex; flex-wrap: wrap; gap: 10px;">
-              <span>📅 ${dateStr}</span>
-              ${doc.duration ? `<span>⏱ ${escapeHtml(doc.duration)}</span>` : ''}
-              ${doc.pages ? `<span>📄 ${doc.pages} page${doc.pages > 1 ? 's' : ''}</span>` : ''}
-              ${doc.school ? `<span>🏫 ${escapeHtml(doc.school)}</span>` : ''}
-              ${credit ? `<span>✏️ ${escapeHtml(credit)}</span>` : ''}
+            <h5 style="margin: 0 0 4px 0; font-size: 0.95rem; font-weight: 700; color: var(--text-primary); line-height: 1.3;">
+              ${escapeHtml(examTitle)}
+            </h5>
+            ${examCredit ? `<div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 6px;">🏫 ${escapeHtml(examCredit)}</div>` : ''}
+            <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+              ${typeBadges}
             </div>
           </div>
           <div style="display: flex; align-items: center; gap: 8px;">
-            <a href="${doc.file}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-size: 0.84rem; font-weight: 600; text-decoration: none; white-space: nowrap;">
-              📄 Sujet
+            <button type="button" onclick="toggleExerciseBookmark('${ex.id}', this)" title="${isBookmarked ? 'Retirer des favoris' : 'Marquer À revoir'}" style="background:none;border:1px solid var(--border-color);border-radius:8px;padding:8px 10px;cursor:pointer;font-size:1.1rem;color:${isBookmarked ? '#fbbf24' : 'var(--text-muted)'};">
+              ${isBookmarked ? '★' : '☆'}
+            </button>
+            <a href="${pdfUrl}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-size: 0.84rem; font-weight: 600; text-decoration: none; white-space: nowrap;">
+              📄 Ouvrir à la page ${ex.pdfPage || 1}
             </a>
           </div>
         </div>`;
@@ -8780,18 +8828,18 @@ function renderAlgoTheoriqueCards() {
         <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px;">
           <div>
             <h4 style="margin: 0; font-size: 1rem; font-weight: 800; color: #10b981; display: flex; align-items: center; gap: 8px;">
-              <span>📝</span> Exercices d'examens (${filteredChExams.length})
+              <span>📝</span> Exercices d'examens de ce chapitre (${chapterExercises.length})
             </h4>
             <p style="margin: 2px 0 0 0; font-size: 0.8rem; color: var(--text-secondary);">
-              Sujets officiels du Baccalauréat et Devoirs portant sur ${escapeHtml(ch.shortTitle)}
+              Exercices ciblés issus des sujets officiels du Baccalauréat et Devoirs portant sur ${escapeHtml(ch.shortTitle)}
             </p>
           </div>
-          <button type="button" onclick="navigateToHash('#/examens')" style="font-size: 0.8rem; color: #10b981; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: 4px 10px; border-radius: 6px; cursor: pointer;">
-            Tous les examens →
+          <button type="button" onclick="navigateToHash('#/algo/types')" style="font-size: 0.8rem; color: #10b981; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: 4px 10px; border-radius: 6px; cursor: pointer;">
+            Tous les types d'exercices →
           </button>
         </div>
         <div style="display: grid; gap: 10px;">
-          ${examsCardsHtml}
+          ${exercisesHtml}
         </div>
       `;
       container.appendChild(examsSection);
@@ -9632,6 +9680,232 @@ window.renderExamensPage = renderExamensPage;
 
 
 // ===================================================================
+// PAGE TYPES D'EXERCICES DU BACCALAURÉAT (#/algo/types)
+// ===================================================================
+
+let currentSelectedTypeSlug = null;
+
+function renderAlgoTypesPage() {
+  const container = document.getElementById('typesCardsGrid');
+  if (!container || typeof EXERCISES_DATA === 'undefined') return;
+
+  const types = EXERCISES_DATA.getAllTypes();
+  const counts = EXERCISES_DATA.getCountsByType();
+
+  // Mettre à jour le badge de la barre latérale
+  const sideTypes = document.getElementById('sideBadgeTypes');
+  if (sideTypes) sideTypes.textContent = types.length;
+
+  container.innerHTML = types.map(t => {
+    const count = counts[t.slug] || 0;
+    const exercises = EXERCISES_DATA.getByType(t.slug);
+
+    // Liste unique des chapitres où ce type apparaît
+    const chapSlugs = [];
+    exercises.forEach(ex => {
+      (ex.chapters || []).forEach(ch => {
+        if (!chapSlugs.includes(ch)) chapSlugs.push(ch);
+      });
+    });
+
+    const chapBadges = chapSlugs.map(slug => {
+      const ch = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getChapterBySlug(slug) : null;
+      const title = ch ? ch.shortTitle : slug;
+      return `<span style="font-size:0.74rem;padding:2px 8px;border-radius:6px;background:var(--surface-bg);border:1px solid var(--border-color);color:var(--text-secondary);">${escapeHtml(title)}</span>`;
+    }).join(' ');
+
+    return `
+      <div class="item-card" onclick="openTypeDetailView('${t.slug}')" style="cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;padding:18px;border-radius:14px;background:var(--surface-elevated);border:1px solid var(--border-color);transition:transform 0.2s, border-color 0.2s;">
+        <div>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:1.6rem;">${t.icon}</span>
+              <h3 style="margin:0;font-size:1.05rem;font-weight:700;color:var(--text-primary);line-height:1.3;">${escapeHtml(t.label)}</h3>
+            </div>
+            <span style="padding:3px 10px;border-radius:20px;font-size:0.78rem;font-weight:700;background:rgba(99,102,241,0.15);color:#818cf8;border:1px solid rgba(99,102,241,0.3);white-space:nowrap;">
+              ${count} exercice${count > 1 ? 's' : ''}
+            </span>
+          </div>
+          <p style="margin:0 0 12px 0;font-size:0.84rem;color:var(--text-secondary);line-height:1.4;">
+            ${escapeHtml(t.expected)}
+          </p>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px;">
+            ${chapBadges}
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:10px;border-top:1px solid var(--border-color);margin-top:auto;">
+          <a href="#/algo/methodes" onclick="event.stopPropagation(); navigateToHash('#/algo/methodes');" style="font-size:0.8rem;color:#a78bfa;text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:4px;">
+            💡 Fiche méthode →
+          </a>
+          <span style="font-size:0.82rem;font-weight:700;color:var(--primary-indigo);">Voir les exercices →</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function openTypeDetailView(typeSlug) {
+  currentSelectedTypeSlug = typeSlug;
+  const mainView = document.getElementById('typesMainView');
+  const detailView = document.getElementById('typeDetailView');
+  const headerEl = document.getElementById('typeDetailHeader');
+  const filterEl = document.getElementById('typeExercisesChapterFilter');
+
+  if (!detailView || !mainView || typeof EXERCISES_DATA === 'undefined') return;
+
+  const typeMeta = EXERCISES_DATA.getTypeMeta(typeSlug);
+  if (!typeMeta) return;
+
+  mainView.style.display = 'none';
+  detailView.style.display = 'block';
+
+  const exercises = EXERCISES_DATA.getByType(typeSlug);
+
+  // Remplir l'en-tête du type
+  headerEl.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span style="font-size:2rem;">${typeMeta.icon}</span>
+        <div>
+          <h3 style="margin:0;font-size:1.25rem;font-weight:800;color:var(--text-primary);">${escapeHtml(typeMeta.label)}</h3>
+          <p style="margin:4px 0 0 0;font-size:0.86rem;color:var(--text-secondary);">${escapeHtml(typeMeta.expected)}</p>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <a href="#/algo/methodes" onclick="navigateToHash('#/algo/methodes')" style="padding:8px 16px;border-radius:8px;background:rgba(167,139,250,0.15);color:#a78bfa;border:1px solid rgba(167,139,250,0.3);font-size:0.82rem;font-weight:700;text-decoration:none;">
+          💡 Voir la Fiche Méthode
+        </a>
+      </div>
+    </div>
+  `;
+
+  // Remplir le sélecteur de chapitre
+  if (filterEl) {
+    const chapSlugs = [];
+    exercises.forEach(ex => {
+      (ex.chapters || []).forEach(ch => {
+        if (!chapSlugs.includes(ch)) chapSlugs.push(ch);
+      });
+    });
+
+    filterEl.innerHTML = '<option value="">Tous les chapitres (' + exercises.length + ')</option>' +
+      chapSlugs.map(slug => {
+        const ch = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getChapterBySlug(slug) : null;
+        const name = ch ? ch.shortTitle : slug;
+        const count = exercises.filter(ex => ex.chapters.includes(slug)).length;
+        return `<option value="${slug}">${escapeHtml(name)} (${count})</option>`;
+      }).join('');
+  }
+
+  renderTypeExercisesList();
+
+  if (window.location.hash !== `#/algo/types/${typeSlug}`) {
+    history.replaceState(null, '', `#/algo/types/${typeSlug}`);
+  }
+}
+
+function closeTypeDetailView() {
+  currentSelectedTypeSlug = null;
+  const mainView = document.getElementById('typesMainView');
+  const detailView = document.getElementById('typeDetailView');
+  if (mainView) mainView.style.display = 'block';
+  if (detailView) detailView.style.display = 'none';
+
+  if (window.location.hash !== '#/algo/types') {
+    history.replaceState(null, '', '#/algo/types');
+  }
+}
+
+function renderTypeExercisesList() {
+  const container = document.getElementById('typeExercisesGrid');
+  const countEl = document.getElementById('typeExercisesCount');
+  const filterEl = document.getElementById('typeExercisesChapterFilter');
+  if (!container || !currentSelectedTypeSlug || typeof EXERCISES_DATA === 'undefined') return;
+
+  const selChap = filterEl ? filterEl.value : '';
+  let exercises = EXERCISES_DATA.getByType(currentSelectedTypeSlug);
+
+  if (selChap) {
+    exercises = exercises.filter(ex => ex.chapters && ex.chapters.includes(selChap));
+  }
+
+  if (countEl) countEl.textContent = `${exercises.length} exercice${exercises.length > 1 ? 's' : ''}`;
+
+  if (exercises.length === 0) {
+    container.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text-secondary);background:var(--surface-elevated);border-radius:12px;border:1px dashed var(--border-color);">Aucun exercice ne correspond à ce filtre.</div>';
+    return;
+  }
+
+  container.innerHTML = exercises.map(ex => {
+    const doc = (typeof DOCUMENTS_DATA !== 'undefined') ? DOCUMENTS_DATA.getDocumentById(ex.examId) : null;
+    const examTitle = doc ? doc.title : ex.examId;
+    const examDate = (doc && doc.date && doc.date !== 'inconnue') ? doc.date : 'Année non précisée';
+    const examCredit = (doc && (doc.teacher || doc.school)) ? [doc.school, doc.teacher ? 'Prof. ' + doc.teacher : ''].filter(Boolean).join(' · ') : '';
+    const pointsStr = (ex.points !== null && ex.points !== undefined) ? `${ex.points} pts` : 'Points non précisés';
+    const filePath = doc ? doc.file : '';
+    const pdfUrl = `${filePath}#page=${ex.pdfPage || 1}`;
+
+    const chapBadges = (ex.chapters || []).map(slug => {
+      const ch = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getChapterBySlug(slug) : null;
+      const title = ch ? ch.shortTitle : slug;
+      return `<span style="font-size:0.74rem;padding:2px 8px;border-radius:6px;background:var(--surface-bg);border:1px solid var(--border-color);color:var(--text-secondary);">${escapeHtml(title)}</span>`;
+    }).join(' ');
+
+    const isBookmarked = (typeof STI_STORE !== 'undefined') ? STI_STORE.isBookmarked('exercise', ex.id) : false;
+
+    return `
+      <div style="background:var(--surface-elevated);border:1px solid var(--border-color);border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:240px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap;">
+            <span style="font-size:0.85rem;font-weight:800;color:var(--primary-indigo);background:rgba(99,102,241,0.12);padding:2px 8px;border-radius:6px;">
+              ${escapeHtml(ex.exNum)}
+            </span>
+            <span style="font-size:0.8rem;font-weight:700;color:#f59e0b;background:rgba(245,158,11,0.12);padding:2px 8px;border-radius:6px;">
+              ⭐ ${pointsStr}
+            </span>
+            <span style="font-size:0.78rem;color:var(--text-secondary);">📅 ${examDate}</span>
+          </div>
+          <h4 style="margin:0 0 4px 0;font-size:0.95rem;font-weight:700;color:var(--text-primary);line-height:1.3;">
+            ${escapeHtml(examTitle)}
+          </h4>
+          ${examCredit ? `<div style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:6px;">🏫 ${escapeHtml(examCredit)}</div>` : ''}
+          <div style="display:flex;flex-wrap:wrap;gap:4px;">
+            ${chapBadges}
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button type="button" onclick="toggleExerciseBookmark('${ex.id}', this)" title="${isBookmarked ? 'Retirer des favoris' : 'Marquer À revoir'}" style="background:none;border:1px solid var(--border-color);border-radius:8px;padding:8px 10px;cursor:pointer;font-size:1.1rem;color:${isBookmarked ? '#fbbf24' : 'var(--text-muted)'};">
+            ${isBookmarked ? '★' : '☆'}
+          </button>
+          <a href="${pdfUrl}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;font-weight:600;font-size:0.84rem;text-decoration:none;white-space:nowrap;">
+            📄 Ouvrir à la page ${ex.pdfPage || 1}
+          </a>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleExerciseBookmark(exId, btn) {
+  if (typeof STI_STORE === 'undefined') return;
+  const isNowBookmarked = STI_STORE.toggleBookmark('exercise', exId);
+  if (btn) {
+    btn.textContent = isNowBookmarked ? '★' : '☆';
+    btn.style.color = isNowBookmarked ? '#fbbf24' : 'var(--text-muted)';
+    btn.title = isNowBookmarked ? 'Retirer des favoris' : 'Marquer À revoir';
+  }
+}
+
+window.renderAlgoTypesPage = renderAlgoTypesPage;
+window.openTypeDetailView = openTypeDetailView;
+window.closeTypeDetailView = closeTypeDetailView;
+window.renderTypeExercisesList = renderTypeExercisesList;
+window.toggleExerciseBookmark = toggleExerciseBookmark;
+
+
+// ===================================================================
 // EXTENSION MODE ÉTUDE CALME & NOUVELLE NAVIGATION
 // ===================================================================
 
@@ -9753,6 +10027,8 @@ const VIEW_METAS = {
   'admin': { module: 'admin', modLabel: 'Administration', title: 'Espace Enseignant' },
   'algo-home': { module: 'algo', modLabel: 'Algorithme', title: 'Accueil Algorithme' },
   'algo-pratique': { module: 'algo', modLabel: 'Algorithme', title: 'Pratique (Qt ➔ Thonny Python)' },
+  'algo-types': { module: 'algo', modLabel: 'Algorithme', title: 'Types d\'Exercices du Bac' },
+  'algo-methodes': { module: 'algo', modLabel: 'Algorithme', title: 'Fiches Méthode' },
   'algo-theorique': { module: 'algo', modLabel: 'Algorithme', title: (typeof CURRICULUM !== 'undefined') ? `Théorique (${CURRICULUM.getTotalAlgoChapters()} Chapitres Bac Info)` : 'Théorique (8 Chapitres Bac Info)' }
 };
 

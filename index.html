@@ -262,6 +262,18 @@
               <span class="nav-label">Pratique (Qt ➔ Thonny)</span>
               <span class="nav-count">20</span>
             </a>
+            <a class="sidebar-link" data-view="algo-types" onclick="switchView('algo-types')">
+              <span class="nav-bullet algo"></span>
+              <span class="nav-icon">🎯</span>
+              <span class="nav-label">Types d'exercices</span>
+              <span class="nav-count" id="sideBadgeTypes">11</span>
+            </a>
+            <a class="sidebar-link" data-view="algo-methodes" onclick="switchView('algo-methodes')">
+              <span class="nav-bullet algo"></span>
+              <span class="nav-icon">💡</span>
+              <span class="nav-label">Fiches méthode</span>
+              <span class="nav-count">6</span>
+            </a>
             <a class="sidebar-link" data-view="algo-theorique" onclick="switchView('algo-theorique')">
               <span class="nav-bullet algo"></span>
               <span class="nav-icon">📖</span>
@@ -3614,6 +3626,52 @@ app.exec_()</code></pre>
             Site de révision interactif réalisé par des élèves, basé sur les annexes officielles de l'Inspection Générale de la République Tunisienne. Vérifie toujours avec ton professeur.
           </p>
     <!-- ==========================================
+         VUE TYPES D'EXERCICES DU BACCALAURÉAT (#/algo/types)
+         ========================================== -->
+    <section id="view-algo-types" class="view-section">
+      <div class="container">
+
+        <div class="page-header-banner" style="margin-bottom:24px; padding:24px 0 10px 0;">
+          <div class="annexe-title-wrap">
+            <div class="annexe-logo-shield" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">
+              🎯
+            </div>
+            <div>
+              <h2 class="annexe-title-text" style="font-size:1.6rem;color:#a78bfa;">Types d'Exercices du Baccalauréat</h2>
+              <span style="font-size:0.9rem;color:var(--text-secondary);">Les 11 modèles d'épreuves incontournables • Statistiques réelles • Accès direct par exercice</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode bascule : 1) Grille des types  2) Liste détaillée par type -->
+        <div id="typesMainView">
+          <div id="typesCardsGrid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(290px, 1fr));gap:16px;"></div>
+        </div>
+
+        <div id="typeDetailView" style="display:none;">
+          <div style="margin-bottom:18px;">
+            <button type="button" onclick="closeTypeDetailView()" class="cat-pill" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;cursor:pointer;">
+              ← Retour à tous les types
+            </button>
+          </div>
+          <div id="typeDetailHeader" style="margin-bottom:20px;padding:20px;background:var(--surface-elevated);border-radius:14px;border:1px solid var(--border-color);"></div>
+          
+          <!-- Filtre par chapitre pour ce type -->
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+            <label style="font-size:0.88rem;color:var(--text-secondary);font-weight:600;">Filtrer par chapitre :</label>
+            <select id="typeExercisesChapterFilter" onchange="renderTypeExercisesList()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border-color);background:var(--surface-bg);color:var(--text-primary);font-size:0.88rem;cursor:pointer;">
+              <option value="">Tous les chapitres</option>
+            </select>
+            <span id="typeExercisesCount" style="margin-left:auto;font-size:0.85rem;color:var(--text-secondary);"></span>
+          </div>
+
+          <div id="typeExercisesGrid" style="display:grid;gap:12px;"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
          VUE EXAMENS : SUJETS & EXAMENS BAC
          ========================================== -->
     <section id="view-examens" class="view-section">
@@ -3951,9 +4009,11 @@ app.exec_()</code></pre>
   </div>
 
   <!-- Fichiers Scripts -->
+  <script src="store.js?v=26.0"></script>
   <script src="data.js?v=26.0"></script>
   <script src="data/curriculum.js?v=26.0"></script>
   <script src="data/documents.js?v=26.0"></script>
+  <script src="data/exercises.js?v=26.0"></script>
   <script src="css_engine.js?v=26.0"></script>
   <script src="algo_pratique_engine.js?v=26.0"></script>
   <script src="pomodoro_engine.js?v=26.0"></script>
