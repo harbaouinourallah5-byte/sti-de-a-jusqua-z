@@ -6806,7 +6806,12 @@ function renderLessons() {
   });
 
   if (counterBadge) {
-    counterBadge.textContent = filtered.length === 0 ? "Aucun document" : `${filtered.length} document${filtered.length > 1 ? 's' : ''}`;
+    if (filtered.length === 0) {
+      counterBadge.style.display = 'none';
+    } else {
+      counterBadge.style.display = '';
+      counterBadge.textContent = `${filtered.length} document${filtered.length > 1 ? 's' : ''}`;
+    }
   }
 
   // Si aucun document n'est disponible
@@ -11436,11 +11441,10 @@ function updateResumeStudyCard() {
     4: "Exercices d'examens"
   };
 
-  let titleText = 'Continuer votre révision';
-  let subtitleText = 'Dernière étape consultée • Cliquez pour reprendre';
+  let titleText = null;
+  let subtitleText = null;
   let targetView = 'html';
-  let targetSlug = null;
-  let targetStep = 1;
+  let hasHistory = false;
 
   // 1. Vérifier si un chapitre récent est disponible dans STI_STORE
   if (typeof STI_STORE !== 'undefined') {
@@ -11449,28 +11453,36 @@ function updateResumeStudyCard() {
       const ch = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getChapterBySlug(lastNav.chapterSlug) : null;
       if (ch) {
         const summary = STI_STORE.getChapterProgressSummary(ch.slug);
-        targetSlug = ch.slug;
-        targetStep = summary.firstUnfinished || 1;
+        const targetStep = summary.firstUnfinished || 1;
         titleText = `🎯 Continuer : ${ch.iconEmoji} ${ch.shortTitle}`;
         subtitleText = `Étape ${targetStep} : ${stepLabels[targetStep] || 'Exercices'} • ${summary.percent}% validé (${summary.doneCount}/${summary.availableCount} étapes)`;
-        targetView = `algo-theorique`;
+        targetView = 'algo-theorique';
+        hasHistory = true;
       }
     }
   }
 
   // 2. Si pas de STI_STORE, fallback sur sti_last_visited
-  if (titleText === 'Continuer votre révision') {
+  if (!hasHistory) {
     try {
       const raw = localStorage.getItem('sti_last_visited');
       if (raw) {
         const data = JSON.parse(raw);
-        if (data && data.title) {
+        if (data && data.title && data.view) {
           titleText = `Continuer votre révision : ${data.title}`;
-          subtitleText = `Dernière consultation enregistrée • Cliquez pour reprendre`;
-          targetView = data.view || 'html';
+          subtitleText = 'Dernière consultation enregistrée • Cliquez pour reprendre';
+          targetView = data.view;
+          hasHistory = true;
         }
       }
     } catch (e) {}
+  }
+
+  // Si aucun historique n'existe dans le navigateur, masquer complètement les cartes de reprise
+  if (!hasHistory) {
+    if (homeCard) homeCard.style.display = 'none';
+    if (algoCard) algoCard.style.display = 'none';
+    return;
   }
 
   if (homeCard) {
