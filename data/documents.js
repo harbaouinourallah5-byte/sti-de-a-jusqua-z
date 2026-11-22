@@ -906,3 +906,8 @@ def filtrer_matrice(m, l, c):
     getSchools:        getSchools
   };
 })();
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = DOCUMENTS_DATA;
+}
+

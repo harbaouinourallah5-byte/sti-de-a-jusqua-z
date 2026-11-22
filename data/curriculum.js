@@ -46,6 +46,22 @@
       borderColor: '#10b981',
       bgTint: 'rgba(16, 185, 129, 0.1)',
       description: "Fichiers texte (lignes) et fichiers d'enregistrements binaires (module pickle dump/load sous Thonny).",
+      coursBrief: {
+        keyNotions: [
+          "Fichiers texte (.txt) : suite séquentielle de lignes de caractères, manipulés ligne par ligne.",
+          "Fichiers d'enregistrements binaires (.dat) : suite d'objets structurés (enregistrements) stockés en binaire.",
+          "T.D.N.T obligatoire : déclarer le type Enregistrement puis le type Fichier de <NomEnregistrement>.",
+          "Parcours séquentiel canonique : boucle 'Tant que NON Fin_fichier(f) Faire' pour traiter chaque élément."
+        ],
+        syntaxRules: [
+          "Pseudo-code : Ouvrir(f, 'chemin', mode) ('L'=lecture, 'E'=écriture/création, 'A'=ajout). Fermer(f) impératif !",
+          "Python / Thonny : with open(path, 'rb') as f: puis pickle.load(f) protégé par un try ... except EOFError:."
+        ],
+        bacTips: [
+          "Ne jamais oublier de fermer le fichier (Fermer(f)) à la fin du sous-programme.",
+          "Attention au mode d'ouverture : l'écriture 'E' efface tout le fichier existant, l'ajout 'A' conserve les données."
+        ]
+      },
       pdfSubjectKey: 'algo-ch1-fichiers',
       legacyPdfKeys: ['algo-ch1-fichiers'],
       legacyCategories: [
@@ -68,6 +84,22 @@
       borderColor: '#3b82f6',
       bgTint: 'rgba(59, 130, 246, 0.1)',
       description: "Sous-programmes récursifs : cas de base, condition d'arrêt, décomposition et appels récursifs conformes Bac.",
+      coursBrief: {
+        keyNotions: [
+          "Principe : un sous-programme qui s'appelle lui-même sur une instance strictement plus petite du problème.",
+          "Cas de base (condition d'arrêt) : cas trivial résolu immédiatement sans aucun appel récursif.",
+          "Cas général : appel récursif avec des arguments convergeant obligatoirement vers le cas de base.",
+          "Mécanisme interne : empilement des contextes d'appel sur la pile d'exécution, puis dépilement au retour."
+        ],
+        syntaxRules: [
+          "Structure type : Si (condition d'arrêt) Alors Résultat <-- valeur_base Sinon Résultat <-- expression_avec_appel(n-1) Fin Si.",
+          "Une fonction récursive doit TOUJOURS renvoyer une valeur dans chacune des branches d'exécution."
+        ],
+        bacTips: [
+          "Erreur fatale au Bac : oublier le cas d'arrêt provoque une récursion infinie (RecursionError sous Python).",
+          "Toujours tracer sur papier avec n=3 pour vérifier la valeur de retour finale."
+        ]
+      },
       pdfSubjectKey: 'algo-ch2-recursivite',
       legacyPdfKeys: ['algo-ch2-recurrence'],
       legacyCategories: [
@@ -91,6 +123,22 @@
       borderColor: '#a855f7',
       bgTint: 'rgba(168, 85, 247, 0.1)',
       description: "Conversions universelles : base B vers décimal, décimal vers base B (divisions successives) et conversions directes (binaire, octal, hexadécimal).",
+      coursBrief: {
+        keyNotions: [
+          "Bases fondamentales : Binaire (B2 : 0,1), Octal (B8 : 0..7), Décimal (B10 : 0..9), Hexadécimal (B16 : 0..9, A..F).",
+          "Décimal ➔ Base B : divisions entières successives par B ; lire les restes dans l'ordre inverse (de bas en haut).",
+          "Base B ➔ Décimal : somme pondérée des chiffres multipliés par B^poids (poids 0 à droite).",
+          "Conversions directes : B2 ↔ B8 par paquets de 3 bits, B2 ↔ B16 par paquets de 4 bits."
+        ],
+        syntaxRules: [
+          "Base 10 ➔ Base 16 : si reste >= 10, convertir avec Chr(reste + 55) pour obtenir 'A'..'F'.",
+          "Python / Thonny : bin(n), oct(n), hex(n) ou int(ch, base) pour tester ses algorithmes."
+        ],
+        bacTips: [
+          "Dans l'algorithme de conversion en chaîne, concaténer à gauche : ch <-- ConvCh(r) + ch pour inverser automatiquement.",
+          "Vérifier la validité des chiffres saisis selon la base (ex: pas de '8' en base octale)."
+        ]
+      },
       pdfSubjectKey: 'algo-ch3-bases',
       legacyPdfKeys: ['algo-ch3-bases'],
       legacyCategories: [
@@ -112,6 +160,22 @@
       borderColor: '#ec4899',
       bgTint: 'rgba(236, 72, 153, 0.1)',
       description: "Primalité, PGCD (Euclide & soustractions), PPCM, divisibilité, factorielle et décomposition en facteurs premiers.",
+      coursBrief: {
+        keyNotions: [
+          "Nombre premier : entier >= 2 divisible uniquement par 1 et lui-même (tester les diviseurs jusqu'à racine_carree(n)).",
+          "PGCD : algorithme d'Euclide par modulos successifs (Tant que b <> 0 : r <-- a mod b ; a <-- b ; b <-- r ; PGCD <-- a).",
+          "PPCM : relation fondamentale PPCM(a, b) = (a * b) DIV PGCD(a, b).",
+          "Décomposition en facteurs premiers : division successive par les nombres premiers (2, 3, 5...)."
+        ],
+        syntaxRules: [
+          "Test primalité : boucle 'Tant que (i <= Racine_carree(n)) et (n mod i <> 0) Faire i <-- i + 1'.",
+          "Contrôle de saisie strict : Répéter n <-- Saisir() Jusqu'à (n > 0)."
+        ],
+        bacTips: [
+          "Les entiers n <= 1 ne sont JAMAIS premiers. Penser à traiter ce cas avant la boucle.",
+          "Pour le PGCD par soustractions : Tant que a <> b Faire Si a > b Alors a <-- a - b Sinon b <-- b - a."
+        ]
+      },
       pdfSubjectKey: 'algo-ch4-arithmetique',
       legacyPdfKeys: ['algo-ch4-arithmetique'],
       legacyCategories: [
@@ -132,6 +196,23 @@
       borderColor: '#d97706',
       bgTint: 'rgba(245, 158, 11, 0.1)',
       description: "Méthodes numériques d'approximation d'aires (milieu, rectangles, trapèzes) et recherche dichotomique.",
+      coursBrief: {
+        keyNotions: [
+          "Approximation numérique : estimation avec une marge d'erreur maximale epsilon (ex: 10^-3 ou 10^-4).",
+          "Calcul d'aires par intégration : découpage de l'intervalle [a, b] en n tranches de largeur h = (b - a) / n.",
+          "Méthode des rectangles : Somme h * f(x_i) pour chaque subdivision.",
+          "Méthode des trapèzes : h * [ (f(a) + f(b)) / 2 + Somme f(x_i) ].",
+          "Dichotomie : recherche du zéro d'une fonction continue changeant de signe sur [a, b] (f(a) * f(b) < 0)."
+        ],
+        syntaxRules: [
+          "Critère d'arrêt : Tant que Abs(b - a) > eps Faire milieu <-- (a + b) / 2 ...",
+          "Attention à l'utilisation systématique de la fonction valeur absolue Abs() dans le critère."
+        ],
+        bacTips: [
+          "Ne jamais utiliser une simple soustraction sans Abs() : b - a peut être négatif si les bornes sont inversées.",
+          "Vérifier le nombre de pas n demandé dans l'énoncé du Bac."
+        ]
+      },
       pdfSubjectKey: 'algo-ch5-approximation',
       legacyPdfKeys: ['algo-ch5-approximation'],
       legacyCategories: [
@@ -153,6 +234,22 @@
       borderColor: '#059669',
       bgTint: 'rgba(16, 185, 129, 0.1)',
       description: "Tableaux à une dimension (vecteurs) : saisie contrôlée, tris, recherche, manipulation, décalages et algorithmes types.",
+      coursBrief: {
+        keyNotions: [
+          "Tableau à 1D (vecteur) : suite ordonnée de n éléments de même type indicés de 0 à n-1 (ou 1 à n).",
+          "Saisie contrôlée : boucle 'Répéter n <-- Saisir() Jusqu'à (n >= 5 et n <= 50)' puis boucle Pour pour remplir.",
+          "Recherche : séquentielle (tableau quelconque O(n)) vs dichotomique (tableau impérativement trié O(log n)).",
+          "Tris fondamentaux du Bac : Tri à bulles (permutations adjacentes), Tri par sélection (recherche du min), Tri par insertion."
+        ],
+        syntaxRules: [
+          "Permutation sécurisée : aux <-- T[i] ; T[i] <-- T[j] ; T[j] <-- aux.",
+          "T.D.N.T : déclarer le type Tab = Tableau de 50 Entiers si demandé par le sujet."
+        ],
+        bacTips: [
+          "Pour la recherche dichotomique, bien vérifier que le tableau est trié au préalable.",
+          "Attention aux indices hors limites (IndexError sous Python) : veiller à ce que 0 <= i < n."
+        ]
+      },
       pdfSubjectKey: 'algo-ch6-tableaux',
       legacyPdfKeys: ['algo-ch6-tableaux'],
       legacyCategories: [
@@ -173,6 +270,22 @@
       borderColor: '#0284c7',
       bgTint: 'rgba(56, 189, 248, 0.1)',
       description: "Tableaux à deux dimensions (2D), parcours lignes/colonnes, diagonales, point-selle, tri et motifs géométriques (sablier).",
+      coursBrief: {
+        keyNotions: [
+          "Matrice L x C : tableau à deux dimensions indicé par [i, j] (i pour les lignes 0..L-1, j pour les colonnes 0..C-1).",
+          "5 Zones stratégiques : Zone 1 (Init globale) ➔ Zone 2 (Init ligne/col) ➔ Zone 3 (Cellule M[i,j]) ➔ Zone 4 (Fin ligne) ➔ Zone 5 (Résultat final).",
+          "Diagonales d'une matrice carrée N x N : Principale (i = j), Secondaire (i + j = N - 1).",
+          "Point-selle : élément qui est le minimum sur sa ligne ET le maximum sur sa colonne (ou l'inverse)."
+        ],
+        syntaxRules: [
+          "Parcours ligne par ligne : Pour i de 0 à L-1 faire Pour j de 0 à C-1 faire ...",
+          "Parcours colonne par colonne : Pour j de 0 à C-1 faire Pour i de 0 à L-1 faire ..."
+        ],
+        bacTips: [
+          "Règle mnémotechnique Bac : 'dima el i taba3 el ligne, el j taba3 el colonne'.",
+          "La boucle imbriquée interne tourne TOUJOURS plus vite que la boucle externe."
+        ]
+      },
       pdfSubjectKey: 'algo-ch7-matrices',
       legacyPdfKeys: ['algo-ch6-matrices', 'algo-ch7-matrices'],
       legacyCategories: [
@@ -194,6 +307,22 @@
       borderColor: '#9333ea',
       bgTint: 'rgba(168, 85, 247, 0.1)',
       description: "Suites arithmétiques, géométriques, récurrentes (Fibonacci, Syracuse, Héron) et calcul approché de limites.",
+      coursBrief: {
+        keyNotions: [
+          "Suite arithmétique : U_{n+1} = U_n + r, terme général U_n = U_0 + n * r.",
+          "Suite géométrique : U_{n+1} = U_n * q, terme général U_n = U_0 * q^n.",
+          "Suites récurrentes d'ordre 2 : Fibonacci (F_n = F_{n-1} + F_{n-2}), Syracuse, méthode de Héron pour racine de a.",
+          "Calcul approché d'une limite : itérer jusqu'à ce que |U_{n} - U_{n-1}| < epsilon."
+        ],
+        syntaxRules: [
+          "Calcul itératif récurrent : maintenir u_prec et u_courant et faire pivoter les valeurs à chaque tour de boucle.",
+          "Critère d'arrêt : Répéter ... Jusqu'à Abs(u_suiv - u_courant) < eps."
+        ],
+        bacTips: [
+          "Bien initialiser les deux premiers termes avant la boucle Pour ou Répéter.",
+          "Pour Syracuse : si n mod 2 = 0 alors n <-- n DIV 2 sinon n <-- 3 * n + 1."
+        ]
+      },
       pdfSubjectKey: 'algo-ch8-suites',
       legacyPdfKeys: ['algo-ch8-suites'],
       legacyCategories: [

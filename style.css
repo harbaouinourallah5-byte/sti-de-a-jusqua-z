@@ -8720,3 +8720,321 @@ button.topbar-action-btn svg {
   color: #34d399;
   font-weight: 700;
 }
+
+/* ===================================================================
+   RUN 6 FEATURE 2: STEPPER, PROGRESS BARS, SIDEBAR RINGS & STUDY BADGES
+   =================================================================== */
+
+/* Stepper Bar */
+.chapter-stepper-bar {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 6px 2px 14px 2px;
+  margin-bottom: 20px;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+.chapter-stepper-bar::-webkit-scrollbar {
+  height: 4px;
+}
+
+.chapter-stepper-bar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.stepper-step-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  border: 1px solid var(--border-color);
+  background: var(--surface-bg, rgba(15, 23, 42, 0.6));
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.stepper-step-pill:hover:not(.bientot) {
+  border-color: #38bdf8;
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+.stepper-step-pill.done {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.45);
+  color: #10b981;
+}
+
+.stepper-step-pill.bientot {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-style: dashed;
+}
+
+.stepper-pill-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 0.72rem;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.stepper-step-pill.done .stepper-pill-icon {
+  background: #10b981;
+  color: #fff;
+}
+
+/* Chapter Progress Bar */
+.chapter-progress-box {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+}
+
+.chapter-progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+}
+
+.chapter-progress-title {
+  color: var(--text-secondary);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chapter-progress-pct {
+  font-weight: 800;
+  color: #10b981;
+}
+
+.chapter-progress-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.chapter-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8, #10b981);
+  border-radius: 6px;
+  transition: width 0.35s ease-in-out;
+}
+
+/* Step Block Wrap & Header */
+.chapter-step-block {
+  margin-bottom: 28px;
+  padding: 20px;
+  background: var(--surface-elevated, rgba(15, 23, 42, 0.65));
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  scroll-margin-top: 80px;
+  transition: border-color 0.2s ease;
+}
+
+.chapter-step-block.is-done {
+  border-left: 4px solid #10b981;
+}
+
+.chapter-step-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.chapter-step-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chapter-step-num-badge {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  font-size: 0.76rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.chapter-step-block.is-done .chapter-step-num-badge {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.chapter-step-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.chapter-step-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.chapter-step-toggle-btn:hover {
+  transform: translateY(-1px);
+}
+
+.chapter-step-toggle-btn.done {
+  background: #10b981;
+  border-color: #10b981;
+  color: #ffffff;
+}
+
+/* Card Studied Button */
+.algo-studied-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+
+.algo-studied-btn:hover {
+  color: var(--text-primary);
+  border-color: #10b981;
+}
+
+.algo-studied-btn.studied {
+  background: rgba(16, 185, 129, 0.18);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #10b981;
+}
+
+.item-card.card-theorique.studied {
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+/* Sidebar Chapter Subnav & Rings */
+.sidebar-chapters-subnav {
+  margin: 4px 0 10px 14px;
+  padding-left: 8px;
+  border-left: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sidebar-chapter-sublink {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.sidebar-chapter-sublink:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.sidebar-chapter-sublink.active {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+}
+
+.sidebar-ring-wrap {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sidebar-ring-svg {
+  transform: rotate(-90deg);
+}
+
+.sidebar-ring-svg .circle-bg {
+  stroke: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-ring-svg .circle-val {
+  transition: stroke-dasharray 0.3s ease;
+}
+
+/* Hub Mini Chapter Progress Bar */
+.hub-chapter-progress {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hub-ch-track {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.hub-ch-fill {
+  height: 100%;
+  background: #10b981;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.hub-ch-pct-text {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+

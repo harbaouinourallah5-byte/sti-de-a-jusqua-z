@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=26.0">
+  <link rel="stylesheet" href="style.css?v=26.2">
   <!-- INITIALISATION IMMÉDIATE DU THÈME & TOGGLE SANS LATENCE -->
   <script>
     (function() {
@@ -280,6 +280,8 @@
               <span class="nav-label">Théorique (8 Chapitres)</span>
               <span class="nav-count" id="sideBadgeTheorique">59</span>
             </a>
+            <!-- SUB-TREE DES 8 CHAPITRES AVEC ANNEAUX DE PROGRESSION SVG -->
+            <div class="sidebar-chapters-subnav" id="sidebarChaptersSubnav"></div>
             <a class="sidebar-link" data-view="algo-devoirs" onclick="navigateToHash('#/algo/theorique/devoirs')">
               <span class="nav-bullet algo"></span>
               <span class="nav-icon">📑</span>
@@ -2778,6 +2780,9 @@
               <button onclick="document.getElementById('importBackupInput').click()" style="background: #1e293b; color: #a3e635; border: 1px solid #65a30d; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 700; cursor: pointer;">
                 📥 Importer une Sauvegarde
               </button>
+              <button onclick="confirmResetProgress()" style="background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.35); padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 700; cursor: pointer;">
+                🔄 Réinitialiser ma progression
+              </button>
               <input type="file" id="importBackupInput" accept=".json" onchange="importLessonsBackup(event)" style="display: none;">
             </div>
           </div>
@@ -2803,6 +2808,21 @@
           <p class="hero-desc">
             Le portail tout-en-un pour préparer l'<strong>Épreuve Pratique</strong> (conception graphique sous Qt Designer &amp; programmation Python sous Thonny) et l'<strong>Épreuve Théorique</strong> (algorithmes officiels, déclarations T.D.O / T.D.N.T, structures de contrôle et sous-programmes).
           </p>
+        </div>
+
+        <!-- CARTE "CONTINUER OÙ J'AI ARRÊTÉ" (HUB ALGO) -->
+        <div class="resume-study-card" id="resumeAlgoStudyCard" style="display: none; margin-bottom: 24px;">
+          <div class="resume-left">
+            <div class="resume-icon-box" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">🎯</div>
+            <div class="resume-info">
+              <h4 id="resumeAlgoStudyTitle">Continuer votre parcours Algorithmique</h4>
+              <p id="resumeAlgoStudySubtitle">Dernière étape consultée • Cliquez pour reprendre</p>
+            </div>
+          </div>
+          <button class="resume-cta-btn" id="resumeAlgoStudyBtn" onclick="resumeLastStudySession()">
+            <span>Reprendre</span>
+            <span>→</span>
+          </button>
         </div>
 
         <!-- LES 2 GRANDS BLOCS ALGORITHME (PRATIQUE & THÉORIQUE) -->
@@ -3522,17 +3542,24 @@ app.exec_()</code></pre>
     <section id="view-algo-theorique" class="view-section">
       <div class="container">
         
-        <div class="page-header-banner" style="margin-bottom: 24px; padding: 24px 0 10px 0;">
+        <div class="page-header-banner" style="margin-bottom: 24px; padding: 24px 0 10px 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
           <div class="annexe-title-wrap">
             <div class="annexe-logo-shield" style="background: linear-gradient(135deg, #d97706, #f59e0b); width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
               📖
             </div>
             <div>
-              <h2 class="annexe-title-text" style="font-size: 1.6rem; color: #fbbf24;">Épreuve Théorique : Algorithmique Bac Tunisie</h2>
+              <h2 class="annexe-title-text" style="font-size: 1.6rem; color: #fbbf24; margin: 0;">Épreuve Théorique : Algorithmique Bac Tunisie</h2>
               <span style="font-size: 0.9rem; color: var(--text-secondary);">Programme officiel • T.D.O &amp; T.D.N.T • Pseudo-code normalisé &amp; Python Thonny</span>
             </div>
           </div>
+          <div>
+            <button type="button" onclick="confirmResetProgress()" title="Remettre à zéro les coches et algorithmes étudiés" style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #f87171; font-size: 0.78rem; font-weight: 700; padding: 6px 14px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s ease;">
+              <span>🔄</span>
+              <span>Réinitialiser ma progression</span>
+            </button>
+          </div>
         </div>
+
 
         <!-- BASCULE THÉORIQUE : 1) CHAPITRES & ALGORITHMES  VS  2) DEVOIRS & EXAMENS DU BAC -->
         <div class="view-tabs-bar" style="margin-bottom: 24px;">
@@ -4009,15 +4036,15 @@ app.exec_()</code></pre>
   </div>
 
   <!-- Fichiers Scripts -->
-  <script src="store.js?v=26.0"></script>
-  <script src="data.js?v=26.0"></script>
-  <script src="data/curriculum.js?v=26.0"></script>
-  <script src="data/documents.js?v=26.0"></script>
-  <script src="data/exercises.js?v=26.0"></script>
-  <script src="css_engine.js?v=26.0"></script>
-  <script src="algo_pratique_engine.js?v=26.0"></script>
-  <script src="pomodoro_engine.js?v=26.0"></script>
-  <script src="app.js?v=26.0"></script>
+  <script src="store.js?v=26.2"></script>
+  <script src="data.js?v=26.2"></script>
+  <script src="data/curriculum.js?v=26.2"></script>
+  <script src="data/documents.js?v=26.2"></script>
+  <script src="data/exercises.js?v=26.2"></script>
+  <script src="css_engine.js?v=26.2"></script>
+  <script src="algo_pratique_engine.js?v=26.2"></script>
+  <script src="pomodoro_engine.js?v=26.2"></script>
+  <script src="app.js?v=26.2"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {

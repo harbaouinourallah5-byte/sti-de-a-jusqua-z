@@ -632,3 +632,8 @@ var EXERCISES_DATA = (function () {
     getCountsByType: getCountsByType
   };
 })();
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = EXERCISES_DATA;
+}
+

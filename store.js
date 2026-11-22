@@ -31,17 +31,17 @@ var STI_STORE = (function () {
     }
   }
 
-  // ── 1. PROGRESSION PAR CHAPITRE (5 ou 6 étapes) ───────────────────────────
-  // Clé: progress -> { [chapterSlug]: { step1: bool, step2: bool, step3: bool, step4: bool, step5: bool, step6?: bool } }
+  // ── 1. PROGRESSION PAR CHAPITRE (5 étapes standardisées) ────────────────
+  // Clé: progress -> { [chapterSlug]: { step1: bool, step2: bool, step3: bool, step4: bool, step5: bool } }
   function getChapterProgress(slug) {
     var all = _safeGet('progress', {});
-    return all[slug] || { step1: false, step2: false, step3: false, step4: false, step5: false, step6: false };
+    return all[slug] || { step1: false, step2: false, step3: false, step4: false, step5: false };
   }
 
   function setChapterStep(slug, stepNum, isDone) {
     var all = _safeGet('progress', {});
     if (!all[slug]) {
-      all[slug] = { step1: false, step2: false, step3: false, step4: false, step5: false, step6: false };
+      all[slug] = { step1: false, step2: false, step3: false, step4: false, step5: false };
     }
     all[slug]['step' + stepNum] = !!isDone;
     _safeSet('progress', all);
@@ -50,15 +50,99 @@ var STI_STORE = (function () {
     return all[slug];
   }
 
-  function getChapterPercentage(slug, totalAvailableSteps) {
-    var p = getChapterProgress(slug);
-    var count = 0;
-    var max = totalAvailableSteps || 5;
-    for (var i = 1; i <= max; i++) {
-      if (p['step' + i]) count++;
+  function getChapterStepAvailability(slug) {
+    // Étape 1 : Cours en bref (toujours présent)
+    var step1 = true;
+    var step2 = false; // Algorithmes types
+    var step3 = false; // Séries & Extraits
+    var step4 = false; // Devoirs
+    var step5 = false; // Exercices d'examens
+
+    try {
+      if (typeof DATA !== 'undefined' && DATA && DATA.algo_theorique && typeof CURRICULUM !== 'undefined') {
+        var ch = CURRICULUM.getChapterBySlug(slug);
+        if (ch) {
+          step2 = DATA.algo_theorique.some(function(x) { return CURRICULUM.matchesCategory(x.category, ch); });
+        }
+      }
+      if (typeof DOCUMENTS_DATA !== 'undefined' && typeof DOCUMENTS_DATA.getByChapter === 'function') {
+        var sList = DOCUMENTS_DATA.getByChapter(slug).filter(function(d) {
+          return (d.kind === 'serie' && d.module === 'algo-theorique') || d.kind === 'extrait';
+        });
+        step3 = sList.length > 0;
+      }
+      if (typeof DOCUMENTS_DATA !== 'undefined' && typeof DOCUMENTS_DATA.getAllDevoirs === 'function') {
+        var dList = DOCUMENTS_DATA.getAllDevoirs().filter(function(d) {
+          return d.chapters && d.chapters.indexOf(slug) !== -1;
+        });
+        step4 = dList.length > 0;
+      }
+      if (typeof EXERCISES_DATA !== 'undefined' && typeof EXERCISES_DATA.getByChapter === 'function') {
+        var exList = EXERCISES_DATA.getByChapter(slug);
+        step5 = exList.length > 0;
+      }
+    } catch (e) {
+      console.warn('[STI_STORE] getChapterStepAvailability error', e);
     }
-    return Math.round((count / max) * 100);
+
+    return { 1: step1, 2: step2, 3: step3, 4: step4, 5: step5 };
   }
+
+  function getChapterPercentage(slug) {
+    var avail = getChapterStepAvailability(slug);
+    var p = getChapterProgress(slug);
+    var availableCount = 0;
+    var doneCount = 0;
+
+    for (var i = 1; i <= 5; i++) {
+      if (avail[i]) {
+        availableCount++;
+        if (p['step' + i]) doneCount++;
+      }
+    }
+    if (availableCount === 0) return 0;
+    return Math.round((doneCount / availableCount) * 100);
+  }
+
+  function getFirstUnfinishedStep(slug) {
+    var avail = getChapterStepAvailability(slug);
+    var p = getChapterProgress(slug);
+    for (var i = 1; i <= 5; i++) {
+      if (avail[i] && !p['step' + i]) {
+        return i;
+      }
+    }
+    return 1;
+  }
+
+  function getChapterProgressSummary(slug) {
+    var avail = getChapterStepAvailability(slug);
+    var p = getChapterProgress(slug);
+    var availableCount = 0;
+    var doneCount = 0;
+    var steps = {};
+
+    for (var i = 1; i <= 5; i++) {
+      var isAvail = !!avail[i];
+      var isDone = !!p['step' + i];
+      if (isAvail) {
+        availableCount++;
+        if (isDone) doneCount++;
+      }
+      steps[i] = { available: isAvail, done: isDone };
+    }
+
+    var percent = availableCount > 0 ? Math.round((doneCount / availableCount) * 100) : 0;
+    return {
+      slug: slug,
+      percent: percent,
+      doneCount: doneCount,
+      availableCount: availableCount,
+      steps: steps,
+      firstUnfinished: getFirstUnfinishedStep(slug)
+    };
+  }
+
 
   // ── 2. ALGORITHMES ÉTUDIÉS ───────────────────────────────────────────────
   // Clé: algo_studied -> Array<string> (IDs d'algorithmes)
@@ -303,6 +387,9 @@ var STI_STORE = (function () {
     getChapterProgress: getChapterProgress,
     setChapterStep: setChapterStep,
     getChapterPercentage: getChapterPercentage,
+    getChapterStepAvailability: getChapterStepAvailability,
+    getFirstUnfinishedStep: getFirstUnfinishedStep,
+    getChapterProgressSummary: getChapterProgressSummary,
     // Algorithmes
     isAlgoStudied: isAlgoStudied,
     toggleAlgoStudied: toggleAlgoStudied,
@@ -333,3 +420,7 @@ var STI_STORE = (function () {
     resetAllData: resetAllData
   };
 })();
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = STI_STORE;
+}

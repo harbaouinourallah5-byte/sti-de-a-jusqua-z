@@ -1780,6 +1780,9 @@ function updateDataCountersUI() {
       const sideTypes = document.getElementById('sideBadgeTypes');
       if (sideTypes) sideTypes.textContent = EXERCISES_DATA.getAllTypes().length;
     }
+    if (typeof updateAllProgressUI === 'function') {
+      updateAllProgressUI();
+    }
   } catch (err) {
     console.warn('Erreur mise à jour des compteurs:', err);
   }
@@ -1805,10 +1808,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof renderAlgoDevoirsFilterBar === 'function') renderAlgoDevoirsFilterBar();
   if (typeof renderAlgoDevoirs === 'function') renderAlgoDevoirs();
   if (typeof updateDataCountersUI === 'function') updateDataCountersUI();
+  if (typeof updateAllProgressUI === 'function') updateAllProgressUI();
   if (typeof setupGlobalSearch === 'function') setupGlobalSearch();
   if (typeof setupReadingProgressBarAndBackToTop === 'function') setupReadingProgressBarAndBackToTop();
   if (typeof updateResumeStudyCard === 'function') updateResumeStudyCard();
   if (typeof updateBreadcrumbBar === 'function') updateBreadcrumbBar(currentView || 'home');
+
 
   // Gestion de l'historique et routage hash au démarrage
   window.addEventListener('hashchange', handleRouteFromHash);
@@ -8658,7 +8663,7 @@ function renderAlgoTheoriqueCards() {
     let matrixGuideHtml = '';
     if (isMatricesCat && !currentAlgoTheoriqueSearch) {
       matrixGuideHtml = `
-        <div class="matrix-interactive-guide">
+        <div class="matrix-interactive-guide" style="margin-bottom: 24px;">
           <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px;">
             <div>
               <h4 style="margin: 0; color: #fb923c; font-size: 1.15rem; font-weight: 800; display: flex; align-items: center; gap: 8px;">
@@ -8688,45 +8693,88 @@ function renderAlgoTheoriqueCards() {
       `;
     }
 
+    // ── DONNÉES DES 5 ÉTAPES ──
+    const summary = (typeof STI_STORE !== 'undefined')
+      ? STI_STORE.getChapterProgressSummary(ch.slug)
+      : { percent: 0, doneCount: 0, availableCount: 5, steps: { 1: { available: true, done: false }, 2: { available: true, done: false }, 3: { available: true, done: false }, 4: { available: true, done: false }, 5: { available: true, done: false } } };
+
+    const combinedSeries = [...filteredChSeries, ...filteredChExtraits];
+    const chapterDevoirs = (typeof DOCUMENTS_DATA !== 'undefined' && typeof DOCUMENTS_DATA.getAllDevoirs === 'function')
+      ? DOCUMENTS_DATA.getAllDevoirs().filter(d => d.chapters && d.chapters.includes(ch.slug))
+      : [];
+    const chapterExercises = (typeof EXERCISES_DATA !== 'undefined') ? EXERCISES_DATA.getByChapter(ch.slug) : [];
+
+    const studiedCount = chapterItems.filter(item => {
+      return (typeof STI_STORE !== 'undefined') ? STI_STORE.isAlgoStudied(item.id) : false;
+    }).length;
+
     const chapterSection = document.createElement('div');
     chapterSection.className = 'algo-chapter-section-wrap';
     chapterSection.style.gridColumn = '1 / -1';
-    chapterSection.style.marginBottom = '32px';
+    chapterSection.style.marginBottom = '36px';
 
     const countBadgeText = (chapterItems.length > 0)
       ? `${chapterItems.length} ${chapterItems.length > 1 ? 'fonctions & algorithmes' : 'fonction'}`
       : `${filteredChExams.length + filteredChExtraits.length + filteredChSeries.length} documents`;
 
-    chapterSection.innerHTML = `
-      <div class="algo-chapter-banner" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; padding: 14px 18px; background: rgba(15, 23, 42, 0.75); border: 1px solid var(--border-color); border-left: 4px solid ${meta.border}; border-radius: var(--radius-md);">
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <div style="font-size: 1.4rem; background: rgba(255,255,255,0.06); width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-            ${meta.icon}
+    // ── ÉTAPE 1 : COURS EN BREF HTML ──
+    const brief = ch.coursBrief || {
+      keyNotions: [ch.description || "Notions fondamentales de ce chapitre"],
+      syntaxRules: ["Respecter les conventions officielles du Baccalauréat."],
+      bacTips: ["Lire attentivement l'énoncé et vérifier les conditions aux limites."]
+    };
+
+    const coursBriefHtml = `
+      <div class="chapter-step-block ${summary.steps[1].done ? 'is-done' : ''}" id="ch-step-1-${ch.slug}">
+        <div class="chapter-step-header">
+          <div class="chapter-step-title-wrap">
+            <span class="chapter-step-num-badge">Étape 1 / 5</span>
+            <h4 class="chapter-step-title">📖 Cours en bref &amp; Règles fondamentales</h4>
           </div>
-          <div>
-            <h3 style="margin: 0; font-size: 1.15rem; color: ${meta.color}; font-weight: 800;">${escapeHtml(ch.fullTitle)}</h3>
-            <span style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4;">${escapeHtml(meta.desc)}</span>
+          <button type="button" class="chapter-step-toggle-btn ${summary.steps[1].done ? 'done' : ''}" onclick="toggleChapterStep('${ch.slug}', 1)">
+            <span>${summary.steps[1].done ? '✓ Validé' : '○ Marquer comme terminé'}</span>
+          </button>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px;">
+          <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px;">
+            <div style="font-size: 0.82rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+              <span>💡</span> Notions Essentielles
+            </div>
+            <ul style="margin: 0; padding-left: 18px; font-size: 0.84rem; color: var(--text-primary); line-height: 1.55;">
+              ${brief.keyNotions.map(n => `<li style="margin-bottom: 6px;">${escapeHtml(n)}</li>`).join('')}
+            </ul>
+          </div>
+          <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px;">
+            <div style="font-size: 0.82rem; font-weight: 800; color: #34d399; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+              <span>📜</span> Conventions Pseudo-Code &amp; Python
+            </div>
+            <ul style="margin: 0; padding-left: 18px; font-size: 0.84rem; color: var(--text-primary); line-height: 1.55;">
+              ${brief.syntaxRules.map(s => `<li style="margin-bottom: 6px;">${escapeHtml(s)}</li>`).join('')}
+            </ul>
+          </div>
+          <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px;">
+            <div style="font-size: 0.82rem; font-weight: 800; color: #f59e0b; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+              <span>⚠️</span> Astuces &amp; Pièges Bac
+            </div>
+            <ul style="margin: 0; padding-left: 18px; font-size: 0.84rem; color: var(--text-primary); line-height: 1.55;">
+              ${brief.bacTips.map(b => `<li style="margin-bottom: 6px;">${escapeHtml(b)}</li>`).join('')}
+            </ul>
           </div>
         </div>
-        <span style="background: rgba(255,255,255,0.08); color: ${meta.color}; border: 1px solid ${meta.border}55; font-size: 0.8rem; font-weight: 800; padding: 4px 12px; border-radius: 20px; white-space: nowrap;">
-          ${countBadgeText}
-        </span>
-      </div>
-      ${matrixGuideHtml}
-      <div class="items-grid algo-cards-grid">
       </div>
     `;
 
-    const grid = chapterSection.querySelector('.items-grid');
-
+    // ── ÉTAPE 2 : ALGORITHMES TYPES HTML ──
+    let algosCardsHtml = '';
     if (chapterItems.length === 0) {
-      grid.innerHTML = `
-        <div style="grid-column: 1 / -1; padding: 20px; border-radius: 12px; background: var(--surface-elevated); color: var(--text-secondary); font-size: 0.88rem; text-align: center; border: 1px dashed var(--border-color);">
-          📚 Les sous-programmes et algorithmes types de ce nouveau chapitre sont en cours de mise en ligne. Consultez les <strong>exercices d'examens</strong> et <strong>séries</strong> associés ci-dessous !
+      algosCardsHtml = `
+        <div style="grid-column: 1 / -1; padding: 24px; border-radius: 12px; background: var(--surface-bg); color: var(--text-secondary); font-size: 0.88rem; text-align: center; border: 1px dashed var(--border-color);">
+          📚 Les sous-programmes types de ce chapitre sont en cours de mise en ligne.
+          <span style="display: block; margin-top: 6px; font-size: 0.8rem; color: #f59e0b;">Consultez les devoirs, séries et exercices d'examens ci-dessous pour vous entraîner !</span>
         </div>
       `;
     } else {
-      chapterItems.forEach(item => {
+      algosCardsHtml = chapterItems.map(item => {
         const isStructure = item.type === 'structure';
         const isProcedure = item.name.toLowerCase().startsWith('procédure') || item.type === 'procedure' || item.type === 'procédure';
         const typeLabel = isStructure ? 'Structure' : (isProcedure ? 'Procédure' : 'Fonction');
@@ -8734,49 +8782,183 @@ function renderAlgoTheoriqueCards() {
         const typeBadgeBg = isStructure ? 'rgba(192, 132, 252, 0.15)' : (isProcedure ? 'rgba(56, 189, 248, 0.15)' : 'rgba(245, 158, 11, 0.15)');
         const typeBadgeBorder = isStructure ? 'rgba(192, 132, 252, 0.35)' : (isProcedure ? 'rgba(56, 189, 248, 0.35)' : 'rgba(245, 158, 11, 0.35)');
 
-        const card = document.createElement('div');
-        card.className = 'item-card card-theorique';
-        card.style.cursor = 'pointer';
-        card.innerHTML = `
-          <div class="card-cat-badge" style="color: ${meta.color};">${escapeHtml(meta.shortName)}</div>
-          <div class="item-card-title">
-            <span>${escapeHtml(item.name)}</span>
-            <div style="display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-              ${(item.imageUrl || (item.images && item.images.length)) ? `
-                <span class="item-card-tag" style="color: #38bdf8; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); font-size: 0.74rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
-                  📸 Schéma Inclus
+        const isStudied = (typeof STI_STORE !== 'undefined') ? STI_STORE.isAlgoStudied(item.id) : false;
+
+        return `
+          <div class="item-card card-theorique ${isStudied ? 'studied' : ''}" style="cursor: pointer;" onclick="openAlgoTheoriqueModalById('${item.id}')">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px;">
+              <span class="card-cat-badge" style="color: ${meta.color};">${escapeHtml(meta.shortName)}</span>
+              <button type="button" class="algo-studied-btn ${isStudied ? 'studied' : ''}" onclick="event.stopPropagation(); toggleAlgoStudied('${item.id}', '${ch.slug}', this)" title="${isStudied ? 'Marqué comme étudié' : 'Marquer comme étudié'}">
+                <span>${isStudied ? '✓' : '○'}</span>
+                <span>${isStudied ? 'Étudié' : 'Étudier'}</span>
+              </button>
+            </div>
+            <div class="item-card-title">
+              <span>${escapeHtml(item.name)}</span>
+              <div style="display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                ${(item.imageUrl || (item.images && item.images.length)) ? `
+                  <span class="item-card-tag" style="color: #38bdf8; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); font-size: 0.74rem; font-weight: 700;">
+                    📸 Schéma Inclus
+                  </span>
+                ` : ''}
+                <span class="item-card-tag" style="color: ${typeBadgeColor}; background: ${typeBadgeBg}; border-color: ${typeBadgeBorder}; font-size: 0.8rem; font-weight: 700;">
+                  ${typeLabel}
                 </span>
-              ` : ''}
-              <span class="item-card-tag" style="color: ${typeBadgeColor}; background: ${typeBadgeBg}; border-color: ${typeBadgeBorder}; font-size: 0.8rem; font-weight: 700;">
-                ${typeLabel}
-              </span>
+              </div>
+            </div>
+            <p class="item-card-desc">${escapeHtml(item.description || item.summary)}</p>
+            <div class="card-action-bar">
+              <span style="color: ${meta.color}; font-weight: 700; font-size: 0.86rem;">⚡ Voir l'Algorithme, TDO & Python</span>
+              <span style="color: ${meta.color}; font-size: 1rem;">→</span>
             </div>
           </div>
-          <p class="item-card-desc">${escapeHtml(item.description || item.summary)}</p>
-          <div class="card-action-bar">
-            <span style="color: ${meta.color}; font-weight: 700; font-size: 0.86rem;">⚡ Voir l'Algorithme, TDO & Python</span>
-            <span style="color: ${meta.color}; font-size: 1rem;">→</span>
+        `;
+      }).join('');
+    }
+
+    const step2Html = `
+      <div class="chapter-step-block ${summary.steps[2].done ? 'is-done' : ''}" id="ch-step-2-${ch.slug}">
+        <div class="chapter-step-header">
+          <div class="chapter-step-title-wrap">
+            <span class="chapter-step-num-badge">Étape 2 / 5</span>
+            <h4 class="chapter-step-title">⚡ Algorithmes types officiels (${chapterItems.length})</h4>
+            ${chapterItems.length > 0 ? `<span style="font-size: 0.78rem; color: #10b981; font-weight: 700;">(${studiedCount}/${chapterItems.length} étudiés)</span>` : ''}
+          </div>
+          ${chapterItems.length > 0 ? `
+            <button type="button" class="chapter-step-toggle-btn ${summary.steps[2].done ? 'done' : ''}" onclick="toggleChapterStep('${ch.slug}', 2)">
+              <span>${summary.steps[2].done ? '✓ Validé' : '○ Marquer comme terminé'}</span>
+            </button>
+          ` : `<span style="font-size: 0.76rem; font-weight: 700; color: #f59e0b; background: rgba(245,158,11,0.15); border: 1px dashed rgba(245,158,11,0.3); padding: 4px 10px; border-radius: 6px;">⏳ Bientôt</span>`}
+        </div>
+        <div class="items-grid algo-cards-grid">
+          ${algosCardsHtml}
+        </div>
+      </div>
+    `;
+
+    // ── ÉTAPE 3 : SÉRIES & EXTRAITS HTML ──
+    let seriesCardsHtml = '';
+    if (combinedSeries.length === 0) {
+      seriesCardsHtml = `
+        <div style="padding: 20px; border-radius: 10px; background: var(--surface-bg); color: var(--text-secondary); font-size: 0.86rem; text-align: center; border: 1px dashed var(--border-color);">
+          📋 Aucune série PDF spécifique pour ce chapitre pour l'instant. Consultez les devoirs de synthèse et exercices d'examens associés !
+        </div>
+      `;
+    } else {
+      seriesCardsHtml = combinedSeries.map(doc => {
+        const isExtrait = doc.kind === 'extrait';
+        const badgeLabel = isExtrait ? '✂️ Extrait de Révision' : '📋 Série TP';
+        const badgeColor = isExtrait ? '#818cf8' : '#38bdf8';
+        const badgeBg = isExtrait ? 'rgba(99, 102, 241, 0.15)' : 'rgba(56, 189, 248, 0.15)';
+        const badgeBorder = isExtrait ? 'rgba(99, 102, 241, 0.3)' : 'rgba(56, 189, 248, 0.3)';
+        const credit = doc.teacher ? `Prof. ${doc.teacher}` : (doc.source || '');
+        return `
+          <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 220px;">
+              <div style="margin-bottom: 4px;">
+                <span style="font-size: 0.76rem; font-weight: 700; color: ${badgeColor}; background: ${badgeBg}; border: 1px solid ${badgeBorder}; padding: 2px 8px; border-radius: 10px;">
+                  ${badgeLabel}
+                </span>
+              </div>
+              <h5 style="margin: 0 0 4px 0; font-size: 0.95rem; font-weight: 700; color: var(--text-primary);">${escapeHtml(doc.title)}</h5>
+              <div style="font-size: 0.8rem; color: var(--text-secondary); display: flex; flex-wrap: wrap; gap: 10px;">
+                ${credit ? `<span>✏️ ${escapeHtml(credit)}</span>` : ''}
+                ${doc.notes ? `<span>📝 ${escapeHtml(doc.notes)}</span>` : ''}
+              </div>
+            </div>
+            <div>
+              <a href="${doc.file}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: linear-gradient(135deg, #4f46e5, #6366f1); color: #fff; font-size: 0.84rem; font-weight: 600; text-decoration: none; white-space: nowrap;">
+                📄 Sujet
+              </a>
+            </div>
           </div>
         `;
-        card.addEventListener('click', () => openAlgoTheoriqueModal(item));
-        grid.appendChild(card);
-      });
+      }).join('');
     }
 
-    container.appendChild(chapterSection);
-    if (isMatricesCat && !currentAlgoTheoriqueSearch) {
-      setTimeout(() => selectMatrixGuideTab(currentMatrixGuideTab), 10);
+    const step3Html = `
+      <div class="chapter-step-block ${summary.steps[3].done ? 'is-done' : ''}" id="ch-step-3-${ch.slug}">
+        <div class="chapter-step-header">
+          <div class="chapter-step-title-wrap">
+            <span class="chapter-step-num-badge">Étape 3 / 5</span>
+            <h4 class="chapter-step-title">📋 Séries &amp; Extraits de travaux pratiques (${combinedSeries.length})</h4>
+          </div>
+          ${combinedSeries.length > 0 ? `
+            <button type="button" class="chapter-step-toggle-btn ${summary.steps[3].done ? 'done' : ''}" onclick="toggleChapterStep('${ch.slug}', 3)">
+              <span>${summary.steps[3].done ? '✓ Validé' : '○ Marquer comme terminé'}</span>
+            </button>
+          ` : `<span style="font-size: 0.76rem; font-weight: 700; color: #f59e0b; background: rgba(245,158,11,0.15); border: 1px dashed rgba(245,158,11,0.3); padding: 4px 10px; border-radius: 6px;">⏳ Bientôt</span>`}
+        </div>
+        <div style="display: grid; gap: 10px;">
+          ${seriesCardsHtml}
+        </div>
+      </div>
+    `;
+
+    // ── ÉTAPE 4 : DEVOIRS (DC & DS) HTML ──
+    let devoirsCardsHtml = '';
+    if (chapterDevoirs.length === 0) {
+      devoirsCardsHtml = `
+        <div style="padding: 20px; border-radius: 10px; background: var(--surface-bg); color: var(--text-secondary); font-size: 0.86rem; text-align: center; border: 1px dashed var(--border-color);">
+          📝 Aucun devoir interactif enregistré ciblant directement ce chapitre.
+        </div>
+      `;
+    } else {
+      devoirsCardsHtml = chapterDevoirs.map(dev => {
+        const typeLabels = { 'dc1': '📌 Devoir de Contrôle N°1', 'dc2': '📌 Devoir de Contrôle N°2', 'ds': '📝 Devoir de Synthèse' };
+        const typeBadgeColor = dev.type === 'ds' ? '#f59e0b' : '#38bdf8';
+        return `
+          <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 220px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+                <span style="font-size: 0.76rem; font-weight: 700; color: ${typeBadgeColor}; background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); padding: 2px 8px; border-radius: 6px;">
+                  ${typeLabels[dev.type] || dev.type}
+                </span>
+                <span style="font-size: 0.78rem; color: var(--text-secondary);">📅 ${escapeHtml(dev.date)}</span>
+                <span style="font-size: 0.78rem; color: var(--text-secondary);">👥 ${escapeHtml(dev.classes)}</span>
+              </div>
+              <h5 style="margin: 0 0 4px 0; font-size: 0.95rem; font-weight: 700; color: var(--text-primary);">${escapeHtml(dev.title)}</h5>
+              <p style="margin: 0; font-size: 0.8rem; color: var(--text-secondary);">${escapeHtml(dev.preview || '')}</p>
+            </div>
+            <div>
+              <button type="button" onclick="navigateToHash('#/algo/theorique/devoirs')" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: linear-gradient(135deg, #d97706, #f59e0b); color: #000; font-size: 0.84rem; font-weight: 700; border: none; cursor: pointer; white-space: nowrap;">
+                📑 Ouvrir le Devoir
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
-    // ── 1. SECTION EXERCICES D'EXAMENS DU CHAPITRE (COMPUTED DEPUIS EXERCISES_DATA) ──
-    const chapterExercises = (typeof EXERCISES_DATA !== 'undefined') ? EXERCISES_DATA.getByChapter(ch.slug) : [];
-    if (chapterExercises.length > 0 || filteredChExams.length > 0) {
-      const examsSection = document.createElement('div');
-      examsSection.style.cssText = 'grid-column: 1 / -1; margin: -16px 0 24px 0; padding: 20px; background: var(--surface-elevated); border: 1px solid var(--border-color); border-radius: 14px;';
+    const step4Html = `
+      <div class="chapter-step-block ${summary.steps[4].done ? 'is-done' : ''}" id="ch-step-4-${ch.slug}">
+        <div class="chapter-step-header">
+          <div class="chapter-step-title-wrap">
+            <span class="chapter-step-num-badge">Étape 4 / 5</span>
+            <h4 class="chapter-step-title">📝 Devoirs surveillés &amp; de synthèse (${chapterDevoirs.length})</h4>
+          </div>
+          ${chapterDevoirs.length > 0 ? `
+            <button type="button" class="chapter-step-toggle-btn ${summary.steps[4].done ? 'done' : ''}" onclick="toggleChapterStep('${ch.slug}', 4)">
+              <span>${summary.steps[4].done ? '✓ Validé' : '○ Marquer comme terminé'}</span>
+            </button>
+          ` : `<span style="font-size: 0.76rem; font-weight: 700; color: #f59e0b; background: rgba(245,158,11,0.15); border: 1px dashed rgba(245,158,11,0.3); padding: 4px 10px; border-radius: 6px;">⏳ Bientôt</span>`}
+        </div>
+        <div style="display: grid; gap: 10px;">
+          ${devoirsCardsHtml}
+        </div>
+      </div>
+    `;
 
-      const typeLabels = { 'bac': '🎓 Bac', 'devoir-synthese': '📝 D. Synthèse', 'devoir-controle': '📌 D. Contrôle', 'inconnu': '❓ Inconnu' };
-
-      const exercisesHtml = chapterExercises.map(ex => {
+    // ── ÉTAPE 5 : EXERCICES D'EXAMENS HTML ──
+    let exercisesHtml = '';
+    if (chapterExercises.length === 0) {
+      exercisesHtml = `
+        <div style="padding: 20px; border-radius: 10px; background: var(--surface-bg); color: var(--text-secondary); font-size: 0.86rem; text-align: center; border: 1px dashed var(--border-color);">
+          🎯 Les exercices d'examens pour ce chapitre sont en cours d'indexation.
+        </div>
+      `;
+    } else {
+      exercisesHtml = chapterExercises.map(ex => {
         const doc = (typeof DOCUMENTS_DATA !== 'undefined') ? DOCUMENTS_DATA.getDocumentById(ex.examId) : null;
         const examTitle = doc ? doc.title : ex.examId;
         const examDate = (doc && doc.date && doc.date !== 'inconnue') ? doc.date : 'Année non précisée';
@@ -8823,84 +9005,273 @@ function renderAlgoTheoriqueCards() {
           </div>
         </div>`;
       }).join('');
+    }
 
-      examsSection.innerHTML = `
-        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px;">
-          <div>
-            <h4 style="margin: 0; font-size: 1rem; font-weight: 800; color: #10b981; display: flex; align-items: center; gap: 8px;">
-              <span>📝</span> Exercices d'examens de ce chapitre (${chapterExercises.length})
-            </h4>
-            <p style="margin: 2px 0 0 0; font-size: 0.8rem; color: var(--text-secondary);">
-              Exercices ciblés issus des sujets officiels du Baccalauréat et Devoirs portant sur ${escapeHtml(ch.shortTitle)}
-            </p>
+    const step5Html = `
+      <div class="chapter-step-block ${summary.steps[5].done ? 'is-done' : ''}" id="ch-step-5-${ch.slug}">
+        <div class="chapter-step-header">
+          <div class="chapter-step-title-wrap">
+            <span class="chapter-step-num-badge">Étape 5 / 5</span>
+            <h4 class="chapter-step-title">🎯 Exercices d'examens de ce chapitre (${chapterExercises.length})</h4>
           </div>
-          <button type="button" onclick="navigateToHash('#/algo/types')" style="font-size: 0.8rem; color: #10b981; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: 4px 10px; border-radius: 6px; cursor: pointer;">
-            Tous les types d'exercices →
-          </button>
+          ${chapterExercises.length > 0 ? `
+            <button type="button" class="chapter-step-toggle-btn ${summary.steps[5].done ? 'done' : ''}" onclick="toggleChapterStep('${ch.slug}', 5)">
+              <span>${summary.steps[5].done ? '✓ Validé' : '○ Marquer comme terminé'}</span>
+            </button>
+          ` : `<span style="font-size: 0.76rem; font-weight: 700; color: #f59e0b; background: rgba(245,158,11,0.15); border: 1px dashed rgba(245,158,11,0.3); padding: 4px 10px; border-radius: 6px;">⏳ Bientôt</span>`}
         </div>
         <div style="display: grid; gap: 10px;">
           ${exercisesHtml}
         </div>
-      `;
-      container.appendChild(examsSection);
-    }
+      </div>
+    `;
 
-    // ── 2. SECTION SÉRIES & EXTRAITS DU CHAPITRE ──────────────────────────
-    const combinedSeries = [...filteredChSeries, ...filteredChExtraits];
-    if (combinedSeries.length > 0) {
-      const seriesSection = document.createElement('div');
-      seriesSection.style.cssText = 'grid-column: 1 / -1; margin: -16px 0 32px 0; padding: 20px; background: var(--surface-elevated); border: 1px solid var(--border-color); border-radius: 14px;';
+    // ── STEPPER BAR HTML ──
+    const stepperHtml = renderChapterStepperPills(ch.slug, summary, {
+      coursCount: 1,
+      algosCount: chapterItems.length,
+      seriesCount: combinedSeries.length,
+      devoirsCount: chapterDevoirs.length,
+      exercisesCount: chapterExercises.length
+    });
 
-      const seriesCardsHtml = combinedSeries.map(doc => {
-        const isExtrait = doc.kind === 'extrait';
-        const badgeLabel = isExtrait ? '✂️ Extrait de Révision' : '📋 Série TP';
-        const badgeColor = isExtrait ? '#818cf8' : '#38bdf8';
-        const badgeBg = isExtrait ? 'rgba(99, 102, 241, 0.15)' : 'rgba(56, 189, 248, 0.15)';
-        const badgeBorder = isExtrait ? 'rgba(99, 102, 241, 0.3)' : 'rgba(56, 189, 248, 0.3)';
-        const credit = doc.teacher ? `Prof. ${doc.teacher}` : (doc.source || '');
-        return `
-        <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
-          <div style="flex: 1; min-width: 220px;">
-            <div style="margin-bottom: 4px;">
-              <span style="font-size: 0.76rem; font-weight: 700; color: ${badgeColor}; background: ${badgeBg}; border: 1px solid ${badgeBorder}; padding: 2px 8px; border-radius: 10px;">
-                ${badgeLabel}
-              </span>
-            </div>
-            <h5 style="margin: 0 0 4px 0; font-size: 0.95rem; font-weight: 700; color: var(--text-primary);">${escapeHtml(doc.title)}</h5>
-            <div style="font-size: 0.8rem; color: var(--text-secondary); display: flex; flex-wrap: wrap; gap: 10px;">
-              ${credit ? `<span>✏️ ${escapeHtml(credit)}</span>` : ''}
-              ${doc.notes ? `<span>📝 ${escapeHtml(doc.notes)}</span>` : ''}
-            </div>
+    chapterSection.innerHTML = `
+      <!-- BANNIÈRE PRINCIPALE DU CHAPITRE -->
+      <div class="algo-chapter-banner" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; padding: 14px 18px; background: rgba(15, 23, 42, 0.75); border: 1px solid var(--border-color); border-left: 4px solid ${meta.border}; border-radius: var(--radius-md);">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="font-size: 1.4rem; background: rgba(255,255,255,0.06); width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+            ${meta.icon}
           </div>
           <div>
-            <a href="${doc.file}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: linear-gradient(135deg, #4f46e5, #6366f1); color: #fff; font-size: 0.84rem; font-weight: 600; text-decoration: none; white-space: nowrap;">
-              📄 Sujet
-            </a>
-          </div>
-        </div>`;
-      }).join('');
-
-      seriesSection.innerHTML = `
-        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px;">
-          <div>
-            <h4 style="margin: 0; font-size: 1rem; font-weight: 800; color: #60a5fa; display: flex; align-items: center; gap: 8px;">
-              <span>📋</span> Séries &amp; Extraits d'exercices (${combinedSeries.length})
-            </h4>
-            <p style="margin: 2px 0 0 0; font-size: 0.8rem; color: var(--text-secondary);">
-              Exercices ciblés et séries de travaux pratiques avec crédits enseignants
-            </p>
+            <h3 style="margin: 0; font-size: 1.15rem; color: ${meta.color}; font-weight: 800;">${escapeHtml(ch.fullTitle)}</h3>
+            <span style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4;">${escapeHtml(meta.desc)}</span>
           </div>
         </div>
-        <div style="display: grid; gap: 10px;">
-          ${seriesCardsHtml}
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="background: rgba(255,255,255,0.08); color: ${meta.color}; border: 1px solid ${meta.border}55; font-size: 0.8rem; font-weight: 800; padding: 4px 12px; border-radius: 20px; white-space: nowrap;">
+            ${countBadgeText}
+          </span>
+        </div>
+      </div>
+
+      <!-- BARRE DE PROGRESSION DU CHAPITRE -->
+      <div class="chapter-progress-box" id="ch-progbox-${ch.slug}">
+        <div class="chapter-progress-header">
+          <span class="chapter-progress-title">
+            <span>📈</span> Progression de votre révision :
+          </span>
+          <div>
+            <span class="chapter-progress-pct" id="ch-progpct-${ch.slug}">${summary.percent}% terminé</span>
+            <span style="font-size: 0.78rem; color: var(--text-secondary); margin-left: 6px;">(${summary.doneCount}/${summary.availableCount} étapes validées)</span>
+          </div>
+        </div>
+        <div class="chapter-progress-track">
+          <div class="chapter-progress-fill" id="ch-progfill-${ch.slug}" style="width: ${summary.percent}%;"></div>
+        </div>
+      </div>
+
+      <!-- STEPPER EN 5 ÉTAPES -->
+      <div class="chapter-stepper-bar" id="ch-stepper-${ch.slug}">
+        ${stepperHtml}
+      </div>
+
+      <!-- ÉTAPE 1 : COURS EN BREF -->
+      ${coursBriefHtml}
+
+      <!-- GUIDE MATRICES (SI CONCERNÉ) -->
+      ${matrixGuideHtml}
+
+      <!-- ÉTAPE 2 : ALGORITHMES TYPES -->
+      ${step2Html}
+
+      <!-- ÉTAPE 3 : SÉRIES & EXTRAITS -->
+      ${step3Html}
+
+      <!-- ÉTAPE 4 : DEVOIRS (DC & DS) -->
+      ${step4Html}
+
+      <!-- ÉTAPE 5 : EXERCICES D'EXAMENS -->
+      ${step5Html}
+    `;
+
+    container.appendChild(chapterSection);
+    if (isMatricesCat && !currentAlgoTheoriqueSearch) {
+      setTimeout(() => selectMatrixGuideTab(currentMatrixGuideTab), 10);
+    }
+  });
+
+  // Mettre à jour les anneaux et barres après rendu des chapitres
+  if (typeof updateAllProgressUI === 'function') {
+    updateAllProgressUI();
+  }
+}
+
+function renderChapterStepperPills(slug, summary, counts) {
+  const steps = [
+    { num: 1, icon: '📖', label: '1. Cours', count: counts.coursCount },
+    { num: 2, icon: '⚡', label: '2. Algorithmes', count: counts.algosCount },
+    { num: 3, icon: '📋', label: '3. Séries', count: counts.seriesCount },
+    { num: 4, icon: '📝', label: '4. Devoirs', count: counts.devoirsCount },
+    { num: 5, icon: '🎯', label: '5. Exercices', count: counts.exercisesCount }
+  ];
+
+  return steps.map(st => {
+    const stepInfo = (summary && summary.steps && summary.steps[st.num]) ? summary.steps[st.num] : { available: false, done: false };
+    if (!stepInfo.available) {
+      return `
+        <div class="stepper-step-pill bientot" title="Étape bientôt disponible">
+          <span class="stepper-pill-icon">⏳</span>
+          <span>${st.label}</span>
+          <span style="font-size:0.68rem;opacity:0.8;">(Bientôt)</span>
         </div>
       `;
-      container.appendChild(seriesSection);
     }
+
+    const isDone = stepInfo.done;
+    return `
+      <div class="stepper-step-pill ${isDone ? 'done' : ''}" onclick="scrollToChapterStep('${slug}', ${st.num})" title="Cliquer pour accéder directement à l'étape ${st.num}">
+        <span class="stepper-pill-icon">${isDone ? '✓' : st.icon}</span>
+        <span>${st.label}</span>
+        ${st.count > 0 ? `<span style="font-size:0.72rem;opacity:0.75;">(${st.count})</span>` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+function openAlgoTheoriqueModalById(id) {
+  if (typeof DATA === 'undefined' || !DATA.algo_theorique) return;
+  const item = DATA.algo_theorique.find(x => x.id === id);
+  if (item) openAlgoTheoriqueModal(item);
+}
+
+function scrollToChapterStep(slug, stepNum) {
+  const el = document.getElementById(`ch-step-${stepNum}-${slug}`);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    el.style.transition = 'box-shadow 0.3s ease';
+    el.style.boxShadow = '0 0 0 2px #38bdf8';
+    setTimeout(() => { el.style.boxShadow = ''; }, 1200);
+  }
+}
+
+function toggleChapterStep(slug, stepNum) {
+  if (typeof STI_STORE === 'undefined') return;
+  const prog = STI_STORE.getChapterProgress(slug);
+  const nextVal = !prog['step' + stepNum];
+  STI_STORE.setChapterStep(slug, stepNum, nextVal);
+  updateAllProgressUI();
+  if (typeof renderAlgoTheoriqueCards === 'function') {
+    renderAlgoTheoriqueCards();
+  }
+}
+
+function toggleAlgoStudied(algoId, slug, btnEl) {
+  if (typeof STI_STORE === 'undefined') return;
+  const isStudied = STI_STORE.toggleAlgoStudied(algoId);
+
+  // Mettre à jour l'élément visuel immédiatement si passé
+  if (btnEl) {
+    btnEl.classList.toggle('studied', isStudied);
+    btnEl.innerHTML = `<span>${isStudied ? '✓' : '○'}</span> <span>${isStudied ? 'Étudié' : 'Étudier'}</span>`;
+  }
+
+  // Si slug fourni ou trouvé, vérifier si tous les algos du chapitre sont étudiés
+  if (slug && typeof DATA !== 'undefined' && DATA.algo_theorique && typeof CURRICULUM !== 'undefined') {
+    const ch = CURRICULUM.getChapterBySlug(slug);
+    if (ch) {
+      const chAlgos = DATA.algo_theorique.filter(x => CURRICULUM.matchesCategory(x.category, ch));
+      if (chAlgos.length > 0) {
+        const allDone = chAlgos.every(x => STI_STORE.isAlgoStudied(x.id));
+        STI_STORE.setChapterStep(slug, 2, allDone);
+      }
+    }
+  }
+
+  updateAllProgressUI();
+  if (typeof renderAlgoTheoriqueCards === 'function') {
+    renderAlgoTheoriqueCards();
+  }
+}
+
+function confirmResetProgress() {
+  const ok = confirm("⚠️ Réinitialiser toute votre progression de révision ?\n\nToutes les étapes validées, sous-programmes étudiés et historiques d'évaluation seront remis à zéro.\n\nConfirmer la réinitialisation ?");
+  if (!ok) return;
+
+  if (typeof STI_STORE !== 'undefined') {
+    STI_STORE.resetAllData();
+  }
+  updateAllProgressUI();
+  if (typeof renderAlgoTheoriqueCards === 'function') {
+    renderAlgoTheoriqueCards();
+  }
+  alert("Progression réinitialisée avec succès !");
+}
+
+function renderSidebarChapterRings() {
+  const container = document.getElementById('sidebarChaptersSubnav');
+  if (!container || typeof CURRICULUM === 'undefined' || typeof STI_STORE === 'undefined') return;
+
+  const currentSlug = (typeof currentAlgoTheoriqueCategory === 'string') ? currentAlgoTheoriqueCategory : '';
+
+  const html = CURRICULUM.chapters.map(ch => {
+    const summary = STI_STORE.getChapterProgressSummary(ch.slug);
+    const pct = summary.percent;
+    const isAct = currentSlug === ch.slug;
+    const ringColor = pct === 100 ? '#10b981' : (pct > 0 ? '#38bdf8' : 'rgba(255,255,255,0.2)');
+
+    return `
+      <a class="sidebar-chapter-sublink ${isAct ? 'active' : ''}" onclick="navigateToHash('#/algo/theorique/${ch.slug}')" title="${escapeHtml(ch.shortTitle)} : ${pct}% validé">
+        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${ch.iconEmoji} ${escapeHtml(ch.shortTitle)}</span>
+        <div class="sidebar-ring-wrap">
+          <svg width="18" height="18" viewBox="0 0 36 36" class="sidebar-ring-svg">
+            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-width="4.5" />
+            <path class="circle-val" stroke-dasharray="${pct}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="${ringColor}" stroke-width="4.5" stroke-linecap="round" />
+          </svg>
+        </div>
+      </a>
+    `;
+  }).join('');
+
+  container.innerHTML = html;
+}
+
+function updateHubChapterProgressBars() {
+  if (typeof CURRICULUM === 'undefined' || typeof STI_STORE === 'undefined') return;
+
+  CURRICULUM.chapters.forEach(ch => {
+    const summary = STI_STORE.getChapterProgressSummary(ch.slug);
+    const targetLink = `#/algo/theorique/${ch.slug}`;
+
+    const cards = document.querySelectorAll(`[onclick*="${targetLink}"]`);
+    cards.forEach(card => {
+      let bar = card.querySelector('.hub-chapter-progress');
+      if (!bar) {
+        bar = document.createElement('div');
+        bar.className = 'hub-chapter-progress';
+        card.appendChild(bar);
+      }
+      bar.innerHTML = `
+        <div class="hub-ch-track">
+          <div class="hub-ch-fill" style="width: ${summary.percent}%;"></div>
+        </div>
+        <span class="hub-ch-pct-text">${summary.percent}%</span>
+      `;
+    });
   });
 }
 
+function updateAllProgressUI() {
+  try {
+    renderSidebarChapterRings();
+    updateHubChapterProgressBars();
+    updateResumeStudyCard();
+  } catch (e) {
+    console.warn('[updateAllProgressUI] error', e);
+  }
+}
+
 function openAlgoTheoriqueModal(item) {
+
   const modal = document.getElementById('detailsModal');
   const body = document.getElementById('modalDynamicBody');
   const title = document.getElementById('modalTitle');
@@ -9048,8 +9419,20 @@ function openAlgoTheoriqueModal(item) {
     ` : ''}
   `;
 
+  const isStudied = (typeof STI_STORE !== 'undefined') ? STI_STORE.isAlgoStudied(item.id) : false;
+  body.innerHTML += `
+    <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+      <button type="button" class="algo-studied-btn ${isStudied ? 'studied' : ''}" style="padding: 8px 16px; font-size: 0.88rem; border-radius: 8px;" onclick="toggleAlgoStudied('${item.id}', null, this); closeModal();">
+        <span>${isStudied ? '✓' : '○'}</span>
+        <span>${isStudied ? 'Marqué comme étudié' : 'Marquer comme étudié'}</span>
+      </button>
+      <span style="font-size: 0.8rem; color: var(--text-secondary);">Progression synchronisée dans votre navigateur</span>
+    </div>
+  `;
+
   modal.classList.add('active');
 }
+
 
 
 // -------------------------------------------------------------
@@ -9903,6 +10286,18 @@ window.openTypeDetailView = openTypeDetailView;
 window.closeTypeDetailView = closeTypeDetailView;
 window.renderTypeExercisesList = renderTypeExercisesList;
 window.toggleExerciseBookmark = toggleExerciseBookmark;
+window.renderChapterStepperPills = renderChapterStepperPills;
+window.openAlgoTheoriqueModalById = openAlgoTheoriqueModalById;
+window.scrollToChapterStep = scrollToChapterStep;
+window.toggleChapterStep = toggleChapterStep;
+window.toggleAlgoStudied = toggleAlgoStudied;
+window.confirmResetProgress = confirmResetProgress;
+window.renderSidebarChapterRings = renderSidebarChapterRings;
+window.updateHubChapterProgressBars = updateHubChapterProgressBars;
+window.updateResumeStudyCard = updateResumeStudyCard;
+window.resumeLastStudySession = resumeLastStudySession;
+window.updateAllProgressUI = updateAllProgressUI;
+
 
 
 // ===================================================================
@@ -10057,31 +10452,95 @@ function saveStudySession(viewName, itemTitle = null) {
 }
 
 function updateResumeStudyCard() {
-  const card = document.getElementById('resumeStudyCard');
-  if (!card) return;
+  const homeCard = document.getElementById('resumeStudyCard');
+  const algoCard = document.getElementById('resumeAlgoStudyCard');
+  if (!homeCard && !algoCard) return;
 
-  const raw = localStorage.getItem('sti_last_visited');
-  if (!raw) {
-    card.style.display = 'none';
-    return;
+  const stepLabels = {
+    1: 'Cours en bref',
+    2: 'Algorithmes types',
+    3: 'Séries & Extraits',
+    4: 'Devoirs (DC & DS)',
+    5: "Exercices d'examens"
+  };
+
+  let titleText = 'Continuer votre révision';
+  let subtitleText = 'Dernière étape consultée • Cliquez pour reprendre';
+  let targetView = 'html';
+  let targetSlug = null;
+  let targetStep = 1;
+
+  // 1. Vérifier si un chapitre récent est disponible dans STI_STORE
+  if (typeof STI_STORE !== 'undefined') {
+    const lastNav = STI_STORE.getLastNav();
+    if (lastNav && lastNav.chapterSlug) {
+      const ch = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getChapterBySlug(lastNav.chapterSlug) : null;
+      if (ch) {
+        const summary = STI_STORE.getChapterProgressSummary(ch.slug);
+        targetSlug = ch.slug;
+        targetStep = summary.firstUnfinished || 1;
+        titleText = `🎯 Continuer : ${ch.iconEmoji} ${ch.shortTitle}`;
+        subtitleText = `Étape ${targetStep} : ${stepLabels[targetStep] || 'Exercices'} • ${summary.percent}% validé (${summary.doneCount}/${summary.availableCount} étapes)`;
+        targetView = `algo-theorique`;
+      }
+    }
   }
 
-  try {
-    const data = JSON.parse(raw);
+  // 2. Si pas de STI_STORE, fallback sur sti_last_visited
+  if (titleText === 'Continuer votre révision') {
+    try {
+      const raw = localStorage.getItem('sti_last_visited');
+      if (raw) {
+        const data = JSON.parse(raw);
+        if (data && data.title) {
+          titleText = `Continuer votre révision : ${data.title}`;
+          subtitleText = `Dernière consultation enregistrée • Cliquez pour reprendre`;
+          targetView = data.view || 'html';
+        }
+      }
+    } catch (e) {}
+  }
+
+  if (homeCard) {
     const titleEl = document.getElementById('resumeStudyTitle');
     const subtitleEl = document.getElementById('resumeStudySubtitle');
     const btn = document.getElementById('resumeStudyBtn');
+    if (titleEl) titleEl.textContent = titleText;
+    if (subtitleEl) subtitleEl.textContent = subtitleText;
+    if (btn) btn.setAttribute('data-target-view', targetView);
+    homeCard.style.display = 'flex';
+  }
 
-    if (titleEl) titleEl.textContent = `Continuer votre révision : ${data.title}`;
-    if (subtitleEl) subtitleEl.textContent = `Dernière consultation enregistrée • Cliquez pour reprendre`;
-    if (btn) btn.setAttribute('data-target-view', data.view);
-    card.style.display = 'flex';
-  } catch (e) {
-    card.style.display = 'none';
+  if (algoCard) {
+    const titleEl = document.getElementById('resumeAlgoStudyTitle');
+    const subtitleEl = document.getElementById('resumeAlgoStudySubtitle');
+    const btn = document.getElementById('resumeAlgoStudyBtn');
+    if (titleEl) titleEl.textContent = titleText;
+    if (subtitleEl) subtitleEl.textContent = subtitleText;
+    if (btn) btn.setAttribute('data-target-view', targetView);
+    algoCard.style.display = 'flex';
   }
 }
 
 function resumeLastStudySession() {
+  if (typeof STI_STORE !== 'undefined') {
+    const lastNav = STI_STORE.getLastNav();
+    if (lastNav && lastNav.chapterSlug) {
+      const slug = lastNav.chapterSlug;
+      const summary = STI_STORE.getChapterProgressSummary(slug);
+      const stepNum = summary.firstUnfinished || 1;
+
+      if (currentModule !== 'algo' && typeof switchModule === 'function') {
+        switchModule('algo', true);
+      }
+      navigateToHash('#/algo/theorique/' + slug);
+      setTimeout(() => {
+        scrollToChapterStep(slug, stepNum);
+      }, 180);
+      return;
+    }
+  }
+
   const raw = localStorage.getItem('sti_last_visited');
   if (raw) {
     try {
@@ -10099,6 +10558,7 @@ function resumeLastStudySession() {
   }
   switchView('html');
 }
+
 
 function handleHomeBottomNav() {
   if (currentModule === 'algo') {
