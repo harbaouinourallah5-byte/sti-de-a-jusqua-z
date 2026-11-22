@@ -11780,3 +11780,47 @@ button.topbar-action-btn svg {
 
 
 
+
+/* ===================================================================
+   GROUPES COLLAPSIBLES DE LA BARRE LATÉRALE (ALGORITHMIQUE)
+   =================================================================== */
+.collapsible-group {
+  margin-bottom: 8px;
+}
+
+.collapsible-group .sidebar-group-header {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm, 6px);
+  transition: background 0.2s ease;
+}
+
+.collapsible-group .sidebar-group-header:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.collapsible-group .group-chevron {
+  font-size: 0.75rem;
+  transition: transform 0.2s ease;
+  color: var(--text-muted, #94a3b8);
+}
+
+.collapsible-group.collapsed .sidebar-group-links {
+  display: none !important;
+}
+
+.collapsible-group.collapsed .group-chevron {
+  transform: rotate(-90deg);
+}
+
+.mobile-bottom-nav .mobile-bottom-item {
+  white-space: nowrap;
+}
+.mobile-bottom-nav .mobile-bottom-item span:not(.icon) {
+  font-size: 0.68rem;
+  letter-spacing: -0.2px;
+}

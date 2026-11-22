@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=35.3">
+  <link rel="stylesheet" href="style.css?v=35.4">
   <!-- INITIALISATION IMMÉDIATE DU THÈME & TOGGLE SANS LATENCE -->
   <script>
     (function() {
@@ -251,53 +251,18 @@
           </div>
         </div>
 
-        <!-- GROUPE MODULE 2 : ALGORITHME & PROGRAMMATION -->
-        <div class="sidebar-group" id="sidebarGroupAlgo">
-          <div class="sidebar-group-header">
-            <span class="group-title">Algorithmique</span>
-            <span class="group-badge">8 Chapitres</span>
+        <!-- GROUPE MODULE 2 : ALGORITHME & PROGRAMMATION (3 BLOCS COLLAPSIBLES) -->
+        <!-- 1. COURS -->
+        <div class="sidebar-group collapsible-group" id="sidebarGroupAlgoCours">
+          <div class="sidebar-group-header" onclick="toggleSidebarGroup('sidebarGroupAlgoCours')">
+            <span class="group-title">Cours</span>
+            <span class="group-chevron">▾</span>
           </div>
           <div class="sidebar-group-links">
             <a class="sidebar-link" data-view="algo-home" onclick="switchView('algo-home')">
               <span class="nav-bullet algo"></span>
-              <span class="nav-icon">📑</span>
-              <span class="nav-label">Vue d'ensemble Algo</span>
-            </a>
-            <a class="sidebar-link" data-view="algo-pratique" onclick="switchView('algo-pratique')">
-              <span class="nav-bullet algo"></span>
-              <span class="nav-icon">🛠️</span>
-              <span class="nav-label">Pratique (Qt ➔ Thonny)</span>
-              <span class="nav-count">20</span>
-            </a>
-            <a class="sidebar-link" data-view="algo-types" onclick="switchView('algo-types')">
-              <span class="nav-bullet algo"></span>
-              <span class="nav-icon">🎯</span>
-              <span class="nav-label">Types d'exercices</span>
-              <span class="nav-count" id="sideBadgeTypes">11</span>
-            </a>
-            <a class="sidebar-link" data-view="algo-methodes" onclick="switchView('algo-methodes')">
-              <span class="nav-bullet algo"></span>
-              <span class="nav-icon">💡</span>
-              <span class="nav-label">Fiches méthode</span>
-              <span class="nav-count">6</span>
-            </a>
-            <a class="sidebar-link" data-view="algo-quiz" onclick="switchView('algo-quiz')">
-              <span class="nav-bullet algo"></span>
-              <span class="nav-icon">⚡</span>
-              <span class="nav-label">Quiz V/F &amp; QCM</span>
-              <span class="nav-count" id="sideBadgeQuiz">80</span>
-            </a>
-            <a class="sidebar-link" data-view="revision-cartes" onclick="navigateToHash('#/revision/cartes')">
-              <span class="nav-bullet algo"></span>
-              <span class="nav-icon">🗂️</span>
-              <span class="nav-label">Cartes mémoire</span>
-              <span class="nav-count" id="sideBadgeCartes" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">Box 1</span>
-            </a>
-            <a class="sidebar-link" data-view="algo-statistiques" onclick="navigateToHash('#/algo/statistiques')">
-              <span class="nav-bullet algo"></span>
-              <span class="nav-icon">📊</span>
-              <span class="nav-label">Statistiques</span>
-              <span class="nav-count" id="sideBadgeStats" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">Bac</span>
+              <span class="nav-icon">🧭</span>
+              <span class="nav-label">Vue d'ensemble</span>
             </a>
             <a class="sidebar-link" data-view="algo-theorique" onclick="switchView('algo-theorique')">
               <span class="nav-bullet algo"></span>
@@ -307,6 +272,74 @@
             </a>
             <!-- SUB-TREE DES 8 CHAPITRES AVEC ANNEAUX DE PROGRESSION SVG -->
             <div class="sidebar-chapters-subnav" id="sidebarChaptersSubnav"></div>
+            <a class="sidebar-link" data-view="algo-pratique" onclick="switchView('algo-pratique')">
+              <span class="nav-bullet algo"></span>
+              <span class="nav-icon">🛠️</span>
+              <span class="nav-label">Pratique (Qt &amp; Python)</span>
+              <span class="nav-count" id="sideBadgeQt">20</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 2. S'ENTRAÎNER -->
+        <div class="sidebar-group collapsible-group collapsed" id="sidebarGroupAlgoTrain">
+          <div class="sidebar-group-header" onclick="toggleSidebarGroup('sidebarGroupAlgoTrain')">
+            <span class="group-title">S'entraîner</span>
+            <span class="group-chevron">▾</span>
+          </div>
+          <div class="sidebar-group-links">
+            <a class="sidebar-link" data-view="algo-types" onclick="switchView('algo-types')">
+              <span class="nav-bullet algo"></span>
+              <span class="nav-icon">🎯</span>
+              <span class="nav-label">Types d'exercices</span>
+              <span class="nav-count" id="sideBadgeTypes">11</span>
+            </a>
+            <a class="sidebar-link" data-view="algo-quiz" onclick="switchView('algo-quiz')">
+              <span class="nav-bullet algo"></span>
+              <span class="nav-icon">⚡</span>
+              <span class="nav-label">Quiz V/F &amp; QCM</span>
+              <span class="nav-count" id="sideBadgeQuiz">80</span>
+            </a>
+            <a class="sidebar-link" data-view="examens" onclick="switchView('examens')">
+              <span class="nav-bullet algo"></span>
+              <span class="nav-icon">📋</span>
+              <span class="nav-label">Examens</span>
+              <span class="nav-count" id="sideBadgeExamens">11</span>
+            </a>
+            <a class="sidebar-link" data-view="revision-cartes" onclick="navigateToHash('#/revision/cartes')">
+              <span class="nav-bullet algo"></span>
+              <span class="nav-icon">🗂️</span>
+              <span class="nav-label">Cartes mémoire</span>
+              <span class="nav-count" id="sideBadgeCartes" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">Box 1</span>
+            </a>
+            <a class="sidebar-link" data-view="algo-methodes" onclick="switchView('algo-methodes')">
+              <span class="nav-bullet algo"></span>
+              <span class="nav-icon">💡</span>
+              <span class="nav-label">Fiches méthode</span>
+              <span class="nav-count">6</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 3. SUIVRE -->
+        <div class="sidebar-group collapsible-group collapsed" id="sidebarGroupAlgoTrack">
+          <div class="sidebar-group-header" onclick="toggleSidebarGroup('sidebarGroupAlgoTrack')">
+            <span class="group-title">Suivre</span>
+            <span class="group-chevron">▾</span>
+          </div>
+          <div class="sidebar-group-links">
+            <a class="sidebar-link" data-view="algo-statistiques" onclick="navigateToHash('#/algo/statistiques')">
+              <span class="nav-bullet algo"></span>
+              <span class="nav-icon">📊</span>
+              <span class="nav-label">Statistiques</span>
+              <span class="nav-count" id="sideBadgeStats" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">Bac</span>
+            </a>
+            <a class="sidebar-link" data-view="revision" onclick="navigateToHash('#/revision')">
+              <span class="nav-bullet algo"></span>
+              <span class="nav-icon">⭐</span>
+              <span class="nav-label">Ma révision</span>
+              <span class="nav-count" id="sideBadgeRevision" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); display: none;">0</span>
+            </a>
           </div>
         </div>
 
@@ -4503,9 +4536,17 @@ app.exec_()</code></pre>
       <span class="icon">🏠</span>
       <span>Accueil</span>
     </button>
-    <button class="mobile-bottom-item" id="bottomNavLessons" onclick="navigateToHash('#/lessons')">
-      <span class="icon">📚</span>
-      <span>Cours PDF</span>
+    <button class="mobile-bottom-item" id="bottomNavAlgo" onclick="navigateToHash('#/algo')">
+      <span class="icon">⚡</span>
+      <span>Algo</span>
+    </button>
+    <button class="mobile-bottom-item" id="bottomNavExamens" onclick="navigateToHash('#/examens')">
+      <span class="icon">📋</span>
+      <span>Examens</span>
+    </button>
+    <button class="mobile-bottom-item" id="bottomNavRevision" onclick="navigateToHash('#/revision')">
+      <span class="icon">⭐</span>
+      <span>Ma révision</span>
     </button>
     <button class="mobile-bottom-item" id="bottomNavMenu" onclick="toggleSidebarDrawer()">
       <span class="icon">☰</span>
@@ -4915,25 +4956,25 @@ app.exec_()</code></pre>
 
   <!-- Fichiers Scripts -->
 
-  <script src="store.js?v=35.3"></script>
-  <script src="data.js?v=35.3"></script>
-  <script src="data/curriculum.js?v=35.3"></script>
-  <script src="data/documents.js?v=35.3"></script>
-  <script src="data/exercises.js?v=35.3"></script>
-  <script src="data/methods.js?v=35.3"></script>
-  <script src="data/quiz/fichiers.js?v=35.3"></script>
-  <script src="data/quiz/recursivite.js?v=35.3"></script>
-  <script src="data/quiz/bases.js?v=35.3"></script>
-  <script src="data/quiz/arithmetique.js?v=35.3"></script>
-  <script src="data/quiz/approximation.js?v=35.3"></script>
-  <script src="data/quiz/tableaux.js?v=35.3"></script>
-  <script src="data/quiz/matrices.js?v=35.3"></script>
-  <script src="data/quiz/suites.js?v=35.3"></script>
-  <script src="data/quiz.js?v=35.3"></script>
-  <script src="css_engine.js?v=35.3"></script>
-  <script src="algo_pratique_engine.js?v=35.3"></script>
-  <script src="pomodoro_engine.js?v=35.3"></script>
-  <script src="app.js?v=35.3"></script>
+  <script src="store.js?v=35.4"></script>
+  <script src="data.js?v=35.4"></script>
+  <script src="data/curriculum.js?v=35.4"></script>
+  <script src="data/documents.js?v=35.4"></script>
+  <script src="data/exercises.js?v=35.4"></script>
+  <script src="data/methods.js?v=35.4"></script>
+  <script src="data/quiz/fichiers.js?v=35.4"></script>
+  <script src="data/quiz/recursivite.js?v=35.4"></script>
+  <script src="data/quiz/bases.js?v=35.4"></script>
+  <script src="data/quiz/arithmetique.js?v=35.4"></script>
+  <script src="data/quiz/approximation.js?v=35.4"></script>
+  <script src="data/quiz/tableaux.js?v=35.4"></script>
+  <script src="data/quiz/matrices.js?v=35.4"></script>
+  <script src="data/quiz/suites.js?v=35.4"></script>
+  <script src="data/quiz.js?v=35.4"></script>
+  <script src="css_engine.js?v=35.4"></script>
+  <script src="algo_pratique_engine.js?v=35.4"></script>
+  <script src="pomodoro_engine.js?v=35.4"></script>
+  <script src="app.js?v=35.4"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {

@@ -1,4 +1,43 @@
 
+function updateAlgoSidebarGroups(currentView) {
+  const groups = {
+    'sidebarGroupAlgoCours': ['algo-home', 'algo-theorique', 'algo-pratique'],
+    'sidebarGroupAlgoTrain': ['algo-types', 'algo-quiz', 'examens', 'revision-cartes', 'algo-methodes', 'exam-simulator'],
+    'sidebarGroupAlgoTrack': ['algo-statistiques', 'revision', 'revision-plan']
+  };
+
+  let activeGroupId = null;
+  for (const [gid, views] of Object.entries(groups)) {
+    if (views.includes(currentView)) {
+      activeGroupId = gid;
+      break;
+    }
+  }
+
+  // Only the group of the current page is open
+  for (const gid of Object.keys(groups)) {
+    const el = document.getElementById(gid);
+    if (!el) continue;
+    if (activeGroupId) {
+      if (gid === activeGroupId) {
+        el.classList.remove('collapsed');
+      } else {
+        el.classList.add('collapsed');
+      }
+    }
+  }
+}
+
+function toggleSidebarGroup(groupId) {
+  const el = document.getElementById(groupId);
+  if (el) {
+    el.classList.toggle('collapsed');
+  }
+}
+window.toggleSidebarGroup = toggleSidebarGroup;
+window.updateAlgoSidebarGroups = updateAlgoSidebarGroups;
+
+
 // =============================================================
 // CONFIGURATION DES VARIANTES INTERACTIVES (BOUTONS RADIO)
 // =============================================================
@@ -2056,16 +2095,20 @@ function switchView(viewName, skipHashUpdate = false) {
     }
   }
 
-  // Mise à jour de la barre inférieure mobile
+  // Mise à jour de la barre inférieure mobile (5 boutons)
   const bottomHome = document.getElementById('bottomNavHome');
-  const bottomLessons = document.getElementById('bottomNavLessons');
-  if (bottomHome) {
-    if (viewName === 'home' || viewName === 'algo-home') bottomHome.classList.add('active');
-    else bottomHome.classList.remove('active');
-  }
-  if (bottomLessons) {
-    if (viewName === 'lessons') bottomLessons.classList.add('active');
-    else bottomLessons.classList.remove('active');
+  const bottomAlgo = document.getElementById('bottomNavAlgo');
+  const bottomExamens = document.getElementById('bottomNavExamens');
+  const bottomRevision = document.getElementById('bottomNavRevision');
+
+  if (bottomHome) bottomHome.classList.toggle('active', viewName === 'home');
+  if (bottomAlgo) bottomAlgo.classList.toggle('active', ['algo-home', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes', 'algo-quiz', 'algo-statistiques'].includes(viewName));
+  if (bottomExamens) bottomExamens.classList.toggle('active', viewName === 'examens' || viewName === 'exam-simulator');
+  if (bottomRevision) bottomRevision.classList.toggle('active', ['revision', 'revision-plan', 'revision-cartes'].includes(viewName));
+
+  // Mise à jour automatique des blocs collapsibles Algo (seul le groupe actif reste ouvert)
+  if (typeof updateAlgoSidebarGroups === 'function') {
+    updateAlgoSidebarGroups(viewName);
   }
 
   // Défilement immédiat vers le haut sans saccade
