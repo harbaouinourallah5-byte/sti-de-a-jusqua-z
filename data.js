@@ -383,7 +383,7 @@ const DATA = {
       "category": "Conteneurs",
       "tag": "<div>",
       "name": "Conteneur générique de bloc (block)",
-      "summary": "Grouper plusieurs éléments HTML de type block pour la mise en page.",
+      "summary": "Groupe plusieurs éléments HTML de type block pour la mise en page.",
       "howToUse": "Balise universelle pour créer des cartes, des boîtes, des grilles flexbox ou grid.",
       "attributes": [
         "class",
@@ -3212,7 +3212,7 @@ const DATA = {
       "name": "VARCHAR",
       "tag": "VARCHAR",
       "syntax": "colonne VARCHAR(longueur_max)",
-      "summary": "Chaîne de caractères de longueur variable dont la longueur maximale fixée.",
+      "summary": "Chaîne de caractères de longueur variable dont la longueur maximale est fixée.",
       "description": "Chaîne de caractères de taille variable. Contrairement à CHAR, VARCHAR n'occupe en mémoire que la longueur réelle du texte saisi + 1 octet pour la taille. Idéal pour les noms, prénoms, adresses et villes.",
       "howToUse": "Définir la longueur maximale autorisée entre parenthèses. Si l'élève saisit moins de caractères, aucun espace n'est gaspillé en mémoire.",
       "values": [

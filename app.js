@@ -9404,7 +9404,7 @@ WIDGET        | SYNTAXE                                | RÔLE
 ------------------------------------------------------------------------
 Label         | W.Nom_Label.setText(chaine)            | Modifier le texte de l’étiquette
 Line Edit     | W.Nom_LineEdit.text()                  | Récupérer le contenu de la zone de saisie
-Line Edit     | W.nom_LineEdit.setText(chaine)         | Modifier le contenu de la zone de texte
+Line Edit     | W.Nom_LineEdit.setText(chaine)         | Modifier le contenu de la zone de texte
 Text Edit     | W.nomTextEdit.toPlainText()            | Récupérer le contenu de la zone de saisie
 Text Edit     | W.nomTextEdit.setText(chaine)          | Modifier le contenu de la zone de texte
 Push Button   | W.nomPushButton.clicked.connect(module)| Ordonner à l'ordinateur d'effectuer une action (suite au clic)
