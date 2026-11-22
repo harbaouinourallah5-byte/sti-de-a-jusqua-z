@@ -11588,6 +11588,317 @@ button.topbar-action-btn svg {
   }
 }
 
+/* ===================================================================
+   FEATURE 6 : FICHES DE RÉVISION IMPRIMABLES A4 (#/algo/theorique/:slug/resume)
+   =================================================================== */
+.resume-page-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 16px 60px 16px;
+}
+
+.resume-toolbar {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 12px 18px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* Fiche A4 à l'écran */
+.print-sheet-a4 {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 34px 38px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, sans-serif;
+  margin-bottom: 30px;
+}
+
+.print-sheet-header {
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 14px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.print-sheet-brand {
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #38bdf8;
+  margin-bottom: 4px;
+}
+
+.print-sheet-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.print-badge-official {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  white-space: nowrap;
+}
+
+.print-section {
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+  background: var(--surface-bg);
+}
+
+.print-section-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 6px;
+}
+
+.print-bullet-list {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.print-bullet-list li {
+  margin-bottom: 6px;
+}
+
+.print-algo-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+  margin-top: 6px;
+}
+
+.print-algo-table th,
+.print-algo-table td {
+  padding: 8px 10px;
+  border: 1px solid var(--border-color);
+  text-align: left;
+}
+
+.print-algo-table th {
+  background: rgba(255, 255, 255, 0.04);
+  font-weight: 800;
+  color: var(--text-primary);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+}
+
+.print-footer-tag {
+  border-top: 1px solid var(--border-color);
+  padding-top: 10px;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+/* Répertoire Toutes les fiches */
+.resume-directory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.resume-directory-card {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.resume-directory-card:hover {
+  transform: translateY(-2px);
+  border-color: #38bdf8;
+}
+
+/* ===================================================================
+   FEUILLE DE STYLE IMPRESSION DÉDIÉE (@media print)
+   =================================================================== */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm 12mm 15mm;
+  }
+
+  /* Cacher strictement tout l'habillage interactif */
+  .no-print,
+  .sidebar-drawer,
+  .mobile-top-header,
+  .app-global-footer,
+  .reading-progress-bar,
+  .theme-toggle-btn,
+  .nav-btn,
+  #globalAppToast,
+  button,
+  select,
+  header,
+  nav,
+  footer {
+    display: none !important;
+  }
+
+  body, html {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 10pt !important;
+    line-height: 1.35 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  .view-section {
+    display: none !important;
+  }
+
+  #view-algo-theorique-resume.active {
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .resume-page-container {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .print-sheet-a4 {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .print-sheet-header {
+    border-bottom: 2pt solid #000000 !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .print-sheet-brand {
+    color: #000000 !important;
+    font-size: 8pt !important;
+  }
+
+  .print-sheet-title {
+    color: #000000 !important;
+    font-size: 14pt !important;
+  }
+
+  .print-badge-official {
+    background: #eeeeee !important;
+    color: #000000 !important;
+    border: 1pt solid #000000 !important;
+    font-size: 7.5pt !important;
+  }
+
+  .print-section {
+    background: #ffffff !important;
+    border: 1pt solid #333333 !important;
+    border-radius: 4px !important;
+    padding: 8px 10px !important;
+    margin-bottom: 10px !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .print-section-title {
+    color: #000000 !important;
+    font-size: 10.5pt !important;
+    border-bottom: 0.75pt solid #cccccc !important;
+    padding-bottom: 3px !important;
+    margin-bottom: 6px !important;
+  }
+
+  .print-bullet-list {
+    color: #111111 !important;
+    font-size: 9pt !important;
+    padding-left: 16px !important;
+  }
+
+  .print-bullet-list li {
+    margin-bottom: 3px !important;
+  }
+
+  .print-algo-table {
+    font-size: 8.5pt !important;
+  }
+
+  .print-algo-table th,
+  .print-algo-table td {
+    border: 0.75pt solid #333333 !important;
+    padding: 4px 6px !important;
+    color: #000000 !important;
+  }
+
+  .print-algo-table th {
+    background: #f0f0f0 !important;
+  }
+
+  .print-code-box {
+    background: #f8f8f8 !important;
+    border: 0.5pt solid #999999 !important;
+    color: #000000 !important;
+    font-family: 'Fira Code', monospace !important;
+    font-size: 8pt !important;
+    padding: 4px 6px !important;
+    page-break-inside: avoid !important;
+  }
+
+  .print-footer-tag {
+    border-top: 1pt solid #999999 !important;
+    color: #555555 !important;
+    font-size: 7.5pt !important;
+    padding-top: 6px !important;
+    margin-top: 12px !important;
+  }
+}
+
 
 
 

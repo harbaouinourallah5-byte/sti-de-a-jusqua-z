@@ -1598,6 +1598,10 @@ function parseAppHash(hash) {
       const devSub = sub.replace(/^devoirs?\/?/, '').trim();
       return { view: 'algo-theorique', subTab: 'devoirs', filter: devSub || 'all' };
     }
+    if (sub.endsWith('/resume') || sub.endsWith('-resume') || sub.startsWith('resume/') || sub === 'resumes' || sub === 'fiches') {
+      const slug = sub.replace(/[\/-]resume$/, '').replace(/^resume\/?/, '').trim();
+      return { view: 'algo-theorique-resume', chapterSlug: (slug === 'resumes' || slug === 'fiches' || !slug) ? 'all' : slug };
+    }
     if (sub) {
       const ch = (typeof CURRICULUM !== 'undefined') ? (CURRICULUM.getChapterBySlug(sub) || CURRICULUM.getChapterByCategory(sub)) : null;
       if (ch) {
@@ -1610,6 +1614,12 @@ function parseAppHash(hash) {
   // Raccourcis directs de devoirs
   if (clean === 'devoirs' || clean === 'devoir' || clean === 'algo/devoirs') {
     return { view: 'algo-theorique', subTab: 'devoirs', filter: 'all' };
+  }
+
+  // Raccourcis directs résumés et fiches (#/resume/:slug ou #/fiches)
+  if (clean.startsWith('resume') || clean.startsWith('fiches') || clean === 'toutes-les-fiches') {
+    const slug = clean.replace(/^(resumes?|fiches?|toutes-les-fiches)\/?/, '').trim();
+    return { view: 'algo-theorique-resume', chapterSlug: slug || 'all' };
   }
 
   // Support direct des slugs ou ch1..ch8 (ex: #/tableaux, #/recursivite, #/ch2, #/matrices, #/ch6, #/suites)
@@ -1709,6 +1719,12 @@ function handleRouteFromHash() {
     }
     if (route.view === 'algo-statistiques' && typeof renderAlgoStatistiquesPage === 'function') {
       renderAlgoStatistiquesPage();
+    }
+  }
+
+  if (route.view === 'algo-theorique-resume') {
+    if (typeof renderAlgoChapterResumePage === 'function') {
+      renderAlgoChapterResumePage(route.chapterSlug);
     }
   }
 
@@ -2029,7 +2045,8 @@ function switchView(viewName, skipHashUpdate = false) {
       'revision': 'Ma Révision',
       'revision-plan': 'Planning d\'étude',
       'revision-cartes': 'Cartes Mémoire',
-      'algo-statistiques': 'Statistiques'
+      'algo-statistiques': 'Statistiques',
+      'algo-theorique-resume': 'Fiche Résumé A4'
     };
     mobileBrandTitle.textContent = titles[viewName] || 'STI de A à Z';
   }
@@ -2038,7 +2055,7 @@ function switchView(viewName, skipHashUpdate = false) {
     if (['html', 'css', 'js', 'sql'].includes(viewName)) {
       mobileModuleChip.textContent = 'STI';
       mobileModuleChip.className = 'mobile-module-chip sti';
-    } else if (['algo-home', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes', 'algo-quiz', 'algo-statistiques'].includes(viewName)) {
+    } else if (['algo-home', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes', 'algo-quiz', 'algo-statistiques', 'algo-theorique-resume'].includes(viewName)) {
       mobileModuleChip.textContent = 'ALGO';
       mobileModuleChip.className = 'mobile-module-chip algo';
     } else if (viewName === 'lessons') {
@@ -2162,6 +2179,10 @@ function switchView(viewName, skipHashUpdate = false) {
   } else if (viewName === 'algo-statistiques') {
     if (typeof renderAlgoStatistiquesPage === 'function') {
       renderAlgoStatistiquesPage();
+    }
+  } else if (viewName === 'algo-theorique-resume') {
+    if (typeof renderAlgoChapterResumePage === 'function') {
+      renderAlgoChapterResumePage();
     }
   }
 }
@@ -9174,7 +9195,10 @@ function renderAlgoTheoriqueCards() {
             <span style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4;">${escapeHtml(meta.desc)}</span>
           </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+          <a href="#/algo/theorique/${ch.slug}/resume" onclick="navigateToHash('#/algo/theorique/${ch.slug}/resume')" class="cat-pill" style="display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; font-size: 0.8rem; font-weight: 700; text-decoration: none; border-color: rgba(56, 189, 248, 0.4); color: #38bdf8;">
+            <span>🖨️ Fiche à imprimer (A4)</span>
+          </a>
           <span style="background: rgba(255,255,255,0.08); color: ${meta.color}; border: 1px solid ${meta.border}55; font-size: 0.8rem; font-weight: 800; padding: 4px 12px; border-radius: 20px; white-space: nowrap;">
             ${countBadgeText}
           </span>
@@ -12575,6 +12599,10 @@ function updatePageMeta(viewName) {
       title: "Statistiques & Fréquence des Chapitres • Bac Informatique",
       desc: "Cartographie interactive et fréquence d'apparition des 8 chapitres et 11 types d'exercices dans les sujets d'examens."
     },
+    'algo-theorique-resume': {
+      title: "Fiche de Révision Imprimable A4 • STI de A à Z",
+      desc: "Fiche de révision synthétique A4 prête à imprimer : cours en bref, algorithmes clés, pièges fréquents et exercices types du Bac."
+    },
     'admin': {
       title: "Espace Enseignant • Dépôt & Gestion Sécurisée des Documents PDF",
       desc: "Interface réservée aux enseignants pour le téléversement et la gestion des documents PDF de cours et devoirs."
@@ -14190,6 +14218,11 @@ if (typeof window !== 'undefined') {
   window.renderAlgoStatistiquesPage = renderAlgoStatistiquesPage;
   window.openStatsCellModal = openStatsCellModal;
   window.closeStatsCellModal = closeStatsCellModal;
+  // Feature 6 Resume bindings
+  window.renderAlgoChapterResumePage = renderAlgoChapterResumePage;
+  window.renderResumeDirectory = renderResumeDirectory;
+  window.handleResumeBack = handleResumeBack;
+  window.openAndPrintResume = openAndPrintResume;
 }
 
 // ===================================================================
@@ -15375,5 +15408,314 @@ function openStatsCellModal(chapterSlug, examId) {
 function closeStatsCellModal() {
   const modal = document.getElementById('statsCellModal');
   if (modal) modal.style.display = 'none';
+}
+
+// ===================================================================
+// RUN 7 FEATURE 6 : FICHES DE RÉVISION IMPRIMABLES A4 (#/algo/theorique/:slug/resume)
+// ===================================================================
+
+let currentResumeChapterSlug = 'fichiers';
+
+function renderAlgoChapterResumePage(chapterSlug = null) {
+  const container = document.getElementById('resumeContentArea');
+  if (!container || typeof CURRICULUM === 'undefined') return;
+
+  const targetSlug = chapterSlug || currentResumeChapterSlug || 'fichiers';
+
+  // Si "all" ou "resumes", afficher le répertoire des 8 fiches + 4 fiches méthode
+  if (targetSlug === 'all' || targetSlug === 'resumes' || targetSlug === 'fiches') {
+    renderResumeDirectory();
+    return;
+  }
+
+  // Résumé d'un chapitre spécifique
+  const ch = CURRICULUM.getChapterBySlug(targetSlug);
+  if (!ch) {
+    renderResumeDirectory();
+    return;
+  }
+
+  currentResumeChapterSlug = ch.slug;
+
+  // Mise à jour du sélecteur
+  const select = document.getElementById('resumeChapterSelect');
+  if (select) {
+    select.value = ch.slug;
+  }
+
+  // 1. Données du chapitre
+  const brief = ch.coursBrief || {
+    keyNotions: [ch.description || "Notions clés de ce chapitre."],
+    syntaxRules: ["Respecter les conventions officielles du Baccalauréat."],
+    bacTips: ["Lire attentivement l'énoncé et vérifier les conditions aux limites."]
+  };
+
+  // 2. Algorithmes clés du chapitre (DATA.algo_theorique)
+  const allAlgos = (typeof DATA !== 'undefined' && Array.isArray(DATA.algo_theorique)) ? DATA.algo_theorique : [];
+  const chapterAlgos = allAlgos.filter(a => CURRICULUM.matchesCategory(a.category, ch));
+
+  // 3. Types d'exercices au Bac (EXERCISES_DATA)
+  const allExercises = (typeof EXERCISES_DATA !== 'undefined' && typeof EXERCISES_DATA.getAllExercises === 'function')
+    ? EXERCISES_DATA.getAllExercises()
+    : [];
+  const matchingExercises = allExercises.filter(e => (e.chapters || []).includes(ch.slug));
+
+  const typeCounts = {};
+  matchingExercises.forEach(e => {
+    (e.types || []).forEach(t => {
+      typeCounts[t] = (typeCounts[t] || 0) + 1;
+    });
+  });
+
+  const sortedTypes = Object.keys(typeCounts).map(tSlug => {
+    const meta = (typeof EXERCISES_DATA !== 'undefined' && typeof EXERCISES_DATA.getTypeMeta === 'function')
+      ? EXERCISES_DATA.getTypeMeta(tSlug)
+      : null;
+    return {
+      slug: tSlug,
+      label: meta ? meta.label : tSlug,
+      icon: meta ? meta.icon : '🏷️',
+      count: typeCounts[tSlug]
+    };
+  }).sort((a, b) => b.count - a.count);
+
+  // Construction de la fiche A4
+  container.innerHTML = `
+    <div class="print-sheet-a4">
+      <!-- En-tête officiel imprimable -->
+      <div class="print-sheet-header">
+        <div>
+          <div class="print-sheet-brand">
+            RÉPUBLIQUE TUNISIENNE • MINISTÈRE DE L'ÉDUCATION • BACCALAURÉAT SCIENCES DE L'INFORMATIQUE
+          </div>
+          <h2 class="print-sheet-title">
+            ${ch.iconEmoji || '📁'} ${escapeHtml(ch.fullTitle)}
+          </h2>
+          <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">
+            ${escapeHtml(ch.description || '')}
+          </div>
+        </div>
+        <div style="text-align: right;">
+          <span class="print-badge-official">FICHE SYNTHÈSE A4</span>
+          <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 4px;">
+            Document officiel de révision
+          </div>
+        </div>
+      </div>
+
+      <!-- 1. À Retenir — L'Essentiel en Bref -->
+      <div class="print-section">
+        <h4 class="print-section-title">
+          <span>💡</span> 1. À Retenir — L'Essentiel du Cours
+        </h4>
+        <ul class="print-bullet-list">
+          ${brief.keyNotions.map(n => `<li>${escapeHtml(n)}</li>`).join('')}
+        </ul>
+      </div>
+
+      <!-- 2. Conventions & Syntaxes Officielles -->
+      <div class="print-section">
+        <h4 class="print-section-title">
+          <span>📜</span> 2. Syntaxes &amp; Conventions Bac (Pseudo-Code vs Python)
+        </h4>
+        <ul class="print-bullet-list">
+          ${brief.syntaxRules.map(s => `<li>${escapeHtml(s)}</li>`).join('')}
+        </ul>
+      </div>
+
+      <!-- 3. Algorithmes Types du Chapitre -->
+      <div class="print-section">
+        <h4 class="print-section-title">
+          <span>⚡</span> 3. Algorithmes Clés au Programme (${chapterAlgos.length})
+        </h4>
+        ${chapterAlgos.length > 0 ? `
+          <table class="print-algo-table">
+            <thead>
+              <tr>
+                <th style="width: 32%;">Sous-Programme</th>
+                <th style="width: 40%;">En-tête &amp; Déclaration TDO</th>
+                <th style="width: 28%;">Rôle au Bac</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${chapterAlgos.map(a => {
+                const tdoBrief = a.tdo && a.tdo.length ? a.tdo.map(t => `${t.objet}:${t.type}`).join(', ') : '—';
+                return `
+                  <tr>
+                    <td><strong>${escapeHtml(a.name)}</strong></td>
+                    <td><code>${escapeHtml(a.syntax || '')}</code><div style="font-size:0.75rem;color:var(--text-muted);margin-top:2px;">TDO : ${escapeHtml(tdoBrief)}</div></td>
+                    <td>${escapeHtml(a.summary || a.description || '')}</td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        ` : `
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">
+            Ce chapitre repose sur la méthode et les structures de données. Consultez les fiches méthode associées.
+          </p>
+        `}
+      </div>
+
+      <!-- 4. Types d'Exercices en Examen -->
+      <div class="print-section">
+        <h4 class="print-section-title">
+          <span>🎯</span> 4. Types d'Exercices aux Épreuves du Bac (${matchingExercises.length} exercices répertoriés)
+        </h4>
+        ${sortedTypes.length > 0 ? `
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 6px;">
+            ${sortedTypes.map(t => `
+              <span style="font-size: 0.8rem; padding: 4px 10px; border-radius: 6px; background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); font-weight: 700;">
+                ${t.icon} ${escapeHtml(t.label)} (${t.count} ex)
+              </span>
+            `).join('')}
+          </div>
+        ` : `
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Exercices transversaux dans les devoirs.</p>
+        `}
+      </div>
+
+      <!-- 5. Pièges Fréquents & Erreurs à Éviter -->
+      <div class="print-section" style="border-left: 4px solid #ef4444;">
+        <h4 class="print-section-title" style="color: #ef4444;">
+          <span>🚨</span> 5. Pièges Fréquents &amp; Erreurs des Candidats
+        </h4>
+        <ul class="print-bullet-list">
+          ${brief.bacTips.map(tip => `<li style="color: var(--text-primary); font-weight: 600;">${escapeHtml(tip)}</li>`).join('')}
+        </ul>
+      </div>
+
+      <!-- 6. Validation par Quiz Express -->
+      <div class="print-section no-print" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(16, 185, 129, 0.08)); border-color: rgba(245, 158, 11, 0.35);">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h4 style="margin: 0 0 4px 0; font-size: 0.95rem; font-weight: 800; color: var(--text-primary);">
+              ⚡ Prêt(e) à tester vos connaissances ?
+            </h4>
+            <p style="margin: 0; font-size: 0.84rem; color: var(--text-secondary);">
+              10 questions certifiées conformes aux exercices types du Bac (Vrai/Faux, QCM, traces manuelles).
+            </p>
+          </div>
+          <a href="#/algo/quiz/${ch.slug}" onclick="navigateToHash('#/algo/quiz/${ch.slug}')" class="fc-hero-btn" style="padding: 8px 16px; font-size: 0.85rem; text-decoration: none; background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);">
+            Lancer le Quiz (${ch.shortTitle}) →
+          </a>
+        </div>
+      </div>
+
+      <!-- Pied de page officiel imprimable -->
+      <div class="print-footer-tag">
+        <span>STI de A à Z • Portail officiel de révision Bac Informatique Tunisie</span>
+        <span>${escapeHtml(ch.shortTitle)} • Document conforme aux programmes officiels</span>
+      </div>
+    </div>
+  `;
+}
+
+function renderResumeDirectory() {
+  const container = document.getElementById('resumeContentArea');
+  if (!container || typeof CURRICULUM === 'undefined') return;
+
+  const allExercises = (typeof EXERCISES_DATA !== 'undefined' && typeof EXERCISES_DATA.getAllExercises === 'function')
+    ? EXERCISES_DATA.getAllExercises()
+    : [];
+
+  const methods = (typeof METHODS_DATA !== 'undefined') ? METHODS_DATA : [];
+
+  container.innerHTML = `
+    <div>
+      <div style="text-align: center; margin-bottom: 28px;">
+        <span class="stats-badge-header">📚 Bibliothèque de Fiches A4</span>
+        <h2 style="font-size: 1.6rem; font-weight: 800; color: var(--text-primary); margin: 6px 0 8px 0;">
+          Toutes les Fiches de Révision Imprimables
+        </h2>
+        <p style="font-size: 0.92rem; color: var(--text-secondary); max-width: 720px; margin: 0 auto; line-height: 1.5;">
+          Fiches de synthèse compactes au format A4 prêt à imprimer pour réviser au calme sans écran. Conformes aux exigences du Baccalauréat tunisien.
+        </p>
+      </div>
+
+      <!-- Grille des 8 Chapitres -->
+      <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--text-primary); margin: 0 0 14px 0; display: flex; align-items: center; gap: 8px;">
+        <span>📐</span> Les 8 Chapitres Théoriques Officiels
+      </h3>
+      <div class="resume-directory-grid">
+        ${CURRICULUM.chapters.map(ch => {
+          const exCount = allExercises.filter(e => (e.chapters || []).includes(ch.slug)).length;
+          return `
+            <div class="resume-directory-card">
+              <div>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;">
+                  <span style="font-size: 1.5rem;">${ch.iconEmoji || '📁'}</span>
+                  <span style="font-size: 0.72rem; font-weight: 800; color: #10b981; background: rgba(16,185,129,0.12); padding: 2px 8px; border-radius: 6px;">
+                    ${exCount} ex au Bac
+                  </span>
+                </div>
+                <h4 style="margin: 0 0 4px 0; font-size: 1rem; font-weight: 800; color: var(--text-primary);">
+                  ${escapeHtml(ch.fullTitle)}
+                </h4>
+                <p style="margin: 0; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4;">
+                  ${escapeHtml(ch.description || '')}
+                </p>
+              </div>
+
+              <div style="display:flex;align-items:center;gap:8px;margin-top:10px;">
+                <a href="#/algo/theorique/${ch.slug}/resume" onclick="navigateToHash('#/algo/theorique/${ch.slug}/resume')" class="fc-hero-btn" style="flex:1;padding:8px 12px;font-size:0.84rem;text-decoration:none;justify-content:center;">
+                  <span>👁️ Consulter</span>
+                </a>
+                <button type="button" class="plan-btn-reset" onclick="openAndPrintResume('${ch.slug}')" title="Imprimer directement cette fiche" style="padding:8px 12px;font-size:0.84rem;">
+                  🖨️
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+
+      <!-- Grille des 4 Fiches Méthode -->
+      <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--text-primary); margin: 30px 0 14px 0; display: flex; align-items: center; gap: 8px;">
+        <span>💡</span> Les 4 Fiches Méthode Pratiques
+      </h3>
+      <div class="resume-directory-grid">
+        ${methods.map(m => `
+          <div class="resume-directory-card">
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                <span style="font-size: 1.5rem;">${m.icon || '💡'}</span>
+                <span style="font-size: 0.72rem; font-weight: 800; color: #38bdf8; background: rgba(56,189,248,0.12); padding: 2px 8px; border-radius: 6px;">
+                  Méthodologie
+                </span>
+              </div>
+              <h4 style="margin: 0 0 4px 0; font-size: 1rem; font-weight: 800; color: var(--text-primary);">
+                ${escapeHtml(m.title)}
+              </h4>
+              <p style="margin: 0; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4;">
+                ${escapeHtml(m.subtitle || '')}
+              </p>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:8px;margin-top:10px;">
+              <a href="#/algo/methodes/${m.slug}" onclick="navigateToHash('#/algo/methodes/${m.slug}')" class="fc-hero-btn" style="flex:1;padding:8px 12px;font-size:0.84rem;text-decoration:none;justify-content:center;background:linear-gradient(135deg,#38bdf8,#0284c7);">
+                <span>👁️ Consulter la méthode</span>
+              </a>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function handleResumeBack() {
+  if (currentResumeChapterSlug && currentResumeChapterSlug !== 'all') {
+    navigateToHash(`#/algo/theorique/${currentResumeChapterSlug}`);
+  } else {
+    navigateToHash('#/algo/theorique');
+  }
+}
+
+function openAndPrintResume(slug) {
+  renderAlgoChapterResumePage(slug);
+  setTimeout(() => {
+    window.print();
+  }, 250);
 }
 

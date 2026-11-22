@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=32.0">
+  <link rel="stylesheet" href="style.css?v=33.0">
   <!-- INITIALISATION IMMÉDIATE DU THÈME & TOGGLE SANS LATENCE -->
   <script>
     (function() {
@@ -4794,6 +4794,47 @@ app.exec_()</code></pre>
       </div>
     </section>
 
+    <!-- ==========================================
+         VUE FICHE RÉSUMÉ A4 IMPRIMABLE (#/algo/theorique/:slug/resume)
+         ========================================== -->
+    <section id="view-algo-theorique-resume" class="view-section">
+      <div class="resume-page-container">
+        <!-- Barre d'outils web (masquée à l'impression) -->
+        <div class="resume-toolbar no-print">
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <button type="button" class="plan-btn-reset" onclick="handleResumeBack()" style="padding: 8px 14px; font-size: 0.84rem;">
+              ← Retour au chapitre
+            </button>
+            <button type="button" class="plan-btn-reset" onclick="navigateToHash('#/algo/theorique/resumes')" style="padding: 8px 14px; font-size: 0.84rem;">
+              📋 Toutes les fiches (8)
+            </button>
+            <select id="resumeChapterSelect" onchange="navigateToHash('#/algo/theorique/' + this.value + '/resume')" style="padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--surface-bg); color: var(--text-primary); font-size: 0.84rem; font-weight: 700;">
+              <option value="fichiers">Ch. 1 : Fichiers</option>
+              <option value="recursivite">Ch. 2 : Récursivité</option>
+              <option value="bases">Ch. 3 : Bases</option>
+              <option value="arithmetique">Ch. 4 : Arithmétique</option>
+              <option value="approximation">Ch. 5 : Approximation</option>
+              <option value="tableaux">Ch. 6 : Tableaux</option>
+              <option value="matrices">Ch. 7 : Matrices</option>
+              <option value="suites">Ch. 8 : Suites</option>
+            </select>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <button type="button" class="fc-hero-btn" onclick="window.print()" style="padding: 10px 20px; font-size: 0.92rem;">
+              <span>🖨️</span>
+              <span>Imprimer / PDF (A4)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Conteneur d'affichage dynamique (Fiche A4 ou Répertoire) -->
+        <div id="resumeContentArea">
+          <!-- Injecté dynamiquement par JS -->
+        </div>
+      </div>
+    </section>
+
     <!-- PIED DE PAGE GLOBAL -->
 
     <footer class="app-global-footer">
@@ -5237,25 +5278,25 @@ app.exec_()</code></pre>
 
   <!-- Fichiers Scripts -->
 
-  <script src="store.js?v=32.0"></script>
-  <script src="data.js?v=32.0"></script>
-  <script src="data/curriculum.js?v=32.0"></script>
-  <script src="data/documents.js?v=32.0"></script>
-  <script src="data/exercises.js?v=32.0"></script>
-  <script src="data/methods.js?v=32.0"></script>
-  <script src="data/quiz/fichiers.js?v=32.0"></script>
-  <script src="data/quiz/recursivite.js?v=32.0"></script>
-  <script src="data/quiz/bases.js?v=32.0"></script>
-  <script src="data/quiz/arithmetique.js?v=32.0"></script>
-  <script src="data/quiz/approximation.js?v=32.0"></script>
-  <script src="data/quiz/tableaux.js?v=32.0"></script>
-  <script src="data/quiz/matrices.js?v=32.0"></script>
-  <script src="data/quiz/suites.js?v=32.0"></script>
-  <script src="data/quiz.js?v=32.0"></script>
-  <script src="css_engine.js?v=32.0"></script>
-  <script src="algo_pratique_engine.js?v=32.0"></script>
-  <script src="pomodoro_engine.js?v=32.0"></script>
-  <script src="app.js?v=32.0"></script>
+  <script src="store.js?v=33.0"></script>
+  <script src="data.js?v=33.0"></script>
+  <script src="data/curriculum.js?v=33.0"></script>
+  <script src="data/documents.js?v=33.0"></script>
+  <script src="data/exercises.js?v=33.0"></script>
+  <script src="data/methods.js?v=33.0"></script>
+  <script src="data/quiz/fichiers.js?v=33.0"></script>
+  <script src="data/quiz/recursivite.js?v=33.0"></script>
+  <script src="data/quiz/bases.js?v=33.0"></script>
+  <script src="data/quiz/arithmetique.js?v=33.0"></script>
+  <script src="data/quiz/approximation.js?v=33.0"></script>
+  <script src="data/quiz/tableaux.js?v=33.0"></script>
+  <script src="data/quiz/matrices.js?v=33.0"></script>
+  <script src="data/quiz/suites.js?v=33.0"></script>
+  <script src="data/quiz.js?v=33.0"></script>
+  <script src="css_engine.js?v=33.0"></script>
+  <script src="algo_pratique_engine.js?v=33.0"></script>
+  <script src="pomodoro_engine.js?v=33.0"></script>
+  <script src="app.js?v=33.0"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
