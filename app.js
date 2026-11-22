@@ -1475,14 +1475,14 @@ const VARIETIES_CONFIG = {
       {
         "label": "target='_self' (Onglet courant)",
         "value": "_self",
-        "previewHtml": "<a href=\"javascript:void(0)\" style=\"color:#f97316; font-weight:bold; text-decoration:underline; font-size:16px;\">Portail Officiel STI (_self)</a>",
-        "code": "<a id=\"lien\" href=\"https://bac.tn\" target=\"_self\">Portail Officiel STI</a>"
+        "previewHtml": "<a href=\"javascript:void(0)\" style=\"color:#f97316; font-weight:bold; text-decoration:underline; font-size:16px;\">Portail Bac STI (_self)</a>",
+        "code": "<a id=\"lien\" href=\"https://bac.tn\" target=\"_self\">Portail Bac STI</a>"
       },
       {
         "label": "target='_blank' (Nouvel onglet ↗)",
         "value": "_blank",
         "previewHtml": "<a href=\"javascript:void(0)\" style=\"color:#0ea5e9; font-weight:bold; text-decoration:underline; font-size:16px;\">Ouvrir dans un nouvel onglet ↗ (_blank)</a>",
-        "code": "<a id=\"lien\" href=\"https://bac.tn\" target=\"_blank\">Portail Officiel STI</a>"
+        "code": "<a id=\"lien\" href=\"https://bac.tn\" target=\"_blank\">Portail Bac STI</a>"
       }
     ]
   }
@@ -1803,7 +1803,7 @@ function updateDataCountersUI() {
     const homeAlgoTheorique = document.getElementById('homeAlgoTheoriqueBadge');
     if (homeAlgoTheorique) homeAlgoTheorique.textContent = `${algoTheoriqueCount} algorithmes complets`;
     const homeAlgoTitle = document.getElementById('homeAlgoTheoriqueTitle');
-    if (homeAlgoTitle) homeAlgoTitle.textContent = `Théorique (${totalChapters} Chapitres Officiels)`;
+    if (homeAlgoTitle) homeAlgoTitle.textContent = `Théorique (${totalChapters} Chapitres)`;
 
     // Badges onglets fiches détaillées
     const tabHtml = document.getElementById('tabBtnHtmlCards');
@@ -6487,7 +6487,7 @@ function openCssModalById(id) {
 
 // =============================================================
 // MODULE COURS & SÉRIES PDF
-// Conforme au Programme Officiel Baccalauréat STI Tunisie
+// Basé sur les annexes du Baccalauréat STI Tunisie
 // =============================================================
 
 let allLessons = [];
@@ -6808,11 +6808,11 @@ function renderLessons() {
             <span style="background: rgba(255,255,255,0.08); font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; color: #cbd5e1; font-weight: 600;">
               ${escapeHtml(lesson.typeLabel || lesson.type)}
             </span>
-            ${hasCorr ? `<span class="badge-corrigé-pill" title="Cette série contient son corrigé type officiel">🎯 Corrigé inclus</span>` : ''}
+            ${hasCorr ? `<span class="badge-corrigé-pill" title="Cette série contient son corrigé type">🎯 Corrigé inclus</span>` : ''}
           </div>
 
           <h3 class="lesson-card-title">${escapeHtml(lesson.title)}</h3>
-          <p class="lesson-card-desc">${escapeHtml(lesson.description || lesson.summary || 'Document officiel de référence.')}</p>
+          <p class="lesson-card-desc">${escapeHtml(lesson.description || lesson.summary || 'Document de révision de référence.')}</p>
         </div>
 
         <div>
@@ -6904,7 +6904,7 @@ function openPdfModal(lessonId, variant = 'enonce') {
 
   if (titleEl) titleEl.textContent = displayTitle;
   if (catEl) {
-    const typeTxt = isCorrige ? "🎯 Corrigé Officiel" : (lesson.typeLabel || lesson.type);
+    const typeTxt = isCorrige ? "🎯 Corrigé Type" : (lesson.typeLabel || lesson.type);
     catEl.textContent = `PDF • ${lesson.subjectLabel || lesson.subject} • ${typeTxt}`;
     catEl.className = `category-label ${lesson.subject}`;
   }
@@ -6928,7 +6928,7 @@ function openPdfModal(lessonId, variant = 'enonce') {
         </button>
         <button class="pdf-viewer-tab-btn ${isCorrige ? 'active' : ''}" onclick="openPdfModal('${lesson.id}', 'corrige')">
           <span>🎯</span>
-          <span>Corrigé Type Officiel</span>
+          <span>Corrigé Type</span>
         </button>
       </div>
       <span style="font-size: 0.78rem; color: #34d399; font-weight: 600;">
@@ -9195,7 +9195,7 @@ function renderAlgoDevoirs() {
         <div class="devoir-corrige-panel" id="devoirCorrigePanel_${d.id}" style="display: ${isCorrigeOpen ? 'block' : 'none'};">
           <div class="devoir-corrige-header">
             <span style="color: #34d399; font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
-              <span>🎯</span> Corrigé Type Officiel &amp; Barème
+              <span>🎯</span> Corrigé Type &amp; Barème
             </span>
             <span style="font-size: 0.78rem; color: var(--text-secondary);">${escapeHtml(d.corrige.resume || '')}</span>
           </div>
@@ -11345,7 +11345,7 @@ const VIEW_METAS = {
   'algo-pratique': { module: 'algo', modLabel: 'Algorithme', title: 'Pratique (Qt ➔ Thonny Python)' },
   'algo-types': { module: 'algo', modLabel: 'Algorithme', title: 'Types d\'Exercices du Bac' },
   'algo-methodes': { module: 'algo', modLabel: 'Algorithme', title: 'Fiches Méthode' },
-  'algo-theorique': { module: 'algo', modLabel: 'Algorithme', title: (typeof CURRICULUM !== 'undefined') ? `Théorique (${CURRICULUM.getTotalAlgoChapters()} Chapitres Bac Info)` : 'Théorique (8 Chapitres Bac Info)' }
+  'algo-theorique': { module: 'algo', modLabel: 'Algorithme', title: (typeof CURRICULUM !== 'undefined') ? `Théorique (${CURRICULUM.getTotalAlgoChapters()} Chapitres Bac Info)` : 'Théorique (8 Chapitres)' }
 };
 
 function updateBreadcrumbBar(viewName) {
@@ -11787,11 +11787,11 @@ function updatePageMeta(viewName) {
       desc: `Portail complet d'étude pour le Baccalauréat tunisien : STI (HTML5, CSS3, JavaScript, SQL) et Algorithmique (Qt Designer, Thonny Python, ${totalAlgoCh} chapitres théoriques).`
     },
     'html': {
-      title: "HTML5 • STI de A à Z — Annexe Officielle & Balises Bac STI",
+      title: "HTML5 • STI de A à Z — Annexe & Balises Bac STI",
       desc: "Guide exhaustif des balises HTML5 officielles du Bac STI avec aperçu visuel, formulaire d'examen et exemples conformes."
     },
     'css': {
-      title: "CSS3 • STI de A à Z — Annexe Officielle & Propriétés Bac STI",
+      title: "CSS3 • STI de A à Z — Annexe & Propriétés Bac STI",
       desc: "Les 61 propriétés CSS3 indispensables au Bac STI avec sélecteurs #id, styles d'examen et simulateur interactif."
     },
     'js': {
@@ -11804,11 +11804,11 @@ function updatePageMeta(viewName) {
     },
     'lessons': {
       title: "Cours & Séries PDF • STI Web & BD & Algorithme Baccalauréat Tunisie",
-      desc: "Bibliothèque officielle de cours, séries d'exercices et devoirs corrigés en PDF pour les modules STI et Algorithmique."
+      desc: "Bibliothèque de cours, séries d'exercices et devoirs corrigés en PDF pour les modules STI et Algorithmique."
     },
     'algo-home': {
       title: "Algorithme & Programmation • Accueil Module Bac Informatique",
-      desc: `Espace de révision officiel pour l'algorithmique au Bac tunisien : pratique Qt Designer & Thonny et ${totalAlgoCh} chapitres théoriques.`
+      desc: `Espace de révision pour l'algorithmique au Bac tunisien : pratique Qt Designer & Thonny et ${totalAlgoCh} chapitres théoriques.`
     },
     'algo-pratique': {
       title: "Pratique Qt Designer ➔ Thonny Python • Algorithme Bac Info",
@@ -11816,7 +11816,7 @@ function updatePageMeta(viewName) {
     },
     'algo-theorique': {
       title: `Algorithmique Théorique • ${totalAlgoCh} Chapitres Officiels Bac Informatique`,
-      desc: `Les ${totalAlgoCh} chapitres théoriques officiels avec algorithmes complets, T.D.O et scripts Python conformes Bac.`
+      desc: `Les ${totalAlgoCh} chapitres théoriques avec algorithmes complets, T.D.O et scripts Python conformes Bac.`
     },
     'revision': {
       title: "Ma Révision • Notions à Revoir, Simulateur & Progression Bac Info",
@@ -12531,7 +12531,7 @@ function renderQuizRecentSection() {
         <div class="revision-empty-icon">⚡</div>
         <h4 style="margin:0 0 6px 0;font-size:1.05rem;color:var(--text-primary);font-weight:700;">Aucun quiz effectué pour le moment</h4>
         <p class="revision-empty-text">
-          Entraînez-vous en format express (2 à 5 minutes) sur les 80 questions certifiées conformes aux exercices types du Bac.
+          Entraînez-vous en format express (2 à 5 minutes) sur les 80 questions rédigées pour la révision, à valider avec ton professeur conformes aux exercices types du Bac.
         </p>
         <button type="button" onclick="navigateToHash('#/algo/quiz')" class="btn-primary" style="padding:10px 22px;border-radius:10px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;font-weight:700;font-size:0.88rem;border:none;cursor:pointer;">
           🚀 Lancer mon premier Quiz
@@ -14725,7 +14725,7 @@ function renderAlgoChapterResumePage(chapterSlug = null) {
         <div style="text-align: right;">
           <span class="print-badge-official">FICHE SYNTHÈSE A4</span>
           <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 4px;">
-            Document officiel de révision
+            Document de révision de révision
           </div>
         </div>
       </div>

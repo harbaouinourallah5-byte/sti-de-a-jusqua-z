@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=35.1">
+  <link rel="stylesheet" href="style.css?v=35.2">
   <!-- INITIALISATION IMMÉDIATE DU THÈME & TOGGLE SANS LATENCE -->
   <script>
     (function() {
@@ -400,7 +400,7 @@
           </div>
           <h1 class="home-calm-title">Bienvenue, on révise !</h1>
           <p class="home-calm-subtitle">
-            Un espace d'étude calme, clair et structuré pour maîtriser l'intégralité du programme officiel de STI (Web &amp; Bases de données) et d'Algorithmique.
+            Un espace d'étude calme, clair et structuré pour maîtriser l'intégralité du programme de STI (Web &amp; Bases de données) et d'Algorithmique.
           </p>
           <div class="home-hero-actions" style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap;">
             <button type="button" onclick="PomodoroEngine.openDrawer()" style="background: linear-gradient(135deg, #ea580c, #f97316); color: #fff; border: none; padding: 10px 22px; border-radius: 25px; font-weight: 700; font-size: 0.92rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 16px rgba(234, 88, 12, 0.35); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
@@ -515,7 +515,7 @@
               </div>
             </div>
             <p class="big-module-desc">
-              Le programme officiel tunisien structuré en 8 chapitres rigoureux et son laboratoire interactif :
+              Les 8 chapitres du programme tunisien et son laboratoire interactif :
             </p>
             <ul class="big-module-topics-list">
               <li class="big-module-topic-item" onclick="event.stopPropagation(); switchView('algo-pratique')">
@@ -528,7 +528,7 @@
               <li class="big-module-topic-item" onclick="event.stopPropagation(); switchView('algo-theorique')">
                 <div class="big-module-topic-name">
                   <span>📖</span>
-                  <span id="homeAlgoTheoriqueTitle">Théorique (8 Chapitres Officiels)</span>
+                  <span id="homeAlgoTheoriqueTitle">Théorique (8 Chapitres)</span>
                 </div>
                 <span class="big-module-topic-badge" id="homeAlgoTheoriqueBadge">59 algorithmes complets</span>
               </li>
@@ -562,11 +562,11 @@
             <span class="hero-tag-badge">HTML5</span>
           </div>
           <div class="view-hero-text">
-            <h1 class="view-hero-title">Annexe Officielle HTML5</h1>
-            <p class="view-hero-subtitle">Programme officiel du Bac STI • Structure sémantique, balises de contenu, multimédia et formulaires interactifs</p>
+            <h1 class="view-hero-title">Annexe HTML5</h1>
+            <p class="view-hero-subtitle">Basé sur les annexes du Bac STI • Structure sémantique, balises de contenu, multimédia et formulaires interactifs</p>
             <div class="view-hero-badges">
               <span class="hero-pill"><strong id="htmlBadgeCount">56</strong> Balises Référencées</span>
-              <span class="hero-pill success">✓ Conforme Programme Bac STI</span>
+              <span class="hero-pill success">✓ Basé sur les annexes du programme</span>
               <span class="hero-pill cyan">Exemples Interactifs</span>
             </div>
           </div>
@@ -576,7 +576,7 @@
         <div class="view-tabs-bar">
           <button id="tabBtnHtmlDoc" class="view-mode-tab active orange" onclick="switchHtmlTab('doc')">
             <span>📄</span>
-            <span>Tableau Officiel Annexe HTML5 (Recommandé)</span>
+            <span>Tableau Annexe HTML5 (Recommandé)</span>
           </button>
           <button id="tabBtnHtmlCards" class="view-mode-tab" onclick="switchHtmlTab('cards')">
             <span>🎴</span>
@@ -585,7 +585,7 @@
         </div>
 
         <!-- ==========================================
-             1. VUE TABLEAU OFFICIEL HTML5 (RÉPLIQUE 3 COLONNES)
+             1. VUE TABLEAU ANNEXE HTML5 (3 COLONNES)
              ========================================== -->
         <div class="annexe-doc-container orange-theme" id="htmlOfficialDocView">
           <div class="annexe-doc-header">
@@ -989,11 +989,11 @@
             <span class="hero-tag-badge">CSS3</span>
           </div>
           <div class="view-hero-text">
-            <h1 class="view-hero-title">Annexe Officielle CSS3</h1>
-            <p class="view-hero-subtitle">Programme officiel du Bac STI • Sélecteurs, mise en forme du texte, modèle de boîte (Box Model), Flexbox et animations</p>
+            <h1 class="view-hero-title">Annexe CSS3</h1>
+            <p class="view-hero-subtitle">Basé sur les annexes du Bac STI • Sélecteurs, mise en forme du texte, modèle de boîte (Box Model), Flexbox et animations</p>
             <div class="view-hero-badges">
               <span class="hero-pill"><strong id="cssBadgeCount">61</strong> Propriétés Référencées</span>
-              <span class="hero-pill success">✓ Conforme Programme Bac STI</span>
+              <span class="hero-pill success">✓ Basé sur les annexes du programme</span>
               <span class="hero-pill cyan">Simulateur Visuel Live</span>
             </div>
           </div>
@@ -1003,7 +1003,7 @@
         <div class="view-tabs-bar">
           <button id="tabBtnCssDoc" class="view-mode-tab active blue" onclick="switchCssTab('doc')">
             <span>📄</span>
-            <span>Tableau Officiel Annexe CSS3 (Recommandé)</span>
+            <span>Tableau Annexe CSS3 (Recommandé)</span>
           </button>
           <button id="tabBtnCssCards" class="view-mode-tab" onclick="switchCssTab('cards')">
             <span>🎴</span>
@@ -1012,7 +1012,7 @@
         </div>
 
         <!-- ==========================================
-             1. VUE TABLEAU OFFICIEL CSS3 (RÉPLIQUE 3 COLONNES)
+             1. VUE TABLEAU ANNEXE CSS3 (3 COLONNES)
              ========================================== -->
         <div class="annexe-doc-container blue-theme" id="cssOfficialDocView">
           <div class="annexe-doc-header">
@@ -1049,7 +1049,7 @@
                   </tr>
                   <tr onclick="openCssModalById('css-sel-id')" title="Cliquer pour afficher la fiche complète">
                     <td class="syntax-col" style="color:#38bdf8; font-weight:800;">#id</td>
-                    <td class="desc-col"><strong>Cible un élément en fonction de la valeur de son attribut id.</strong> (Sélecteur officiel Bac STI)</td>
+                    <td class="desc-col"><strong>Cible un élément en fonction de la valeur de son attribut id.</strong> (Sélecteur au Bac STI)</td>
                   </tr>
                   <tr onclick="openCssModalById('css-sel-class')" title="Cliquer pour afficher la fiche complète">
                     <td class="syntax-col">.class</td>
@@ -1399,11 +1399,11 @@
             <span class="hero-tag-badge">JS</span>
           </div>
           <div class="view-hero-text">
-            <h1 class="view-hero-title">Annexe Officielle JavaScript</h1>
-            <p class="view-hero-subtitle">Programme officiel du Bac STI • Contrôle de saisie des formulaires, manipulation du DOM, objets Date et événements</p>
+            <h1 class="view-hero-title">Annexe JavaScript</h1>
+            <p class="view-hero-subtitle">Basé sur les annexes du Bac STI • Contrôle de saisie des formulaires, manipulation du DOM, objets Date et événements</p>
             <div class="view-hero-badges">
               <span class="hero-pill"><strong id="jsBadgeCount">63</strong> Notions &amp; Méthodes</span>
-              <span class="hero-pill success">✓ Conforme Programme Bac STI</span>
+              <span class="hero-pill success">✓ Basé sur les annexes du programme</span>
               <span class="hero-pill cyan">Console Interactive ES6</span>
             </div>
           </div>
@@ -1413,7 +1413,7 @@
         <div class="view-tabs-bar">
           <button id="tabBtnAnnexeDoc" class="view-mode-tab active" onclick="switchJsTab('doc')">
             <span>📄</span>
-            <span>Tableau Officiel Annexe JS (Recommandé)</span>
+            <span>Tableau Annexe JS (Recommandé)</span>
           </button>
           <button id="tabBtnCardsGrid" class="view-mode-tab" onclick="switchJsTab('cards')">
             <span>🎴</span>
@@ -1422,7 +1422,7 @@
         </div>
 
         <!-- ==========================================
-             1. VUE TABLEAU OFFICIEL (RÉPLIQUE 3 COLONNES)
+             1. VUE TABLEAU ANNEXE JS (3 COLONNES)
              ========================================== -->
         <div class="annexe-doc-container" id="jsOfficialDocView">
           <div class="annexe-doc-header">
@@ -1896,7 +1896,7 @@
             <div>
               <h4 style="color: #34d399; font-size: 1.05rem; margin-bottom: 4px;">⚡ 63 Notions & Fonctions JavaScript - Baccalauréat STI</h4>
               <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;">
-                L'intégralité des 14 sections officielles : opérateurs, comparaisons, Math, chaînes, dates, tableaux, sélection DOM, validation verif, Captcha, et structure conditionnelle switch !
+                Les 14 sections de l'annexe : opérateurs, comparaisons, Math, chaînes, dates, tableaux, sélection DOM, validation verif, Captcha, et structure conditionnelle switch !
               </p>
             </div>
             <span style="background: #059669; color: #fff; font-weight: 800; font-size: 0.8rem; padding: 6px 14px; border-radius: 20px;">
@@ -1947,11 +1947,11 @@
             <span class="hero-tag-badge">SQL</span>
           </div>
           <div class="view-hero-text">
-            <h1 class="view-hero-title">Annexe Officielle SQL (MySQL)</h1>
-            <p class="view-hero-subtitle">Programme officiel du Bac STI • Définition (LDD), Manipulation (LMD), contraintes d'intégrité et console MySQL live</p>
+            <h1 class="view-hero-title">Annexe SQL (MySQL)</h1>
+            <p class="view-hero-subtitle">Basé sur les annexes du Bac STI • Définition (LDD), Manipulation (LMD), contraintes d'intégrité et console MySQL live</p>
             <div class="view-hero-badges">
               <span class="hero-pill"><strong id="sqlBadgeCount">57</strong> Commandes &amp; Fonctions</span>
-              <span class="hero-pill success">✓ Conforme Programme Bac STI</span>
+              <span class="hero-pill success">✓ Basé sur les annexes du programme</span>
               <span class="hero-pill cyan">Simulateur MySQL 8</span>
             </div>
           </div>
@@ -1961,7 +1961,7 @@
         <div class="view-tabs-bar">
           <button id="tabBtnSqlDoc" class="view-mode-tab active" onclick="switchSqlTab('doc')">
             <span>📄</span>
-            <span>Tableau Officiel Annexe SQL (Réplique Conforme)</span>
+            <span>Tableau Annexe SQL (8 Sections)</span>
           </button>
           <button id="tabBtnSqlCards" class="view-mode-tab" onclick="switchSqlTab('cards')">
             <span>🎴</span>
@@ -1970,7 +1970,7 @@
         </div>
 
         <!-- ==========================================
-             1. VUE TABLEAU OFFICIEL (RÉPLIQUE 8 SECTIONS DE LA FICHE)
+             1. VUE TABLEAU ANNEXE SQL (8 SECTIONS)
              ========================================== -->
         <div class="annexe-doc-container" id="sqlOfficialDocView">
           <div class="annexe-doc-header">
@@ -2360,7 +2360,7 @@
           </div>
           <div class="view-hero-text">
             <h1 class="view-hero-title">Cours, Séries &amp; Documents PDF</h1>
-            <p class="view-hero-subtitle">Bibliothèque numérique officielle • Polycopiés officiels, devoirs de synthèse, corrigés types et résumés STI &amp; Algorithme</p>
+            <p class="view-hero-subtitle">Bibliothèque numérique • Documents de cours, séries d'exercices, corrigés types et fiches de révision STI &amp; Algorithme</p>
             <div class="view-hero-badges">
               <span class="hero-pill" id="lessonsCounterBadge">Chargement...</span>
               <span class="hero-pill success">✓ Téléchargement &amp; Prévisualisation Directe</span>
@@ -2536,13 +2536,13 @@
         
         <div class="hero">
           <span class="hero-tag" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);">
-            🐍 Baccalauréat Tunisie • Section Informatique &amp; Épreuves Officielles
+            🐍 Baccalauréat Tunisie • Section Informatique
           </span>
           <h1 class="hero-title" style="background: linear-gradient(135deg, #38bdf8, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
             Algorithme &amp; Programmation de A à Z
           </h1>
           <p class="hero-desc">
-            Le portail tout-en-un pour préparer l'<strong>Épreuve Pratique</strong> (conception graphique sous Qt Designer &amp; programmation Python sous Thonny) et l'<strong>Épreuve Théorique</strong> (algorithmes officiels, déclarations T.D.O / T.D.N.T, structures de contrôle et sous-programmes).
+            Le portail tout-en-un pour préparer l'<strong>Épreuve Pratique</strong> (conception graphique sous Qt Designer &amp; programmation Python sous Thonny) et l'<strong>Épreuve Théorique</strong> (algorithmes du programme, déclarations T.D.O / T.D.N.T, structures de contrôle et sous-programmes).
           </p>
         </div>
 
@@ -2587,11 +2587,11 @@
             <div class="card-icon-wrap" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #fff;">📖</div>
             <h2 class="card-title">Épreuve Théorique (Algorithmique Bac)</h2>
             <p class="card-subtitle">
-              Les 8 grands chapitres officiels du programme tunisien : <strong>1) Fichiers</strong>, <strong>2) Récursivité</strong>, <strong>3) Conversion des bases</strong>, <strong>4) Arithmétique</strong>, <strong>5) Approximation</strong>, <strong>6) Tableaux</strong>, <strong>7) Matrices</strong> et <strong>8) Suites</strong>.
+              Les 8 grands chapitres du programme tunisien : <strong>1) Fichiers</strong>, <strong>2) Récursivité</strong>, <strong>3) Conversion des bases</strong>, <strong>4) Arithmétique</strong>, <strong>5) Approximation</strong>, <strong>6) Tableaux</strong>, <strong>7) Matrices</strong> et <strong>8) Suites</strong>.
             </p>
             <div class="card-badges">
               <span class="pill-badge" id="algoHomeTheoriqueBadge" style="color: #fbbf24;">59 Algorithmes &amp; Modules</span>
-              <span class="pill-badge" style="color: #38bdf8;">📋 T.D.O &amp; T.D.N.T Officiels</span>
+              <span class="pill-badge" style="color: #38bdf8;">📋 Conventions T.D.O &amp; T.D.N.T</span>
               <span class="pill-badge" style="color: #34d399;">⚡ Pseudo-Code &amp; Python Côte à Côte</span>
             </div>
             <div class="card-cta-btn" style="background: #f59e0b; color: #000; font-weight: 800;">
@@ -2605,12 +2605,12 @@
             <div class="card-icon-wrap" style="background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff;">📚</div>
             <h2 class="card-title">Cours, Séries &amp; Documents PDF</h2>
             <p class="card-subtitle">
-              Supports officiels et fiches de révision de l'Algorithme : Pratique (Qt Designer ➔ Thonny) et Théorique (Fichiers, Bases de numération, Calcul d'aires, Matrices &amp; Patterns, Fiches de révision).
+              Supports et fiches de révision de l'Algorithme : Pratique (Qt Designer ➔ Thonny) et Théorique (Fichiers, Bases de numération, Calcul d'aires, Matrices &amp; Patterns, Fiches de révision).
             </p>
             <div class="card-badges">
               <span class="pill-badge" id="algoHomeLessonsCardBadge" style="color: #c084fc;">8 Chapitres &amp; Pratique</span>
               <span class="pill-badge" style="color: #34d399;">🛠️ Fiches Qt ➔ Thonny</span>
-              <span class="pill-badge" style="color: #fbbf24;">📖 Supports Officiels Bac</span>
+              <span class="pill-badge" style="color: #fbbf24;">📖 Supports Bac</span>
             </div>
             <div class="card-cta-btn" onclick="openLessonsForModule('algo')" style="background: #a855f7; color: #fff; font-weight: 800;">
               <span>Consulter les Cours PDF</span>
@@ -2626,11 +2626,11 @@
             <div style="display: flex; align-items: center; gap: 10px;">
               <span style="font-size: 1.5rem;">📚</span>
               <div>
-                <h3 id="algoHomeChaptersTitle" style="margin: 0; font-size: 1.2rem; color: #fbbf24;">Les 8 Chapitres Officiels d'Algorithmique (Bac Tunisie)</h3>
+                <h3 id="algoHomeChaptersTitle" style="margin: 0; font-size: 1.2rem; color: #fbbf24;">Les 8 Chapitres d'Algorithmique (Bac Tunisie)</h3>
                 <span style="font-size: 0.82rem; color: var(--text-secondary);">Accès direct aux algorithmes types, T.D.O et implémentations Python Thonny</span>
               </div>
             </div>
-            <span style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700;">Programme Officiel Bac Info</span>
+            <span style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700;">Programme Bac Info 4SI</span>
           </div>
 
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;">
@@ -2765,7 +2765,7 @@
             </div>
             <div>
               <h2 class="annexe-title-text" style="font-size: 1.6rem; color: #34d399;">Épreuve Pratique : Qt Designer ➔ Thonny Python</h2>
-              <span style="font-size: 0.9rem; color: var(--text-secondary);">Baccalauréat Tunisie • Fiche Annexe Officielle &amp; Guide Complet de Manipulation</span>
+              <span style="font-size: 0.9rem; color: var(--text-secondary);">Baccalauréat Tunisie • Fiche Annexe &amp; Guide de Manipulation</span>
             </div>
           </div>
         </div>
@@ -2774,7 +2774,7 @@
         <div class="view-tabs-bar" style="margin-bottom: 24px;">
           <button id="tabBtnAlgoDoc" class="view-mode-tab active green" onclick="switchAlgoPratiqueTab('doc')">
             <span>📄</span>
-            <span>Tableau Officiel Annexe Qt (Feuille d'Examen Bac)</span>
+            <span>Tableau Annexe Qt (Feuille d'Examen)</span>
           </button>
           <button id="tabBtnAlgoInteractive" class="view-mode-tab" onclick="switchAlgoPratiqueTab('interactive')">
             <span>🎛️</span>
@@ -2791,7 +2791,7 @@
         </div>
 
         <!-- ==========================================
-             1. VUE TABLEAU OFFICIEL ANNEXE QT (RÉPLIQUE EXACTE)
+             1. VUE TABLEAU ANNEXE QT (FEUILLE D'EXAMEN)
              ========================================== -->
         <div class="annexe-doc-container green-theme" id="algoOfficialDocView">
           <div class="annexe-doc-header" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; padding: 18px 24px; border-bottom: 1px solid var(--border-color); background: rgba(15, 23, 42, 0.7);">
@@ -2801,10 +2801,10 @@
               </div>
               <div>
                 <h2 style="font-size: 1.4rem; font-weight: 900; margin: 0; color: var(--text-primary); letter-spacing: -0.5px;">
-                  Annexe Officielle : Qt Designer ➔ Thonny Python
+                  Annexe : Qt Designer ➔ Thonny Python
                 </h2>
                 <span style="font-size: 0.84rem; color: var(--text-secondary);">
-                  Réplique conforme de la feuille d'examen distribuée lors de l'épreuve pratique du Baccalauréat
+                  Basé sur la feuille d'examen distribuée lors de l'épreuve pratique du Baccalauréat
                 </span>
               </div>
             </div>
@@ -3141,7 +3141,7 @@
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 14px;">
               <div style="display: flex; align-items: center; gap: 10px;">
                 <span style="font-size: 1.4rem;">📋</span>
-                <h3 style="font-size: 1.1rem; color: #34d399; margin: 0;">Le Starter Template Officiel Bac (À mémoriser &amp; coller dans Thonny)</h3>
+                <h3 style="font-size: 1.1rem; color: #34d399; margin: 0;">Le Modèle de Base Bac (Template Python)</h3>
               </div>
               <button class="copy-btn" onclick="copyStarterTemplate()" style="background: #10b981; color: #000; font-weight: 700; border: none; padding: 7px 16px; border-radius: 6px; cursor: pointer;">
                 📋 Copier le Starter Template
@@ -3282,7 +3282,7 @@ app.exec_()</code></pre>
           </div>
           <div class="pagination-card next" onclick="switchView('algo-theorique')">
             <span class="pagination-label">Suivant →</span>
-            <span class="pagination-title">📖 Théorique (6 Chapitres Officiels)</span>
+            <span class="pagination-title">📖 Théorique (8 Chapitres)</span>
           </div>
         </div>
 
@@ -3302,7 +3302,7 @@ app.exec_()</code></pre>
             </div>
             <div>
               <h2 class="annexe-title-text" style="font-size: 1.6rem; color: #fbbf24; margin: 0;">Épreuve Théorique : Algorithmique Bac Tunisie</h2>
-              <span style="font-size: 0.9rem; color: var(--text-secondary);">Programme officiel • T.D.O &amp; T.D.N.T • Pseudo-code normalisé &amp; Python Thonny</span>
+              <span style="font-size: 0.9rem; color: var(--text-secondary);">Programme du Bac • T.D.O &amp; T.D.N.T • Pseudo-code normalisé &amp; Python Thonny</span>
             </div>
           </div>
           <div>
@@ -3348,16 +3348,7 @@ app.exec_()</code></pre>
     </section>
 
         
-      <!-- PIED DE PAGE GLOBAL MODE ÉTUDE CALME -->
-      <footer class="app-global-footer">
-        <div class="container footer-content-wrap">
-          <div class="footer-badge-box">
-            <span class="footer-badge-pill">🎓 STI de A à Z • Baccalauréat Tunisie</span>
-          </div>
-          <p class="footer-disclaimer-text">
-            Site de révision interactif réalisé par des élèves, basé sur les annexes officielles de l'Inspection Générale de la République Tunisienne. Vérifie toujours avec ton professeur.
-          </p>
-    <!-- ==========================================
+      <!-- ==========================================
          VUE TYPES D'EXERCICES DU BACCALAURÉAT (#/algo/types)
          ========================================== -->
     <section id="view-algo-types" class="view-section">
@@ -3463,7 +3454,7 @@ app.exec_()</code></pre>
               </div>
               <div>
                 <h2 class="annexe-title-text" style="font-size:1.6rem;color:#f59e0b;">Quiz V/F &amp; QCM • Algorithmique Bac</h2>
-                <span style="font-size:0.9rem;color:var(--text-secondary);">Entraînement express format Exercice 1 • Rétroaction immédiate • 80 questions certifiées</span>
+                <span style="font-size:0.9rem;color:var(--text-secondary);">Entraînement express format Exercice 1 • Rétroaction immédiate • 80 questions rédigées pour la révision, à valider avec ton professeur</span>
               </div>
             </div>
             <div id="quizGlobalStatsBadge" style="font-size:0.82rem;font-weight:700;padding:6px 14px;border-radius:20px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);color:#f59e0b;">
@@ -3786,7 +3777,7 @@ app.exec_()</code></pre>
           <div class="revision-section-header">
             <h3 class="revision-section-title">
               <span>📖</span>
-              <span>Progression par Chapitre (Programme Officiel 4SI)</span>
+              <span>Progression par Chapitre (Programme 4SI)</span>
             </h3>
             <span style="font-size: 0.85rem; color: var(--text-secondary);" id="revChaptersGlobalPercent">0% global</span>
           </div>
@@ -4477,8 +4468,11 @@ app.exec_()</code></pre>
 
     <footer class="app-global-footer">
       <div class="container">
-        <p class="footer-credit">
-          STI de A à Z • Conforme au programme officiel du Baccalauréat Tunisie (Sciences de l'informatique)
+        <p class="footer-credit" style="font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">
+          Site de révision réalisé par des élèves. Vérifie toujours avec ton professeur.
+        </p>
+        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 14px;">
+          Les tableaux d'annexes reprennent les éléments des documents distribués pour le Baccalauréat.
         </p>
         <div class="footer-links-row">
           <a onclick="navigateToHash('#/')">Accueil</a>
@@ -4783,7 +4777,7 @@ app.exec_()</code></pre>
     <div class="custom-modal-dialog" style="max-width: 580px;">
       <div class="custom-modal-header">
         <div>
-          <span style="font-size: 0.76rem; font-weight: 800; color: #10b981; text-transform: uppercase;">Simulateur d'épreuve officielle</span>
+          <span style="font-size: 0.76rem; font-weight: 800; color: #10b981; text-transform: uppercase;">Simulateur d'épreuve du Bac</span>
           <h3 id="setupModalExamTitle" style="margin: 4px 0 0 0; font-size: 1.2rem; font-weight: 800; color: var(--text-primary);">...</h3>
         </div>
         <button type="button" class="custom-modal-close" onclick="closeExamSimulatorSetup()">✕</button>
@@ -4921,25 +4915,25 @@ app.exec_()</code></pre>
 
   <!-- Fichiers Scripts -->
 
-  <script src="store.js?v=35.1"></script>
-  <script src="data.js?v=35.1"></script>
-  <script src="data/curriculum.js?v=35.1"></script>
-  <script src="data/documents.js?v=35.1"></script>
-  <script src="data/exercises.js?v=35.1"></script>
-  <script src="data/methods.js?v=35.1"></script>
-  <script src="data/quiz/fichiers.js?v=35.1"></script>
-  <script src="data/quiz/recursivite.js?v=35.1"></script>
-  <script src="data/quiz/bases.js?v=35.1"></script>
-  <script src="data/quiz/arithmetique.js?v=35.1"></script>
-  <script src="data/quiz/approximation.js?v=35.1"></script>
-  <script src="data/quiz/tableaux.js?v=35.1"></script>
-  <script src="data/quiz/matrices.js?v=35.1"></script>
-  <script src="data/quiz/suites.js?v=35.1"></script>
-  <script src="data/quiz.js?v=35.1"></script>
-  <script src="css_engine.js?v=35.1"></script>
-  <script src="algo_pratique_engine.js?v=35.1"></script>
-  <script src="pomodoro_engine.js?v=35.1"></script>
-  <script src="app.js?v=35.1"></script>
+  <script src="store.js?v=35.2"></script>
+  <script src="data.js?v=35.2"></script>
+  <script src="data/curriculum.js?v=35.2"></script>
+  <script src="data/documents.js?v=35.2"></script>
+  <script src="data/exercises.js?v=35.2"></script>
+  <script src="data/methods.js?v=35.2"></script>
+  <script src="data/quiz/fichiers.js?v=35.2"></script>
+  <script src="data/quiz/recursivite.js?v=35.2"></script>
+  <script src="data/quiz/bases.js?v=35.2"></script>
+  <script src="data/quiz/arithmetique.js?v=35.2"></script>
+  <script src="data/quiz/approximation.js?v=35.2"></script>
+  <script src="data/quiz/tableaux.js?v=35.2"></script>
+  <script src="data/quiz/matrices.js?v=35.2"></script>
+  <script src="data/quiz/suites.js?v=35.2"></script>
+  <script src="data/quiz.js?v=35.2"></script>
+  <script src="css_engine.js?v=35.2"></script>
+  <script src="algo_pratique_engine.js?v=35.2"></script>
+  <script src="pomodoro_engine.js?v=35.2"></script>
+  <script src="app.js?v=35.2"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {

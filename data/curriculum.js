@@ -1,6 +1,6 @@
 /**
  * =============================================================
- * CURRICULUM OFFICIEL — SOURCE UNIQUE DE VÉRITÉ (STI DE A À Z)
+ * CURRICULUM DU BACCALAURÉAT — SOURCE UNIQUE DE VÉRITÉ (STI DE A À Z)
  * Conforme au Baccalauréat STI & Algorithme Bac Informatique (Tunisie)
  * =============================================================
  */
@@ -32,7 +32,7 @@
     suites: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h2"></path><path d="M8 12h4"></path><path d="M16 12h6"></path><circle cx="5" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle></svg>'
   };
 
-  // Liste des 8 chapitres officiels d'Algorithmique
+  // Liste des 8 chapitres d'Algorithmique
   const ALGO_CHAPTERS = [
     {
       order: 1,
