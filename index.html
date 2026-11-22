@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=25.0">
+  <link rel="stylesheet" href="style.css?v=26.0">
   <!-- INITIALISATION IMMÉDIATE DU THÈME & TOGGLE SANS LATENCE -->
   <script>
     (function() {
@@ -93,6 +93,15 @@
         <button class="mobile-action-btn" id="mobileThemeToggleBtn" onclick="toggleThemeMode()" title="Changer de thème" aria-label="Changer de thème">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
         </button>
+        <script>
+          (function(){
+            var isDark = (document.documentElement.getAttribute('data-theme')==='dark');
+            var btn = document.getElementById('mobileThemeToggleBtn');
+            if(btn) btn.innerHTML = isDark
+              ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+              : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>';
+          })();
+        </script>
       </div>
     </div>
   </header>
@@ -278,6 +287,11 @@
               <span class="nav-icon">📚</span>
               <span class="nav-label">Cours &amp; Séries PDF</span>
             </a>
+            <a class="sidebar-link" data-view="examens" onclick="switchView('examens')">
+              <span class="nav-icon">📋</span>
+              <span class="nav-label">Examens &amp; Sujets</span>
+              <span class="nav-count" id="sideBadgeExamens">0</span>
+            </a>
             <!-- LIEN MINUTEUR POMODORO & AMBIANCE MUSICALE -->
             <a class="sidebar-link pomodoro-nav-link" onclick="PomodoroEngine.openDrawer()" title="Ouvrir le Minuteur Pomodoro et la Musique d'Étude">
               <span class="nav-icon">🎧</span>
@@ -319,6 +333,15 @@
           <button class="topbar-action-btn" id="desktopThemeToggleBtn" onclick="toggleThemeMode()" title="Changer de thème" aria-label="Changer de thème">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
           </button>
+          <script>
+            (function(){
+              var isDark = (document.documentElement.getAttribute('data-theme')==='dark');
+              var btn = document.getElementById('desktopThemeToggleBtn');
+              if(btn) btn.innerHTML = isDark
+                ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+                : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>';
+            })();
+          </script>
           <button class="breadcrumb-pomodoro-btn" id="breadcrumbPomodoroBtn" onclick="PomodoroEngine.openDrawer()" title="Ouvrir le Minuteur Pomodoro (25/50 min) & Musique YouTube">
             <span class="pomo-pulse-dot"></span>
             <span class="pomo-btn-icon">⏱️</span>
@@ -2976,6 +2999,10 @@
             <span>🎴</span>
             <span>Fiches Détaillées &amp; Recherche (20 Notions)</span>
           </button>
+          <button id="tabBtnAlgoPratiqueSerials" class="view-mode-tab" onclick="switchAlgoPratiqueTab('serials')">
+            <span>📋</span>
+            <span>Séries Qt (Mounir Saadani)</span>
+          </button>
         </div>
 
         <!-- ==========================================
@@ -3457,6 +3484,11 @@ app.exec_()</code></pre>
           </div>
         </div>
 
+        <!-- Séries Qt (Mounir Saadani) -->
+        <div id="algoPratiqueSeriesView" style="display:none;">
+          <div id="algoPratiqueSeriesGrid" style="display:grid;gap:16px;"></div>
+        </div>
+
         <!-- Navigation bas de page Pratique -->
         <div class="page-pagination-bar">
           <div class="pagination-card prev" onclick="switchView('algo-home')">
@@ -3581,24 +3613,74 @@ app.exec_()</code></pre>
           <p class="footer-disclaimer-text">
             Site de révision interactif réalisé par des élèves, basé sur les annexes officielles de l'Inspection Générale de la République Tunisienne. Vérifie toujours avec ton professeur.
           </p>
-          <div class="footer-links-row">
-            <a onclick="navigateToHash('#/')">Accueil</a>
-            <span>•</span>
-            <a onclick="navigateToHash('#/html5')">HTML5</a>
-            <span>•</span>
-            <a onclick="navigateToHash('#/css3')">CSS3</a>
-            <span>•</span>
-            <a onclick="navigateToHash('#/javascript')">JavaScript</a>
-            <span>•</span>
-            <a onclick="navigateToHash('#/sql')">SQL</a>
-            <span>•</span>
-            <a onclick="navigateToHash('#/algo')">Algorithme</a>
-            <span>•</span>
-            <a onclick="navigateToHash('#/lessons')">Cours PDF</a>
+    <!-- ==========================================
+         VUE EXAMENS : SUJETS & EXAMENS BAC
+         ========================================== -->
+    <section id="view-examens" class="view-section">
+      <div class="container">
+
+        <div class="page-header-banner" style="margin-bottom:24px; padding:24px 0 10px 0;">
+          <div class="annexe-title-wrap">
+            <div class="annexe-logo-shield" style="background:linear-gradient(135deg,#059669,#10b981);width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">
+              📋
+            </div>
+            <div>
+              <h2 class="annexe-title-text" style="font-size:1.6rem;color:#10b981;">Examens &amp; Sujets du Baccalauréat</h2>
+              <span style="font-size:0.9rem;color:var(--text-secondary);">Devoirs de synthèse • Devoirs de contrôle • Sujets type Bac — Algorithme Tunisie 4SI</span>
+            </div>
           </div>
         </div>
-      </footer>
-    </main>
+
+        <!-- Barre de filtres -->
+        <div id="examensFilterBar" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;padding:16px;background:var(--surface-elevated);border-radius:12px;border:1px solid var(--border-color);">
+          <select id="examensFilterType" onchange="renderExamensPage()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border-color);background:var(--surface-bg);color:var(--text-primary);font-size:0.9rem;cursor:pointer;">
+            <option value="">Tous les types</option>
+            <option value="bac">🎓 Bac</option>
+            <option value="devoir-synthese">📝 Devoir de synthèse</option>
+            <option value="devoir-controle">📌 Devoir de contrôle</option>
+            <option value="inconnu">❓ Type inconnu</option>
+          </select>
+          <select id="examensFilterYear" onchange="renderExamensPage()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border-color);background:var(--surface-bg);color:var(--text-primary);font-size:0.9rem;cursor:pointer;">
+            <option value="">Toutes les années</option>
+          </select>
+          <select id="examensFilterSchool" onchange="renderExamensPage()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border-color);background:var(--surface-bg);color:var(--text-primary);font-size:0.9rem;cursor:pointer;">
+            <option value="">Tous les établissements</option>
+          </select>
+          <span id="examensCount" style="margin-left:auto;padding:8px 12px;font-size:0.85rem;color:var(--text-secondary);align-self:center;"></span>
+        </div>
+
+        <!-- Grille des cartes -->
+        <div id="examensGrid" style="display:grid;gap:16px;"></div>
+
+      </div>
+    </section>
+
+    <!-- PIED DE PAGE GLOBAL -->
+    <footer class="app-global-footer">
+      <div class="container">
+        <p class="footer-credit">
+          STI de A à Z • Conforme au programme officiel du Baccalauréat Tunisie (Sciences de l'informatique)
+        </p>
+        <div class="footer-links-row">
+          <a onclick="navigateToHash('#/')">Accueil</a>
+          <span>•</span>
+          <a onclick="navigateToHash('#/html5')">HTML5</a>
+          <span>•</span>
+          <a onclick="navigateToHash('#/css3')">CSS3</a>
+          <span>•</span>
+          <a onclick="navigateToHash('#/javascript')">JavaScript</a>
+          <span>•</span>
+          <a onclick="navigateToHash('#/sql')">SQL</a>
+          <span>•</span>
+          <a onclick="navigateToHash('#/algo')">Algorithme</a>
+          <span>•</span>
+          <a onclick="navigateToHash('#/lessons')">Cours PDF</a>
+          <span>•</span>
+          <a onclick="navigateToHash('#/examens')">Examens</a>
+        </div>
+      </div>
+    </footer>
+  </main>
     </div> <!-- fin .app-main-content -->
   </div> <!-- fin .app-shell -->
 
@@ -3869,13 +3951,13 @@ app.exec_()</code></pre>
   </div>
 
   <!-- Fichiers Scripts -->
-  <script src="data.js?v=25.0"></script>
-  <script src="data/curriculum.js?v=25.0"></script>
-  <script src="data/documents.js?v=25.0"></script>
-  <script src="css_engine.js?v=21.0"></script>
-  <script src="algo_pratique_engine.js?v=21.0"></script>
-  <script src="pomodoro_engine.js?v=25.0"></script>
-  <script src="app.js?v=25.0"></script>
+  <script src="data.js?v=26.0"></script>
+  <script src="data/curriculum.js?v=26.0"></script>
+  <script src="data/documents.js?v=26.0"></script>
+  <script src="css_engine.js?v=26.0"></script>
+  <script src="algo_pratique_engine.js?v=26.0"></script>
+  <script src="pomodoro_engine.js?v=26.0"></script>
+  <script src="app.js?v=26.0"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -3885,3 +3967,4 @@ app.exec_()</code></pre>
   </script>
 </body>
 </html>
+

@@ -1543,6 +1543,7 @@ const VIEW_TO_HASH_MAP = {
   'js': '#/javascript',
   'sql': '#/sql',
   'lessons': '#/lessons',
+  'examens': '#/examens',
   'admin': '#/admin',
   'algo-home': '#/algo',
   'algo-pratique': '#/algo/pratique',
@@ -1601,6 +1602,9 @@ function parseAppHash(hash) {
     'cours': 'lessons',
     'cours-pdf': 'lessons',
     'admin': 'admin',
+    'examens': 'examens',
+    'sujets': 'examens',
+    'examens-bac': 'examens',
     'algo': 'algo-home',
     'algo-home': 'algo-home',
     'algo/pratique': 'algo-pratique',
@@ -1740,11 +1744,17 @@ function updateDataCountersUI() {
     if (sideQt) sideQt.textContent = qtCount;
     const sideTheorique = document.getElementById('sideBadgeTheorique');
     if (sideTheorique) sideTheorique.textContent = algoTheoriqueCount;
-    const devoirsCount = (typeof DOCUMENTS_DATA !== 'undefined') ? DOCUMENTS_DATA.getAllDevoirs().length : 7;
+    // Compteur devoirs (placeholder)
     const sideDevoirs = document.getElementById('sideBadgeDevoirs');
-    if (sideDevoirs) sideDevoirs.textContent = devoirsCount;
+    if (sideDevoirs && sideDevoirs.textContent === '0') sideDevoirs.textContent = '7';
     const badgeDevoirsTotal = document.getElementById('devoirsTotalCountBadge');
-    if (badgeDevoirsTotal) badgeDevoirsTotal.textContent = `${devoirsCount} Épreuves Disponibles`;
+    // Compteur examens
+    if (typeof DOCUMENTS_DATA !== 'undefined') {
+      const examensCount = DOCUMENTS_DATA.getExamens().length;
+      const sideExamens = document.getElementById('sideBadgeExamens');
+      if (sideExamens) sideExamens.textContent = examensCount;
+      if (badgeDevoirsTotal) badgeDevoirsTotal.textContent = `${examensCount} Épreuves`;
+    }
   } catch (err) {
     console.warn('Erreur mise à jour des compteurs:', err);
   }
@@ -1897,6 +1907,7 @@ function switchView(viewName, skipHashUpdate = false) {
       'js': 'JavaScript',
       'sql': 'SQL (MySQL)',
       'lessons': 'Cours & Séries',
+      'examens': 'Examens & Sujets',
       'admin': 'Espace Prof',
       'algo-home': 'Algorithme',
       'algo-pratique': 'Pratique Qt',
@@ -1989,6 +2000,8 @@ function switchView(viewName, skipHashUpdate = false) {
     } catch (err) {
       console.error('Erreur lors du rendu des leçons:', err);
     }
+  } else if (viewName === 'examens') {
+    renderExamensPage();
   } else if (viewName === 'admin') {
     if (typeof checkAdminAuth === 'function') {
       checkAdminAuth();
@@ -8565,13 +8578,23 @@ function renderAlgoTheoriqueCards() {
     return matchCat && matchSearch;
   });
 
-  if (filteredAll.length === 0) {
-    container.innerHTML = `
-      <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); background: var(--bg-card); border-radius: var(--radius-md);">
-        🔍 Aucun sous-programme ou algorithme ne correspond à votre recherche.
-      </div>
-    `;
-    return;
+  if (q && filteredAll.length === 0) {
+    let docMatches = 0;
+    if (typeof DOCUMENTS_DATA !== 'undefined') {
+      docMatches = DOCUMENTS_DATA.getAllDocuments().filter(d =>
+        d.title.toLowerCase().includes(q) ||
+        (d.teacher && d.teacher.toLowerCase().includes(q)) ||
+        (d.source && d.source.toLowerCase().includes(q))
+      ).length;
+    }
+    if (docMatches === 0) {
+      container.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); background: var(--bg-card); border-radius: var(--radius-md);">
+          🔍 Aucun sous-programme, algorithme ou document ne correspond à votre recherche.
+        </div>
+      `;
+      return;
+    }
   }
 
   chaptersToShow.forEach(ch => {
@@ -8580,7 +8603,19 @@ function renderAlgoTheoriqueCards() {
         ? CURRICULUM.matchesCategory(x.category, ch)
         : (x.category === ch.fullTitle || x.category === ch.title);
     });
-    if (chapterItems.length === 0) return;
+
+    const chExams = (typeof DOCUMENTS_DATA !== 'undefined') ? DOCUMENTS_DATA.getByChapter(ch.slug).filter(d => d.kind === 'examen') : [];
+    const chExtraits = (typeof DOCUMENTS_DATA !== 'undefined') ? DOCUMENTS_DATA.getByChapter(ch.slug).filter(d => d.kind === 'extrait') : [];
+    const chSeries = (typeof DOCUMENTS_DATA !== 'undefined') ? DOCUMENTS_DATA.getByChapter(ch.slug).filter(d => d.kind === 'serie' && d.module === 'algo-theorique') : [];
+
+    // Si recherche active, filtrer les documents aussi
+    const filteredChExams = q ? chExams.filter(d => d.title.toLowerCase().includes(q) || (d.teacher && d.teacher.toLowerCase().includes(q))) : chExams;
+    const filteredChExtraits = q ? chExtraits.filter(d => d.title.toLowerCase().includes(q) || (d.teacher && d.teacher.toLowerCase().includes(q))) : chExtraits;
+    const filteredChSeries = q ? chSeries.filter(d => d.title.toLowerCase().includes(q) || (d.teacher && d.teacher.toLowerCase().includes(q))) : chSeries;
+
+    if (chapterItems.length === 0 && filteredChExams.length === 0 && filteredChExtraits.length === 0 && filteredChSeries.length === 0) {
+      return;
+    }
 
     const meta = {
       icon: ch.iconEmoji || "📖",
@@ -8629,6 +8664,10 @@ function renderAlgoTheoriqueCards() {
     chapterSection.style.gridColumn = '1 / -1';
     chapterSection.style.marginBottom = '32px';
 
+    const countBadgeText = (chapterItems.length > 0)
+      ? `${chapterItems.length} ${chapterItems.length > 1 ? 'fonctions & algorithmes' : 'fonction'}`
+      : `${filteredChExams.length + filteredChExtraits.length + filteredChSeries.length} documents`;
+
     chapterSection.innerHTML = `
       <div class="algo-chapter-banner" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; padding: 14px 18px; background: rgba(15, 23, 42, 0.75); border: 1px solid var(--border-color); border-left: 4px solid ${meta.border}; border-radius: var(--radius-md);">
         <div style="display: flex; align-items: center; gap: 12px;">
@@ -8641,7 +8680,7 @@ function renderAlgoTheoriqueCards() {
           </div>
         </div>
         <span style="background: rgba(255,255,255,0.08); color: ${meta.color}; border: 1px solid ${meta.border}55; font-size: 0.8rem; font-weight: 800; padding: 4px 12px; border-radius: 20px; white-space: nowrap;">
-          ${chapterItems.length} ${chapterItems.length > 1 ? 'fonctions & algorithmes' : 'fonction'}
+          ${countBadgeText}
         </span>
       </div>
       ${matrixGuideHtml}
@@ -8651,45 +8690,164 @@ function renderAlgoTheoriqueCards() {
 
     const grid = chapterSection.querySelector('.items-grid');
 
-    chapterItems.forEach(item => {
-      const isStructure = item.type === 'structure';
-      const isProcedure = item.name.toLowerCase().startsWith('procédure') || item.type === 'procedure' || item.type === 'procédure';
-      const typeLabel = isStructure ? 'Structure' : (isProcedure ? 'Procédure' : 'Fonction');
-      const typeBadgeColor = isStructure ? '#c084fc' : (isProcedure ? '#38bdf8' : '#f59e0b');
-      const typeBadgeBg = isStructure ? 'rgba(192, 132, 252, 0.15)' : (isProcedure ? 'rgba(56, 189, 248, 0.15)' : 'rgba(245, 158, 11, 0.15)');
-      const typeBadgeBorder = isStructure ? 'rgba(192, 132, 252, 0.35)' : (isProcedure ? 'rgba(56, 189, 248, 0.35)' : 'rgba(245, 158, 11, 0.35)');
-
-      const card = document.createElement('div');
-      card.className = 'item-card card-theorique';
-      card.style.cursor = 'pointer';
-      card.innerHTML = `
-        <div class="card-cat-badge" style="color: ${meta.color};">${escapeHtml(meta.shortName)}</div>
-        <div class="item-card-title">
-          <span>${escapeHtml(item.name)}</span>
-          <div style="display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-            ${(item.imageUrl || (item.images && item.images.length)) ? `
-              <span class="item-card-tag" style="color: #38bdf8; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); font-size: 0.74rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
-                📸 Schéma Inclus
-              </span>
-            ` : ''}
-            <span class="item-card-tag" style="color: ${typeBadgeColor}; background: ${typeBadgeBg}; border-color: ${typeBadgeBorder}; font-size: 0.8rem; font-weight: 700;">
-              ${typeLabel}
-            </span>
-          </div>
-        </div>
-        <p class="item-card-desc">${escapeHtml(item.description || item.summary)}</p>
-        <div class="card-action-bar">
-          <span style="color: ${meta.color}; font-weight: 700; font-size: 0.86rem;">⚡ Voir l'Algorithme, TDO & Python</span>
-          <span style="color: ${meta.color}; font-size: 1rem;">→</span>
+    if (chapterItems.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column: 1 / -1; padding: 20px; border-radius: 12px; background: var(--surface-elevated); color: var(--text-secondary); font-size: 0.88rem; text-align: center; border: 1px dashed var(--border-color);">
+          📚 Les sous-programmes et algorithmes types de ce nouveau chapitre sont en cours de mise en ligne. Consultez les <strong>exercices d'examens</strong> et <strong>séries</strong> associés ci-dessous !
         </div>
       `;
-      card.addEventListener('click', () => openAlgoTheoriqueModal(item));
-      grid.appendChild(card);
-    });
+    } else {
+      chapterItems.forEach(item => {
+        const isStructure = item.type === 'structure';
+        const isProcedure = item.name.toLowerCase().startsWith('procédure') || item.type === 'procedure' || item.type === 'procédure';
+        const typeLabel = isStructure ? 'Structure' : (isProcedure ? 'Procédure' : 'Fonction');
+        const typeBadgeColor = isStructure ? '#c084fc' : (isProcedure ? '#38bdf8' : '#f59e0b');
+        const typeBadgeBg = isStructure ? 'rgba(192, 132, 252, 0.15)' : (isProcedure ? 'rgba(56, 189, 248, 0.15)' : 'rgba(245, 158, 11, 0.15)');
+        const typeBadgeBorder = isStructure ? 'rgba(192, 132, 252, 0.35)' : (isProcedure ? 'rgba(56, 189, 248, 0.35)' : 'rgba(245, 158, 11, 0.35)');
+
+        const card = document.createElement('div');
+        card.className = 'item-card card-theorique';
+        card.style.cursor = 'pointer';
+        card.innerHTML = `
+          <div class="card-cat-badge" style="color: ${meta.color};">${escapeHtml(meta.shortName)}</div>
+          <div class="item-card-title">
+            <span>${escapeHtml(item.name)}</span>
+            <div style="display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+              ${(item.imageUrl || (item.images && item.images.length)) ? `
+                <span class="item-card-tag" style="color: #38bdf8; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); font-size: 0.74rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                  📸 Schéma Inclus
+                </span>
+              ` : ''}
+              <span class="item-card-tag" style="color: ${typeBadgeColor}; background: ${typeBadgeBg}; border-color: ${typeBadgeBorder}; font-size: 0.8rem; font-weight: 700;">
+                ${typeLabel}
+              </span>
+            </div>
+          </div>
+          <p class="item-card-desc">${escapeHtml(item.description || item.summary)}</p>
+          <div class="card-action-bar">
+            <span style="color: ${meta.color}; font-weight: 700; font-size: 0.86rem;">⚡ Voir l'Algorithme, TDO & Python</span>
+            <span style="color: ${meta.color}; font-size: 1rem;">→</span>
+          </div>
+        `;
+        card.addEventListener('click', () => openAlgoTheoriqueModal(item));
+        grid.appendChild(card);
+      });
+    }
 
     container.appendChild(chapterSection);
     if (isMatricesCat && !currentAlgoTheoriqueSearch) {
       setTimeout(() => selectMatrixGuideTab(currentMatrixGuideTab), 10);
+    }
+
+    // ── 1. SECTION EXERCICES D'EXAMENS DU CHAPITRE ──────────────────────────
+    if (filteredChExams.length > 0) {
+      const examsSection = document.createElement('div');
+      examsSection.style.cssText = 'grid-column: 1 / -1; margin: -16px 0 24px 0; padding: 20px; background: var(--surface-elevated); border: 1px solid var(--border-color); border-radius: 14px;';
+
+      const typeLabels = { 'bac': '🎓 Bac', 'devoir-synthese': '📝 D. Synthèse', 'devoir-controle': '📌 D. Contrôle', 'inconnu': '❓ Inconnu' };
+
+      const examsCardsHtml = filteredChExams.map(doc => {
+        const dateStr = (!doc.date || doc.date === 'inconnue') ? 'Année non précisée' : doc.date;
+        const credit = doc.teacher ? `Prof. ${doc.teacher}` : (doc.source || '');
+        const incompleteHtml = doc.incomplete
+          ? `<span style="padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3);">⚠️ Incomplet${doc.notes ? ' : ' + escapeHtml(doc.notes) : ''}</span>`
+          : '';
+        return `
+        <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 220px;">
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+              <span style="font-size: 0.78rem; font-weight: 700; color: #10b981;">${typeLabels[doc.examType] || '📝 Examen'}</span>
+              ${incompleteHtml}
+            </div>
+            <h5 style="margin: 0 0 4px 0; font-size: 0.95rem; font-weight: 700; color: var(--text-primary);">${escapeHtml(doc.title)}</h5>
+            <div style="font-size: 0.8rem; color: var(--text-secondary); display: flex; flex-wrap: wrap; gap: 10px;">
+              <span>📅 ${dateStr}</span>
+              ${doc.duration ? `<span>⏱ ${escapeHtml(doc.duration)}</span>` : ''}
+              ${doc.pages ? `<span>📄 ${doc.pages} page${doc.pages > 1 ? 's' : ''}</span>` : ''}
+              ${doc.school ? `<span>🏫 ${escapeHtml(doc.school)}</span>` : ''}
+              ${credit ? `<span>✏️ ${escapeHtml(credit)}</span>` : ''}
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <a href="${doc.file}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-size: 0.84rem; font-weight: 600; text-decoration: none; white-space: nowrap;">
+              📄 Sujet
+            </a>
+          </div>
+        </div>`;
+      }).join('');
+
+      examsSection.innerHTML = `
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px;">
+          <div>
+            <h4 style="margin: 0; font-size: 1rem; font-weight: 800; color: #10b981; display: flex; align-items: center; gap: 8px;">
+              <span>📝</span> Exercices d'examens (${filteredChExams.length})
+            </h4>
+            <p style="margin: 2px 0 0 0; font-size: 0.8rem; color: var(--text-secondary);">
+              Sujets officiels du Baccalauréat et Devoirs portant sur ${escapeHtml(ch.shortTitle)}
+            </p>
+          </div>
+          <button type="button" onclick="navigateToHash('#/examens')" style="font-size: 0.8rem; color: #10b981; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: 4px 10px; border-radius: 6px; cursor: pointer;">
+            Tous les examens →
+          </button>
+        </div>
+        <div style="display: grid; gap: 10px;">
+          ${examsCardsHtml}
+        </div>
+      `;
+      container.appendChild(examsSection);
+    }
+
+    // ── 2. SECTION SÉRIES & EXTRAITS DU CHAPITRE ──────────────────────────
+    const combinedSeries = [...filteredChSeries, ...filteredChExtraits];
+    if (combinedSeries.length > 0) {
+      const seriesSection = document.createElement('div');
+      seriesSection.style.cssText = 'grid-column: 1 / -1; margin: -16px 0 32px 0; padding: 20px; background: var(--surface-elevated); border: 1px solid var(--border-color); border-radius: 14px;';
+
+      const seriesCardsHtml = combinedSeries.map(doc => {
+        const isExtrait = doc.kind === 'extrait';
+        const badgeLabel = isExtrait ? '✂️ Extrait de Révision' : '📋 Série TP';
+        const badgeColor = isExtrait ? '#818cf8' : '#38bdf8';
+        const badgeBg = isExtrait ? 'rgba(99, 102, 241, 0.15)' : 'rgba(56, 189, 248, 0.15)';
+        const badgeBorder = isExtrait ? 'rgba(99, 102, 241, 0.3)' : 'rgba(56, 189, 248, 0.3)';
+        const credit = doc.teacher ? `Prof. ${doc.teacher}` : (doc.source || '');
+        return `
+        <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 220px;">
+            <div style="margin-bottom: 4px;">
+              <span style="font-size: 0.76rem; font-weight: 700; color: ${badgeColor}; background: ${badgeBg}; border: 1px solid ${badgeBorder}; padding: 2px 8px; border-radius: 10px;">
+                ${badgeLabel}
+              </span>
+            </div>
+            <h5 style="margin: 0 0 4px 0; font-size: 0.95rem; font-weight: 700; color: var(--text-primary);">${escapeHtml(doc.title)}</h5>
+            <div style="font-size: 0.8rem; color: var(--text-secondary); display: flex; flex-wrap: wrap; gap: 10px;">
+              ${credit ? `<span>✏️ ${escapeHtml(credit)}</span>` : ''}
+              ${doc.notes ? `<span>📝 ${escapeHtml(doc.notes)}</span>` : ''}
+            </div>
+          </div>
+          <div>
+            <a href="${doc.file}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: linear-gradient(135deg, #4f46e5, #6366f1); color: #fff; font-size: 0.84rem; font-weight: 600; text-decoration: none; white-space: nowrap;">
+              📄 Sujet
+            </a>
+          </div>
+        </div>`;
+      }).join('');
+
+      seriesSection.innerHTML = `
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px;">
+          <div>
+            <h4 style="margin: 0; font-size: 1rem; font-weight: 800; color: #60a5fa; display: flex; align-items: center; gap: 8px;">
+              <span>📋</span> Séries &amp; Extraits d'exercices (${combinedSeries.length})
+            </h4>
+            <p style="margin: 2px 0 0 0; font-size: 0.8rem; color: var(--text-secondary);">
+              Exercices ciblés et séries de travaux pratiques avec crédits enseignants
+            </p>
+          </div>
+        </div>
+        <div style="display: grid; gap: 10px;">
+          ${seriesCardsHtml}
+        </div>
+      `;
+      container.appendChild(seriesSection);
     }
   });
 }
@@ -8850,25 +9008,27 @@ function openAlgoTheoriqueModal(item) {
 // 7. Fonctions de l'Annexe Officielle Qt Designer (Feuille Bac)
 // -------------------------------------------------------------
 function switchAlgoPratiqueTab(tabName) {
-  const tabDoc = document.getElementById('tabBtnAlgoDoc');
+  const tabDoc         = document.getElementById('tabBtnAlgoDoc');
   const tabInteractive = document.getElementById('tabBtnAlgoInteractive');
-  const tabCards = document.getElementById('tabBtnAlgoCards');
+  const tabCards       = document.getElementById('tabBtnAlgoCards');
+  const tabSerials     = document.getElementById('tabBtnAlgoPratiqueSerials');
 
-  const viewDoc = document.getElementById('algoOfficialDocView');
+  const viewDoc        = document.getElementById('algoOfficialDocView');
   const viewInteractive = document.getElementById('algoInteractiveView');
-  const viewCards = document.getElementById('algoCardsGridView');
+  const viewCards      = document.getElementById('algoCardsGridView');
+  const viewSerials    = document.getElementById('algoPratiqueSeriesView');
 
   if (!tabDoc || !viewDoc) return;
 
   // Réinitialiser les boutons d'onglets
-  [tabDoc, tabInteractive, tabCards].forEach(btn => {
+  [tabDoc, tabInteractive, tabCards, tabSerials].forEach(btn => {
     if (btn) btn.classList.remove('active');
   });
 
   // Masquer toutes les sous-vues
-  if (viewDoc) viewDoc.style.display = 'none';
-  if (viewInteractive) viewInteractive.style.display = 'none';
-  if (viewCards) viewCards.style.display = 'none';
+  [viewDoc, viewInteractive, viewCards, viewSerials].forEach(v => {
+    if (v) v.style.display = 'none';
+  });
 
   if (tabName === 'doc') {
     if (tabDoc) tabDoc.classList.add('active');
@@ -8886,8 +9046,53 @@ function switchAlgoPratiqueTab(tabName) {
       renderAlgoPratiqueCategories();
       renderAlgoPratiqueCards();
     }
+  } else if (tabName === 'serials') {
+    if (tabSerials) tabSerials.classList.add('active');
+    if (viewSerials) {
+      viewSerials.style.display = 'block';
+      renderAlgoPratiqueSerials();
+    }
   }
 }
+
+function renderAlgoPratiqueSerials() {
+  const grid = document.getElementById('algoPratiqueSeriesGrid');
+  if (!grid) return;
+  if (typeof DOCUMENTS_DATA === 'undefined') {
+    grid.innerHTML = '<p style="color:var(--text-secondary);">Données non disponibles.</p>';
+    return;
+  }
+  const series = DOCUMENTS_DATA.getPratiqueSerials();
+  if (!series.length) {
+    grid.innerHTML = '<p style="color:var(--text-secondary);">Aucune série disponible.</p>';
+    return;
+  }
+  grid.innerHTML = series.map(doc => {
+    const chapterNames = (doc.chapters || []).map(slug => {
+      if (typeof CURRICULUM !== 'undefined') {
+        const ch = CURRICULUM.getChapterBySlug(slug);
+        return ch ? ch.shortTitle : slug;
+      }
+      return slug;
+    });
+    const chapHtml = chapterNames.map(n =>
+      `<span style="display:inline-block;padding:2px 8px;border-radius:6px;font-size:0.75rem;background:var(--surface-bg);border:1px solid var(--border-color);color:var(--text-secondary);">${n}</span>`
+    ).join(' ');
+    return `
+    <div style="background:var(--surface-elevated);border:1px solid var(--border-color);border-radius:14px;padding:18px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:0;">
+        <h3 style="font-size:1rem;font-weight:700;color:var(--text-primary);margin:0 0 6px 0;">${doc.title}</h3>
+        <div style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:8px;">✏️ ${doc.teacher || doc.source || ''}${doc.notes ? ' · ' + doc.notes : ''}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;">${chapHtml}</div>
+      </div>
+      <a href="${doc.file}" target="_blank" rel="noopener"
+         style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:10px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;font-weight:600;font-size:0.88rem;text-decoration:none;white-space:nowrap;">
+        📄 Sujet PDF
+      </a>
+    </div>`;
+  }).join('');
+}
+window.renderAlgoPratiqueSerials = renderAlgoPratiqueSerials;
 
 // =============================================================
 // GESTIONNAIRE DES ONGLETS THÉORIQUES (CHAPITRES VS DEVOIRS BAC)
@@ -8947,7 +9152,9 @@ function renderAlgoDevoirsFilterBar() {
   if (!bar) return;
 
   const docs = (typeof DOCUMENTS_DATA !== 'undefined') ? DOCUMENTS_DATA : null;
-  const counts = docs ? docs.getDevoirsCounts() : { all: 0, dc1: 0, dc2: 0, ds: 0 };
+  const counts = (docs && typeof docs.getDevoirsCounts === 'function') 
+    ? docs.getDevoirsCounts() 
+    : { all: 0, dc1: 0, dc2: 0, ds: 0 };
 
   const filters = [
     { id: 'all', label: '✨ Tous les Devoirs', count: counts.all },
@@ -9006,7 +9213,7 @@ function renderAlgoDevoirs() {
   if (!container) return;
 
   const docs = (typeof DOCUMENTS_DATA !== 'undefined') ? DOCUMENTS_DATA : null;
-  if (!docs) {
+  if (!docs || typeof docs.getAllDevoirs !== 'function') {
     container.innerHTML = '<div style="padding: 30px; text-align: center; color: var(--text-muted);">Modules de devoirs en cours de chargement...</div>';
     return;
   }
@@ -9293,6 +9500,138 @@ Table Widget  | W.nomTable.setItem(r, c, QTableWidgetItem(str(v))) | Remplir une
 
 
 // ===================================================================
+// PAGE EXAMENS & SUJETS BAC (#/examens)
+// ===================================================================
+
+function renderExamensPage() {
+  if (typeof DOCUMENTS_DATA === 'undefined') return;
+
+  const grid = document.getElementById('examensGrid');
+  const countEl = document.getElementById('examensCount');
+  const typeFilter = document.getElementById('examensFilterType');
+  const yearFilter = document.getElementById('examensFilterYear');
+  const schoolFilter = document.getElementById('examensFilterSchool');
+  if (!grid) return;
+
+  // Peupler les listes déroulantes lors du premier appel
+  if (yearFilter && yearFilter.options.length === 1) {
+    DOCUMENTS_DATA.getYears().forEach(y => {
+      const o = document.createElement('option');
+      o.value = y; o.textContent = y;
+      yearFilter.appendChild(o);
+    });
+    const oInc = document.createElement('option');
+    oInc.value = 'inconnue';
+    oInc.textContent = 'Année non précisée';
+    yearFilter.appendChild(oInc);
+  }
+  if (schoolFilter && schoolFilter.options.length === 1) {
+    DOCUMENTS_DATA.getSchools().forEach(s => {
+      const o = document.createElement('option');
+      o.value = s; o.textContent = s;
+      schoolFilter.appendChild(o);
+    });
+  }
+
+  const selType   = typeFilter   ? typeFilter.value   : '';
+  const selYear   = yearFilter   ? yearFilter.value   : '';
+  const selSchool = schoolFilter ? schoolFilter.value : '';
+
+  let items = DOCUMENTS_DATA.getExamens(); // sorted newest first
+
+  if (selType)   items = items.filter(d => d.examType === selType);
+  if (selYear) {
+    if (selYear === 'inconnue') {
+      items = items.filter(d => !d.date || d.date === 'inconnue');
+    } else {
+      items = items.filter(d => d.date && d.date.startsWith(selYear));
+    }
+  }
+  if (selSchool) items = items.filter(d => d.school === selSchool);
+
+  if (countEl) countEl.textContent = `${items.length} examen${items.length !== 1 ? 's' : ''}`;
+
+  const typeLabels = {
+    'bac': '🎓 Bac',
+    'devoir-synthese': '📝 D. Synthèse',
+    'devoir-controle': '📌 D. Contrôle',
+    'inconnu': '❓ Inconnu'
+  };
+  const typeColors = {
+    'bac':              { bg: 'rgba(16,185,129,0.15)', color: '#10b981', border: 'rgba(16,185,129,0.3)' },
+    'devoir-synthese':  { bg: 'rgba(99,102,241,0.15)',  color: '#818cf8', border: 'rgba(99,102,241,0.3)' },
+    'devoir-controle':  { bg: 'rgba(245,158,11,0.15)',  color: '#fbbf24', border: 'rgba(245,158,11,0.3)' },
+    'inconnu':          { bg: 'rgba(107,114,128,0.15)', color: '#9ca3af', border: 'rgba(107,114,128,0.3)' }
+  };
+
+  if (!items.length) {
+    grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-secondary);">Aucun examen ne correspond aux filtres sélectionnés.</div>';
+    return;
+  }
+
+  grid.innerHTML = items.map(doc => {
+    const dateStr = (!doc.date || doc.date === 'inconnue') ? 'Année non précisée' : doc.date;
+    const col = typeColors[doc.examType] || typeColors['inconnu'];
+    const typeLabel = typeLabels[doc.examType] || '❓';
+    const chapterNames = (doc.chapters || []).map(slug => {
+      if (typeof CURRICULUM !== 'undefined') {
+        const ch = CURRICULUM.getChapterBySlug(slug);
+        return ch ? ch.shortTitle : slug;
+      }
+      return slug;
+    });
+    const chapHtml = chapterNames.map(n =>
+      `<span style="display:inline-block;padding:2px 8px;border-radius:6px;font-size:0.75rem;background:var(--surface-bg);border:1px solid var(--border-color);color:var(--text-secondary);">${n}</span>`
+    ).join(' ');
+
+    const incompleteHtml = doc.incomplete
+      ? `<div style="display:flex;align-items:center;gap:6px;margin-top:8px;padding:8px 12px;border-radius:8px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#f87171;font-size:0.82rem;">
+           ⚠️ <strong>Incomplet</strong>${doc.notes ? ' — ' + doc.notes : ''}
+         </div>`
+      : '';
+
+    const creditLine = (doc.teacher || doc.source)
+      ? `<div style="font-size:0.78rem;color:var(--text-secondary);margin-top:6px;">
+           ✏️ ${[doc.teacher, doc.source].filter(Boolean).join(' · ')}
+         </div>`
+      : '';
+
+    return `
+    <div style="background:var(--surface-elevated);border:1px solid var(--border-color);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
+            <span style="padding:3px 10px;border-radius:20px;font-size:0.78rem;font-weight:600;background:${col.bg};color:${col.color};border:1px solid ${col.border};">${typeLabel}</span>
+            ${doc.incomplete ? '<span style="padding:3px 10px;border-radius:20px;font-size:0.78rem;font-weight:600;background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);">⚠️ Incomplet</span>' : ''}
+          </div>
+          <h3 style="font-size:1rem;font-weight:700;color:var(--text-primary);margin:0 0 4px 0;line-height:1.3;">${doc.title}</h3>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:0.82rem;color:var(--text-secondary);">
+            ${doc.date && doc.date !== 'inconnue' ? `<span>📅 ${dateStr}</span>` : `<span>📅 Année non précisée</span>`}
+            ${doc.duration ? `<span>⏱ ${doc.duration}</span>` : ''}
+            ${doc.pages ? `<span>📄 ${doc.pages} page${doc.pages > 1 ? 's' : ''}</span>` : ''}
+            ${doc.classes ? `<span>🎒 ${doc.classes}</span>` : ''}
+          </div>
+          ${doc.school ? `<div style="font-size:0.82rem;color:var(--text-secondary);margin-top:4px;">🏫 ${doc.school}</div>` : ''}
+          ${creditLine}
+          ${doc.notes && !doc.incomplete ? `<div style="font-size:0.78rem;color:var(--text-secondary);font-style:italic;margin-top:4px;">📝 ${doc.notes}</div>` : ''}
+          ${incompleteHtml}
+          <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:4px;">${chapHtml}</div>
+        </div>
+        <div style="flex-shrink:0;">
+          <a href="${doc.file}" target="_blank" rel="noopener"
+             style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:10px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;font-weight:600;font-size:0.88rem;text-decoration:none;white-space:nowrap;">
+            📄 Sujet
+          </a>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.renderExamensPage = renderExamensPage;
+
+
+// ===================================================================
 // EXTENSION MODE ÉTUDE CALME & NOUVELLE NAVIGATION
 // ===================================================================
 
@@ -9410,6 +9749,7 @@ const VIEW_METAS = {
   'js': { module: 'sti', modLabel: 'STI Web & BD', title: 'JavaScript (Contrôles & DOM)' },
   'sql': { module: 'sti', modLabel: 'STI Web & BD', title: 'SQL & MySQL (Bases de Données)' },
   'lessons': { module: 'all', modLabel: 'Cours & Séries', title: 'Polycopiés & Examens PDF' },
+  'examens': { module: 'all', modLabel: 'Examens & Sujets', title: 'Examens & Sujets du Baccalauréat' },
   'admin': { module: 'admin', modLabel: 'Administration', title: 'Espace Enseignant' },
   'algo-home': { module: 'algo', modLabel: 'Algorithme', title: 'Accueil Algorithme' },
   'algo-pratique': { module: 'algo', modLabel: 'Algorithme', title: 'Pratique (Qt ➔ Thonny Python)' },

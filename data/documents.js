@@ -1,21 +1,431 @@
-/**
- * =============================================================
- * DOCUMENTS OFFICIELS — DEVOIRS & SÉRIES DU BACCALAURÉAT TUNISIE
- * Séparation claire : Devoirs au niveau Théorique (DC1, DC2, DS)
- * =============================================================
- */
+// data/documents.js — Source unique des documents PDF (examens, séries, extraits)
+// Généré automatiquement depuis documents.json — NE PAS MODIFIER À LA MAIN
+// Chargé avant app.js dans index.html
+'use strict';
+var DOCUMENTS_DATA = (function () {
 
-(function (root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    define([], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory();
-  } else {
-    root.DOCUMENTS_DATA = factory();
+  var _docs = [
+    // ── EXAMENS ────────────────────────────────────────────────────────────────
+    {
+      id: 'ds1-4si2-4si3-2025-12-09',
+      kind: 'examen',
+      examType: 'devoir-synthese',
+      title: 'Devoir de synthèse n°1 — 4SI2/4SI3',
+      date: '2025-12-09',
+      classes: '4SI2, 4SI3',
+      school: 'Lycée Sidi Thabet (Ariana)',
+      teacher: 'Mme Olfa Hichri',
+      duration: '3h',
+      pages: 4,
+      module: 'algo-theorique',
+      chapters: ['recursivite', 'fichiers', 'matrices', 'tableaux'],
+      file: 'pdf/examens/2025-12-09_ds1_4si2-4si3_hichri.pdf',
+      correction: null,
+      incomplete: false,
+      notes: '',
+      source: ''
+    },
+    {
+      id: 'ds2-4si123-2023-03-13',
+      kind: 'examen',
+      examType: 'devoir-synthese',
+      title: 'Devoir de synthèse n°2 — 4SI 1, 2 et 3',
+      date: '2023-03-13',
+      classes: '4SI 1, 2, 3',
+      school: 'Lycée Sidi Thabet',
+      teacher: 'Olfa Hichri, Khemais Bitri, Aymen Jamazi',
+      duration: '3h',
+      pages: 3,
+      module: 'algo-theorique',
+      chapters: ['tableaux', 'fichiers', 'bases', 'arithmetique', 'matrices', 'suites'],
+      file: 'pdf/examens/2023-03-13_ds2_4si1-2-3_sidi-thabet.pdf',
+      correction: null,
+      incomplete: false,
+      notes: '',
+      source: ''
+    },
+    {
+      id: 'bac-style-a',
+      kind: 'examen',
+      examType: 'bac',
+      title: 'Examen type Bac (5 pages) — année et session non imprimées',
+      date: 'inconnue',
+      classes: "Sciences de l'informatique",
+      school: 'République Tunisienne',
+      teacher: '',
+      duration: '3h (coef 2)',
+      pages: 5,
+      module: 'algo-theorique',
+      chapters: ['recursivite', 'fichiers', 'tableaux', 'arithmetique', 'bases', 'matrices', 'suites'],
+      file: 'pdf/examens/bac-style_A_5-pages_annee-inconnue.pdf',
+      correction: null,
+      incomplete: false,
+      notes: 'Année/session à confirmer.',
+      source: ''
+    },
+    {
+      id: 'dc3-4si4-2026-04-17',
+      kind: 'examen',
+      examType: 'devoir-controle',
+      title: 'Devoir de contrôle n°3 — 4SI4',
+      date: '2026-04-17',
+      classes: '4SI4',
+      school: 'Lycée Sidi Thabet',
+      teacher: 'Aymen Jamazi',
+      duration: '1h30',
+      pages: 2,
+      module: 'algo-theorique',
+      chapters: ['recursivite', 'approximation', 'matrices'],
+      file: 'pdf/examens/2026-04-17_dc3_4si4_jamazi.pdf',
+      correction: null,
+      incomplete: false,
+      notes: '',
+      source: ''
+    },
+    {
+      id: 'bac-style-b',
+      kind: 'examen',
+      examType: 'bac',
+      title: 'Examen type Bac (4 pages) — année et session non imprimées',
+      date: 'inconnue',
+      classes: "Sciences de l'informatique",
+      school: 'République Tunisienne',
+      teacher: '',
+      duration: '3h (coef 2)',
+      pages: 4,
+      module: 'algo-theorique',
+      chapters: ['recursivite', 'fichiers', 'matrices', 'bases'],
+      file: 'pdf/examens/bac-style_B_4-pages_annee-inconnue.pdf',
+      correction: null,
+      incomplete: false,
+      notes: 'Année/session à confirmer. Les pages étaient mélangées dans le scan : ordre rétabli 1/4, 2/4, 3/4, 4/4.',
+      source: ''
+    },
+    {
+      id: 'ds2-4si14-2026-03-03',
+      kind: 'examen',
+      examType: 'devoir-synthese',
+      title: 'Devoir de synthèse n°2 — 4SI 1 et 4',
+      date: '2026-03-03',
+      classes: '4SI 1, 4',
+      school: 'Lycée Sidi Thabet',
+      teacher: '',
+      duration: '3h',
+      pages: 3,
+      module: 'algo-theorique',
+      chapters: ['fichiers', 'recursivite', 'arithmetique', 'matrices', 'suites'],
+      file: 'pdf/examens/2026-03-03_ds2_4si1-4_sidi-thabet.pdf',
+      correction: null,
+      incomplete: false,
+      notes: "Pages remises dans l'ordre (scan mélangé).",
+      source: ''
+    },
+    {
+      id: 'ds1-4si14-2025-12-09',
+      kind: 'examen',
+      examType: 'devoir-synthese',
+      title: 'Devoir de synthèse n°1 — 4SI 1 et 4',
+      date: '2025-12-09',
+      classes: '4SI 1, 4',
+      school: 'Lycée Sidi Thabet',
+      teacher: '',
+      duration: '3h',
+      pages: 4,
+      module: 'algo-theorique',
+      chapters: ['tableaux', 'recursivite', 'matrices', 'fichiers'],
+      file: 'pdf/examens/2025-12-09_ds1_4si1-4_sidi-thabet.pdf',
+      correction: null,
+      incomplete: false,
+      notes: "Pages remises dans l'ordre (scan mélangé). Le titre de la page 1 est un peu abîmé par le nettoyage.",
+      source: ''
+    },
+    {
+      id: 'dc2-4si1-2024-03-07',
+      kind: 'examen',
+      examType: 'devoir-controle',
+      title: 'Devoir de contrôle n°2 — 4SI1',
+      date: '2024-03-07',
+      classes: '4SI1',
+      school: 'Lycée Sidi Thabet',
+      teacher: 'Aymen Jamazi',
+      duration: '1h30',
+      pages: 1,
+      module: 'algo-theorique',
+      chapters: ['arithmetique', 'fichiers'],
+      file: 'pdf/examens/2024-03-07_dc2_4si1_jamazi.pdf',
+      correction: null,
+      incomplete: false,
+      notes: 'Vérifier si le sujet complet tient sur cette seule page.',
+      source: ''
+    },
+    {
+      id: 'bac-controle-2022',
+      kind: 'examen',
+      examType: 'bac',
+      title: 'Bac session de contrôle 2022 (pages 1 à 3 sur 4)',
+      date: '2022',
+      classes: "Sciences de l'informatique",
+      school: 'République Tunisienne',
+      teacher: '',
+      duration: '3h (coef 2)',
+      pages: 3,
+      module: 'algo-theorique',
+      chapters: ['recursivite', 'fichiers', 'matrices', 'suites'],
+      file: 'pdf/examens/bac-session-controle-2022_incomplet-pages-1-a-3-sur-4.pdf',
+      correction: null,
+      incomplete: true,
+      notes: 'La page 4 (fin Exercice 3 + Exercice 4) manque.',
+      source: ''
+    },
+    {
+      id: 'ds3-ben-arous-2025-05-06',
+      kind: 'examen',
+      examType: 'devoir-synthese',
+      title: 'Devoir de synthèse n°3 — Ben Arous',
+      date: '2025-05-06',
+      classes: "4ème Sciences de l'informatique",
+      school: "Commissariat régional de l'éducation de Ben Arous",
+      teacher: '',
+      duration: '3h',
+      pages: 3,
+      module: 'algo-theorique',
+      chapters: ['fichiers', 'matrices', 'suites', 'bases'],
+      file: 'pdf/examens/2025-05-06_ds3_ben-arous.pdf',
+      correction: null,
+      incomplete: true,
+      notes: 'Filigrane mesdevoirs.tn conservé. Une page (Exercice 3) manque peut-être entre les pages 2 et 3.',
+      source: 'mesdevoirs.tn'
+    },
+    {
+      id: 'a-identifier-p38',
+      kind: 'examen',
+      examType: 'inconnu',
+      title: 'Examen incomplet à identifier (exercices 2 et 3)',
+      date: 'inconnue',
+      classes: '',
+      school: '',
+      teacher: '',
+      duration: '',
+      pages: 1,
+      module: 'algo-theorique',
+      chapters: ['recursivite', 'approximation'],
+      file: 'pdf/examens/a-identifier_exercices-2-et-3.pdf',
+      correction: null,
+      incomplete: true,
+      notes: "Une seule page (Ex 2 récursivité, Ex 3 approximation) avec filigrane mesdevoirs.tn. L'en-tête et l'exercice 1 manquent.",
+      source: 'mesdevoirs.tn'
+    },
+
+    // ── SÉRIES ─────────────────────────────────────────────────────────────────
+    {
+      id: 'serie-12-premier-palindrome',
+      kind: 'serie',
+      title: 'Série n°12 — Nombre premier palindrome (Qt)',
+      module: 'algo-pratique',
+      chapters: ['arithmetique'],
+      teacher: 'Mounir Saadani',
+      file: 'pdf/series/pratique/serie-12-premier-palindrome.pdf',
+      correction: null,
+      notes: 'Filigrane conservé.',
+      source: 'Mounir Saadani'
+    },
+    {
+      id: 'serie-13-nombre-riche',
+      kind: 'serie',
+      title: 'Série n°13 — Nombre riche (Qt)',
+      module: 'algo-pratique',
+      chapters: ['arithmetique', 'fichiers'],
+      teacher: 'Mounir Saadani',
+      file: 'pdf/series/pratique/serie-13-nombre-riche.pdf',
+      correction: null,
+      notes: 'Filigrane conservé.',
+      source: 'Mounir Saadani'
+    },
+    {
+      id: 'serie-16-conversion-base-b',
+      kind: 'serie',
+      title: 'Série n°16 — Conversion décimal vers base B (Qt)',
+      module: 'algo-pratique',
+      chapters: ['bases', 'fichiers'],
+      teacher: 'Mounir Saadani',
+      file: 'pdf/series/pratique/serie-16-conversion-base-b.pdf',
+      correction: null,
+      notes: 'Filigrane conservé.',
+      source: 'Mounir Saadani'
+    },
+    {
+      id: 'tp3-matrices-tri',
+      kind: 'serie',
+      title: 'TP3 — Applications sur les matrices + tri',
+      module: 'algo-theorique',
+      chapters: ['matrices', 'tableaux'],
+      teacher: 'Olfa Hichri',
+      file: 'pdf/series/matrices/tp3-matrices-et-tri.pdf',
+      correction: null,
+      notes: '',
+      source: 'Mme Olfa Hichri'
+    },
+
+    // ── EXTRAITS ───────────────────────────────────────────────────────────────
+    {
+      id: 'x-inconnue-pr2024',
+      kind: 'extrait',
+      title: 'Fonction Inconnue (Pr 2024)',
+      module: 'algo-theorique',
+      chapters: ['recursivite'],
+      teacher: 'Aymen Jamazi',
+      file: 'pdf/extraits/recursivite/inconnue-pr2024.pdf',
+      correction: null,
+      notes: '',
+      source: 'Révision BAC, Prof. Aymen Jamazi — exercice 1'
+    },
+    {
+      id: 'x-trait-qcm',
+      kind: 'extrait',
+      title: 'Exécution manuelle : fonction Trait (QCM)',
+      module: 'algo-theorique',
+      chapters: ['recursivite', 'bases'],
+      teacher: 'Aymen Jamazi',
+      file: 'pdf/extraits/recursivite/trait-qcm-execution-manuelle.pdf',
+      correction: null,
+      notes: '',
+      source: 'Révision Bac blanc, Prof. Aymen Jamazi'
+    },
+    {
+      id: 'x-nom-triangulaire-pr2024',
+      kind: 'extrait',
+      title: 'Nom triangulaire (Pr 2024)',
+      module: 'algo-theorique',
+      chapters: ['fichiers'],
+      teacher: 'Aymen Jamazi',
+      file: 'pdf/extraits/fichiers/nom-triangulaire-pr2024.pdf',
+      correction: null,
+      notes: '',
+      source: 'Révision BAC, Prof. Aymen Jamazi — exercice 2 (2 pages recollées)'
+    },
+    {
+      id: 'x-probleme-bac2017',
+      kind: 'extrait',
+      title: 'Problème Bac 2017 : moteur de recherche local',
+      module: 'algo-theorique',
+      chapters: ['fichiers', 'tableaux', 'matrices'],
+      teacher: 'Aymen Jamazi',
+      file: 'pdf/extraits/fichiers/probleme-bac2017-moteur-de-recherche.pdf',
+      correction: null,
+      notes: '',
+      source: "Annale écrite 'Bac 2017 Pr' sur la feuille"
+    },
+    {
+      id: 'x-quadruplets-pr2021',
+      kind: 'extrait',
+      title: 'Quadruplets de nombres premiers jumeaux (Pr 2021)',
+      module: 'algo-theorique',
+      chapters: ['arithmetique', 'approximation', 'tableaux'],
+      teacher: 'Aymen Jamazi',
+      file: 'pdf/extraits/arithmetique/quadruplets-premiers-jumeaux-pr2021.pdf',
+      correction: null,
+      notes: '',
+      source: 'Révision BAC, Prof. Aymen Jamazi — exercice 3'
+    },
+    {
+      id: 'x-optimisation-1-2',
+      kind: 'extrait',
+      title: "Problèmes d'optimisation 1 et 2",
+      module: 'algo-theorique',
+      chapters: ['approximation'],
+      teacher: 'Aymen Jamazi',
+      file: 'pdf/extraits/approximation/optimisation-problemes-1-et-2.pdf',
+      correction: null,
+      notes: '',
+      source: 'Révision Bac blanc, Prof. Aymen Jamazi'
+    },
+    {
+      id: 'x-optimisation-3-pr2015',
+      kind: 'extrait',
+      title: "Problème 3 (Pr 2015) : stade et piste d'athlétisme",
+      module: 'algo-theorique',
+      chapters: ['approximation'],
+      teacher: 'Aymen Jamazi',
+      file: 'pdf/extraits/approximation/optimisation-probleme-3-pr2015.pdf',
+      correction: null,
+      notes: '',
+      source: 'Révision Bac blanc, Prof. Aymen Jamazi'
+    }
+  ];
+
+  // ── API publique ─────────────────────────────────────────────────────────────
+  function getAllDocuments() { return _docs; }
+
+  function getExamens() {
+    return _docs.filter(function(d){ return d.kind === 'examen'; })
+      .sort(function(a, b){
+        // newest first (date "inconnue" goes to the bottom)
+        var da = a.date === 'inconnue' ? '0000' : a.date;
+        var db = b.date === 'inconnue' ? '0000' : b.date;
+        return db.localeCompare(da);
+      });
   }
-}(typeof self !== 'undefined' ? self : this, function () {
 
-  const DEVOIR_TYPES = {
+  function getSeries() {
+    return _docs.filter(function(d){ return d.kind === 'serie'; });
+  }
+
+  function getExtraits() {
+    return _docs.filter(function(d){ return d.kind === 'extrait'; });
+  }
+
+  function getByChapter(slug) {
+    return _docs.filter(function(d){
+      return Array.isArray(d.chapters) && d.chapters.indexOf(slug) !== -1;
+    });
+  }
+
+  function getByModule(module) {
+    return _docs.filter(function(d){ return d.module === module; });
+  }
+
+  function getPratiqueSerials() {
+    return _docs.filter(function(d){
+      return d.kind === 'serie' && d.module === 'algo-pratique';
+    });
+  }
+
+  function getDocumentById(id) {
+    return _docs.find(function(d){ return d.id === id; }) || null;
+  }
+
+  function getCounts() {
+    return {
+      total:    _docs.length,
+      examens:  _docs.filter(function(d){ return d.kind === 'examen'; }).length,
+      series:   _docs.filter(function(d){ return d.kind === 'serie'; }).length,
+      extraits: _docs.filter(function(d){ return d.kind === 'extrait'; }).length
+    };
+  }
+
+  /** Années disponibles pour le filtre (sans "inconnue") */
+  function getYears() {
+    var years = {};
+    _docs.forEach(function(d){
+      if (d.date && d.date !== 'inconnue') {
+        var y = d.date.substring(0, 4);
+        years[y] = true;
+      }
+    });
+    return Object.keys(years).sort(function(a,b){ return b - a; });
+  }
+
+  /** Établissements disponibles pour le filtre */
+  function getSchools() {
+    var schools = {};
+    _docs.forEach(function(d){
+      if (d.school) schools[d.school] = true;
+    });
+    return Object.keys(schools).sort();
+  }
+
+    // ── DEVOIRS INTERACTIFS (DC1, DC2, DS AVEC ÉNONCÉS, TDO & PYTHON) ───
+const DEVOIR_TYPES = {
     dc1: {
       id: 'dc1',
       label: 'Devoir de Contrôle N°1',
@@ -51,7 +461,7 @@
     }
   };
 
-  const ALGO_DEVOIRS = [
+const ALGO_DEVOIRS = [
     // -------------------------------------------------------------
     // 1. DEVOIRS DE CONTRÔLE N°1 (DC1 - 1er Trimestre)
     // -------------------------------------------------------------
@@ -456,37 +866,43 @@ def filtrer_matrice(m, l, c):
   ];
 
   return {
+    // ── Devoirs interactifs (épreuves avec TDO & corrigés Python) ──────────────
     devoirTypes: DEVOIR_TYPES,
     devoirs: ALGO_DEVOIRS,
-
-    getAllDevoirs() {
-      return ALGO_DEVOIRS;
-    },
-
-    getDevoirsByType(type) {
+    getAllDevoirs: function() { return ALGO_DEVOIRS; },
+    getDevoirsByType: function(type) {
       if (!type || type === 'all') return ALGO_DEVOIRS;
-      const clean = String(type).trim().toLowerCase();
-      return ALGO_DEVOIRS.filter(d => d.type.toLowerCase() === clean);
+      var clean = String(type).trim().toLowerCase();
+      return ALGO_DEVOIRS.filter(function(d){ return d.type.toLowerCase() === clean; });
     },
-
-    getDevoirById(id) {
+    getDevoirById: function(id) {
       if (!id) return null;
-      return ALGO_DEVOIRS.find(d => d.id === id) || null;
+      return ALGO_DEVOIRS.find(function(d){ return d.id === id; }) || null;
     },
-
-    getDevoirsByChapter(chapterSlug) {
+    getDevoirsByChapter: function(chapterSlug) {
       if (!chapterSlug) return [];
-      const clean = String(chapterSlug).trim().toLowerCase();
-      return ALGO_DEVOIRS.filter(d => d.chapters && d.chapters.includes(clean));
+      var clean = String(chapterSlug).trim().toLowerCase();
+      return ALGO_DEVOIRS.filter(function(d){ return d.chapters && d.chapters.indexOf(clean) !== -1; });
     },
-
-    getDevoirsCounts() {
+    getDevoirsCounts: function() {
       return {
         all: ALGO_DEVOIRS.length,
-        dc1: ALGO_DEVOIRS.filter(d => d.type === 'dc1').length,
-        dc2: ALGO_DEVOIRS.filter(d => d.type === 'dc2').length,
-        ds: ALGO_DEVOIRS.filter(d => d.type === 'ds').length
+        dc1: ALGO_DEVOIRS.filter(function(d){ return d.type === 'dc1'; }).length,
+        dc2: ALGO_DEVOIRS.filter(function(d){ return d.type === 'dc2'; }).length,
+        ds: ALGO_DEVOIRS.filter(function(d){ return d.type === 'ds'; }).length
       };
-    }
+    },
+
+    getAllDocuments:    getAllDocuments,
+    getExamens:        getExamens,
+    getSeries:         getSeries,
+    getExtraits:       getExtraits,
+    getByChapter:      getByChapter,
+    getByModule:       getByModule,
+    getPratiqueSerials: getPratiqueSerials,
+    getDocumentById:   getDocumentById,
+    getCounts:         getCounts,
+    getYears:          getYears,
+    getSchools:        getSchools
   };
-}));
+})();

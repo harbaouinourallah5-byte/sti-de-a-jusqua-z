@@ -1,15 +1,15 @@
-const CACHE_NAME = 'sti-de-a-z-v25';
+const CACHE_NAME = 'sti-de-a-z-v26';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
-  '/style.css?v=25.0',
-  '/data.js?v=25.0',
-  '/data/curriculum.js?v=25.0',
-  '/data/documents.js?v=25.0',
-  '/app.js?v=25.0',
-  '/css_engine.js?v=25.0',
-  '/algo_pratique_engine.js?v=25.0',
-  '/pomodoro_engine.js?v=25.0',
+  '/style.css?v=26.0',
+  '/data.js?v=26.0',
+  '/data/curriculum.js?v=26.0',
+  '/data/documents.js?v=26.0',
+  '/app.js?v=26.0',
+  '/css_engine.js?v=26.0',
+  '/algo_pratique_engine.js?v=26.0',
+  '/pomodoro_engine.js?v=26.0',
   '/favicon.svg',
   '/manifest.webmanifest'
 ];
@@ -78,3 +78,4 @@ self.addEventListener('fetch', (e) => {
     })
   );
 });
+
