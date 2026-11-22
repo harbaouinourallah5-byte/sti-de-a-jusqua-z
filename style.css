@@ -3052,7 +3052,7 @@ input, select, textarea {
 }
 
 /* =============================================================
-   SECTION COURS & SÉRIES PDF + ESPACE ENSEIGNANT (/admin)
+   SECTION COURS & SÉRIES PDF
    ============================================================= */
 
 /* Carte Portail Cours & Séries PDF */
@@ -3317,45 +3317,6 @@ input, select, textarea {
 .lesson-btn-download:hover {
   background: #0284c7;
   color: #fff;
-}
-
-/* Tableau d'administration */
-.admin-table tr {
-  border-bottom: 1px solid var(--border-color);
-  transition: background 0.2s ease;
-}
-
-.admin-table tbody tr:hover {
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.admin-action-btn {
-  padding: 5px 10px;
-  border-radius: 4px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  margin-left: 4px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.admin-action-btn.view {
-  background: rgba(124, 58, 237, 0.15);
-  color: #c084fc;
-  border: 1px solid #7c3aed;
-}
-
-.admin-action-btn.del {
-  background: rgba(239, 68, 68, 0.15);
-  color: #f87171;
-  border: 1px solid #ef4444;
-}
-
-.admin-action-btn:hover {
-  filter: brightness(1.25);
 }
 
 /* Lecteur PDF intégré */
@@ -6763,103 +6724,6 @@ input, select, textarea {
   top: 0;
   z-index: 8;
   backdrop-filter: blur(10px);
-}
-
-/* ===================================================================
-   SÉCURITÉ ESPACE ENSEIGNANT (/admin) : ÉCRAN DE VERROUILLAGE
-   =================================================================== */
-.admin-auth-gate-box {
-  max-width: 460px;
-  margin: 50px auto;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-xl);
-  padding: 36px 30px;
-  box-shadow: var(--shadow-lg);
-  text-align: center;
-}
-
-.admin-lock-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: var(--sti-accent-light);
-  color: var(--sti-accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2rem;
-  margin: 0 auto 18px auto;
-}
-
-.admin-auth-title {
-  font-size: 1.35rem;
-  margin-bottom: 8px;
-  color: var(--text-primary);
-}
-
-.admin-auth-desc {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  line-height: 1.6;
-  margin-bottom: 24px;
-}
-
-.admin-password-input-wrap {
-  margin-bottom: 16px;
-  position: relative;
-}
-
-.admin-password-input {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid var(--border-input);
-  background: var(--bg-input);
-  color: var(--text-input);
-  border-radius: var(--radius-md);
-  font-size: 1rem;
-  outline: none;
-  transition: var(--transition);
-}
-
-.admin-password-input:focus {
-  border-color: var(--primary-indigo);
-  box-shadow: 0 0 0 3px var(--primary-indigo-glow);
-}
-
-.admin-login-btn {
-  width: 100%;
-  padding: 12px 20px;
-  background: var(--sti-accent);
-  color: #FFFFFF;
-  border: none;
-  border-radius: var(--radius-md);
-  font-weight: 700;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.admin-login-btn:hover {
-  background: #0f766e;
-}
-
-.admin-auth-error {
-  display: none;
-  margin-top: 14px;
-  padding: 8px 12px;
-  background: #FEF2F2;
-  border: 1px solid #FECDD3;
-  color: #B91C1C;
-  border-radius: var(--radius-sm);
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-[data-theme="dark"] .admin-auth-error {
-  background: rgba(239, 68, 68, 0.15);
-  border-color: rgba(239, 68, 68, 0.4);
-  color: #FCA5A5;
 }
 
 /* ===================================================================

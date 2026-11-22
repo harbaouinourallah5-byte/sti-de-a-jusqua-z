@@ -1544,7 +1544,6 @@ const VIEW_TO_HASH_MAP = {
   'sql': '#/sql',
   'lessons': '#/lessons',
   'examens': '#/examens',
-  'admin': '#/admin',
   'algo-home': '#/algo',
   'algo-pratique': '#/algo/pratique',
   'algo-theorique': '#/algo/theorique',
@@ -1564,7 +1563,7 @@ function getHashForView(viewName) {
 
 function parseAppHash(hash) {
   let clean = (hash || '').replace(/^#[\/]?/, '').trim().toLowerCase();
-  if (!clean || clean === 'home') return { view: 'home' };
+  if (!clean || clean === 'home' || clean === 'admin') return { view: 'home' };
 
   // Espace Ma Révision (#/revision, #/revision/cartes, #/revision/plan)
   if (clean === 'revision' || clean.startsWith('revision/')) {
@@ -1661,7 +1660,7 @@ function parseAppHash(hash) {
     'lessons': 'lessons',
     'cours': 'lessons',
     'cours-pdf': 'lessons',
-    'admin': 'admin',
+    'admin': 'home',
     'examens': 'examens',
     'sujets': 'examens',
     'examens-bac': 'examens',
@@ -1998,7 +1997,7 @@ function switchView(viewName, skipHashUpdate = false) {
   }
 
   // Mémoriser la session d'étude ("Continuer où j'ai arrêté")
-  if (typeof saveStudySession === 'function' && viewName !== 'admin') {
+  if (typeof saveStudySession === 'function') {
     saveStudySession(viewName);
   }
 
@@ -2017,7 +2016,6 @@ function switchView(viewName, skipHashUpdate = false) {
       'sql': 'SQL (MySQL)',
       'lessons': 'Cours & Séries',
       'examens': 'Examens & Sujets',
-      'admin': 'Espace Prof',
       'algo-home': 'Algorithme',
       'algo-pratique': 'Pratique Qt',
       'algo-theorique': 'Théorique',
@@ -2043,9 +2041,7 @@ function switchView(viewName, skipHashUpdate = false) {
     } else if (viewName === 'lessons') {
       mobileModuleChip.textContent = 'PDF';
       mobileModuleChip.className = 'mobile-module-chip sti';
-    } else if (viewName === 'admin') {
-      mobileModuleChip.textContent = 'PROF';
-      mobileModuleChip.className = 'mobile-module-chip algo';
+    
     } else {
       mobileModuleChip.textContent = 'BAC';
       mobileModuleChip.className = 'mobile-module-chip sti';
@@ -2128,10 +2124,6 @@ function switchView(viewName, skipHashUpdate = false) {
   } else if (viewName === 'algo-quiz') {
     if (typeof initAlgoQuizScreen === 'function') {
       initAlgoQuizScreen();
-    }
-  } else if (viewName === 'admin') {
-    if (typeof checkAdminAuth === 'function') {
-      checkAdminAuth();
     }
   } else if (viewName === 'algo-pratique') {
     const input = document.getElementById('algoPratiqueSearchInput');
@@ -6494,7 +6486,7 @@ function openCssModalById(id) {
 
 
 // =============================================================
-// MODULE COURS & SÉRIES PDF + ESPACE ENSEIGNANT (/admin)
+// MODULE COURS & SÉRIES PDF
 // Conforme au Programme Officiel Baccalauréat STI Tunisie
 // =============================================================
 
@@ -6651,94 +6643,6 @@ async function fetchLessonsFromSupabase() {
   }
 }
 
-async function uploadPdfToSupabase(file, lessonId) {
-  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-  const filePath = `${lessonId}_${safeName}`;
-
-  const res = await fetch(`${SUPABASE_CONFIG.url}/storage/v1/object/${SUPABASE_CONFIG.bucket}/${filePath}`, {
-    method: 'POST',
-    headers: {
-      'apikey': SUPABASE_CONFIG.anonKey,
-      'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`,
-      'Content-Type': file.type || 'application/pdf',
-      'x-upsert': 'true'
-    },
-    body: file
-  });
-
-  if (!res.ok) {
-    const errText = await res.text();
-    throw new Error(`Échec du téléversement vers le Cloud (${res.status}): ${errText}`);
-  }
-
-  return `${SUPABASE_CONFIG.url}/storage/v1/object/public/${SUPABASE_CONFIG.bucket}/${filePath}`;
-}
-
-async function saveLessonToSupabase(lesson) {
-  const payload = {
-    id: lesson.id,
-    title: lesson.title,
-    subject: lesson.subject,
-    subject_label: lesson.subjectLabel,
-    tags: lesson.tags,
-    type: lesson.type,
-    type_label: lesson.typeLabel,
-    date: lesson.date,
-    author: lesson.author,
-    file_size: lesson.fileSize,
-    description: lesson.description,
-    summary: lesson.summary,
-    pdf_url: lesson.pdfUrl,
-    download_count: 0
-  };
-
-  const res = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/lessons`, {
-    method: 'POST',
-    headers: {
-      'apikey': SUPABASE_CONFIG.anonKey,
-      'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`,
-      'Content-Type': 'application/json',
-      'Prefer': 'return=minimal'
-    },
-    body: JSON.stringify(payload)
-  });
-
-  if (!res.ok) {
-    const errText = await res.text();
-    throw new Error(`Échec d'enregistrement en base Cloud: ${errText}`);
-  }
-  return true;
-}
-
-async function deleteLessonFromSupabase(id, pdfUrl) {
-  try {
-    await fetch(`${SUPABASE_CONFIG.url}/rest/v1/lessons?id=eq.${encodeURIComponent(id)}`, {
-      method: 'DELETE',
-      headers: {
-        'apikey': SUPABASE_CONFIG.anonKey,
-        'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`
-      }
-    });
-
-    if (pdfUrl && pdfUrl.includes(`/storage/v1/object/public/${SUPABASE_CONFIG.bucket}/`)) {
-      const fileName = pdfUrl.split(`/storage/v1/object/public/${SUPABASE_CONFIG.bucket}/`)[1];
-      if (fileName) {
-        await fetch(`${SUPABASE_CONFIG.url}/storage/v1/object/${SUPABASE_CONFIG.bucket}`, {
-          method: 'DELETE',
-          headers: {
-            'apikey': SUPABASE_CONFIG.anonKey,
-            'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ prefixes: [fileName] })
-        });
-      }
-    }
-  } catch (err) {
-    console.error('Erreur suppression Supabase:', err);
-  }
-}
-
 // -------------------------------------------------------------
 // Initialisation du Module Leçons & Vérification Routage URL
 // -------------------------------------------------------------
@@ -6767,8 +6671,7 @@ async function initLessonsModule() {
   }
 
   renderLessons();
-  renderAdminLessonsTable();
-  setupAdminDragAndDrop();
+  
 
   // Écoute des changements d'URL hash
   window.addEventListener('hashchange', checkUrlRouting);
@@ -6780,7 +6683,7 @@ function checkUrlRouting() {
   const path = window.location.pathname.toLowerCase();
 
   if (hash === '#admin' || path.endsWith('/admin') || path.endsWith('/admin/') || path.includes('/admin')) {
-    switchView('admin');
+    switchView('home');
   } else if (hash === '#lessons' || path.endsWith('/lessons') || path.endsWith('/cours')) {
     switchView('lessons');
   } else if (hash === '#html') {
@@ -6855,7 +6758,7 @@ function renderLessons() {
     counterBadge.textContent = filtered.length === 0 ? "Aucun document" : `${filtered.length} document${filtered.length > 1 ? 's' : ''}`;
   }
 
-  // Si aucun document n'a été publié par le professeur
+  // Si aucun document n'est disponible
   if (allLessons.length === 0) {
     grid.innerHTML = `
       <div class="pdf-empty-state-card" style="grid-column: 1 / -1; text-align: center; padding: 50px 24px; background: var(--bg-card); border: 1px dashed var(--border-color); border-radius: 16px; margin: 20px 0;">
@@ -6866,7 +6769,7 @@ function renderLessons() {
           Aucun document pour le moment
         </h3>
         <p style="color: var(--text-secondary); font-size: 0.95rem; max-width: 480px; margin: 0 auto 20px; line-height: 1.6;">
-          Votre professeur ajoutera les séries, devoirs et résumés de cours au format PDF très bientôt. En attendant, toutes les leçons interactives sont disponibles en ligne !
+          Aucun document pour le moment. Consultez les chapitres d'algorithme et les sujets d'examens disponibles.
         </p>
         <button type="button" onclick="navigateToHash('#/html5')" style="background: linear-gradient(135deg, #4f46e5, #06b6d4); color: #fff; border: none; padding: 12px 24px; border-radius: 25px; font-weight: 600; font-size: 0.95rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);">
           <span>💻</span>
@@ -7263,520 +7166,6 @@ function downloadLessonPdf(lessonId, variant = 'enonce') {
 }
 
 // -------------------------------------------------------------
-// ESPACE ENSEIGNANT (/admin) : Gestion & Téléversement Direct (Sans Mot de Passe)
-// -------------------------------------------------------------
-function handleAdminLogin(e) {
-  if (e) e.preventDefault();
-  isAdminLoggedIn = true;
-  const dash = document.getElementById('adminDashboard');
-  if (dash) dash.style.display = 'block';
-  renderAdminLessonsTable();
-}
-
-function handleAdminLogout() {
-  switchView('home');
-}
-
-
-function handleAdminTypeChange(typeVal) {
-  const wrap = document.getElementById('adminSerieCorrectionWrap');
-  if (wrap) {
-    wrap.style.display = (typeVal === 'serie') ? 'block' : 'none';
-  }
-}
-
-function toggleAdminCorrectionMode(mode) {
-  const fileZone = document.getElementById('adminCorrectionFileZone');
-  const linkZone = document.getElementById('adminCorrectionLinkZone');
-  if (mode === 'file') {
-    if (fileZone) fileZone.style.display = 'block';
-    if (linkZone) linkZone.style.display = 'none';
-  } else {
-    if (fileZone) fileZone.style.display = 'none';
-    if (linkZone) linkZone.style.display = 'block';
-  }
-}
-
-function handleAdminCorrectionFileSelected(e) {
-  const file = e.target.files[0];
-  const label = document.getElementById('adminCorrectionFileLabel');
-  if (file) {
-    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
-      alert("Attention : Le fichier du corrigé doit être un document PDF (.pdf) !");
-      e.target.value = '';
-      selectedAdminCorrectionFile = null;
-      if (label) label.style.display = 'none';
-      return;
-    }
-    selectedAdminCorrectionFile = file;
-    const sizeMo = (file.size / (1024 * 1024)).toFixed(2);
-    if (label) {
-      label.style.display = 'inline-block';
-      label.textContent = `✓ Corrigé sélectionné : ${file.name} (${sizeMo} Mo)`;
-    }
-  } else {
-    selectedAdminCorrectionFile = null;
-    if (label) label.style.display = 'none';
-  }
-}
-
-function toggleAdminPdfMode(mode) {
-  const fileWrap = document.getElementById('adminPdfFileWrap');
-  const linkWrap = document.getElementById('adminPdfLinkWrap');
-  if (mode === 'file') {
-    if (fileWrap) fileWrap.style.display = 'block';
-    if (linkWrap) linkWrap.style.display = 'none';
-  } else {
-    if (fileWrap) fileWrap.style.display = 'none';
-    if (linkWrap) linkWrap.style.display = 'block';
-  }
-}
-
-function setupAdminDragAndDrop() {
-  const dropZone = document.getElementById('adminPdfFileWrap');
-  if (!dropZone || dropZone.dataset.dndInit === 'true') return;
-  dropZone.dataset.dndInit = 'true';
-
-  ['dragenter', 'dragover'].forEach(eventName => {
-    dropZone.addEventListener(eventName, (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      dropZone.style.borderColor = '#34d399';
-      dropZone.style.background = 'rgba(16, 185, 129, 0.14)';
-    }, false);
-  });
-
-  ['dragleave', 'drop'].forEach(eventName => {
-    dropZone.addEventListener(eventName, (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      dropZone.style.borderColor = 'rgba(16, 185, 129, 0.4)';
-      dropZone.style.background = 'rgba(16, 185, 129, 0.04)';
-    }, false);
-  });
-
-  dropZone.addEventListener('drop', (e) => {
-    const dt = e.dataTransfer;
-    if (dt && dt.files && dt.files.length > 0) {
-      const file = dt.files[0];
-      if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
-        selectedAdminFile = file;
-        const label = document.getElementById('adminSelectedFileName');
-        if (label) {
-          const sizeMo = (file.size / (1024 * 1024)).toFixed(2);
-          label.style.display = 'block';
-          label.textContent = `✓ Fichier glissé : ${file.name} (${sizeMo} Mo)`;
-        }
-      } else {
-        alert("Veuillez déposer un document au format PDF (.pdf).");
-      }
-    }
-  }, false);
-}
-
-function handleAdminFileSelected(e) {
-  const file = e.target.files[0];
-  const label = document.getElementById('adminSelectedFileName');
-  if (file) {
-    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
-      alert("Attention : Le fichier sélectionné doit être un document PDF (.pdf) !");
-      e.target.value = '';
-      selectedAdminFile = null;
-      if (label) label.style.display = 'none';
-      return;
-    }
-    selectedAdminFile = file;
-    const sizeMo = (file.size / (1024 * 1024)).toFixed(2);
-    if (label) {
-      label.style.display = 'block';
-      label.textContent = `✓ Fichier sélectionné : ${file.name} (${sizeMo} Mo)`;
-    }
-  } else {
-    selectedAdminFile = null;
-    if (label) label.style.display = 'none';
-  }
-}
-
-async function handleUploadLesson(e) {
-  if (e) e.preventDefault();
-
-  const titleInput = document.getElementById('adminLessonTitle');
-  const subjectSelect = document.getElementById('adminLessonSubject');
-  const typeSelect = document.getElementById('adminLessonType');
-  const authorInput = document.getElementById('adminLessonAuthor');
-  const descInput = document.getElementById('adminLessonDesc');
-  const linkInput = document.getElementById('adminPdfLinkInput');
-  const modeRadios = document.getElementsByName('adminPdfMode');
-  const submitBtn = document.getElementById('adminSubmitBtn');
-
-  const title = titleInput.value.trim();
-  const subject = (subjectSelect ? subjectSelect.value : '').trim().toLowerCase() || 'html';
-  const type = (typeSelect ? typeSelect.value : '').trim().toLowerCase() || 'cours';
-  const author = authorInput.value.trim() || "Professeur d'Informatique (Bac STI)";
-  const desc = descInput.value.trim();
-
-  let isFileMode = true;
-  for (let r of modeRadios) {
-    if (r.checked && r.value === 'link') isFileMode = false;
-  }
-
-  const subjectLabels = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getSubjectLabelsMap() : {
-    html: "HTML5",
-    css: "CSS3",
-    js: "JavaScript",
-    sql: "SQL (Bases de Données)",
-    "algo-pratique": "Pratique (Qt ➔ Thonny)",
-    "algo-theorique": "Théorique (Algorithme)",
-    "algo-ch1-fichiers": "Ch 1 : Fichiers Binaires & Texte",
-    "algo-ch2-recursivite": "Ch 2 : Récursivité",
-    "algo-ch2-recurrence": "Ch 2 : Récursivité",
-    "algo-ch3-bases": "Ch 3 : Conversion entre les bases",
-    "algo-ch4-arithmetique": "Ch 4 : Arithmétique",
-    "algo-ch5-approximation": "Ch 5 : Approximation & Optimisation",
-    "algo-ch6-tableaux": "Ch 6 : Les tableaux",
-    "algo-ch6-matrices": "Ch 7 : Matrices",
-    "algo-ch7-matrices": "Ch 7 : Matrices",
-    "algo-ch8-suites": "Ch 8 : Les suites"
-  };
-
-  const subjectTags = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getSubjectTagsMap() : {
-    html: ["html", "html5", "web", "balise", "formulaire"],
-    css: ["css", "css3", "style", "design", "animation"],
-    js: ["js", "javascript", "script", "controle", "validation"],
-    sql: ["sql", "bdd", "base", "table", "requete", "select"],
-    "algo-pratique": ["algo", "algorithme", "pratique", "qt", "designer", "thonny", "python", "interface"],
-    "algo-theorique": ["algo", "algorithme", "theorique", "bac", "tri", "matrice", "pattern", "bases", "recursivite", "tableaux", "suites"]
-  };
-
-  const typeLabels = {
-    cours: "📖 Cours",
-    serie: "📝 Série d'exercices",
-    devoir: "📑 Devoir de Contrôle",
-    corrige: "🎯 Corrigé Type",
-    resume: "📌 Fiche Résumé"
-  };
-
-  const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '<span>🚀</span><span>Publier</span>';
-  if (submitBtn) {
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span>⏳</span><span>Publication Cloud en cours...</span>';
-  }
-
-  try {
-    const lessonId = `lesson_${Date.now()}`;
-    let fileData = null;
-    let fileSize = "1 Mo";
-    let pdfUrl = null;
-
-    if (isFileMode) {
-      if (!selectedAdminFile) {
-        alert("Veuillez sélectionner un fichier PDF local à téléverser !");
-        return;
-      }
-      fileSize = `${(selectedAdminFile.size / (1024 * 1024)).toFixed(2)} Mo`;
-
-      try {
-        // 1. Téléversement dans Supabase Storage (Cloud)
-        pdfUrl = await uploadPdfToSupabase(selectedAdminFile, lessonId);
-      } catch (upErr) {
-        console.warn("Téléversement cloud direct non disponible, enregistrement local :", upErr);
-        fileData = await readFileAsDataUrl(selectedAdminFile);
-      }
-    } else {
-      pdfUrl = linkInput.value.trim();
-      if (!pdfUrl) {
-        alert("Veuillez saisir le lien vers le document PDF (Google Drive ou lien web) !");
-        return;
-      }
-      fileSize = "Lien Cloud";
-    }
-
-    let dlName = (selectedAdminFile && selectedAdminFile.name) ? selectedAdminFile.name : `${title}.pdf`;
-    if (!dlName.toLowerCase().endsWith('.pdf')) {
-      dlName += '.pdf';
-    }
-
-    let hasCorrection = false;
-    let correctionUrl = null;
-    let correctionData = null;
-    let correctionSize = null;
-    let correctionName = null;
-
-    if (type === 'serie') {
-      let isCorrFileMode = true;
-      const corrRadios = document.getElementsByName('adminCorrectionMode');
-      for (let r of corrRadios) {
-        if (r.checked && r.value === 'link') isCorrFileMode = false;
-      }
-      const corrLinkInput = document.getElementById('adminCorrectionLinkInput');
-
-      if (isCorrFileMode && selectedAdminCorrectionFile) {
-        hasCorrection = true;
-        correctionSize = `${(selectedAdminCorrectionFile.size / (1024 * 1024)).toFixed(2)} Mo`;
-        correctionName = selectedAdminCorrectionFile.name;
-        try {
-          correctionUrl = await uploadPdfToSupabase(selectedAdminCorrectionFile, `${lessonId}_corrige`);
-        } catch (cErr) {
-          console.warn("Téléversement corrigé cloud direct non disponible, enregistrement local :", cErr);
-          correctionData = await readFileAsDataUrl(selectedAdminCorrectionFile);
-        }
-      } else if (!isCorrFileMode && corrLinkInput && corrLinkInput.value.trim()) {
-        hasCorrection = true;
-        correctionUrl = corrLinkInput.value.trim();
-        correctionSize = "Lien Web";
-        correctionName = `${title} — Corrigé Officiel.pdf`;
-      }
-    }
-
-    const newLesson = {
-      id: lessonId,
-      title: title,
-      subject: subject,
-      subjectLabel: subjectLabels[subject] || subject.toUpperCase(),
-      tags: subjectTags[subject] || [subject],
-      type: type,
-      typeLabel: typeLabels[type] || type,
-      date: new Date().toISOString().split('T')[0],
-      author: author,
-      fileSize: fileSize,
-      description: desc || "Document PDF déposé par l'enseignant pour les révisions du Bac.",
-      summary: desc,
-      fileData: fileData,
-      pdfUrl: pdfUrl,
-      downloadName: dlName,
-      isCustom: true,
-      isCloud: !!pdfUrl,
-      hasCorrection: hasCorrection,
-      correctionUrl: correctionUrl,
-      correctionData: correctionData,
-      correctionSize: correctionSize,
-      correctionName: correctionName
-    };
-
-    // 2. Enregistrement en base de données Cloud Supabase
-    if (pdfUrl) {
-      try {
-        await saveLessonToSupabase(newLesson);
-      } catch (dbErr) {
-        console.warn("Avertissement base cloud Supabase :", dbErr);
-      }
-    }
-
-    // 3. Sauvegarde dans le cache IndexedDB local
-    await STILessonsDB.save(newLesson);
-
-    // 4. Ajout immédiat en tête de liste pour l'affichage
-    allLessons.unshift(newLesson);
-
-    // 5. Réinitialisation du formulaire
-    titleInput.value = '';
-    descInput.value = '';
-    if (linkInput) linkInput.value = '';
-    const fileInput = document.getElementById('adminPdfFileInput');
-    if (fileInput) fileInput.value = '';
-    const label = document.getElementById('adminSelectedFileName');
-    if (label) label.style.display = 'none';
-    selectedAdminFile = null;
-    selectedAdminCorrectionFile = null;
-    const corrLabel = document.getElementById('adminCorrectionFileLabel');
-    if (corrLabel) { corrLabel.style.display = 'none'; corrLabel.textContent = ''; }
-    const corrFileInput = document.getElementById('adminCorrectionFileInput');
-    if (corrFileInput) corrFileInput.value = '';
-    const corrLinkInput = document.getElementById('adminCorrectionLinkInput');
-    if (corrLinkInput) corrLinkInput.value = '';
-    const corrWrap = document.getElementById('adminSerieCorrectionWrap');
-    if (corrWrap) corrWrap.style.display = 'none';
-    alert(`✓ Document "${title}" publié avec succès dans le Cloud Supabase (${subjectLabels[subject]}) !\nIl est immédiatement accessible par tous les élèves sans consommer d'espace sur Vercel.`);
-
-    renderAdminLessonsTable();
-    renderLessons();
-  } catch (err) {
-    console.error("Erreur de publication :", err);
-    alert("Erreur lors de la publication : " + err.message);
-  } finally {
-    if (submitBtn) {
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = originalBtnHtml;
-    }
-  }
-}
-
-function readFileAsDataUrl(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(file);
-  });
-}
-
-function filterAdminTable(subj) {
-  adminFilterSubject = (subj || 'all').trim().toLowerCase();
-  document.querySelectorAll('#adminSubjectFilterWrap .cat-btn').forEach(b => b.classList.remove('active'));
-  if (typeof event !== 'undefined' && event && event.target) event.target.classList.add('active');
-  renderAdminLessonsTable();
-}
-
-function renderAdminLessonsTable() {
-  const tbody = document.getElementById('adminLessonsTableBody');
-  if (!tbody) return;
-
-  const targetSubj = (adminFilterSubject || 'all').trim().toLowerCase();
-  const filtered = allLessons.filter(l => {
-    if (targetSubj === 'all') return true;
-    const lSubj = (l.subject || '').trim().toLowerCase();
-    if (targetSubj === 'algo-theorique') {
-      return lSubj === 'algo-theorique' || lSubj.startsWith('algo-ch');
-    }
-    return lSubj === targetSubj;
-  });
-
-  if (filtered.length === 0) {
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="5" style="text-align:center; padding:20px; color:#94a3b8;">
-          Aucun document trouvé pour la matière sélectionnée.
-        </td>
-      </tr>
-    `;
-    return;
-  }
-
-  tbody.innerHTML = filtered.map(l => {
-    return `
-      <tr>
-        <td style="padding:10px 12px;">
-          <span class="subject-badge ${l.subject}">${escapeHtml(l.subjectLabel || l.subject)}</span>
-        </td>
-        <td style="padding:10px 12px; font-weight:600; color:#f8fafc;">
-          ${escapeHtml(l.title)}
-        </td>
-        <td style="padding:10px 12px; color:#cbd5e1;">
-          ${escapeHtml(l.typeLabel || l.type)}${l.hasCorrection ? ' <span style="background:rgba(16,185,129,0.2); color:#34d399; font-size:0.72rem; padding:2px 6px; border-radius:4px; font-weight:700; margin-left:4px;">🎯 + Corrigé</span>' : ''}
-        </td>
-        <td style="padding:10px 12px; font-size:0.8rem; color:#94a3b8;">
-          ${escapeHtml(l.fileSize || 'PDF')}
-        </td>
-        <td style="padding:10px 12px; text-align:right;">
-          <button class="admin-action-btn view" onclick="openPdfModal('${l.id}')">👁️ Aperçu</button>
-          <button class="admin-action-btn view" onclick="downloadLessonPdf('${l.id}')">⬇️ Télécharger</button>
-          ${(l.isCustom || l.isCloud) ? `<button class="admin-action-btn del" onclick="deleteLesson('${l.id}')">🗑️ Supprimer</button>` : ''}
-        </td>
-      </tr>
-    `;
-  }).join('');
-}
-
-async function deleteLesson(id) {
-  if (!confirm("Voulez-vous vraiment supprimer ce document ? Cette action est irréversible.")) return;
-
-  const target = allLessons.find(l => l.id === id);
-  if (target) {
-    await deleteLessonFromSupabase(id, target.pdfUrl);
-  }
-  await STILessonsDB.delete(id);
-  allLessons = allLessons.filter(l => l.id !== id);
-
-  renderAdminLessonsTable();
-  renderLessons();
-  alert("✓ Document supprimé avec succès.");
-}
-
-async function exportAllLessonsBackup() {
-  const custom = await STILessonsDB.getAll();
-  const backup = {
-    version: 1,
-    exportedAt: new Date().toISOString(),
-    customLessons: custom
-  };
-
-  const str = JSON.stringify(backup, null, 2);
-  const blob = new Blob([str], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `Sauvegarde_Cours_STI_${new Date().toISOString().split('T')[0]}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function importLessonsBackup(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = async () => {
-    try {
-      const data = JSON.parse(reader.result);
-      if (!data || !Array.isArray(data.customLessons)) {
-        alert("Fichier de sauvegarde invalide : structure attendue 'customLessons' introuvable.");
-        return;
-      }
-
-      const validSubjects = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getValidSubjects() : ['html', 'css', 'js', 'sql', 'algo-pratique', 'algo-theorique', 'algo-ch1-fichiers', 'algo-ch2-recursivite', 'algo-ch2-recurrence', 'algo-ch3-bases', 'algo-ch4-arithmetique', 'algo-ch5-approximation', 'algo-ch6-tableaux', 'algo-ch6-matrices', 'algo-ch7-matrices', 'algo-ch8-suites'];
-      let importedCount = 0;
-
-      for (let l of data.customLessons) {
-        if (!l || typeof l !== 'object') continue;
-        if (!l.id || typeof l.id !== 'string') continue;
-        if (!l.title || typeof l.title !== 'string') continue;
-
-        // Assainissement des chaînes
-        const cleanLesson = {
-          id: String(l.id).replace(/[^a-zA-Z0-9_-]/g, ''),
-          title: String(l.title).slice(0, 200),
-          subject: validSubjects.includes(l.subject) ? l.subject : 'html',
-          subjectLabel: String(l.subjectLabel || l.subject || '').slice(0, 100),
-          type: String(l.type || 'cours').slice(0, 50),
-          typeLabel: String(l.typeLabel || '📖 Cours').slice(0, 50),
-          date: String(l.date || '2026').slice(0, 20),
-          author: String(l.author || 'Enseignant').slice(0, 100),
-          fileSize: String(l.fileSize || 'PDF').slice(0, 30),
-          pdfUrl: (typeof l.pdfUrl === 'string' && !l.pdfUrl.startsWith('javascript:')) ? l.pdfUrl : '',
-          description: String(l.description || '').slice(0, 1000),
-          summary: String(l.summary || '').slice(0, 500),
-          downloadName: String(l.downloadName || 'document.pdf').replace(/[^a-zA-Z0-9._-]/g, '_'),
-          isCustom: true
-        };
-
-        await STILessonsDB.save(cleanLesson);
-        importedCount++;
-      }
-
-      await initLessonsModule();
-      alert(`✓ Sauvegarde importée et vérifiée avec succès (${importedCount} documents restaurés) !`);
-    } catch (err) {
-      alert("Erreur lors de la lecture du fichier de sauvegarde JSON : " + err.message);
-    }
-  };
-  reader.readAsText(file);
-}
-
-async function loadOfficialAlgoPdfPacks() {
-  const packs = (typeof DATA !== 'undefined' && DATA && DATA.lessons) ? DATA.lessons : [];
-  if (packs.length === 0) {
-    alert("Aucun support par défaut disponible.");
-    return;
-  }
-
-  for (let l of packs) {
-    await STILessonsDB.save(l);
-  }
-  await initLessonsModule();
-  const totalAlgoCh = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getTotalAlgoChapters() : 8;
-  alert(`✓ Les ${packs.length} cours officiels Baccalauréat (STI & ${totalAlgoCh} Chapitres d'Algorithme) ont été chargés avec succès !`);
-}
-
-async function resetToDefaultLessons() {
-  if (!confirm("Voulez-vous réinitialiser et vider la liste des documents ?")) return;
-  await STILessonsDB.clear();
-  allLessons = [];
-  renderAdminLessonsTable();
-  renderLessons();
-  alert("✓ Documents réinitialisés.");
-}
-
-
 // ===================================================================
 // MODULE ALGORITHME & PROGRAMMATION (BAC TUNISIE)
 // Épreuve Pratique (Qt Designer & Thonny) + Épreuve Théorique
@@ -7886,7 +7275,7 @@ function switchModule(moduleName, skipViewSwitch = false) {
 
     if (currentView === 'lessons') {
       renderLessons();
-    } else if (!skipViewSwitch && !['algo-home', 'algo-pratique', 'algo-theorique', 'admin'].includes(currentView)) {
+    } else if (!skipViewSwitch && !['algo-home', 'algo-pratique', 'algo-theorique'].includes(currentView)) {
       switchView('algo-home');
     }
   } else {
@@ -11952,7 +11341,6 @@ const VIEW_METAS = {
   'sql': { module: 'sti', modLabel: 'STI Web & BD', title: 'SQL & MySQL (Bases de Données)' },
   'lessons': { module: 'all', modLabel: 'Cours & Séries', title: 'Polycopiés & Examens PDF' },
   'examens': { module: 'all', modLabel: 'Examens & Sujets', title: 'Examens & Sujets du Baccalauréat' },
-  'admin': { module: 'admin', modLabel: 'Administration', title: 'Espace Enseignant' },
   'algo-home': { module: 'algo', modLabel: 'Algorithme', title: 'Accueil Algorithme' },
   'algo-pratique': { module: 'algo', modLabel: 'Algorithme', title: 'Pratique (Qt ➔ Thonny Python)' },
   'algo-types': { module: 'algo', modLabel: 'Algorithme', title: 'Types d\'Exercices du Bac' },
@@ -12388,58 +11776,6 @@ function navigateGlobalSearchResult(index) {
   }
 }
 
-// 7. ACCÈS DIRECT ESPACE ENSEIGNANT (/admin) SANS MOT DE PASSE
-function checkAdminAuth() {
-  const gate = document.getElementById('adminAuthGate');
-  const dash = document.getElementById('adminDashboard');
-  if (gate) gate.style.display = 'none';
-  if (dash) dash.style.display = 'block';
-  if (typeof renderAdminLessonsTable === 'function') renderAdminLessonsTable();
-  if (typeof setupAdminDragAndDrop === 'function') setupAdminDragAndDrop();
-}
-
-function handleAdminLogin(e) {
-  if (e && e.preventDefault) e.preventDefault();
-  const pwdInput = document.getElementById('adminPasswordInput');
-  const errEl = document.getElementById('adminAuthErrorMsg');
-  const pwd = pwdInput ? pwdInput.value.trim().toLowerCase() : '';
-
-  const validPasswords = ['prof2025', 'sti2025', 'bac2025', 'admin', 'prof', 'professeur'];
-  if (validPasswords.includes(pwd)) {
-    sessionStorage.setItem('sti_admin_auth', 'true');
-    if (errEl) errEl.style.display = 'none';
-    if (pwdInput) pwdInput.value = '';
-    checkAdminAuth();
-  } else {
-    if (errEl) {
-      errEl.style.display = 'block';
-      errEl.textContent = "❌ Mot de passe incorrect. (Indice enseignant : prof2025)";
-    } else {
-      alert("❌ Mot de passe incorrect. (Indice enseignant : prof2025)");
-    }
-  }
-}
-
-function handleAdminLogout() {
-  sessionStorage.removeItem('sti_admin_auth');
-  checkAdminAuth();
-}
-
-// 8. DOUBLE SÉCURITÉ POUR VIDER TOUS LES DOCUMENTS
-async function clearAllLessonsFromDB() {
-  const code = prompt("⚠️ ATTENTION : Vous êtes sur le point de supprimer TOUS les documents de cours et séries PDF.\\n\\nCette action est irréversible. Pour confirmer définitivement, tapez SUPPRIMER ci-dessous :");
-  if (code !== "SUPPRIMER") {
-    alert("Action annulée. Aucun document n'a été supprimé.");
-    return;
-  }
-  await STILessonsDB.clear();
-  allLessons = [];
-  renderAdminLessonsTable();
-  renderLessons();
-  alert("✓ Tous les documents ont été supprimés de la base locale.");
-}
-
-
 // -------------------------------------------------------------
 // Mise à jour dynamique du Titre de la page et de la Description Meta
 // -------------------------------------------------------------
@@ -12502,10 +11838,6 @@ function updatePageMeta(viewName) {
       title: "Fiche de Révision Imprimable A4 • STI de A à Z",
       desc: "Fiche de révision synthétique A4 prête à imprimer : cours en bref, algorithmes clés, pièges fréquents et exercices types du Bac."
     },
-    'admin': {
-      title: "Espace Enseignant • Dépôt & Gestion Sécurisée des Documents PDF",
-      desc: "Interface réservée aux enseignants pour le téléversement et la gestion des documents PDF de cours et devoirs."
-    }
   };
 
   const item = metaMap[viewName] || metaMap['home'];
@@ -12528,10 +11860,6 @@ if (typeof window !== 'undefined') {
   window.setupThemeToggle = setupThemeToggle;
 }
 
-
-window.handleAdminTypeChange = handleAdminTypeChange;
-window.toggleAdminCorrectionMode = toggleAdminCorrectionMode;
-window.handleAdminCorrectionFileSelected = handleAdminCorrectionFileSelected;
 
 // ===================================================================
 // RUN 7 FEATURE 2 : ESPACE MA RÉVISION & DASHBOARD (#/revision)
