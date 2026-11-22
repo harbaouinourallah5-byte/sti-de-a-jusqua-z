@@ -5942,5 +5942,347 @@ const DATA = {
       "pythonCode": "# Exemple d'entraînement : Détection d'un point-selle\ndef point_selle(M, n, m):\n    trouve = False\n    for i in range(n):\n        col_min = 0\n        for j in range(1, m):\n            if M[i][j] < M[i][col_min]:\n                col_min = j\n        est_max = True\n        for k in range(n):\n            if M[k][col_min] > M[i][col_min]:\n                est_max = False\n        if est_max:\n            print(\"Point-selle en (\" + str(i) + \",\" + str(col_min) + \") = \" + str(M[i][col_min]))\n            trouve = True\n    if not trouve:\n        print(\"Aucun point-selle dans cette matrice.\")",
       "example": "Identifie les points-selles d'une matrice de notes ou de coefficients"
     }
+  ,
+    {
+      "id": "algo-fact-rec",
+      "category": "Chapitre 2 : Récursivité",
+      "type": "fonction",
+      "name": "Factorielle Récursive : n!",
+      "syntax": "fonction Factorielle(n : entier) : entier",
+      "summary": "Calcul récursif de la factorielle d'un entier naturel n (n! = n * (n-1)!).",
+      "description": "Cas de base : si n = 0 ou n = 1, la factorielle vaut 1. Cas général : n! = n * Factorielle(n - 1). Cet algorithme illustre le principe fondamental de la récursivité terminale / simple.",
+      "pseudoCode": "0) fonction Factorielle(n : entier) : entier\n1) si (n ≤ 1) alors\n     retourner 1\n   sinon\n     retourner n * Factorielle(n - 1)\n   fin_si\n2) fin",
+      "tdo": [],
+      "pythonCode": "def factorielle(n):\n    if n <= 1:\n        return 1\n    return n * factorielle(n - 1)",
+      "example": "factorielle(5) -> 120"
+    },
+    {
+      "id": "algo-fibo-rec",
+      "category": "Chapitre 2 : Récursivité",
+      "type": "fonction",
+      "name": "Suite de Fibonacci Récursive",
+      "syntax": "fonction Fibonacci(n : entier) : entier",
+      "summary": "Calcul du n-ième terme de la suite de Fibonacci par définition récurrente.",
+      "description": "Définie par F(0)=0, F(1)=1 et F(n)=F(n-1)+F(n-2). Exemple classique d'arborescence récursive double fréquemment posé au Bac pour tester la compréhension de la pile d'appels.",
+      "pseudoCode": "0) fonction Fibonacci(n : entier) : entier\n1) si (n ≤ 1) alors\n     retourner n\n   sinon\n     retourner Fibonacci(n - 1) + Fibonacci(n - 2)\n   fin_si\n2) fin",
+      "tdo": [],
+      "pythonCode": "def fibonacci(n):\n    if n <= 1:\n        return n\n    return fibonacci(n - 1) + fibonacci(n - 2)",
+      "example": "fibonacci(6) -> 8"
+    },
+    {
+      "id": "algo-pgcd-rec",
+      "category": "Chapitre 2 : Récursivité",
+      "type": "fonction",
+      "name": "PGCD Récursif (Algorithme d'Euclide)",
+      "syntax": "fonction PGCD(a : entier, b : entier) : entier",
+      "summary": "Plus Grand Commun Diviseur de deux entiers positifs a et b par soustractions ou modulo récursif.",
+      "description": "Propriété d'Euclide : PGCD(a, b) = PGCD(b, a mod b) avec cas d'arrêt PGCD(a, 0) = a. Solution optimale et concise exigée dans les épreuves théoriques du Bac.",
+      "pseudoCode": "0) fonction PGCD(a : entier, b : entier) : entier\n1) si (b = 0) alors\n     retourner a\n   sinon\n     retourner PGCD(b, a mod b)\n   fin_si\n2) fin",
+      "tdo": [],
+      "pythonCode": "def pgcd(a, b):\n    if b == 0:\n        return a\n    return pgcd(b, a % b)",
+      "example": "pgcd(48, 18) -> 6"
+    },
+    {
+      "id": "algo-puissance-rec",
+      "category": "Chapitre 2 : Récursivité",
+      "type": "fonction",
+      "name": "Puissance Récursive x^n",
+      "syntax": "fonction Puissance(x : réel, n : entier) : réel",
+      "summary": "Calcul de x élevé à la puissance n (n entier ≥ 0) par décomposition récursive.",
+      "description": "Cas de base : x^0 = 1. Cas récurrent : x^n = x * Puissance(x, n-1). Permet également la variante d'exponentiation rapide où x^n = (x^(n/2))^2.",
+      "pseudoCode": "0) fonction Puissance(x : réel, n : entier) : réel\n1) si (n = 0) alors\n     retourner 1.0\n   sinon\n     retourner x * Puissance(x, n - 1)\n   fin_si\n2) fin",
+      "tdo": [],
+      "pythonCode": "def puissance(x, n):\n    if n == 0:\n        return 1.0\n    return x * puissance(x, n - 1)",
+      "example": "puissance(2.0, 3) -> 8.0"
+    },
+    {
+      "id": "algo-somme-chiffres-rec",
+      "category": "Chapitre 2 : Récursivité",
+      "type": "fonction",
+      "name": "Somme des Chiffres Récursive",
+      "syntax": "fonction Somme_Chiffres(n : entier) : entier",
+      "summary": "Calcul récursif de la somme des chiffres décimaux d'un entier strictement positif.",
+      "description": "Isole le dernier chiffre avec n mod 10 et appelle récursivement la fonction sur le reste n div 10. Cas d'arrêt : n < 10.",
+      "pseudoCode": "0) fonction Somme_Chiffres(n : entier) : entier\n1) si (n < 10) alors\n     retourner n\n   sinon\n     retourner (n mod 10) + Somme_Chiffres(n div 10)\n   fin_si\n2) fin",
+      "tdo": [],
+      "pythonCode": "def somme_chiffres(n):\n    if n < 10:\n        return n\n    return (n % 10) + somme_chiffres(n // 10)",
+      "example": "somme_chiffres(1234) -> 10 (1+2+3+4)"
+    },
+    {
+      "id": "algo-palindrome-rec",
+      "category": "Chapitre 2 : Récursivité",
+      "type": "fonction",
+      "name": "Test de Palindrome Récursif",
+      "syntax": "fonction Est_Palindrome(ch : chaîne, i : entier, j : entier) : booléen",
+      "summary": "Vérifie si une chaîne de caractères se lit de la même manière dans les deux sens.",
+      "description": "Compare le caractère à l'indice i avec celui à l'indice j. Si ch[i] ≠ ch[j], la chaîne n'est pas un palindrome. Sinon on teste le sous-mot avec i+1 et j-1. Cas d'arrêt : i ≥ j.",
+      "pseudoCode": "0) fonction Est_Palindrome(ch : chaîne, i : entier, j : entier) : booléen\n1) si (i ≥ j) alors\n     retourner vrai\n   sinon_si (ch[i] ≠ ch[j]) alors\n     retourner faux\n   sinon\n     retourner Est_Palindrome(ch, i + 1, j - 1)\n   fin_si\n2) fin",
+      "tdo": [],
+      "pythonCode": "def est_palindrome(ch, i, j):\n    if i >= j:\n        return True\n    elif ch[i] != ch[j]:\n        return False\n    return est_palindrome(ch, i + 1, j - 1)",
+      "example": "est_palindrome(\"radar\", 0, 4) -> True"
+    },
+    {
+      "id": "algo-recherche-dicho-rec",
+      "category": "Chapitre 2 : Récursivité",
+      "type": "fonction",
+      "name": "Recherche Dichotomique Récursive",
+      "syntax": "fonction Recherche_Dicho_Rec(t : tab, deb : entier, fin : entier, val : entier) : entier",
+      "summary": "Recherche efficace d'une valeur dans un tableau préalablement trié par dichotomie récursive.",
+      "description": "Divise l'intervalle de recherche par 2 à chaque étape. Calcule mil = (deb + fin) div 2. Renvoie l'indice trouvé ou -1 si deb > fin. Complexité logarithmique O(log n).",
+      "pseudoCode": "0) fonction Recherche_Dicho_Rec(t : tab, deb : entier, fin : entier, val : entier) : entier\n1) si (deb > fin) alors\n     retourner -1\n   fin_si\n2) mil ← (deb + fin) div 2\n3) si (t[mil] = val) alors\n     retourner mil\n   sinon_si (t[mil] > val) alors\n     retourner Recherche_Dicho_Rec(t, deb, mil - 1, val)\n   sinon\n     retourner Recherche_Dicho_Rec(t, mil + 1, fin, val)\n   fin_si\n4) fin",
+      "tdo": [
+        {
+          "objet": "mil",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def recherche_dicho_rec(t, deb, fin, val):\n    if deb > fin:\n        return -1\n    mil = (deb + fin) // 2\n    if t[mil] == val:\n        return mil\n    elif t[mil] > val:\n        return recherche_dicho_rec(t, deb, mil - 1, val)\n    else:\n        return recherche_dicho_rec(t, mil + 1, fin, val)",
+      "example": "recherche_dicho_rec([2, 5, 8, 12, 16], 0, 4, 12) -> 3"
+    },
+    {
+      "id": "algo-tab-saisie",
+      "category": "Chapitre 6 : Les tableaux",
+      "type": "procédure",
+      "name": "Remplissage d'un Tableau d'Entiers avec Contrôle",
+      "syntax": "procédure Saisie_Tableau(var t : tab, n : entier)",
+      "summary": "Saisie contrôlée des éléments d'un tableau à une dimension de taille n.",
+      "description": "Parcourt les indices de 0 à n-1 (ou 1 à n selon la convention) pour lire chaque élément. Modifie le tableau passé par variable.",
+      "pseudoCode": "0) procédure Saisie_Tableau(var t : tab, n : entier)\n1) pour i de 0 à n - 1 faire\n     écrire(\"t[\", i, \"] = \")\n     lire(t[i])\n   fin_pour\n2) fin",
+      "tdo": [
+        {
+          "objet": "i",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def saisie_tableau(t, n):\n    for i in range(n):\n        t[i] = int(input(f\"t[{i}] = \"))",
+      "example": "saisie_tableau(t, 5)"
+    },
+    {
+      "id": "algo-tab-recherche-seq",
+      "category": "Chapitre 6 : Les tableaux",
+      "type": "fonction",
+      "name": "Recherche Séquentielle dans un Tableau",
+      "syntax": "fonction Recherche_Seq(t : tab, n : entier, val : entier) : entier",
+      "summary": "Recherche linéaire d'une valeur dans un tableau quelconque, renvoie son indice ou -1.",
+      "description": "Parcourt le tableau élément par élément. S'arrête dès que la valeur est rencontrée. Indispensable lorsque le tableau n'est pas trié. Complexité O(n).",
+      "pseudoCode": "0) fonction Recherche_Seq(t : tab, n : entier, val : entier) : entier\n1) pos ← -1\n2) i ← 0\n3) tant_que (i < n et pos = -1) faire\n     si (t[i] = val) alors\n       pos ← i\n     sinon\n       i ← i + 1\n     fin_si\n   fin_tant_que\n4) retourner pos\n5) fin",
+      "tdo": [
+        {
+          "objet": "i, pos",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def recherche_seq(t, n, val):\n    pos = -1\n    i = 0\n    while i < n and pos == -1:\n        if t[i] == val:\n            pos = i\n        else:\n            i += 1\n    return pos",
+      "example": "recherche_seq([4, 7, 2, 9], 4, 2) -> 2"
+    },
+    {
+      "id": "algo-tab-recherche-dicho",
+      "category": "Chapitre 6 : Les tableaux",
+      "type": "fonction",
+      "name": "Recherche Dichotomique Itérative",
+      "syntax": "fonction Recherche_Dicho(t : tab, n : entier, val : entier) : entier",
+      "summary": "Recherche dichotomique itérative dans un tableau préalablement trié par ordre croissant.",
+      "description": "Maintient les bornes deb et fin. À chaque tour, mil ← (deb + fin) div 2. Réduit l'espace de recherche de moitié. Renvoie la position trouvée ou -1 si absent.",
+      "pseudoCode": "0) fonction Recherche_Dicho(t : tab, n : entier, val : entier) : entier\n1) deb ← 0\n2) fin ← n - 1\n3) pos ← -1\n4) tant_que (deb ≤ fin et pos = -1) faire\n     mil ← (deb + fin) div 2\n     si (t[mil] = val) alors\n       pos ← mil\n     sinon_si (t[mil] > val) alors\n       fin ← mil - 1\n     sinon\n       deb ← mil + 1\n     fin_si\n   fin_tant_que\n5) retourner pos\n6) fin",
+      "tdo": [
+        {
+          "objet": "deb, fin, mil, pos",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def recherche_dicho(t, n, val):\n    deb = 0\n    fin = n - 1\n    pos = -1\n    while deb <= fin and pos == -1:\n        mil = (deb + fin) // 2\n        if t[mil] == val:\n            pos = mil\n        elif t[mil] > val:\n            fin = mil - 1\n        else:\n            deb = mil + 1\n    return pos",
+      "example": "recherche_dicho([2, 5, 8, 12, 16], 5, 12) -> 3"
+    },
+    {
+      "id": "algo-tab-tri-bulles",
+      "category": "Chapitre 6 : Les tableaux",
+      "type": "procédure",
+      "name": "Tri à Bulles Optimisé (avec Indicateur)",
+      "syntax": "procédure Tri_Bulles(var t : tab, n : entier)",
+      "summary": "Tri croissant d'un tableau par échanges successifs d'éléments adjacents et arrêt anticipé.",
+      "description": "Parcourt le tableau et permute deux éléments consécutifs si t[i] > t[i+1]. Un booléen 'echange' détecte si le tableau est déjà trié pour interrompre l'algorithme.",
+      "pseudoCode": "0) procédure Tri_Bulles(var t : tab, n : entier)\n1) répéter\n     echange ← faux\n     pour i de 0 à n - 2 faire\n       si (t[i] > t[i + 1]) alors\n         aux ← t[i]\n         t[i] ← t[i + 1]\n         t[i + 1] ← aux\n         echange ← vrai\n       fin_si\n     fin_pour\n   jusqu'à (non echange)\n2) fin",
+      "tdo": [
+        {
+          "objet": "i, aux",
+          "type": "entier"
+        },
+        {
+          "objet": "echange",
+          "type": "booléen"
+        }
+      ],
+      "pythonCode": "def tri_bulles(t, n):\n    echange = True\n    while echange:\n        echange = False\n        for i in range(n - 1):\n            if t[i] > t[i + 1]:\n                t[i], t[i + 1] = t[i + 1], t[i]\n                echange = True",
+      "example": "tri_bulles([5, 2, 9, 1], 4) -> [1, 2, 5, 9]"
+    },
+    {
+      "id": "algo-tab-tri-selection",
+      "category": "Chapitre 6 : Les tableaux",
+      "type": "procédure",
+      "name": "Tri par Sélection du Minimum",
+      "syntax": "procédure Tri_Selection(var t : tab, n : entier)",
+      "summary": "Tri croissant par recherche de la valeur minimale et placement à son indice définitif.",
+      "description": "À chaque étape i, recherche l'indice de la plus petite valeur entre i et n-1, puis permute t[i] et t[pos_min]. Effectue exactement n-1 permutations au maximum.",
+      "pseudoCode": "0) procédure Tri_Selection(var t : tab, n : entier)\n1) pour i de 0 à n - 2 faire\n     pos_min ← i\n     pour j de i + 1 à n - 1 faire\n       si (t[j] < t[pos_min]) alors\n         pos_min ← j\n       fin_si\n     fin_pour\n     si (pos_min ≠ i) alors\n       aux ← t[i]\n       t[i] ← t[pos_min]\n       t[pos_min] ← aux\n     fin_si\n   fin_pour\n2) fin",
+      "tdo": [
+        {
+          "objet": "i, j, pos_min, aux",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def tri_selection(t, n):\n    for i in range(n - 1):\n        pos_min = i\n        for j in range(i + 1, n):\n            if t[j] < t[pos_min]:\n                pos_min = j\n        if pos_min != i:\n            t[i], t[pos_min] = t[pos_min], t[i]",
+      "example": "tri_selection([5, 2, 9, 1], 4) -> [1, 2, 5, 9]"
+    },
+    {
+      "id": "algo-tab-tri-insertion",
+      "category": "Chapitre 6 : Les tableaux",
+      "type": "procédure",
+      "name": "Tri par Insertion",
+      "syntax": "procédure Tri_Insertion(var t : tab, n : entier)",
+      "summary": "Tri croissant par insertion d'un élément à sa place exacte dans la partie déjà triée.",
+      "description": "Similaire au tri des cartes dans une main de jeu. Parcourt de 1 à n-1, mémorise la clé t[i] et décale les éléments plus grands vers la droite avant d'insérer la clé.",
+      "pseudoCode": "0) procédure Tri_Insertion(var t : tab, n : entier)\n1) pour i de 1 à n - 1 faire\n     cle ← t[i]\n     j ← i - 1\n     tant_que (j ≥ 0 et t[j] > cle) faire\n       t[j + 1] ← t[j]\n       j ← j - 1\n     fin_tant_que\n     t[j + 1] ← cle\n   fin_pour\n2) fin",
+      "tdo": [
+        {
+          "objet": "i, j, cle",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def tri_insertion(t, n):\n    for i in range(1, n):\n        cle = t[i]\n        j = i - 1\n        while j >= 0 and t[j] > cle:\n            t[j + 1] = t[j]\n            j -= 1\n        t[j + 1] = cle",
+      "example": "tri_insertion([5, 2, 9, 1], 4) -> [1, 2, 5, 9]"
+    },
+    {
+      "id": "algo-tab-decalage-gauche",
+      "category": "Chapitre 6 : Les tableaux",
+      "type": "procédure",
+      "name": "Décalage Circulaire à Gauche",
+      "syntax": "procédure Decalage_Gauche(var t : tab, n : entier)",
+      "summary": "Déplace chaque élément d'une position vers la gauche et place le premier élément à la fin.",
+      "description": "Sauvegarde t[0] dans une variable temporaire, effectue le décalage t[i] ← t[i+1] pour i variant de 0 à n-2, puis range le premier sauvegardé dans t[n-1].",
+      "pseudoCode": "0) procédure Decalage_Gauche(var t : tab, n : entier)\n1) premier ← t[0]\n2) pour i de 0 à n - 2 faire\n     t[i] ← t[i + 1]\n   fin_pour\n3) t[n - 1] ← premier\n4) fin",
+      "tdo": [
+        {
+          "objet": "i, premier",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def decalage_gauche(t, n):\n    premier = t[0]\n    for i in range(n - 1):\n        t[i] = t[i + 1]\n    t[n - 1] = premier",
+      "example": "decalage_gauche([1, 2, 3, 4], 4) -> [2, 3, 4, 1]"
+    },
+    {
+      "id": "algo-tab-inversion",
+      "category": "Chapitre 6 : Les tableaux",
+      "type": "procédure",
+      "name": "Inversion des Éléments d'un Tableau",
+      "syntax": "procédure Inverser_Tableau(var t : tab, n : entier)",
+      "summary": "Inverse l'ordre des éléments d'un tableau sur place sans utiliser de tableau auxiliaire.",
+      "description": "Échange symétriquement les éléments des extrémités vers le centre : t[i] avec t[n - 1 - i] pour i variant de 0 à (n div 2) - 1. Efficacité optimale en mémoire O(1).",
+      "pseudoCode": "0) procédure Inverser_Tableau(var t : tab, n : entier)\n1) pour i de 0 à (n div 2) - 1 faire\n     aux ← t[i]\n     t[i] ← t[n - 1 - i]\n     t[n - 1 - i] ← aux\n   fin_pour\n2) fin",
+      "tdo": [
+        {
+          "objet": "i, aux",
+          "type": "entier"
+        }
+      ],
+      "pythonCode": "def inverser_tableau(t, n):\n    for i in range(n // 2):\n        t[i], t[n - 1 - i] = t[n - 1 - i], t[i]",
+      "example": "inverser_tableau([1, 2, 3, 4, 5], 5) -> [5, 4, 3, 2, 1]"
+    },
+    {
+      "id": "algo-suite-arithmetique",
+      "category": "Chapitre 8 : Les suites",
+      "type": "procédure",
+      "name": "Suite Arithmétique : Terme Général & Somme",
+      "syntax": "procédure Suite_Arithmetique(u0 : réel, r : réel, n : entier, var un : réel, var som : réel)",
+      "summary": "Calcul du n-ième terme Un = U0 + n*r et de la somme des termes d'une suite arithmétique.",
+      "description": "Formule du terme général : Un = U0 + n * r. Formule de la somme des N+1 premiers termes : S = (n + 1) * (U0 + Un) / 2. Calculable directement ou par boucle itérative.",
+      "pseudoCode": "0) procédure Suite_Arithmetique(u0 : réel, r : réel, n : entier, var un : réel, var som : réel)\n1) un ← u0 + n * r\n2) som ← ((n + 1) * (u0 + un)) / 2\n3) fin",
+      "tdo": [],
+      "pythonCode": "def suite_arithmetique(u0, r, n):\n    un = u0 + n * r\n    somme = ((n + 1) * (u0 + un)) / 2\n    return un, somme",
+      "example": "suite_arithmetique(2, 3, 4) -> (14, 40.0)"
+    },
+    {
+      "id": "algo-suite-geometrique",
+      "category": "Chapitre 8 : Les suites",
+      "type": "procédure",
+      "name": "Suite Géométrique : Terme Général & Somme",
+      "syntax": "procédure Suite_Geometrique(u0 : réel, q : réel, n : entier, var un : réel, var som : réel)",
+      "summary": "Calcul du n-ième terme Un = U0 * q^n et de la somme des termes d'une suite géométrique.",
+      "description": "Formule du terme général : Un = U0 * q^n. Si q ≠ 1, la somme des N+1 termes vaut S = U0 * (1 - q^(n+1)) / (1 - q). Si q = 1, S = U0 * (n + 1).",
+      "pseudoCode": "0) procédure Suite_Geometrique(u0 : réel, q : réel, n : entier, var un : réel, var som : réel)\n1) un ← u0 * (q ^ n)\n2) si (q = 1) alors\n     som ← u0 * (n + 1)\n   sinon\n     som ← u0 * (1 - (q ^ (n + 1))) / (1 - q)\n   fin_si\n3) fin",
+      "tdo": [],
+      "pythonCode": "def suite_geometrique(u0, q, n):\n    un = u0 * (q ** n)\n    if q == 1:\n        somme = u0 * (n + 1)\n    else:\n        somme = u0 * (1 - (q ** (n + 1))) / (1 - q)\n    return un, somme",
+      "example": "suite_geometrique(1, 2, 3) -> (8, 15.0)"
+    },
+    {
+      "id": "algo-suite-recurrente-f",
+      "category": "Chapitre 8 : Les suites",
+      "type": "fonction",
+      "name": "Suite Récurrente Un = f(Un-1)",
+      "syntax": "fonction Suite_Recurrente(u0 : réel, n : entier) : réel",
+      "summary": "Calcul itératif du n-ième terme d'une suite définie par une relation de récurrence.",
+      "description": "Exemple type avec U(n) = 2*U(n-1) + 1. Utilise une variable accumulateur u initialisée à u0 et mise à jour n fois dans une boucle pour.",
+      "pseudoCode": "0) fonction Suite_Recurrente(u0 : réel, n : entier) : réel\n1) u ← u0\n2) pour i de 1 à n faire\n     u ← 2 * u + 1\n   fin_pour\n3) retourner u\n4) fin",
+      "tdo": [
+        {
+          "objet": "i",
+          "type": "entier"
+        },
+        {
+          "objet": "u",
+          "type": "réel"
+        }
+      ],
+      "pythonCode": "def suite_recurrente(u0, n):\n    u = u0\n    for i in range(1, n + 1):\n        u = 2 * u + 1\n    return u",
+      "example": "suite_recurrente(1, 3) -> 15"
+    },
+    {
+      "id": "algo-suite-convergence-eps",
+      "category": "Chapitre 8 : Les suites",
+      "type": "fonction",
+      "name": "Calcul de Suite jusqu'à Convergence (Epsilon)",
+      "syntax": "fonction Suite_Convergence(u0 : réel, eps : réel) : réel",
+      "summary": "Calcul des termes successifs jusqu'à ce que |Un - Un-1| < eps.",
+      "description": "Modèle standard du Baccalauréat pour les approximations numériques. Boucle tant_que ou répéter jusqu'à vérification du critère d'arrêt de Cauchy.",
+      "pseudoCode": "0) fonction Suite_Convergence(u0 : réel, eps : réel) : réel\n1) u_prec ← u0\n2) répéter\n     u_cour ← (u_prec + 2 / u_prec) / 2\n     diff ← abs(u_cour - u_prec)\n     u_prec ← u_cour\n   jusqu'à (diff < eps)\n3) retourner u_cour\n4) fin",
+      "tdo": [
+        {
+          "objet": "u_prec, u_cour, diff",
+          "type": "réel"
+        }
+      ],
+      "pythonCode": "def suite_convergence(u0, eps):\n    u_prec = u0\n    while True:\n        u_cour = (u_prec + 2 / u_prec) / 2\n        diff = abs(u_cour - u_prec)\n        u_prec = u_cour\n        if diff < eps:\n            break\n    return u_cour",
+      "example": "suite_convergence(1.0, 1e-5) -> 1.41421"
+    },
+    {
+      "id": "algo-suite-heron",
+      "category": "Chapitre 8 : Les suites",
+      "type": "fonction",
+      "name": "Approximation de Racine Carrée (Méthode de Héron)",
+      "syntax": "fonction Heron(a : réel, eps : réel) : réel",
+      "summary": "Approximation de la racine carrée de a par la suite récurrente de Héron d'Alexandrie.",
+      "description": "Suite définie par U(n+1) = 0.5 * (U(n) + a / U(n)). Convergence quadratique extrêmement rapide. Sujet fréquent d'exercice type au Bac Informatique.",
+      "pseudoCode": "0) fonction Heron(a : réel, eps : réel) : réel\n1) u_prec ← a\n2) u_cour ← 0.5 * (u_prec + a / u_prec)\n3) tant_que (abs(u_cour - u_prec) ≥ eps) faire\n     u_prec ← u_cour\n     u_cour ← 0.5 * (u_prec + a / u_prec)\n   fin_tant_que\n4) retourner u_cour\n5) fin",
+      "tdo": [
+        {
+          "objet": "u_prec, u_cour",
+          "type": "réel"
+        }
+      ],
+      "pythonCode": "def heron(a, eps):\n    u_prec = a\n    u_cour = 0.5 * (u_prec + a / u_prec)\n    while abs(u_cour - u_prec) >= eps:\n        u_prec = u_cour\n        u_cour = 0.5 * (u_prec + a / u_prec)\n    return u_cour",
+      "example": "heron(9.0, 1e-6) -> 3.0"
+    },
+    {
+      "id": "algo-suite-syracuse",
+      "category": "Chapitre 8 : Les suites",
+      "type": "procédure",
+      "name": "Suite de Syracuse (Collatz) : Vol & Altitude",
+      "syntax": "procédure Syracuse(n : entier, var vol : entier, var alt : entier)",
+      "summary": "Génération de la suite de Syracuse (3n+1), calcul de la durée de vol et de l'altitude maximale.",
+      "description": "Si n est pair, n ← n div 2 ; si n est impair, n ← 3*n + 1. La conjecture affirme que tout entier strictement positif atteint 1. Compte les itérations (temps de vol) et mémorise le plus grand nombre atteint (altitude).",
+      "pseudoCode": "0) procédure Syracuse(n : entier, var vol : entier, var alt : entier)\n1) vol ← 0\n2) alt ← n\n3) tant_que (n ≠ 1) faire\n     si (n mod 2 = 0) alors\n       n ← n div 2\n     sinon\n       n ← 3 * n + 1\n     fin_si\n     vol ← vol + 1\n     si (n > alt) alors\n       alt ← n\n     fin_si\n   fin_tant_que\n4) fin",
+      "tdo": [],
+      "pythonCode": "def syracuse(n):\n    vol = 0\n    alt = n\n    while n != 1:\n        if n % 2 == 0:\n            n = n // 2\n        else:\n            n = 3 * n + 1\n        vol += 1\n        if n > alt:\n            alt = n\n    return vol, alt",
+      "example": "syracuse(6) -> vol = 8, alt = 16"
+    }
   ]
 };
