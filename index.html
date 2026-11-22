@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=31.0">
+  <link rel="stylesheet" href="style.css?v=32.0">
   <!-- INITIALISATION IMMÉDIATE DU THÈME & TOGGLE SANS LATENCE -->
   <script>
     (function() {
@@ -4621,6 +4621,179 @@ app.exec_()</code></pre>
       </div>
     </section>
 
+    <!-- ==========================================
+         VUE STATISTIQUES DES EXAMENS (#/algo/statistiques)
+         ========================================== -->
+    <section id="view-algo-statistiques" class="view-section">
+      <div class="stats-container">
+        <!-- En-tête -->
+        <div class="stats-header">
+          <div class="stats-badge-header">
+            <span>📊</span>
+            <span>Statistiques &amp; Analyse d'Examens</span>
+          </div>
+          <h2 class="stats-title">Fréquence des Chapitres &amp; Types d'Exercices</h2>
+          <p class="stats-subtitle">
+            Cartographie interactive basée sur les 11 examens et devoirs disponibles sur la plateforme. Visualisez en un coup d'œil les notions récurrentes et commencez par les priorités du Baccalauréat.
+          </p>
+        </div>
+
+        <!-- 1. Barre de Filtres Interactifs -->
+        <div class="stats-filters-bar">
+          <div class="stats-filter-group">
+            <span class="stats-filter-label">Type d'examen :</span>
+            <div class="stats-pill-row" id="statsScopePills">
+              <button type="button" class="stats-pill-btn active" data-scope="all" onclick="setStatsScopeFilter('all', this)">Tous (<span id="statsScopeCountAll">11</span>)</button>
+              <button type="button" class="stats-pill-btn" data-scope="bac" onclick="setStatsScopeFilter('bac', this)">Baccalauréats (<span id="statsScopeCountBac">3</span>)</button>
+              <button type="button" class="stats-pill-btn" data-scope="devoirs" onclick="setStatsScopeFilter('devoirs', this)">Devoirs de synthèse &amp; contrôle (<span id="statsScopeCountDevoirs">8</span>)</button>
+            </div>
+          </div>
+
+          <div class="stats-filter-group">
+            <span class="stats-filter-label">Filtre d'année :</span>
+            <div class="stats-pill-row" id="statsYearPills">
+              <button type="button" class="stats-pill-btn active" data-year="all" onclick="setStatsYearFilter('all', this)">Toutes les dates</button>
+              <button type="button" class="stats-pill-btn" data-year="known" onclick="setStatsYearFilter('known', this)">Années précisées uniquement</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Panneau Conseils "Par où commencer ?" -->
+        <div class="stats-advice-panel" id="statsAdvicePanel">
+          <!-- Injecté dynamiquement par JS -->
+        </div>
+
+        <!-- 3. Heatmap Chapitres x Examens -->
+        <div class="stats-chart-card">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+            <div>
+              <h3 style="margin: 0; font-size: 1.2rem; font-weight: 800; color: var(--text-primary);">
+                🗺️ Cartographie Croisée : 8 Chapitres × Sujets d'Examens
+              </h3>
+              <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-secondary);">
+                Chaque case indique le nombre d'exercices portant sur le chapitre dans ce sujet. Cliquez sur une case pour ouvrir les exercices correspondants.
+              </p>
+            </div>
+
+            <!-- Légende Heatmap -->
+            <div class="stats-heatmap-legend">
+              <span style="font-size: 0.76rem; color: var(--text-muted); font-weight: 700;">Intensité :</span>
+              <span class="stats-leg-chip c0">— 0</span>
+              <span class="stats-leg-chip c1">1 ex</span>
+              <span class="stats-leg-chip c2">2 ex</span>
+              <span class="stats-leg-chip c3">3+ ex</span>
+            </div>
+          </div>
+
+          <div class="stats-heatmap-box" id="statsHeatmapContainer">
+            <!-- Table injectée dynamiquement -->
+          </div>
+
+          <p class="stats-disclaimer" id="statsHeatmapDisclaimer">
+            Basé sur les 11 examens et devoirs disponibles sur ce site (incomplets signalés). Ce n'est pas une prévision de l'examen.
+          </p>
+        </div>
+
+        <!-- 4. Bar Chart : Fréquence des 8 Chapitres -->
+        <div class="stats-chart-card">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+            <div>
+              <h3 style="margin: 0; font-size: 1.2rem; font-weight: 800; color: var(--text-primary);">
+                📈 Classement des 8 Chapitres au Bac
+              </h3>
+              <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-secondary);">
+                Fréquence globale des chapitres dans l'ensemble des épreuves analysées.
+              </p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700;">Afficher par :</span>
+              <select id="statsChapterMetricSelect" onchange="setStatsChapterMetric(this.value)" style="padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--surface-bg); color: var(--text-primary); font-size: 0.84rem; font-weight: 700;">
+                <option value="count">Nombre d'exercices</option>
+                <option value="points">Total des points connus</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="stats-svg-wrap" id="statsChapterChartWrap">
+            <!-- SVG injecté dynamiquement -->
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-top: 14px;">
+            <p class="stats-disclaimer" id="statsChapterDisclaimer">
+              Note : Les exercices des devoirs incomplets sans barème explicite ne sont pas comptabilisés dans le total des points.
+            </p>
+            <button type="button" class="cat-pill" onclick="navigateToHash('#/algo/theorique')" style="padding: 6px 14px; font-size: 0.82rem; cursor: pointer;">
+              📚 Consulter les 8 cours →
+            </button>
+          </div>
+        </div>
+
+        <!-- 5. Bar Chart : 11 Types d'Exercices -->
+        <div class="stats-chart-card">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+            <div>
+              <h3 style="margin: 0; font-size: 1.2rem; font-weight: 800; color: var(--text-primary);">
+                🎯 Répartition des 11 Types d'Exercices
+              </h3>
+              <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-secondary);">
+                Les mêmes types d'exercices reviennent dans chaque épreuve (trace manuelle, V/F QCM, TDO/TDNT, procédures sur fichiers...).
+              </p>
+            </div>
+            <button type="button" class="cat-pill" onclick="navigateToHash('#/algo/types')" style="padding: 6px 14px; font-size: 0.82rem; cursor: pointer;">
+              🔍 Voir les 11 types d'exercices →
+            </button>
+          </div>
+
+          <div class="stats-svg-wrap" id="statsTypesChartWrap">
+            <!-- SVG injecté dynamiquement -->
+          </div>
+
+          <p class="stats-disclaimer">
+            Astuce Bac : Cliquez sur une barre pour accéder à tous les exercices répertoriés pour ce type et à sa fiche méthode associée.
+          </p>
+        </div>
+
+        <!-- 6. Pied de page & Navigation rapide -->
+        <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; padding-top: 20px;">
+          <button type="button" class="fc-hero-btn" onclick="navigateToHash('#/algo/theorique')" style="padding: 10px 18px; font-size: 0.88rem;">
+            <span>📖</span>
+            <span>Cours Théorique</span>
+          </button>
+          <button type="button" class="fc-hero-btn" onclick="navigateToHash('#/algo/quiz')" style="padding: 10px 18px; font-size: 0.88rem; background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 18px rgba(245, 158, 11, 0.35);">
+            <span>⚡</span>
+            <span>Quiz Express</span>
+          </button>
+          <button type="button" class="fc-hero-btn" onclick="navigateToHash('#/algo/methodes')" style="padding: 10px 18px; font-size: 0.88rem; background: linear-gradient(135deg, #38bdf8, #0284c7); box-shadow: 0 4px 18px rgba(56, 189, 248, 0.35);">
+            <span>💡</span>
+            <span>Fiches Méthode</span>
+          </button>
+          <button type="button" class="cat-pill" onclick="navigateToHash('#/revision')" style="padding: 10px 18px; font-size: 0.88rem; cursor: pointer;">
+            <span>⭐</span>
+            <span>Ma Révision</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- MODALE DÉTAIL D'UNE CELLULE DU HEATMAP -->
+      <div id="statsCellModal" class="custom-modal-backdrop" style="display: none;" onclick="if(event.target === this) closeStatsCellModal()">
+        <div class="custom-modal-dialog" style="max-width: 620px;">
+          <div class="custom-modal-header">
+            <div>
+              <span id="statsModalSub" style="font-size: 0.76rem; font-weight: 800; color: #10b981; text-transform: uppercase;">Exercices correspondants</span>
+              <h3 id="statsModalTitle" style="margin: 4px 0 0 0; font-size: 1.15rem; font-weight: 800; color: var(--text-primary);">...</h3>
+            </div>
+            <button type="button" class="custom-modal-close" onclick="closeStatsCellModal()">✕</button>
+          </div>
+          <div class="custom-modal-body" style="padding: 20px 24px;">
+            <div id="statsModalList" style="display: grid; gap: 12px; max-height: 420px; overflow-y: auto;">
+              <!-- Injecté dynamiquement -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- PIED DE PAGE GLOBAL -->
 
     <footer class="app-global-footer">
@@ -5064,25 +5237,25 @@ app.exec_()</code></pre>
 
   <!-- Fichiers Scripts -->
 
-  <script src="store.js?v=31.0"></script>
-  <script src="data.js?v=31.0"></script>
-  <script src="data/curriculum.js?v=31.0"></script>
-  <script src="data/documents.js?v=31.0"></script>
-  <script src="data/exercises.js?v=31.0"></script>
-  <script src="data/methods.js?v=31.0"></script>
-  <script src="data/quiz/fichiers.js?v=31.0"></script>
-  <script src="data/quiz/recursivite.js?v=31.0"></script>
-  <script src="data/quiz/bases.js?v=31.0"></script>
-  <script src="data/quiz/arithmetique.js?v=31.0"></script>
-  <script src="data/quiz/approximation.js?v=31.0"></script>
-  <script src="data/quiz/tableaux.js?v=31.0"></script>
-  <script src="data/quiz/matrices.js?v=31.0"></script>
-  <script src="data/quiz/suites.js?v=31.0"></script>
-  <script src="data/quiz.js?v=31.0"></script>
-  <script src="css_engine.js?v=31.0"></script>
-  <script src="algo_pratique_engine.js?v=31.0"></script>
-  <script src="pomodoro_engine.js?v=31.0"></script>
-  <script src="app.js?v=31.0"></script>
+  <script src="store.js?v=32.0"></script>
+  <script src="data.js?v=32.0"></script>
+  <script src="data/curriculum.js?v=32.0"></script>
+  <script src="data/documents.js?v=32.0"></script>
+  <script src="data/exercises.js?v=32.0"></script>
+  <script src="data/methods.js?v=32.0"></script>
+  <script src="data/quiz/fichiers.js?v=32.0"></script>
+  <script src="data/quiz/recursivite.js?v=32.0"></script>
+  <script src="data/quiz/bases.js?v=32.0"></script>
+  <script src="data/quiz/arithmetique.js?v=32.0"></script>
+  <script src="data/quiz/approximation.js?v=32.0"></script>
+  <script src="data/quiz/tableaux.js?v=32.0"></script>
+  <script src="data/quiz/matrices.js?v=32.0"></script>
+  <script src="data/quiz/suites.js?v=32.0"></script>
+  <script src="data/quiz.js?v=32.0"></script>
+  <script src="css_engine.js?v=32.0"></script>
+  <script src="algo_pratique_engine.js?v=32.0"></script>
+  <script src="pomodoro_engine.js?v=32.0"></script>
+  <script src="app.js?v=32.0"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {

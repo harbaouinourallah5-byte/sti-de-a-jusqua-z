@@ -1707,6 +1707,9 @@ function handleRouteFromHash() {
     if (route.view === 'revision-cartes' && typeof renderFlashcardsPage === 'function') {
       renderFlashcardsPage(route.deckId);
     }
+    if (route.view === 'algo-statistiques' && typeof renderAlgoStatistiquesPage === 'function') {
+      renderAlgoStatistiquesPage();
+    }
   }
 
 
@@ -2035,7 +2038,7 @@ function switchView(viewName, skipHashUpdate = false) {
     if (['html', 'css', 'js', 'sql'].includes(viewName)) {
       mobileModuleChip.textContent = 'STI';
       mobileModuleChip.className = 'mobile-module-chip sti';
-    } else if (['algo-home', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes', 'algo-quiz'].includes(viewName)) {
+    } else if (['algo-home', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes', 'algo-quiz', 'algo-statistiques'].includes(viewName)) {
       mobileModuleChip.textContent = 'ALGO';
       mobileModuleChip.className = 'mobile-module-chip algo';
     } else if (viewName === 'lessons') {
@@ -2155,6 +2158,10 @@ function switchView(viewName, skipHashUpdate = false) {
   } else if (viewName === 'revision-plan') {
     if (typeof renderStudyPlanPage === 'function') {
       renderStudyPlanPage();
+    }
+  } else if (viewName === 'algo-statistiques') {
+    if (typeof renderAlgoStatistiquesPage === 'function') {
+      renderAlgoStatistiquesPage();
     }
   }
 }
@@ -14176,6 +14183,13 @@ if (typeof window !== 'undefined') {
   window.restartCurrentFlashcardDeck = restartCurrentFlashcardDeck;
   window.confirmResetFlashcardDeck = confirmResetFlashcardDeck;
   window.toggleFlashcardBookmark = toggleFlashcardBookmark;
+  // Feature 5 Stats bindings
+  window.setStatsScopeFilter = setStatsScopeFilter;
+  window.setStatsYearFilter = setStatsYearFilter;
+  window.setStatsChapterMetric = setStatsChapterMetric;
+  window.renderAlgoStatistiquesPage = renderAlgoStatistiquesPage;
+  window.openStatsCellModal = openStatsCellModal;
+  window.closeStatsCellModal = closeStatsCellModal;
 }
 
 // ===================================================================
@@ -14843,5 +14857,523 @@ function setupFlashcardTouchListeners() {
       }
     }
   }, { passive: true });
+}
+
+// ===================================================================
+// RUN 7 FEATURE 5 : STATISTIQUES DES EXAMENS (#/algo/statistiques)
+// ===================================================================
+
+let statsScopeFilter = 'all';
+let statsYearFilter = 'all';
+let statsChapterMetric = 'count';
+
+function setStatsScopeFilter(scope, btnEl) {
+  statsScopeFilter = scope;
+  if (btnEl) {
+    document.querySelectorAll('#statsScopePills .stats-pill-btn').forEach(b => b.classList.remove('active'));
+    btnEl.classList.add('active');
+  }
+  renderAlgoStatistiquesPage();
+}
+
+function setStatsYearFilter(year, btnEl) {
+  statsYearFilter = year;
+  if (btnEl) {
+    document.querySelectorAll('#statsYearPills .stats-pill-btn').forEach(b => b.classList.remove('active'));
+    btnEl.classList.add('active');
+  }
+  renderAlgoStatistiquesPage();
+}
+
+function setStatsChapterMetric(metric) {
+  statsChapterMetric = metric || 'count';
+  renderAlgoStatistiquesPage();
+}
+
+function getFilteredStatsData() {
+  const allExams = (typeof DOCUMENTS_DATA !== 'undefined' && typeof DOCUMENTS_DATA.getExamens === 'function')
+    ? DOCUMENTS_DATA.getExamens()
+    : [];
+
+  const allExercises = (typeof EXERCISES_DATA !== 'undefined' && typeof EXERCISES_DATA.getAllExercises === 'function')
+    ? EXERCISES_DATA.getAllExercises()
+    : [];
+
+  // Filtrage des examens
+  let filteredExams = allExams;
+
+  if (statsScopeFilter === 'bac') {
+    filteredExams = filteredExams.filter(e => e.id.startsWith('bac') || (e.title && e.title.toLowerCase().includes('bac')));
+  } else if (statsScopeFilter === 'devoirs') {
+    filteredExams = filteredExams.filter(e => !e.id.startsWith('bac') && !(e.title && e.title.toLowerCase().includes('bac')));
+  }
+
+  if (statsYearFilter === 'known') {
+    filteredExams = filteredExams.filter(e => e.date && e.date !== 'inconnue');
+  }
+
+  const validExamIds = new Set(filteredExams.map(e => e.id));
+
+  // Filtrage des exercices appartenant aux examens filtrés
+  const filteredExercises = allExercises.filter(ex => validExamIds.has(ex.examId));
+
+  return {
+    allExams: allExams,
+    filteredExams: filteredExams,
+    allExercises: allExercises,
+    filteredExercises: filteredExercises
+  };
+}
+
+function renderAlgoStatistiquesPage() {
+  const container = document.getElementById('view-algo-statistiques');
+  if (!container) return;
+
+  const data = getFilteredStatsData();
+  const allExams = data.allExams;
+  const filteredExams = data.filteredExams;
+  const filteredExercises = data.filteredExercises;
+
+  // Mise à jour des compteurs dans les boutons de filtres
+  const countAll = allExams.length;
+  const countBac = allExams.filter(e => e.id.startsWith('bac') || (e.title && e.title.toLowerCase().includes('bac'))).length;
+  const countDevoirs = allExams.filter(e => !e.id.startsWith('bac') && !(e.title && e.title.toLowerCase().includes('bac'))).length;
+
+  const elAll = document.getElementById('statsScopeCountAll'); if (elAll) elAll.textContent = countAll;
+  const elBac = document.getElementById('statsScopeCountBac'); if (elBac) elBac.textContent = countBac;
+  const elDev = document.getElementById('statsScopeCountDevoirs'); if (elDev) elDev.textContent = countDevoirs;
+
+  // 1. Panneau Conseils "Par où commencer ?"
+  renderStatsAdvicePanel(filteredExercises);
+
+  // 2. Heatmap Chapitres × Examens
+  renderStatsHeatmap(filteredExams, filteredExercises);
+
+  // 3. Classement des 8 Chapitres (Bar Chart SVG)
+  renderStatsChapterSvg(filteredExercises);
+
+  // 4. Classement des 11 Types d'exercices (Bar Chart SVG)
+  renderStatsTypesSvg(filteredExercises);
+
+  // Mise à jour du disclaimer avec le nombre exact d'examens
+  const incomplets = filteredExams.filter(e => e.incomplete).length;
+  const disc = document.getElementById('statsHeatmapDisclaimer');
+  if (disc) {
+    disc.textContent = `Basé sur les ${filteredExams.length} examens et devoirs sélectionnés (${incomplets} incomplets signalés). Ce n'est pas une prévision officielle de l'examen.`;
+  }
+}
+
+function renderStatsAdvicePanel(filteredExercises) {
+  const panel = document.getElementById('statsAdvicePanel');
+  if (!panel || typeof CURRICULUM === 'undefined') return;
+
+  // Calcul du classement des chapitres par nombre d'exercices
+  const chapStats = CURRICULUM.chapters.map(ch => {
+    const list = filteredExercises.filter(e => (e.chapters || []).includes(ch.slug));
+    const pts = list.reduce((sum, e) => sum + (typeof e.points === 'number' ? e.points : 0), 0);
+    return {
+      chapter: ch,
+      count: list.length,
+      points: pts
+    };
+  });
+
+  chapStats.sort((a, b) => b.count - a.count);
+  const top3 = chapStats.slice(0, 3);
+
+  // Identification des points faibles dans les quiz de l'élève
+  const weakChapters = [];
+  if (typeof STI_STORE !== 'undefined') {
+    CURRICULUM.chapters.forEach(ch => {
+      const best = STI_STORE.getBestQuizScore(ch.slug);
+      if (best === null || best < 70) {
+        weakChapters.push({
+          chapter: ch,
+          bestScore: best
+        });
+      }
+    });
+  }
+
+  panel.innerHTML = `
+    <div class="stats-advice-header">
+      <span style="font-size: 1.8rem;">💡</span>
+      <div>
+        <h3 class="stats-advice-title">Par où commencer vos révisions ?</h3>
+        <p style="margin: 2px 0 0 0; font-size: 0.85rem; color: var(--text-secondary);">
+          Recommandations pédagogiques basées sur la récurrence réelle au Bac et vos résultats actuels.
+        </p>
+      </div>
+    </div>
+
+    <div class="stats-advice-grid">
+      <!-- Les 3 chapitres les plus fréquents -->
+      <div class="stats-advice-card" style="border-left: 4px solid #10b981;">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;">
+            <span style="font-size:0.75rem;font-weight:800;color:#10b981;text-transform:uppercase;">🔥 Incontournables au Bac</span>
+            <span style="font-size:0.74rem;color:var(--text-muted);">Top 3 Fréquence</span>
+          </div>
+          <h4 style="margin:0 0 8px 0;font-size:0.98rem;font-weight:800;color:var(--text-primary);">
+            ${top3.map(t => `${t.chapter.iconEmoji || '📁'} ${t.chapter.shortTitle}`).join(' • ')}
+          </h4>
+          <p style="margin:0;font-size:0.83rem;color:var(--text-secondary);line-height:1.45;">
+            Ces 3 chapitres totalisent à eux seuls <strong>${top3.reduce((s, t) => s + t.count, 0)} exercices</strong> et plus de <strong>${top3.reduce((s, t) => s + t.points, 0).toFixed(0)} points</strong> dans la base d'épreuves.
+          </p>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:6px;">
+          ${top3.map(t => `
+            <a href="#/algo/theorique/${t.chapter.slug}" onclick="navigateToHash('#/algo/theorique/${t.chapter.slug}')" class="cat-pill" style="font-size:0.75rem;padding:4px 10px;text-decoration:none;">
+              ${t.chapter.shortTitle} →
+            </a>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- Suggestion ciblée sur les faiblesses -->
+      <div class="stats-advice-card" style="border-left: 4px solid #f59e0b;">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;">
+            <span style="font-size:0.75rem;font-weight:800;color:#f59e0b;text-transform:uppercase;">🎯 Vos Priorités Personnelles</span>
+            <span style="font-size:0.74rem;color:var(--text-muted);">Quiz locaux</span>
+          </div>
+          ${weakChapters.length > 0 ? `
+            <h4 style="margin:0 0 8px 0;font-size:0.98rem;font-weight:800;color:var(--text-primary);">
+              ${weakChapters.slice(0, 2).map(w => `${w.chapter.iconEmoji || '📁'} ${w.chapter.shortTitle}`).join(' et ')}
+            </h4>
+            <p style="margin:0;font-size:0.83rem;color:var(--text-secondary);line-height:1.45;">
+              ${weakChapters[0].bestScore === null ? "Vous n'avez pas encore validé les quiz de ces chapitres." : `Score quiz le plus bas : ${weakChapters[0].bestScore}%.`} Faites un test rapide de 2 minutes pour repérer vos lacunes !
+            </p>
+          ` : `
+            <h4 style="margin:0 0 8px 0;font-size:0.98rem;font-weight:800;color:#10b981;">
+              🎉 Excellent niveau global !
+            </h4>
+            <p style="margin:0;font-size:0.83rem;color:var(--text-secondary);line-height:1.45;">
+              Tous vos quiz dépassent 70% de réussite. Passez aux épreuves complètes avec le simulateur d'examen !
+            </p>
+          `}
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:6px;">
+          ${weakChapters.slice(0, 2).map(w => `
+            <a href="#/algo/quiz/${w.chapter.slug}" onclick="navigateToHash('#/algo/quiz/${w.chapter.slug}')" class="cat-pill" style="font-size:0.75rem;padding:4px 10px;text-decoration:none;color:#fbbf24;border-color:rgba(245,158,11,0.4);">
+              Quiz ${w.chapter.shortTitle} ⚡
+            </a>
+          `).join('')}
+          <a href="#/examens" onclick="navigateToHash('#/examens')" class="cat-pill" style="font-size:0.75rem;padding:4px 10px;text-decoration:none;">
+            Simuler un sujet ⏱️
+          </a>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderStatsHeatmap(filteredExams, filteredExercises) {
+  const container = document.getElementById('statsHeatmapContainer');
+  if (!container || typeof CURRICULUM === 'undefined') return;
+
+  if (filteredExams.length === 0) {
+    container.innerHTML = `
+      <div style="text-align:center;padding:40px 20px;color:var(--text-muted);">
+        <span style="font-size:2rem;display:block;margin-bottom:8px;">🔍</span>
+        Aucun sujet d'examen ne correspond aux filtres sélectionnés.
+      </div>
+    `;
+    return;
+  }
+
+  // Formatage du libellé court d'un examen pour l'en-tête de colonne
+  function getExamShortLabel(doc) {
+    const t = doc.title || doc.id;
+    if (doc.id.startsWith('bac-controle-2022')) return 'Bac Contrôle 2022';
+    if (doc.id.startsWith('bac-style-a')) return 'Bac Type A';
+    if (doc.id.startsWith('bac-style-b')) return 'Bac Type B';
+    if (doc.id.startsWith('a-identifier-p38')) return 'Incomplet (p.38)';
+
+    const dcMatch = t.match(/Devoir de contrôle n°(\d+)/i);
+    const dsMatch = t.match(/Devoir de synthèse n°(\d+)/i);
+    const yearMatch = doc.date ? doc.date.split('-')[0] : '';
+    const classMatch = doc.classes ? doc.classes.split(',')[0].trim() : '';
+
+    if (dcMatch) return `DC${dcMatch[1]} ${yearMatch}${classMatch ? `<br><span style="opacity:0.7;font-size:0.7rem;">(${classMatch})</span>` : ''}`;
+    if (dsMatch) return `DS${dsMatch[1]} ${yearMatch}${classMatch ? `<br><span style="opacity:0.7;font-size:0.7rem;">(${classMatch})</span>` : ''}`;
+
+    return doc.date ? `${doc.date.split('-')[0]}` : t.slice(0, 14);
+  }
+
+  let tableHtml = `
+    <table class="stats-heatmap-table">
+      <thead>
+        <tr>
+          <th class="stats-sticky-col" style="background:var(--surface-bg);border-bottom:1px solid var(--border-color);z-index:4;">
+            Chapitre
+          </th>
+          ${filteredExams.map(doc => `
+            <th class="stats-heatmap-th" title="${escapeHtml(doc.title)} • ${doc.date || 'Non daté'}">
+              <div>${getExamShortLabel(doc)}</div>
+              ${doc.incomplete ? `<span style="font-size:0.62rem;color:#f87171;font-weight:700;display:block;">[Inc.]</span>` : ''}
+            </th>
+          `).join('')}
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  CURRICULUM.chapters.forEach(ch => {
+    tableHtml += `
+      <tr>
+        <td class="stats-sticky-col" onclick="navigateToHash('#/algo/theorique/${ch.slug}')" title="Cliquer pour ouvrir le cours de ce chapitre">
+          <span style="font-size:1.1rem;margin-right:4px;">${ch.iconEmoji || '📁'}</span>
+          <span>${escapeHtml(ch.shortTitle)}</span>
+        </td>
+    `;
+
+    filteredExams.forEach(doc => {
+      const matching = filteredExercises.filter(e => e.examId === doc.id && (e.chapters || []).includes(ch.slug));
+      const count = matching.length;
+      let cellClass = 'c0';
+      if (count === 1) cellClass = 'c1';
+      else if (count === 2) cellClass = 'c2';
+      else if (count >= 3) cellClass = 'c3';
+
+      const cellText = count > 0 ? count : '—';
+      const cellTitle = count > 0
+        ? `${count} exercice(s) sur ${ch.shortTitle} dans ${doc.title}`
+        : `Aucun exercice sur ${ch.shortTitle} dans ce sujet`;
+
+      const clickAttr = count > 0
+        ? `onclick="openStatsCellModal('${ch.slug}', '${doc.id}')"`
+        : '';
+
+      tableHtml += `
+        <td class="stats-cell ${cellClass}" title="${escapeHtml(cellTitle)}" ${clickAttr}>
+          ${cellText}
+        </td>
+      `;
+    });
+
+    tableHtml += `</tr>`;
+  });
+
+  tableHtml += `
+      </tbody>
+    </table>
+  `;
+
+  container.innerHTML = tableHtml;
+}
+
+function renderStatsChapterSvg(filteredExercises) {
+  const container = document.getElementById('statsChapterChartWrap');
+  if (!container || typeof CURRICULUM === 'undefined') return;
+
+  const metric = statsChapterMetric;
+
+  // Calcul pour chaque chapitre
+  const stats = CURRICULUM.chapters.map(ch => {
+    const list = filteredExercises.filter(e => (e.chapters || []).includes(ch.slug));
+    const pts = list.reduce((sum, e) => sum + (typeof e.points === 'number' ? e.points : 0), 0);
+    return {
+      chapter: ch,
+      count: list.length,
+      points: pts,
+      val: metric === 'points' ? pts : list.length
+    };
+  });
+
+  // Trier par valeur décroissante
+  stats.sort((a, b) => b.val - a.val);
+
+  const maxVal = Math.max(...stats.map(s => s.val), 1);
+  const W = 780;
+  const rowH = 42;
+  const H = stats.length * rowH + 20;
+  const barStart = 250;
+  const maxBarW = 380;
+
+  const rowsSvg = stats.map((item, idx) => {
+    const y = 14 + idx * rowH;
+    const barW = Math.max(Math.round((item.val / maxVal) * maxBarW), 6);
+    const labelVal = metric === 'points'
+      ? `${item.points.toFixed(1)} pts (${item.count} ex)`
+      : `${item.count} ex (${item.points.toFixed(1)} pts)`;
+
+    return `
+      <g style="cursor: pointer;" onclick="navigateToHash('#/algo/theorique/${item.chapter.slug}')" class="stats-svg-row">
+        <!-- Rangée de fond au hover -->
+        <rect x="0" y="${y - 4}" width="${W}" height="${rowH - 6}" rx="8" fill="rgba(255,255,255,0.02)" class="stats-svg-row-bg" />
+        
+        <!-- Rang # -->
+        <text x="14" y="${y + 18}" fill="var(--text-muted)" font-size="12" font-weight="700">#${idx + 1}</text>
+        
+        <!-- Emoji & Titre du Chapitre -->
+        <text x="44" y="${y + 18}" fill="var(--text-primary)" font-size="13" font-weight="700">
+          ${item.chapter.iconEmoji || '📁'} ${escapeHtml(item.chapter.shortTitle)}
+        </text>
+
+        <!-- Barre de progression -->
+        <rect x="${barStart}" y="${y + 4}" width="${barW}" height="18" rx="6" fill="url(#statsGreenGrad)" />
+
+        <!-- Valeur à droite de la barre -->
+        <text x="${barStart + barW + 10}" y="${y + 18}" fill="var(--text-secondary)" font-size="12" font-weight="700">
+          ${labelVal}
+        </text>
+      </g>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" style="overflow: visible; display: block;" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="statsGreenGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#10b981" />
+          <stop offset="100%" stop-color="#34d399" />
+        </linearGradient>
+      </defs>
+      ${rowsSvg}
+    </svg>
+  `;
+}
+
+function renderStatsTypesSvg(filteredExercises) {
+  const container = document.getElementById('statsTypesChartWrap');
+  if (!container || typeof EXERCISES_DATA === 'undefined') return;
+
+  const types = (typeof EXERCISES_DATA.getAllTypes === 'function')
+    ? EXERCISES_DATA.getAllTypes()
+    : [];
+
+  const stats = types.map(t => {
+    const list = filteredExercises.filter(e => (e.types || []).includes(t.slug));
+    return {
+      type: t,
+      count: list.length
+    };
+  });
+
+  stats.sort((a, b) => b.count - a.count);
+
+  const maxCount = Math.max(...stats.map(s => s.count), 1);
+  const W = 780;
+  const rowH = 38;
+  const H = stats.length * rowH + 20;
+  const barStart = 270;
+  const maxBarW = 360;
+
+  const rowsSvg = stats.map((item, idx) => {
+    const y = 12 + idx * rowH;
+    const barW = Math.max(Math.round((item.count / maxCount) * maxBarW), 6);
+
+    return `
+      <g style="cursor: pointer;" onclick="navigateToHash('#/algo/types/${item.type.slug}')" class="stats-svg-row">
+        <!-- Rangée de fond au hover -->
+        <rect x="0" y="${y - 4}" width="${W}" height="${rowH - 6}" rx="8" fill="rgba(255,255,255,0.02)" class="stats-svg-row-bg" />
+
+        <!-- Rang # -->
+        <text x="14" y="${y + 16}" fill="var(--text-muted)" font-size="11" font-weight="700">#${idx + 1}</text>
+
+        <!-- Icône & Nom du type -->
+        <text x="44" y="${y + 16}" fill="var(--text-primary)" font-size="12" font-weight="700">
+          ${item.type.icon || '☑️'} ${escapeHtml(item.type.label)}
+        </text>
+
+        <!-- Barre de progression violette/indigo -->
+        <rect x="${barStart}" y="${y + 3}" width="${barW}" height="16" rx="5" fill="url(#statsPurpleGrad)" />
+
+        <!-- Valeur à droite -->
+        <text x="${barStart + barW + 10}" y="${y + 16}" fill="var(--text-secondary)" font-size="12" font-weight="700">
+          ${item.count} exercice${item.count > 1 ? 's' : ''}
+        </text>
+      </g>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" style="overflow: visible; display: block;" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="statsPurpleGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#818cf8" />
+          <stop offset="100%" stop-color="#c084fc" />
+        </linearGradient>
+      </defs>
+      ${rowsSvg}
+    </svg>
+  `;
+}
+
+function openStatsCellModal(chapterSlug, examId) {
+  const modal = document.getElementById('statsCellModal');
+  const titleEl = document.getElementById('statsModalTitle');
+  const subEl = document.getElementById('statsModalSub');
+  const listEl = document.getElementById('statsModalList');
+
+  if (!modal || !titleEl || !listEl) return;
+
+  const ch = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getChapterBySlug(chapterSlug) : null;
+  const doc = (typeof DOCUMENTS_DATA !== 'undefined') ? DOCUMENTS_DATA.getDocumentById(examId) : null;
+  const allEx = (typeof EXERCISES_DATA !== 'undefined') ? EXERCISES_DATA.getAllExercises() : [];
+
+  const exercises = allEx.filter(e => e.examId === examId && (e.chapters || []).includes(chapterSlug));
+
+  titleEl.innerHTML = `${ch ? (ch.iconEmoji || '📁') + ' ' + escapeHtml(ch.fullTitle) : chapterSlug}`;
+  if (subEl && doc) {
+    subEl.textContent = `${doc.title} • ${doc.date === 'inconnue' ? 'Année non précisée' : doc.date}`;
+  }
+
+  if (exercises.length === 0) {
+    listEl.innerHTML = `
+      <div style="text-align:center;padding:20px;color:var(--text-muted);">
+        Aucun exercice trouvé pour cette combinaison.
+      </div>
+    `;
+  } else {
+    listEl.innerHTML = exercises.map(ex => {
+      const ptsLabel = (typeof ex.points === 'number') ? `${ex.points} point${ex.points > 1 ? 's' : ''}` : 'Points non précisés';
+      const pdfUrl = doc ? `${doc.file}#page=${ex.pdfPage || 1}` : '#';
+      const isBm = (typeof STI_STORE !== 'undefined') ? STI_STORE.isBookmarked('exercise', ex.id) : false;
+
+      return `
+        <div style="background:var(--surface-bg);border:1px solid var(--border-color);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <strong style="font-size:0.95rem;color:var(--text-primary);">${escapeHtml(ex.exNum)}</strong>
+              <span style="font-size:0.75rem;padding:2px 8px;border-radius:6px;background:rgba(16,185,129,0.15);color:#10b981;font-weight:700;">
+                ${ptsLabel}
+              </span>
+            </div>
+            <button type="button" class="plan-bookmark-toggle-btn ${isBm ? 'active' : ''}" onclick="toggleExerciseBookmark('${ex.id}', this)" style="padding:4px 8px;font-size:0.75rem;">
+              <span>${isBm ? '⭐' : '☆'}</span>
+              <span>À revoir</span>
+            </button>
+          </div>
+
+          <!-- Types d'exercices -->
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            ${(ex.types || []).map(tSlug => {
+              const meta = (typeof EXERCISES_DATA !== 'undefined' && typeof EXERCISES_DATA.getTypeMeta === 'function')
+                ? EXERCISES_DATA.getTypeMeta(tSlug)
+                : null;
+              const label = meta ? `${meta.icon || '🏷️'} ${meta.label}` : tSlug;
+              return `<span style="font-size:0.72rem;padding:2px 8px;border-radius:6px;background:rgba(255,255,255,0.05);color:var(--text-secondary);">${escapeHtml(label)}</span>`;
+            }).join('')}
+          </div>
+
+          <!-- Bouton d'ouverture du PDF à la page exacte -->
+          <div style="display:flex;align-items:center;justify-content:flex-end;margin-top:4px;">
+            <a href="${pdfUrl}" target="_blank" rel="noopener" class="revision-bm-open-btn" style="text-decoration:none;padding:6px 12px;font-size:0.82rem;">
+              📄 Ouvrir l'examen à la page ${ex.pdfPage || 1} →
+            </a>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  modal.style.display = 'flex';
+}
+
+function closeStatsCellModal() {
+  const modal = document.getElementById('statsCellModal');
+  if (modal) modal.style.display = 'none';
 }
 
