@@ -1603,9 +1603,10 @@ function parseAppHash(hash) {
     return { view: 'algo-types', typeSlug: subType || null };
   }
 
-  // Fiches méthode (#/algo/methodes)
+  // Fiches méthode (#/algo/methodes ou #/algo/methodes/:slug)
   if (clean.startsWith('algo/methodes') || clean.startsWith('methodes') || clean === 'algo/methode' || clean === 'methode') {
-    return { view: 'algo-methodes' };
+    const subMethod = clean.replace(/^(algo\/methodes|methodes|algo\/methode|methode)\/?/, '').trim();
+    return { view: 'algo-methodes', sheetSlug: subMethod || null };
   }
 
   const map = {
@@ -1667,6 +1668,12 @@ function handleRouteFromHash() {
       openTypeDetailView(route.typeSlug);
     } else if (typeof closeTypeDetailView === 'function') {
       closeTypeDetailView();
+    }
+  }
+
+  if (route.view === 'algo-methodes') {
+    if (typeof renderAlgoMethodesPage === 'function') {
+      renderAlgoMethodesPage(route.sheetSlug);
     }
   }
 
@@ -2052,6 +2059,10 @@ function switchView(viewName, skipHashUpdate = false) {
     renderExamensPage();
   } else if (viewName === 'algo-types') {
     renderAlgoTypesPage();
+  } else if (viewName === 'algo-methodes') {
+    if (typeof renderAlgoMethodesPage === 'function') {
+      renderAlgoMethodesPage();
+    }
   } else if (viewName === 'admin') {
     if (typeof checkAdminAuth === 'function') {
       checkAdminAuth();
@@ -7836,15 +7847,16 @@ function handleLogoClick() {
 // 3. Utilitaires de Copie de Code avec Feedback Visuel
 // -------------------------------------------------------------
 function copyCodeText(text, btn) {
-  if (!navigator.clipboard) {
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-  } else {
-    navigator.clipboard.writeText(text);
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).catch(() => {
+        fallbackCopyText(text);
+      });
+    } else {
+      fallbackCopyText(text);
+    }
+  } catch (err) {
+    fallbackCopyText(text);
   }
 
   if (btn) {
@@ -7858,6 +7870,19 @@ function copyCodeText(text, btn) {
       btn.style.color = "";
     }, 1800);
   }
+}
+
+function fallbackCopyText(text) {
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  } catch (e) {}
 }
 
 function copyStarterTemplate() {
@@ -11053,6 +11078,229 @@ function toggleExerciseBookmark(exId, btn) {
   }
 }
 
+// ===================================================================
+// PAGE FICHES MÉTHODE BACCALAURÉAT INFORMATIQUE (#/algo/methodes)
+// ===================================================================
+
+function renderAlgoMethodesPage(targetSlug = null) {
+  const container = document.getElementById('methodesCardsContainer');
+  const pillsContainer = document.getElementById('methodesSummaryPills');
+  if (!container || typeof METHODS_DATA === 'undefined') return;
+
+  // 1. Pilules d'accès rapide (sommaire)
+  if (pillsContainer) {
+    pillsContainer.innerHTML = METHODS_DATA.map(m => {
+      return `
+        <button type="button" onclick="scrollToMethodSheet('${m.slug}')" class="cat-pill"
+                style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;font-size:0.82rem;font-weight:600;cursor:pointer;background:var(--surface-elevated);border:1px solid var(--border-color);color:var(--text-primary);border-radius:8px;">
+          <span>${m.icon}</span>
+          <span>${escapeHtml(m.title.split(':')[0])}</span>
+        </button>
+      `;
+    }).join('');
+  }
+
+  // 2. Rendu des 6 fiches complètes
+  container.innerHTML = METHODS_DATA.map((m, idx) => {
+    // Badges types d'exercices
+    let typeBadge = '';
+    if (m.relatedType && typeof EXERCISES_DATA !== 'undefined') {
+      const typeObj = EXERCISES_DATA.getAllTypes().find(t => t.slug === m.relatedType);
+      const typeLabel = typeObj ? typeObj.label : m.relatedType;
+      typeBadge = `
+        <a href="#/algo/types/${m.relatedType}" onclick="navigateToHash('#/algo/types/${m.relatedType}')" class="method-tag-pill type" title="Voir les exercices de ce type">
+          🎯 Exercice Type : ${escapeHtml(typeLabel)}
+        </a>
+      `;
+    }
+
+    // Badges chapitres
+    const chapterBadges = (m.relatedChapters || []).map(slug => {
+      const ch = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getChapterBySlug(slug) : null;
+      const title = ch ? ch.shortTitle : slug;
+      return `
+        <a href="#/algo/theorique/${slug}" onclick="navigateToHash('#/algo/theorique/${slug}')" class="method-tag-pill chapter" title="Ouvrir le cours du chapitre">
+          📁 ${escapeHtml(title)}
+        </a>
+      `;
+    }).join('');
+
+    // Points "À retenir"
+    const aRetenirHtml = (m.aRetenir || []).map(pt => `<li>${escapeHtml(pt)}</li>`).join('');
+
+    // Étapes d'exemple
+    const stepsHtml = (m.exempleSteps || []).map((step, sIdx) => `
+      <div class="method-step-row">
+        <span class="method-step-num">${sIdx + 1}</span>
+        <span>${escapeHtml(step)}</span>
+      </div>
+    `).join('');
+
+    // Erreurs fréquentes
+    const erreursHtml = (m.erreursFrequentes || []).map(err => `<li>${escapeHtml(err)}</li>`).join('');
+
+    return `
+      <article id="methode-${m.slug}" class="method-sheet-card">
+        <!-- En-tête de la fiche -->
+        <div class="method-header-row">
+          <div class="method-title-wrap">
+            <div class="method-icon-badge">${m.icon}</div>
+            <div>
+              <div style="font-size:0.75rem;font-weight:700;color:#c084fc;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;">
+                Fiche N°${idx + 1} • ${escapeHtml(m.category)}
+              </div>
+              <h3 class="method-title-text">${escapeHtml(m.title)}</h3>
+              <p class="method-subtitle-text">${escapeHtml(m.subtitle)}</p>
+            </div>
+          </div>
+          <div class="no-print" style="display:flex;align-items:center;gap:8px;">
+            <button type="button" onclick="printSingleMethodSheet('${m.slug}')" class="cat-pill"
+                    style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;font-size:0.8rem;font-weight:700;cursor:pointer;background:rgba(255,255,255,0.06);border:1px solid var(--border-color);color:var(--text-secondary);border-radius:8px;"
+                    title="Imprimer cette fiche seule">
+              🖨️ Imprimer la fiche
+            </button>
+          </div>
+        </div>
+
+        <!-- Badges Liens : Types & Chapitres -->
+        <div class="method-tags-row">
+          ${typeBadge}
+          ${chapterBadges}
+        </div>
+
+        <!-- Section 1 : À retenir -->
+        <div style="background:rgba(16,185,129,0.04);border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:16px;">
+          <h4 class="method-section-title" style="color:#10b981;">
+            <span>📌</span> À Retenir Absolument (Points Clés Bac)
+          </h4>
+          <ul class="method-bullet-list">
+            ${aRetenirHtml}
+          </ul>
+        </div>
+
+        <!-- Section 2 : Exemple type pas à pas -->
+        <div>
+          <h4 class="method-section-title" style="color:#38bdf8;">
+            <span>📝</span> ${escapeHtml(m.exempleTitre || 'Exemple Type Pas à Pas')}
+          </h4>
+          ${stepsHtml ? `<div class="method-steps-container">${stepsHtml}</div>` : ''}
+
+          <!-- Bloc Pseudo-code -->
+          ${m.codePseudo ? `
+            <div class="method-code-box">
+              <div class="method-code-header">
+                <span class="method-code-lang">📜 Pseudo-code officiel Bac</span>
+                <button type="button" class="method-copy-btn no-print" onclick="copyCodeFromPre(this)">
+                  📋 Copier le pseudo-code
+                </button>
+              </div>
+              <pre class="method-code-pre"><code>${escapeHtml(m.codePseudo)}</code></pre>
+            </div>
+          ` : ''}
+
+          <!-- Bloc Python -->
+          ${m.codePython ? `
+            <div class="method-code-box">
+              <div class="method-code-header">
+                <span class="method-code-lang">🐍 Équivalent Python Thonny</span>
+                <button type="button" class="method-copy-btn no-print" onclick="copyCodeFromPre(this)">
+                  📋 Copier le code Python
+                </button>
+              </div>
+              <pre class="method-code-pre"><code>${escapeHtml(m.codePython)}</code></pre>
+            </div>
+          ` : ''}
+        </div>
+
+        <!-- Section 3 : Erreurs fréquentes au Bac -->
+        ${erreursHtml ? `
+          <div class="method-warning-box">
+            <div class="method-warning-title">
+              <span>⚠️</span> Pièges & Erreurs fréquentes constatées au Bac
+            </div>
+            <ul class="method-warning-list">
+              ${erreursHtml}
+            </ul>
+          </div>
+        ` : ''}
+
+        <!-- Pied de fiche d'action -->
+        <div class="method-card-footer no-print">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            ${m.relatedType ? `
+              <a href="#/algo/types/${m.relatedType}" onclick="navigateToHash('#/algo/types/${m.relatedType}')"
+                 style="font-size:0.82rem;font-weight:700;color:var(--primary-indigo);text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.25);">
+                🎯 S'entraîner sur ce type d'exercice →
+              </a>
+            ` : ''}
+            <button type="button" onclick="printSingleMethodSheet('${m.slug}')"
+                    style="background:none;border:none;color:var(--text-secondary);font-size:0.82rem;cursor:pointer;text-decoration:underline;">
+              🖨️ Format imprimable A4
+            </button>
+          </div>
+          <button type="button" onclick="scrollToMethodTop()" style="background:none;border:none;color:var(--text-muted);font-size:0.8rem;cursor:pointer;">
+            ⬆️ Haut de page
+          </button>
+        </div>
+      </article>
+    `;
+  }).join('');
+
+  // Si un slug est ciblé, faire défiler vers la fiche
+  if (targetSlug) {
+    setTimeout(() => {
+      scrollToMethodSheet(targetSlug);
+    }, 150);
+  }
+}
+
+function scrollToMethodSheet(slug) {
+  if (!slug) return;
+  let el = document.getElementById(`methode-${slug}`);
+  if (!el && typeof METHODS_DATA !== 'undefined') {
+    const match = METHODS_DATA.find(m => m.slug === slug || m.slug.includes(slug) || slug.includes(m.slug) || (m.relatedType && m.relatedType === slug));
+    if (match) {
+      el = document.getElementById(`methode-${match.slug}`);
+    }
+  }
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    el.classList.remove('method-card-highlight');
+    void el.offsetWidth; // trigger reflow
+    el.classList.add('method-card-highlight');
+  }
+}
+
+function scrollToMethodTop() {
+  const topEl = document.getElementById('view-algo-methodes');
+  if (topEl) {
+    topEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function printSingleMethodSheet(sheetSlug) {
+  const card = document.getElementById(`methode-${sheetSlug}`);
+  if (!card) return;
+  document.body.classList.add('printing-single-sheet');
+  card.classList.add('target-print-sheet');
+  window.print();
+  setTimeout(() => {
+    document.body.classList.remove('printing-single-sheet');
+    card.classList.remove('target-print-sheet');
+  }, 1000);
+}
+
+function copyCodeFromPre(btn) {
+  if (!btn) return;
+  const box = btn.closest('.method-code-box');
+  if (!box) return;
+  const codeEl = box.querySelector('pre code');
+  if (!codeEl) return;
+  copyCodeText(codeEl.innerText, btn);
+}
+
 window.renderAlgoTypesPage = renderAlgoTypesPage;
 window.openTypeDetailView = openTypeDetailView;
 window.closeTypeDetailView = closeTypeDetailView;
@@ -11090,6 +11338,14 @@ window.changePdfPage = changePdfPage;
 window.changePdfZoom = changePdfZoom;
 window.renderAlgoHubARevoirSection = renderAlgoHubARevoirSection;
 window.removeExerciseBookmark = removeExerciseBookmark;
+
+// Fiches Méthode
+window.renderAlgoMethodesPage = renderAlgoMethodesPage;
+window.scrollToMethodSheet = scrollToMethodSheet;
+window.scrollToMethodTop = scrollToMethodTop;
+window.printSingleMethodSheet = printSingleMethodSheet;
+window.copyCodeFromPre = copyCodeFromPre;
+window.copyCodeText = copyCodeText;
 
 
 
