@@ -420,7 +420,7 @@ var STI_STORE = (function () {
       var keysToRemove = [
         'progress', 'algo_studied', 'last_nav', 'sim_active',
         'sim_history', 'bookmarks', 'quiz_history', 'quiz_bests',
-        'study_plan'
+        'study_plan', 'flashcards_leitner'
       ];
       keysToRemove.forEach(function (k) {
         localStorage.removeItem(PREFIX + k);
@@ -522,6 +522,103 @@ var STI_STORE = (function () {
     return overdue;
   }
 
+  // ── 8. CARTES MÉMOIRE — SYSTÈME LEITNER À 3 BOÎTES (FEATURE 4) ────────
+  // Clé: flashcards_leitner -> { [cardId]: { box: 1|2|3, nextReview: 'YYYY-MM-DD', lastReviewed: 'YYYY-MM-DD', reviewCount: n, successes: s } }
+  function getFlashcardsState() {
+    return _safeGet('flashcards_leitner', {});
+  }
+
+  function getCardState(cardId) {
+    var all = getFlashcardsState();
+    var todayStr = new Date().toISOString().split('T')[0];
+    return all[cardId] || { box: 1, nextReview: todayStr, lastReviewed: null, reviewCount: 0, successes: 0, unreviewed: true };
+  }
+
+  function recordCardReview(cardId, wasSuccess) {
+    var all = getFlashcardsState();
+    var current = all[cardId] || { box: 1, reviewCount: 0, successes: 0 };
+    var today = new Date();
+    var todayStr = today.toISOString().split('T')[0];
+
+    var newBox = 1;
+    var intervalDays = 1;
+
+    if (wasSuccess) {
+      if (current.box === 1) {
+        newBox = 2;
+        intervalDays = 3;
+      } else {
+        newBox = 3;
+        intervalDays = 7;
+      }
+    } else {
+      newBox = 1;
+      intervalDays = 1;
+    }
+
+    var nextDateObj = new Date(today.getTime() + (intervalDays * 24 * 3600 * 1000));
+    var nextReviewStr = nextDateObj.toISOString().split('T')[0];
+
+    all[cardId] = {
+      box: newBox,
+      lastReviewed: todayStr,
+      nextReview: nextReviewStr,
+      reviewCount: (current.reviewCount || 0) + 1,
+      successes: (current.successes || 0) + (wasSuccess ? 1 : 0),
+      unreviewed: false
+    };
+
+    _safeSet('flashcards_leitner', all);
+    return all[cardId];
+  }
+
+  function resetDeckCards(cardIds) {
+    if (!cardIds || !cardIds.length) return false;
+    var all = getFlashcardsState();
+    cardIds.forEach(function (id) {
+      delete all[id];
+    });
+    return _safeSet('flashcards_leitner', all);
+  }
+
+  function getDeckProgress(cardIds) {
+    if (!cardIds || !cardIds.length) {
+      return { total: 0, box1: 0, box2: 0, box3: 0, unreviewed: 0, dueToday: 0, masteredPct: 0 };
+    }
+    var all = getFlashcardsState();
+    var todayStr = new Date().toISOString().split('T')[0];
+
+    var b1 = 0, b2 = 0, b3 = 0, unrev = 0, due = 0;
+
+    cardIds.forEach(function (id) {
+      var item = all[id];
+      if (!item) {
+        unrev++;
+        due++; // Jamais révisée -> due immédiatement
+      } else {
+        if (item.box === 1) b1++;
+        else if (item.box === 2) b2++;
+        else if (item.box === 3) b3++;
+
+        if (!item.nextReview || item.nextReview <= todayStr) {
+          due++;
+        }
+      }
+    });
+
+    var masteredPct = cardIds.length > 0 ? Math.round((b3 / cardIds.length) * 100) : 0;
+
+    return {
+      total: cardIds.length,
+      box1: b1,
+      box2: b2,
+      box3: b3,
+      unreviewed: unrev,
+      dueToday: due,
+      masteredPct: masteredPct
+    };
+  }
+
   return {
     // Progression & Chapitres
     getChapterProgress: getChapterProgress,
@@ -564,6 +661,12 @@ var STI_STORE = (function () {
     togglePlanTask: togglePlanTask,
     getTodayPlan: getTodayPlan,
     getOverduePlanTasks: getOverduePlanTasks,
+    // Cartes mémoire Leitner
+    getFlashcardsState: getFlashcardsState,
+    getCardState: getCardState,
+    recordCardReview: recordCardReview,
+    resetDeckCards: resetDeckCards,
+    getDeckProgress: getDeckProgress,
     // Sauvegarde globale
     exportAllData: exportAllData,
     importAllData: importAllData,

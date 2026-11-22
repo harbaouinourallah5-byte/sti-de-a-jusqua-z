@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=30.0">
+  <link rel="stylesheet" href="style.css?v=31.0">
   <!-- INITIALISATION IMMÉDIATE DU THÈME & TOGGLE SANS LATENCE -->
   <script>
     (function() {
@@ -4198,6 +4198,7 @@ app.exec_()</code></pre>
             <button type="button" class="revision-filter-btn" data-bmfilter="exam" onclick="filterRevisionBookmarks('exam', this)">Examens (<span id="bmCountExam">0</span>)</button>
             <button type="button" class="revision-filter-btn" data-bmfilter="method" onclick="filterRevisionBookmarks('method', this)">Fiches méthode (<span id="bmCountMethod">0</span>)</button>
             <button type="button" class="revision-filter-btn" data-bmfilter="quiz" onclick="filterRevisionBookmarks('quiz', this)">Quiz (<span id="bmCountQuiz">0</span>)</button>
+            <button type="button" class="revision-filter-btn" data-bmfilter="flashcard" onclick="filterRevisionBookmarks('flashcard', this)">Cartes (<span id="bmCountFlashcard">0</span>)</button>
           </div>
 
           <!-- Grille des cartes -->
@@ -4435,6 +4436,185 @@ app.exec_()</code></pre>
             <div id="planWeeksAccordion" class="plan-calendar-wrap">
               <!-- Injecté par JS -->
             </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VUE CARTES MÉMOIRE / LEITNER (#/revision/cartes)
+         ========================================== -->
+    <section id="view-revision-cartes" class="view-section">
+      <div class="fc-container">
+        <!-- En-tête -->
+        <div class="fc-header">
+          <div class="fc-badge-header">
+            <span>🗂️</span>
+            <span>Cartes Mémoire • Répétition Espacée</span>
+          </div>
+          <h2 class="fc-title">Flashcards &amp; Système Leitner</h2>
+          <p class="fc-subtitle">
+            Mémorisez durablement les syntaxes, propriétés et algorithmes du Bac avec le système Leitner à 3 boîtes (1 jour, 3 jours, 7 jours).
+          </p>
+        </div>
+
+        <!-- 1. ÉCRAN SÉLECTION DES PAQUETS -->
+        <div id="fcDeckSelectScreen">
+          <!-- Carte Héro : Mélange du Jour -->
+          <div class="fc-hero-melange">
+            <div class="fc-hero-content">
+              <div class="fc-hero-icon">🌟</div>
+              <div>
+                <h3 class="fc-hero-title">Mélange du Jour</h3>
+                <p class="fc-hero-desc">
+                  Session transversale automatique regroupant les notions arrivées à échéance aujourd'hui (Boîtes 1, 2 et 3) dans tous vos modules.
+                </p>
+              </div>
+            </div>
+            <button type="button" class="fc-hero-btn" onclick="startFlashcardSession('melange')">
+              <span>⚡</span>
+              <span>Lancer le mélange du jour (<span id="fcHeroDueCount">0</span> dues)</span>
+            </button>
+          </div>
+
+          <!-- Filtre rapide chapitres pour algorithmes -->
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+            <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--text-primary);">
+              📚 Vos paquets d'étude
+            </h3>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 0.8rem; color: var(--text-muted);">Filtrer les algos :</span>
+              <select id="fcAlgoChapterFilter" onchange="filterFlashcardDeckAlgos(this.value)" style="padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--surface-bg); color: var(--text-primary); font-size: 0.82rem;">
+                <option value="all">Tous les 8 chapitres</option>
+                <option value="fichiers">Fichiers</option>
+                <option value="recursivite">Récursivité</option>
+                <option value="bases">Conversions</option>
+                <option value="arithmetique">Arithmétique</option>
+                <option value="approximation">Approximation</option>
+                <option value="tableaux">Tableaux</option>
+                <option value="matrices">Matrices</option>
+                <option value="suites">Suites</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Grille des Paquets -->
+          <div class="fc-decks-grid" id="fcDecksGrid">
+            <!-- Injecté dynamiquement par JS -->
+          </div>
+        </div>
+
+        <!-- 2. ÉCRAN SESSION ACTIVE DU LECTEUR DE CARTES -->
+        <div id="fcSessionScreen" style="display: none;">
+          <div class="fc-player-wrap">
+            <!-- Barre de progression supérieure -->
+            <div class="fc-player-nav">
+              <button type="button" class="fc-exit-btn" onclick="exitFlashcardSession()">
+                ✕ Quitter la session
+              </button>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span class="fc-session-progress" id="fcSessionProgressText">1 / 15</span>
+                <span class="fc-box-pill b1" id="fcCurrentCardBoxPill">📦 Boîte 1</span>
+              </div>
+            </div>
+
+            <!-- Barre de progression continue -->
+            <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden;">
+              <div id="fcSessionProgressBar" style="width: 7%; height: 100%; background: linear-gradient(90deg, #a855f7, #38bdf8); border-radius: 10px; transition: width 0.3s ease;"></div>
+            </div>
+
+            <!-- Scène 3D Flashcard -->
+            <div class="fc-scene" onclick="flipCurrentFlashcard()">
+              <div class="fc-card" id="fcActiveCardElement">
+                <!-- RECTO -->
+                <div class="fc-card-face fc-front">
+                  <div class="fc-face-top">
+                    <span class="fc-face-tag" id="fcFrontTag">HTML5</span>
+                    <div id="fcFrontBookmarkWrap" onclick="event.stopPropagation();">
+                      <!-- Bouton ⭐ À revoir -->
+                    </div>
+                  </div>
+                  <div class="fc-front-center">
+                    <h3 class="fc-front-title" id="fcFrontTitle">...</h3>
+                    <p class="fc-front-prompt" id="fcFrontPrompt">...</p>
+                  </div>
+                  <div class="fc-front-hint">
+                    <span>👆 Touchez ou appuyez sur [Espace] pour retourner</span>
+                  </div>
+                </div>
+
+                <!-- VERSO -->
+                <div class="fc-card-face fc-back">
+                  <div class="fc-face-top">
+                    <span class="fc-face-tag" id="fcBackTag">Réponse</span>
+                    <div id="fcBackBookmarkWrap" onclick="event.stopPropagation();">
+                      <!-- Bouton ⭐ À revoir -->
+                    </div>
+                  </div>
+                  <div id="fcBackContent" style="display: flex; flex-direction: column; gap: 12px; flex: 1;">
+                    <!-- Rôle, Syntaxe, Code -->
+                  </div>
+                  <div class="fc-front-hint" style="margin-top: 8px;">
+                    <span>Évaluez votre mémorisation ci-dessous</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Boutons de réponse Leitner -->
+            <div class="fc-controls-row">
+              <button type="button" class="fc-btn-action again" onclick="handleCardAnswer(false)" title="Rétrograder en Boîte 1 (Révision demain)">
+                <span>✕ À revoir</span>
+                <span class="fc-btn-sub">Demain (Boîte 1) • [1]</span>
+              </button>
+              <button type="button" class="fc-btn-action good" onclick="handleCardAnswer(true)" title="Avancer en Boîte 2 ou 3">
+                <span>✓ Je savais !</span>
+                <span class="fc-btn-sub" id="fcBtnGoodSub">+3 ou +7 jours • [2]</span>
+              </button>
+            </div>
+
+            <!-- Raccourcis clavier -->
+            <div class="fc-keyboard-hints">
+              <span>⌨️ Raccourcis :</span>
+              <span><kbd>Espace</kbd> ou <kbd>↑ / ↓</kbd> Retourner</span>
+              <span><kbd>1</kbd> ou <kbd>←</kbd> À revoir</span>
+              <span><kbd>2</kbd> ou <kbd>→</kbd> Je savais</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. ÉCRAN BILAN DE FIN DE SESSION -->
+        <div id="fcSummaryScreen" style="display: none; background: var(--surface-elevated); border: 1px solid var(--border-color); border-radius: 16px; padding: 36px 20px; text-align: center; max-width: 620px; margin: 0 auto;">
+          <div style="font-size: 3.5rem; margin-bottom: 12px;">🎉</div>
+          <h3 style="margin: 0 0 8px 0; font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">
+            Session Terminée !
+          </h3>
+          <p style="color: var(--text-secondary); font-size: 0.95rem; margin: 0 0 24px 0;" id="fcSummarySubtitle">
+            Vous avez entraîné votre mémoire avec succès.
+          </p>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 28px;">
+            <div style="padding: 16px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px;">
+              <span style="font-size: 1.6rem; font-weight: 800; color: #10b981; display: block;" id="fcSummaryGoodCount">0</span>
+              <span style="font-size: 0.8rem; color: #34d399; font-weight: 700;">Cartes sues (Avancées)</span>
+            </div>
+            <div style="padding: 16px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px;">
+              <span style="font-size: 1.6rem; font-weight: 800; color: #ef4444; display: block;" id="fcSummaryAgainCount">0</span>
+              <span style="font-size: 0.8rem; color: #f87171; font-weight: 700;">À revoir (Demain)</span>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button type="button" class="cat-pill" onclick="restartCurrentFlashcardDeck()" style="padding: 10px 18px; cursor: pointer;">
+              🔄 Rejouer une session
+            </button>
+            <button type="button" class="plan-action-btn" onclick="exitFlashcardSession()" style="padding: 10px 18px; cursor: pointer; color: #c084fc; border-color: #a855f7;">
+              📋 Choisir un autre paquet
+            </button>
+            <button type="button" class="cat-pill" onclick="navigateToHash('#/revision')" style="padding: 10px 18px; cursor: pointer;">
+              ⭐ Voir Ma Révision
+            </button>
           </div>
         </div>
 
@@ -4884,25 +5064,25 @@ app.exec_()</code></pre>
 
   <!-- Fichiers Scripts -->
 
-  <script src="store.js?v=30.0"></script>
-  <script src="data.js?v=30.0"></script>
-  <script src="data/curriculum.js?v=30.0"></script>
-  <script src="data/documents.js?v=30.0"></script>
-  <script src="data/exercises.js?v=30.0"></script>
-  <script src="data/methods.js?v=30.0"></script>
-  <script src="data/quiz/fichiers.js?v=30.0"></script>
-  <script src="data/quiz/recursivite.js?v=30.0"></script>
-  <script src="data/quiz/bases.js?v=30.0"></script>
-  <script src="data/quiz/arithmetique.js?v=30.0"></script>
-  <script src="data/quiz/approximation.js?v=30.0"></script>
-  <script src="data/quiz/tableaux.js?v=30.0"></script>
-  <script src="data/quiz/matrices.js?v=30.0"></script>
-  <script src="data/quiz/suites.js?v=30.0"></script>
-  <script src="data/quiz.js?v=30.0"></script>
-  <script src="css_engine.js?v=30.0"></script>
-  <script src="algo_pratique_engine.js?v=30.0"></script>
-  <script src="pomodoro_engine.js?v=30.0"></script>
-  <script src="app.js?v=30.0"></script>
+  <script src="store.js?v=31.0"></script>
+  <script src="data.js?v=31.0"></script>
+  <script src="data/curriculum.js?v=31.0"></script>
+  <script src="data/documents.js?v=31.0"></script>
+  <script src="data/exercises.js?v=31.0"></script>
+  <script src="data/methods.js?v=31.0"></script>
+  <script src="data/quiz/fichiers.js?v=31.0"></script>
+  <script src="data/quiz/recursivite.js?v=31.0"></script>
+  <script src="data/quiz/bases.js?v=31.0"></script>
+  <script src="data/quiz/arithmetique.js?v=31.0"></script>
+  <script src="data/quiz/approximation.js?v=31.0"></script>
+  <script src="data/quiz/tableaux.js?v=31.0"></script>
+  <script src="data/quiz/matrices.js?v=31.0"></script>
+  <script src="data/quiz/suites.js?v=31.0"></script>
+  <script src="data/quiz.js?v=31.0"></script>
+  <script src="css_engine.js?v=31.0"></script>
+  <script src="algo_pratique_engine.js?v=31.0"></script>
+  <script src="pomodoro_engine.js?v=31.0"></script>
+  <script src="app.js?v=31.0"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {

@@ -1570,7 +1570,8 @@ function parseAppHash(hash) {
   if (clean === 'revision' || clean.startsWith('revision/')) {
     const revSub = clean.replace(/^revision\/?/, '').trim();
     if (revSub.startsWith('cartes')) {
-      return { view: 'revision-cartes' };
+      const deckSub = revSub.replace(/^cartes\/?/, '').trim();
+      return { view: 'revision-cartes', deckId: deckSub || null };
     }
     if (revSub.startsWith('plan')) {
       return { view: 'revision-plan' };
@@ -1702,6 +1703,9 @@ function handleRouteFromHash() {
     }
     if (route.view === 'revision-plan' && typeof renderStudyPlanPage === 'function') {
       renderStudyPlanPage();
+    }
+    if (route.view === 'revision-cartes' && typeof renderFlashcardsPage === 'function') {
+      renderFlashcardsPage(route.deckId);
     }
   }
 
@@ -2018,7 +2022,11 @@ function switchView(viewName, skipHashUpdate = false) {
       'algo-theorique': 'Théorique',
       'algo-types': 'Types d\'exercices',
       'algo-methodes': 'Fiches méthode',
-      'algo-quiz': 'Quiz V/F & QCM'
+      'algo-quiz': 'Quiz V/F & QCM',
+      'revision': 'Ma Révision',
+      'revision-plan': 'Planning d\'étude',
+      'revision-cartes': 'Cartes Mémoire',
+      'algo-statistiques': 'Statistiques'
     };
     mobileBrandTitle.textContent = titles[viewName] || 'STI de A à Z';
   }
@@ -2139,6 +2147,10 @@ function switchView(viewName, skipHashUpdate = false) {
   } else if (viewName === 'revision') {
     if (typeof renderRevisionPage === 'function') {
       renderRevisionPage();
+    }
+  } else if (viewName === 'revision-cartes') {
+    if (typeof renderFlashcardsPage === 'function') {
+      renderFlashcardsPage();
     }
   } else if (viewName === 'revision-plan') {
     if (typeof renderStudyPlanPage === 'function') {
@@ -12697,6 +12709,16 @@ function renderRevisionPage() {
     avgExamScore = sumMax > 0 ? (sum / sumMax * 20).toFixed(1) : null;
   }
 
+  // Calcul cartes mémoire Leitner
+  let dueFlashcards = 0;
+  let masteredCardsPct = 0;
+  if (typeof STI_STORE !== 'undefined') {
+    const allCards = (typeof getAllFlashcardCards === 'function') ? getAllFlashcardCards() : [];
+    const fp = STI_STORE.getDeckProgress(allCards.map(c => c.id));
+    dueFlashcards = fp.dueToday;
+    masteredCardsPct = fp.masteredPct;
+  }
+
   // Grille des statistiques résumées
   const summaryGrid = document.getElementById('revStatsSummaryGrid');
   if (summaryGrid) {
@@ -12744,6 +12766,15 @@ function renderRevisionPage() {
         </div>
         <span class="revision-stat-label">Notions « À revoir »</span>
         <span class="revision-stat-sub">Marquées pour révision ciblée</span>
+      </div>
+
+      <div class="revision-stat-card" style="border-color: rgba(168, 85, 247, 0.4); cursor: pointer;" onclick="navigateToHash('#/revision/cartes')">
+        <div class="revision-stat-icon-val">
+          <span style="font-size:1.5rem;">🗂️</span>
+          <span class="revision-stat-val" style="color:#c084fc;">${dueFlashcards}</span>
+        </div>
+        <span class="revision-stat-label">Cartes Mémoire Dues</span>
+        <span class="revision-stat-sub">${masteredCardsPct}% maîtrisées (Boîte 3)</span>
       </div>
     `;
   }
@@ -13018,6 +13049,7 @@ function renderRevisionBookmarksSection() {
   const countExam = allBookmarks.filter(b => b.type === 'exam').length;
   const countMethod = allBookmarks.filter(b => b.type === 'method').length;
   const countQuiz = allBookmarks.filter(b => b.type === 'quiz').length;
+  const countFlashcard = allBookmarks.filter(b => b.type === 'flashcard').length;
 
   const elAll = document.getElementById('bmCountAll'); if (elAll) elAll.textContent = countAll;
   const elAlgo = document.getElementById('bmCountAlgo'); if (elAlgo) elAlgo.textContent = countAlgo;
@@ -13025,6 +13057,7 @@ function renderRevisionBookmarksSection() {
   const elExam = document.getElementById('bmCountExam'); if (elExam) elExam.textContent = countExam;
   const elMethod = document.getElementById('bmCountMethod'); if (elMethod) elMethod.textContent = countMethod;
   const elQuiz = document.getElementById('bmCountQuiz'); if (elQuiz) elQuiz.textContent = countQuiz;
+  const elFlashcard = document.getElementById('bmCountFlashcard'); if (elFlashcard) elFlashcard.textContent = countFlashcard;
 
   // Filtrer selon currentRevisionBmFilter
   let list = allBookmarks;
@@ -13101,6 +13134,19 @@ function renderRevisionBookmarksSection() {
         desc = `Chapitre : ${b.meta.chapter || 'Mixte'}`;
       }
       openActionHtml = `<button type="button" class="revision-bm-open-btn" onclick="startQuizForSingleQuestion('${b.id}')">⚡ Refaire ce quiz →</button>`;
+    } else if (b.type === 'flashcard') {
+      badgeLabel = 'Carte Mémoire';
+      badgeClass = 'flashcard';
+      const allCards = (typeof getAllFlashcardCards === 'function') ? getAllFlashcardCards() : [];
+      const card = allCards.find(c => c.id === b.id);
+      if (card) {
+        title = card.frontTitle;
+        desc = `${card.tag} • ${card.backRole || card.frontPrompt}`;
+      } else if (b.meta) {
+        title = b.meta.title || b.id;
+        desc = b.meta.desc || '';
+      }
+      openActionHtml = `<button type="button" class="revision-bm-open-btn" onclick="startFlashcardForSingleCard('${b.id}')">🗂️ Réviser cette carte →</button>`;
     }
 
     return `
@@ -13174,6 +13220,8 @@ function openAllBookmarksSequentially() {
       }
     } else if (b.type === 'quiz') {
       startQuizForSingleQuestion(b.id);
+    } else if (b.type === 'flashcard') {
+      startFlashcardForSingleCard(b.id);
     }
   }
 
@@ -14115,5 +14163,685 @@ if (typeof window !== 'undefined') {
   window.recalculatePlanFromToday = recalculatePlanFromToday;
   window.exportPlanToIcs = exportPlanToIcs;
   window.confirmResetStudyPlan = confirmResetStudyPlan;
+  // Feature 4 Flashcards bindings
+  window.getAllFlashcardCards = getAllFlashcardCards;
+  window.getFlashcardDecks = getFlashcardDecks;
+  window.renderFlashcardsPage = renderFlashcardsPage;
+  window.filterFlashcardDeckAlgos = filterFlashcardDeckAlgos;
+  window.startFlashcardSession = startFlashcardSession;
+  window.startFlashcardForSingleCard = startFlashcardForSingleCard;
+  window.flipCurrentFlashcard = flipCurrentFlashcard;
+  window.handleCardAnswer = handleCardAnswer;
+  window.exitFlashcardSession = exitFlashcardSession;
+  window.restartCurrentFlashcardDeck = restartCurrentFlashcardDeck;
+  window.confirmResetFlashcardDeck = confirmResetFlashcardDeck;
+  window.toggleFlashcardBookmark = toggleFlashcardBookmark;
+}
+
+// ===================================================================
+// RUN 7 FEATURE 4 : CARTES MÉMOIRE — SYSTÈME LEITNER (#/revision/cartes)
+// ===================================================================
+
+let currentFlashcardSession = null;
+let currentAlgoChapterFilter = 'all';
+let flashcardKeydownAttached = false;
+let flashcardTouchAttached = false;
+
+function getAllFlashcardCards() {
+  const cards = [];
+
+  // 1. HTML5 (DATA.html)
+  if (typeof DATA !== 'undefined' && Array.isArray(DATA.html)) {
+    DATA.html.forEach((item, idx) => {
+      cards.push({
+        id: 'fc-html-' + (item.id || idx),
+        deckId: 'html',
+        deckName: 'HTML5',
+        deckIcon: '🌐',
+        tag: 'HTML5 • ' + (item.category || 'Balise'),
+        frontTitle: item.tag || item.name,
+        frontPrompt: item.name ? (`${item.name} — À quoi sert cette balise et comment l'utiliser au Bac ?`) : 'Rôle et syntaxe de cette balise HTML5',
+        backRole: (item.summary || '') + (item.howToUse ? (' ' + item.howToUse) : ''),
+        backSyntax: (item.attributes && item.attributes.length) ? item.attributes.join(', ') : '',
+        backCode: item.code || '',
+        backNote: item.attributes && item.attributes.length ? ('Attributs clés : ' + item.attributes.join(', ')) : ''
+      });
+    });
+  }
+
+  // 2. CSS3 (DATA.css)
+  if (typeof DATA !== 'undefined' && Array.isArray(DATA.css)) {
+    DATA.css.forEach((item, idx) => {
+      cards.push({
+        id: 'fc-css-' + (item.id || idx),
+        deckId: 'css',
+        deckName: 'CSS3',
+        deckIcon: '🎨',
+        tag: 'CSS3 • ' + (item.category || 'Propriété'),
+        frontTitle: item.property || item.name,
+        frontPrompt: item.name ? (`${item.name} — Quelle est la syntaxe et l'utilité de cette règle CSS ?`) : 'Rôle et valeurs en Bac STI',
+        backRole: item.summary || item.description || '',
+        backSyntax: (item.values && item.values.length) ? item.values.join(' | ') : '',
+        backCode: item.code || '',
+        backNote: item.hoverNote || item.howToUse || ''
+      });
+    });
+  }
+
+  // 3. JavaScript (DATA.js)
+  if (typeof DATA !== 'undefined' && Array.isArray(DATA.js)) {
+    DATA.js.forEach((item, idx) => {
+      cards.push({
+        id: 'fc-js-' + (item.id || idx),
+        deckId: 'js',
+        deckName: 'JavaScript',
+        deckIcon: '⚡',
+        tag: 'JavaScript • ' + (item.category || item.section || 'Fonction'),
+        frontTitle: item.tag || item.name,
+        frontPrompt: item.syntax ? (`Syntaxe : ${item.syntax}`) : (`${item.name} — Rôle en contrôle de formulaire / DOM`),
+        backRole: (item.summary ? item.summary + '. ' : '') + (item.description || ''),
+        backSyntax: item.syntax || '',
+        backCode: item.code || item.runnableCode || '',
+        backNote: item.howToUse || ''
+      });
+    });
+  }
+
+  // 4. SQL (DATA.sql)
+  if (typeof DATA !== 'undefined' && Array.isArray(DATA.sql)) {
+    DATA.sql.forEach((item, idx) => {
+      cards.push({
+        id: 'fc-sql-' + (item.id || idx),
+        deckId: 'sql',
+        deckName: 'SQL',
+        deckIcon: '💾',
+        tag: 'SQL • ' + (item.category || 'Commande'),
+        frontTitle: item.tag || item.name,
+        frontPrompt: item.syntax ? (`Syntaxe : ${item.syntax}`) : (`${item.name} — Rôle et structure de cette clause SQL`),
+        backRole: (item.summary ? item.summary + '. ' : '') + (item.description || ''),
+        backSyntax: item.syntax || '',
+        backCode: item.code || '',
+        backNote: item.howToUse || ''
+      });
+    });
+  }
+
+  // 5. Qt / Algo pratique (DATA.algo_pratique)
+  if (typeof DATA !== 'undefined' && Array.isArray(DATA.algo_pratique)) {
+    DATA.algo_pratique.forEach((item, idx) => {
+      cards.push({
+        id: 'fc-qt-' + (item.id || idx),
+        deckId: 'qt',
+        deckName: 'Qt & Python',
+        deckIcon: '🐍',
+        tag: 'Qt Designer • ' + (item.category || 'Composant'),
+        frontTitle: item.qtWidget || item.name,
+        frontPrompt: item.name ? (`${item.name} — Comment programmer ce widget sous Thonny avec PyQt5 ?`) : 'Rôle et code Python associé',
+        backRole: (item.summary ? item.summary + '. ' : '') + (item.description || ''),
+        backSyntax: item.qtProperty || '',
+        backCode: item.thonnyCode || (item.examples && item.examples[0] ? item.examples[0].code : ''),
+        backNote: item.bacTips || item.howToUse || ''
+      });
+    });
+  }
+
+  // 6. Algorithmes théoriques (DATA.algo_theorique)
+  if (typeof DATA !== 'undefined' && Array.isArray(DATA.algo_theorique)) {
+    DATA.algo_theorique.forEach((item, idx) => {
+      let chSlug = 'fichiers';
+      if (typeof CURRICULUM !== 'undefined') {
+        const ch = CURRICULUM.getChapterByCategory(item.category);
+        if (ch) chSlug = ch.slug;
+      }
+      const tdoStr = (item.tdo && item.tdo.length) ? item.tdo.map(t => `${t.objet} : ${t.type}`).join(' | ') : '';
+      cards.push({
+        id: 'fc-algo-' + (item.id || idx),
+        deckId: 'algos',
+        deckName: 'Algorithmique',
+        deckIcon: '📐',
+        chapterSlug: chSlug,
+        tag: 'Algorithme • ' + (item.type || 'Sous-programme'),
+        frontTitle: item.name,
+        frontPrompt: item.syntax ? (`En-tête : ${item.syntax}\n${item.summary || ''}`) : (item.summary || 'Quel est le principe, pseudo-code et code Python de cet algorithme ?'),
+        backRole: (item.summary || '') + (item.description ? (' ' + item.description) : ''),
+        backSyntax: item.syntax || '',
+        backTdo: tdoStr,
+        backPseudo: item.pseudoCode || '',
+        backCode: item.pythonCode || '',
+        backNote: item.example ? (`Exemple d'appel : ${item.example}`) : ''
+      });
+    });
+  }
+
+  return cards;
+}
+
+function getFlashcardDecks() {
+  const allCards = getAllFlashcardCards();
+
+  const deckDefs = [
+    {
+      id: 'html',
+      name: 'HTML5 & Sémantique',
+      icon: '🌐',
+      desc: 'Balises sémantiques, attributs indispensables et formulaires du Bac STI.',
+      color: '#f97316'
+    },
+    {
+      id: 'css',
+      name: 'CSS3 & Mise en Page',
+      icon: '🎨',
+      desc: 'Sélecteurs, Box Model, Flexbox et propriétés graphiques d\'examen.',
+      color: '#38bdf8'
+    },
+    {
+      id: 'js',
+      name: 'JavaScript & DOM',
+      icon: '⚡',
+      desc: 'Méthodes de chaînes, validation de formulaires et fonctions Bac.',
+      color: '#fbbf24'
+    },
+    {
+      id: 'sql',
+      name: 'SQL & Requêtes MySQL',
+      icon: '💾',
+      desc: 'Création de tables, contraintes, clauses SELECT et fonctions d\'agrégation.',
+      color: '#34d399'
+    },
+    {
+      id: 'qt',
+      name: 'Qt Designer & Python',
+      icon: '🐍',
+      desc: 'Widgets PyQt5, connexions clicked.connect, fenêtres et astuces Thonny.',
+      color: '#a855f7'
+    },
+    {
+      id: 'algos',
+      name: 'Algorithmes Théoriques',
+      icon: '📐',
+      desc: 'Démarches types, TDO, pseudo-code officiel et implémentations Python.',
+      color: '#10b981'
+    }
+  ];
+
+  return deckDefs.map(def => {
+    let deckCards = allCards.filter(c => c.deckId === def.id);
+    const cardIds = deckCards.map(c => c.id);
+    const progress = (typeof STI_STORE !== 'undefined') ? STI_STORE.getDeckProgress(cardIds) : { total: cardIds.length, box1: 0, box2: 0, box3: 0, unreviewed: cardIds.length, dueToday: cardIds.length, masteredPct: 0 };
+
+    return {
+      ...def,
+      cards: deckCards,
+      cardIds: cardIds,
+      progress: progress
+    };
+  });
+}
+
+function renderFlashcardsPage(selectedDeckId = null) {
+  const selectScreen = document.getElementById('fcDeckSelectScreen');
+  const sessionScreen = document.getElementById('fcSessionScreen');
+  const summaryScreen = document.getElementById('fcSummaryScreen');
+
+  if (!selectScreen) return;
+
+  // Si on quitte une session ou qu'on arrive sur la page
+  if (!currentFlashcardSession) {
+    selectScreen.style.display = 'block';
+    if (sessionScreen) sessionScreen.style.display = 'none';
+    if (summaryScreen) summaryScreen.style.display = 'none';
+  }
+
+  const decks = getFlashcardDecks();
+  const allCards = getAllFlashcardCards();
+  const allCardIds = allCards.map(c => c.id);
+  const totalProgress = (typeof STI_STORE !== 'undefined') ? STI_STORE.getDeckProgress(allCardIds) : { dueToday: 0 };
+
+  // Mise à jour du compteur Héro
+  const heroDue = document.getElementById('fcHeroDueCount');
+  if (heroDue) {
+    heroDue.textContent = totalProgress.dueToday;
+  }
+
+  // Grille des paquets
+  const grid = document.getElementById('fcDecksGrid');
+  if (grid) {
+    grid.innerHTML = decks.map(d => {
+      const p = d.progress;
+      const b1Pct = p.total > 0 ? (p.box1 / p.total) * 100 : 0;
+      const b2Pct = p.total > 0 ? (p.box2 / p.total) * 100 : 0;
+      const b3Pct = p.total > 0 ? (p.box3 / p.total) * 100 : 0;
+      const isClean = p.dueToday === 0;
+
+      return `
+        <div class="fc-deck-card">
+          <div>
+            <div class="fc-deck-top">
+              <div class="fc-deck-info-group">
+                <div class="fc-deck-icon">${d.icon}</div>
+                <div>
+                  <h4 class="fc-deck-name">${escapeHtml(d.name)}</h4>
+                  <span class="fc-deck-sub">${p.total} cartes • ${p.masteredPct}% maîtrisées</span>
+                </div>
+              </div>
+              <span class="fc-deck-badge-due ${isClean ? 'clean' : ''}">
+                ${isClean ? '✓ À jour' : `${p.dueToday} due${p.dueToday > 1 ? 's' : ''}`}
+              </span>
+            </div>
+            <p style="font-size:0.83rem;color:var(--text-secondary);margin:10px 0 14px 0;line-height:1.4;">
+              ${escapeHtml(d.desc)}
+            </p>
+
+            <!-- Barre Leitner 3 segments -->
+            <div class="fc-leitner-track" title="Boîte 1 : ${p.box1} | Boîte 2 : ${p.box2} | Boîte 3 : ${p.box3}">
+              <div class="fc-leitner-segment b1" style="width:${b1Pct}%;"></div>
+              <div class="fc-leitner-segment b2" style="width:${b2Pct}%;"></div>
+              <div class="fc-leitner-segment b3" style="width:${b3Pct}%;"></div>
+            </div>
+
+            <div class="fc-leitner-legend" style="margin-top:6px;">
+              <span>📦 B1 : <strong>${p.box1}</strong> (1j)</span>
+              <span>📦 B2 : <strong>${p.box2}</strong> (3j)</span>
+              <span>📦 B3 : <strong>${p.box3}</strong> (7j)</span>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:8px;margin-top:10px;">
+            <button type="button" class="fc-hero-btn" onclick="startFlashcardSession('${d.id}')" style="flex:1;padding:10px 14px;font-size:0.88rem;justify-content:center;">
+              <span>▶</span>
+              <span>${p.dueToday > 0 ? `Réviser (${p.dueToday})` : "S'entraîner"}</span>
+            </button>
+            <button type="button" class="plan-btn-reset" onclick="confirmResetFlashcardDeck('${d.id}', '${escapeHtml(d.name)}')" title="Réinitialiser ce paquet" style="padding:10px;font-size:0.85rem;">
+              🔄
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Setup des raccourcis clavier et tactiles
+  setupFlashcardKeyboardListeners();
+  setupFlashcardTouchListeners();
+
+  // Si un deckId est passé en paramètre, démarrer directement
+  if (selectedDeckId) {
+    startFlashcardSession(selectedDeckId);
+  }
+}
+
+function filterFlashcardDeckAlgos(chapterSlug) {
+  currentAlgoChapterFilter = chapterSlug || 'all';
+  showToast(`Filtre algorithmes : ${chapterSlug === 'all' ? 'Tous les 8 chapitres' : chapterSlug}`);
+}
+
+function startFlashcardSession(deckId, singleCardId = null) {
+  const allCards = getAllFlashcardCards();
+  let pool = [];
+
+  if (singleCardId) {
+    const single = allCards.find(c => c.id === singleCardId);
+    if (single) pool = [single];
+  } else if (deckId === 'melange') {
+    pool = [...allCards];
+  } else if (deckId === 'algos') {
+    pool = allCards.filter(c => c.deckId === 'algos');
+    if (currentAlgoChapterFilter !== 'all') {
+      pool = pool.filter(c => c.chapterSlug === currentAlgoChapterFilter);
+    }
+  } else {
+    pool = allCards.filter(c => c.deckId === deckId);
+  }
+
+  if (pool.length === 0) {
+    alert("Aucune carte trouvée pour cette sélection.");
+    return;
+  }
+
+  const todayStr = new Date().toISOString().split('T')[0];
+
+  // Tri Leitner : dues aujourd'hui ou non révisées d'abord, puis Boîte 1, 2, 3
+  const scored = pool.map(c => {
+    const st = (typeof STI_STORE !== 'undefined') ? STI_STORE.getCardState(c.id) : { box: 1, nextReview: todayStr, unreviewed: true };
+    const isDue = (!st.nextReview || st.nextReview <= todayStr || st.unreviewed);
+    let priority = 10;
+    if (isDue) {
+      if (st.box === 1) priority = 1;
+      else if (st.box === 2) priority = 2;
+      else priority = 3;
+    } else {
+      priority = 20 + st.box;
+    }
+    return { card: c, priority: priority, isDue: isDue, state: st };
+  });
+
+  scored.sort((a, b) => {
+    if (a.priority !== b.priority) return a.priority - b.priority;
+    return Math.random() - 0.5; // Brassage léger au sein de la même priorité
+  });
+
+  // Limite de 15 cartes par session pour une mémorisation active optimale
+  const sessionCards = scored.slice(0, 15).map(s => s.card);
+
+  currentFlashcardSession = {
+    deckId: deckId,
+    cards: sessionCards,
+    currentIndex: 0,
+    stats: { good: 0, again: 0 },
+    isFlipped: false
+  };
+
+  const selectScreen = document.getElementById('fcDeckSelectScreen');
+  const sessionScreen = document.getElementById('fcSessionScreen');
+  const summaryScreen = document.getElementById('fcSummaryScreen');
+
+  if (selectScreen) selectScreen.style.display = 'none';
+  if (summaryScreen) summaryScreen.style.display = 'none';
+  if (sessionScreen) sessionScreen.style.display = 'block';
+
+  renderActiveFlashcard();
+}
+
+function startFlashcardForSingleCard(cardId) {
+  startFlashcardSession('single', cardId);
+}
+
+function renderActiveFlashcard() {
+  if (!currentFlashcardSession) return;
+  const session = currentFlashcardSession;
+  const card = session.cards[session.currentIndex];
+  if (!card) return;
+
+  session.isFlipped = false;
+
+  // Progression
+  const progressText = document.getElementById('fcSessionProgressText');
+  if (progressText) {
+    progressText.textContent = `${session.currentIndex + 1} / ${session.cards.length}`;
+  }
+
+  const progressBar = document.getElementById('fcSessionProgressBar');
+  if (progressBar) {
+    const pct = ((session.currentIndex + 1) / session.cards.length) * 100;
+    progressBar.style.width = `${pct}%`;
+  }
+
+  // État Leitner
+  const cardState = (typeof STI_STORE !== 'undefined') ? STI_STORE.getCardState(card.id) : { box: 1 };
+  const boxPill = document.getElementById('fcCurrentCardBoxPill');
+  if (boxPill) {
+    boxPill.className = `fc-box-pill b${cardState.box}`;
+    const labels = { 1: '📦 Boîte 1 (1 jour)', 2: '📦 Boîte 2 (3 jours)', 3: '📦 Boîte 3 (7 jours)' };
+    boxPill.textContent = labels[cardState.box] || '📦 Boîte 1';
+  }
+
+  // Boutons et sous-textes
+  const goodSub = document.getElementById('fcBtnGoodSub');
+  if (goodSub) {
+    if (cardState.box === 1) goodSub.textContent = 'Passer en Boîte 2 (+3j) • [2]';
+    else if (cardState.box === 2) goodSub.textContent = 'Passer en Boîte 3 (+7j) • [2]';
+    else goodSub.textContent = 'Conserver en Boîte 3 (+7j) • [2]';
+  }
+
+  // RECTO
+  const frontTag = document.getElementById('fcFrontTag');
+  if (frontTag) frontTag.textContent = card.tag;
+
+  const frontTitle = document.getElementById('fcFrontTitle');
+  if (frontTitle) frontTitle.textContent = card.frontTitle;
+
+  const frontPrompt = document.getElementById('fcFrontPrompt');
+  if (frontPrompt) frontPrompt.textContent = card.frontPrompt;
+
+  // VERSO
+  const backTag = document.getElementById('fcBackTag');
+  if (backTag) backTag.textContent = `${card.tag} • Réponse`;
+
+  const backContent = document.getElementById('fcBackContent');
+  if (backContent) {
+    let html = '';
+
+    if (card.backRole) {
+      html += `
+        <div class="fc-back-section">
+          <div class="fc-back-label">Rôle &amp; Usage au Bac</div>
+          <p class="fc-back-text">${escapeHtml(card.backRole)}</p>
+        </div>
+      `;
+    }
+
+    if (card.backSyntax) {
+      html += `
+        <div class="fc-back-section">
+          <div class="fc-back-label">Syntaxe / Paramètres</div>
+          <div class="fc-code-box">${escapeHtml(card.backSyntax)}</div>
+        </div>
+      `;
+    }
+
+    if (card.backTdo) {
+      html += `
+        <div class="fc-back-section">
+          <div class="fc-back-label">Tableau de Déclaration des Objets (T.D.O)</div>
+          <div class="fc-code-box">${escapeHtml(card.backTdo)}</div>
+        </div>
+      `;
+    }
+
+    if (card.backPseudo) {
+      html += `
+        <div class="fc-back-section">
+          <div class="fc-back-label">Algorithme (Pseudo-code Bac)</div>
+          <div class="fc-code-box">${escapeHtml(card.backPseudo)}</div>
+        </div>
+      `;
+    }
+
+    if (card.backCode) {
+      const codeLabel = (card.deckId === 'algos') ? 'Implémentation Python (Thonny)' : 'Exemple de Code';
+      html += `
+        <div class="fc-back-section">
+          <div class="fc-back-label">${codeLabel}</div>
+          <div class="fc-code-box">${escapeHtml(card.backCode)}</div>
+        </div>
+      `;
+    }
+
+    if (card.backNote) {
+      html += `
+        <div style="font-size:0.83rem;color:var(--text-secondary);background:rgba(255,255,255,0.03);padding:8px 12px;border-radius:8px;border-left:3px solid #38bdf8;">
+          💡 ${escapeHtml(card.backNote)}
+        </div>
+      `;
+    }
+
+    backContent.innerHTML = html;
+  }
+
+  // Bookmarks recto / verso
+  renderFlashcardBookmarkWrappers(card);
+
+  // Réinitialiser le retournement 3D
+  const cardElem = document.getElementById('fcActiveCardElement');
+  if (cardElem) {
+    cardElem.classList.remove('is-flipped');
+  }
+}
+
+function renderFlashcardBookmarkWrappers(card) {
+  const isBm = (typeof STI_STORE !== 'undefined') ? STI_STORE.isBookmarked('flashcard', card.id) : false;
+  const starIcon = isBm ? '⭐' : '☆';
+  const starClass = isBm ? 'active' : '';
+
+  const btnHtml = `
+    <button type="button" class="plan-bookmark-toggle-btn ${starClass}" onclick="toggleFlashcardBookmark('${card.id}', '${escapeHtml(card.frontTitle)}', '${escapeHtml(card.tag)}', event)" title="${isBm ? 'Retirer des notions à revoir' : 'Marquer comme notion à revoir'}">
+      <span>${starIcon}</span>
+      <span style="font-size:0.75rem;">À revoir</span>
+    </button>
+  `;
+
+  const frontWrap = document.getElementById('fcFrontBookmarkWrap');
+  if (frontWrap) frontWrap.innerHTML = btnHtml;
+
+  const backWrap = document.getElementById('fcBackBookmarkWrap');
+  if (backWrap) backWrap.innerHTML = btnHtml;
+}
+
+function toggleFlashcardBookmark(cardId, cardTitle, cardTag, event) {
+  if (event) event.stopPropagation();
+  if (typeof STI_STORE === 'undefined') return;
+
+  const isNow = STI_STORE.toggleBookmark('flashcard', cardId, { title: cardTitle, desc: cardTag });
+  showToast(isNow ? '⭐ Carte ajoutée à Ma Révision' : 'Carte retirée de Ma Révision');
+
+  if (currentFlashcardSession) {
+    const card = currentFlashcardSession.cards[currentFlashcardSession.currentIndex];
+    if (card && card.id === cardId) {
+      renderFlashcardBookmarkWrappers(card);
+    }
+  }
+}
+
+function flipCurrentFlashcard() {
+  const cardElem = document.getElementById('fcActiveCardElement');
+  if (!cardElem || !currentFlashcardSession) return;
+  cardElem.classList.toggle('is-flipped');
+  currentFlashcardSession.isFlipped = cardElem.classList.contains('is-flipped');
+}
+
+function handleCardAnswer(wasSuccess) {
+  if (!currentFlashcardSession) return;
+  const session = currentFlashcardSession;
+  const card = session.cards[session.currentIndex];
+  if (!card) return;
+
+  // Enregistrement dans le système Leitner
+  if (typeof STI_STORE !== 'undefined') {
+    STI_STORE.recordCardReview(card.id, wasSuccess);
+  }
+
+  if (wasSuccess) {
+    session.stats.good++;
+  } else {
+    session.stats.again++;
+  }
+
+  session.currentIndex++;
+
+  if (session.currentIndex < session.cards.length) {
+    renderActiveFlashcard();
+  } else {
+    showFlashcardSessionSummary();
+  }
+}
+
+function showFlashcardSessionSummary() {
+  const sessionScreen = document.getElementById('fcSessionScreen');
+  const summaryScreen = document.getElementById('fcSummaryScreen');
+  if (sessionScreen) sessionScreen.style.display = 'none';
+  if (summaryScreen) summaryScreen.style.display = 'block';
+
+  if (!currentFlashcardSession) return;
+  const stats = currentFlashcardSession.stats;
+
+  const goodEl = document.getElementById('fcSummaryGoodCount');
+  if (goodEl) goodEl.textContent = stats.good;
+
+  const againEl = document.getElementById('fcSummaryAgainCount');
+  if (againEl) againEl.textContent = stats.again;
+
+  const subtitle = document.getElementById('fcSummarySubtitle');
+  if (subtitle) {
+    subtitle.textContent = `Session de ${currentFlashcardSession.cards.length} cartes terminée. Vos dates de répétition espacée sont enregistrées dans le navigateur.`;
+  }
+}
+
+function exitFlashcardSession() {
+  currentFlashcardSession = null;
+  renderFlashcardsPage();
+}
+
+function restartCurrentFlashcardDeck() {
+  if (!currentFlashcardSession) return;
+  const deckId = currentFlashcardSession.deckId;
+  startFlashcardSession(deckId);
+}
+
+function confirmResetFlashcardDeck(deckId, deckName) {
+  if (!confirm(`Voulez-vous réinitialiser toute la progression Leitner du paquet « ${deckName} » ?\nToutes les cartes reviendront en Boîte 1.`)) {
+    return;
+  }
+
+  const allCards = getAllFlashcardCards();
+  const deckCardIds = allCards.filter(c => c.deckId === deckId).map(c => c.id);
+
+  if (typeof STI_STORE !== 'undefined') {
+    STI_STORE.resetDeckCards(deckCardIds);
+  }
+
+  showToast(`Le paquet « ${deckName} » a été réinitialisé avec succès.`);
+  renderFlashcardsPage();
+}
+
+function setupFlashcardKeyboardListeners() {
+  if (flashcardKeydownAttached) return;
+  flashcardKeydownAttached = true;
+
+  window.addEventListener('keydown', (e) => {
+    const sessionScreen = document.getElementById('fcSessionScreen');
+    if (!sessionScreen || sessionScreen.style.display === 'none' || !currentFlashcardSession) return;
+
+    // Ignorer si on tape dans un champ texte
+    const active = document.activeElement;
+    if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.tagName === 'SELECT')) return;
+
+    if (e.code === 'Space' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      flipCurrentFlashcard();
+    } else if (e.key === '1' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      handleCardAnswer(false);
+    } else if (e.key === '2' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      handleCardAnswer(true);
+    }
+  });
+}
+
+function setupFlashcardTouchListeners() {
+  if (flashcardTouchAttached) return;
+  flashcardTouchAttached = true;
+
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  const cardElem = document.getElementById('fcActiveCardElement');
+  if (!cardElem) return;
+
+  cardElem.addEventListener('touchstart', (e) => {
+    if (e.changedTouches && e.changedTouches[0]) {
+      touchStartX = e.changedTouches[0].clientX;
+      touchStartY = e.changedTouches[0].clientY;
+    }
+  }, { passive: true });
+
+  cardElem.addEventListener('touchend', (e) => {
+    if (!currentFlashcardSession || !e.changedTouches || !e.changedTouches[0]) return;
+    const endX = e.changedTouches[0].clientX;
+    const endY = e.changedTouches[0].clientY;
+    const diffX = endX - touchStartX;
+    const diffY = endY - touchStartY;
+
+    // Balayage horizontal significatif (> 60px)
+    if (Math.abs(diffX) > 60 && Math.abs(diffX) > Math.abs(diffY)) {
+      if (diffX < 0) {
+        // Balayage gauche -> À revoir
+        handleCardAnswer(false);
+      } else {
+        // Balayage droite -> Je savais
+        handleCardAnswer(true);
+      }
+    }
+  }, { passive: true });
 }
 
