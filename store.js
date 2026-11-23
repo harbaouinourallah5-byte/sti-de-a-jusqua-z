@@ -59,8 +59,10 @@ var STI_STORE = (function () {
     // Étape 1 : Cours en bref (toujours présent)
     var step1 = true;
     var step2 = false; // Algorithmes types
-    var step3 = false; // Séries & Extraits
+    var step3 = false; // Quiz du chapitre
     var step4 = false; // Exercices d'examens
+    var step5 = false; // Séries & Documents
+    var step6 = false; // Cartes mémoire du chapitre
 
     try {
       if (typeof DATA !== 'undefined' && DATA && DATA.algo_theorique && typeof CURRICULUM !== 'undefined') {
@@ -69,21 +71,29 @@ var STI_STORE = (function () {
           step2 = DATA.algo_theorique.some(function(x) { return CURRICULUM.matchesCategory(x.category, ch); });
         }
       }
-      if (typeof DOCUMENTS_DATA !== 'undefined' && typeof DOCUMENTS_DATA.getByChapter === 'function') {
-        var sList = DOCUMENTS_DATA.getByChapter(slug).filter(function(d) {
-          return (d.kind === 'serie' && d.module === 'algo-theorique') || d.kind === 'extrait';
-        });
-        step3 = sList.length > 0;
+      if (typeof QUIZ_DATA !== 'undefined' && typeof QUIZ_DATA.getQuestionsByChapter === 'function') {
+        var qList = QUIZ_DATA.getQuestionsByChapter(slug);
+        step3 = qList && qList.length > 0;
       }
       if (typeof EXERCISES_DATA !== 'undefined' && typeof EXERCISES_DATA.getByChapter === 'function') {
         var exList = EXERCISES_DATA.getByChapter(slug);
-        step4 = exList.length > 0;
+        step4 = exList && exList.length > 0;
+      }
+      if (typeof DOCUMENTS_DATA !== 'undefined' && typeof DOCUMENTS_DATA.getByChapter === 'function') {
+        var sList = DOCUMENTS_DATA.getByChapter(slug);
+        step5 = sList && sList.length > 0;
+      }
+      if (typeof getAllFlashcardCards === 'function') {
+        var fList = getAllFlashcardCards().filter(function(c) { return c.chapterSlug === slug; });
+        step6 = fList && fList.length > 0;
+      } else if (step2) {
+        step6 = true;
       }
     } catch (e) {
       console.warn('[STI_STORE] getChapterStepAvailability error', e);
     }
 
-    return { 1: step1, 2: step2, 3: step3, 4: step4 };
+    return { 1: step1, 2: step2, 3: step3, 4: step4, 5: step5, 6: step6 };
   }
 
   function getChapterPercentage(slug) {
@@ -92,7 +102,7 @@ var STI_STORE = (function () {
     var availableCount = 0;
     var doneCount = 0;
 
-    for (var i = 1; i <= 4; i++) {
+    for (var i = 1; i <= 6; i++) {
       if (avail[i]) {
         availableCount++;
         if (p['step' + i]) doneCount++;
@@ -105,7 +115,7 @@ var STI_STORE = (function () {
   function getFirstUnfinishedStep(slug) {
     var avail = getChapterStepAvailability(slug);
     var p = getChapterProgress(slug);
-    for (var i = 1; i <= 4; i++) {
+    for (var i = 1; i <= 6; i++) {
       if (avail[i] && !p['step' + i]) {
         return i;
       }
@@ -120,7 +130,7 @@ var STI_STORE = (function () {
     var doneCount = 0;
     var steps = {};
 
-    for (var i = 1; i <= 4; i++) {
+    for (var i = 1; i <= 6; i++) {
       var isAvail = !!avail[i];
       var isDone = !!p['step' + i];
       if (isAvail) {

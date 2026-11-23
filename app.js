@@ -1667,6 +1667,15 @@ function parseAppHash(hash) {
     }
   }
 
+  // Raccourcis directs algo/<slug> (ex: #/algo/fichiers, #/algo/recursivite, etc.)
+  if (clean.startsWith('algo/') && typeof CURRICULUM !== 'undefined') {
+    const directAlgoSub = clean.replace(/^algo\//, '').trim();
+    const ch = CURRICULUM.getChapterBySlug(directAlgoSub) || CURRICULUM.getChapterByCategory(directAlgoSub);
+    if (ch) {
+      return { view: 'algo-theorique', subTab: 'chapitres', chapter: ch.fullTitle, chapterSlug: ch.slug, chapterObj: ch };
+    }
+  }
+
   // Types d'exercices (#/algo/types ou #/algo/types/:slug)
   if (clean.startsWith('algo/types') || clean.startsWith('types')) {
     const subType = clean.replace(/^(algo\/types|types)\/?/, '').trim();
@@ -8301,7 +8310,7 @@ function renderAlgoTheoriqueCards() {
       <div class="chapter-step-block ${summary.steps[1].done ? 'is-done' : ''}" id="ch-step-1-${ch.slug}">
         <div class="chapter-step-header">
           <div class="chapter-step-title-wrap">
-            <span class="chapter-step-num-badge">Étape 1 / 4</span>
+            <span class="chapter-step-num-badge">Étape 1 / 6</span>
             <h4 class="chapter-step-title">📖 Cours en bref &amp; Règles fondamentales</h4>
           </div>
           <button type="button" class="chapter-step-toggle-btn ${summary.steps[1].done ? 'done' : ''}" onclick="toggleChapterStep('${ch.slug}', 1)">
@@ -8396,7 +8405,7 @@ function renderAlgoTheoriqueCards() {
       <div class="chapter-step-block ${summary.steps[2].done ? 'is-done' : ''}" id="ch-step-2-${ch.slug}">
         <div class="chapter-step-header">
           <div class="chapter-step-title-wrap">
-            <span class="chapter-step-num-badge">Étape 2 / 4</span>
+            <span class="chapter-step-num-badge">Étape 2 / 6</span>
             <h4 class="chapter-step-title">⚡ Algorithmes types officiels (${chapterItems.length})</h4>
             ${chapterItems.length > 0 ? `<span style="font-size: 0.78rem; color: #10b981; font-weight: 700;">(${studiedCount}/${chapterItems.length} étudiés)</span>` : ''}
           </div>
@@ -8452,22 +8461,65 @@ function renderAlgoTheoriqueCards() {
       }).join('');
     }
 
+    // ── ÉTAPE 3 : QUIZ DU CHAPITRE HTML ──
+    const chapterQuiz = (typeof QUIZ_DATA !== 'undefined' && typeof QUIZ_DATA.getQuestionsByChapter === 'function')
+      ? QUIZ_DATA.getQuestionsByChapter(ch.slug)
+      : [];
+    const bestScore = (typeof STI_STORE !== 'undefined') ? STI_STORE.getBestQuizScore(ch.slug) : null;
+    const isQuizStepDone = summary.steps && summary.steps[3] ? summary.steps[3].done : false;
+
+    let quizBlockContent = '';
+    if (chapterQuiz.length === 0) {
+      quizBlockContent = `
+        <div style="padding: 20px; border-radius: 10px; background: var(--surface-bg); color: var(--text-secondary); font-size: 0.86rem; text-align: center; border: 1px dashed var(--border-color);">
+          ⏳ Le quiz pour ce chapitre sera bientôt disponible.
+        </div>
+      `;
+    } else {
+      const bestScoreBadge = bestScore !== null
+        ? `<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3);font-size:0.82rem;font-weight:700;">🏆 Meilleur score : ${bestScore}%</span>`
+        : `<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;background:rgba(245,158,11,0.12);color:#f59e0b;border:1px solid rgba(245,158,11,0.25);font-size:0.82rem;font-weight:700;">⏳ Non commencé</span>`;
+
+      quizBlockContent = `
+        <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 18px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 240px;">
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px;">
+              <span style="font-size: 0.78rem; font-weight: 700; color: #818cf8; background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); padding: 2px 10px; border-radius: 12px;">
+                ⚡ Format Express (2 à 5 min)
+              </span>
+              ${bestScoreBadge}
+            </div>
+            <h5 style="margin: 0 0 6px 0; font-size: 1.05rem; font-weight: 800; color: var(--text-primary);">
+              Auto-évaluation : ${escapeHtml(ch.shortTitle)}
+            </h5>
+            <p style="margin: 0; font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5;">
+              Testez vos réflexes d'examen sur les traces d'algorithmes, la validité T.D.O et les pièges classiques de ce chapitre (${chapterQuiz.length} questions).
+            </p>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <a href="#/algo/quiz/${ch.slug}" onclick="navigateToHash('#/algo/quiz/${ch.slug}')" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 10px; background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; font-size: 0.88rem; font-weight: 800; text-decoration: none; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3); white-space: nowrap;">
+              <span>🚀 Lancer le Quiz (${chapterQuiz.length})</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+      `;
+    }
+
     const step3Html = `
-      <div class="chapter-step-block ${summary.steps[3].done ? 'is-done' : ''}" id="ch-step-3-${ch.slug}">
+      <div class="chapter-step-block ${isQuizStepDone ? 'is-done' : ''}" id="ch-step-3-${ch.slug}">
         <div class="chapter-step-header">
           <div class="chapter-step-title-wrap">
-            <span class="chapter-step-num-badge">Étape 3 / 4</span>
-            <h4 class="chapter-step-title">📋 Séries &amp; Extraits de travaux pratiques (${combinedSeries.length})</h4>
+            <span class="chapter-step-num-badge">Étape 3 / 6</span>
+            <h4 class="chapter-step-title">⚡ Quiz du chapitre (${chapterQuiz.length} questions)</h4>
           </div>
-          ${combinedSeries.length > 0 ? `
-            <button type="button" class="chapter-step-toggle-btn ${summary.steps[3].done ? 'done' : ''}" onclick="toggleChapterStep('${ch.slug}', 3)">
-              <span>${summary.steps[3].done ? '✓ Validé' : '○ Marquer comme terminé'}</span>
+          ${chapterQuiz.length > 0 ? `
+            <button type="button" class="chapter-step-toggle-btn ${isQuizStepDone ? 'done' : ''}" onclick="toggleChapterStep('${ch.slug}', 3)">
+              <span>${isQuizStepDone ? '✓ Validé' : '○ Marquer comme terminé'}</span>
             </button>
           ` : `<span style="font-size: 0.76rem; font-weight: 700; color: #f59e0b; background: rgba(245,158,11,0.15); border: 1px dashed rgba(245,158,11,0.3); padding: 4px 10px; border-radius: 6px;">⏳ Bientôt</span>`}
         </div>
-        <div style="display: grid; gap: 10px;">
-          ${seriesCardsHtml}
-        </div>
+        ${quizBlockContent}
       </div>
     `;
 
@@ -8529,16 +8581,17 @@ function renderAlgoTheoriqueCards() {
       }).join('');
     }
 
+    const isExStepDone = summary.steps && summary.steps[4] ? summary.steps[4].done : false;
     const step4Html = `
-      <div class="chapter-step-block ${summary.steps[4].done ? 'is-done' : ''}" id="ch-step-4-${ch.slug}">
+      <div class="chapter-step-block ${isExStepDone ? 'is-done' : ''}" id="ch-step-4-${ch.slug}">
         <div class="chapter-step-header">
           <div class="chapter-step-title-wrap">
-            <span class="chapter-step-num-badge">Étape 4 / 4</span>
+            <span class="chapter-step-num-badge">Étape 4 / 6</span>
             <h4 class="chapter-step-title">🎯 Exercices d'examens de ce chapitre (${chapterExercises.length})</h4>
           </div>
           ${chapterExercises.length > 0 ? `
-            <button type="button" class="chapter-step-toggle-btn ${summary.steps[4].done ? 'done' : ''}" onclick="toggleChapterStep('${ch.slug}', 4)">
-              <span>${summary.steps[4].done ? '✓ Validé' : '○ Marquer comme terminé'}</span>
+            <button type="button" class="chapter-step-toggle-btn ${isExStepDone ? 'done' : ''}" onclick="toggleChapterStep('${ch.slug}', 4)">
+              <span>${isExStepDone ? '✓ Validé' : '○ Marquer comme terminé'}</span>
             </button>
           ` : `<span style="font-size: 0.76rem; font-weight: 700; color: #f59e0b; background: rgba(245,158,11,0.15); border: 1px dashed rgba(245,158,11,0.3); padding: 4px 10px; border-radius: 6px;">⏳ Bientôt</span>`}
         </div>
@@ -8548,29 +8601,135 @@ function renderAlgoTheoriqueCards() {
       </div>
     `;
 
+    // ── ÉTAPE 5 : SÉRIES & DOCUMENTS HTML ──
+    const isSeriesStepDone = summary.steps && summary.steps[5] ? summary.steps[5].done : false;
+    const step5Html = `
+      <div class="chapter-step-block ${isSeriesStepDone ? 'is-done' : ''}" id="ch-step-5-${ch.slug}">
+        <div class="chapter-step-header">
+          <div class="chapter-step-title-wrap">
+            <span class="chapter-step-num-badge">Étape 5 / 6</span>
+            <h4 class="chapter-step-title">📋 Séries &amp; Documents de travaux pratiques (${combinedSeries.length})</h4>
+          </div>
+          ${combinedSeries.length > 0 ? `
+            <button type="button" class="chapter-step-toggle-btn ${isSeriesStepDone ? 'done' : ''}" onclick="toggleChapterStep('${ch.slug}', 5)">
+              <span>${isSeriesStepDone ? '✓ Validé' : '○ Marquer comme terminé'}</span>
+            </button>
+          ` : `<span style="font-size: 0.76rem; font-weight: 700; color: #f59e0b; background: rgba(245,158,11,0.15); border: 1px dashed rgba(245,158,11,0.3); padding: 4px 10px; border-radius: 6px;">⏳ Bientôt</span>`}
+        </div>
+        <div style="display: grid; gap: 10px;">
+          ${seriesCardsHtml}
+        </div>
+      </div>
+    `;
+
+    // ── ÉTAPE 6 : CARTES MÉMOIRE DU CHAPITRE HTML ──
+    const allFlashcards = (typeof getAllFlashcardCards === 'function') ? getAllFlashcardCards() : [];
+    const chapterCards = allFlashcards.filter(c => c.chapterSlug === ch.slug);
+    let dueCardsToday = 0;
+    if (typeof STI_STORE !== 'undefined' && chapterCards.length > 0) {
+      const fp = STI_STORE.getDeckProgress(chapterCards.map(c => c.id));
+      dueCardsToday = fp.dueToday;
+    }
+    const isCardsStepDone = summary.steps && summary.steps[6] ? summary.steps[6].done : false;
+
+    let cardsBlockContent = '';
+    if (chapterCards.length === 0) {
+      cardsBlockContent = `
+        <div style="padding: 20px; border-radius: 10px; background: var(--surface-bg); color: var(--text-secondary); font-size: 0.86rem; text-align: center; border: 1px dashed var(--border-color);">
+          ⏳ Les cartes mémoire pour ce chapitre seront bientôt disponibles.
+        </div>
+      `;
+    } else {
+      cardsBlockContent = `
+        <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 18px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 240px;">
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px;">
+              <span style="font-size: 0.78rem; font-weight: 700; color: #c084fc; background: rgba(192, 132, 252, 0.15); border: 1px solid rgba(192, 132, 252, 0.3); padding: 2px 10px; border-radius: 12px;">
+                🗂️ Répétition Espacée Leitner
+              </span>
+              <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;background:rgba(56,189,248,0.12);color:#38bdf8;border:1px solid rgba(56,189,248,0.25);font-size:0.82rem;font-weight:700;">
+                📅 ${dueCardsToday > 0 ? `${dueCardsToday} carte(s) à réviser aujourd'hui` : 'Toutes les cartes sont à jour !'}
+              </span>
+            </div>
+            <h5 style="margin: 0 0 6px 0; font-size: 1.05rem; font-weight: 800; color: var(--text-primary);">
+              Flashcards : ${escapeHtml(ch.shortTitle)} (${chapterCards.length} cartes)
+            </h5>
+            <p style="margin: 0; font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5;">
+              Mémorisez les rôles, en-têtes, déclarations TDO et structures d'algorithmes clés grâce au système de boîtes Leitner (1j, 3j, 7j).
+            </p>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <a href="#/revision/cartes" onclick="navigateToHash('#/revision/cartes'); if(typeof filterFlashcardDeckAlgos==='function'){setTimeout(()=>filterFlashcardDeckAlgos('${ch.slug}'),100);}" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 10px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: #fff; font-size: 0.88rem; font-weight: 800; text-decoration: none; box-shadow: 0 4px 14px rgba(139, 92, 246, 0.3); white-space: nowrap;">
+              <span>🗂️ Réviser les cartes (${chapterCards.length})</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+      `;
+    }
+
+    const step6Html = `
+      <div class="chapter-step-block ${isCardsStepDone ? 'is-done' : ''}" id="ch-step-6-${ch.slug}">
+        <div class="chapter-step-header">
+          <div class="chapter-step-title-wrap">
+            <span class="chapter-step-num-badge">Étape 6 / 6</span>
+            <h4 class="chapter-step-title">🗂️ Cartes mémoire du chapitre (${chapterCards.length} cartes)</h4>
+          </div>
+          ${chapterCards.length > 0 ? `
+            <button type="button" class="chapter-step-toggle-btn ${isCardsStepDone ? 'done' : ''}" onclick="toggleChapterStep('${ch.slug}', 6)">
+              <span>${isCardsStepDone ? '✓ Validé' : '○ Marquer comme terminé'}</span>
+            </button>
+          ` : `<span style="font-size: 0.76rem; font-weight: 700; color: #f59e0b; background: rgba(245,158,11,0.15); border: 1px dashed rgba(245,158,11,0.3); padding: 4px 10px; border-radius: 6px;">⏳ Bientôt</span>`}
+        </div>
+        ${cardsBlockContent}
+      </div>
+    `;
+
     // ── STEPPER BAR HTML ──
     const stepperHtml = renderChapterStepperPills(ch.slug, summary, {
       coursCount: 1,
       algosCount: chapterItems.length,
+      quizCount: chapterQuiz.length,
+      exercisesCount: chapterExercises.length,
       seriesCount: combinedSeries.length,
-      exercisesCount: chapterExercises.length
+      cardsCount: chapterCards.length
     });
 
+    const allChs = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.chapters : [];
+    const chIndex = allChs.findIndex(c => c.slug === ch.slug);
+    const prevCh = chIndex > 0 ? allChs[chIndex - 1] : allChs[allChs.length - 1];
+    const nextCh = chIndex < allChs.length - 1 ? allChs[chIndex + 1] : allChs[0];
+
     chapterSection.innerHTML = `
+      <!-- BARRE DE NAVIGATION PRÉCÉDENT / SUIVANT HAUT -->
+      <div class="chapter-nav-top-bar" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; padding: 10px 16px; background: rgba(15, 23, 42, 0.65); border: 1px solid var(--border-color); border-radius: 12px;">
+        <a href="#/algo/theorique/${prevCh.slug}" onclick="navigateToHash('#/algo/theorique/${prevCh.slug}')" class="ch-nav-btn prev" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.84rem; font-weight: 700; color: var(--text-secondary); text-decoration: none;">
+          <span>←</span>
+          <span>${prevCh.iconEmoji} ${escapeHtml(prevCh.shortTitle)}</span>
+        </a>
+        <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-muted); background: rgba(255,255,255,0.06); padding: 4px 12px; border-radius: 12px;">
+          Chapitre ${ch.order} / ${allChs.length}
+        </span>
+        <a href="#/algo/theorique/${nextCh.slug}" onclick="navigateToHash('#/algo/theorique/${nextCh.slug}')" class="ch-nav-btn next" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.84rem; font-weight: 700; color: var(--text-secondary); text-decoration: none;">
+          <span>${nextCh.iconEmoji} ${escapeHtml(nextCh.shortTitle)}</span>
+          <span>→</span>
+        </a>
+      </div>
+
       <!-- BANNIÈRE PRINCIPALE DU CHAPITRE -->
-      <div class="algo-chapter-banner" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; padding: 14px 18px; background: rgba(15, 23, 42, 0.75); border: 1px solid var(--border-color); border-left: 4px solid ${meta.border}; border-radius: var(--radius-md);">
+      <div class="algo-chapter-banner" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; padding: 16px 20px; background: rgba(15, 23, 42, 0.75); border: 1px solid var(--border-color); border-left: 4px solid ${meta.border}; border-radius: var(--radius-md);">
         <div style="display: flex; align-items: center; gap: 12px;">
-          <div style="font-size: 1.4rem; background: rgba(255,255,255,0.06); width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+          <div style="font-size: 1.5rem; background: rgba(255,255,255,0.06); width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
             ${meta.icon}
           </div>
           <div>
-            <h3 style="margin: 0; font-size: 1.15rem; color: ${meta.color}; font-weight: 800;">${escapeHtml(ch.fullTitle)}</h3>
-            <span style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4;">${escapeHtml(meta.desc)}</span>
+            <h3 style="margin: 0; font-size: 1.2rem; color: ${meta.color}; font-weight: 800;">${escapeHtml(ch.fullTitle)}</h3>
+            <span style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.4;">${escapeHtml(meta.desc)}</span>
           </div>
         </div>
         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-          <a href="#/algo/theorique/${ch.slug}/resume" onclick="navigateToHash('#/algo/theorique/${ch.slug}/resume')" class="cat-pill" style="display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; font-size: 0.8rem; font-weight: 700; text-decoration: none; border-color: rgba(56, 189, 248, 0.4); color: #38bdf8;">
-            <span>🖨️ Fiche à imprimer (A4)</span>
+          <a href="#/algo/theorique/${ch.slug}/resume" onclick="navigateToHash('#/algo/theorique/${ch.slug}/resume')" class="cat-pill" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; font-size: 0.82rem; font-weight: 700; text-decoration: none; border-color: rgba(56, 189, 248, 0.4); color: #38bdf8;">
+            <span>🖨️ Fiche A4 à imprimer</span>
           </a>
           <span style="background: rgba(255,255,255,0.08); color: ${meta.color}; border: 1px solid ${meta.border}55; font-size: 0.8rem; font-weight: 800; padding: 4px 12px; border-radius: 20px; white-space: nowrap;">
             ${countBadgeText}
@@ -8594,7 +8753,7 @@ function renderAlgoTheoriqueCards() {
         </div>
       </div>
 
-      <!-- STEPPER EN 4 ÉTAPES -->
+      <!-- STEPPER EN 6 ÉTAPES -->
       <div class="chapter-stepper-bar" id="ch-stepper-${ch.slug}">
         ${stepperHtml}
       </div>
@@ -8608,11 +8767,32 @@ function renderAlgoTheoriqueCards() {
       <!-- ÉTAPE 2 : ALGORITHMES TYPES -->
       ${step2Html}
 
-      <!-- ÉTAPE 3 : SÉRIES & EXTRAITS -->
+      <!-- ÉTAPE 3 : QUIZ DU CHAPITRE -->
       ${step3Html}
 
       <!-- ÉTAPE 4 : EXERCICES D'EXAMENS -->
       ${step4Html}
+
+      <!-- ÉTAPE 5 : SÉRIES & DOCUMENTS -->
+      ${step5Html}
+
+      <!-- ÉTAPE 6 : CARTES MÉMOIRE -->
+      ${step6Html}
+
+      <!-- BARRE DE NAVIGATION PRÉCÉDENT / SUIVANT BAS -->
+      <div class="chapter-nav-bottom-bar" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 32px; padding: 16px; background: rgba(15, 23, 42, 0.65); border: 1px solid var(--border-color); border-radius: 12px;">
+        <a href="#/algo/theorique/${prevCh.slug}" onclick="navigateToHash('#/algo/theorique/${prevCh.slug}')" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border-color); color: var(--text-primary); font-size: 0.88rem; font-weight: 700; text-decoration: none; background: var(--bg-card);">
+          <span>←</span>
+          <span>Précédent : ${prevCh.iconEmoji} ${escapeHtml(prevCh.shortTitle)}</span>
+        </a>
+        <button type="button" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="background: none; border: 1px solid var(--border-color); padding: 8px 14px; border-radius: 8px; color: var(--text-secondary); font-size: 0.84rem; cursor: pointer; font-weight: 600;">
+          ↑ Haut de page
+        </button>
+        <a href="#/algo/theorique/${nextCh.slug}" onclick="navigateToHash('#/algo/theorique/${nextCh.slug}')" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 8px; background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; font-size: 0.88rem; font-weight: 800; text-decoration: none;">
+          <span>Suivant : ${nextCh.iconEmoji} ${escapeHtml(nextCh.shortTitle)}</span>
+          <span>→</span>
+        </a>
+      </div>
     `;
 
     container.appendChild(chapterSection);
@@ -8631,8 +8811,10 @@ function renderChapterStepperPills(slug, summary, counts) {
   const steps = [
     { num: 1, icon: '📖', label: '1. Cours', count: counts.coursCount },
     { num: 2, icon: '⚡', label: '2. Algorithmes', count: counts.algosCount },
-    { num: 3, icon: '📋', label: '3. Séries', count: counts.seriesCount },
-    { num: 4, icon: '🎯', label: '4. Exercices', count: counts.exercisesCount }
+    { num: 3, icon: '⚡', label: '3. Quiz', count: counts.quizCount },
+    { num: 4, icon: '🎯', label: '4. Exercices', count: counts.exercisesCount },
+    { num: 5, icon: '📋', label: '5. Documents', count: counts.seriesCount },
+    { num: 6, icon: '🗂️', label: '6. Cartes', count: counts.cardsCount }
   ];
 
   return steps.map(st => {
@@ -11437,8 +11619,10 @@ function updateResumeStudyCard() {
   const stepLabels = {
     1: 'Cours en bref',
     2: 'Algorithmes types',
-    3: 'Séries & Extraits',
-    4: "Exercices d'examens"
+    3: 'Quiz du chapitre',
+    4: "Exercices d'examens",
+    5: 'Séries & Documents',
+    6: 'Cartes mémoire'
   };
 
   let titleText = null;
@@ -12152,7 +12336,7 @@ function renderRevisionPage() {
       const ch = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getChapterBySlug(lastNav.chapterSlug) : null;
       const chName = ch ? ch.fullTitle : 'Fichiers';
       const firstUnfinished = ch ? STI_STORE.getFirstUnfinishedStep(ch.slug) : 1;
-      const stepNames = { 1: 'Cours en bref', 2: 'Algorithmes types', 3: 'Séries & Extraits', 4: 'Devoirs de synthèse', 5: 'Exercices d\'examens', 6: 'Quiz rapide' };
+      const stepNames = { 1: 'Cours en bref', 2: 'Algorithmes types', 3: 'Quiz du chapitre', 4: 'Exercices d\'examens', 5: 'Séries & Documents', 6: 'Cartes mémoire' };
 
       todayContainer.innerHTML = `
         <div style="background:var(--surface-bg);border:1px solid var(--border-color);border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
