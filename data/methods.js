@@ -346,7 +346,166 @@ print(somme_chiffres(352))  # Affiche 10`,
       "Confondre l'affectation '<--' avec le test d'égalité '=' dans les conditions Si.",
       "Utiliser une fonction non standard sans l'avoir définie au préalable."
     ]
+  },
+  {
+    id: 'fonctions-predefinies',
+    slug: 'fonctions-predefinies',
+    title: 'Fonctions et procédures prédéfinies',
+    subtitle: 'Catalogue officiel des 16 primitives sur chaînes et fichiers (Signatures, retours & pièges)',
+    icon: '⚙️',
+    category: 'Primitives & Syntaxe',
+    relatedType: 'fonctions-predefinies',
+    relatedChapters: ['fichiers', 'tableaux'],
+    aRetenir: [
+      "Distinction fondamentale : une Fonction retourne une valeur utilisable dans une expression ou affectation (ex: 'x <-- F(a)'), tandis qu'une Procédure effectue une action et modifie ses paramètres par adresse (@ ou Var) sans retourner de résultat direct.",
+      "Primitives sur chaînes : 'Pos', 'Majus', 'Long', 'Chr', 'Ord', 'Sous_chaine' sont des Fonctions. En revanche, 'Effacer', 'Valeur' et 'Convch' sont des Procédures qui agissent par effet de bord sur leurs arguments (@).",
+      "Indices de chaînes : en pseudo-code officiel tunisien, le 1er caractère est à l'indice 1 et le dernier à l'indice 'Long(ch)'. Si 'Pos(sous, ch)' ne trouve aucune occurrence, elle retourne 0 (jamais -1).",
+      "Primitives sur fichiers : toute manipulation suit le cycle impératif Associer(F, nom) -> Ouvrir(F) (ou Reecrire) -> boucle avec Fin_Fichier(F) -> Fermer(F).",
+      "Sécurité numérique : après l'appel à la procédure 'Valeur(ch, val, err)', il faut impérativement tester 'Si err = 0' avant d'utiliser la valeur 'val'."
+    ],
+    exempleTitre: "Catalogue de référence : 16 primitives officielles",
+    exempleSteps: [
+      "Vérifier la nature : Fonction (avec affectation) vs Procédure (appel direct sans affectation).",
+      "Contrôler la validité des paramètres : types compatibles, ordre et respect des passages par variable (@).",
+      "Gérer les cas limites et sentinelles : indice 0 pour Pos, code d'erreur err <> 0 pour Valeur.",
+      "Fermer impérativement chaque fichier ouvert avant la fin du sous-programme via Fermer(F)."
+    ],
+    codePseudo: `// =========================================================================
+// 1. PRIMITIVES SUR LES CARACTÈRES ET CHAÎNES DE CARACTÈRES
+// =========================================================================
+
+// 1. Pos(sous_ch, ch) : Entier
+// -> Retourne : La position (1..Long) de la 1ère occurrence de sous_ch dans ch, ou 0 si absente.
+// -> Exemple  : p <-- Pos("bac", "le bac 2026")  // p vaut 4
+// -> Piège    : Croire que l'indice démarre à 0 comme en Python.
+
+// 2. Majus(ch) : Chaîne  (ou Majus(c : Caractère) : Caractère)
+// -> Retourne : La chaîne ou le caractère converti en lettres majuscules.
+// -> Exemple  : txt <-- Majus("informatique")  // txt vaut "INFORMATIQUE"
+// -> Piège    : Écrire 'Majus(ch)' sans affecter le résultat ('ch <-- Majus(ch)' est requis).
+
+// 3. Effacer(@ch : Chaîne, pos : Entier, nb : Entier) [Procédure]
+// -> Action   : Supprime 'nb' caractères de 'ch' à partir de la position 'pos'.
+// -> Exemple  : ch <-- "Bonjour"; Effacer(ch, 4, 4)  // ch devient "Bon"
+// -> Piège    : L'utiliser comme une fonction 'ch <-- Effacer(ch, 1, 2)' au lieu d'une procédure.
+
+// 4. Sous_chaine(ch : Chaîne, pos : Entier, nb : Entier) : Chaîne
+// -> Retourne : Une portion de 'nb' caractères extraite de 'ch' à partir de l'indice 'pos'.
+// -> Exemple  : s <-- Sous_chaine("Tunisie", 1, 3)  // s vaut "Tun"
+// -> Piège    : Confondre 'nb' (longueur à extraire) avec la position finale.
+
+// 5. Valeur(ch : Chaîne, @val : Entier/Réel, @err : Entier) [Procédure]
+// -> Action   : Convertit la chaîne numérique 'ch' en nombre 'val'. 'err' vaut 0 si succès.
+// -> Exemple  : Valeur("2026", n, e)  // n vaut 2026, e vaut 0
+// -> Piège    : Oublier de vérifier 'Si err = 0' avant d'utiliser la variable 'val'.
+
+// 6. Convch(val : Entier/Réel, @ch : Chaîne) [Procédure]
+// -> Action   : Convertit le nombre 'val' en sa chaîne de caractères dans 'ch'.
+// -> Exemple  : Convch(125, s)  // s devient "125"
+// -> Piège    : Écrire 's <-- Convch(125)' (Convch est une procédure, pas une fonction).
+
+// 7. Long(ch : Chaîne) : Entier
+// -> Retourne : Le nombre total de caractères de la chaîne 'ch' (0 pour chaîne vide "").
+// -> Exemple  : n <-- Long("Sciences")  // n vaut 8
+// -> Piège    : Tenter d'accéder à 'ch[Long(ch) + 1]' (débordement d'indice).
+
+// 8. Chr(code : Entier) : Caractère
+// -> Retourne : Le caractère ASCII correspondant au code numérique 'code' (0..255).
+// -> Exemple  : c <-- Chr(65)  // c vaut 'A'
+// -> Piège    : Passer un entier en dehors de la plage 0..255 ou confondre avec Ord.
+
+// 9. Ord(car : Caractère) : Entier
+// -> Retourne : Le code ASCII entier correspondant au caractère 'car'.
+// -> Exemple  : code <-- Ord('A')  // code vaut 65
+// -> Piège    : Passer une chaîne de plusieurs caractères au lieu d'un seul caractère.
+
+// =========================================================================
+// 2. PRIMITIVES SUR LES FICHIERS (TEXTE ET ENREGISTREMENTS)
+// =========================================================================
+
+// 10. Ouvrir(@F : Fichier) [Procédure]
+// -> Action   : Ouvre un fichier existant en lecture/écriture, positionne le pointeur au début.
+// -> Exemple  : Associer(F, "notes.txt"); Ouvrir(F)
+// -> Piège    : Appeler 'Ouvrir' sans 'Associer' préalable, ou sur un fichier inexistant.
+
+// 11. Lire(@F : Fichier, @var : TypeElement) [Procédure]
+// -> Action   : Lit un élément (ou enregistrement) dans 'var' et avance le pointeur.
+// -> Exemple  : Lire(F, e)  // e reçoit l'enregistrement courant
+// -> Piège    : Lire au-delà de la fin de fichier sans tester 'Fin_Fichier(F)'.
+
+// 12. Lire_ligne(@F : Fichier_Texte, @ch : Chaîne) [Procédure]
+// -> Action   : Lit toute une ligne de texte jusqu'au saut de ligne dans la chaîne 'ch'.
+// -> Exemple  : Lire_ligne(F, ligne)
+// -> Piège    : L'utiliser sur un fichier binaire (primitive réservée aux fichiers texte).
+
+// 13. Ecrire(@F : Fichier, val : TypeElement) [Procédure]
+// -> Action   : Écrit la valeur ou l'enregistrement 'val' à la position courante du pointeur.
+// -> Exemple  : Ecrire(F, e)
+// -> Piège    : Oublier 'Fermer(F)' après l'écriture, empêchant l'enregistrement sur le disque.
+
+// 14. Ecrire_nl(@F : Fichier_Texte, val : Chaîne) [Procédure]
+// -> Action   : Écrit la ligne 'val' dans 'F' en ajoutant automatiquement un saut de ligne.
+// -> Exemple  : Ecrire_nl(F, "Bac 2026")
+// -> Piège    : Confondre avec 'Ecrire' (qui n'insère pas de retour à la ligne).
+
+// 15. Fermer(@F : Fichier) [Procédure]
+// -> Action   : Ferme la liaison physique avec le fichier et vide le tampon d'écriture.
+// -> Exemple  : Fermer(F)
+// -> Piège    : Oublier la fermeture en fin d'algorithme (perte de données écrites).
+
+// 16. Fin_Fichier(@F : Fichier) : Booléen [Fonction]
+// -> Retourne : VRAI si la tête de lecture est arrivée à la fin du fichier, FAUX sinon.
+// -> Exemple  : TantQue (Non Fin_Fichier(F)) Faire Lire(F, e); Traiter(e); Fin TantQue
+// -> Piège    : Écrire 'TantQue (Fin_Fichier(F))' (condition inversée) ou lire avant de tester.`,
+    codePython: `# Équivalents Python officiels (Thonny / Bac Informatique) :
+
+# 1. Pos -> ch.find(sous) + 1  (en base 1 ; ou s.find(sub) base 0)
+pos = s.find("bac") + 1 if "bac" in s else 0
+
+# 2. Majus -> s.upper()
+s = s.upper()
+
+# 3. Effacer -> s = s[:pos-1] + s[pos-1+nb:]  (les chaînes Python sont immuables)
+s = s[:3] + s[7:]
+
+# 4. Sous_chaine -> s[pos-1 : pos-1+nb]
+sub = s[0:3]
+
+# 5. Valeur -> conversion sécurisée try/except
+try:
+    val = int("2026")
+    err = 0
+except ValueError:
+    err = 1
+
+# 6. Convch -> str(val)
+ch = str(125)
+
+# 7. Long -> len(s)
+n = len("Sciences")
+
+# 8. Chr -> chr(code)
+c = chr(65)
+
+# 9. Ord -> ord(car)
+k = ord('A')
+
+# 10. Ouvrir / Associer -> f = open("notes.txt", "r") ou open(..., "w")
+# 11. Lire (pickle)     -> e = pickle.load(f)
+# 12. Lire_ligne        -> ligne = f.readline().strip()
+# 13. Ecrire (pickle)   -> pickle.dump(e, f)
+# 14. Ecrire_nl         -> f.write("Bac 2026\n")
+# 15. Fermer            -> f.close()
+# 16. Fin_Fichier       -> boucle while True avec try/except EOFError pour pickle`,
+    erreursFrequentes: [
+      "Confondre une Fonction et une Procédure : tenter d'affecter le résultat d'une procédure comme 'Convch' (ex: 'ch <-- Convch(12)') ou 'Effacer'.",
+      "Oublier que les indices de chaînes et tableaux commencent à 1 en pseudo-code tunisien, alors que Python commence à 0.",
+      "Oublier de tester 'Si err = 0' avant d'utiliser la variable numérique issue de 'Valeur(ch, val, err)'.",
+      "Inverser la condition de parcours de fichier : écrire 'TantQue Fin_Fichier(F)' au lieu de 'TantQue Non Fin_Fichier(F)'.",
+      "Oublier l'instruction 'Fermer(F)' en fin d'algorithme."
+    ]
   }
+
 ];
 
 // Helper methods

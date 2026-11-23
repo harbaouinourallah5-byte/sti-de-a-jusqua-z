@@ -1903,6 +1903,10 @@ function updateDataCountersUI() {
       const sideTypes = document.getElementById('sideBadgeTypes');
       if (sideTypes) sideTypes.textContent = EXERCISES_DATA.getAllTypes().length;
     }
+    if (typeof METHODS_DATA !== 'undefined') {
+      const sideMethodes = document.getElementById('sideBadgeMethodes');
+      if (sideMethodes) sideMethodes.textContent = METHODS_DATA.length;
+    }
     if (typeof STI_STORE !== 'undefined') {
       const bmCount = STI_STORE.getBookmarksCount();
       const sideRev = document.getElementById('sideBadgeRevision');
