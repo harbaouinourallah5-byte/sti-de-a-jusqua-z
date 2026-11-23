@@ -1746,7 +1746,7 @@ function handleRouteFromHash() {
   const route = parseAppHash(currentHash);
   isRouterNavigating = true;
 
-  if (['algo-home', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes', 'algo-quiz', 'exam-simulator', 'algo-erreurs'].includes(route.view)) {
+  if (['algo-home', 'algo-carte', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes', 'algo-quiz', 'exam-simulator', 'algo-erreurs'].includes(route.view)) {
     if (typeof switchModule === 'function') switchModule('algo', true);
   } else if (['html', 'css', 'js', 'sql'].includes(route.view)) {
     if (typeof switchModule === 'function') switchModule('sti', true);
@@ -2257,6 +2257,10 @@ function switchView(viewName, skipHashUpdate = false) {
   } else if (viewName === 'algo-statistiques') {
     if (typeof renderAlgoStatistiquesPage === 'function') {
       renderAlgoStatistiquesPage();
+    }
+  } else if (viewName === 'algo-carte') {
+    if (typeof renderAlgoCartePage === 'function') {
+      renderAlgoCartePage();
     }
   } else if (viewName === 'algo-theorique-resume') {
     if (typeof renderAlgoChapterResumePage === 'function') {
@@ -9096,14 +9100,16 @@ function renderAlgoTheoriqueCards() {
         }
 
         // Erreurs classiques associées
-        const chErrors = (typeof ERRORS_DATA !== 'undefined') ? ERRORS_DATA.getByChapter(ch.slug) : [];
+        const chErrors = (typeof ERRORS_HELPER !== 'undefined' && typeof ERRORS_HELPER.getByChapter === 'function')
+          ? ERRORS_HELPER.getByChapter(ch.slug)
+          : ((typeof ERRORS_DATA !== 'undefined' && Array.isArray(ERRORS_DATA)) ? ERRORS_DATA.filter(e => e.chapter === ch.slug) : []);
         let errorTipHtml = '';
         if (chErrors.length > 0) {
           const err = chErrors[0];
           errorTipHtml = `
             <div style="margin-top: 12px; margin-bottom: 14px; padding: 10px 14px; background: rgba(245, 158, 11, 0.08); border: 1px dashed rgba(245, 158, 11, 0.35); border-radius: 8px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
               <div style="font-size: 0.82rem; color: #f59e0b; font-weight: 600; display: flex; align-items: center; gap: 6px;">
-                <span>⚠️</span> <span>${escapeHtml(err.title)} : ${escapeHtml(err.mistake.substring(0, 75))}...</span>
+                <span>⚠️</span> <span>${escapeHtml(err.title)} : ${escapeHtml((err.explanation || err.title || '').substring(0, 75))}...</span>
               </div>
               <a href="#/algo/erreurs?chapitre=${ch.slug}" class="cat-pill" style="font-size: 0.75rem; padding: 3px 10px; text-decoration: none; border-color: rgba(245,158,11,0.4); color: #f59e0b;">
                 Voir les pièges →
