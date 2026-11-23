@@ -12853,7 +12853,10 @@ function renderRevisionPage() {
   // 5. Section Notions "À revoir" (Bookmarks)
   renderRevisionBookmarksSection();
 
-  // 6. Section Quiz Récents & Points Faibles
+  // 6. Section Mes Points Faibles
+  renderWeakPointsSection();
+
+  // 7. Section Quiz Récents & Points Faibles
   renderQuizRecentSection();
 }
 
@@ -13199,6 +13202,167 @@ function startQuizForSingleQuestion(qId) {
     startQuizSession([q]);
   }
 }
+
+// -------------------------------------------------------------
+// RUN 10 - SECTION "MES POINTS FAIBLES" DANS MA RÉVISION
+// -------------------------------------------------------------
+function renderWeakPointsSection() {
+  const container = document.getElementById('revWeakPointsWrap');
+  if (!container || typeof STI_STORE === 'undefined') return;
+
+  const history = STI_STORE.getQuizHistory();
+  const allQuestions = (typeof QUIZ_DATA !== 'undefined' && QUIZ_DATA.getAllQuestions) ? QUIZ_DATA.getAllQuestions() : [];
+
+  // Rassembler toutes les erreurs de quiz enregistrées
+  const wrongIds = [];
+  history.forEach(h => {
+    if (Array.isArray(h.wrongAnswers)) {
+      wrongIds.push(...h.wrongAnswers);
+    }
+  });
+
+  // Calcul du taux d'erreur par chapitre
+  const chapterStats = {};
+  if (typeof CURRICULUM !== 'undefined' && CURRICULUM.chapters) {
+    CURRICULUM.chapters.forEach(ch => {
+      chapterStats[ch.slug] = {
+        chapter: ch,
+        attempts: 0,
+        errors: 0,
+        successPct: 100
+      };
+    });
+  }
+
+  history.forEach(h => {
+    if (h.chapterSlug && chapterStats[h.chapterSlug]) {
+      chapterStats[h.chapterSlug].attempts += (h.total || 0);
+      const wrongCount = (h.total || 0) - (h.score || 0);
+      chapterStats[h.chapterSlug].errors += Math.max(0, wrongCount);
+    }
+  });
+
+  Object.values(chapterStats).forEach(stat => {
+    if (stat.attempts > 0) {
+      stat.successPct = Math.round(((stat.attempts - stat.errors) / stat.attempts) * 100);
+    }
+  });
+
+  // 3 chapitres les plus fragiles (avec erreurs, ou unattempted pour compléter à 3)
+  let weakestChapters = Object.values(chapterStats)
+    .filter(stat => stat.attempts > 0 && stat.errors > 0)
+    .sort((a, b) => b.errors - a.errors || a.successPct - b.successPct)
+    .slice(0, 3);
+
+  if (weakestChapters.length < 3 && typeof CURRICULUM !== 'undefined') {
+    const remaining = CURRICULUM.chapters.filter(ch => !weakestChapters.some(w => w.chapter.slug === ch.slug));
+    for (const rem of remaining) {
+      if (weakestChapters.length >= 3) break;
+      weakestChapters.push({
+        chapter: rem,
+        attempts: 0,
+        errors: 0,
+        successPct: 0,
+        isSuggested: true
+      });
+    }
+  }
+
+  // 3 types de questions les plus fragiles
+  const kindStats = {
+    'trace': { label: "Trace à la main d'un algorithme", icon: '📊', errors: 0, link: '#/algo/methodes/trace-execution', linkText: 'Fiche Méthode 2' },
+    'correct-ou-non': { label: "Trouver l'erreur & Débogage", icon: '⚠️', errors: 0, link: '#/algo/erreurs', linkText: 'Catalogue erreurs' },
+    'validite': { label: "Validité T.D.O & Déclarations", icon: '📋', errors: 0, link: '#/algo/methodes/tdo-tdnt', linkText: 'Fiche Méthode 1' },
+    'fonctions': { label: "Primitives chaînes & fichiers", icon: '⚙️', errors: 0, link: '#/algo/methodes/fonctions-predefinies', linkText: 'Fiche Méthode 7' },
+    'concept': { label: "Concepts théoriques & V/F", icon: '💡', errors: 0, link: '#/algo/methodes', linkText: 'Fiches méthode' }
+  };
+
+  wrongIds.forEach(id => {
+    const q = allQuestions.find(item => item.id === id);
+    if (!q) return;
+
+    if (q.type === 'trace' || q.kind === 'trace') {
+      kindStats['trace'].errors++;
+    } else if (q.kind === 'correct-ou-non' || q.kind === 'trouver l\'erreur' || q.kind === 'compléter') {
+      kindStats['correct-ou-non'].errors++;
+    } else if (q.id.includes('fich') || (q.links && q.links.methodSheet === 'procedures-fichiers')) {
+      kindStats['fonctions'].errors++;
+    } else if (q.links && q.links.methodSheet === 'tdo-tdnt') {
+      kindStats['validite'].errors++;
+    } else {
+      kindStats['concept'].errors++;
+    }
+  });
+
+  const weakestKinds = Object.entries(kindStats)
+    .sort((a, b) => b[1].errors - a[1].errors)
+    .slice(0, 3);
+
+  container.innerHTML = `
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+      <!-- TOP 3 CHAPITRES LES PLUS FRAGILES -->
+      <div style="background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 12px; padding: 16px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px;">
+          <h4 style="margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+            <span>📁</span>
+            <span>3 Chapitres à consolider</span>
+          </h4>
+          <span style="font-size: 0.74rem; font-weight: 700; color: #ef4444; background: rgba(239, 68, 68, 0.12); padding: 2px 8px; border-radius: 12px;">Priorité</span>
+        </div>
+
+        <div style="display: grid; gap: 8px;">
+          ${weakestChapters.map(item => `
+            <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;">
+                <span style="font-size: 1.2rem;">${item.chapter.iconEmoji || '📁'}</span>
+                <div style="overflow: hidden;">
+                  <div style="font-size: 0.88rem; font-weight: 700; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(item.chapter.shortTitle)}</div>
+                  <div style="font-size: 0.74rem; color: var(--text-secondary);">
+                    ${item.attempts > 0 ? `${item.errors} erreur(s) • ${item.successPct}% réussite` : 'Conseillé pour s\'entraîner'}
+                  </div>
+                </div>
+              </div>
+              <a href="#/algo/theorique/${item.chapter.slug}" onclick="navigateToHash('#/algo/theorique/${item.chapter.slug}')" class="btn-sm" style="padding: 5px 10px; border-radius: 6px; background: rgba(56, 189, 248, 0.12); color: #38bdf8; font-weight: 700; font-size: 0.78rem; text-decoration: none; border: 1px solid rgba(56, 189, 248, 0.28); white-space: nowrap;">
+                Revoir →
+              </a>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- TOP 3 TYPES DE QUESTIONS LES PLUS FRAGILES -->
+      <div style="background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 12px; padding: 16px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px;">
+          <h4 style="margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+            <span>⚡</span>
+            <span>3 Notions clés à réviser</span>
+          </h4>
+          <span style="font-size: 0.74rem; font-weight: 700; color: #f59e0b; background: rgba(245, 158, 11, 0.12); padding: 2px 8px; border-radius: 12px;">Méthode</span>
+        </div>
+
+        <div style="display: grid; gap: 8px;">
+          ${weakestKinds.map(([key, data]) => `
+            <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;">
+                <span style="font-size: 1.2rem;">${data.icon}</span>
+                <div style="overflow: hidden;">
+                  <div style="font-size: 0.88rem; font-weight: 700; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(data.label)}</div>
+                  <div style="font-size: 0.74rem; color: var(--text-secondary);">
+                    ${data.errors > 0 ? `${data.errors} erreur(s) récente(s)` : 'Fiches repères'}
+                  </div>
+                </div>
+              </div>
+              <a href="${data.link}" onclick="navigateToHash('${data.link}')" class="btn-sm" style="padding: 5px 10px; border-radius: 6px; background: rgba(168, 85, 247, 0.12); color: #c084fc; font-weight: 700; font-size: 0.78rem; text-decoration: none; border: 1px solid rgba(168, 85, 247, 0.28); white-space: nowrap;">
+                Revoir →
+              </a>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+window.renderWeakPointsSection = renderWeakPointsSection;
 
 function renderQuizRecentSection() {
   const container = document.getElementById('revQuizRecentWrap');
