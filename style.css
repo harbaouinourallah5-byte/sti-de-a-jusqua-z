@@ -5750,6 +5750,7 @@ input, select, textarea {
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  min-height: 44px;
   padding: 8px 12px;
   background: var(--bg-card-hover);
   border: 1px solid var(--border-color);

@@ -1,9 +1,13 @@
 
-function updateAlgoSidebarGroups(currentView) {
+// =============================================================
+// NAVIGATION & ACCORDÉON DE LA BARRE LATÉRALE (PHASE 1)
+// =============================================================
+function updateSidebarAccordion(currentView) {
   const groups = {
-    'sidebarGroupAlgoCours': ['algo-home', 'algo-theorique', 'algo-pratique', 'lessons'],
-    'sidebarGroupAlgoTrain': ['algo-types', 'algo-quiz', 'examens', 'revision-cartes', 'algo-methodes', 'exam-simulator', 'algo-erreurs'],
-    'sidebarGroupAlgoTrack': ['algo-statistiques', 'revision', 'revision-plan']
+    'sidebarGroupSti': ['html', 'css', 'js', 'sql'],
+    'sidebarGroupAlgo': ['algo-theorique', 'algo-pratique', 'algo-home', 'algo-carte', 'algo-theorique-resume'],
+    'sidebarGroupTrain': ['algo-quiz', 'revision-cartes', 'examens', 'exam-simulator', 'methode', 'algo-methodes', 'algo-erreurs', 'algo-types'],
+    'sidebarGroupTrack': ['revision', 'revision-plan', 'algo-statistiques']
   };
 
   let activeGroupId = null;
@@ -14,28 +18,109 @@ function updateAlgoSidebarGroups(currentView) {
     }
   }
 
-  // Only the group of the current page is open
+  // Seul le groupe contenant la page active reste ouvert
   for (const gid of Object.keys(groups)) {
     const el = document.getElementById(gid);
     if (!el) continue;
-    if (activeGroupId) {
-      if (gid === activeGroupId) {
-        el.classList.remove('collapsed');
-      } else {
-        el.classList.add('collapsed');
-      }
+    if (activeGroupId && gid === activeGroupId) {
+      el.classList.remove('collapsed');
+    } else {
+      el.classList.add('collapsed');
     }
   }
 }
 
 function toggleSidebarGroup(groupId) {
-  const el = document.getElementById(groupId);
-  if (el) {
-    el.classList.toggle('collapsed');
+  const target = document.getElementById(groupId);
+  if (!target) return;
+  const wasCollapsed = target.classList.contains('collapsed');
+  
+  // Accordéon strict : ferme tous les autres groupes
+  const allGroups = document.querySelectorAll('.sidebar-group.collapsible-group');
+  allGroups.forEach(g => g.classList.add('collapsed'));
+  
+  // Si le groupe ciblé était fermé, on l'ouvre
+  if (wasCollapsed) {
+    target.classList.remove('collapsed');
   }
 }
+
+function updateSidebarProgressIndicators() {
+  try {
+    if (typeof STI_STORE === 'undefined') return;
+
+    // 1. Progression STI (HTML, CSS, JS, SQL)
+    const stiItems = ['html', 'css', 'js', 'sql'];
+    let totalStiNotions = 0;
+    stiItems.forEach(item => {
+      const dataArr = (typeof DATA !== 'undefined' && DATA && DATA[item]) ? DATA[item] : [];
+      const count = dataArr.length;
+      totalStiNotions += count;
+      const badge = document.getElementById('sideBadge' + item.charAt(0).toUpperCase() + item.slice(1));
+      if (badge) badge.textContent = count;
+    });
+
+    // 2. Progression Algorithmique Théorique & Pratique
+    if (typeof CURRICULUM !== 'undefined' && CURRICULUM.chapters) {
+      const chPercentages = CURRICULUM.chapters.map(ch => STI_STORE.getChapterPercentage(ch.slug));
+      const avgAlgoPct = chPercentages.length > 0 ? Math.round(chPercentages.reduce((a, b) => a + b, 0) / chPercentages.length) : 0;
+      const progAlgoEl = document.getElementById('sideProgAlgo');
+      if (progAlgoEl) {
+        progAlgoEl.textContent = avgAlgoPct > 0 ? (avgAlgoPct + '%') : '8 chapitres';
+      }
+    }
+
+    const algoCount = (typeof DATA !== 'undefined' && DATA && DATA.algo_theorique) ? DATA.algo_theorique.length : 80;
+    const sideBadgeTheorique = document.getElementById('sideBadgeTheorique');
+    if (sideBadgeTheorique) sideBadgeTheorique.textContent = algoCount;
+
+    const pratiqueCount = (typeof DATA !== 'undefined' && DATA && DATA.algo_pratique) ? DATA.algo_pratique.length : 20;
+    const sideBadgeQt = document.getElementById('sideBadgeQt');
+    if (sideBadgeQt) sideBadgeQt.textContent = pratiqueCount;
+
+    // 3. Outils S'entraîner (Quiz, Flashcards, Examens, Méthode)
+    const sideBadgeQuiz = document.getElementById('sideBadgeQuiz');
+    if (sideBadgeQuiz && typeof QUIZ_DATA !== 'undefined' && QUIZ_DATA.getAllQuestions) {
+      sideBadgeQuiz.textContent = QUIZ_DATA.getAllQuestions().length;
+    }
+
+    const sideBadgeExamens = document.getElementById('sideBadgeExamens');
+    if (sideBadgeExamens && typeof EXERCISES_DATA !== 'undefined' && EXERCISES_DATA.getAllExams) {
+      sideBadgeExamens.textContent = EXERCISES_DATA.getAllExams().length;
+    }
+
+    const sideBadgeMethodes = document.getElementById('sideBadgeMethodes');
+    if (sideBadgeMethodes && typeof METHODS_DATA !== 'undefined') {
+      sideBadgeMethodes.textContent = METHODS_DATA.length;
+    }
+
+    // 4. Ma Progression
+    const sideBadgeRevision = document.getElementById('sideBadgeRevision');
+    if (sideBadgeRevision) {
+      const revCount = STI_STORE.getBookmarksCount();
+      if (revCount > 0) {
+        sideBadgeRevision.textContent = revCount;
+        sideBadgeRevision.style.display = 'inline-block';
+      } else {
+        sideBadgeRevision.style.display = 'none';
+      }
+    }
+
+    // 5. Bibliothèque PDF
+    const sideBadgeLessons = document.getElementById('sideBadgeLessons');
+    if (sideBadgeLessons && typeof DOCUMENTS_DATA !== 'undefined' && DOCUMENTS_DATA.getAll) {
+      sideBadgeLessons.textContent = DOCUMENTS_DATA.getAll().length;
+    }
+  } catch (err) {
+    console.warn('[Sidebar] Erreur mise à jour compteurs & progression:', err);
+  }
+}
+
+// Compatibilité
+window.updateAlgoSidebarGroups = updateSidebarAccordion;
+window.updateSidebarAccordion = updateSidebarAccordion;
 window.toggleSidebarGroup = toggleSidebarGroup;
-window.updateAlgoSidebarGroups = updateAlgoSidebarGroups;
+window.updateSidebarProgressIndicators = updateSidebarProgressIndicators;
 
 
 // =============================================================
@@ -2155,9 +2240,12 @@ function switchView(viewName, skipHashUpdate = false) {
   if (bottomExamens) bottomExamens.classList.toggle('active', viewName === 'examens' || viewName === 'exam-simulator');
   if (bottomRevision) bottomRevision.classList.toggle('active', ['revision', 'revision-plan', 'revision-cartes'].includes(viewName));
 
-  // Mise à jour automatique des blocs collapsibles Algo (seul le groupe actif reste ouvert)
-  if (typeof updateAlgoSidebarGroups === 'function') {
-    updateAlgoSidebarGroups(viewName);
+  // Mise à jour automatique des blocs collapsibles (accordéon strict & progression)
+  if (typeof updateSidebarAccordion === 'function') {
+    updateSidebarAccordion(viewName);
+  }
+  if (typeof updateSidebarProgressIndicators === 'function') {
+    updateSidebarProgressIndicators();
   }
 
   // Défilement immédiat vers le haut sans saccade

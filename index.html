@@ -140,255 +140,182 @@
         <button class="sidebar-close-btn" onclick="toggleSidebarDrawer(false)" aria-label="Fermer le menu">✕</button>
       </div>
 
-      <!-- 2. Bascule instantanée de module (1 CLIC STI <-> ALGO) -->
-      <div class="sidebar-module-switch-box">
-        <div class="sidebar-module-tabs">
-          <!-- BOUTON 1 : STI WEB & BD AVEC LOGO VECTORIEL -->
-          <button class="sidebar-module-tab active-sti" id="sidebarTabSti" onclick="switchModule('sti')" title="Basculer vers le module STI Web & BD (HTML5, CSS3, JS, SQL)">
-            <div class="tab-logo-box sti">
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="stiIconGrad" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#06B6D4"/>
-                    <stop offset="0.55" stop-color="#3B82F6"/>
-                    <stop offset="1" stop-color="#4F46E5"/>
-                  </linearGradient>
-                </defs>
-                <rect width="28" height="28" rx="8" fill="url(#stiIconGrad)"/>
-                <path d="M9.5 9.5L5.5 13.5L9.5 17.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M18.5 9.5L22.5 13.5L18.5 17.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M15.5 8L12.5 19" stroke="#A5F3FC" stroke-width="1.8" stroke-linecap="round"/>
-                <ellipse cx="14" cy="21.5" rx="4.5" ry="1.5" stroke="#FFFFFF" stroke-width="1.2" fill="rgba(255,255,255,0.25)"/>
-              </svg>
-            </div>
-            <div class="tab-text-box">
-              <span class="tab-title">STI Web &amp; BD</span>
-              <span class="tab-caption">HTML • CSS • JS • SQL</span>
-            </div>
-            <span class="tab-active-pill"></span>
-          </button>
-
-          <!-- BOUTON 2 : ALGORITHME AVEC LOGO VECTORIEL -->
-          <button class="sidebar-module-tab" id="sidebarTabAlgo" onclick="switchModule('algo')" title="Basculer vers le module Algorithme (Qt Designer, Thonny Python, 8 Chapitres)">
-            <div class="tab-logo-box algo">
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="algoIconGrad" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#10B981"/>
-                    <stop offset="0.5" stop-color="#F59E0B"/>
-                    <stop offset="1" stop-color="#EA580C"/>
-                  </linearGradient>
-                </defs>
-                <rect width="28" height="28" rx="8" fill="url(#algoIconGrad)"/>
-                <path d="M13.5 7.5C9.5 7.5 7.5 9.2 7.5 11.5C7.5 13.8 9.5 14.3 11.8 14.7C14 15.1 16.5 15.5 16.5 18C16.5 20.2 14.5 21.5 11.5 21.5" stroke="white" stroke-width="1.9" stroke-linecap="round"/>
-                <path d="M14.5 20.5C18.5 20.5 20.5 18.8 20.5 16.5C20.5 14.2 18.5 13.7 16.2 13.3C14 12.9 11.5 12.5 11.5 10C11.5 7.8 13.5 6.5 16.5 6.5" stroke="#FDE047" stroke-width="1.9" stroke-linecap="round"/>
-                <circle cx="10" cy="10" r="1.1" fill="white"/>
-                <circle cx="18" cy="17" r="1.1" fill="white"/>
-              </svg>
-            </div>
-            <div class="tab-text-box">
-              <span class="tab-title">Algorithme</span>
-              <span class="tab-caption">Qt • Thonny Python</span>
-            </div>
-            <span class="tab-active-pill"></span>
-          </button>
-        </div>
-      </div>
-
-      <!-- 3. Déclencheur Recherche Globale Spotlight (Ctrl+K) -->
-      <div class="sidebar-search-trigger" onclick="openGlobalSearchModal()">
-        <span class="search-icon">🔍</span>
+      <!-- 2. Déclencheur Recherche Globale Spotlight (Ctrl+K) -->
+      <div class="sidebar-search-trigger" onclick="openGlobalSearchModal()" style="margin: 12px 14px 10px 14px;">
+        <span class="search-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
         <span class="search-text">Rechercher...</span>
-        <span class="search-kbd">Ctrl K</span>
+        <span class="search-kbd" id="sidebarSearchKbd">Ctrl K</span>
       </div>
 
-      <!-- 4. Navigation structurée par module -->
+      <!-- 3. Navigation Subject-First (7 éléments de premier niveau) -->
       <nav class="sidebar-nav-scroll" id="sidebarNavScroll">
-        <!-- Accueil Général -->
-        <a class="sidebar-link active" data-view="home" onclick="switchView('home')">
-          <span class="nav-icon">🏠</span>
-          <span class="nav-label">Accueil &amp; Vue d'ensemble</span>
+        <!-- 1. ACCUEIL -->
+        <a class="sidebar-link active" data-view="home" onclick="switchView('home')" title="Accueil">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </span>
+          <span class="nav-label">Accueil</span>
         </a>
 
-        <!-- Espace Personnel : Ma révision -->
-        <a class="sidebar-link" data-view="revision" onclick="navigateToHash('#/revision')">
-          <span class="nav-icon">⭐</span>
-          <span class="nav-label">Ma révision</span>
-          <span class="nav-count" id="sideBadgeRevision" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); display: none;">0</span>
-        </a>
-
-        <!-- GROUPE MODULE 1 : STI WEB & BASES DE DONNÉES -->
-        <div class="sidebar-group" id="sidebarGroupSti">
-          <div class="sidebar-group-header">
-            <span class="group-title">STI Web &amp; BD</span>
-            <span class="group-badge">4 Matières</span>
+        <!-- 2. STI WEB & BD (COLLAPSIBLE ACCORDION) -->
+        <div class="sidebar-group collapsible-group collapsed" id="sidebarGroupSti">
+          <div class="sidebar-group-header" onclick="toggleSidebarGroup('sidebarGroupSti')" title="Ouvrir le module STI Web & BD">
+            <span class="group-title" style="display:flex; align-items:center; gap:8px;">
+              <span>🌐</span>
+              <span>STI Web &amp; BD</span>
+            </span>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="nav-progress-pill" id="sideProgSti" style="font-size:0.72rem; padding:1px 6px; border-radius:10px; background:rgba(6,182,212,0.15); color:#06b6d4;">4 matières</span>
+              <span class="group-chevron">▾</span>
+            </div>
           </div>
           <div class="sidebar-group-links">
-            <a class="sidebar-link" data-view="html" onclick="switchView('html')">
-              <span class="nav-bullet sti"></span>
-              <span class="nav-icon">🌐</span>
+            <a class="sidebar-link" data-view="html" onclick="switchView('html')" title="HTML5">
+              <span class="nav-bullet" style="background:#ea580c;"></span>
               <span class="nav-label">HTML5</span>
-              <span class="nav-count">57</span>
+              <span class="nav-count" id="sideBadgeHtml">57</span>
             </a>
-            <a class="sidebar-link" data-view="css" onclick="switchView('css')">
-              <span class="nav-bullet sti"></span>
-              <span class="nav-icon">🎨</span>
+            <a class="sidebar-link" data-view="css" onclick="switchView('css')" title="CSS3">
+              <span class="nav-bullet" style="background:#2563eb;"></span>
               <span class="nav-label">CSS3</span>
-              <span class="nav-count">61</span>
+              <span class="nav-count" id="sideBadgeCss">61</span>
             </a>
-            <a class="sidebar-link" data-view="js" onclick="switchView('js')">
-              <span class="nav-bullet sti"></span>
-              <span class="nav-icon">⚡</span>
+            <a class="sidebar-link" data-view="js" onclick="switchView('js')" title="JavaScript">
+              <span class="nav-bullet" style="background:#eab308;"></span>
               <span class="nav-label">JavaScript</span>
-              <span class="nav-count">63</span>
+              <span class="nav-count" id="sideBadgeJs">63</span>
             </a>
-            <a class="sidebar-link" data-view="sql" onclick="switchView('sql')">
-              <span class="nav-bullet sti"></span>
-              <span class="nav-icon">🗄️</span>
+            <a class="sidebar-link" data-view="sql" onclick="switchView('sql')" title="SQL MySQL">
+              <span class="nav-bullet" style="background:#059669;"></span>
               <span class="nav-label">SQL MySQL</span>
-              <span class="nav-count">57</span>
+              <span class="nav-count" id="sideBadgeSql">57</span>
             </a>
           </div>
         </div>
 
-        <!-- GROUPE MODULE 2 : ALGORITHME & PROGRAMMATION (3 BLOCS COLLAPSIBLES) -->
-        <!-- 1. COURS -->
-        <div class="sidebar-group collapsible-group" id="sidebarGroupAlgoCours">
-          <div class="sidebar-group-header" onclick="toggleSidebarGroup('sidebarGroupAlgoCours')">
-            <span class="group-title">Cours</span>
-            <span class="group-chevron">▾</span>
+        <!-- 3. ALGORITHMIQUE (COLLAPSIBLE ACCORDION) -->
+        <div class="sidebar-group collapsible-group collapsed" id="sidebarGroupAlgo">
+          <div class="sidebar-group-header" onclick="toggleSidebarGroup('sidebarGroupAlgo')" title="Ouvrir le module Algorithmique">
+            <span class="group-title" style="display:flex; align-items:center; gap:8px;">
+              <span>🐍</span>
+              <span>Algorithmique</span>
+            </span>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="nav-progress-pill" id="sideProgAlgo" style="font-size:0.72rem; padding:1px 6px; border-radius:10px; background:rgba(124,58,237,0.15); color:#a78bfa;">8 chapitres</span>
+              <span class="group-chevron">▾</span>
+            </div>
           </div>
           <div class="sidebar-group-links">
-            <a class="sidebar-link" data-view="algo-carte" onclick="switchView('algo-carte')">
-              <span class="nav-bullet algo"></span>
-              <span class="nav-icon">🗺️</span>
-              <span class="nav-label">Carte de révision</span>
-              <span class="nav-count" id="sideBadgeCarte">9</span>
-            </a>
-            <a class="sidebar-link" data-view="algo-home" onclick="switchView('algo-home')">
-              <span class="nav-bullet algo"></span>
-              <span class="nav-icon">🧭</span>
-              <span class="nav-label">Vue d'ensemble</span>
-            </a>
-            <a class="sidebar-link" data-view="algo-theorique" onclick="switchView('algo-theorique')">
-              <span class="nav-bullet algo"></span>
-              <span class="nav-icon">📖</span>
-              <span class="nav-label">Théorique (8 Chapitres)</span>
+            <a class="sidebar-link" data-view="algo-theorique" onclick="switchView('algo-theorique')" title="Théorique (8 Chapitres)">
+              <span class="nav-bullet" style="background:#7c3aed;"></span>
+              <span class="nav-label">Théorique (8 chapitres)</span>
               <span class="nav-count" id="sideBadgeTheorique">80</span>
             </a>
-            <!-- SUB-TREE DES 8 CHAPITRES AVEC ANNEAUX DE PROGRESSION SVG -->
+            <!-- Sub-tree des chapitres avec progression SVG -->
             <div class="sidebar-chapters-subnav" id="sidebarChaptersSubnav"></div>
-            <a class="sidebar-link" data-view="lessons" onclick="switchView('lessons')">
-              <span class="nav-bullet algo"></span>
-              <span class="nav-icon">📚</span>
-              <span class="nav-label">Cours &amp; Séries PDF</span>
-              <span class="nav-count" id="sideBadgeLessons">47</span>
-            </a>
-            <a class="sidebar-link" data-view="algo-pratique" onclick="switchView('algo-pratique')">
-              <span class="nav-bullet algo"></span>
-              <span class="nav-icon">🛠️</span>
-              <span class="nav-label">Pratique (Qt &amp; Python)</span>
+            <a class="sidebar-link" data-view="algo-pratique" onclick="switchView('algo-pratique')" title="Pratique (Qt & Python)">
+              <span class="nav-bullet" style="background:#10b981;"></span>
+              <span class="nav-label">Pratique Qt ➔ Thonny</span>
               <span class="nav-count" id="sideBadgeQt">20</span>
             </a>
           </div>
         </div>
 
-        <!-- 2. S'ENTRAÎNER -->
-        <div class="sidebar-group collapsible-group collapsed" id="sidebarGroupAlgoTrain">
-          <div class="sidebar-group-header" onclick="toggleSidebarGroup('sidebarGroupAlgoTrain')">
-            <span class="group-title">S'entraîner</span>
-            <span class="group-chevron">▾</span>
+        <!-- 4. S'ENTRAÎNER (COLLAPSIBLE ACCORDION) -->
+        <div class="sidebar-group collapsible-group collapsed" id="sidebarGroupTrain">
+          <div class="sidebar-group-header" onclick="toggleSidebarGroup('sidebarGroupTrain')" title="Ouvrir les outils d'entraînement">
+            <span class="group-title" style="display:flex; align-items:center; gap:8px;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+              <span>S'entraîner</span>
+            </span>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="group-chevron">▾</span>
+            </div>
           </div>
           <div class="sidebar-group-links">
-            <a class="sidebar-link" data-view="algo-types" onclick="switchView('algo-types')">
-              <span class="nav-bullet algo"></span>
-              <span class="nav-icon">🎯</span>
-              <span class="nav-label">Types d'exercices</span>
-              <span class="nav-count" id="sideBadgeTypes">11</span>
-            </a>
-            <a class="sidebar-link" data-view="algo-quiz" onclick="switchView('algo-quiz')">
-              <span class="nav-bullet algo"></span>
-              <span class="nav-icon">⚡</span>
-              <span class="nav-label">Quiz V/F &amp; QCM</span>
+            <a class="sidebar-link" data-view="algo-quiz" onclick="switchView('algo-quiz')" title="Quiz express V/F & QCM">
+              <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+              <span class="nav-label">Quiz</span>
               <span class="nav-count" id="sideBadgeQuiz">80</span>
             </a>
-            <a class="sidebar-link" data-view="examens" onclick="switchView('examens')">
-              <span class="nav-bullet algo"></span>
-              <span class="nav-icon">📋</span>
+            <a class="sidebar-link" data-view="revision-cartes" onclick="navigateToHash('#/revision/cartes')" title="Cartes mémoire Leitner">
+              <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></span>
+              <span class="nav-label">Flashcards</span>
+              <span class="nav-count" id="sideBadgeCartes" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">Box 1</span>
+            </a>
+            <a class="sidebar-link" data-view="examens" onclick="switchView('examens')" title="Examens et sujets du Bac">
+              <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span>
               <span class="nav-label">Examens</span>
               <span class="nav-count" id="sideBadgeExamens">11</span>
             </a>
-            <a class="sidebar-link" data-view="revision-cartes" onclick="navigateToHash('#/revision/cartes')">
-              <span class="nav-bullet algo"></span>
-              <span class="nav-icon">🗂️</span>
-              <span class="nav-label">Cartes mémoire</span>
-              <span class="nav-count" id="sideBadgeCartes" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">Box 1</span>
-            </a>
-            <a class="sidebar-link" data-view="algo-methodes" onclick="switchView('algo-methodes')">
-              <span class="nav-bullet algo"></span>
-              <span class="nav-icon">💡</span>
-              <span class="nav-label">Fiches méthode</span>
+            <a class="sidebar-link" data-view="algo-methodes" onclick="switchView('algo-methodes')" title="Méthode, Réflexes & Pièges">
+              <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
+              <span class="nav-label">Méthode</span>
               <span class="nav-count" id="sideBadgeMethodes">7</span>
-            </a>
-            <a class="sidebar-link" data-view="algo-erreurs" onclick="navigateToHash('#/algo/erreurs')">
-              <span class="nav-bullet algo"></span>
-              <span class="nav-icon">⚠️</span>
-              <span class="nav-label">Erreurs classiques</span>
-              <span class="nav-count" id="sideBadgeErreurs">12</span>
             </a>
           </div>
         </div>
 
-        <!-- 3. SUIVRE -->
-        <div class="sidebar-group collapsible-group collapsed" id="sidebarGroupAlgoTrack">
-          <div class="sidebar-group-header" onclick="toggleSidebarGroup('sidebarGroupAlgoTrack')">
-            <span class="group-title">Suivre</span>
-            <span class="group-chevron">▾</span>
+        <!-- 5. MA PROGRESSION (COLLAPSIBLE ACCORDION) -->
+        <div class="sidebar-group collapsible-group collapsed" id="sidebarGroupTrack">
+          <div class="sidebar-group-header" onclick="toggleSidebarGroup('sidebarGroupTrack')" title="Suivre ma progression">
+            <span class="group-title" style="display:flex; align-items:center; gap:8px;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+              <span>Ma progression</span>
+            </span>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="group-chevron">▾</span>
+            </div>
           </div>
           <div class="sidebar-group-links">
-            <a class="sidebar-link" data-view="algo-statistiques" onclick="navigateToHash('#/algo/statistiques')">
-              <span class="nav-bullet algo"></span>
-              <span class="nav-icon">📊</span>
-              <span class="nav-label">Statistiques</span>
-              <span class="nav-count" id="sideBadgeStats" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">Bac</span>
-            </a>
-            <a class="sidebar-link" data-view="revision" onclick="navigateToHash('#/revision')">
-              <span class="nav-bullet algo"></span>
-              <span class="nav-icon">⭐</span>
+            <a class="sidebar-link" data-view="revision" onclick="navigateToHash('#/revision')" title="Mon espace de révision personnalisé">
+              <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
               <span class="nav-label">Ma révision</span>
               <span class="nav-count" id="sideBadgeRevision" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); display: none;">0</span>
             </a>
+            <a class="sidebar-link" data-view="revision-plan" onclick="navigateToHash('#/revision/plan')" title="Planning de révision Bac">
+              <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg></span>
+              <span class="nav-label">Planning</span>
+            </a>
+            <a class="sidebar-link" data-view="algo-statistiques" onclick="navigateToHash('#/algo/statistiques')" title="Statistiques Bac">
+              <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg></span>
+              <span class="nav-label">Statistiques</span>
+            </a>
           </div>
         </div>
 
-        <!-- GROUPE TRANSVERSAL : OUTILS (POMODORO, SAUVEGARDE) -->
-        <div class="sidebar-group" id="sidebarGroupTools">
-          <div class="sidebar-group-header">
-            <span class="group-title">Outils</span>
-          </div>
-          <div class="sidebar-group-links">
-            <!-- LIEN MINUTEUR POMODORO & AMBIANCE MUSICALE -->
-            <a class="sidebar-link pomodoro-nav-link" onclick="PomodoroEngine.openDrawer()" title="Ouvrir le Minuteur Pomodoro et la Musique d'Étude">
-              <span class="nav-icon">🎧</span>
-              <span class="nav-label">Pomodoro &amp; Musique</span>
-              <span class="pomodoro-nav-badge" id="sidebarPomodoroTimerDisplay">25:00</span>
-            </a>
-            <!-- LIEN SAUVEGARDE & RESTAURATION -->
-            <a class="sidebar-link" onclick="openDataBackupModal()" title="Sauvegarder ou restaurer mes données de révision">
-              <span class="nav-icon">💾</span>
-              <span class="nav-label">Sauvegarde &amp; Données</span>
-            </a>
-          </div>
-        </div>
+        <!-- 6. BIBLIOTHÈQUE PDF -->
+        <a class="sidebar-link" data-view="lessons" onclick="switchView('lessons')" title="Bibliothèque numérique PDF">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10"/></svg>
+          </span>
+          <span class="nav-label">Bibliothèque PDF</span>
+          <span class="nav-count" id="sideBadgeLessons">47</span>
+        </a>
       </nav>
 
-      <!-- 5. Pied de la barre latérale : Thème -->
+      <!-- 7. PIED DE BARRE LATÉRALE (OUTILS : POMODORO · SAUVEGARDE · THÈME) -->
       <div class="sidebar-footer">
-        <button class="sidebar-footer-btn" id="sidebarThemeBtn" onclick="toggleThemeMode()" title="Changer de thème">
-          <span class="footer-icon">🌙</span>
-          <span class="footer-text">Mode Sombre</span>
+        <button type="button" class="sidebar-footer-btn" onclick="PomodoroEngine.openDrawer()" title="Ouvrir le Minuteur Pomodoro & Musique">
+          <span style="display:flex; align-items:center; gap:8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span class="footer-text">Pomodoro</span>
+          </span>
+          <span class="pomodoro-nav-badge" id="sidebarPomodoroTimerDisplay">25:00</span>
         </button>
-        </div>
+        <button type="button" class="sidebar-footer-btn" onclick="openDataBackupModal()" title="Sauvegarder ou restaurer mes données de révision">
+          <span style="display:flex; align-items:center; gap:8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            <span class="footer-text">Sauvegarde &amp; Données</span>
+          </span>
+        </button>
+        <button type="button" class="sidebar-footer-btn" id="sidebarThemeBtn" onclick="toggleThemeMode()" title="Changer de thème (Clair / Sombre)">
+          <span style="display:flex; align-items:center; gap:8px;">
+            <span class="footer-icon">🌙</span>
+            <span class="footer-text">Mode Sombre</span>
+          </span>
+        </button>
+      </div>
     </aside>
 
     <!-- CONTENU PRINCIPAL DE L'APPLICATION -->
