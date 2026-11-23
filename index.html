@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=36.0">
+  <link rel="stylesheet" href="style.css?v=36.1">
   <!-- INITIALISATION IMMÉDIATE DU THÈME & TOGGLE SANS LATENCE -->
   <script>
     (function() {
@@ -425,30 +425,89 @@
     <section id="view-home" class="view-section active">
       <div class="container">
         
-        <!-- HERO PRINCIPAL MODE ÉTUDE CALME -->
-        <div class="home-calm-hero">
-          <div class="home-calm-badge">
-            <span>✨</span>
-            <span>Baccalauréat Tunisie • STI &amp; Informatique</span>
+        <!-- LES 3 GRANDS ACCÈS RÉVISION DE L'ACCUEIL -->
+        <div class="home-trio-actions-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 18px 0 24px 0;">
+          <!-- BOUTON 1 : JE RÉVISE UN CHAPITRE -->
+          <div class="home-trio-card card-revision-ch" onclick="navigateToHash('#/algo/theorique')" style="cursor: pointer; background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px;">
+              <div style="font-size: 2rem; background: rgba(56, 189, 248, 0.12); width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                📖
+              </div>
+              <span style="font-size: 0.78rem; font-weight: 800; color: #38bdf8; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); padding: 3px 10px; border-radius: 20px;">
+                8 Chapitres
+              </span>
+            </div>
+            <div>
+              <h3 style="margin: 0 0 6px 0; font-size: 1.25rem; font-weight: 800; color: var(--text-primary);">
+                Je révise un chapitre
+              </h3>
+              <p style="margin: 0; font-size: 0.86rem; color: var(--text-secondary); line-height: 1.5;">
+                Fiches de cours synthétiques, algorithmes types, TDO/TDNT et astuces pour chaque chapitre.
+              </p>
+            </div>
+            <div style="margin-top: 16px; display: flex; align-items: center; justify-content: space-between; color: #38bdf8; font-weight: 700; font-size: 0.88rem;">
+              <span>Choisir un chapitre</span>
+              <span style="font-size: 1.1rem;">→</span>
+            </div>
           </div>
-          <h1 class="home-calm-title">Bienvenue, on révise !</h1>
-          <p class="home-calm-subtitle">
-            Un espace d'étude calme, clair et structuré pour maîtriser l'intégralité du programme de STI (Web &amp; Bases de données) et d'Algorithmique.
-          </p>
-          <div class="home-hero-actions" style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap;">
-            <button type="button" onclick="PomodoroEngine.openDrawer()" style="background: linear-gradient(135deg, #ea580c, #f97316); color: #fff; border: none; padding: 10px 22px; border-radius: 25px; font-weight: 700; font-size: 0.92rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 16px rgba(234, 88, 12, 0.35); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
-              <span>🎧</span>
-              <span>Lancer une Session Pomodoro &amp; Musique</span>
-            </button>
-            <button type="button" onclick="openGlobalSearchModal()" style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-soft); padding: 10px 18px; border-radius: 25px; font-weight: 600; font-size: 0.9rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
-              <span>🔍</span>
-              <span>Rechercher une notion (Ctrl+K)</span>
-            </button>
+
+          <!-- BOUTON 2 : JE M'ENTRAÎNE -->
+          <div class="home-trio-card card-train" onclick="navigateToHash('#/algo/quiz')" style="cursor: pointer; background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px;">
+              <div style="font-size: 2rem; background: rgba(245, 158, 11, 0.12); width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                ⚡
+              </div>
+              <span style="font-size: 0.78rem; font-weight: 800; color: #f59e0b; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); padding: 3px 10px; border-radius: 20px;">
+                Quiz • Cartes • Types
+              </span>
+            </div>
+            <div>
+              <h3 style="margin: 0 0 6px 0; font-size: 1.25rem; font-weight: 800; color: var(--text-primary);">
+                Je m'entraîne
+              </h3>
+              <p style="margin: 0; font-size: 0.86rem; color: var(--text-secondary); line-height: 1.5;">
+                Quiz express (V/F & QCM), flashcards Leitner espacées et exercices types du Bac.
+              </p>
+            </div>
+            <div style="margin-top: 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <a href="#/algo/quiz" onclick="event.stopPropagation(); navigateToHash('#/algo/quiz')" style="padding: 4px 10px; border-radius: 6px; background: rgba(245, 158, 11, 0.15); color: #f59e0b; font-size: 0.76rem; font-weight: 700; text-decoration: none;">⚡ Quiz</a>
+              <a href="#/revision/cartes" onclick="event.stopPropagation(); navigateToHash('#/revision/cartes')" style="padding: 4px 10px; border-radius: 6px; background: rgba(168, 85, 247, 0.15); color: #c084fc; font-size: 0.76rem; font-weight: 700; text-decoration: none;">🗂️ Flashcards</a>
+              <a href="#/algo/types" onclick="event.stopPropagation(); navigateToHash('#/algo/types')" style="padding: 4px 10px; border-radius: 6px; background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 0.76rem; font-weight: 700; text-decoration: none;">🎯 Types d'exos</a>
+            </div>
+          </div>
+
+          <!-- BOUTON 3 : JE PASSE UN EXAMEN -->
+          <div class="home-trio-card card-exam" onclick="navigateToHash('#/examens')" style="cursor: pointer; background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px;">
+              <div style="font-size: 2rem; background: rgba(16, 185, 129, 0.12); width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                📋
+              </div>
+              <span style="font-size: 0.78rem; font-weight: 800; color: #10b981; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); padding: 3px 10px; border-radius: 20px;">
+                11 Sujets d'examens
+              </span>
+            </div>
+            <div>
+              <h3 style="margin: 0 0 6px 0; font-size: 1.25rem; font-weight: 800; color: var(--text-primary);">
+                Je passe un examen
+              </h3>
+              <p style="margin: 0; font-size: 0.86rem; color: var(--text-secondary); line-height: 1.5;">
+                Simulateur en conditions réelles, décompte 3h, mode plein écran et correction guidée.
+              </p>
+            </div>
+            <div style="margin-top: 16px; display: flex; align-items: center; justify-content: space-between; color: #10b981; font-weight: 700; font-size: 0.88rem;">
+              <span>Voir les épreuves du Bac</span>
+              <span style="font-size: 1.1rem;">→</span>
+            </div>
           </div>
         </div>
 
+        <!-- BLOC "AUJOURD'HUI" (TÂCHES DU JOUR, CARTES DUES, PROCHAINE ÉTAPE) -->
+        <div class="home-today-container" id="homeTodayBlock" style="margin-bottom: 24px;">
+          <!-- Rempli dynamiquement par renderHomeTodaySection() -->
+        </div>
+
         <!-- CARTE "CONTINUER OÙ J'AI ARRÊTÉ" (LOCALSTORAGE) -->
-        <div class="resume-study-card" id="resumeStudyCard" style="display: none;">
+        <div class="resume-study-card" id="resumeStudyCard" style="display: none; margin-bottom: 24px;">
           <div class="resume-left">
             <div class="resume-icon-box">⏱️</div>
             <div class="resume-info">
@@ -4956,25 +5015,25 @@ app.exec_()</code></pre>
 
   <!-- Fichiers Scripts -->
 
-  <script src="store.js?v=36.0"></script>
-  <script src="data.js?v=36.0"></script>
-  <script src="data/curriculum.js?v=36.0"></script>
-  <script src="data/documents.js?v=36.0"></script>
-  <script src="data/exercises.js?v=36.0"></script>
-  <script src="data/methods.js?v=36.0"></script>
-  <script src="data/quiz/fichiers.js?v=36.0"></script>
-  <script src="data/quiz/recursivite.js?v=36.0"></script>
-  <script src="data/quiz/bases.js?v=36.0"></script>
-  <script src="data/quiz/arithmetique.js?v=36.0"></script>
-  <script src="data/quiz/approximation.js?v=36.0"></script>
-  <script src="data/quiz/tableaux.js?v=36.0"></script>
-  <script src="data/quiz/matrices.js?v=36.0"></script>
-  <script src="data/quiz/suites.js?v=36.0"></script>
-  <script src="data/quiz.js?v=36.0"></script>
-  <script src="css_engine.js?v=36.0"></script>
-  <script src="algo_pratique_engine.js?v=36.0"></script>
-  <script src="pomodoro_engine.js?v=36.0"></script>
-  <script src="app.js?v=36.0"></script>
+  <script src="store.js?v=36.1"></script>
+  <script src="data.js?v=36.1"></script>
+  <script src="data/curriculum.js?v=36.1"></script>
+  <script src="data/documents.js?v=36.1"></script>
+  <script src="data/exercises.js?v=36.1"></script>
+  <script src="data/methods.js?v=36.1"></script>
+  <script src="data/quiz/fichiers.js?v=36.1"></script>
+  <script src="data/quiz/recursivite.js?v=36.1"></script>
+  <script src="data/quiz/bases.js?v=36.1"></script>
+  <script src="data/quiz/arithmetique.js?v=36.1"></script>
+  <script src="data/quiz/approximation.js?v=36.1"></script>
+  <script src="data/quiz/tableaux.js?v=36.1"></script>
+  <script src="data/quiz/matrices.js?v=36.1"></script>
+  <script src="data/quiz/suites.js?v=36.1"></script>
+  <script src="data/quiz.js?v=36.1"></script>
+  <script src="css_engine.js?v=36.1"></script>
+  <script src="algo_pratique_engine.js?v=36.1"></script>
+  <script src="pomodoro_engine.js?v=36.1"></script>
+  <script src="app.js?v=36.1"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {

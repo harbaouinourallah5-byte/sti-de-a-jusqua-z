@@ -1945,6 +1945,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof updateAllProgressUI === 'function') updateAllProgressUI();
   if (typeof setupGlobalSearch === 'function') setupGlobalSearch();
   if (typeof setupReadingProgressBarAndBackToTop === 'function') setupReadingProgressBarAndBackToTop();
+  if (typeof renderHomeTodaySection === 'function') renderHomeTodaySection();
   if (typeof updateResumeStudyCard === 'function') updateResumeStudyCard();
   if (typeof updateBreadcrumbBar === 'function') updateBreadcrumbBar(currentView || 'home');
 
@@ -2217,6 +2218,13 @@ function switchView(viewName, skipHashUpdate = false) {
   } else if (viewName === 'algo-theorique-resume') {
     if (typeof renderAlgoChapterResumePage === 'function') {
       renderAlgoChapterResumePage();
+    }
+  } else if (viewName === 'home') {
+    if (typeof renderHomeTodaySection === 'function') {
+      renderHomeTodaySection();
+    }
+    if (typeof updateResumeStudyCard === 'function') {
+      updateResumeStudyCard();
     }
   }
 }
@@ -11726,6 +11734,237 @@ function resumeLastStudySession() {
   }
   switchView('html');
 }
+
+// -------------------------------------------------------------
+// RUN 10 - SECTION "AUJOURD'HUI" SUR LA PAGE D'ACCUEIL
+// -------------------------------------------------------------
+function renderHomeTodaySection() {
+  const container = document.getElementById('homeTodayBlock');
+  if (!container) return;
+
+  const now = new Date();
+  const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
+  let dateFormatted = '';
+  try {
+    dateFormatted = now.toLocaleDateString('fr-FR', dateOptions);
+  } catch (e) {
+    dateFormatted = now.toDateString();
+  }
+  const capitalizedDate = dateFormatted ? (dateFormatted.charAt(0).toUpperCase() + dateFormatted.slice(1)) : 'Aujourd\'hui';
+
+  // 1. Tâches du planning d'aujourd'hui
+  let planTasksHtml = '';
+  let planHasTasks = false;
+  let completedCount = 0;
+  let totalTasks = 0;
+
+  if (typeof STI_STORE !== 'undefined') {
+    const todayInfo = STI_STORE.getTodayPlan();
+    if (todayInfo && todayInfo.day && todayInfo.day.tasks && todayInfo.day.tasks.length > 0) {
+      planHasTasks = true;
+      const tasks = todayInfo.day.tasks;
+      totalTasks = tasks.length;
+      completedCount = tasks.filter(t => t.done).length;
+
+      planTasksHtml = `
+        <div style="display: grid; gap: 8px; margin-top: 10px;">
+          ${tasks.map(t => `
+            <div class="plan-task-row ${t.done ? 'done' : ''}" style="background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0;">
+                <input type="checkbox" ${t.done ? 'checked' : ''} onchange="if(typeof togglePlanTaskCheckbox==='function'){togglePlanTaskCheckbox('${t.id}', this.checked);} renderHomeTodaySection();" style="width: 18px; height: 18px; cursor: pointer; accent-color: #f59e0b;" />
+                <span style="font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; background: rgba(245, 158, 11, 0.15); color: #f59e0b; white-space: nowrap;">${escapeHtml(t.badge || '25 min')}</span>
+                <span style="font-size: 0.88rem; font-weight: 600; color: var(--text-primary); text-decoration: ${t.done ? 'line-through' : 'none'}; opacity: ${t.done ? '0.6' : '1'}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(t.title)}</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <button type="button" onclick="if(typeof startPomodoroForPlanTask==='function'){startPomodoroForPlanTask('${escapeHtml(t.title)}');}else if(typeof PomodoroEngine!=='undefined'){PomodoroEngine.openDrawer();}" style="background: rgba(234, 88, 12, 0.12); color: #ea580c; border: 1px solid rgba(234, 88, 12, 0.25); border-radius: 6px; padding: 4px 10px; font-size: 0.76rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+                  <span>⏱️</span>
+                  <span>25m</span>
+                </button>
+                ${t.link ? `<a href="${t.link}" onclick="navigateToHash('${t.link}')" style="background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 6px; padding: 4px 10px; font-size: 0.76rem; font-weight: 700; text-decoration: none;">Ouvrir →</a>` : ''}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+  }
+
+  // 2. Cartes mémoire à réviser
+  let dueCardsCount = 0;
+  let totalCardsCount = 0;
+  if (typeof getAllFlashcardCards === 'function') {
+    const allCards = getAllFlashcardCards();
+    totalCardsCount = allCards.length;
+    if (typeof STI_STORE !== 'undefined' && totalCardsCount > 0) {
+      const dp = STI_STORE.getDeckProgress(allCards.map(c => c.id));
+      dueCardsCount = dp.dueToday;
+    }
+  }
+
+  // 3. Prochaine étape conseillée
+  let nextCh = null;
+  let nextStepNum = 1;
+  const stepLabels = {
+    1: 'Cours en bref',
+    2: 'Algorithmes types',
+    3: 'Quiz du chapitre',
+    4: "Exercices d'examens",
+    5: 'Séries & Documents',
+    6: 'Cartes mémoire'
+  };
+
+  if (typeof STI_STORE !== 'undefined') {
+    const lastNav = STI_STORE.getLastNav();
+    if (lastNav && lastNav.chapterSlug && typeof CURRICULUM !== 'undefined') {
+      const candidate = CURRICULUM.getChapterBySlug(lastNav.chapterSlug);
+      if (candidate) {
+        const sum = STI_STORE.getChapterProgressSummary(candidate.slug);
+        if (sum.firstUnfinished) {
+          nextCh = candidate;
+          nextStepNum = sum.firstUnfinished;
+        }
+      }
+    }
+    if (!nextCh && typeof CURRICULUM !== 'undefined' && CURRICULUM.chapters) {
+      for (const ch of CURRICULUM.chapters) {
+        const sum = STI_STORE.getChapterProgressSummary(ch.slug);
+        if (sum.firstUnfinished) {
+          nextCh = ch;
+          nextStepNum = sum.firstUnfinished;
+          break;
+        }
+      }
+    }
+  }
+
+  container.innerHTML = `
+    <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-soft);">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="font-size: 1.4rem; background: rgba(245, 158, 11, 0.15); width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+            ⚡
+          </div>
+          <div>
+            <h2 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+              <span>Aujourd'hui</span>
+              <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">&bull; ${escapeHtml(capitalizedDate)}</span>
+            </h2>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <button type="button" onclick="if(typeof PomodoroEngine!=='undefined'){PomodoroEngine.openDrawer();}" style="background: rgba(234, 88, 12, 0.12); color: #ea580c; border: 1px solid rgba(234, 88, 12, 0.28); padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+            <span>⏱️</span>
+            <span>Pomodoro</span>
+          </button>
+          <a href="#/revision/plan" onclick="navigateToHash('#/revision/plan')" style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-soft); padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+            <span>📅</span>
+            <span>Planning</span>
+          </a>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px;">
+        <!-- SOUS-BLOC 1 : PROCHAINE ÉTAPE DU COURS -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: #38bdf8; letter-spacing: 0.5px; margin-bottom: 4px;">
+              🎯 Prochaine étape recommandée
+            </div>
+            ${nextCh ? `
+              <h4 style="margin: 0 0 4px 0; font-size: 0.98rem; font-weight: 800; color: var(--text-primary);">
+                ${escapeHtml(nextCh.iconEmoji || '📖')} ${escapeHtml(nextCh.shortTitle)}
+              </h4>
+              <p style="margin: 0; font-size: 0.82rem; color: var(--text-secondary);">
+                Étape ${nextStepNum} : <strong>${escapeHtml(stepLabels[nextStepNum] || '')}</strong>
+              </p>
+            ` : `
+              <h4 style="margin: 0 0 4px 0; font-size: 0.98rem; font-weight: 800; color: #10b981;">
+                🎉 Toutes les étapes sont validées !
+              </h4>
+              <p style="margin: 0; font-size: 0.82rem; color: var(--text-secondary);">
+                Excellente progression, continuez à vous entraîner sur les sujets de Bac.
+              </p>
+            `}
+          </div>
+          <div style="margin-top: 12px;">
+            ${nextCh ? `
+              <a href="#/algo/theorique/${nextCh.slug}" onclick="navigateToHash('#/algo/theorique/${nextCh.slug}'); setTimeout(function() { if(typeof scrollToChapterStep==='function') scrollToChapterStep('${nextCh.slug}', ${nextStepNum}); }, 180);" style="display: inline-flex; align-items: center; justify-content: space-between; width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 8px; background: rgba(56, 189, 248, 0.12); color: #38bdf8; font-weight: 700; font-size: 0.82rem; text-decoration: none;">
+                <span>Reprendre l'étape ${nextStepNum}</span>
+                <span>→</span>
+              </a>
+            ` : `
+              <a href="#/algo/theorique" onclick="navigateToHash('#/algo/theorique')" style="display: inline-flex; align-items: center; justify-content: space-between; width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 8px; background: rgba(56, 189, 248, 0.12); color: #38bdf8; font-weight: 700; font-size: 0.82rem; text-decoration: none;">
+                <span>Revoir les chapitres</span>
+                <span>→</span>
+              </a>
+            `}
+          </div>
+        </div>
+
+        <!-- SOUS-BLOC 2 : CARTES MÉMOIRE DU JOUR -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: #c084fc; letter-spacing: 0.5px; margin-bottom: 4px;">
+              🗂️ Répétition Espacée Leitner
+            </div>
+            <h4 style="margin: 0 0 4px 0; font-size: 0.98rem; font-weight: 800; color: var(--text-primary);">
+              ${dueCardsCount > 0 ? `${dueCardsCount} carte(s) à réviser` : 'Cartes à jour'}
+            </h4>
+            <p style="margin: 0; font-size: 0.82rem; color: var(--text-secondary);">
+              ${dueCardsCount > 0 ? 'Des cartes sont prêtes pour consolider ta mémoire à long terme.' : 'Toutes les cartes programmées aujourd\'hui ont été révisées !'}
+            </p>
+          </div>
+          <div style="margin-top: 12px;">
+            <a href="#/revision/cartes" onclick="navigateToHash('#/revision/cartes')" style="display: inline-flex; align-items: center; justify-content: space-between; width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 8px; background: rgba(168, 85, 247, 0.12); color: #c084fc; font-weight: 700; font-size: 0.82rem; text-decoration: none;">
+              <span>${dueCardsCount > 0 ? 'Lancer la session' : 'Voir les cartes'}</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- SOUS-BLOC 3 : PLANNING D'ÉTUDE DU JOUR -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px;">
+              <span style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: #f59e0b; letter-spacing: 0.5px;">
+                📅 Planning du jour
+              </span>
+              ${planHasTasks ? `<span style="font-size: 0.74rem; font-weight: 700; color: var(--text-secondary);">${completedCount}/${totalTasks} fait</span>` : ''}
+            </div>
+            ${planHasTasks ? `
+              <h4 style="margin: 0 0 4px 0; font-size: 0.98rem; font-weight: 800; color: var(--text-primary);">
+                ${totalTasks - completedCount > 0 ? `${totalTasks - completedCount} bloc(s) restant(s)` : 'Objectif du jour atteint ! 🎉'}
+              </h4>
+              ${planTasksHtml}
+            ` : `
+              <h4 style="margin: 0 0 4px 0; font-size: 0.98rem; font-weight: 800; color: var(--text-primary);">
+                Planning personnalisé
+              </h4>
+              <p style="margin: 0; font-size: 0.82rem; color: var(--text-secondary);">
+                Générez un calendrier de révision sur mesure jusqu'à la date du Bac.
+              </p>
+              <div style="margin-top: 12px;">
+                <a href="#/revision/plan" onclick="navigateToHash('#/revision/plan')" style="display: inline-flex; align-items: center; justify-content: space-between; width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 8px; background: rgba(245, 158, 11, 0.12); color: #f59e0b; font-weight: 700; font-size: 0.82rem; text-decoration: none;">
+                  <span>Configurer mon planning</span>
+                  <span>→</span>
+                </a>
+              </div>
+            `}
+          </div>
+          ${planHasTasks ? `
+            <div style="margin-top: 12px;">
+              <a href="#/revision/plan" onclick="navigateToHash('#/revision/plan')" style="display: inline-flex; align-items: center; justify-content: space-between; width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 8px; background: rgba(245, 158, 11, 0.12); color: #f59e0b; font-weight: 700; font-size: 0.82rem; text-decoration: none;">
+                <span>Voir tout le calendrier</span>
+                <span>→</span>
+              </a>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    </div>
+  `;
+}
+window.renderHomeTodaySection = renderHomeTodaySection;
 
 
 function handleHomeBottomNav() {

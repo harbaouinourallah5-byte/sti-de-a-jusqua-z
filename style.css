@@ -11824,3 +11824,32 @@ button.topbar-action-btn svg {
   font-size: 0.68rem;
   letter-spacing: -0.2px;
 }
+
+/* RUN 10 - HOME REDESIGN & ACCÈS RAPIDES */
+.home-trio-card {
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.home-trio-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+.home-trio-card.card-revision-ch:hover {
+  border-color: rgba(56, 189, 248, 0.6) !important;
+}
+.home-trio-card.card-train:hover {
+  border-color: rgba(245, 158, 11, 0.6) !important;
+}
+.home-trio-card.card-exam:hover {
+  border-color: rgba(16, 185, 129, 0.6) !important;
+}
+
+@media (max-width: 640px) {
+  .home-trio-actions-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    margin-top: 10px !important;
+  }
+  .home-trio-card {
+    padding: 16px !important;
+  }
+}
