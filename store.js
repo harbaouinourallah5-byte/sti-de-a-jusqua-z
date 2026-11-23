@@ -389,6 +389,67 @@ var STI_STORE = (function () {
     };
   }
 
+  // ── 6b. GESTION DES COMPÉTENCES "À SAVOIR" (CHECKLIST DES SECTIONS) ───────────
+  function getSkillsTickedMap() {
+    return _safeGet('skills_ticked', {});
+  }
+
+  function isSkillTicked(skillId) {
+    if (!skillId) return false;
+    var map = getSkillsTickedMap();
+    return map[skillId] === true;
+  }
+
+  function setSkillTicked(skillId, isTicked) {
+    if (!skillId) return false;
+    var map = getSkillsTickedMap();
+    if (isTicked) {
+      map[skillId] = true;
+    } else {
+      delete map[skillId];
+    }
+    _safeSet('skills_ticked', map);
+    return !!isTicked;
+  }
+
+  function toggleSkillTicked(skillId) {
+    var current = isSkillTicked(skillId);
+    return setSkillTicked(skillId, !current);
+  }
+
+  function getSectionSkillProgress(chapterSlug, sectionSlug) {
+    if (typeof CURRICULUM === 'undefined') return { ticked: 0, total: 0, percent: 0 };
+    var sec = CURRICULUM.getSection(chapterSlug, sectionSlug);
+    if (!sec || !sec.skills || sec.skills.length === 0) return { ticked: 0, total: 0, percent: 100 };
+    var map = getSkillsTickedMap();
+    var ticked = 0;
+    sec.skills.forEach(function (sk) {
+      if (map[sk.id] === true) ticked++;
+    });
+    var total = sec.skills.length;
+    var percent = Math.round((ticked / total) * 100);
+    return { ticked: ticked, total: total, percent: percent };
+  }
+
+  function getChapterSkillProgress(chapterSlug) {
+    if (typeof CURRICULUM === 'undefined') return { ticked: 0, total: 0, percent: 0 };
+    var sections = CURRICULUM.getChapterSections(chapterSlug);
+    if (!sections || sections.length === 0) return { ticked: 0, total: 0, percent: 0 };
+    var map = getSkillsTickedMap();
+    var total = 0;
+    var ticked = 0;
+    sections.forEach(function (sec) {
+      if (sec.skills) {
+        sec.skills.forEach(function (sk) {
+          total++;
+          if (map[sk.id] === true) ticked++;
+        });
+      }
+    });
+    var percent = total > 0 ? Math.round((ticked / total) * 100) : 0;
+    return { ticked: ticked, total: total, percent: percent };
+  }
+
   // ── 7. EXPORT / IMPORT ET RÉINITIALISATION COMPLÈTE ────────────────────────
   function exportAllData() {
     var data = {
@@ -399,6 +460,7 @@ var STI_STORE = (function () {
       lastNav: _safeGet('last_nav', null),
       simHistory: _safeGet('sim_history', []),
       bookmarks: _safeGet('bookmarks', []),
+      skillsTicked: _safeGet('skills_ticked', {}),
       quizHistory: _safeGet('quiz_history', []),
       quizBests: _safeGet('quiz_bests', {})
     };
@@ -414,6 +476,7 @@ var STI_STORE = (function () {
       if (data.lastNav) _safeSet('last_nav', data.lastNav);
       if (Array.isArray(data.simHistory)) _safeSet('sim_history', data.simHistory);
       if (Array.isArray(data.bookmarks)) _safeSet('bookmarks', data.bookmarks);
+      if (data.skillsTicked && typeof data.skillsTicked === 'object') _safeSet('skills_ticked', data.skillsTicked);
       if (Array.isArray(data.quizHistory)) _safeSet('quiz_history', data.quizHistory);
       if (data.quizBests) _safeSet('quiz_bests', data.quizBests);
       return true;
@@ -426,7 +489,7 @@ var STI_STORE = (function () {
   function resetAllData() {
     try {
       var keysToRemove = [
-        'progress', 'algo_studied', 'last_nav', 'sim_active',
+        'progress', 'algo_studied', 'last_nav', 'sim_active', 'skills_ticked',
         'sim_history', 'bookmarks', 'quiz_history', 'quiz_bests',
         'study_plan', 'flashcards_leitner'
       ];
@@ -659,6 +722,12 @@ var STI_STORE = (function () {
     setBookmarkNote: setBookmarkNote,
     // Quiz
     getQuizHistory: getQuizHistory,
+    getSkillsTickedMap: getSkillsTickedMap,
+    isSkillTicked: isSkillTicked,
+    setSkillTicked: setSkillTicked,
+    toggleSkillTicked: toggleSkillTicked,
+    getSectionSkillProgress: getSectionSkillProgress,
+    getChapterSkillProgress: getChapterSkillProgress,
     saveQuizResult: saveQuizResult,
     getBestQuizScore: getBestQuizScore,
     getQuizStats: getQuizStats,

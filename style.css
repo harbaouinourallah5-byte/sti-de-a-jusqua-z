@@ -11927,3 +11927,384 @@ button.topbar-action-btn svg {
     padding: 16px;
   }
 }
+
+
+/* ===================================================================
+   RUN 11 : STYLES DES SECTIONS DE CHAPITRES & TABLES D'INSTRUCTIONS
+   Mobile-first, dark + light mode conforme Bac Informatique
+   =================================================================== */
+
+/* Mini-sommaire sticky des sections */
+.chapter-sections-toc {
+  position: sticky;
+  top: 60px;
+  z-index: 15;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 8px 14px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s ease;
+}
+
+[data-theme="light"] .chapter-sections-toc {
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.chapter-toc-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  padding: 2px 0;
+}
+.chapter-toc-pills::-webkit-scrollbar {
+  display: none;
+}
+
+.toc-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.toc-pill-btn:hover {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: #38bdf8;
+  color: #38bdf8;
+  transform: translateY(-1px);
+}
+
+[data-theme="light"] .toc-pill-btn {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+[data-theme="light"] .toc-pill-btn:hover {
+  background: #e0f2fe;
+  border-color: #0284c7;
+  color: #0284c7;
+}
+
+/* Carte de section */
+.chapter-section-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 22px;
+  margin-bottom: 28px;
+  position: relative;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.chapter-section-card.highlight-target {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.28);
+}
+
+.chapter-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sec-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sec-num-badge {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(16, 185, 129, 0.2));
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #38bdf8;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 16px;
+  letter-spacing: 0.5px;
+}
+
+.sec-title {
+  margin: 0;
+  font-size: 1.18rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+/* Boîte Cours en Bref de section */
+.sec-cours-brief {
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-left: 4px solid #38bdf8;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+[data-theme="light"] .sec-cours-brief {
+  background: #f0f9ff;
+  border-color: #bae6fd;
+  border-left-color: #0284c7;
+}
+
+/* Tables de fonctions / instructions */
+.func-table-container {
+  margin-bottom: 22px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--surface-bg);
+}
+
+.func-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px 16px;
+  background: rgba(15, 23, 42, 0.6);
+  border-bottom: 1px solid var(--border-color);
+}
+
+[data-theme="light"] .func-table-header {
+  background: #e2e8f0;
+}
+
+.func-table-title {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.func-table-mobile-toggle {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .func-table-mobile-toggle {
+    display: inline-flex;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 2px;
+    border: 1px solid var(--border-color);
+  }
+  .func-table-mobile-toggle button {
+    padding: 4px 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 6px;
+  }
+  .func-table-mobile-toggle button.active {
+    background: #38bdf8;
+    color: #0f172a;
+  }
+}
+
+.func-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.func-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.func-table th {
+  padding: 10px 14px;
+  background: rgba(30, 41, 59, 0.5);
+  color: var(--text-secondary);
+  font-weight: 800;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.82rem;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+}
+
+[data-theme="light"] .func-table th {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.func-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  vertical-align: middle;
+}
+
+[data-theme="light"] .func-table td {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.func-table tr:hover {
+  background: rgba(56, 189, 248, 0.06);
+}
+
+.func-code-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: rgba(9, 13, 22, 0.85);
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  min-width: 180px;
+}
+
+[data-theme="light"] .func-code-box {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.func-code-box code {
+  font-family: "Fira Code", Consolas, Monaco, monospace;
+  font-size: 0.82rem;
+  color: #38bdf8;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+[data-theme="light"] .func-code-box code {
+  color: #0284c7;
+}
+
+/* Checklist "À savoir" */
+.sec-skills-box {
+  background: rgba(16, 185, 129, 0.06);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 22px;
+}
+
+[data-theme="light"] .sec-skills-box {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+}
+
+.sec-skills-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sec-skills-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skill-check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  line-height: 1.45;
+  cursor: pointer;
+  user-select: none;
+}
+
+.skill-check-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  cursor: pointer;
+  accent-color: #10b981;
+  flex-shrink: 0;
+}
+
+.skill-check-item.ticked span {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+/* Barre d'entraînement de la section */
+.sec-train-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--border-color);
+}
+
+.sec-train-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.sec-train-btn.quiz {
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.35);
+}
+.sec-train-btn.quiz:hover {
+  background: rgba(168, 85, 247, 0.25);
+  border-color: #a855f7;
+  transform: translateY(-1px);
+}
+
+.sec-train-btn.exam {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+}
+.sec-train-btn.exam:hover {
+  background: rgba(56, 189, 248, 0.25);
+  border-color: #0284c7;
+  transform: translateY(-1px);
+}

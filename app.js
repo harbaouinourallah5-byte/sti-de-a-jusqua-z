@@ -1640,9 +1640,12 @@ function parseAppHash(hash) {
       return { view: 'algo-theorique-resume', chapterSlug: (slug === 'resumes' || slug === 'fiches' || !slug) ? 'all' : slug };
     }
     if (sub) {
-      const ch = (typeof CURRICULUM !== 'undefined') ? (CURRICULUM.getChapterBySlug(sub) || CURRICULUM.getChapterByCategory(sub)) : null;
+      const parts = sub.split('/');
+      const chSlug = parts[0];
+      const secSlug = parts[1] || null;
+      const ch = (typeof CURRICULUM !== 'undefined') ? (CURRICULUM.getChapterBySlug(chSlug) || CURRICULUM.getChapterByCategory(chSlug)) : null;
       if (ch) {
-        return { view: 'algo-theorique', subTab: 'chapitres', chapter: ch.fullTitle, chapterSlug: ch.slug, chapterObj: ch };
+        return { view: 'algo-theorique', subTab: 'chapitres', chapter: ch.fullTitle, chapterSlug: ch.slug, chapterObj: ch, sectionSlug: secSlug };
       }
     }
     return { view: 'algo-theorique', subTab: 'chapitres', chapter: null, chapterSlug: 'all' };
@@ -1805,6 +1808,13 @@ function handleRouteFromHash() {
     currentAlgoTheoriqueCategory = route.chapterSlug || route.chapter || 'all';
     if (typeof renderAlgoTheoriqueCategories === 'function') renderAlgoTheoriqueCategories();
     if (typeof renderAlgoTheoriqueCards === 'function') renderAlgoTheoriqueCards();
+    if (route.sectionSlug) {
+      setTimeout(function () {
+        if (typeof window.navigateToSection === 'function') {
+          window.navigateToSection(route.chapterSlug, route.sectionSlug, null, true);
+        }
+      }, 200);
+    }
   }
 
   isRouterNavigating = false;
@@ -8179,6 +8189,225 @@ function selectMatrixGuideTab(tabKey) {
   `;
 }
 
+// ===================================================================
+// RUN 11 : COMPOSANTS DES SECTIONS DE CHAPITRES & TABLES D'INSTRUCTIONS
+// ===================================================================
+
+function computeSectionPriorities() {
+  if (typeof CURRICULUM === 'undefined' || typeof EXERCISES_DATA === 'undefined') {
+    return {};
+  }
+  const allSecs = [];
+  CURRICULUM.chapters.forEach(ch => {
+    (ch.sections || []).forEach(s => {
+      allSecs.push(s.slug);
+    });
+  });
+
+  const counts = allSecs.map(slug => {
+    return { slug, count: EXERCISES_DATA.getBySection(slug).length };
+  });
+
+  const withData = counts.filter(s => s.count > 0).sort((a, b) => b.count - a.count);
+  const third = Math.ceil(withData.length / 3);
+
+  const prioMap = {};
+  counts.forEach(s => {
+    if (s.count === 0) {
+      prioMap[s.slug] = {
+        label: 'Pour aller plus loin',
+        badgeClass: 'prio-plus-loin',
+        count: 0,
+        color: '#94a3b8',
+        bg: 'rgba(148, 163, 184, 0.15)',
+        border: 'rgba(148, 163, 184, 0.35)'
+      };
+    }
+  });
+
+  withData.forEach((s, idx) => {
+    if (idx < third) {
+      prioMap[s.slug] = {
+        label: 'Essentiel',
+        badgeClass: 'prio-essentiel',
+        count: s.count,
+        color: '#f43f5e',
+        bg: 'rgba(244, 63, 94, 0.15)',
+        border: 'rgba(244, 63, 94, 0.4)'
+      };
+    } else if (idx < third * 2) {
+      prioMap[s.slug] = {
+        label: 'Important',
+        badgeClass: 'prio-important',
+        count: s.count,
+        color: '#f59e0b',
+        bg: 'rgba(245, 158, 11, 0.15)',
+        border: 'rgba(245, 158, 11, 0.4)'
+      };
+    } else {
+      prioMap[s.slug] = {
+        label: 'Pour aller plus loin',
+        badgeClass: 'prio-plus-loin',
+        count: s.count,
+        color: '#38bdf8',
+        bg: 'rgba(56, 189, 248, 0.15)',
+        border: 'rgba(56, 189, 248, 0.35)'
+      };
+    }
+  });
+
+  return prioMap;
+}
+
+function getSectionPriorityBadge(secSlug) {
+  const map = computeSectionPriorities();
+  const info = map[secSlug] || {
+    label: 'Pour aller plus loin',
+    count: 0,
+    color: '#94a3b8',
+    bg: 'rgba(148, 163, 184, 0.15)',
+    border: 'rgba(148, 163, 184, 0.35)'
+  };
+  return `<span class="sec-prio-badge" style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;font-size:0.75rem;font-weight:800;color:${info.color};background:${info.bg};border:1px solid ${info.border};white-space:nowrap;" title="Fréquence dans les sujets d'examens (${info.count} sujet${info.count > 1 ? 's' : ''})">
+    <span>${info.label === 'Essentiel' ? '🔥' : (info.label === 'Important' ? '⭐' : '💡')}</span>
+    <span>${info.label}</span>
+  </span>`;
+}
+
+function renderFunctionTableHtml(table) {
+  if (!table || !table.rows || table.rows.length === 0) return '';
+  const rowsHtml = table.rows.map((row) => {
+    return `
+      <tr class="func-table-row">
+        <td style="font-weight: 700; color: #38bdf8; min-width: 140px;">
+          ${escapeHtml(row.instruction)}
+        </td>
+        <td style="color: var(--text-secondary); line-height: 1.45; min-width: 170px;">
+          ${escapeHtml(row.role)}
+        </td>
+        <td class="col-pseudo" style="min-width: 210px;">
+          <div class="func-code-box">
+            <code>${escapeHtml(row.pseudo)}</code>
+            <button type="button" class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText(${JSON.stringify(row.pseudo)}, this)" title="Copier le pseudo-code">📋</button>
+          </div>
+        </td>
+        <td class="col-python" style="min-width: 210px;">
+          <div class="func-code-box" style="border-color: rgba(52, 211, 153, 0.35);">
+            <code style="color: #34d399;">${escapeHtml(row.python)}</code>
+            <button type="button" class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText(${JSON.stringify(row.python)}, this)" title="Copier le code Python">📋</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  return `
+    <div class="func-table-container" id="tbl-${table.id}">
+      <div class="func-table-header">
+        <div>
+          <h5 class="func-table-title">
+            <span>📋</span> ${escapeHtml(table.title)}
+          </h5>
+          ${table.topic ? `<span style="font-size: 0.78rem; color: var(--text-muted);">${escapeHtml(table.topic)}</span>` : ''}
+        </div>
+        <div class="func-table-mobile-toggle" data-table-id="tbl-${table.id}">
+          <button type="button" class="active" onclick="toggleFuncTableLang('tbl-${table.id}', 'both', this)">Les deux</button>
+          <button type="button" onclick="toggleFuncTableLang('tbl-${table.id}', 'pseudo', this)">Pseudo</button>
+          <button type="button" onclick="toggleFuncTableLang('tbl-${table.id}', 'python', this)">Python</button>
+        </div>
+      </div>
+      <div class="func-table-wrap">
+        <table class="func-table">
+          <thead>
+            <tr>
+              <th style="width: 20%;">Instruction</th>
+              <th style="width: 32%;">Rôle</th>
+              <th style="width: 24%;" class="col-pseudo">Pseudo-code</th>
+              <th style="width: 24%;" class="col-python">Python 3 (Thonny)</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHtml}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+window.toggleFuncTableLang = function(tableId, lang, btn) {
+  const container = document.getElementById(tableId);
+  if (!container) return;
+  const btns = container.querySelectorAll('.func-table-mobile-toggle button');
+  btns.forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  const pseudoCols = container.querySelectorAll('.col-pseudo');
+  const pythonCols = container.querySelectorAll('.col-python');
+
+  if (lang === 'pseudo') {
+    pseudoCols.forEach(c => c.style.display = '');
+    pythonCols.forEach(c => c.style.display = 'none');
+  } else if (lang === 'python') {
+    pseudoCols.forEach(c => c.style.display = 'none');
+    pythonCols.forEach(c => c.style.display = '');
+  } else {
+    pseudoCols.forEach(c => c.style.display = '');
+    pythonCols.forEach(c => c.style.display = '');
+  }
+};
+
+window.navigateToSection = function(chSlug, secSlug, event, skipHash) {
+  if (event) event.preventDefault();
+  if (!skipHash) {
+    if (window.location.hash !== `#/algo/theorique/${chSlug}/${secSlug}`) {
+      history.replaceState(null, '', `#/algo/theorique/${chSlug}/${secSlug}`);
+    }
+  }
+  const el = document.getElementById(`section-${secSlug}`);
+  if (el) {
+    const yOffset = -80;
+    const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+    el.classList.add('highlight-target');
+    setTimeout(() => el.classList.remove('highlight-target'), 2000);
+  }
+};
+
+window.toggleSkillChecklist = function(skillId, chSlug, secSlug, checkbox) {
+  if (typeof STI_STORE === 'undefined') return;
+  const isTicked = STI_STORE.toggleSkillTicked(skillId);
+  if (checkbox) {
+    const label = checkbox.closest('.skill-check-item');
+    if (label) {
+      if (isTicked) label.classList.add('ticked');
+      else label.classList.remove('ticked');
+    }
+  }
+
+  // Update section pill
+  const secProgress = STI_STORE.getSectionSkillProgress(chSlug, secSlug);
+  const secBadge = document.getElementById(`sec-skill-badge-${secSlug}`);
+  if (secBadge) {
+    secBadge.textContent = `${secProgress.ticked}/${secProgress.total} acquis`;
+    if (secProgress.percent === 100) {
+      secBadge.style.color = '#10b981';
+      secBadge.style.borderColor = '#10b981';
+    }
+  }
+
+  // Update chapter skill total & global progress
+  const chProgress = STI_STORE.getChapterSkillProgress(chSlug);
+  const chSkillEl = document.getElementById(`ch-skill-total-${chSlug}`);
+  if (chSkillEl) {
+    chSkillEl.textContent = `${chProgress.ticked}/${chProgress.total} compétences validées`;
+  }
+
+  if (typeof updateAllProgressUI === 'function') {
+    updateAllProgressUI();
+  }
+};
+
 function renderAlgoTheoriqueCards() {
   const container = document.getElementById('algoTheoriqueGrid');
   if (!container) return;
@@ -8732,6 +8961,218 @@ function renderAlgoTheoriqueCards() {
     const prevCh = chIndex > 0 ? allChs[chIndex - 1] : allChs[allChs.length - 1];
     const nextCh = chIndex < allChs.length - 1 ? allChs[chIndex + 1] : allChs[0];
 
+
+    // ── RUN 11 : CONSTRUCTION DES SECTIONS DU CHAPITRE ──
+    const chSections = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getChapterSections(ch.slug) : [];
+    
+    // Mini-Sommaire Sticky
+    let sectionsTocHtml = '';
+    if (chSections.length > 0) {
+      sectionsTocHtml = `
+        <div class="chapter-sections-toc">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 0.95rem;">📑</span>
+            <span style="font-weight: 800; font-size: 0.84rem; color: var(--text-primary);">Sommaire :</span>
+          </div>
+          <div class="chapter-toc-pills">
+            ${chSections.map(s => {
+              const sProgress = (typeof STI_STORE !== 'undefined') ? STI_STORE.getSectionSkillProgress(ch.slug, s.slug) : { ticked: 0, total: 0 };
+              const isAllTicked = sProgress.total > 0 && sProgress.ticked === sProgress.total;
+              return `
+                <a href="#/algo/theorique/${ch.slug}/${s.slug}" onclick="navigateToSection('${ch.slug}', '${s.slug}', event)" class="toc-pill-btn">
+                  <span>${s.order}. ${escapeHtml(s.title)}</span>
+                  ${isAllTicked ? '<span style="color: #10b981; font-weight: 800;">✓</span>' : ''}
+                </a>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // Liste des Sections
+    let sectionsListHtml = '';
+    if (chSections.length > 0) {
+      sectionsListHtml = chSections.map(sec => {
+        const secAlgos = chapterItems.filter(item => item.section === sec.slug);
+        const secTables = (sec.tables || []).map(tId => (typeof TABLES_DATA !== 'undefined' ? TABLES_DATA.getTableById(tId) : null)).filter(Boolean);
+        const secSkills = sec.skills || [];
+        const secProgress = (typeof STI_STORE !== 'undefined')
+          ? STI_STORE.getSectionSkillProgress(ch.slug, sec.slug)
+          : { ticked: 0, total: secSkills.length, percent: 0 };
+        const prioBadge = (typeof getSectionPriorityBadge === 'function') ? getSectionPriorityBadge(sec.slug) : '';
+
+        // Cartes d'algorithmes de cette section
+        let secAlgosHtml = '';
+        if (secAlgos.length > 0) {
+          secAlgosHtml = `
+            <div style="margin-top: 18px; margin-bottom: 20px;">
+              <div style="font-size: 0.84rem; font-weight: 800; color: ${meta.color}; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                <span>⚡</span> Algorithmes types de cette section (${secAlgos.length})
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px;">
+                ${secAlgos.map(item => {
+                  const isStructure = item.type === 'structure';
+                  const isProcedure = item.name.toLowerCase().startsWith('procédure') || item.type === 'procedure' || item.type === 'procédure';
+                  const typeLabel = isStructure ? 'Structure' : (isProcedure ? 'Procédure' : 'Fonction');
+                  const typeBadgeColor = isStructure ? '#c084fc' : (isProcedure ? '#38bdf8' : '#f59e0b');
+                  const typeBadgeBg = isStructure ? 'rgba(192, 132, 252, 0.15)' : (isProcedure ? 'rgba(56, 189, 248, 0.15)' : 'rgba(245, 158, 11, 0.15)');
+                  const typeBadgeBorder = isStructure ? 'rgba(192, 132, 252, 0.35)' : (isProcedure ? 'rgba(56, 189, 248, 0.35)' : 'rgba(245, 158, 11, 0.35)');
+                  const isStudied = (typeof STI_STORE !== 'undefined') ? STI_STORE.isAlgoStudied(item.id) : false;
+
+                  return `
+                    <div class="item-card card-theorique ${isStudied ? 'studied' : ''}" style="cursor: pointer;" onclick="openAlgoTheoriqueModalById('${item.id}')">
+                      <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px;">
+                        <span class="card-cat-badge" style="color: ${meta.color};">${escapeHtml(meta.shortName)}</span>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                          ${renderBookmarkBtn('algo', item.id, { title: item.name, chapter: ch.slug })}
+                          <button type="button" class="algo-studied-btn ${isStudied ? 'studied' : ''}" onclick="event.stopPropagation(); toggleAlgoStudied('${item.id}', '${ch.slug}', this)" title="${isStudied ? 'Marqué comme étudié' : 'Marquer comme étudié'}">
+                            <span>${isStudied ? '✓' : '○'}</span>
+                            <span>${isStudied ? 'Étudié' : 'Étudier'}</span>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="item-card-title">
+                        <span>${escapeHtml(item.name)}</span>
+                        <div style="display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                          ${(item.imageUrl || (item.images && item.images.length)) ? `
+                            <span class="item-card-tag" style="color: #38bdf8; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); font-size: 0.74rem; font-weight: 700;">
+                              📸 Schéma Inclus
+                            </span>
+                          ` : ''}
+                          <span class="item-card-tag" style="color: ${typeBadgeColor}; background: ${typeBadgeBg}; border-color: ${typeBadgeBorder}; font-size: 0.8rem; font-weight: 700;">
+                            ${typeLabel}
+                          </span>
+                        </div>
+                      </div>
+                      <p class="item-card-desc">${escapeHtml(item.description || item.summary)}</p>
+                      <div class="card-action-bar">
+                        <span style="color: ${meta.color}; font-weight: 700; font-size: 0.86rem;">⚡ Voir l'Algorithme, TDO & Python</span>
+                        <span style="color: ${meta.color}; font-size: 1rem;">→</span>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          `;
+        }
+
+        // Checklist des compétences "À savoir"
+        let skillsChecklistHtml = '';
+        if (secSkills.length > 0) {
+          skillsChecklistHtml = `
+            <div class="sec-skills-box">
+              <div class="sec-skills-header">
+                <div style="font-size: 0.84rem; font-weight: 800; color: #10b981; text-transform: uppercase; display: flex; align-items: center; gap: 6px;">
+                  <span>✅</span> Compétences exigibles ("À savoir")
+                </div>
+                <span id="sec-skill-badge-${sec.slug}" style="font-size: 0.78rem; font-weight: 800; color: ${secProgress.percent === 100 ? '#10b981' : 'var(--text-secondary)'}; background: rgba(255,255,255,0.06); padding: 3px 10px; border-radius: 12px; border: 1px solid var(--border-color);">
+                  ${secProgress.ticked}/${secSkills.length} acquis
+                </span>
+              </div>
+              <div class="sec-skills-list">
+                ${secSkills.map(sk => {
+                  const isTicked = (typeof STI_STORE !== 'undefined') ? STI_STORE.isSkillTicked(sk.id) : false;
+                  return `
+                    <label class="skill-check-item ${isTicked ? 'ticked' : ''}">
+                      <input type="checkbox" ${isTicked ? 'checked' : ''} onchange="toggleSkillChecklist('${sk.id}', '${ch.slug}', '${sec.slug}', this)">
+                      <span>${escapeHtml(sk.text)}</span>
+                    </label>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          `;
+        }
+
+        // Erreurs classiques associées
+        const chErrors = (typeof ERRORS_DATA !== 'undefined') ? ERRORS_DATA.getByChapter(ch.slug) : [];
+        let errorTipHtml = '';
+        if (chErrors.length > 0) {
+          const err = chErrors[0];
+          errorTipHtml = `
+            <div style="margin-top: 12px; margin-bottom: 14px; padding: 10px 14px; background: rgba(245, 158, 11, 0.08); border: 1px dashed rgba(245, 158, 11, 0.35); border-radius: 8px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+              <div style="font-size: 0.82rem; color: #f59e0b; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                <span>⚠️</span> <span>${escapeHtml(err.title)} : ${escapeHtml(err.mistake.substring(0, 75))}...</span>
+              </div>
+              <a href="#/algo/erreurs?chapitre=${ch.slug}" class="cat-pill" style="font-size: 0.75rem; padding: 3px 10px; text-decoration: none; border-color: rgba(245,158,11,0.4); color: #f59e0b;">
+                Voir les pièges →
+              </a>
+            </div>
+          `;
+        }
+
+        // Boutons S'entraîner (Quiz & Exercices)
+        const secExCount = (typeof EXERCISES_DATA !== 'undefined') ? EXERCISES_DATA.getBySection(sec.slug).length : 0;
+        const secQuizCount = (typeof QUIZ_DATA !== 'undefined' && typeof QUIZ_DATA.getQuestionsBySection === 'function')
+          ? QUIZ_DATA.getQuestionsBySection(sec.slug).length : 0;
+
+        let secTrainBarHtml = `
+          <div class="sec-train-bar">
+            <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">
+              🏋️ S'entraîner :
+            </span>
+            ${secQuizCount > 0 ? `
+              <a href="#/algo/quiz?chapitre=${ch.slug}&section=${sec.slug}" onclick="navigateToHash('#/algo/quiz?chapitre=${ch.slug}&section=${sec.slug}')" class="sec-train-btn quiz">
+                <span>🎯</span> Quiz de cette section (${secQuizCount})
+              </a>
+            ` : ''}
+            ${secExCount > 0 ? `
+              <a href="#/examens?chapitre=${ch.slug}&section=${sec.slug}" onclick="navigateToHash('#/examens?chapitre=${ch.slug}&section=${sec.slug}')" class="sec-train-btn exam">
+                <span>📝</span> Exercices d'examens (${secExCount})
+              </a>
+            ` : ''}
+          </div>
+        `;
+
+        return `
+          <div class="chapter-section-card" id="section-${sec.slug}">
+            <div class="chapter-section-header">
+              <div class="sec-title-wrap">
+                <span class="sec-num-badge">Section ${sec.order}</span>
+                <h4 class="sec-title">${escapeHtml(sec.title)}</h4>
+                ${prioBadge}
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span id="sec-skill-badge-${sec.slug}" style="font-size: 0.8rem; font-weight: 800; color: ${secProgress.percent === 100 ? '#10b981' : 'var(--text-secondary)'}; background: rgba(255,255,255,0.06); padding: 4px 12px; border-radius: 12px; border: 1px solid var(--border-color);">
+                  ${secProgress.ticked}/${secProgress.total} acquis
+                </span>
+                <a href="#/algo/theorique/${ch.slug}/${sec.slug}" onclick="navigateToSection('${ch.slug}', '${sec.slug}', event)" style="font-size: 0.78rem; color: #38bdf8; text-decoration: none; padding: 4px 8px; border-radius: 6px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.25);">
+                  🔗 Lien
+                </a>
+              </div>
+            </div>
+
+            <!-- COURS EN BREF DE LA SECTION -->
+            <div class="sec-cours-brief">
+              <div style="font-size: 0.82rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                <span>💡</span> Cours en bref &amp; Définitions
+              </div>
+              ${escapeHtml(sec.summary)}
+            </div>
+
+            <!-- TABLES D'INSTRUCTIONS DE LA SECTION -->
+            ${secTables.map(tbl => renderFunctionTableHtml(tbl)).join('')}
+
+            <!-- ALGORITHMES TYPES DE LA SECTION -->
+            ${secAlgosHtml}
+
+            <!-- CHECKLIST "À SAVOIR" -->
+            ${skillsChecklistHtml}
+
+            <!-- ERREURS CLASSIQUES -->
+            ${errorTipHtml}
+
+            <!-- BOUTONS S'ENTRAÎNER -->
+            ${secTrainBarHtml}
+          </div>
+        `;
+      }).join('');
+    }
+
+    const chSkillProgress = (typeof STI_STORE !== 'undefined') ? STI_STORE.getChapterSkillProgress(ch.slug) : { ticked: 0, total: 0, percent: 0 };
+
     chapterSection.innerHTML = `
       <!-- BARRE DE NAVIGATION PRÉCÉDENT / SUIVANT HAUT -->
       <div class="chapter-nav-top-bar" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; padding: 10px 16px; background: rgba(15, 23, 42, 0.65); border: 1px solid var(--border-color); border-radius: 12px;">
@@ -8785,19 +9226,29 @@ function renderAlgoTheoriqueCards() {
         </div>
       </div>
 
-      <!-- STEPPER EN 6 ÉTAPES -->
-      <div class="chapter-stepper-bar" id="ch-stepper-${ch.slug}">
-        ${stepperHtml}
-      </div>
+      <!-- MINI-SOMMAIRE STICKY DES SECTIONS (RUN 11) -->
+      ${sectionsTocHtml}
 
-      <!-- ÉTAPE 1 : COURS EN BREF -->
-      ${coursBriefHtml}
+      <!-- LES SECTIONS DU CHAPITRE EN ORDRE (RUN 11) -->
+      ${sectionsListHtml}
 
       <!-- GUIDE MATRICES (SI CONCERNÉ) -->
       ${matrixGuideHtml}
 
-      <!-- ÉTAPE 2 : ALGORITHMES TYPES -->
-      ${step2Html}
+      <!-- BLOC D'ENTRAÎNEMENT & CERTIFICATION DU CHAPITRE -->
+      <div style="margin-top: 36px; margin-bottom: 20px; border-top: 2px dashed var(--border-color); padding-top: 24px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 16px;">
+          <h4 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+            <span>🎯</span> Entraînement Global du Chapitre
+          </h4>
+          <span id="ch-skill-total-${ch.slug}" style="font-size: 0.8rem; font-weight: 800; color: #10b981; background: rgba(16, 185, 129, 0.12); padding: 4px 12px; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.3);">
+            ${chSkillProgress.ticked}/${chSkillProgress.total} compétences validées
+          </span>
+        </div>
+        <div class="chapter-stepper-bar" id="ch-stepper-${ch.slug}">
+          ${stepperHtml}
+        </div>
+      </div>
 
       <!-- ÉTAPE 3 : QUIZ DU CHAPITRE -->
       ${step3Html}
