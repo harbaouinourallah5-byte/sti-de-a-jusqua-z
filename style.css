@@ -11853,3 +11853,77 @@ button.topbar-action-btn svg {
     padding: 16px !important;
   }
 }
+
+/* =============================================================
+   RUN 10 - CATALOGUE DES ERREURS CLASSIQUES (#/algo/erreurs)
+   ============================================================= */
+.error-sheet-card {
+  background: var(--surface-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.error-sheet-card:hover {
+  border-color: rgba(239, 68, 68, 0.4);
+  box-shadow: 0 8px 30px rgba(239, 68, 68, 0.08);
+}
+.error-code-box {
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin: 10px 0;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+.error-code-box.buggy {
+  background: rgba(239, 68, 68, 0.07);
+  border: 1px solid rgba(239, 68, 68, 0.28);
+  color: #f87171;
+}
+.error-code-box.fix {
+  background: rgba(16, 185, 129, 0.07);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  color: #34d399;
+}
+.error-code-box pre {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  white-space: pre;
+}
+.error-counter-box {
+  background: rgba(245, 158, 11, 0.08);
+  border-left: 4px solid #f59e0b;
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin: 12px 0;
+  font-size: 0.86rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.error-train-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #000;
+  font-weight: 700;
+  font-size: 0.84rem;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.error-train-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+}
+@media (max-width: 640px) {
+  .error-sheet-card {
+    padding: 16px;
+  }
+}

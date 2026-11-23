@@ -9,6 +9,7 @@ const STATIC_ASSETS = [
   '/data/documents.js?v=36.1',
   '/data/exercises.js?v=36.1',
   '/data/methods.js?v=36.1',
+  '/data/errors.js?v=36.1',
   '/data/quiz/fichiers.js?v=36.1',
   '/data/quiz/recursivite.js?v=36.1',
   '/data/quiz/bases.js?v=36.1',

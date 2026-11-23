@@ -1,8 +1,8 @@
 
 function updateAlgoSidebarGroups(currentView) {
   const groups = {
-    'sidebarGroupAlgoCours': ['algo-home', 'algo-theorique', 'algo-pratique'],
-    'sidebarGroupAlgoTrain': ['algo-types', 'algo-quiz', 'examens', 'revision-cartes', 'algo-methodes', 'exam-simulator'],
+    'sidebarGroupAlgoCours': ['algo-home', 'algo-theorique', 'algo-pratique', 'lessons'],
+    'sidebarGroupAlgoTrain': ['algo-types', 'algo-quiz', 'examens', 'revision-cartes', 'algo-methodes', 'exam-simulator', 'algo-erreurs'],
     'sidebarGroupAlgoTrack': ['algo-statistiques', 'revision', 'revision-plan']
   };
 
@@ -1694,6 +1694,12 @@ function parseAppHash(hash) {
     return { view: 'algo-quiz', chapterSlug: subQuiz || null };
   }
 
+  // Catalogue des erreurs classiques (#/algo/erreurs ou #/algo/erreurs/:chapter)
+  if (clean.startsWith('algo/erreurs') || clean.startsWith('erreurs') || clean === 'algo/erreur' || clean === 'erreur') {
+    const subError = clean.replace(/^(algo\/erreurs|erreurs|algo\/erreur|erreur)\/?/, '').trim();
+    return { view: 'algo-erreurs', chapterSlug: subError || null };
+  }
+
   const map = {
     '': 'home',
     '/': 'home',
@@ -1733,7 +1739,7 @@ function handleRouteFromHash() {
   const route = parseAppHash(currentHash);
   isRouterNavigating = true;
 
-  if (['algo-home', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes', 'algo-quiz', 'exam-simulator'].includes(route.view)) {
+  if (['algo-home', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes', 'algo-quiz', 'exam-simulator', 'algo-erreurs'].includes(route.view)) {
     if (typeof switchModule === 'function') switchModule('algo', true);
   } else if (['html', 'css', 'js', 'sql'].includes(route.view)) {
     if (typeof switchModule === 'function') switchModule('sti', true);
@@ -1750,6 +1756,12 @@ function handleRouteFromHash() {
   if (route.view === 'algo-quiz') {
     if (typeof initAlgoQuizScreen === 'function') {
       initAlgoQuizScreen(route.chapterSlug);
+    }
+  }
+
+  if (route.view === 'algo-erreurs') {
+    if (typeof renderAlgoErreursPage === 'function') {
+      renderAlgoErreursPage(route.chapterSlug || 'all');
     }
   }
 
@@ -1906,6 +1918,10 @@ function updateDataCountersUI() {
     if (typeof METHODS_DATA !== 'undefined') {
       const sideMethodes = document.getElementById('sideBadgeMethodes');
       if (sideMethodes) sideMethodes.textContent = METHODS_DATA.length;
+    }
+    if (typeof ERRORS_DATA !== 'undefined') {
+      const sideErreurs = document.getElementById('sideBadgeErreurs');
+      if (sideErreurs) sideErreurs.textContent = ERRORS_DATA.length;
     }
     if (typeof STI_STORE !== 'undefined') {
       const bmCount = STI_STORE.getBookmarksCount();
@@ -2116,7 +2132,7 @@ function switchView(viewName, skipHashUpdate = false) {
   const bottomRevision = document.getElementById('bottomNavRevision');
 
   if (bottomHome) bottomHome.classList.toggle('active', viewName === 'home');
-  if (bottomAlgo) bottomAlgo.classList.toggle('active', ['algo-home', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes', 'algo-quiz', 'algo-statistiques'].includes(viewName));
+  if (bottomAlgo) bottomAlgo.classList.toggle('active', ['algo-home', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes', 'algo-quiz', 'algo-statistiques', 'algo-erreurs'].includes(viewName));
   if (bottomExamens) bottomExamens.classList.toggle('active', viewName === 'examens' || viewName === 'exam-simulator');
   if (bottomRevision) bottomRevision.classList.toggle('active', ['revision', 'revision-plan', 'revision-cartes'].includes(viewName));
 
@@ -2189,6 +2205,10 @@ function switchView(viewName, skipHashUpdate = false) {
   } else if (viewName === 'algo-quiz') {
     if (typeof initAlgoQuizScreen === 'function') {
       initAlgoQuizScreen();
+    }
+  } else if (viewName === 'algo-erreurs') {
+    if (typeof renderAlgoErreursPage === 'function') {
+      renderAlgoErreursPage();
     }
   } else if (viewName === 'algo-pratique') {
     const input = document.getElementById('algoPratiqueSearchInput');
@@ -11001,6 +11021,177 @@ window.scrollToMethodTop = scrollToMethodTop;
 window.printSingleMethodSheet = printSingleMethodSheet;
 window.copyCodeFromPre = copyCodeFromPre;
 window.copyCodeText = copyCodeText;
+
+
+// ===================================================================
+// RUN 10 - MODULE CATALOGUE DES ERREURS CLASSIQUES (#/algo/erreurs)
+// ===================================================================
+
+let currentErrorsFilterChapter = 'all';
+
+function renderAlgoErreursPage(filterChapter = null) {
+  const container = document.getElementById('algoErreursGrid');
+  const filterBar = document.getElementById('algoErreursFilterBar');
+  const badgeEl = document.getElementById('errorsCountBadge');
+  if (!container || typeof ERRORS_DATA === 'undefined') return;
+
+  if (filterChapter !== null) {
+    currentErrorsFilterChapter = filterChapter;
+  }
+
+  const allErrors = ERRORS_DATA;
+  const filtered = (currentErrorsFilterChapter === 'all')
+    ? allErrors
+    : allErrors.filter(e => e.chapter === currentErrorsFilterChapter);
+
+  if (badgeEl) {
+    badgeEl.textContent = `${filtered.length} Erreur${filtered.length > 1 ? 's' : ''} affichée${filtered.length > 1 ? 's' : ''}`;
+  }
+
+  // 1. Barre de filtres par chapitre
+  if (filterBar && typeof CURRICULUM !== 'undefined') {
+    const chaptersWithErrors = CURRICULUM.chapters.filter(ch => allErrors.some(e => e.chapter === ch.slug));
+    filterBar.innerHTML = `
+      <button type="button" onclick="renderAlgoErreursPage('all')" class="cat-pill ${currentErrorsFilterChapter === 'all' ? 'active' : ''}" style="padding: 6px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 700; cursor: pointer; background: ${currentErrorsFilterChapter === 'all' ? '#ef4444' : 'var(--surface-bg)'}; color: ${currentErrorsFilterChapter === 'all' ? '#fff' : 'var(--text-primary)'}; border: 1px solid ${currentErrorsFilterChapter === 'all' ? '#ef4444' : 'var(--border-color)'};">
+        Tous (${allErrors.length})
+      </button>
+      ${chaptersWithErrors.map(ch => {
+        const count = allErrors.filter(e => e.chapter === ch.slug).length;
+        const isActive = currentErrorsFilterChapter === ch.slug;
+        return `
+          <button type="button" onclick="renderAlgoErreursPage('${ch.slug}')" class="cat-pill ${isActive ? 'active' : ''}" style="padding: 6px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 700; cursor: pointer; background: ${isActive ? '#ef4444' : 'var(--surface-bg)'}; color: ${isActive ? '#fff' : 'var(--text-primary)'}; border: 1px solid ${isActive ? '#ef4444' : 'var(--border-color)'}; display: inline-flex; align-items: center; gap: 6px;">
+            <span>${ch.iconEmoji || '📁'}</span>
+            <span>${escapeHtml(ch.shortTitle)} (${count})</span>
+          </button>
+        `;
+      }).join('')}
+    `;
+  }
+
+  // 2. Grille des fiches d'erreurs
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div style="padding: 40px 20px; text-align: center; background: var(--surface-bg); border: 1px dashed var(--border-color); border-radius: 12px; color: var(--text-secondary);">
+        <div style="font-size: 2rem; margin-bottom: 8px;">🔍</div>
+        <p style="margin: 0; font-size: 0.95rem; font-weight: 600;">Aucune erreur répertoriée pour ce filtre.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = filtered.map(err => {
+    const ch = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getChapterBySlug(err.chapter) : null;
+    const chTitle = ch ? ch.fullTitle : err.chapter;
+    const chIcon = ch ? (ch.iconEmoji || '📁') : '📁';
+
+    return `
+      <article class="error-sheet-card" id="error-${err.id}">
+        <!-- En-tête de la carte -->
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-soft);">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px;">
+              <a href="#/algo/theorique/${err.chapter}" onclick="navigateToHash('#/algo/theorique/${err.chapter}')" style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 6px; background: rgba(56, 189, 248, 0.12); color: #38bdf8; font-size: 0.78rem; font-weight: 700; text-decoration: none; border: 1px solid rgba(56, 189, 248, 0.25);">
+                <span>${chIcon}</span>
+                <span>${escapeHtml(chTitle)}</span>
+              </a>
+              <span style="padding: 3px 10px; border-radius: 6px; background: rgba(245, 158, 11, 0.12); color: #f59e0b; font-size: 0.78rem; font-weight: 700; border: 1px solid rgba(245, 158, 11, 0.25);">
+                ${escapeHtml(err.category || 'Piège classique')}
+              </span>
+            </div>
+            <h3 style="margin: 0; font-size: 1.18rem; font-weight: 800; color: var(--text-primary); line-height: 1.4;">
+              ${escapeHtml(err.title)}
+            </h3>
+          </div>
+          <div>
+            <button type="button" class="error-train-btn no-print" onclick="startQuizForError('${err.id}')" title="S'entraîner sur ce piège dans le quiz">
+              <span>⚡</span>
+              <span>S'entraîner sur cette erreur</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Grille Comparaison : Code Piégé vs Code Corrigé -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 14px;">
+          <!-- ❌ CODE ERRONÉ -->
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+              <span style="font-size: 0.78rem; font-weight: 800; color: #ef4444; text-transform: uppercase; letter-spacing: 0.5px;">
+                ❌ Ce qu'il ne faut PAS faire
+              </span>
+              <button type="button" class="no-print" onclick="copyCodeFromPre(this)" style="background: transparent; border: none; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer;">📋 Copier</button>
+            </div>
+            <div class="error-code-box buggy">
+              <pre><code>${escapeHtml(err.buggyCode)}</code></pre>
+            </div>
+          </div>
+
+          <!-- ✅ CODE CORRIGÉ -->
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+              <span style="font-size: 0.78rem; font-weight: 800; color: #10b981; text-transform: uppercase; letter-spacing: 0.5px;">
+                ✅ La Solution Recommandée
+              </span>
+              <button type="button" class="no-print" onclick="copyCodeFromPre(this)" style="background: transparent; border: none; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer;">📋 Copier</button>
+            </div>
+            <div class="error-code-box fix">
+              <pre><code>${escapeHtml(err.fixCode)}</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- 💥 CONTRE-EXEMPLE CONCRET -->
+        <div class="error-counter-box">
+          <div style="font-size: 0.78rem; font-weight: 800; color: #f59e0b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
+            💥 Pourquoi ça casse ? (Contre-exemple)
+          </div>
+          <div style="color: var(--text-primary); font-size: 0.88rem; line-height: 1.5;">
+            ${escapeHtml(err.counterExample)}
+          </div>
+        </div>
+
+        <!-- 💡 EXPLICATION ET ASTUCE BAC -->
+        <div style="margin-top: 12px; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">
+          <strong style="color: var(--text-primary);">💡 Analyse du piège :</strong> ${escapeHtml(err.explanation)}
+        </div>
+
+        <!-- LIENS DE RETOUR / COURS -->
+        <div style="margin-top: 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding-top: 10px; border-top: 1px dashed var(--border-soft);">
+          <a href="#/algo/theorique/${err.chapter}" onclick="navigateToHash('#/algo/theorique/${err.chapter}')" style="color: #38bdf8; font-weight: 700; font-size: 0.84rem; text-decoration: none;">
+            📖 Consulter le cours complet de ${escapeHtml(chTitle)} →
+          </a>
+          <button type="button" class="no-print" onclick="startQuizForError('${err.id}')" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 6px; padding: 4px 10px; font-size: 0.78rem; font-weight: 600; cursor: pointer;">
+            ⚡ Lancer le quiz (${err.questionIds ? err.questionIds.length : 1} question)
+          </button>
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
+function startQuizForError(errorId) {
+  if (typeof ERRORS_DATA === 'undefined' || typeof QUIZ_DATA === 'undefined') return;
+  const errObj = ERRORS_DATA.find(e => e.id === errorId);
+  if (!errObj) return;
+
+  const allQuestions = QUIZ_DATA.getAllQuestions();
+  let questions = [];
+  if (errObj.questionIds && errObj.questionIds.length > 0) {
+    questions = allQuestions.filter(q => errObj.questionIds.includes(q.id));
+  }
+  if (questions.length === 0) {
+    questions = QUIZ_DATA.getQuestionsByChapter(errObj.chapter);
+  }
+
+  navigateToHash('#/algo/quiz');
+  setTimeout(() => {
+    if (typeof startQuizSession === 'function') {
+      startQuizSession(questions);
+    }
+  }, 140);
+}
+
+window.renderAlgoErreursPage = renderAlgoErreursPage;
+window.startQuizForError = startQuizForError;
 
 // ===================================================================
 // MODULE QUIZ RAPIDE V/F & QCM (#/algo/quiz)
