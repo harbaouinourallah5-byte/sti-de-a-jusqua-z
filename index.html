@@ -362,15 +362,35 @@
     <section id="view-home" class="view-section active">
       <div class="container">
         
-        <!-- LES 3 GRANDS ACCÈS RÉVISION DE L'ACCUEIL -->
-        <div class="home-trio-actions-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 18px 0 24px 0;">
+        <!-- 1. CARTE "CONTINUER OÙ J'AI ARRÊTÉ" (AFFICHÉE UNIQUEMENT S'IL Y A UN HISTORIQUE) -->
+        <div class="resume-study-card" id="resumeStudyCard" style="display: none; margin: 18px 0 20px 0;">
+          <div class="resume-left">
+            <div class="resume-icon-box">⏱️</div>
+            <div class="resume-info">
+              <h4 id="resumeStudyTitle">Continuer votre révision</h4>
+              <p id="resumeStudySubtitle">Dernière consultation enregistrée • Cliquez pour reprendre</p>
+            </div>
+          </div>
+          <button class="resume-cta-btn" id="resumeStudyBtn" onclick="resumeLastStudySession()">
+            <span>Reprendre</span>
+            <span>→</span>
+          </button>
+        </div>
+
+        <!-- 2. BANDEAU "AUJOURD'HUI" (COMPTE À REBOURS BAC, FLASHCARDS DUES, PROCHAINE ÉTAPE) -->
+        <div class="home-today-container" id="homeTodayBlock" style="margin-bottom: 24px;">
+          <!-- Rempli dynamiquement par renderHomeTodaySection() -->
+        </div>
+
+        <!-- 3. LES 3 GRANDS ACCÈS D'ACTION -->
+        <div class="home-trio-actions-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px;">
           <!-- BOUTON 1 : JE RÉVISE UN CHAPITRE -->
           <div class="home-trio-card card-revision-ch" onclick="navigateToHash('#/algo/carte')" style="cursor: pointer; background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;">
             <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px;">
               <div style="font-size: 2rem; background: rgba(56, 189, 248, 0.12); width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
                 📖
               </div>
-              <span style="font-size: 0.78rem; font-weight: 800; color: #38bdf8; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); padding: 3px 10px; border-radius: 20px;">
+              <span style="font-size: 0.78rem; font-weight: 800; color: #38bdf8; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); padding: 3px 10px; border-radius: 20px;" id="homeChBadgeCount">
                 8 Chapitres
               </span>
             </div>
@@ -379,7 +399,7 @@
                 Je révise un chapitre
               </h3>
               <p style="margin: 0; font-size: 0.86rem; color: var(--text-secondary); line-height: 1.5;">
-                Fiches de cours synthétiques, algorithmes types, TDO/TDNT et astuces pour chaque chapitre.
+                Fiches de cours synthétiques, algorithmes types, TDO/TDNT et compétences du Bac.
               </p>
             </div>
             <div style="margin-top: 16px; display: flex; align-items: center; justify-content: space-between; color: #38bdf8; font-weight: 700; font-size: 0.88rem;">
@@ -395,7 +415,7 @@
                 ⚡
               </div>
               <span style="font-size: 0.78rem; font-weight: 800; color: #f59e0b; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); padding: 3px 10px; border-radius: 20px;">
-                Quiz • Cartes • Types
+                Quiz • Cartes • Méthode
               </span>
             </div>
             <div>
@@ -403,13 +423,13 @@
                 Je m'entraîne
               </h3>
               <p style="margin: 0; font-size: 0.86rem; color: var(--text-secondary); line-height: 1.5;">
-                Quiz express (V/F & QCM), flashcards Leitner espacées et exercices types du Bac.
+                Quiz express V/F &amp; QCM, flashcards Leitner espacées et réflexes d'examen.
               </p>
             </div>
             <div style="margin-top: 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
               <a href="#/algo/quiz" onclick="event.stopPropagation(); navigateToHash('#/algo/quiz')" style="padding: 4px 10px; border-radius: 6px; background: rgba(245, 158, 11, 0.15); color: #f59e0b; font-size: 0.76rem; font-weight: 700; text-decoration: none;">⚡ Quiz</a>
               <a href="#/revision/cartes" onclick="event.stopPropagation(); navigateToHash('#/revision/cartes')" style="padding: 4px 10px; border-radius: 6px; background: rgba(168, 85, 247, 0.15); color: #c084fc; font-size: 0.76rem; font-weight: 700; text-decoration: none;">🗂️ Flashcards</a>
-              <a href="#/algo/types" onclick="event.stopPropagation(); navigateToHash('#/algo/types')" style="padding: 4px 10px; border-radius: 6px; background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 0.76rem; font-weight: 700; text-decoration: none;">🎯 Types d'exos</a>
+              <a href="#/methode" onclick="event.stopPropagation(); navigateToHash('#/methode')" style="padding: 4px 10px; border-radius: 6px; background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 0.76rem; font-weight: 700; text-decoration: none;">💡 Méthode</a>
             </div>
           </div>
 
@@ -419,7 +439,7 @@
               <div style="font-size: 2rem; background: rgba(16, 185, 129, 0.12); width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
                 📋
               </div>
-              <span style="font-size: 0.78rem; font-weight: 800; color: #10b981; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); padding: 3px 10px; border-radius: 20px;">
+              <span style="font-size: 0.78rem; font-weight: 800; color: #10b981; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); padding: 3px 10px; border-radius: 20px;" id="homeExamCountBadge">
                 11 Sujets d'examens
               </span>
             </div>
@@ -438,53 +458,8 @@
           </div>
         </div>
 
-        <!-- BLOC "AUJOURD'HUI" (TÂCHES DU JOUR, CARTES DUES, PROCHAINE ÉTAPE) -->
-        <div class="home-today-container" id="homeTodayBlock" style="margin-bottom: 24px;">
-          <!-- Rempli dynamiquement par renderHomeTodaySection() -->
-        </div>
-
-        <!-- CARTE "CONTINUER OÙ J'AI ARRÊTÉ" (LOCALSTORAGE) -->
-        <div class="resume-study-card" id="resumeStudyCard" style="display: none; margin-bottom: 24px;">
-          <div class="resume-left">
-            <div class="resume-icon-box">⏱️</div>
-            <div class="resume-info">
-              <h4 id="resumeStudyTitle">Continuer votre révision</h4>
-              <p id="resumeStudySubtitle">Dernière consultation enregistrée • Cliquez pour reprendre</p>
-            </div>
-          </div>
-          <button class="resume-cta-btn" id="resumeStudyBtn" onclick="resumeLastStudySession()">
-            <span>Reprendre</span>
-            <span>→</span>
-          </button>
-        </div>
-
-        <!-- WIDGET "MA RÉVISION" (COMPACT) -->
-        <div class="home-revision-widget" id="homeRevisionWidget">
-          <div class="home-revision-widget-left">
-            <div class="home-revision-widget-icon">⭐</div>
-            <div>
-              <div class="home-revision-widget-title">
-                <span>Ma Révision &amp; Notions à revoir</span>
-                <span class="home-revision-pill" id="homeRevBadgeCount"><strong>0</strong> à revoir</span>
-              </div>
-              <p class="home-revision-widget-desc" id="homeRevDesc">
-                Simulateur d'examen, notions bookmarkées, quiz et suivi de progression 100% privé.
-              </p>
-            </div>
-          </div>
-          <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-            <div class="home-revision-widget-stats" id="homeRevStatsPills">
-              <!-- Rempli dynamiquement -->
-            </div>
-            <button type="button" class="home-revision-btn" onclick="navigateToHash('#/revision')">
-              <span>Ouvrir Ma Révision</span>
-              <span>→</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- LES DEUX GRANDES CARTES DE MODULES (STI vs ALGO) -->
-        <div class="big-modules-grid">
+        <!-- 4. LES DEUX GRANDES CARTES DE MODULES (STI vs ALGO) -->
+        <div class="big-modules-grid" style="margin-bottom: 24px;">
           
           <!-- GRAND BLOC 1 : STI WEB & BD -->
           <div class="big-module-card sti" onclick="switchView('html')">
@@ -496,7 +471,7 @@
               </div>
             </div>
             <p class="big-module-desc">
-              Le programme complet des 4 matières du Web et des Bases de Données pour la section STI :
+              Programme complet des 4 matières Web &amp; BD avec annexes officielles et simulateurs interactifs.
             </p>
             <ul class="big-module-topics-list">
               <li class="big-module-topic-item" onclick="event.stopPropagation(); switchView('html')">
@@ -544,7 +519,7 @@
               </div>
             </div>
             <p class="big-module-desc">
-              Les 8 chapitres du programme tunisien et son laboratoire interactif :
+              Les 8 chapitres d'algorithmique du Bac avec fiches synthétiques, TDO/TDNT et pratique Qt ➔ Thonny.
             </p>
             <ul class="big-module-topics-list">
               <li class="big-module-topic-item" onclick="event.stopPropagation(); switchView('algo-pratique')">
@@ -559,7 +534,7 @@
                   <span>📖</span>
                   <span id="homeAlgoTheoriqueTitle">Théorique (8 Chapitres)</span>
                 </div>
-                <span class="big-module-topic-badge" id="homeAlgoTheoriqueBadge">59 algorithmes complets</span>
+                <span class="big-module-topic-badge" id="homeAlgoTheoriqueBadge">80 algorithmes complets</span>
               </li>
               <li class="big-module-topic-item" onclick="event.stopPropagation(); openLessonsForModule('algo')">
                 <div class="big-module-topic-name">
@@ -575,6 +550,38 @@
             </button>
           </div>
 
+        </div>
+
+        <!-- 5. OUTILS DE RÉVISION (POMODORO & SAUVEGARDE) -->
+        <div class="home-tools-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-top: 10px;">
+          <div class="home-tool-card" onclick="PomodoroEngine.openDrawer()" style="cursor: pointer; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="font-size: 1.6rem; background: rgba(234, 88, 12, 0.12); width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">⏱️</span>
+              <div>
+                <h4 style="margin: 0; font-size: 0.96rem; font-weight: 800; color: var(--text-primary);">Minuteur Pomodoro</h4>
+                <p style="margin: 2px 0 0 0; font-size: 0.8rem; color: var(--text-secondary);">Sessions de 25 min &amp; sons d'ambiance d'étude</p>
+              </div>
+            </div>
+            <span style="font-size: 1.1rem; color: var(--text-muted);">→</span>
+          </div>
+
+          <div class="home-tool-card" onclick="openDataBackupModal()" style="cursor: pointer; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="font-size: 1.6rem; background: rgba(99, 102, 241, 0.12); width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">💾</span>
+              <div>
+                <h4 style="margin: 0; font-size: 0.96rem; font-weight: 800; color: var(--text-primary);">Sauvegarde &amp; Données</h4>
+                <p style="margin: 2px 0 0 0; font-size: 0.8rem; color: var(--text-secondary);">Exporter / importer ma progression locale en JSON</p>
+              </div>
+            </div>
+            <span style="font-size: 1.1rem; color: var(--text-muted);">→</span>
+          </div>
+        </div>
+
+        <!-- Élément fantôme pour préserver les requêtes de l'ancien widget -->
+        <div id="homeRevisionWidget" style="display:none;" aria-hidden="true">
+          <span id="homeRevBadgeCount">0</span>
+          <div id="homeRevStatsPills"></div>
+          <p id="homeRevDesc"></p>
         </div>
 
       </div>

@@ -2040,8 +2040,10 @@ function updateDataCountersUI() {
     const jsCount = (typeof DATA !== 'undefined' && DATA.js) ? DATA.js.length : 63;
     const sqlCount = (typeof DATA !== 'undefined' && DATA.sql) ? DATA.sql.length : 57;
     const qtCount = (typeof DATA !== 'undefined' && DATA.algo_pratique) ? DATA.algo_pratique.length : 20;
-    const algoTheoriqueCount = (typeof DATA !== 'undefined' && DATA.algo_theorique) ? DATA.algo_theorique.length : 59;
+    const algoTheoriqueCount = (typeof DATA !== 'undefined' && DATA.algo_theorique) ? DATA.algo_theorique.length : 80;
     const totalChapters = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getTotalAlgoChapters() : 8;
+    const methodCount = (typeof METHODS_DATA !== 'undefined') ? METHODS_DATA.length : 7;
+    const examCount = (typeof EXERCISES_DATA !== 'undefined' && EXERCISES_DATA.getAllExams) ? EXERCISES_DATA.getAllExams().length : 11;
 
     const elHtmlBadge = document.getElementById('htmlBadgeCount');
     if (elHtmlBadge) elHtmlBadge.textContent = htmlCount;
@@ -2055,6 +2057,16 @@ function updateDataCountersUI() {
     if (elQtBadge) elQtBadge.textContent = qtCount;
     const elThBadge = document.getElementById('algoTheoriqueBadgeCount');
     if (elThBadge) elThBadge.textContent = algoTheoriqueCount;
+
+    // Badges onglets de matières
+    const elHtmlTabBadge = document.getElementById('htmlBadgeCountTab');
+    if (elHtmlTabBadge) elHtmlTabBadge.textContent = htmlCount;
+    const elCssTabBadge = document.getElementById('cssBadgeCountTab');
+    if (elCssTabBadge) elCssTabBadge.textContent = cssCount;
+    const elJsTabBadge = document.getElementById('jsBadgeCountTab');
+    if (elJsTabBadge) elJsTabBadge.textContent = jsCount;
+    const elSqlTabBadge = document.getElementById('sqlBadgeCountTab');
+    if (elSqlTabBadge) elSqlTabBadge.textContent = sqlCount;
 
     // Badges page d'accueil
     const homeHtml = document.getElementById('homeHtmlBadge');
@@ -2072,22 +2084,33 @@ function updateDataCountersUI() {
     const homeAlgoTitle = document.getElementById('homeAlgoTheoriqueTitle');
     if (homeAlgoTitle) homeAlgoTitle.textContent = `Théorique (${totalChapters} Chapitres)`;
 
+    const homeChBadge = document.getElementById('homeChBadgeCount');
+    if (homeChBadge) homeChBadge.textContent = `${totalChapters} Chapitres`;
+    const homeExamBadge = document.getElementById('homeExamCountBadge');
+    if (homeExamBadge) homeExamBadge.textContent = `${examCount} Sujets d'examens`;
+
+    // Badges onglets Méthode et Examens
+    const methodeBadge = document.getElementById('methodeTabBadgeFiches');
+    if (methodeBadge) methodeBadge.textContent = methodCount;
+    const examensTabBadge = document.getElementById('examensTabBadgeSujets');
+    if (examensTabBadge) examensTabBadge.textContent = examCount;
+
     // Badges onglets fiches détaillées
     const tabHtml = document.getElementById('tabBtnHtmlCards');
     if (tabHtml && tabHtml.querySelector('span:last-child')) {
-      tabHtml.querySelector('span:last-child').textContent = `Fiches Détaillées & Recherche (${htmlCount} notions)`;
+      tabHtml.querySelector('span:last-child').textContent = `Fiches (${htmlCount})`;
     }
     const tabCss = document.getElementById('tabBtnCssCards');
     if (tabCss && tabCss.querySelector('span:last-child')) {
-      tabCss.querySelector('span:last-child').textContent = `Fiches Détaillées & Recherche (${cssCount} propriétés)`;
+      tabCss.querySelector('span:last-child').textContent = `Fiches (${cssCount})`;
     }
-    const tabJs = document.getElementById('tabBtnCardsGrid');
+    const tabJs = document.getElementById('tabBtnCardsGrid') || document.getElementById('tabBtnJsCards');
     if (tabJs && tabJs.querySelector('span:last-child')) {
-      tabJs.querySelector('span:last-child').textContent = `Fiches Détaillées & Recherche (${jsCount} fonctions)`;
+      tabJs.querySelector('span:last-child').textContent = `Fiches (${jsCount})`;
     }
     const tabSql = document.getElementById('tabBtnSqlCards');
     if (tabSql && tabSql.querySelector('span:last-child')) {
-      tabSql.querySelector('span:last-child').textContent = `Fiches Détaillées & Recherche (${sqlCount} commandes)`;
+      tabSql.querySelector('span:last-child').textContent = `Fiches (${sqlCount})`;
     }
 
     // Badges accueil Algo
