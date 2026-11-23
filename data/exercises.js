@@ -101,6 +101,8 @@ var EXERCISES_DATA = (function () {
     // --- ds1-4si2-4si3-2025-12-09 ---
     {
       id: 'ds1-4si2-4si3-2025-12-09-ex1',
+      section: 'recursivite-numerique',
+      sections: ["recursivite-numerique","tableaux-remplissage"],
       examId: 'ds1-4si2-4si3-2025-12-09',
       exNum: 'Exercice 1',
       points: 5.5,
@@ -111,6 +113,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'ds1-4si2-4si3-2025-12-09-ex2',
+      section: 'fichiers-texte',
+      sections: ["fichiers-texte","matrices-parcours"],
       examId: 'ds1-4si2-4si3-2025-12-09',
       exNum: 'Exercice 2',
       points: 2.25,
@@ -121,6 +125,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'ds1-4si2-4si3-2025-12-09-ex3',
+      section: 'tdo-tdnt',
+      sections: ["tdo-tdnt","fichiers-binaires","tableaux-remplissage","matrices-parcours"],
       examId: 'ds1-4si2-4si3-2025-12-09',
       exNum: 'Exercice 3',
       points: 4.75,
@@ -131,6 +137,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'ds1-4si2-4si3-2025-12-09-ex4',
+      section: 'fichiers-binaires',
+      sections: ["fichiers-binaires","fichiers-transfert"],
       examId: 'ds1-4si2-4si3-2025-12-09',
       exNum: 'Exercice 4',
       points: 3.5,
@@ -141,6 +149,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'ds1-4si2-4si3-2025-12-09-ex5',
+      section: 'fichiers-binaires',
+      sections: ["fichiers-binaires","tableaux-tris"],
       examId: 'ds1-4si2-4si3-2025-12-09',
       exNum: 'Exercice 5',
       points: 4,
@@ -153,6 +163,8 @@ var EXERCISES_DATA = (function () {
     // --- ds2-4si123-2023-03-13 ---
     {
       id: 'ds2-4si123-2023-03-13-ex1',
+      section: 'tdo-tdnt',
+      sections: ["tdo-tdnt","recurrence-bases","tableaux-remplissage"],
       examId: 'ds2-4si123-2023-03-13',
       exNum: 'Exercice 1',
       points: 4.75,
@@ -163,6 +175,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'ds2-4si123-2023-03-13-ex2',
+      section: 'fichiers-binaires',
+      sections: ["fichiers-binaires","bases-dec-any"],
       examId: 'ds2-4si123-2023-03-13',
       exNum: 'Exercice 2',
       points: 4,
@@ -173,6 +187,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'ds2-4si123-2023-03-13-ex3',
+      section: 'arithmetique-primalite',
+      sections: ["arithmetique-primalite","tableaux-tris"],
       examId: 'ds2-4si123-2023-03-13',
       exNum: 'Exercice 3',
       points: 3.25,
@@ -183,6 +199,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'ds2-4si123-2023-03-13-ex4',
+      section: 'arithmetique-primalite',
+      sections: ["arithmetique-primalite","matrices-parcours","suites-recurrentes"],
       examId: 'ds2-4si123-2023-03-13',
       exNum: 'Exercice 4',
       points: 8,
@@ -195,6 +213,8 @@ var EXERCISES_DATA = (function () {
     // --- bac-style-a ---
     {
       id: 'bac-style-a-ex1',
+      section: 'tdo-tdnt',
+      sections: ["tdo-tdnt","recursivite-numerique"],
       examId: 'bac-style-a',
       exNum: 'Exercice 1',
       points: 3.25,
@@ -205,6 +225,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'bac-style-a-ex2',
+      section: 'fichiers-binaires',
+      sections: ["fichiers-binaires","tableaux-tris"],
       examId: 'bac-style-a',
       exNum: 'Exercice 2',
       points: 2.75,
@@ -215,6 +237,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'bac-style-a-ex3',
+      section: 'fichiers-binaires',
+      sections: ["fichiers-binaires","bases-dec-any","arithmetique-primalite"],
       examId: 'bac-style-a',
       exNum: 'Exercice 3',
       points: 5,
@@ -225,6 +249,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'bac-style-a-ex4',
+      section: 'fichiers-binaires',
+      sections: ["fichiers-binaires","matrices-parcours","suites-recurrentes"],
       examId: 'bac-style-a',
       exNum: 'Exercice 4',
       points: 9,
@@ -237,6 +263,8 @@ var EXERCISES_DATA = (function () {
     // --- dc3-4si4-2026-04-17 ---
     {
       id: 'dc3-4si4-2026-04-17-ex1',
+      section: 'recursivite-numerique',
+      sections: ["recursivite-numerique"],
       examId: 'dc3-4si4-2026-04-17',
       exNum: 'Exercice 1',
       points: 3,
@@ -247,6 +275,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'dc3-4si4-2026-04-17-ex2',
+      section: 'approximation-aires',
+      sections: ["approximation-aires","suites-recurrentes"],
       examId: 'dc3-4si4-2026-04-17',
       exNum: 'Exercice 2',
       points: 8,
@@ -257,6 +287,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'dc3-4si4-2026-04-17-ex3',
+      section: 'approximation-aires',
+      sections: ["approximation-aires","matrices-parcours"],
       examId: 'dc3-4si4-2026-04-17',
       exNum: 'Exercice 3',
       points: 9,
@@ -269,6 +301,8 @@ var EXERCISES_DATA = (function () {
     // --- bac-style-b ---
     {
       id: 'bac-style-b-ex1',
+      section: 'recursivite-numerique',
+      sections: ["recursivite-numerique"],
       examId: 'bac-style-b',
       exNum: 'Exercice 1',
       points: 4,
@@ -279,6 +313,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'bac-style-b-ex2',
+      section: 'fichiers-binaires',
+      sections: ["fichiers-binaires","matrices-parcours"],
       examId: 'bac-style-b',
       exNum: 'Exercice 2',
       points: 6,
@@ -289,6 +325,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'bac-style-b-ex3',
+      section: 'fichiers-binaires',
+      sections: ["fichiers-binaires","bases-dec-any","tableaux-remplissage"],
       examId: 'bac-style-b',
       exNum: 'Exercice 3',
       points: 10,
@@ -301,6 +339,8 @@ var EXERCISES_DATA = (function () {
     // --- ds2-4si14-2026-03-03 ---
     {
       id: 'ds2-4si14-2026-03-03-ex1',
+      section: 'fichiers-texte',
+      sections: ["fichiers-texte","fichiers-binaires"],
       examId: 'ds2-4si14-2026-03-03',
       exNum: 'Exercice 1',
       points: 2,
@@ -311,6 +351,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'ds2-4si14-2026-03-03-ex2',
+      section: 'recursivite-numerique',
+      sections: ["recursivite-numerique"],
       examId: 'ds2-4si14-2026-03-03',
       exNum: 'Exercice 2',
       points: 2.5,
@@ -321,6 +363,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'ds2-4si14-2026-03-03-ex3',
+      section: 'fichiers-binaires',
+      sections: ["fichiers-binaires","arithmetique-primalite"],
       examId: 'ds2-4si14-2026-03-03',
       exNum: 'Exercice 3',
       points: 4.5,
@@ -331,6 +375,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'ds2-4si14-2026-03-03-ex4',
+      section: 'arithmetique-primalite',
+      sections: ["arithmetique-primalite","matrices-parcours","suites-recurrentes"],
       examId: 'ds2-4si14-2026-03-03',
       exNum: 'Exercice 4',
       points: 11,
@@ -343,6 +389,8 @@ var EXERCISES_DATA = (function () {
     // --- ds1-4si14-2025-12-09 ---
     {
       id: 'ds1-4si14-2025-12-09-ex1',
+      section: 'recurrence-bases',
+      sections: ["recurrence-bases","tableaux-remplissage"],
       examId: 'ds1-4si14-2025-12-09',
       exNum: 'Exercice 1',
       points: 3,
@@ -353,6 +401,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'ds1-4si14-2025-12-09-ex2',
+      section: 'recursivite-numerique',
+      sections: ["recursivite-numerique","tableaux-remplissage"],
       examId: 'ds1-4si14-2025-12-09',
       exNum: 'Exercice 2',
       points: 6,
@@ -363,6 +413,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'ds1-4si14-2025-12-09-ex3',
+      section: 'matrices-parcours',
+      sections: ["matrices-parcours","matrices-bases"],
       examId: 'ds1-4si14-2025-12-09',
       exNum: 'Exercice 3',
       points: 4,
@@ -373,6 +425,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'ds1-4si14-2025-12-09-ex4',
+      section: 'fichiers-binaires',
+      sections: ["fichiers-binaires","tableaux-tris"],
       examId: 'ds1-4si14-2025-12-09',
       exNum: 'Exercice 4',
       points: 4,
@@ -383,6 +437,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'ds1-4si14-2025-12-09-ex5',
+      section: 'tableaux-tris',
+      sections: ["tableaux-tris"],
       examId: 'ds1-4si14-2025-12-09',
       exNum: 'Exercice 5',
       points: 3,
@@ -395,6 +451,8 @@ var EXERCISES_DATA = (function () {
     // --- dc2-4si1-2024-03-07 ---
     {
       id: 'dc2-4si1-2024-03-07-ex1',
+      section: 'fichiers-binaires',
+      sections: ["fichiers-binaires","arithmetique-primalite"],
       examId: 'dc2-4si1-2024-03-07',
       exNum: 'Exercice 1',
       points: null,
@@ -405,6 +463,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'dc2-4si1-2024-03-07-ex2',
+      section: 'fichiers-binaires',
+      sections: ["fichiers-binaires","fichiers-transfert"],
       examId: 'dc2-4si1-2024-03-07',
       exNum: 'Exercice 2',
       points: null,
@@ -417,6 +477,8 @@ var EXERCISES_DATA = (function () {
     // --- bac-controle-2022 ---
     {
       id: 'bac-controle-2022-ex1',
+      section: 'tdo-tdnt',
+      sections: ["tdo-tdnt","fichiers-binaires"],
       examId: 'bac-controle-2022',
       exNum: 'Exercice 1',
       points: 3.5,
@@ -427,6 +489,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'bac-controle-2022-ex2',
+      section: 'recursivite-numerique',
+      sections: ["recursivite-numerique","approximation-aires"],
       examId: 'bac-controle-2022',
       exNum: 'Exercice 2',
       points: 5.5,
@@ -437,6 +501,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'bac-controle-2022-ex3',
+      section: 'tableaux-remplissage',
+      sections: ["tableaux-remplissage","matrices-parcours"],
       examId: 'bac-controle-2022',
       exNum: 'Exercice 3',
       points: 4.5,
@@ -447,6 +513,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'bac-controle-2022-ex4',
+      section: 'bases-dec-any',
+      sections: ["bases-dec-any","tableaux-remplissage"],
       examId: 'bac-controle-2022',
       exNum: 'Exercice 4',
       points: 6.5,
@@ -459,6 +527,8 @@ var EXERCISES_DATA = (function () {
     // --- ds3-ben-arous-2025-05-06 ---
     {
       id: 'ds3-ben-arous-2025-05-06-ex1',
+      section: 'fichiers-binaires',
+      sections: ["fichiers-binaires","matrices-parcours","suites-recurrentes"],
       examId: 'ds3-ben-arous-2025-05-06',
       exNum: 'Exercice 1',
       points: 3,
@@ -469,6 +539,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'ds3-ben-arous-2025-05-06-ex2',
+      section: 'bases-dec-any',
+      sections: ["bases-dec-any","tableaux-remplissage"],
       examId: 'ds3-ben-arous-2025-05-06',
       exNum: 'Exercice 2',
       points: null,
@@ -479,6 +551,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'ds3-ben-arous-2025-05-06-ex4',
+      section: 'arithmetique-primalite',
+      sections: ["arithmetique-primalite","matrices-parcours","suites-recurrentes"],
       examId: 'ds3-ben-arous-2025-05-06',
       exNum: 'Exercice 4',
       points: 5,
@@ -491,6 +565,8 @@ var EXERCISES_DATA = (function () {
     // --- a-identifier-p38 ---
     {
       id: 'a-identifier-p38-ex2',
+      section: 'recursivite-numerique',
+      sections: ["recursivite-numerique"],
       examId: 'a-identifier-p38',
       exNum: 'Exercice 2',
       points: 3,
@@ -501,6 +577,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'a-identifier-p38-ex3',
+      section: 'approximation-aires',
+      sections: ["approximation-aires"],
       examId: 'a-identifier-p38',
       exNum: 'Exercice 3',
       points: 4,
@@ -513,6 +591,8 @@ var EXERCISES_DATA = (function () {
     // --- EXTRAITS (documents.json kind:"extrait") ---
     {
       id: 'x-inconnue-pr2024-ex',
+      section: 'recursivite-numerique',
+      sections: ["recursivite-numerique"],
       examId: 'x-inconnue-pr2024',
       exNum: 'Extrait',
       points: null,
@@ -523,6 +603,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'x-trait-qcm-ex',
+      section: 'recurrence-bases',
+      sections: ["recurrence-bases","bases-dec-any"],
       examId: 'x-trait-qcm',
       exNum: 'Extrait QCM',
       points: null,
@@ -533,6 +615,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'x-nom-triangulaire-pr2024-ex',
+      section: 'fichiers-binaires',
+      sections: ["fichiers-binaires"],
       examId: 'x-nom-triangulaire-pr2024',
       exNum: 'Extrait',
       points: null,
@@ -543,6 +627,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'x-probleme-bac2017-ex',
+      section: 'fichiers-binaires',
+      sections: ["fichiers-binaires","tableaux-tris","matrices-parcours"],
       examId: 'x-probleme-bac2017',
       exNum: 'Problème',
       points: null,
@@ -553,6 +639,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'x-quadruplets-pr2021-ex',
+      section: 'arithmetique-primalite',
+      sections: ["arithmetique-primalite","approximation-aires","tableaux-tris"],
       examId: 'x-quadruplets-pr2021',
       exNum: 'Extrait',
       points: null,
@@ -563,6 +651,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'x-optimisation-1-2-ex',
+      section: 'approximation-aires',
+      sections: ["approximation-aires"],
       examId: 'x-optimisation-1-2',
       exNum: 'Extrait',
       points: null,
@@ -573,6 +663,8 @@ var EXERCISES_DATA = (function () {
     },
     {
       id: 'x-optimisation-3-pr2015-ex',
+      section: 'approximation-aires',
+      sections: ["approximation-aires"],
       examId: 'x-optimisation-3-pr2015',
       exNum: 'Extrait',
       points: null,
@@ -609,6 +701,14 @@ var EXERCISES_DATA = (function () {
     });
   }
 
+  function getBySection(sectionSlug) {
+    return EXERCISES.filter(function (ex) {
+      if (ex.sections && ex.sections.indexOf(sectionSlug) !== -1) return true;
+      if (ex.section === sectionSlug) return true;
+      return false;
+    });
+  }
+
   function getByChapter(chapterSlug) {
     return EXERCISES.filter(function (ex) {
       return ex.chapters && ex.chapters.indexOf(chapterSlug) !== -1;
@@ -635,6 +735,7 @@ var EXERCISES_DATA = (function () {
     getAllExercises: getAllExercises,
     getById: getById,
     getByType: getByType,
+    getBySection: getBySection,
     getByChapter: getByChapter,
     getByExam: getByExam,
     getCountsByType: getCountsByType

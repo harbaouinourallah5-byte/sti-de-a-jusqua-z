@@ -30,6 +30,11 @@ const QUIZ_DATA = {
     ];
   },
 
+  getQuestionsBySection(sectionSlug) {
+    if (!sectionSlug || sectionSlug === 'all') return this.getAllQuestions();
+    return this.getAllQuestions().filter(q => q.section === sectionSlug);
+  },
+
   getQuestionsByChapter(chapterSlug) {
     if (!chapterSlug || chapterSlug === 'all') {
       return this.getAllQuestions();
@@ -37,7 +42,18 @@ const QUIZ_DATA = {
     return this.chapters[chapterSlug] || [];
   },
 
-  getQuestionsFiltered(chapterSlug = 'all', level = 'all') {
+  getQuestionsFiltered(chapterSlug = 'all', level = 'all', sectionSlug = 'all') {
+    let list = this.getQuestionsByChapter(chapterSlug);
+    if (level && level !== 'all') {
+      list = list.filter(q => q.level === level);
+    }
+    if (sectionSlug && sectionSlug !== 'all') {
+      list = list.filter(q => q.section === sectionSlug);
+    }
+    return list;
+  },
+
+  _orig_getQuestionsFiltered(chapterSlug = 'all', level = 'all') {
     let list = this.getQuestionsByChapter(chapterSlug);
     if (level && level !== 'all') {
       list = list.filter(q => q.level === level);
