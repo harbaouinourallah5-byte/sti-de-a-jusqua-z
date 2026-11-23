@@ -13143,6 +13143,24 @@ function confirmResetAllStudentData() {
   }
 }
 
+function openDataBackupModal() {
+  const modal = document.getElementById('dataBackupModal');
+  if (modal) modal.style.display = 'flex';
+}
+
+function closeDataBackupModal() {
+  const modal = document.getElementById('dataBackupModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function triggerGlobalImportData() {
+  const input = document.getElementById('globalBackupFileInput');
+  if (input) input.click();
+}
+window.openDataBackupModal = openDataBackupModal;
+window.closeDataBackupModal = closeDataBackupModal;
+window.triggerGlobalImportData = triggerGlobalImportData;
+
 // ─────────────────────────────────────────────────────────────────────────────
 // RUN 7 FEATURE 3 : PLANNING D'ÉTUDE PERSONNALISÉ (#/revision/plan)
 // ─────────────────────────────────────────────────────────────────────────────
