@@ -7665,6 +7665,20 @@ if idx <= 0:
       tip: "💡 À appeler avant de re-remplir la ComboBox pour éviter les doublons."
     }
   ],
+  QListWidget: [
+    {
+      id: "add_item",
+      name: "Ajouter une chaîne (.addItem)",
+      code: (obj) => `windows.${obj}.addItem(chaine)`,
+      tip: "💡 Ajoute une nouvelle ligne de texte dans la Liste Widget."
+    },
+    {
+      id: "clear",
+      name: "Vider la liste (.clear)",
+      code: (obj) => `windows.${obj}.clear()`,
+      tip: "💡 Efface tous les éléments de la Liste Widget."
+    }
+  ],
   QSpinBox: [
     {
       id: "get_value",
@@ -7713,6 +7727,12 @@ if age < 18:
   ],
   QTableWidget: [
     {
+      id: "insert_row",
+      name: "Ajouter une ligne (.insertRow)",
+      code: (obj) => `windows.${obj}.insertRow(i)`,
+      tip: "💡 Insère une nouvelle ligne dans la Table Widget à l'indice i avant de remplir avec setItem."
+    },
+    {
       id: "set_row_count",
       name: "Fixer le nombre de lignes (.setRowCount)",
       code: (obj) => `windows.${obj}.setRowCount(len(mes_lignes))`,
@@ -7754,6 +7774,14 @@ return  # INDISPENSABLE pour stopper l'exécution du reste de la fonction !`,
       code: (obj) => `QMessageBox.warning(windows, "Attention", "Vérifiez vos paramètres avant de continuer.")`,
       tip: "💡 Message préventif sans blocage strict."
     }
+  ],
+  Fenêtre: [
+    {
+      id: "close",
+      name: "Fermer la fenêtre (.close)",
+      code: (obj) => `windows.close()`,
+      tip: "💡 Ferme la fenêtre active de l'application (ex: dans le module Quitter)."
+    }
   ]
 };
 
@@ -7785,6 +7813,8 @@ function handleTranslatorWidgetChange() {
     else if (widget === 'QLabel') objInput.value = 'Nom_Label';
     else if (widget === 'QTableWidget') objInput.value = 'nomTable';
     else if (widget === 'QMessageBox') objInput.value = 'msg';
+    else if (widget === 'QListWidget') objInput.value = 'LW';
+    else if (widget === 'Fenêtre') objInput.value = 'windows';
   }
 
   // Remplir les options d'actions
@@ -10088,8 +10118,10 @@ function copyEntireAnnexeTable() {
 WIDGET        | SYNTAXE                                | RÔLE
 ------------------------------------------------------------------------
 Label         | W.Nom_Label.setText(chaine)            | Modifier le texte de l’étiquette
-Line Edit     | W.Nom_LineEdit.text()                  | Récupérer le contenu de la zone de saisie
+Line Edit     | W.Nom_LineEdit.text()                  | Pour récupérer un texte d'une zone de saisie
 Line Edit     | W.Nom_LineEdit.setText(chaine)         | Modifier le contenu de la zone de texte
+Line Edit     | W.Nom_LineEdit.clear()                 | Pour vider un champ
+Line Edit     | W.Nom_LineEdit.setFocus()              | Pour mettre le curseur dans une zone de saisie
 Text Edit     | W.nomTextEdit.toPlainText()            | Récupérer le contenu de la zone de saisie
 Text Edit     | W.nomTextEdit.setText(chaine)          | Modifier le contenu de la zone de texte
 Push Button   | W.nomPushButton.clicked.connect(module)| Ordonner à l'ordinateur d'effectuer une action (suite au clic)
@@ -10098,14 +10130,17 @@ Check Box     | W.nomCheckBox.isChecked()              | Vérifier si la case es
 Combo Box     | W.nomComboBox.currentText()            | Récupérer le texte d’élément sélectionné
 Combo Box     | W.nomComboBox.currentIndex()           | Récupérer l’indice du choix
 Combo Box     | W.nomComboBox.setCurrentIndex(-1)      | Aucun choix sélectionné (vider / réinitialiser liste)
+List Widget   | windows.LW.addItem(chaine)             | Pour ajouter une chaîne dans une liste widget
 ------------------------------------------------------------------------
 COMPLÉMENTS INDISPENSABLES AU BAC :
-QMessageBox   | QMessageBox.critical(W, "Err", msg)    | Boîte d'erreur bloquante (suivie de return)
-QMessageBox   | QMessageBox.information(W, "Ok", msg)  | Boîte d'information ou confirmation de succès
+QMessageBox   | QMessageBox.critical(W, "Err", msg)    | Pour afficher un message d'alerte (suivie de return)
+QMessageBox   | QMessageBox.information(W, "Ok", msg)  | Pour afficher un message d'information
+Fenêtre       | windows.close()                        | Pour fermer la fenêtre (module Quitter)
 Spin Box      | W.nomSpinBox.value()                   | Récupérer la valeur entière (int)
 Date Edit     | W.nomDateEdit.date().toString("yyyy-MM-dd") | Récupérer la date formatée (compatible SQL)
-Table Widget  | W.nomTable.setRowCount(n)              | Fixer le nombre de lignes
-Table Widget  | W.nomTable.setItem(r, c, QTableWidgetItem(str(v))) | Remplir une cellule du tableau
+Table Widget  | windows.TW.insertRow(i)                | Pour ajouter une ligne dans une table widget
+Table Widget  | windows.TW.setItem(NL, NC, QTableWidgetItem(chaine)) | Pour remplir une case dans une table widget
+Table Widget  | windows.TW.setRowCount(0)              | Pour réinitialiser une table widget à 0 ligne
 ========================================================================`;
 
   const btn = event ? event.target : null;

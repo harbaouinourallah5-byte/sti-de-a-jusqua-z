@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=37.0">
+  <link rel="stylesheet" href="style.css?v=37.1">
   <!-- INITIALISATION IMMÉDIATE DU THÈME & TOGGLE SANS LATENCE -->
   <script>
     (function() {
@@ -2964,9 +2964,9 @@
                   </td>
                 </tr>
 
-                <!-- 2. LINE EDIT (2 SYNTAXES) -->
+                <!-- 2. LINE EDIT (4 SYNTAXES) -->
                 <tr class="annexe-row" onclick="loadIntoTranslator('QLineEdit', 'Nom_LineEdit', 'read_text')" title="Cliquer pour essayer dans le Traducteur Live">
-                  <td class="widget-cell" rowspan="2">
+                  <td class="widget-cell" rowspan="4">
                     <div class="widget-badge-wrap">
                       <span class="widget-icon-box">🔤</span>
                       <span class="widget-name-label">Line Edit</span>
@@ -2979,7 +2979,7 @@
                     </div>
                   </td>
                   <td class="role-cell">
-                    Récupérer le contenu de la zone de saisie
+                    Pour récupérer un texte d'une zone de saisie
                   </td>
                 </tr>
                 <tr class="annexe-row" onclick="loadIntoTranslator('QLineEdit', 'Nom_LineEdit', 'set_text')" title="Cliquer pour essayer dans le Traducteur Live">
@@ -2991,6 +2991,28 @@
                   </td>
                   <td class="role-cell">
                     Modifier le contenu de la zone de texte
+                  </td>
+                </tr>
+                <tr class="annexe-row" onclick="loadIntoTranslator('QLineEdit', 'Nom_LineEdit', 'clear')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">W</span>.<span class="code-obj">Nom_LineEdit</span>.<span class="code-method">clear</span>()</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('W.Nom_LineEdit.clear()', this)" title="Copier la syntaxe">📋</button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Pour vider un champ
+                  </td>
+                </tr>
+                <tr class="annexe-row" onclick="loadIntoTranslator('QLineEdit', 'Nom_LineEdit', 'focus')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">W</span>.<span class="code-obj">Nom_LineEdit</span>.<span class="code-method">setFocus</span>()</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('W.Nom_LineEdit.setFocus()', this)" title="Copier la syntaxe">📋</button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Pour mettre le curseur dans une zone de saisie
                   </td>
                 </tr>
 
@@ -3122,6 +3144,25 @@
                   </td>
                 </tr>
 
+                <!-- 8. LIST WIDGET -->
+                <tr class="annexe-row" onclick="loadIntoTranslator('QListWidget', 'LW', 'add_item')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="widget-cell" rowspan="1">
+                    <div class="widget-badge-wrap">
+                      <span class="widget-icon-box">📋</span>
+                      <span class="widget-name-label">List Widget</span>
+                    </div>
+                  </td>
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">windows</span>.<span class="code-obj">LW</span>.<span class="code-method">addItem</span>(<span class="code-param">chaine</span>)</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('windows.LW.addItem(chaine)', this)" title="Copier la syntaxe">📋</button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Pour ajouter une chaîne dans une liste widget
+                  </td>
+                </tr>
+
                 <!-- COMPLÉMENTS ESSENTIELS BAC -->
                 <tr class="subtable-header-row">
                   <td colspan="3">
@@ -3165,6 +3206,24 @@
                   </td>
                 </tr>
 
+                <tr class="annexe-row" onclick="loadIntoTranslator('Fenêtre', 'windows', 'close')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="widget-cell">
+                    <div class="widget-badge-wrap">
+                      <span class="widget-icon-box" style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3);">🚪</span>
+                      <span class="widget-name-label">Fenêtre</span>
+                    </div>
+                  </td>
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">windows</span>.<span class="code-method">close</span>()</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('windows.close()', this)" title="Copier la syntaxe">📋</button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Pour fermer la fenêtre (ex: module Quitter)
+                  </td>
+                </tr>
+
                 <tr class="annexe-row" onclick="loadIntoTranslator('QSpinBox', 'nomSpinBox', 'get_value')" title="Cliquer pour essayer dans le Traducteur Live">
                   <td class="widget-cell">
                     <div class="widget-badge-wrap">
@@ -3201,8 +3260,9 @@
                   </td>
                 </tr>
 
-                <tr class="annexe-row" onclick="loadIntoTranslator('QTableWidget', 'nomTable', 'set_item')" title="Cliquer pour essayer dans le Traducteur Live">
-                  <td class="widget-cell">
+                <!-- TABLE WIDGET (3 SYNTAXES) -->
+                <tr class="annexe-row" onclick="loadIntoTranslator('QTableWidget', 'TW', 'insert_row')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="widget-cell" rowspan="3">
                     <div class="widget-badge-wrap">
                       <span class="widget-icon-box">📊</span>
                       <span class="widget-name-label">Table Widget</span>
@@ -3210,12 +3270,34 @@
                   </td>
                   <td class="syntax-cell">
                     <div class="syntax-code-wrap">
-                      <code><span class="code-w">W</span>.<span class="code-obj">nomTable</span>.<span class="code-method">setItem</span>(<span class="code-param">r</span>, <span class="code-param">c</span>, <span class="code-obj">QTableWidgetItem</span>(<span class="code-param">str(v)</span>))</code>
-                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('W.nomTable.setItem(r, c, QTableWidgetItem(str(v)))', this)" title="Copier la syntaxe">📋</button>
+                      <code><span class="code-w">windows</span>.<span class="code-obj">TW</span>.<span class="code-method">insertRow</span>(<span class="code-param">i</span>)</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('windows.TW.insertRow(i)', this)" title="Copier la syntaxe">📋</button>
                     </div>
                   </td>
                   <td class="role-cell">
-                    Remplir la cellule située à la ligne <code>r</code> et colonne <code>c</code>
+                    Pour ajouter une ligne dans une table widget (à l'indice <code>i</code>)
+                  </td>
+                </tr>
+                <tr class="annexe-row" onclick="loadIntoTranslator('QTableWidget', 'TW', 'set_item')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">windows</span>.<span class="code-obj">TW</span>.<span class="code-method">setItem</span>(<span class="code-param">NL</span>, <span class="code-param">NC</span>, <span class="code-obj">QTableWidgetItem</span>(<span class="code-param">chaine</span>))</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('windows.TW.setItem(NL, NC, QTableWidgetItem(chaine))', this)" title="Copier la syntaxe">📋</button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Pour remplir une case dans une table widget (ligne <code>NL</code>, colonne <code>NC</code>)
+                  </td>
+                </tr>
+                <tr class="annexe-row" onclick="loadIntoTranslator('QTableWidget', 'TW', 'clear_table')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">windows</span>.<span class="code-obj">TW</span>.<span class="code-method">setRowCount</span>(<span class="code-param">0</span>)</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('windows.TW.setRowCount(0)', this)" title="Copier la syntaxe">📋</button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Pour réinitialiser une table widget à 0 ligne (vider le tableau)
                   </td>
                 </tr>
               </tbody>
@@ -3313,11 +3395,13 @@ app.exec_()</code></pre>
                   <option value="QRadioButton">QRadioButton (Bouton d'option radio)</option>
                   <option value="QCheckBox">QCheckBox (Case à cocher)</option>
                   <option value="QComboBox">QComboBox (Liste déroulante)</option>
+                  <option value="QListWidget">QListWidget (Liste d'éléments / ListWidget)</option>
                   <option value="QSpinBox">QSpinBox (Compteur numérique)</option>
                   <option value="QDateEdit">QDateEdit (Sélecteur de date)</option>
                   <option value="QLabel">QLabel (Étiquette de texte)</option>
                   <option value="QTableWidget">QTableWidget (Tableau de données)</option>
                   <option value="QMessageBox">QMessageBox (Boîte d'alerte / dialogue)</option>
+                  <option value="Fenêtre">Fenêtre (Fermeture / Quitter)</option>
                 </select>
               </div>
 
@@ -5188,36 +5272,36 @@ app.exec_()</code></pre>
 
   <!-- Fichiers Scripts -->
 
-  <script src="store.js?v=37.0"></script>
-  <script src="data.js?v=37.0"></script>
-  <script src="data/curriculum.js?v=37.0"></script>
-  <script src="data/documents.js?v=37.0"></script>
-  <script src="data/exercises.js?v=37.0"></script>
-  <script src="data/methods.js?v=37.0"></script>
-  <script src="data/errors.js?v=37.0"></script>
-  <script src="data/tables/rappels.js?v=37.0"></script>
-  <script src="data/tables/fichiers.js?v=37.0"></script>
-  <script src="data/tables/recursivite.js?v=37.0"></script>
-  <script src="data/tables/bases.js?v=37.0"></script>
-  <script src="data/tables/arithmetique.js?v=37.0"></script>
-  <script src="data/tables/approximation.js?v=37.0"></script>
-  <script src="data/tables/tableaux.js?v=37.0"></script>
-  <script src="data/tables/matrices.js?v=37.0"></script>
-  <script src="data/tables/suites.js?v=37.0"></script>
-  <script src="data/tables.js?v=37.0"></script>
-  <script src="data/quiz/fichiers.js?v=37.0"></script>
-  <script src="data/quiz/recursivite.js?v=37.0"></script>
-  <script src="data/quiz/bases.js?v=37.0"></script>
-  <script src="data/quiz/arithmetique.js?v=37.0"></script>
-  <script src="data/quiz/approximation.js?v=37.0"></script>
-  <script src="data/quiz/tableaux.js?v=37.0"></script>
-  <script src="data/quiz/matrices.js?v=37.0"></script>
-  <script src="data/quiz/suites.js?v=37.0"></script>
-  <script src="data/quiz.js?v=37.0"></script>
-  <script src="css_engine.js?v=37.0"></script>
-  <script src="algo_pratique_engine.js?v=37.0"></script>
-  <script src="pomodoro_engine.js?v=37.0"></script>
-  <script src="app.js?v=37.0"></script>
+  <script src="store.js?v=37.1"></script>
+  <script src="data.js?v=37.1"></script>
+  <script src="data/curriculum.js?v=37.1"></script>
+  <script src="data/documents.js?v=37.1"></script>
+  <script src="data/exercises.js?v=37.1"></script>
+  <script src="data/methods.js?v=37.1"></script>
+  <script src="data/errors.js?v=37.1"></script>
+  <script src="data/tables/rappels.js?v=37.1"></script>
+  <script src="data/tables/fichiers.js?v=37.1"></script>
+  <script src="data/tables/recursivite.js?v=37.1"></script>
+  <script src="data/tables/bases.js?v=37.1"></script>
+  <script src="data/tables/arithmetique.js?v=37.1"></script>
+  <script src="data/tables/approximation.js?v=37.1"></script>
+  <script src="data/tables/tableaux.js?v=37.1"></script>
+  <script src="data/tables/matrices.js?v=37.1"></script>
+  <script src="data/tables/suites.js?v=37.1"></script>
+  <script src="data/tables.js?v=37.1"></script>
+  <script src="data/quiz/fichiers.js?v=37.1"></script>
+  <script src="data/quiz/recursivite.js?v=37.1"></script>
+  <script src="data/quiz/bases.js?v=37.1"></script>
+  <script src="data/quiz/arithmetique.js?v=37.1"></script>
+  <script src="data/quiz/approximation.js?v=37.1"></script>
+  <script src="data/quiz/tableaux.js?v=37.1"></script>
+  <script src="data/quiz/matrices.js?v=37.1"></script>
+  <script src="data/quiz/suites.js?v=37.1"></script>
+  <script src="data/quiz.js?v=37.1"></script>
+  <script src="css_engine.js?v=37.1"></script>
+  <script src="algo_pratique_engine.js?v=37.1"></script>
+  <script src="pomodoro_engine.js?v=37.1"></script>
+  <script src="app.js?v=37.1"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
