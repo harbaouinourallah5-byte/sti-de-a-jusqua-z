@@ -22,6 +22,7 @@
     js: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>',
     sql: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>',
     algoPratique: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M7 8h10"></path><path d="M7 12h10"></path><path d="M7 16h10"></path></svg>',
+    rappels: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path><path d="M6 6h10"></path><path d="M6 10h10"></path><path d="M6 14h6"></path></svg>',
     fichiers: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"></path></svg>',
     recursivite: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>',
     bases: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line></svg>',
@@ -32,8 +33,82 @@
     suites: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h2"></path><path d="M8 12h4"></path><path d="M16 12h6"></path><circle cx="5" cy="12" r="1"></circle><circle cx="14" cy="12" r="1"></circle></svg>'
   };
 
-  // Liste des 8 chapitres d'Algorithmique
+  // Liste des 9 chapitres d'Algorithmique (Chapitre 0 : Rappels + Chapitres 1 à 8)
   const ALGO_CHAPTERS = [
+    {
+      order: 0,
+      slug: 'rappels',
+      title: 'Rappels & Structures de base',
+      fullTitle: 'Chapitre 0 : Rappels & Prérequis',
+      shortTitle: 'Rappels & Bases',
+      iconEmoji: '🧱',
+      iconSvg: ICONS.rappels,
+      color: '#94a3b8',
+      borderColor: '#64748b',
+      bgTint: 'rgba(100, 116, 139, 0.1)',
+      description: "Structures de contrôle (Si, Pour, Tant que, Répéter), sous-programmes (fonctions, procédures) et conventions T.D.O / T.D.N.T.",
+      coursBrief: {
+        keyNotions: [
+          "Structures conditionnelles : Si..Alors..SinonSi..Sinon..Fin Si pour aiguiller selon une condition logique.",
+          "Boucles : Pour (itérations dénombrées), Tant que (condition préalable), Répéter..Jusqu'à (au moins un tour, arrêt sur condition).",
+          "Sous-programmes : Fonction (retourne une valeur unique) vs Procédure (action / modification).",
+          "Conventions T.D.O & T.D.N.T : déclaration obligatoire de tous les objets locaux/globaux et types personnalisés."
+        ],
+        syntaxRules: [
+          "Passage de paramètres : par valeur (copie) ou par variable (VAR ou @) pour modifier la variable appelante.",
+          "Typage strict : Entier, Réel, Booléen, Caractère, Chaîne."
+        ],
+        bacTips: [
+          "Ne jamais modifier la variable d'itération i à l'intérieur d'une boucle Pour.",
+          "Utiliser Répéter..Jusqu'à pour les contrôles de saisie, jamais Pour ni Tant que."
+        ]
+      },
+      pdfSubjectKey: 'algo-ch0-rappels',
+      legacyPdfKeys: [],
+      legacyCategories: [
+        'Chapitre 0 : Rappels & Prérequis',
+        'Chapitre 0 : Rappels',
+        'rappels'
+      ],
+      tags: ["algo", "rappels", "structures", "boucle", "condition", "fonction", "procedure", "tdo", "tdnt"],
+      sections: [
+        {
+          slug: 'structures-controle',
+          order: 1,
+          title: 'Structures de contrôle',
+          summary: "Structures conditionnelles (Si..Alors..Sinon) et itératives (Pour, Tant que, Répéter..Jusqu'à). Choix de la boucle adaptée selon que le nombre d'itérations est connu d'avance ou dépend d'une condition d'arrêt.",
+          skills: [
+            { id: 'skill-rappels-si', text: "Je sais utiliser une structure conditionnelle Si..Alors..SinonSi..Fin Si", algoId: 'algo-struct-si-sinonsi' },
+            { id: 'skill-rappels-pour', text: "Je sais utiliser la boucle Pour lorsque le nombre d'itérations est fixé", algoId: 'algo-struct-boucle-pour' },
+            { id: 'skill-rappels-tantque', text: "Je sais utiliser Tant que lorsque la condition doit être testée avant d'entrer", algoId: 'algo-struct-boucle-tantque' },
+            { id: 'skill-rappels-repeter', text: "Je sais utiliser Répéter..Jusqu'à pour les contrôles de saisie (au moins un passage)", algoId: 'algo-struct-boucle-repeter' }
+          ],
+          tables: ['rappels-structures']
+        },
+        {
+          slug: 'sous-programmes',
+          order: 2,
+          title: 'Sous-programmes (Procédures & Fonctions)',
+          summary: "Distinction fondamentale entre Fonction (retourne obligatoirement une valeur unique de type simple) et Procédure (exécute des actions, ne retourne rien). Passage de paramètres par valeur (copie locale) vs par variable/adresse (@ en pseudo-code, modification répercutée).",
+          skills: [
+            { id: 'skill-rappels-proc-fonc', text: "Je sais choisir entre fonction (retourne une valeur) et procédure (action / affichage)", algoId: 'algo-struct-sousprogrammes' },
+            { id: 'skill-rappels-passage-param', text: "Je sais distinguer le passage par valeur et le passage par variable (@)", algoId: 'algo-struct-sousprogrammes' }
+          ],
+          tables: ['rappels-sous-programmes']
+        },
+        {
+          slug: 'tdo-tdnt',
+          order: 3,
+          title: 'T.D.O & T.D.N.T',
+          summary: "Conventions de déclaration au Bac Informatique : Tableau de Déclaration des Objets (T.D.O) locaux et globaux, et Tableau de Déclaration des Nouveaux Types (T.D.N.T) pour les types personnalisés (tableaux, enregistrements). Règles de validité des identificateurs et typage strict.",
+          skills: [
+            { id: 'skill-rappels-tdo', text: "Je sais remplir correctement un T.D.O (Objet, Type, Rôle)", algoId: 'algo-struct-tdo-tdnt' },
+            { id: 'skill-rappels-tdnt', text: "Je sais déclarer de nouveaux types dans le T.D.N.T avant de les utiliser dans le T.D.O", algoId: 'algo-struct-tdo-tdnt' }
+          ],
+          tables: ['rappels-tdo-tdnt']
+        }
+      ]
+    },
     {
       order: 1,
       slug: 'fichiers',
@@ -70,7 +145,41 @@
         'Chapitre 1 : Les structures de données (Fichiers & Enregistrements)',
         'fichiers'
       ],
-      tags: ["algo", "algorithme", "fichiers", "texte", "binaire", "pickle", "dump", "load", "eof", "recréer", "ouvrir", "associer"]
+      tags: ["algo", "algorithme", "fichiers", "texte", "binaire", "pickle", "dump", "load", "eof", "recréer", "ouvrir", "associer"],
+      sections: [
+        {
+          slug: 'fichiers-texte',
+          order: 1,
+          title: 'Fichiers texte (.txt)',
+          summary: "Manipulation des fichiers texte séquentiels (.txt) : création ('w'), lecture ligne par ligne ('r') et ajout ('a'). Utilisation de Ouvrir, Lire / Lire_ligne, Ecrire / Ecrire_nl et Fermer.",
+          skills: [
+            { id: 'skill-fichiers-creer', text: "Je sais créer et remplir un fichier texte", algoId: 'algo-fichier-texte-creer' },
+            { id: 'skill-fichiers-lire', text: "Je sais lire et afficher le contenu d'un fichier texte jusqu'à la fin de fichier", algoId: 'algo-fichier-texte-afficher' }
+          ],
+          tables: ['fichiers-table-a', 'fichiers-table-c']
+        },
+        {
+          slug: 'fichiers-binaires',
+          order: 2,
+          title: 'Fichiers binaires (.dat)',
+          summary: "Fichiers d'enregistrements binaires (.dat) : enregistrements structurés, module pickle (dump/load). Déclaration T.D.N.T d'un enregistrement et lecture séquentielle avec gestion de Fin_Fichier.",
+          skills: [
+            { id: 'skill-fichiers-enreg', text: "Je sais déclarer un type Enregistrement dans le T.D.N.T et créer un fichier binaire", algoId: 'algo-fichier-binaire-remplir' },
+            { id: 'skill-fichiers-eof', text: "Je sais parcourir un fichier binaire séquentiellement avec Tant que NON Fin_Fichier", algoId: 'algo-fichier-binaire-afficher' }
+          ],
+          tables: ['fichiers-table-b', 'fichiers-table-c']
+        },
+        {
+          slug: 'fichiers-transfert',
+          order: 3,
+          title: "Transferts et modèles d'exercices",
+          summary: "Transfert et conversion de données entre fichiers texte, fichiers binaires et tableaux en mémoire. Algorithmes types d'extraction, filtrage et sauvegarde des données.",
+          skills: [
+            { id: 'skill-fichiers-transf', text: "Je sais transférer les données d'un fichier vers un tableau ou un autre fichier", algoId: 'algo-fichier-texte-transfert' }
+          ],
+          tables: ['fichiers-table-d']
+        }
+      ]
     },
     {
       order: 2,
@@ -109,7 +218,43 @@
         'recursivite',
         'recurrence'
       ],
-      tags: ["algo", "algorithme", "recurrence", "recursivite", "base", "general", "arret", "pile"]
+      tags: ["algo", "algorithme", "recurrence", "recursivite", "base", "general", "arret", "pile"],
+      sections: [
+        {
+          slug: 'recurrence-bases',
+          order: 1,
+          title: 'Fondements de la récursivité',
+          summary: "Fondements de la récursivité : condition d'arrêt (cas de base) et étape récursive. Comprendre le rôle de la pile d'exécution et savoir tracer les appels récursifs sur papier.",
+          skills: [
+            { id: 'skill-rec-base', text: "Je sais identifier le cas de base et le cas récursif d'une fonction", algoId: 'algo-recurrence-intro' },
+            { id: 'skill-rec-trace', text: "Je sais tracer l'arbre des appels récursifs d'une suite ou fonction", algoId: 'algo-fibo-rec' }
+          ],
+          tables: ['recursivite-bases']
+        },
+        {
+          slug: 'recursivite-numerique',
+          order: 2,
+          title: 'Arithmétique & calculs récursifs',
+          summary: "Algorithmes arithmétiques et numériques récursifs classiques du Bac : factorielle, puissance, PGCD euclidien, somme des chiffres et conversion.",
+          skills: [
+            { id: 'skill-rec-fact', text: "Je sais écrire une factorielle ou une puissance récursive", algoId: 'algo-fact-rec' },
+            { id: 'skill-rec-pgcd', text: "Je sais implémenter l'algorithme d'Euclide récursif pour le PGCD", algoId: 'algo-pgcd-rec' },
+            { id: 'skill-rec-chiffres', text: "Je sais décomposer un entier récursivement (somme des chiffres, conversion)", algoId: 'algo-somme-chiffres-rec' }
+          ],
+          tables: ['recursivite-numerique']
+        },
+        {
+          slug: 'recursivite-chaines-tableaux',
+          order: 3,
+          title: 'Chaînes & tableaux récursifs',
+          summary: "Traitement récursif sur les structures séquentielles : vérification de palindrome et recherche dichotomique récursive. Réduction de taille par découpage d'indices.",
+          skills: [
+            { id: 'skill-rec-palin', text: "Je sais tester un palindrome de façon récursive", algoId: 'algo-palindrome-rec' },
+            { id: 'skill-rec-dicho', text: "Je sais écrire la recherche dichotomique sous forme récursive", algoId: 'algo-recherche-dicho-rec' }
+          ],
+          tables: ['recursivite-structures']
+        }
+      ]
     },
     {
       order: 3,
@@ -146,7 +291,41 @@
         'Chapitre 3 : Convertion Entre les Bases',
         'bases'
       ],
-      tags: ["algo", "algorithme", "bases", "conversion", "binaire", "octal", "hexadecimal", "decimal"]
+      tags: ["algo", "algorithme", "bases", "conversion", "binaire", "octal", "hexadecimal", "decimal"],
+      sections: [
+        {
+          slug: 'bases-puissances-2',
+          order: 1,
+          title: 'Conversions directes (Puissances de 2)',
+          summary: "Conversions directes entre bases puissances de 2 (Base 2, Base 8, Base 16) par regroupement de bits (3 bits pour l'octal, 4 bits pour l'hexadécimal).",
+          skills: [
+            { id: 'skill-bases-regroup', text: "Je sais convertir un binaire en octal ou hexadécimal par paquets de bits", algoId: 'algo-bin2hexa' },
+            { id: 'skill-bases-eclate', text: "Je sais éclater un chiffre octal ou hexadécimal en binaire", algoId: 'algo-hex2bin' }
+          ],
+          tables: ['bases-puissances-2']
+        },
+        {
+          slug: 'bases-dec-any',
+          order: 2,
+          title: 'Décimal ↔ Base B',
+          summary: "Conversions universelles : Décimal vers Base B par divisions successives (lecture des restes inversée) et Base B vers Décimal par méthode polynomiale ou de Horner.",
+          skills: [
+            { id: 'skill-bases-dec2any', text: "Je sais convertir un entier décimal en une base B quelconque (2 à 16)", algoId: 'algo-dec2any' },
+            { id: 'skill-bases-any2dec', text: "Je sais évaluer une chaîne en base B vers le système décimal", algoId: 'algo-a2d' }
+          ],
+          tables: ['bases-conversions']
+        },
+        {
+          slug: 'bases-any2any',
+          order: 3,
+          title: 'Conversion universelle (Base A ➔ Base B)',
+          summary: "Conversion universelle d'une base source A vers une base cible B par passage intermédiaire via la base 10 (Base A ➔ Décimal ➔ Base B).",
+          skills: [
+            { id: 'skill-bases-trans', text: "Je sais chaîner les deux algorithmes pour convertir d'une base A à une base B", algoId: 'algo-any2any' }
+          ],
+          tables: ['bases-any2any']
+        }
+      ]
     },
     {
       order: 4,
@@ -182,7 +361,39 @@
         'Chapitre 4 : Arithmétique',
         'arithmetique'
       ],
-      tags: ["algo", "algorithme", "arithmetique", "premier", "pgcd", "ppcm", "factorielle", "puissance"]
+      tags: ["algo", "algorithme", "arithmetique", "premier", "pgcd", "ppcm", "factorielle", "puissance"],
+      sections: [
+        {
+          slug: 'arithmetique-primalite',
+          order: 1,
+          title: 'Primalité & diviseurs',
+          summary: "Test de primalité d'un entier n >= 2 par recherche de diviseurs jusqu'à racine_carree(n). Génération de nombres premiers et recherche de diviseurs.",
+          skills: [
+            { id: 'skill-arith-premier', text: "Je sais tester si un nombre est premier de manière optimisée", algoId: 'algo-premier' }
+          ],
+          tables: ['arithmetique-primalite']
+        },
+        {
+          slug: 'arithmetique-pgcd-ppcm',
+          order: 2,
+          title: 'PGCD & PPCM',
+          summary: "Calcul du PGCD par l'algorithme d'Euclide (modulos) ou par soustractions successives. Calcul du PPCM via la relation fondamentale PPCM(a,b) = (a * b) DIV PGCD(a,b).",
+          skills: [
+            { id: 'skill-arith-pgcd', text: "Je sais calculer le PGCD et le PPCM de deux entiers", algoId: 'algo-pgcd-ppcm' }
+          ],
+          tables: ['arithmetique-pgcd-ppcm']
+        },
+        {
+          slug: 'arithmetique-puissances',
+          order: 3,
+          title: 'Factorielle & puissances',
+          summary: "Calcul de factorielle, de puissances entières, puissances à exposant négatif et puissances d'exposant quelconque avec contrôle de validité.",
+          skills: [
+            { id: 'skill-arith-puiss', text: "Je sais calculer n! et x^n de manière itérative", algoId: 'algo-puissance' }
+          ],
+          tables: ['arithmetique-puissances']
+        }
+      ]
     },
     {
       order: 5,
@@ -220,7 +431,21 @@
         'Chapitre 5 : Approximation & optimisation',
         'approximation'
       ],
-      tags: ["algo", "algorithme", "approximation", "optimisation", "aires", "rectangles", "trapezes", "integration"]
+      tags: ["algo", "algorithme", "approximation", "optimisation", "aires", "rectangles", "trapezes", "integration"],
+      sections: [
+        {
+          slug: 'approximation-aires',
+          order: 1,
+          title: "Approximation d'aires & intégrales",
+          summary: "Méthodes numériques d'intégration approchée : méthode des rectangles (point gauche, point milieu, point droit) et méthode des trapèzes pour estimer l'intégrale d'une fonction.",
+          skills: [
+            { id: 'skill-approx-h', text: "Je sais calculer le pas h = (b - a) / n d'une subdivision", algoId: 'algo-aire-milieu' },
+            { id: 'skill-approx-rect', text: "Je sais approcher une aire par la méthode des rectangles (milieu / gauche / droite)", algoId: 'algo-aire-milieu' },
+            { id: 'skill-approx-trap', text: "Je sais approcher une aire par la méthode des trapèzes", algoId: 'algo-aire-trapezes' }
+          ],
+          tables: ['approximation-methodes']
+        }
+      ]
     },
     {
       order: 6,
@@ -256,7 +481,65 @@
         'Chapitre 6 : Les tableaux',
         'tableaux'
       ],
-      tags: ["algo", "algorithme", "tableaux", "vecteurs", "tri", "recherche", "manipulation", "selection", "bulles", "insertion"]
+      tags: ["algo", "algorithme", "tableaux", "vecteurs", "tri", "recherche", "manipulation", "selection", "bulles", "insertion"],
+      sections: [
+        {
+          slug: 'tableaux-remplissage',
+          order: 1,
+          title: 'Saisie & Remplissage',
+          summary: "Saisie contrôlée de la taille du tableau (Répéter..Jusqu'à) et remplissage selon diverses contraintes (valeurs quelconques, respectant une condition, ou éléments strictement distincts).",
+          skills: [
+            { id: 'skill-tab-saisie', text: "Je sais contrôler la saisie de la taille d'un tableau (5 <= n <= 50)", algoId: 'algo-tab-saisie' },
+            { id: 'skill-tab-remplir-dist', text: "Je sais remplir un tableau avec des valeurs distinctes", algoId: 'algo-remplir-distinct' }
+          ],
+          tables: ['tableaux-remplissage']
+        },
+        {
+          slug: 'tableaux-recherche',
+          order: 2,
+          title: 'Recherche séquentielle & dichotomique',
+          summary: "Recherche séquentielle sur tableau quelconque (O(n)) vs recherche dichotomique sur tableau trié (O(log n)). Maintien des bornes début, fin et milieu.",
+          skills: [
+            { id: 'skill-tab-rech-seq', text: "Je sais effectuer une recherche séquentielle dans un tableau", algoId: 'algo-tab-recherche-seq' },
+            { id: 'skill-tab-rech-dicho', text: "Je sais programmer la recherche dichotomique itérative sur un tableau trié", algoId: 'algo-tab-recherche-dicho' }
+          ],
+          tables: ['tableaux-recherche']
+        },
+        {
+          slug: 'tableaux-tris',
+          order: 3,
+          title: 'Tris fondamentaux (Bulles, Sélection, Insertion)',
+          summary: "Les 3 tris au programme du Bac : Tri à bulles (avec variable drapeau d'optimisation), Tri par sélection du minimum, et Tri par insertion progressive.",
+          skills: [
+            { id: 'skill-tab-tri-bulles', text: "Je sais implémenter et expliquer le tri à bulles optimisé", algoId: 'algo-tab-tri-bulles' },
+            { id: 'skill-tab-tri-selection', text: "Je sais implémenter le tri par sélection du minimum", algoId: 'algo-tab-tri-selection' },
+            { id: 'skill-tab-tri-insertion', text: "Je sais implémenter le tri par insertion", algoId: 'algo-tab-tri-insertion' }
+          ],
+          tables: ['tableaux-tris']
+        },
+        {
+          slug: 'tableaux-chaines',
+          order: 4,
+          title: 'Chaînes & caractères',
+          summary: "Manipulation de chaînes et conversion entre chaînes et tableaux de caractères : test de palindrome, saisie sécurisée et extraction de mots.",
+          skills: [
+            { id: 'skill-tab-palindrome', text: "Je sais vérifier si une chaîne ou un tableau est un palindrome", algoId: 'algo-palindrome' },
+            { id: 'skill-tab-lirech', text: "Je sais contrôler la saisie d'une chaîne alphabétique non vide", algoId: 'algo-lirech' }
+          ],
+          tables: ['tableaux-chaines']
+        },
+        {
+          slug: 'tableaux-transformations',
+          order: 5,
+          title: 'Transformations & inversions',
+          summary: "Transformations de vecteurs : décalage circulaire à gauche ou à droite, rotation et inversion sur place des éléments d'un tableau.",
+          skills: [
+            { id: 'skill-tab-inversion', text: "Je sais inverser les éléments d'un tableau sur place", algoId: 'algo-tab-inversion' },
+            { id: 'skill-tab-decalage', text: "Je sais effectuer un décalage circulaire des éléments", algoId: 'algo-tab-decalage-gauche' }
+          ],
+          tables: ['tableaux-transformations']
+        }
+      ]
     },
     {
       order: 7,
@@ -293,7 +576,64 @@
         'Chapitre 7 : Matrices',
         'matrices'
       ],
-      tags: ["algo", "algorithme", "matrice", "matrices", "2d", "diagonale", "point-selle", "sablier", "motif"]
+      tags: ["algo", "algorithme", "matrice", "matrices", "2d", "diagonale", "point-selle", "sablier", "motif"],
+      sections: [
+        {
+          slug: 'matrices-bases',
+          order: 1,
+          title: 'Création & Initialisation',
+          summary: "Définition et initialisation d'une matrice L x C : déclaration T.D.N.T, boucle imbriquée pour la saisie et l'affichage sous forme de grille tabulée.",
+          skills: [
+            { id: 'skill-mat-decl', text: "Je sais déclarer une matrice dans le T.D.N.T et l'initialiser", algoId: 'algo-mat-declaration-creation' },
+            { id: 'skill-mat-affich', text: "Je sais afficher proprement une matrice en lignes et colonnes", algoId: 'algo-mat-remplissage-affichage' }
+          ],
+          tables: ['matrices-bases']
+        },
+        {
+          slug: 'matrices-parcours',
+          order: 2,
+          title: 'Parcours & Motifs',
+          summary: "Techniques de parcours : parcours standard par lignes ou par colonnes, parcours inversé, parcours en zig-zag et parcours de motifs géométriques (sablier).",
+          skills: [
+            { id: 'skill-mat-parcours-col', text: "Je sais parcourir une matrice colonne par colonne", algoId: 'algo-mat-parcours-lignes-colonnes' },
+            { id: 'skill-mat-sablier', text: "Je sais extraire ou remplir un motif géométrique (sablier, croix)", algoId: 'algo-mat-pattern-sablier' }
+          ],
+          tables: ['matrices-parcours']
+        },
+        {
+          slug: 'matrices-diagonales',
+          order: 3,
+          title: 'Diagonales & Matrices carrées',
+          summary: "Matrices carrées N x N : repérage et traitement de la diagonale principale (i = j), de la diagonale secondaire (i + j = N - 1) et test de symétrie.",
+          skills: [
+            { id: 'skill-mat-diags', text: "Je sais parcourir les deux diagonales d'une matrice carrée", algoId: 'algo-mat-diagonales' },
+            { id: 'skill-mat-sym', text: "Je sais vérifier si une matrice est symétrique ou diagonale", algoId: 'algo-mat-verifications-speciales' }
+          ],
+          tables: ['matrices-diagonales']
+        },
+        {
+          slug: 'matrices-tris-calculs',
+          order: 4,
+          title: 'Calculs, tris & point-selle',
+          summary: "Calculs sur matrices : somme par ligne/colonne, statistiques globales (min, max, moyenne), transposition, recherche d'élément et calcul d'un point-selle.",
+          skills: [
+            { id: 'skill-mat-transp', text: "Je sais calculer la transposée d'une matrice", algoId: 'algo-mat-transposee' },
+            { id: 'skill-mat-point-selle', text: "Je sais chercher un point-selle (min sur ligne et max sur colonne)", algoId: 'algo-mat-exercice-point-selle' },
+            { id: 'skill-mat-tri', text: "Je sais trier les lignes ou les colonnes d'une matrice", algoId: 'algo-tri-mat-ligne' }
+          ],
+          tables: ['matrices-calculs']
+        },
+        {
+          slug: 'matrices-fichiers',
+          order: 5,
+          title: 'Matrices & Fichiers',
+          summary: "Sauvegarde et chargement d'une matrice dans un fichier binaire : stockage sous forme de lignes d'enregistrements ou d'objet matriciel avec pickle.",
+          skills: [
+            { id: 'skill-mat-fich', text: "Je sais enregistrer une matrice dans un fichier binaire", algoId: 'algo-mat-fichiers-binaires' }
+          ],
+          tables: ['matrices-fichiers']
+        }
+      ]
     },
     {
       order: 8,
@@ -329,7 +669,41 @@
         'Chapitre 8 : Les suites',
         'suites'
       ],
-      tags: ["algo", "algorithme", "suites", "recurrence", "terme", "somme", "fibonacci", "syracuse", "heron"]
+      tags: ["algo", "algorithme", "suites", "recurrence", "terme", "somme", "fibonacci", "syracuse", "heron"],
+      sections: [
+        {
+          slug: 'suites-classiques',
+          order: 1,
+          title: 'Suites arithmétiques & géométriques',
+          summary: "Suites arithmétiques (terme général U_n = U_0 + n*r, somme des termes) et suites géométriques (U_n = U_0 * q^n, somme des termes). Formules directes et calcul itératif.",
+          skills: [
+            { id: 'skill-suites-arith-geom', text: "Je sais calculer le n-ième terme et la somme d'une suite arithmétique ou géométrique", algoId: 'algo-suite-arithmetique' }
+          ],
+          tables: ['suites-classiques']
+        },
+        {
+          slug: 'suites-recurrentes',
+          order: 2,
+          title: 'Suites récurrentes & convergence',
+          summary: "Suites définies par récurrence U_{n+1} = f(U_n) : maintien des termes successifs, calcul de termes consécutifs et critère d'arrêt de convergence |U_{n+1} - U_n| < epsilon.",
+          skills: [
+            { id: 'skill-suites-rec-pivot', text: "Je sais calculer les termes d'une suite récurrente avec 2 variables pivot", algoId: 'algo-suite-recurrente-f' },
+            { id: 'skill-suites-eps', text: "Je sais itérer jusqu'à la convergence avec une marge d'erreur epsilon", algoId: 'algo-suite-convergence-eps' }
+          ],
+          tables: ['suites-recurrentes']
+        },
+        {
+          slug: 'suites-heron-syracuse',
+          order: 3,
+          title: 'Suites remarquables (Héron, Syracuse)',
+          summary: "Suites remarquables du Bac : algorithme de Héron pour l'approximation de racine carrée et suite de Syracuse (Collatz) avec calcul du temps de vol et de l'altitude maximale.",
+          skills: [
+            { id: 'skill-suites-heron', text: "Je sais programmer la suite de Héron pour approcher racine(a)", algoId: 'algo-suite-heron' },
+            { id: 'skill-suites-syracuse', text: "Je sais calculer le temps de vol et l'altitude de la suite de Syracuse", algoId: 'algo-suite-syracuse' }
+          ],
+          tables: ['suites-heron-syracuse']
+        }
+      ]
     }
   ];
 
@@ -396,15 +770,16 @@
     }
   });
 
-  // Alias rétrocompatibles pour routes (ch1..ch8, recurrence -> recursivite, ch6 -> matrices)
+  // Alias rétrocompatibles pour routes (ch0..ch8, recurrence -> recursivite, ch6 -> matrices)
+  slugMap.set('ch0', orderMap.get(0));
   slugMap.set('ch1', orderMap.get(1));
   slugMap.set('ch2', orderMap.get(2));
   slugMap.set('ch3', orderMap.get(3));
   slugMap.set('ch4', orderMap.get(4));
   slugMap.set('ch5', orderMap.get(5));
-  slugMap.set('ch6', slugMap.get('matrices')); // Ancien ch6 était Matrices
-  slugMap.set('ch7', slugMap.get('matrices') || orderMap.get(7));
-  slugMap.set('ch8', slugMap.get('suites') || orderMap.get(8));
+  slugMap.set('ch6', orderMap.get(6));
+  slugMap.set('ch7', orderMap.get(7));
+  slugMap.set('ch8', orderMap.get(8));
   slugMap.set('recurrence', slugMap.get('recursivite'));
 
   return {
@@ -417,8 +792,8 @@
       const clean = String(slug).trim().toLowerCase();
       // Match exact slug ou alias
       if (slugMap.has(clean)) return slugMap.get(clean);
-      // Match "chX"
-      const chMatch = clean.match(/^ch([1-8])$/);
+      // Match "chX" (0..8)
+      const chMatch = clean.match(/^ch([0-8])$/);
       if (chMatch) {
         return orderMap.get(parseInt(chMatch[1], 10)) || null;
       }
@@ -443,17 +818,36 @@
         if (ch.fullTitle.toLowerCase() === clean) return ch;
         if (ch.title.toLowerCase() === clean) return ch;
         if (ch.shortTitle.toLowerCase() === clean) return ch;
+        if (ch.slug.toLowerCase() === clean) return ch;
         if (ch.legacyCategories && ch.legacyCategories.some(c => c.toLowerCase() === clean)) return ch;
       }
       return null;
     },
 
-    matchesCategory(itemCategory, chapter) {
-      if (!itemCategory || !chapter) return false;
-      const clean = String(itemCategory).trim().toLowerCase();
+    getChapterSections(slug) {
+      const ch = this.getChapterBySlug(slug);
+      return (ch && ch.sections) ? ch.sections : [];
+    },
+
+    getSection(chapterSlug, sectionSlug) {
+      const ch = this.getChapterBySlug(chapterSlug);
+      if (!ch || !ch.sections) return null;
+      return ch.sections.find(s => s.slug === sectionSlug) || null;
+    },
+
+    matchesCategory(itemOrCat, chapter) {
+      if (!itemOrCat || !chapter) return false;
+      // Si l'objet possède la propriété chapter explicite
+      if (typeof itemOrCat === 'object') {
+        if (itemOrCat.chapter && itemOrCat.chapter === chapter.slug) return true;
+        if (itemOrCat.secondaryChapters && Array.isArray(itemOrCat.secondaryChapters) && itemOrCat.secondaryChapters.includes(chapter.slug)) return true;
+      }
+      const raw = typeof itemOrCat === 'string' ? itemOrCat : (itemOrCat.category || '');
+      const clean = String(raw).trim().toLowerCase();
       if (chapter.fullTitle.toLowerCase() === clean) return true;
       if (chapter.title.toLowerCase() === clean) return true;
       if (chapter.shortTitle.toLowerCase() === clean) return true;
+      if (chapter.slug.toLowerCase() === clean) return true;
       if (chapter.legacyCategories && chapter.legacyCategories.some(c => c.toLowerCase() === clean)) return true;
       return false;
     },
@@ -485,10 +879,10 @@
         "algo-theorique": "Théorique (Algorithme)"
       };
       ALGO_CHAPTERS.forEach(ch => {
-        map[ch.pdfSubjectKey] = `Ch ${ch.order} : ${ch.title}`;
+        map[ch.pdfSubjectKey] = ch.order === 0 ? ch.fullTitle : `Ch ${ch.order} : ${ch.title}`;
         if (ch.legacyPdfKeys) {
           ch.legacyPdfKeys.forEach(k => {
-            map[k] = `Ch ${ch.order} : ${ch.title}`;
+            map[k] = ch.order === 0 ? ch.fullTitle : `Ch ${ch.order} : ${ch.title}`;
           });
         }
       });
@@ -502,7 +896,7 @@
         js: ["js", "javascript", "script", "controle", "validation"],
         sql: ["sql", "bdd", "base", "table", "requete", "select"],
         "algo-pratique": ["algo", "algorithme", "pratique", "qt", "designer", "thonny", "python", "interface"],
-        "algo-theorique": ["algo", "algorithme", "theorique", "bac", "tri", "matrice", "pattern", "bases", "recursivite", "tableaux", "suites"]
+        "algo-theorique": ["algo", "algorithme", "theorique", "bac", "tri", "matrice", "pattern", "bases", "recursivite", "tableaux", "suites", "rappels"]
       };
       ALGO_CHAPTERS.forEach(ch => {
         map[ch.pdfSubjectKey] = ch.tags;
@@ -529,7 +923,7 @@
     },
 
     formatChapterBadge(order) {
-      return `Ch ${order}`;
+      return order === 0 ? 'Prérequis' : `Ch ${order}`;
     },
 
     getTotalAlgoChapters() {

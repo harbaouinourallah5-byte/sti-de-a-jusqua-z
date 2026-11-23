@@ -3091,7 +3091,7 @@ const DATA = {
       "summary": "Calculs approchés d'intégrales définies et convergence de suites d'aires.",
       "downloadName": "Support_Officiel_Ch5_Approximation.pdf"
     },
-        {
+    {
       "id": "lesson-algo-ch6-matrices",
       "title": "Support Officiel : Ch 6 - Matrices & Tableaux à Deux Dimensions",
       "subject": "algo-ch6-matrices",
@@ -4702,7 +4702,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def remplir_fichier_texte():\n    f = open(\"donnees.txt\", \"w\")\n    ch = input(\"ch=\")\n    while not (ch == \"\"):\n        f.write(ch + \"\\n\")\n        ch = input(\"ch=\")\n    f.close()",
-      "example": "remplir_fichier_texte()"
+      "example": "remplir_fichier_texte()",
+      "chapter": "fichiers",
+      "section": "fichiers-texte"
     },
     {
       "id": "algo-fichier-texte-afficher",
@@ -4724,7 +4726,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def afficher_fichier_texte():\n    f = open(\"donnees.txt\", \"r\")\n    for ligne in f:\n        ch = ligne.strip()\n        print(ch)\n    f.close()",
-      "example": "afficher_fichier_texte()"
+      "example": "afficher_fichier_texte()",
+      "chapter": "fichiers",
+      "section": "fichiers-texte"
     },
     {
       "id": "algo-fichier-texte-transfert",
@@ -4746,7 +4750,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def fichier_vers_tableau(T):\n    f = open(\"donnees.txt\", \"r\")\n    for ligne in f:\n        ch = ligne.strip()\n        T.append(ch)\n    f.close()",
-      "example": "T = [] ; fichier_vers_tableau(T)"
+      "example": "T = [] ; fichier_vers_tableau(T)",
+      "chapter": "fichiers",
+      "section": "fichiers-transfert"
     },
     {
       "id": "algo-fichier-binaire-remplir",
@@ -4772,7 +4778,9 @@ const DATA = {
         }
       ],
       "pythonCode": "from pickle import dump\n\ndef remplir_fichier_binaire(n):\n    f = open(\"eleves.dat\", \"wb\")\n    for i in range(n):\n        e = {}\n        e[\"cin\"] = input(\"cin=\")\n        e[\"nom\"] = input(\"nom=\")\n        e[\"moy\"] = float(input(\"moy=\"))\n        dump(e, f)\n    f.close()",
-      "example": "remplir_fichier_binaire(3)"
+      "example": "remplir_fichier_binaire(3)",
+      "chapter": "fichiers",
+      "section": "fichiers-binaires"
     },
     {
       "id": "algo-fichier-binaire-afficher",
@@ -4794,11 +4802,13 @@ const DATA = {
         }
       ],
       "pythonCode": "from pickle import load\n\ndef afficher_fichier_binaire():\n    f = open(\"eleves.dat\", \"rb\")\n    fin = False\n    while not fin:\n        try:\n            e = load(f)\n            print(e[\"cin\"], e[\"nom\"], e[\"moy\"])\n        except:\n            fin = True\n    f.close()",
-      "example": "afficher_fichier_binaire()"
+      "example": "afficher_fichier_binaire()",
+      "chapter": "fichiers",
+      "section": "fichiers-binaires"
     },
     {
       "id": "algo-remplir",
-      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
+      "category": "Chapitre 6 : Les tableaux",
       "type": "procédure",
       "name": "remplir(VAR t, N)",
       "syntax": "procédure remplir(VAR t: tab, N: entier)",
@@ -4812,11 +4822,13 @@ const DATA = {
         }
       ],
       "pythonCode": "def remplir(t, N):\n    for i in range(N):\n        x = int(input(\"t[\" + str(i) + \"]=\"))\n        t.append(x)",
-      "example": "remplir(t, 4) → t = [12, 45, 7, 88]"
+      "example": "remplir(t, 4) → t = [12, 45, 7, 88]",
+      "chapter": "tableaux",
+      "section": "tableaux-remplissage"
     },
     {
       "id": "algo-remplir-condition",
-      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
+      "category": "Chapitre 6 : Les tableaux",
       "type": "procédure",
       "name": "remplir_condition(VAR t, N)",
       "syntax": "procédure remplir_condition(VAR t: tab, N: entier)",
@@ -4830,11 +4842,13 @@ const DATA = {
         }
       ],
       "pythonCode": "def remplir_condition(t, N):\n    for i in range(N):\n        x = int(input(\"t[\" + str(i) + \"]=\"))\n        while not (x > 0):\n            x = int(input(\"t[\" + str(i) + \"]=\"))\n        t.append(x)",
-      "example": "Force la saisie de nombres strictement positifs pour chaque case"
+      "example": "Force la saisie de nombres strictement positifs pour chaque case",
+      "chapter": "tableaux",
+      "section": "tableaux-remplissage"
     },
     {
       "id": "algo-remplir-distinct",
-      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
+      "category": "Chapitre 6 : Les tableaux",
       "type": "procédure",
       "name": "remplir_distinct(VAR t, n)",
       "syntax": "procédure remplir_distinct(VAR t: tab, n: entier)",
@@ -4852,11 +4866,13 @@ const DATA = {
         }
       ],
       "pythonCode": "def existe(t, n, x):\n    for i in range(n):\n        if t[i] == x:\n            return True\n    return False\n\ndef remplir_distinct(t, n):\n    for i in range(n):\n        x = int(input(\"t[\" + str(i) + \"]=\"))\n        while not (not existe(t, i, x)):\n            x = int(input(\"t[\" + str(i) + \"]=\"))\n        t.append(x)",
-      "example": "Saisie t = [5, 12, 8, 99] (rejette tout doublon)"
+      "example": "Saisie t = [5, 12, 8, 99] (rejette tout doublon)",
+      "chapter": "tableaux",
+      "section": "tableaux-remplissage"
     },
     {
       "id": "algo-tri-bulle",
-      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
+      "category": "Chapitre 6 : Les tableaux",
       "type": "procédure",
       "name": "tri_bulle(VAR t, n)",
       "syntax": "procédure tri_bulle(VAR t: tab, n: entier)",
@@ -4874,11 +4890,13 @@ const DATA = {
         }
       ],
       "pythonCode": "def tri_bulle(t, n):\n    p = True\n    while p:\n        p = False\n        for i in range(n - 1):\n            if t[i] > t[i + 1]:\n                aux = t[i]\n                t[i] = t[i + 1]\n                t[i + 1] = aux\n                p = True\n        n = n - 1",
-      "example": "tri_bulle([64, 34, 25, 12, 22], 5) → [12, 22, 24, 34, 64]"
+      "example": "tri_bulle([64, 34, 25, 12, 22], 5) → [12, 22, 24, 34, 64]",
+      "chapter": "tableaux",
+      "section": "tableaux-tris"
     },
     {
       "id": "algo-tri-selection",
-      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
+      "category": "Chapitre 6 : Les tableaux",
       "type": "procédure",
       "name": "tri_par_sélection(VAR T, N)",
       "syntax": "procédure tri_par_sélection(VAR T: tab, N: entier)",
@@ -4892,11 +4910,13 @@ const DATA = {
         }
       ],
       "pythonCode": "def tri_par_selection(T, N):\n    for i in range(N - 1):\n        pos_min = i\n        for j in range(i + 1, N):\n            if T[j] < T[pos_min]:\n                pos_min = j\n        if i != pos_min:\n            aux = T[i]\n            T[i] = T[pos_min]\n            T[pos_min] = aux",
-      "example": "tri_par_selection([29, 10, 14, 37, 13], 5) → [10, 13, 14, 29, 37]"
+      "example": "tri_par_selection([29, 10, 14, 37, 13], 5) → [10, 13, 14, 29, 37]",
+      "chapter": "tableaux",
+      "section": "tableaux-tris"
     },
     {
       "id": "algo-tri-insertion",
-      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
+      "category": "Chapitre 6 : Les tableaux",
       "type": "procédure",
       "name": "tri_par_insertion(VAR T, N)",
       "syntax": "procédure tri_par_insertion(VAR T: tab, N: entier)",
@@ -4910,11 +4930,13 @@ const DATA = {
         }
       ],
       "pythonCode": "def tri_par_insertion(T, N):\n    for i in range(1, N):\n        backup = T[i]\n        inLibre = i\n        while inLibre > 0 and T[inLibre - 1] > backup:\n            T[inLibre] = T[inLibre - 1]\n            inLibre = inLibre - 1\n        T[inLibre] = backup",
-      "example": "tri_par_insertion([12, 11, 13, 5, 6], 5) → [5, 6, 11, 12, 13]"
+      "example": "tri_par_insertion([12, 11, 13, 5, 6], 5) → [5, 6, 11, 12, 13]",
+      "chapter": "tableaux",
+      "section": "tableaux-tris"
     },
     {
       "id": "algo-palindrome",
-      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
+      "category": "Chapitre 6 : Les tableaux",
       "type": "fonction",
       "name": "palindrome(ch)",
       "syntax": "fonction palindrome(ch: chaîne): booléen",
@@ -4932,11 +4954,13 @@ const DATA = {
         }
       ],
       "pythonCode": "def palindrome(ch):\n    i = 0\n    j = len(ch) - 1\n    ok = True\n    while i < j and ok:\n        if ch[i] != ch[j]:\n            ok = False\n        else:\n            i = i + 1\n            j = j - 1\n    return ok",
-      "example": "palindrome(\"radar\") → True, palindrome(\"bac\") → False"
+      "example": "palindrome(\"radar\") → True, palindrome(\"bac\") → False",
+      "chapter": "tableaux",
+      "section": "tableaux-chaines"
     },
     {
       "id": "algo-lirech",
-      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
+      "category": "Chapitre 6 : Les tableaux",
       "type": "procédure",
       "name": "lirech(VAR ch)",
       "syntax": "procédure lirech(VAR ch: chaîne)",
@@ -4954,11 +4978,13 @@ const DATA = {
         }
       ],
       "pythonCode": "def verif(ch):\n    if len(ch) == 0:\n        return False\n    for i in range(len(ch)):\n        if ch.find(ch[i]) != i:\n            return False\n    return True\n\ndef lirech():\n    ch = input(\"ch=\")\n    while not verif(ch):\n        ch = input(\"ch=\")\n    return ch",
-      "example": "lirech() avec \"bac\" → valide, avec \"test\" (2 fois t) → rejeté"
+      "example": "lirech() avec \"bac\" → valide, avec \"test\" (2 fois t) → rejeté",
+      "chapter": "tableaux",
+      "section": "tableaux-chaines"
     },
     {
       "id": "algo-struct-si-sinonsi",
-      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
+      "category": "Chapitre 0 : Rappels & Prérequis",
       "type": "structure",
       "name": "Structure Conditionnelle : Si ... Sinon Si ... Sinon",
       "syntax": "si (condition_1) alors ... sinon si (condition_2) alors ... sinon ... fin_si",
@@ -4976,11 +5002,13 @@ const DATA = {
         }
       ],
       "pythonCode": "if moyenne >= 16:\n    mention = \"Très Bien\"\nelif moyenne >= 14:\n    mention = \"Bien\"\nelif moyenne >= 12:\n    mention = \"Assez Bien\"\nelif moyenne >= 10:\n    mention = \"Passable\"\nelse:\n    mention = \"Ajourné\"\n\nprint(mention)",
-      "example": "moyenne = 15.5 → mention = \"Bien\""
+      "example": "moyenne = 15.5 → mention = \"Bien\"",
+      "chapter": "rappels",
+      "section": "structures-controle"
     },
     {
       "id": "algo-struct-boucle-pour",
-      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
+      "category": "Chapitre 0 : Rappels & Prérequis",
       "type": "structure",
       "name": "Boucle Pour (Nombre d'itérations connu)",
       "syntax": "pour i de début à fin [pas = p] faire ... fin_pour",
@@ -4994,11 +5022,13 @@ const DATA = {
         }
       ],
       "pythonCode": "s = 0\nfor i in range(1, N + 1):\n    s = s + i\n\nprint(\"Somme = \" + str(s))",
-      "example": "N = 5 → Somme = 15"
+      "example": "N = 5 → Somme = 15",
+      "chapter": "rappels",
+      "section": "structures-controle"
     },
     {
       "id": "algo-struct-boucle-tantque",
-      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
+      "category": "Chapitre 0 : Rappels & Prérequis",
       "type": "structure",
       "name": "Boucle Tant Que (Condition préalable)",
       "syntax": "tant que (condition) faire ... fin_tant_que",
@@ -5012,11 +5042,13 @@ const DATA = {
         }
       ],
       "pythonCode": "while n % 2 == 0:\n    n = n // 2\n\nprint(\"Résultat = \" + str(n))",
-      "example": "n = 40 → Résultat = 5"
+      "example": "n = 40 → Résultat = 5",
+      "chapter": "rappels",
+      "section": "structures-controle"
     },
     {
       "id": "algo-struct-boucle-repeter",
-      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
+      "category": "Chapitre 0 : Rappels & Prérequis",
       "type": "structure",
       "name": "Boucle Répéter ... Jusqu'à (Arrêt sur condition)",
       "syntax": "répéter ... jusqu'à (condition_arrêt)",
@@ -5030,11 +5062,13 @@ const DATA = {
         }
       ],
       "pythonCode": "N = int(input(\"N=\"))\nwhile not (10 <= N <= 50):\n    N = int(input(\"N=\"))",
-      "example": "Saisie redemandée tant que N est hors de [10, 50]"
+      "example": "Saisie redemandée tant que N est hors de [10, 50]",
+      "chapter": "rappels",
+      "section": "structures-controle"
     },
     {
       "id": "algo-struct-sousprogrammes",
-      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
+      "category": "Chapitre 0 : Rappels & Prérequis",
       "type": "structure",
       "name": "Sous-Programmes : Fonction & Procédure (VAR)",
       "syntax": "fonction F(p: type): type_retour | procédure P(VAR p1: type, p2: type)",
@@ -5048,11 +5082,13 @@ const DATA = {
         }
       ],
       "pythonCode": "# Fonction : calcule et retourne une valeur\ndef Somme(a, b):\n    return a + b\n\n# Procédure : modifie directement les éléments (ex: tableau)\ndef Permuter(t, i, j):\n    aux = t[i]\n    t[i] = t[j]\n    t[j] = aux",
-      "example": "Somme(4, 7) → 11"
+      "example": "Somme(4, 7) → 11",
+      "chapter": "rappels",
+      "section": "sous-programmes"
     },
     {
       "id": "algo-struct-tdo-tdnt",
-      "category": "Chapitre 1 : Les fichiers binaires et fichiers texte",
+      "category": "Chapitre 0 : Rappels & Prérequis",
       "type": "structure",
       "name": "Conventions Officielles : T.D.O & T.D.N.T",
       "syntax": "T.D.O (Objet | Type/Nature) & T.D.N.T (Type | Définition)",
@@ -5074,7 +5110,9 @@ const DATA = {
         }
       ],
       "pythonCode": "# En Python Thonny, les types sont dynamiques :\nT = [0] * 50\nM = [[0.0] * 10 for _ in range(10)]\ni = 0\nj = 0\nn = len(T)\nok = True",
-      "example": "T.D.O & T.D.N.T conformes au barème officiel de correction"
+      "example": "T.D.O & T.D.N.T conformes au barème officiel de correction",
+      "chapter": "rappels",
+      "section": "tdo-tdnt"
     },
     {
       "id": "algo-recurrence-intro",
@@ -5087,7 +5125,9 @@ const DATA = {
       "pseudoCode": "0) fonction Factorielle_Rec(n: entier): entier\n1) si (n = 0) ou (n = 1) alors\n     retourner 1\n   sinon\n     retourner n * Factorielle_Rec(n - 1)\n   fin_si\n2) fin",
       "tdo": [],
       "pythonCode": "def factorielle_rec(n):\n    if n == 0 or n == 1:\n        return 1\n    else:\n        return n * factorielle_rec(n - 1)",
-      "example": "factorielle_rec(5) → 120"
+      "example": "factorielle_rec(5) → 120",
+      "chapter": "recursivite",
+      "section": "recurrence-bases"
     },
     {
       "id": "algo-a2dr",
@@ -5105,7 +5145,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def a2dR(ch, bs, p):\n    chh = \"0123456789ABCDEF\"\n    if len(ch) == 0:\n        return 0\n    else:\n        return chh.index(ch[0].upper()) * p + a2dR(ch[1:], bs, p * bs)",
-      "example": "a2dR(\"1A55F\", 16, 1) → 107871"
+      "example": "a2dR(\"1A55F\", 16, 1) → 107871",
+      "chapter": "recursivite",
+      "section": "recursivite-numerique"
     },
     {
       "id": "algo-dec2anyr",
@@ -5123,7 +5165,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def dec2anyR(n, bd):\n    chh = \"0123456789ABCDEF\"\n    if n == 0:\n        return \"\"\n    return dec2anyR(n // bd, bd) + chh[n % bd]",
-      "example": "dec2anyR(46, 2) → \"101110\""
+      "example": "dec2anyR(46, 2) → \"101110\"",
+      "chapter": "recursivite",
+      "section": "recursivite-numerique"
     },
     {
       "id": "algo-bin2oct",
@@ -5145,7 +5189,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def bin2oct(ch):\n    while len(ch) % 3 != 0:\n        ch = \"0\" + ch\n    \n    res = \"\"\n    while ch != \"\":\n        b = ch[0:3]\n        ch = ch[3:]\n        val = int(b[0]) * 4 + int(b[1]) * 2 + int(b[2])\n        res = res + str(val)\n        \n    return int(res)",
-      "example": "bin2oct(\"1011011\") → 133"
+      "example": "bin2oct(\"1011011\") → 133",
+      "chapter": "bases",
+      "section": "bases-puissances-2"
     },
     {
       "id": "algo-a2d",
@@ -5167,7 +5213,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def a2d(ch, bs):\n    chh = \"0123456789ABCDEF\"\n    res = 0\n    p = 1\n    for i in range(len(ch) - 1, -1, -1):\n        pos = chh.index(ch[i].upper())\n        res = res + pos * p\n        p = p * bs\n    return res",
-      "example": "a2d(\"1A55F\", 16) → 107871"
+      "example": "a2d(\"1A55F\", 16) → 107871",
+      "chapter": "bases",
+      "section": "bases-dec-any"
     },
     {
       "id": "algo-bin2hexa",
@@ -5189,7 +5237,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def bin2hexa(ch):\n    chh = \"0123456789ABCDEF\"\n    while len(ch) % 4 != 0:\n        ch = \"0\" + ch\n    res = \"\"\n    while ch != \"\":\n        b = ch[0:4]\n        ch = ch[4:]\n        val = int(b[0]) * 8 + int(b[1]) * 4 + int(b[2]) * 2 + int(b[3])\n        res = res + chh[val]\n    return res",
-      "example": "bin2hexa(\"1011011\") → \"5B\""
+      "example": "bin2hexa(\"1011011\") → \"5B\"",
+      "chapter": "bases",
+      "section": "bases-puissances-2"
     },
     {
       "id": "algo-octal2bin",
@@ -5211,7 +5261,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def octal2bin(ch):\n    res = \"\"\n    for char in ch:\n        c = int(char)\n        b = dec2any(c, 2)\n        while len(b) < 3:\n            b = \"0\" + b\n        res = res + b\n    return res",
-      "example": "octal2bin(\"75401\") → \"111101100000001\""
+      "example": "octal2bin(\"75401\") → \"111101100000001\"",
+      "chapter": "bases",
+      "section": "bases-puissances-2"
     },
     {
       "id": "algo-octal2hexa",
@@ -5229,7 +5281,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def octal2hexa(ch):\n    b = octal2bin(ch)\n    h = bin2hexa(b)\n    return h",
-      "example": "octal2hexa(\"75401\") → \"7B01\""
+      "example": "octal2hexa(\"75401\") → \"7B01\"",
+      "chapter": "bases",
+      "section": "bases-puissances-2"
     },
     {
       "id": "algo-dec2any",
@@ -5247,7 +5301,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def dec2any(n, bd):\n    chh = \"0123456789ABCDEF\"\n    if n == 0:\n        return \"0\"\n    res = \"\"\n    while n != 0:\n        res = chh[n % bd] + res\n        n = n // bd\n    return res",
-      "example": "dec2any(2591, 16) → \"A1F\""
+      "example": "dec2any(2591, 16) → \"A1F\"",
+      "chapter": "bases",
+      "section": "bases-dec-any"
     },
     {
       "id": "algo-hex2bin",
@@ -5269,7 +5325,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def hex2bin(ch):\n    res = \"\"\n    chh = \"0123456789ABCDEF\"\n    for char in ch:\n        c = chh.index(char.upper())\n        b = dec2any(c, 2)\n        while len(b) < 4:\n            b = \"0\" + b\n        res = res + b\n    return res",
-      "example": "hex2bin(\"1F5A\") → \"0001111101011010\""
+      "example": "hex2bin(\"1F5A\") → \"0001111101011010\"",
+      "chapter": "bases",
+      "section": "bases-puissances-2"
     },
     {
       "id": "algo-hex2octal",
@@ -5287,7 +5345,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def hex2octal(ch):\n    b = hex2bin(ch)\n    o = str(bin2oct(b))\n    return o",
-      "example": "hex2octal(\"1F5A\") → \"17532\""
+      "example": "hex2octal(\"1F5A\") → \"17532\"",
+      "chapter": "bases",
+      "section": "bases-puissances-2"
     },
     {
       "id": "algo-any2any",
@@ -5309,7 +5369,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def any2any(ch, bs, bd):\n    n = a2d(ch, bs)\n    res = dec2any(n, bd)\n    return res",
-      "example": "any2any(\"1FA2\", 16, 8) → \"17642\""
+      "example": "any2any(\"1FA2\", 16, 8) → \"17642\"",
+      "chapter": "bases",
+      "section": "bases-any2any"
     },
     {
       "id": "algo-premier",
@@ -5331,7 +5393,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def premier(n):\n    if n <= 1:\n        return False\n    ok = True\n    for i in range(2, (n // 2) + 1):\n        if n % i == 0:\n            ok = False\n            break\n    return ok",
-      "example": "premier(17) → True, premier(21) → False"
+      "example": "premier(17) → True, premier(21) → False",
+      "chapter": "arithmetique",
+      "section": "arithmetique-primalite"
     },
     {
       "id": "algo-factorielle",
@@ -5349,7 +5413,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def factorielle(N):\n    f = 1\n    for i in range(2, N + 1):\n        f = f * i\n    return f",
-      "example": "factorielle(5) → 120"
+      "example": "factorielle(5) → 120",
+      "chapter": "arithmetique",
+      "section": "arithmetique-puissances"
     },
     {
       "id": "algo-puissance",
@@ -5371,7 +5437,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def puissance(x, n):\n    p = 1\n    for i in range(1, n + 1):\n        p = p * x\n    return float(p)",
-      "example": "puissance(2, 5) → 32.0"
+      "example": "puissance(2, 5) → 32.0",
+      "chapter": "arithmetique",
+      "section": "arithmetique-puissances"
     },
     {
       "id": "algo-puissance-va",
@@ -5393,7 +5461,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def puissance_va(x, n):\n    p = 1.0\n    for i in range(1, abs(n) + 1):\n        p = p * x\n    if n < 0:\n        p = 1.0 / p\n    return p",
-      "example": "puissance_va(2, -3) → 0.125"
+      "example": "puissance_va(2, -3) → 0.125",
+      "chapter": "arithmetique",
+      "section": "arithmetique-puissances"
     },
     {
       "id": "algo-pgcd-ppcm",
@@ -5411,7 +5481,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def pgcd_ppcm(a, b):\n    k = 1\n    while (a * k) % b != 0:\n        k = k + 1\n    ppcm = a * k\n    pgcd = (a * b) // ppcm\n    return pgcd, ppcm",
-      "example": "pgcd_ppcm(12, 18) → (PGCD: 6, PPCM: 36)"
+      "example": "pgcd_ppcm(12, 18) → (PGCD: 6, PPCM: 36)",
+      "chapter": "arithmetique",
+      "section": "arithmetique-pgcd-ppcm"
     },
     {
       "id": "algo-aire-milieu",
@@ -5433,7 +5505,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def f(x):\n    return x * x  # Exemple de fonction à intégrer\n\ndef aire_milieu(nb, a, b):\n    h = abs(b - a) / nb\n    x = a + (h / 2)\n    s = 0.0\n    for i in range(nb):\n        s = s + f(x) * h\n        x = x + h\n    return round(s, 6)",
-      "example": "aire_milieu(100, 0, 1) avec f(x)=x^2 → 0.333325"
+      "example": "aire_milieu(100, 0, 1) avec f(x)=x^2 → 0.333325",
+      "chapter": "approximation",
+      "section": "approximation-aires"
     },
     {
       "id": "algo-aire-droite",
@@ -5455,7 +5529,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def f(x):\n    return x * x\n\ndef aire_droite(nb, a, b):\n    h = abs(b - a) / nb\n    x = a + h\n    s = 0.0\n    for i in range(nb):\n        s = s + f(x) * h\n        x = x + h\n    return round(s, 6)",
-      "example": "aire_droite(100, 0, 1) avec f(x)=x^2 → 0.338350"
+      "example": "aire_droite(100, 0, 1) avec f(x)=x^2 → 0.338350",
+      "chapter": "approximation",
+      "section": "approximation-aires"
     },
     {
       "id": "algo-aire-gauche",
@@ -5477,7 +5553,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def f(x):\n    return x * x\n\ndef aire_gauche(nb, a, b):\n    h = abs(b - a) / nb\n    x = a\n    s = 0.0\n    for i in range(nb):\n        s = s + f(x) * h\n        x = x + h\n    return round(s, 6)",
-      "example": "aire_gauche(100, 0, 1) avec f(x)=x^2 → 0.328350"
+      "example": "aire_gauche(100, 0, 1) avec f(x)=x^2 → 0.328350",
+      "chapter": "approximation",
+      "section": "approximation-aires"
     },
     {
       "id": "algo-aire-trapezes",
@@ -5499,11 +5577,13 @@ const DATA = {
         }
       ],
       "pythonCode": "def f(x):\n    return x * x\n\ndef aire_trapezes(nb, a, b):\n    h = abs(b - a) / nb\n    x = a\n    s = 0.0\n    for i in range(nb):\n        s = s + ((f(x) + f(x + h)) * h) / 2\n        x = x + h\n    return round(s, 6)",
-      "example": "aire_trapezes(100, 0, 1) avec f(x)=x^2 → 0.333350"
+      "example": "aire_trapezes(100, 0, 1) avec f(x)=x^2 → 0.333350",
+      "chapter": "approximation",
+      "section": "approximation-aires"
     },
     {
       "id": "algo-recherche-dicho",
-      "category": "Chapitre 5 : Approximation et optimisation",
+      "category": "Chapitre 6 : Les tableaux",
       "type": "fonction",
       "name": "recherche_dichotomique(t, n, x)",
       "syntax": "fonction recherche_dichotomique(t: tab, n, x: entier): entier",
@@ -5517,7 +5597,12 @@ const DATA = {
         }
       ],
       "pythonCode": "def recherche_dichotomique(t, n, x):\n    g = 0\n    d = n - 1\n    pos = -1\n    while g <= d and pos == -1:\n        m = (g + d) // 2\n        if t[m] == x:\n            pos = m\n        elif t[m] < x:\n            g = m + 1\n        else:\n            d = m - 1\n    return pos",
-      "example": "recherche_dichotomique([10, 20, 30, 40, 50], 5, 30) → 2"
+      "example": "recherche_dichotomique([10, 20, 30, 40, 50], 5, 30) → 2",
+      "chapter": "tableaux",
+      "section": "tableaux-recherche",
+      "secondaryChapters": [
+        "approximation"
+      ]
     },
     {
       "id": "algo-tri-mat-colonne",
@@ -5541,7 +5626,9 @@ const DATA = {
       "pythonCode": "def tri_mat_colonne(m, n):\n    for j in range(n):\n        p = True\n        taille = n\n        while p:\n            p = False\n            for i in range(taille - 1):\n                if m[i][j] > m[i + 1][j]:\n                    aux = m[i][j]\n                    m[i][j] = m[i + 1][j]\n                    m[i + 1][j] = aux\n                    p = True\n            taille = taille - 1",
       "example": "Chaque colonne de la matrice devient triée par ordre croissant",
       "imageUrl": "img/matrices/tri_matrice_colonne.png",
-      "imageCaption": "Fiche officielle Bac Tunisie : Algorithme tri_mat_colonne (Tri à bulles optimisé par colonne indépendante avec drapeau booléen p et réduction de taille)."
+      "imageCaption": "Fiche officielle Bac Tunisie : Algorithme tri_mat_colonne (Tri à bulles optimisé par colonne indépendante avec drapeau booléen p et réduction de taille).",
+      "chapter": "matrices",
+      "section": "matrices-tris-calculs"
     },
     {
       "id": "algo-tri-mat-ligne",
@@ -5565,7 +5652,9 @@ const DATA = {
       "pythonCode": "def tri_mat_ligne(m, n):\n    for i in range(n):\n        p = True\n        taille = n\n        while p:\n            p = False\n            for j in range(taille - 1):\n                if m[i][j] > m[i][j + 1]:\n                    aux = m[i][j]\n                    m[i][j] = m[i][j + 1]\n                    m[i][j + 1] = aux\n                    p = True\n            taille = taille - 1",
       "example": "Chaque ligne de la matrice devient triée par ordre croissant",
       "imageUrl": "img/matrices/tri_matrice_ligne.png",
-      "imageCaption": "Fiche officielle Bac Tunisie : Algorithme tri_mat_ligne (Tri à bulles optimisé ligne par ligne avec boucle externe sur les lignes i et permutation sur les colonnes j)."
+      "imageCaption": "Fiche officielle Bac Tunisie : Algorithme tri_mat_ligne (Tri à bulles optimisé ligne par ligne avec boucle externe sur les lignes i et permutation sur les colonnes j).",
+      "chapter": "matrices",
+      "section": "matrices-tris-calculs"
     },
     {
       "id": "algo-mat-zones-boucles",
@@ -5593,7 +5682,9 @@ const DATA = {
       "pythonCode": "def architecture_5_zones(m, L, C):\n    # ZONE 1 : Variables globales pour toute la matrice\n    s_tot = 0\n    \n    for i in range(L):\n        # ZONE 2 : Variables réinitialisées pour chaque ligne\n        s_ligne = 0\n        \n        for j in range(C):\n            # ZONE 3 : Traitement cellule par cellule m[i][j]\n            s_ligne += m[i][j]\n            s_tot += m[i][j]\n        \n        # ZONE 4 : Traitement / vérification à la fin de la ligne\n        print(f\"Somme ligne {i} = {s_ligne}\")\n        \n    # ZONE 5 : Traitement / affichage final après les deux boucles\n    print(f\"Somme totale de la matrice = {s_tot}\")",
       "example": "Modèle architectural universel pour tous les exercices de matrices au Bac (lignes, colonnes, carrés magiques, symétrie)",
       "imageUrl": "img/matrices/zones_boucles_matrice.png",
-      "imageCaption": "Fiche manuscrite originale du Support Bac : Schéma des 5 Zones d'une boucle imbriquée (Zone 1 globale, Zone 2 par axe, Zone 3 traitement cellule, Zone 4 fin d'axe, Zone 5 résultat final)."
+      "imageCaption": "Fiche manuscrite originale du Support Bac : Schéma des 5 Zones d'une boucle imbriquée (Zone 1 globale, Zone 2 par axe, Zone 3 traitement cellule, Zone 4 fin d'axe, Zone 5 résultat final).",
+      "chapter": "matrices",
+      "section": "matrices-parcours"
     },
     {
       "id": "algo-mat-parcours-bas-haut",
@@ -5613,7 +5704,9 @@ const DATA = {
       "pythonCode": "def mat_parcours_bas_haut(m, L, C):\n    for j in range(C - 1, -1, -1):\n        for i in range(L - 1, -1, -1):\n            print(m[i][j])",
       "example": "Explore m[L-1, C-1], m[L-2, C-1], ..., m[0, 0]",
       "imageUrl": "img/matrices/parcours_colonne_bas_haut.png",
-      "imageCaption": "Schéma manuscrit original du Support Bac : Parcours d'une matrice 3x4 colonne par colonne du bas vers le haut et de droite à gauche. Règle d'or : \"elli tet7arek fisa3 hiya el pour da5lenya\" (la boucle interne varie le plus vite)."
+      "imageCaption": "Schéma manuscrit original du Support Bac : Parcours d'une matrice 3x4 colonne par colonne du bas vers le haut et de droite à gauche. Règle d'or : \"elli tet7arek fisa3 hiya el pour da5lenya\" (la boucle interne varie le plus vite).",
+      "chapter": "matrices",
+      "section": "matrices-parcours"
     },
     {
       "id": "algo-mat-parcours-ligne-inverse",
@@ -5633,7 +5726,9 @@ const DATA = {
       "pythonCode": "def mat_parcours_ligne_inverse(m, L, C):\n    for i in range(L - 1, -1, -1):\n        for j in range(C - 1, -1, -1):\n            print(m[i][j])",
       "example": "Lecture inversée ligne par ligne complète",
       "imageUrl": "img/matrices/parcours_ligne_droite_gauche.png",
-      "imageCaption": "Schéma manuscrit original du Support Bac : Parcours ligne par ligne à l'envers (de droite à gauche et du bas vers le haut). Règle d'or : \"dima el i taba3 el ligne, el j taba3 el colonne\"."
+      "imageCaption": "Schéma manuscrit original du Support Bac : Parcours ligne par ligne à l'envers (de droite à gauche et du bas vers le haut). Règle d'or : \"dima el i taba3 el ligne, el j taba3 el colonne\".",
+      "chapter": "matrices",
+      "section": "matrices-parcours"
     },
     {
       "id": "algo-mat-pattern-sablier",
@@ -5653,7 +5748,9 @@ const DATA = {
       "pythonCode": "def mat_pattern_sablier(m, L, C):\n    d = 0\n    f = C - 1\n    for i in range(L):\n        if d <= f:\n            for j in range(d, f + 1):\n                print(m[i][j], end=\" \")\n            print()\n            d = d + 1\n            f = f - 1",
       "example": "Parcours des étoiles * formant un entonnoir dans la matrice",
       "imageUrl": "img/matrices/pattern_sablier_pyramide.png",
-      "imageCaption": "Schéma manuscrit original du Support Bac : Motif triangulaire / sablier (pyramide inversée) d'étoiles *. Utilise des bornes de colonnes dynamiques d <- 0 et f <- C - 1 ajustées à chaque saut de ligne."
+      "imageCaption": "Schéma manuscrit original du Support Bac : Motif triangulaire / sablier (pyramide inversée) d'étoiles *. Utilise des bornes de colonnes dynamiques d <- 0 et f <- C - 1 ajustées à chaque saut de ligne.",
+      "chapter": "matrices",
+      "section": "matrices-parcours"
     },
     {
       "id": "algo-mat-pattern-diagonales",
@@ -5681,7 +5778,9 @@ const DATA = {
         "Partie 1 : Diagonales montantes de la moitié supérieure (au-dessus et sur la diagonale principale)",
         "Partie 2 : Diagonales montantes de la moitié inférieure (sous la diagonale principale)"
       ],
-      "imageCaption": "Schémas manuscrits originaux du Support Bac : Balayage complet d'une matrice carrée par diagonales montantes en deux boucles complémentaires (décalage coordonné de i et j)."
+      "imageCaption": "Schémas manuscrits originaux du Support Bac : Balayage complet d'une matrice carrée par diagonales montantes en deux boucles complémentaires (décalage coordonné de i et j).",
+      "chapter": "matrices",
+      "section": "matrices-parcours"
     },
     {
       "id": "algo-mat-declaration-creation",
@@ -5706,7 +5805,9 @@ const DATA = {
       ],
       "pseudoCode": "// T.D.N.T\nType\n  mat = tableau de 20, 20 entier\n\n// Algorithme d'initialisation\n0) procédure Initialiser_Matrice(VAR M: mat, n, m, val: entier)\n1) pour i de 0 à n - 1 faire\n     pour j de 0 à m - 1 faire\n       M[i, j] <-- val\n     fin_pour\n   fin_pour\n2) fin",
       "pythonCode": "def creer_matrice(n, m, val=0):\n    M = []\n    for i in range(n):\n        ligne = []\n        for j in range(m):\n            ligne.append(val)\n        M.append(ligne)\n    return M",
-      "example": "creer_matrice(3, 4, 0) retourne une matrice 3x4 remplie de zéros"
+      "example": "creer_matrice(3, 4, 0) retourne une matrice 3x4 remplie de zéros",
+      "chapter": "matrices",
+      "section": "matrices-bases"
     },
     {
       "id": "algo-mat-remplissage-affichage",
@@ -5727,7 +5828,9 @@ const DATA = {
       ],
       "pseudoCode": "0) procédure Remplir_Matrice(VAR M: mat, n, m: entier)\n1) pour i de 0 à n - 1 faire\n     pour j de 0 à m - 1 faire\n       écrire(\"M[\", i, \",\", j, \"]=\")\n       lire(M[i, j])\n     fin_pour\n   fin_pour\n2) fin\n\n0) procédure Afficher_Matrice(M: mat, n, m: entier)\n1) pour i de 0 à n - 1 faire\n     pour j de 0 à m - 1 faire\n       écrire(M[i, j], \" \")\n     fin_pour\n     écrire_ligne()\n   fin_pour\n2) fin",
       "pythonCode": "def remplir_matrice(M, n, m):\n    for i in range(n):\n        for j in range(m):\n            M[i][j] = int(input(\"M[\" + str(i) + \",\" + str(j) + \"]=\"))\n\ndef afficher_matrice(M, n, m):\n    for i in range(n):\n        ch = \"\"\n        for j in range(m):\n            ch = ch + str(M[i][j]) + \" \"\n        print(ch)",
-      "example": "Affiche la matrice en tableau régulier 2D"
+      "example": "Affiche la matrice en tableau régulier 2D",
+      "chapter": "matrices",
+      "section": "matrices-bases"
     },
     {
       "id": "algo-mat-parcours-lignes-colonnes",
@@ -5748,7 +5851,9 @@ const DATA = {
       ],
       "pseudoCode": "// Parcours par colonnes (de haut en bas)\n0) procédure Parcours_Colonnes(M: mat, n, m: entier)\n1) pour j de 0 à m - 1 faire\n     écrire(\"--- Colonne \", j, \" ---\")\n     pour i de 0 à n - 1 faire\n       écrire(M[i, j])\n     fin_pour\n   fin_pour\n2) fin",
       "pythonCode": "def parcours_colonnes(M, n, m):\n    for j in range(m):\n        for i in range(n):\n            print(\"Colonne \" + str(j) + \" : \" + str(M[i][j]))",
-      "example": "Visite M[0,0], M[1,0], M[2,0] puis M[0,1], M[1,1]..."
+      "example": "Visite M[0,0], M[1,0], M[2,0] puis M[0,1], M[1,1]...",
+      "chapter": "matrices",
+      "section": "matrices-parcours"
     },
     {
       "id": "algo-mat-statistiques-globales",
@@ -5773,7 +5878,9 @@ const DATA = {
       ],
       "pseudoCode": "0) fonction Somme_Matrice(M: mat, n, m: entier): entier\n1) s <-- 0\n2) pour i de 0 à n - 1 faire\n     pour j de 0 à m - 1 faire\n       s <-- s + M[i, j]\n     fin_pour\n   fin_pour\n3) retourner s\n4) fin\n\n0) fonction Max_Matrice(M: mat, n, m: entier): entier\n1) mx <-- M[0, 0]\n2) pour i de 0 à n - 1 faire\n     pour j de 0 à m - 1 faire\n       si M[i, j] > mx alors\n         mx <-- M[i, j]\n       fin_si\n     fin_pour\n   fin_pour\n3) retourner mx\n4) fin",
       "pythonCode": "def somme_matrice(M, n, m):\n    s = 0\n    for i in range(n):\n        for j in range(m):\n            s = s + M[i][j]\n    return s\n\ndef max_matrice(M, n, m):\n    mx = M[0][0]\n    for i in range(n):\n        for j in range(m):\n            if M[i][j] > mx:\n                mx = M[i][j]\n    return mx",
-      "example": "Retourne la somme totale et l'élément maximal de la matrice"
+      "example": "Retourne la somme totale et l'élément maximal de la matrice",
+      "chapter": "matrices",
+      "section": "matrices-tris-calculs"
     },
     {
       "id": "algo-mat-somme-lignes-colonnes",
@@ -5798,7 +5905,9 @@ const DATA = {
       ],
       "pseudoCode": "0) procédure Somme_Par_Ligne(M: mat, n, m: entier, VAR SL: tab)\n1) pour i de 0 à n - 1 faire\n     s <-- 0\n     pour j de 0 à m - 1 faire\n       s <-- s + M[i, j]\n     fin_pour\n     SL[i] <-- s\n   fin_pour\n2) fin\n\n0) procédure Somme_Par_Colonne(M: mat, n, m: entier, VAR SC: tab)\n1) pour j de 0 à m - 1 faire\n     s <-- 0\n     pour i de 0 à n - 1 faire\n       s <-- s + M[i, j]\n     fin_pour\n     SC[j] <-- s\n   fin_pour\n2) fin",
       "pythonCode": "def somme_par_ligne(M, n, m, SL):\n    for i in range(n):\n        s = 0\n        for j in range(m):\n            s = s + M[i][j]\n        SL.append(s)\n\ndef somme_par_colonne(M, n, m, SC):\n    for j in range(m):\n        s = 0\n        for i in range(n):\n            s = s + M[i][j]\n        SC.append(s)",
-      "example": "SL[i] contient le total de la ligne i, SC[j] le total de la colonne j"
+      "example": "SL[i] contient le total de la ligne i, SC[j] le total de la colonne j",
+      "chapter": "matrices",
+      "section": "matrices-tris-calculs"
     },
     {
       "id": "algo-mat-diagonales",
@@ -5819,7 +5928,9 @@ const DATA = {
       ],
       "pseudoCode": "0) procédure Diagonales(M: mat, n: entier, VAR sp, ss: entier)\n1) sp <-- 0\n2) ss <-- 0\n3) pour i de 0 à n - 1 faire\n     sp <-- sp + M[i, i]\n     ss <-- ss + M[i, n - 1 - i]\n   fin_pour\n4) fin",
       "pythonCode": "def somme_diagonales(M, n):\n    sp = 0\n    ss = 0\n    for i in range(n):\n        sp = sp + M[i][i]\n        ss = ss + M[i][n - 1 - i]\n    return sp, ss",
-      "example": "Calcule en O(n) les sommes des deux diagonales sans double boucle"
+      "example": "Calcule en O(n) les sommes des deux diagonales sans double boucle",
+      "chapter": "matrices",
+      "section": "matrices-diagonales"
     },
     {
       "id": "algo-mat-recherche-element",
@@ -5844,7 +5955,9 @@ const DATA = {
       ],
       "pseudoCode": "0) procédure Chercher_Matrice(M: mat, n, m, x: entier, VAR trouve: booléen, VAR pos_i, pos_j: entier)\n1) trouve <-- faux\n2) pos_i <-- -1\n3) pos_j <-- -1\n4) i <-- 0\n5) tant que (i < n) et (non trouve) faire\n     j <-- 0\n     tant que (j < m) et (non trouve) faire\n       si M[i, j] = x alors\n         trouve <-- vrai\n         pos_i <-- i\n         pos_j <-- j\n       sinon\n         j <-- j + 1\n       fin_si\n     fin_tant_que\n     i <-- i + 1\n   fin_tant_que\n6) fin",
       "pythonCode": "def chercher_matrice(M, n, m, x):\n    trouve = False\n    pos_i = -1\n    pos_j = -1\n    i = 0\n    while i < n and not trouve:\n        j = 0\n        while j < m and not trouve:\n            if M[i][j] == x:\n                trouve = True\n                pos_i = i\n                pos_j = j\n            else:\n                j = j + 1\n        i = i + 1\n    return trouve, pos_i, pos_j",
-      "example": "Retourne True et les coordonnées (ligne, col), ou False et (-1, -1)"
+      "example": "Retourne True et les coordonnées (ligne, col), ou False et (-1, -1)",
+      "chapter": "matrices",
+      "section": "matrices-tris-calculs"
     },
     {
       "id": "algo-mat-transposee",
@@ -5865,7 +5978,9 @@ const DATA = {
       ],
       "pseudoCode": "0) procédure Transposer(M: mat, n, m: entier, VAR T: mat)\n1) pour i de 0 à n - 1 faire\n     pour j de 0 à m - 1 faire\n       T[j, i] <-- M[i, j]\n     fin_pour\n   fin_pour\n2) fin",
       "pythonCode": "def transposer_matrice(M, n, m):\n    T = []\n    for j in range(m):\n        ligne = []\n        for i in range(n):\n            ligne.append(M[i][j])\n        T.append(ligne)\n    return T",
-      "example": "Une matrice 2x3 devient une matrice 3x2"
+      "example": "Une matrice 2x3 devient une matrice 3x2",
+      "chapter": "matrices",
+      "section": "matrices-tris-calculs"
     },
     {
       "id": "algo-mat-verifications-speciales",
@@ -5890,7 +6005,9 @@ const DATA = {
       ],
       "pseudoCode": "0) fonction Est_Symetrique(M: mat, n: entier): booléen\n1) ok <-- vrai\n2) i <-- 0\n3) tant que (i < n) et ok faire\n     j <-- 0\n     tant que (j < i) et ok faire\n       si M[i, j] ≠ M[j, i] alors\n         ok <-- faux\n       sinon\n         j <-- j + 1\n       fin_si\n     fin_tant_que\n     i <-- i + 1\n   fin_tant_que\n4) retourner ok\n5) fin",
       "pythonCode": "def est_symetrique(M, n):\n    ok = True\n    i = 0\n    while i < n and ok:\n        j = 0\n        while j < i and ok:\n            if M[i][j] != M[j][i]:\n                ok = False\n            else:\n                j = j + 1\n        i = i + 1\n    return ok\n\ndef est_identite(M, n):\n    ok = True\n    i = 0\n    while i < n and ok:\n        j = 0\n        while j < n and ok:\n            if i == j and M[i][j] != 1:\n                ok = False\n            elif i != j and M[i][j] != 0:\n                ok = False\n            else:\n                j = j + 1\n        i = i + 1\n    return ok",
-      "example": "Retourne True si M est identique à sa transposée ou si M est la matrice identité In"
+      "example": "Retourne True si M est identique à sa transposée ou si M est la matrice identité In",
+      "chapter": "matrices",
+      "section": "matrices-diagonales"
     },
     {
       "id": "algo-mat-fichiers-binaires",
@@ -5915,7 +6032,9 @@ const DATA = {
       ],
       "pseudoCode": "0) procédure Sauvegarder_Matrice(M: mat, n, m: entier)\n1) ouvrir(\"matrice.dat\", f, \"wb\")\n2) pour i de 0 à n - 1 faire\n     pour j de 0 à m - 1 faire\n       écrire_enreg(f, M[i, j])\n     fin_pour\n   fin_pour\n3) fermer(f)\n4) fin",
       "pythonCode": "from pickle import dump, load\n\ndef sauvegarder_matrice(M):\n    f = open(\"matrice.dat\", \"wb\")\n    dump(M, f)\n    f.close()\n\ndef charger_matrice():\n    f = open(\"matrice.dat\", \"rb\")\n    M = load(f)\n    f.close()\n    return M",
-      "example": "Sérialise la matrice dans matrice.dat et la restaure intacte"
+      "example": "Sérialise la matrice dans matrice.dat et la restaure intacte",
+      "chapter": "matrices",
+      "section": "matrices-fichiers"
     },
     {
       "id": "algo-mat-exercice-point-selle",
@@ -5940,9 +6059,10 @@ const DATA = {
       ],
       "pseudoCode": "0) procédure Point_Selle(M: mat, n, m: entier)\n// Exemple d'entraînement type Baccalauréat\n1) trouve <-- faux\n2) pour i de 0 à n - 1 faire\n     // 1. Trouver l'indice de la valeur minimale de la ligne i\n     col_min <-- 0\n     pour j de 1 à m - 1 faire\n       si M[i, j] < M[i, col_min] alors\n         col_min <-- j\n       fin_si\n     fin_pour\n     // 2. Vérifier si M[i, col_min] est le maximum de sa colonne\n     est_max <-- vrai\n     pour k de 0 à n - 1 faire\n       si M[k, col_min] > M[i, col_min] alors\n         est_max <-- faux\n       fin_si\n     fin_pour\n     si est_max alors\n       écrire(\"Point-selle trouvé en (\", i, \",\", col_min, \") = \", M[i, col_min])\n       trouve <-- vrai\n     fin_si\n   fin_pour\n3) si non trouve alors\n     écrire(\"Aucun point-selle dans cette matrice.\")\n   fin_si\n4) fin",
       "pythonCode": "# Exemple d'entraînement : Détection d'un point-selle\ndef point_selle(M, n, m):\n    trouve = False\n    for i in range(n):\n        col_min = 0\n        for j in range(1, m):\n            if M[i][j] < M[i][col_min]:\n                col_min = j\n        est_max = True\n        for k in range(n):\n            if M[k][col_min] > M[i][col_min]:\n                est_max = False\n        if est_max:\n            print(\"Point-selle en (\" + str(i) + \",\" + str(col_min) + \") = \" + str(M[i][col_min]))\n            trouve = True\n    if not trouve:\n        print(\"Aucun point-selle dans cette matrice.\")",
-      "example": "Identifie les points-selles d'une matrice de notes ou de coefficients"
-    }
-  ,
+      "example": "Identifie les points-selles d'une matrice de notes ou de coefficients",
+      "chapter": "matrices",
+      "section": "matrices-tris-calculs"
+    },
     {
       "id": "algo-fact-rec",
       "category": "Chapitre 2 : Récursivité",
@@ -5954,7 +6074,9 @@ const DATA = {
       "pseudoCode": "0) fonction Factorielle(n : entier) : entier\n1) si (n ≤ 1) alors\n     retourner 1\n   sinon\n     retourner n * Factorielle(n - 1)\n   fin_si\n2) fin",
       "tdo": [],
       "pythonCode": "def factorielle(n):\n    if n <= 1:\n        return 1\n    return n * factorielle(n - 1)",
-      "example": "factorielle(5) -> 120"
+      "example": "factorielle(5) -> 120",
+      "chapter": "recursivite",
+      "section": "recursivite-numerique"
     },
     {
       "id": "algo-fibo-rec",
@@ -5967,7 +6089,9 @@ const DATA = {
       "pseudoCode": "0) fonction Fibonacci(n : entier) : entier\n1) si (n ≤ 1) alors\n     retourner n\n   sinon\n     retourner Fibonacci(n - 1) + Fibonacci(n - 2)\n   fin_si\n2) fin",
       "tdo": [],
       "pythonCode": "def fibonacci(n):\n    if n <= 1:\n        return n\n    return fibonacci(n - 1) + fibonacci(n - 2)",
-      "example": "fibonacci(6) -> 8"
+      "example": "fibonacci(6) -> 8",
+      "chapter": "recursivite",
+      "section": "recurrence-bases"
     },
     {
       "id": "algo-pgcd-rec",
@@ -5980,7 +6104,9 @@ const DATA = {
       "pseudoCode": "0) fonction PGCD(a : entier, b : entier) : entier\n1) si (b = 0) alors\n     retourner a\n   sinon\n     retourner PGCD(b, a mod b)\n   fin_si\n2) fin",
       "tdo": [],
       "pythonCode": "def pgcd(a, b):\n    if b == 0:\n        return a\n    return pgcd(b, a % b)",
-      "example": "pgcd(48, 18) -> 6"
+      "example": "pgcd(48, 18) -> 6",
+      "chapter": "recursivite",
+      "section": "recursivite-numerique"
     },
     {
       "id": "algo-puissance-rec",
@@ -5993,7 +6119,9 @@ const DATA = {
       "pseudoCode": "0) fonction Puissance(x : réel, n : entier) : réel\n1) si (n = 0) alors\n     retourner 1.0\n   sinon\n     retourner x * Puissance(x, n - 1)\n   fin_si\n2) fin",
       "tdo": [],
       "pythonCode": "def puissance(x, n):\n    if n == 0:\n        return 1.0\n    return x * puissance(x, n - 1)",
-      "example": "puissance(2.0, 3) -> 8.0"
+      "example": "puissance(2.0, 3) -> 8.0",
+      "chapter": "recursivite",
+      "section": "recursivite-numerique"
     },
     {
       "id": "algo-somme-chiffres-rec",
@@ -6006,7 +6134,9 @@ const DATA = {
       "pseudoCode": "0) fonction Somme_Chiffres(n : entier) : entier\n1) si (n < 10) alors\n     retourner n\n   sinon\n     retourner (n mod 10) + Somme_Chiffres(n div 10)\n   fin_si\n2) fin",
       "tdo": [],
       "pythonCode": "def somme_chiffres(n):\n    if n < 10:\n        return n\n    return (n % 10) + somme_chiffres(n // 10)",
-      "example": "somme_chiffres(1234) -> 10 (1+2+3+4)"
+      "example": "somme_chiffres(1234) -> 10 (1+2+3+4)",
+      "chapter": "recursivite",
+      "section": "recursivite-numerique"
     },
     {
       "id": "algo-palindrome-rec",
@@ -6019,7 +6149,9 @@ const DATA = {
       "pseudoCode": "0) fonction Est_Palindrome(ch : chaîne, i : entier, j : entier) : booléen\n1) si (i ≥ j) alors\n     retourner vrai\n   sinon_si (ch[i] ≠ ch[j]) alors\n     retourner faux\n   sinon\n     retourner Est_Palindrome(ch, i + 1, j - 1)\n   fin_si\n2) fin",
       "tdo": [],
       "pythonCode": "def est_palindrome(ch, i, j):\n    if i >= j:\n        return True\n    elif ch[i] != ch[j]:\n        return False\n    return est_palindrome(ch, i + 1, j - 1)",
-      "example": "est_palindrome(\"radar\", 0, 4) -> True"
+      "example": "est_palindrome(\"radar\", 0, 4) -> True",
+      "chapter": "recursivite",
+      "section": "recursivite-chaines-tableaux"
     },
     {
       "id": "algo-recherche-dicho-rec",
@@ -6037,7 +6169,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def recherche_dicho_rec(t, deb, fin, val):\n    if deb > fin:\n        return -1\n    mil = (deb + fin) // 2\n    if t[mil] == val:\n        return mil\n    elif t[mil] > val:\n        return recherche_dicho_rec(t, deb, mil - 1, val)\n    else:\n        return recherche_dicho_rec(t, mil + 1, fin, val)",
-      "example": "recherche_dicho_rec([2, 5, 8, 12, 16], 0, 4, 12) -> 3"
+      "example": "recherche_dicho_rec([2, 5, 8, 12, 16], 0, 4, 12) -> 3",
+      "chapter": "recursivite",
+      "section": "recursivite-chaines-tableaux"
     },
     {
       "id": "algo-tab-saisie",
@@ -6055,7 +6189,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def saisie_tableau(t, n):\n    for i in range(n):\n        t[i] = int(input(f\"t[{i}] = \"))",
-      "example": "saisie_tableau(t, 5)"
+      "example": "saisie_tableau(t, 5)",
+      "chapter": "tableaux",
+      "section": "tableaux-remplissage"
     },
     {
       "id": "algo-tab-recherche-seq",
@@ -6073,7 +6209,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def recherche_seq(t, n, val):\n    pos = -1\n    i = 0\n    while i < n and pos == -1:\n        if t[i] == val:\n            pos = i\n        else:\n            i += 1\n    return pos",
-      "example": "recherche_seq([4, 7, 2, 9], 4, 2) -> 2"
+      "example": "recherche_seq([4, 7, 2, 9], 4, 2) -> 2",
+      "chapter": "tableaux",
+      "section": "tableaux-recherche"
     },
     {
       "id": "algo-tab-recherche-dicho",
@@ -6091,7 +6229,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def recherche_dicho(t, n, val):\n    deb = 0\n    fin = n - 1\n    pos = -1\n    while deb <= fin and pos == -1:\n        mil = (deb + fin) // 2\n        if t[mil] == val:\n            pos = mil\n        elif t[mil] > val:\n            fin = mil - 1\n        else:\n            deb = mil + 1\n    return pos",
-      "example": "recherche_dicho([2, 5, 8, 12, 16], 5, 12) -> 3"
+      "example": "recherche_dicho([2, 5, 8, 12, 16], 5, 12) -> 3",
+      "chapter": "tableaux",
+      "section": "tableaux-recherche"
     },
     {
       "id": "algo-tab-tri-bulles",
@@ -6113,7 +6253,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def tri_bulles(t, n):\n    echange = True\n    while echange:\n        echange = False\n        for i in range(n - 1):\n            if t[i] > t[i + 1]:\n                t[i], t[i + 1] = t[i + 1], t[i]\n                echange = True",
-      "example": "tri_bulles([5, 2, 9, 1], 4) -> [1, 2, 5, 9]"
+      "example": "tri_bulles([5, 2, 9, 1], 4) -> [1, 2, 5, 9]",
+      "chapter": "tableaux",
+      "section": "tableaux-tris"
     },
     {
       "id": "algo-tab-tri-selection",
@@ -6131,7 +6273,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def tri_selection(t, n):\n    for i in range(n - 1):\n        pos_min = i\n        for j in range(i + 1, n):\n            if t[j] < t[pos_min]:\n                pos_min = j\n        if pos_min != i:\n            t[i], t[pos_min] = t[pos_min], t[i]",
-      "example": "tri_selection([5, 2, 9, 1], 4) -> [1, 2, 5, 9]"
+      "example": "tri_selection([5, 2, 9, 1], 4) -> [1, 2, 5, 9]",
+      "chapter": "tableaux",
+      "section": "tableaux-tris"
     },
     {
       "id": "algo-tab-tri-insertion",
@@ -6149,7 +6293,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def tri_insertion(t, n):\n    for i in range(1, n):\n        cle = t[i]\n        j = i - 1\n        while j >= 0 and t[j] > cle:\n            t[j + 1] = t[j]\n            j -= 1\n        t[j + 1] = cle",
-      "example": "tri_insertion([5, 2, 9, 1], 4) -> [1, 2, 5, 9]"
+      "example": "tri_insertion([5, 2, 9, 1], 4) -> [1, 2, 5, 9]",
+      "chapter": "tableaux",
+      "section": "tableaux-tris"
     },
     {
       "id": "algo-tab-decalage-gauche",
@@ -6167,7 +6313,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def decalage_gauche(t, n):\n    premier = t[0]\n    for i in range(n - 1):\n        t[i] = t[i + 1]\n    t[n - 1] = premier",
-      "example": "decalage_gauche([1, 2, 3, 4], 4) -> [2, 3, 4, 1]"
+      "example": "decalage_gauche([1, 2, 3, 4], 4) -> [2, 3, 4, 1]",
+      "chapter": "tableaux",
+      "section": "tableaux-transformations"
     },
     {
       "id": "algo-tab-inversion",
@@ -6185,7 +6333,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def inverser_tableau(t, n):\n    for i in range(n // 2):\n        t[i], t[n - 1 - i] = t[n - 1 - i], t[i]",
-      "example": "inverser_tableau([1, 2, 3, 4, 5], 5) -> [5, 4, 3, 2, 1]"
+      "example": "inverser_tableau([1, 2, 3, 4, 5], 5) -> [5, 4, 3, 2, 1]",
+      "chapter": "tableaux",
+      "section": "tableaux-transformations"
     },
     {
       "id": "algo-suite-arithmetique",
@@ -6198,7 +6348,9 @@ const DATA = {
       "pseudoCode": "0) procédure Suite_Arithmetique(u0 : réel, r : réel, n : entier, var un : réel, var som : réel)\n1) un ← u0 + n * r\n2) som ← ((n + 1) * (u0 + un)) / 2\n3) fin",
       "tdo": [],
       "pythonCode": "def suite_arithmetique(u0, r, n):\n    un = u0 + n * r\n    somme = ((n + 1) * (u0 + un)) / 2\n    return un, somme",
-      "example": "suite_arithmetique(2, 3, 4) -> (14, 40.0)"
+      "example": "suite_arithmetique(2, 3, 4) -> (14, 40.0)",
+      "chapter": "suites",
+      "section": "suites-classiques"
     },
     {
       "id": "algo-suite-geometrique",
@@ -6211,7 +6363,9 @@ const DATA = {
       "pseudoCode": "0) procédure Suite_Geometrique(u0 : réel, q : réel, n : entier, var un : réel, var som : réel)\n1) un ← u0 * (q ^ n)\n2) si (q = 1) alors\n     som ← u0 * (n + 1)\n   sinon\n     som ← u0 * (1 - (q ^ (n + 1))) / (1 - q)\n   fin_si\n3) fin",
       "tdo": [],
       "pythonCode": "def suite_geometrique(u0, q, n):\n    un = u0 * (q ** n)\n    if q == 1:\n        somme = u0 * (n + 1)\n    else:\n        somme = u0 * (1 - (q ** (n + 1))) / (1 - q)\n    return un, somme",
-      "example": "suite_geometrique(1, 2, 3) -> (8, 15.0)"
+      "example": "suite_geometrique(1, 2, 3) -> (8, 15.0)",
+      "chapter": "suites",
+      "section": "suites-classiques"
     },
     {
       "id": "algo-suite-recurrente-f",
@@ -6233,7 +6387,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def suite_recurrente(u0, n):\n    u = u0\n    for i in range(1, n + 1):\n        u = 2 * u + 1\n    return u",
-      "example": "suite_recurrente(1, 3) -> 15"
+      "example": "suite_recurrente(1, 3) -> 15",
+      "chapter": "suites",
+      "section": "suites-recurrentes"
     },
     {
       "id": "algo-suite-convergence-eps",
@@ -6251,7 +6407,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def suite_convergence(u0, eps):\n    u_prec = u0\n    while True:\n        u_cour = (u_prec + 2 / u_prec) / 2\n        diff = abs(u_cour - u_prec)\n        u_prec = u_cour\n        if diff < eps:\n            break\n    return u_cour",
-      "example": "suite_convergence(1.0, 1e-5) -> 1.41421"
+      "example": "suite_convergence(1.0, 1e-5) -> 1.41421",
+      "chapter": "suites",
+      "section": "suites-recurrentes"
     },
     {
       "id": "algo-suite-heron",
@@ -6269,7 +6427,9 @@ const DATA = {
         }
       ],
       "pythonCode": "def heron(a, eps):\n    u_prec = a\n    u_cour = 0.5 * (u_prec + a / u_prec)\n    while abs(u_cour - u_prec) >= eps:\n        u_prec = u_cour\n        u_cour = 0.5 * (u_prec + a / u_prec)\n    return u_cour",
-      "example": "heron(9.0, 1e-6) -> 3.0"
+      "example": "heron(9.0, 1e-6) -> 3.0",
+      "chapter": "suites",
+      "section": "suites-heron-syracuse"
     },
     {
       "id": "algo-suite-syracuse",
@@ -6282,7 +6442,13 @@ const DATA = {
       "pseudoCode": "0) procédure Syracuse(n : entier, var vol : entier, var alt : entier)\n1) vol ← 0\n2) alt ← n\n3) tant_que (n ≠ 1) faire\n     si (n mod 2 = 0) alors\n       n ← n div 2\n     sinon\n       n ← 3 * n + 1\n     fin_si\n     vol ← vol + 1\n     si (n > alt) alors\n       alt ← n\n     fin_si\n   fin_tant_que\n4) fin",
       "tdo": [],
       "pythonCode": "def syracuse(n):\n    vol = 0\n    alt = n\n    while n != 1:\n        if n % 2 == 0:\n            n = n // 2\n        else:\n            n = 3 * n + 1\n        vol += 1\n        if n > alt:\n            alt = n\n    return vol, alt",
-      "example": "syracuse(6) -> vol = 8, alt = 16"
+      "example": "syracuse(6) -> vol = 8, alt = 16",
+      "chapter": "suites",
+      "section": "suites-heron-syracuse"
     }
   ]
 };
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = DATA;
+}
