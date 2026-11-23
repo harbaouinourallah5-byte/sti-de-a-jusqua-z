@@ -168,6 +168,68 @@ function switchExamensTab(tabName) {
 window.switchMethodeTab = switchMethodeTab;
 window.switchExamensTab = switchExamensTab;
 
+// =============================================================
+// GESTION DES 5 ONGLETS STANDARDS PAR MATIÈRE (PHASE 3)
+// =============================================================
+function switchSubjectTab(subject, tabName) {
+  const normTab = (tabName === 'doc' ? 'annexe' : (tabName === 'cards' ? 'fiches' : tabName));
+  const subCap = subject.charAt(0).toUpperCase() + subject.slice(1);
+
+  // Boutons d'onglets
+  const btnDoc = document.getElementById(`tabBtn${subCap}Doc`);
+  const btnCards = document.getElementById(`tabBtn${subCap}Cards`);
+  const btnQuiz = document.getElementById(`tabBtn${subCap}Quiz`);
+  const btnEx = document.getElementById(`tabBtn${subCap}Exercices`);
+  const btnPdf = document.getElementById(`tabBtn${subCap}Pdf`);
+
+  [btnDoc, btnCards, btnQuiz, btnEx, btnPdf].forEach(b => {
+    if (b) b.classList.remove('active');
+  });
+
+  // Vues associées
+  const viewDoc = document.getElementById(`${subject}OfficialDocView`);
+  const viewCards = document.getElementById(`${subject}CardsGridView`);
+  const viewQuiz = document.getElementById(`${subject}QuizView`);
+  const viewEx = document.getElementById(`${subject}ExercicesView`);
+  const viewPdf = document.getElementById(`${subject}PdfView`);
+
+  [viewDoc, viewCards, viewQuiz, viewEx, viewPdf].forEach(v => {
+    if (v) v.style.display = 'none';
+  });
+
+  if (normTab === 'annexe') {
+    if (btnDoc) btnDoc.classList.add('active');
+    if (viewDoc) viewDoc.style.display = 'block';
+  } else if (normTab === 'fiches') {
+    if (btnCards) btnCards.classList.add('active');
+    if (viewCards) viewCards.style.display = 'block';
+    if (subject === 'html' && typeof renderHtmlCards === 'function') { renderHtmlCategories(); renderHtmlCards(); }
+    if (subject === 'css' && typeof renderCssCards === 'function') { renderCssCategories(); renderCssCards(); }
+    if (subject === 'js' && typeof renderJsCards === 'function') { renderJsCategories(); renderJsCards(); }
+    if (subject === 'sql' && typeof renderSqlCards === 'function') { renderSqlCategories(); renderSqlCards(); }
+  } else if (normTab === 'quiz') {
+    if (btnQuiz) btnQuiz.classList.add('active');
+    if (viewQuiz) viewQuiz.style.display = 'block';
+  } else if (normTab === 'exercices') {
+    if (btnEx) btnEx.classList.add('active');
+    if (viewEx) viewEx.style.display = 'block';
+  } else if (normTab === 'pdf') {
+    if (btnPdf) btnPdf.classList.add('active');
+    if (viewPdf) viewPdf.style.display = 'block';
+  }
+}
+
+function switchHtmlTab(mode) { switchSubjectTab('html', mode); }
+function switchCssTab(mode) { switchSubjectTab('css', mode); }
+function switchJsTab(mode) { switchSubjectTab('js', mode); }
+function switchSqlTab(mode) { switchSubjectTab('sql', mode); }
+
+window.switchSubjectTab = switchSubjectTab;
+window.switchHtmlTab = switchHtmlTab;
+window.switchCssTab = switchCssTab;
+window.switchJsTab = switchJsTab;
+window.switchSqlTab = switchSqlTab;
+
 
 // =============================================================
 // CONFIGURATION DES VARIANTES INTERACTIVES (BOUTONS RADIO)

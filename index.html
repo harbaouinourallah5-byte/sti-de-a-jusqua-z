@@ -601,15 +601,28 @@
           </div>
         </div>
 
-        <!-- Onglets de bascule d'affichage HTML5 -->
-        <div class="view-tabs-bar">
-          <button id="tabBtnHtmlDoc" class="view-mode-tab active orange" onclick="switchHtmlTab('doc')">
+        <!-- Onglets de bascule d'affichage HTML5 (5 onglets standards Phase 3) -->
+        <div class="subject-nav-tabs no-print" id="htmlNavTabs">
+          <button id="tabBtnHtmlDoc" class="subject-tab-btn active" onclick="switchSubjectTab('html', 'annexe')">
             <span>📄</span>
-            <span>Tableau Annexe HTML5 (Recommandé)</span>
+            <span>Annexe</span>
           </button>
-          <button id="tabBtnHtmlCards" class="view-mode-tab" onclick="switchHtmlTab('cards')">
+          <button id="tabBtnHtmlCards" class="subject-tab-btn" onclick="switchSubjectTab('html', 'fiches')">
             <span>🎴</span>
-            <span>Fiches Détaillées & Recherche (57 notions)</span>
+            <span>Fiches</span>
+            <span class="subject-tab-badge" id="htmlBadgeCountTab">57</span>
+          </button>
+          <button id="tabBtnHtmlQuiz" class="subject-tab-btn" onclick="switchSubjectTab('html', 'quiz')">
+            <span>⚡</span>
+            <span>Quiz</span>
+          </button>
+          <button id="tabBtnHtmlExercices" class="subject-tab-btn" onclick="switchSubjectTab('html', 'exercices')">
+            <span>🎯</span>
+            <span>Exercices</span>
+          </button>
+          <button id="tabBtnHtmlPdf" class="subject-tab-btn" onclick="switchSubjectTab('html', 'pdf')">
+            <span>📚</span>
+            <span>PDF</span>
           </button>
         </div>
 
@@ -993,6 +1006,36 @@
           </div>
         </div>
 
+        <!-- Vue Quiz HTML5 (Phase 3) -->
+        <div id="htmlQuizView" class="subject-tab-panel">
+          <div class="empty-tab-state">
+            <span class="empty-tab-state-icon">⚡</span>
+            <h3 class="empty-tab-state-title">Quiz HTML5 • Bientôt disponible</h3>
+            <p class="empty-tab-state-desc">Les quiz interactifs d'auto-évaluation et questions d'examen sur les balises HTML5 et formulaires sont en cours de préparation.</p>
+            <button type="button" class="fc-hero-btn" onclick="switchSubjectTab('html', 'annexe')" style="margin-top:14px; padding:8px 18px; font-size:0.85rem;">Consulter l'Annexe HTML5 →</button>
+          </div>
+        </div>
+
+        <!-- Vue Exercices HTML5 (Phase 3) -->
+        <div id="htmlExercicesView" class="subject-tab-panel">
+          <div class="empty-tab-state">
+            <span class="empty-tab-state-icon">🎯</span>
+            <h3 class="empty-tab-state-title">Exercices HTML5 • Bientôt disponible</h3>
+            <p class="empty-tab-state-desc">Les exercices d'application pratique et conception de pages web seront prochainement intégrés.</p>
+            <button type="button" class="fc-hero-btn" onclick="switchSubjectTab('html', 'annexe')" style="margin-top:14px; padding:8px 18px; font-size:0.85rem;">Consulter l'Annexe HTML5 →</button>
+          </div>
+        </div>
+
+        <!-- Vue PDF HTML5 (Phase 3) -->
+        <div id="htmlPdfView" class="subject-tab-panel">
+          <div class="empty-tab-state">
+            <span class="empty-tab-state-icon">📚</span>
+            <h3 class="empty-tab-state-title">Documents &amp; Polycopiés HTML5</h3>
+            <p class="empty-tab-state-desc">Consultez la bibliothèque numérique pour accéder à tous les cours et résumés PDF du programme.</p>
+            <button type="button" class="fc-hero-btn" onclick="switchView('lessons')" style="margin-top:14px; padding:8px 18px; font-size:0.85rem;">Ouvrir la Bibliothèque PDF →</button>
+          </div>
+        </div>
+
         <!-- Navigation bas de page HTML5 -->
         <div class="page-pagination-bar">
           <div class="pagination-card prev" onclick="switchView('home')">
@@ -1028,15 +1071,28 @@
           </div>
         </div>
 
-        <!-- Onglets de bascule d'affichage CSS3 -->
-        <div class="view-tabs-bar">
-          <button id="tabBtnCssDoc" class="view-mode-tab active blue" onclick="switchCssTab('doc')">
+        <!-- Onglets de bascule d'affichage CSS3 (5 onglets standards Phase 3) -->
+        <div class="subject-nav-tabs no-print" id="cssNavTabs">
+          <button id="tabBtnCssDoc" class="subject-tab-btn active" onclick="switchSubjectTab('css', 'annexe')">
             <span>📄</span>
-            <span>Tableau Annexe CSS3 (Recommandé)</span>
+            <span>Annexe</span>
           </button>
-          <button id="tabBtnCssCards" class="view-mode-tab" onclick="switchCssTab('cards')">
+          <button id="tabBtnCssCards" class="subject-tab-btn" onclick="switchSubjectTab('css', 'fiches')">
             <span>🎴</span>
-            <span>Fiches Détaillées & Recherche (61 propriétés)</span>
+            <span>Fiches</span>
+            <span class="subject-tab-badge" id="cssBadgeCountTab">61</span>
+          </button>
+          <button id="tabBtnCssQuiz" class="subject-tab-btn" onclick="switchSubjectTab('css', 'quiz')">
+            <span>⚡</span>
+            <span>Quiz</span>
+          </button>
+          <button id="tabBtnCssExercices" class="subject-tab-btn" onclick="switchSubjectTab('css', 'exercices')">
+            <span>🎯</span>
+            <span>Exercices</span>
+          </button>
+          <button id="tabBtnCssPdf" class="subject-tab-btn" onclick="switchSubjectTab('css', 'pdf')">
+            <span>📚</span>
+            <span>PDF</span>
           </button>
         </div>
 
@@ -1403,6 +1459,36 @@
           </div>
         </div>
 
+        <!-- Vue Quiz CSS3 (Phase 3) -->
+        <div id="cssQuizView" class="subject-tab-panel">
+          <div class="empty-tab-state">
+            <span class="empty-tab-state-icon">⚡</span>
+            <h3 class="empty-tab-state-title">Quiz CSS3 • Bientôt disponible</h3>
+            <p class="empty-tab-state-desc">Les tests et QCM sur les sélecteurs, flexbox, box model et animations CSS3 sont en cours de finalisation.</p>
+            <button type="button" class="fc-hero-btn" onclick="switchSubjectTab('css', 'annexe')" style="margin-top:14px; padding:8px 18px; font-size:0.85rem;">Consulter l'Annexe CSS3 →</button>
+          </div>
+        </div>
+
+        <!-- Vue Exercices CSS3 (Phase 3) -->
+        <div id="cssExercicesView" class="subject-tab-panel">
+          <div class="empty-tab-state">
+            <span class="empty-tab-state-icon">🎯</span>
+            <h3 class="empty-tab-state-title">Exercices CSS3 • Bientôt disponible</h3>
+            <p class="empty-tab-state-desc">Les devoirs pratiques et mises en situation graphique seront bientôt disponibles.</p>
+            <button type="button" class="fc-hero-btn" onclick="switchSubjectTab('css', 'annexe')" style="margin-top:14px; padding:8px 18px; font-size:0.85rem;">Consulter l'Annexe CSS3 →</button>
+          </div>
+        </div>
+
+        <!-- Vue PDF CSS3 (Phase 3) -->
+        <div id="cssPdfView" class="subject-tab-panel">
+          <div class="empty-tab-state">
+            <span class="empty-tab-state-icon">📚</span>
+            <h3 class="empty-tab-state-title">Documents &amp; Polycopiés CSS3</h3>
+            <p class="empty-tab-state-desc">Consultez la bibliothèque numérique pour accéder à tous les cours et résumés PDF du programme.</p>
+            <button type="button" class="fc-hero-btn" onclick="switchView('lessons')" style="margin-top:14px; padding:8px 18px; font-size:0.85rem;">Ouvrir la Bibliothèque PDF →</button>
+          </div>
+        </div>
+
         <!-- Navigation bas de page CSS3 -->
         <div class="page-pagination-bar">
           <div class="pagination-card prev" onclick="switchView('html')">
@@ -1438,15 +1524,28 @@
           </div>
         </div>
         
-        <!-- Onglets de bascule d'affichage -->
-        <div class="view-tabs-bar">
-          <button id="tabBtnAnnexeDoc" class="view-mode-tab active" onclick="switchJsTab('doc')">
+        <!-- Onglets de bascule d'affichage JavaScript (5 onglets standards Phase 3) -->
+        <div class="subject-nav-tabs no-print" id="jsNavTabs">
+          <button id="tabBtnJsDoc" class="subject-tab-btn active" onclick="switchSubjectTab('js', 'annexe')">
             <span>📄</span>
-            <span>Tableau Annexe JS (Recommandé)</span>
+            <span>Annexe</span>
           </button>
-          <button id="tabBtnCardsGrid" class="view-mode-tab" onclick="switchJsTab('cards')">
+          <button id="tabBtnJsCards" class="subject-tab-btn" onclick="switchSubjectTab('js', 'fiches')">
             <span>🎴</span>
-            <span>Fiches Détaillées & Recherche (63 notions)</span>
+            <span>Fiches</span>
+            <span class="subject-tab-badge" id="jsBadgeCountTab">63</span>
+          </button>
+          <button id="tabBtnJsQuiz" class="subject-tab-btn" onclick="switchSubjectTab('js', 'quiz')">
+            <span>⚡</span>
+            <span>Quiz</span>
+          </button>
+          <button id="tabBtnJsExercices" class="subject-tab-btn" onclick="switchSubjectTab('js', 'exercices')">
+            <span>🎯</span>
+            <span>Exercices</span>
+          </button>
+          <button id="tabBtnJsPdf" class="subject-tab-btn" onclick="switchSubjectTab('js', 'pdf')">
+            <span>📚</span>
+            <span>PDF</span>
           </button>
         </div>
 
@@ -1950,6 +2049,36 @@
           </div>
         </div>
 
+        <!-- Vue Quiz JavaScript (Phase 3) -->
+        <div id="jsQuizView" class="subject-tab-panel">
+          <div class="empty-tab-state">
+            <span class="empty-tab-state-icon">⚡</span>
+            <h3 class="empty-tab-state-title">Quiz JavaScript • Bientôt disponible</h3>
+            <p class="empty-tab-state-desc">Les quiz interactifs sur les fonctions de chaînes, objets Date, regex et contrôle de saisie seront ajoutés prochainement.</p>
+            <button type="button" class="fc-hero-btn" onclick="switchSubjectTab('js', 'annexe')" style="margin-top:14px; padding:8px 18px; font-size:0.85rem;">Consulter l'Annexe JavaScript →</button>
+          </div>
+        </div>
+
+        <!-- Vue Exercices JavaScript (Phase 3) -->
+        <div id="jsExercicesView" class="subject-tab-panel">
+          <div class="empty-tab-state">
+            <span class="empty-tab-state-icon">🎯</span>
+            <h3 class="empty-tab-state-title">Exercices JavaScript • Bientôt disponible</h3>
+            <p class="empty-tab-state-desc">Les devoirs pratiques et sujets d'examen de validation de formulaires seront bientôt consultables.</p>
+            <button type="button" class="fc-hero-btn" onclick="switchSubjectTab('js', 'annexe')" style="margin-top:14px; padding:8px 18px; font-size:0.85rem;">Consulter l'Annexe JavaScript →</button>
+          </div>
+        </div>
+
+        <!-- Vue PDF JavaScript (Phase 3) -->
+        <div id="jsPdfView" class="subject-tab-panel">
+          <div class="empty-tab-state">
+            <span class="empty-tab-state-icon">📚</span>
+            <h3 class="empty-tab-state-title">Documents &amp; Polycopiés JavaScript</h3>
+            <p class="empty-tab-state-desc">Consultez la bibliothèque numérique pour accéder à tous les cours et résumés PDF du programme.</p>
+            <button type="button" class="fc-hero-btn" onclick="switchView('lessons')" style="margin-top:14px; padding:8px 18px; font-size:0.85rem;">Ouvrir la Bibliothèque PDF →</button>
+          </div>
+        </div>
+
         <!-- Navigation bas de page JavaScript -->
         <div class="page-pagination-bar">
           <div class="pagination-card prev" onclick="switchView('css')">
@@ -1986,15 +2115,28 @@
           </div>
         </div>
         
-        <!-- Onglets de bascule d'affichage -->
-        <div class="view-tabs-bar">
-          <button id="tabBtnSqlDoc" class="view-mode-tab active" onclick="switchSqlTab('doc')">
+        <!-- Onglets de bascule d'affichage SQL (5 onglets standards Phase 3) -->
+        <div class="subject-nav-tabs no-print" id="sqlNavTabs">
+          <button id="tabBtnSqlDoc" class="subject-tab-btn active" onclick="switchSubjectTab('sql', 'annexe')">
             <span>📄</span>
-            <span>Tableau Annexe SQL (8 Sections)</span>
+            <span>Annexe</span>
           </button>
-          <button id="tabBtnSqlCards" class="view-mode-tab" onclick="switchSqlTab('cards')">
+          <button id="tabBtnSqlCards" class="subject-tab-btn" onclick="switchSubjectTab('sql', 'fiches')">
             <span>🎴</span>
-            <span>Fiches Détaillées & Recherche (57 commandes)</span>
+            <span>Fiches</span>
+            <span class="subject-tab-badge" id="sqlBadgeCountTab">57</span>
+          </button>
+          <button id="tabBtnSqlQuiz" class="subject-tab-btn" onclick="switchSubjectTab('sql', 'quiz')">
+            <span>⚡</span>
+            <span>Quiz</span>
+          </button>
+          <button id="tabBtnSqlExercices" class="subject-tab-btn" onclick="switchSubjectTab('sql', 'exercices')">
+            <span>🎯</span>
+            <span>Exercices</span>
+          </button>
+          <button id="tabBtnSqlPdf" class="subject-tab-btn" onclick="switchSubjectTab('sql', 'pdf')">
+            <span>📚</span>
+            <span>PDF</span>
           </button>
         </div>
 
@@ -2359,6 +2501,36 @@
 
           <div class="items-grid" id="sqlItemsGrid">
             <!-- Rempli dynamiquement par JS -->
+          </div>
+        </div>
+
+        <!-- Vue Quiz SQL (Phase 3) -->
+        <div id="sqlQuizView" class="subject-tab-panel">
+          <div class="empty-tab-state">
+            <span class="empty-tab-state-icon">⚡</span>
+            <h3 class="empty-tab-state-title">Quiz SQL • Bientôt disponible</h3>
+            <p class="empty-tab-state-desc">Les quiz interactifs d'évaluation sur les requêtes LDD, LMD, jointures et fonctions d'agrégation seront bientôt en ligne.</p>
+            <button type="button" class="fc-hero-btn" onclick="switchSubjectTab('sql', 'annexe')" style="margin-top:14px; padding:8px 18px; font-size:0.85rem;">Consulter l'Annexe SQL →</button>
+          </div>
+        </div>
+
+        <!-- Vue Exercices SQL (Phase 3) -->
+        <div id="sqlExercicesView" class="subject-tab-panel">
+          <div class="empty-tab-state">
+            <span class="empty-tab-state-icon">🎯</span>
+            <h3 class="empty-tab-state-title">Exercices SQL • Bientôt disponible</h3>
+            <p class="empty-tab-state-desc">Les exercices d'entraînement aux requêtes MySQL et schémas relationnels seront prochainement disponibles.</p>
+            <button type="button" class="fc-hero-btn" onclick="switchSubjectTab('sql', 'annexe')" style="margin-top:14px; padding:8px 18px; font-size:0.85rem;">Consulter l'Annexe SQL →</button>
+          </div>
+        </div>
+
+        <!-- Vue PDF SQL (Phase 3) -->
+        <div id="sqlPdfView" class="subject-tab-panel">
+          <div class="empty-tab-state">
+            <span class="empty-tab-state-icon">📚</span>
+            <h3 class="empty-tab-state-title">Documents &amp; Polycopiés SQL</h3>
+            <p class="empty-tab-state-desc">Consultez la bibliothèque numérique pour accéder à tous les cours et résumés PDF du programme.</p>
+            <button type="button" class="fc-hero-btn" onclick="switchView('lessons')" style="margin-top:14px; padding:8px 18px; font-size:0.85rem;">Ouvrir la Bibliothèque PDF →</button>
           </div>
         </div>
 
