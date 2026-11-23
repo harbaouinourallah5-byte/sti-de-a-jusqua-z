@@ -122,6 +122,52 @@ window.updateSidebarAccordion = updateSidebarAccordion;
 window.toggleSidebarGroup = toggleSidebarGroup;
 window.updateSidebarProgressIndicators = updateSidebarProgressIndicators;
 
+// =============================================================
+// GESTION DES ONGLETS DE PAGES FUSIONNÉES (PHASE 2)
+// =============================================================
+function switchMethodeTab(tabName) {
+  const tabs = ['fiches', 'erreurs', 'types'];
+  if (!tabs.includes(tabName)) tabName = 'fiches';
+
+  tabs.forEach(t => {
+    const cap = t.charAt(0).toUpperCase() + t.slice(1);
+    const btn = document.getElementById('methodeTabBtn' + cap);
+    const panel = document.getElementById('methodeTabPanel' + cap);
+    if (btn) btn.classList.toggle('active', t === tabName);
+    if (panel) panel.classList.toggle('active', t === tabName);
+  });
+
+  if (tabName === 'fiches' && typeof renderAlgoMethodesPage === 'function') {
+    renderAlgoMethodesPage();
+  } else if (tabName === 'erreurs' && typeof renderAlgoErreursPage === 'function') {
+    renderAlgoErreursPage();
+  } else if (tabName === 'types' && typeof renderAlgoTypesPage === 'function') {
+    renderAlgoTypesPage();
+  }
+}
+
+function switchExamensTab(tabName) {
+  const isStats = (tabName === 'statistiques' || tabName === 'stats');
+  const btnSujets = document.getElementById('examensTabBtnSujets');
+  const btnStats = document.getElementById('examensTabBtnStats');
+  const panelSujets = document.getElementById('examensTabPanelSujets');
+  const panelStats = document.getElementById('examensTabPanelStats');
+
+  if (btnSujets) btnSujets.classList.toggle('active', !isStats);
+  if (btnStats) btnStats.classList.toggle('active', isStats);
+  if (panelSujets) panelSujets.classList.toggle('active', !isStats);
+  if (panelStats) panelStats.classList.toggle('active', isStats);
+
+  if (isStats && typeof renderAlgoStatistiquesPage === 'function') {
+    renderAlgoStatistiquesPage();
+  } else if (!isStats && typeof renderExamensPage === 'function') {
+    renderExamensPage();
+  }
+}
+
+window.switchMethodeTab = switchMethodeTab;
+window.switchExamensTab = switchExamensTab;
+
 
 // =============================================================
 // CONFIGURATION DES VARIANTES INTERACTIVES (BOUTONS RADIO)
@@ -1702,9 +1748,9 @@ function parseAppHash(hash) {
     return { view: 'revision' };
   }
 
-  // Statistiques (#/algo/statistiques)
-  if (clean.startsWith('algo/statistiques') || clean === 'statistiques') {
-    return { view: 'algo-statistiques' };
+  // Statistiques (#/algo/statistiques ou #/statistiques) -> redirigé vers l'onglet Statistiques d'Examens
+  if (clean.startsWith('algo/statistiques') || clean === 'statistiques' || clean === 'stats') {
+    return { view: 'examens', tab: 'statistiques' };
   }
 
   // Simulateur d'examen (#/examens/simulateur/:id ou #/simulateur/:id)
@@ -1768,16 +1814,16 @@ function parseAppHash(hash) {
     }
   }
 
-  // Types d'exercices (#/algo/types ou #/algo/types/:slug)
+  // Types d'exercices (#/algo/types ou #/algo/types/:slug) -> onglet Types de la vue unifiée Méthode
   if (clean.startsWith('algo/types') || clean.startsWith('types')) {
     const subType = clean.replace(/^(algo\/types|types)\/?/, '').trim();
-    return { view: 'algo-types', typeSlug: subType || null };
+    return { view: 'methode', tab: 'types', typeSlug: subType || null };
   }
 
-  // Fiches méthode (#/algo/methodes ou #/algo/methodes/:slug)
-  if (clean.startsWith('algo/methodes') || clean.startsWith('methodes') || clean === 'algo/methode' || clean === 'methode') {
+  // Fiches méthode (#/algo/methodes ou #/algo/methodes/:slug ou #/methode) -> vue unifiée Méthode
+  if (clean.startsWith('algo/methodes') || clean.startsWith('methodes') || clean === 'algo/methode' || clean.startsWith('methode')) {
     const subMethod = clean.replace(/^(algo\/methodes|methodes|algo\/methode|methode)\/?/, '').trim();
-    return { view: 'algo-methodes', sheetSlug: subMethod || null };
+    return { view: 'methode', tab: 'fiches', sheetSlug: subMethod || null };
   }
 
   // Quiz rapide (#/algo/quiz ou #/algo/quiz/:slug)
@@ -1786,15 +1832,16 @@ function parseAppHash(hash) {
     return { view: 'algo-quiz', chapterSlug: subQuiz || null };
   }
 
-  // Catalogue des erreurs classiques (#/algo/erreurs ou #/algo/erreurs/:chapter)
+  // Catalogue des erreurs classiques (#/algo/erreurs ou #/algo/erreurs/:chapter) -> onglet Erreurs de Méthode
   if (clean.startsWith('algo/erreurs') || clean.startsWith('erreurs') || clean === 'algo/erreur' || clean === 'erreur') {
     const subError = clean.replace(/^(algo\/erreurs|erreurs|algo\/erreur|erreur)\/?/, '').trim();
-    return { view: 'algo-erreurs', chapterSlug: subError || null };
+    return { view: 'methode', tab: 'erreurs', chapterSlug: subError || null };
   }
 
   const map = {
     '': 'home',
     '/': 'home',
+    'methode': 'methode',
     'html': 'html',
     'html5': 'html',
     'css': 'css',
@@ -1831,13 +1878,38 @@ function handleRouteFromHash() {
   const route = parseAppHash(currentHash);
   isRouterNavigating = true;
 
-  if (['algo-home', 'algo-carte', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes', 'algo-quiz', 'exam-simulator', 'algo-erreurs'].includes(route.view)) {
+  if (['algo-home', 'algo-carte', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes', 'algo-quiz', 'exam-simulator', 'algo-erreurs', 'methode'].includes(route.view)) {
     if (typeof switchModule === 'function') switchModule('algo', true);
   } else if (['html', 'css', 'js', 'sql'].includes(route.view)) {
     if (typeof switchModule === 'function') switchModule('sti', true);
   }
 
   switchView(route.view, true);
+
+  if (route.view === 'examens') {
+    const targetTab = route.tab || 'sujets';
+    if (typeof switchExamensTab === 'function') {
+      switchExamensTab(targetTab);
+    }
+  }
+
+  if (route.view === 'methode' || ['algo-methodes', 'algo-erreurs', 'algo-types'].includes(route.view)) {
+    const targetTab = route.tab || (route.view === 'algo-erreurs' ? 'erreurs' : (route.view === 'algo-types' ? 'types' : 'fiches'));
+    if (typeof switchMethodeTab === 'function') {
+      switchMethodeTab(targetTab);
+    }
+    if (targetTab === 'fiches' && typeof renderAlgoMethodesPage === 'function') {
+      renderAlgoMethodesPage(route.sheetSlug);
+    } else if (targetTab === 'erreurs' && typeof renderAlgoErreursPage === 'function') {
+      renderAlgoErreursPage(route.chapterSlug || 'all');
+    } else if (targetTab === 'types') {
+      if (route.typeSlug && typeof openTypeDetailView === 'function') {
+        openTypeDetailView(route.typeSlug);
+      } else if (typeof closeTypeDetailView === 'function') {
+        closeTypeDetailView();
+      }
+    }
+  }
 
   if (route.view === 'exam-simulator') {
     if (route.examId && typeof initExamSimulatorScreen === 'function') {
@@ -1851,13 +1923,7 @@ function handleRouteFromHash() {
     }
   }
 
-  if (route.view === 'algo-erreurs') {
-    if (typeof renderAlgoErreursPage === 'function') {
-      renderAlgoErreursPage(route.chapterSlug || 'all');
-    }
-  }
-
-  if (route.view === 'revision' || route.view === 'revision-cartes' || route.view === 'revision-plan' || route.view === 'algo-statistiques') {
+  if (route.view === 'revision' || route.view === 'revision-cartes' || route.view === 'revision-plan') {
     if (typeof renderRevisionPage === 'function') {
       renderRevisionPage();
     }
@@ -1866,30 +1932,6 @@ function handleRouteFromHash() {
     }
     if (route.view === 'revision-cartes' && typeof renderFlashcardsPage === 'function') {
       renderFlashcardsPage(route.deckId);
-    }
-    if (route.view === 'algo-statistiques' && typeof renderAlgoStatistiquesPage === 'function') {
-      renderAlgoStatistiquesPage();
-    }
-  }
-
-  if (route.view === 'algo-theorique-resume') {
-    if (typeof renderAlgoChapterResumePage === 'function') {
-      renderAlgoChapterResumePage(route.chapterSlug);
-    }
-  }
-
-
-  if (route.view === 'algo-types') {
-    if (route.typeSlug && typeof openTypeDetailView === 'function') {
-      openTypeDetailView(route.typeSlug);
-    } else if (typeof closeTypeDetailView === 'function') {
-      closeTypeDetailView();
-    }
-  }
-
-  if (route.view === 'algo-methodes') {
-    if (typeof renderAlgoMethodesPage === 'function') {
-      renderAlgoMethodesPage(route.sheetSlug);
     }
   }
 
@@ -2131,6 +2173,13 @@ function switchView(viewName, skipHashUpdate = false) {
   // Normaliser les alias éventuels (cours, cours-pdf, etc.)
   if (viewName === 'cours' || viewName === 'cours-pdf' || viewName === 'cours-series') {
     viewName = 'lessons';
+  } else if (['algo-methodes', 'algo-erreurs', 'algo-types'].includes(viewName)) {
+    const targetTab = (viewName === 'algo-erreurs') ? 'erreurs' : (viewName === 'algo-types' ? 'types' : 'fiches');
+    viewName = 'methode';
+    if (typeof switchMethodeTab === 'function') switchMethodeTab(targetTab);
+  } else if (['algo-statistiques', 'statistiques'].includes(viewName)) {
+    viewName = 'examens';
+    if (typeof switchExamensTab === 'function') switchExamensTab('statistiques');
   }
 
   currentView = viewName;

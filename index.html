@@ -248,7 +248,7 @@
               <span class="nav-label">Examens</span>
               <span class="nav-count" id="sideBadgeExamens">11</span>
             </a>
-            <a class="sidebar-link" data-view="algo-methodes" onclick="switchView('algo-methodes')" title="Méthode, Réflexes & Pièges">
+            <a class="sidebar-link" data-view="methode" onclick="switchView('methode')" title="Méthode, Réflexes & Pièges">
               <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
               <span class="nav-label">Méthode</span>
               <span class="nav-count" id="sideBadgeMethodes">7</span>
@@ -276,10 +276,6 @@
             <a class="sidebar-link" data-view="revision-plan" onclick="navigateToHash('#/revision/plan')" title="Planning de révision Bac">
               <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg></span>
               <span class="nav-label">Planning</span>
-            </a>
-            <a class="sidebar-link" data-view="algo-statistiques" onclick="navigateToHash('#/algo/statistiques')" title="Statistiques Bac">
-              <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg></span>
-              <span class="nav-label">Statistiques</span>
             </a>
           </div>
         </div>
@@ -3506,56 +3502,10 @@ app.exec_()</code></pre>
     </section>
 
         
-      <!-- ==========================================
-         VUE TYPES D'EXERCICES DU BACCALAURÉAT (#/algo/types)
-         ========================================== -->
-    <section id="view-algo-types" class="view-section">
-      <div class="container">
-
-        <div class="page-header-banner" style="margin-bottom:24px; padding:24px 0 10px 0;">
-          <div class="annexe-title-wrap">
-            <div class="annexe-logo-shield" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">
-              🎯
-            </div>
-            <div>
-              <h2 class="annexe-title-text" style="font-size:1.6rem;color:#a78bfa;">Types d'Exercices du Baccalauréat</h2>
-              <span style="font-size:0.9rem;color:var(--text-secondary);">Les 11 modèles d'épreuves incontournables • Statistiques réelles • Accès direct par exercice</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Mode bascule : 1) Grille des types  2) Liste détaillée par type -->
-        <div id="typesMainView">
-          <div id="typesCardsGrid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(290px, 1fr));gap:16px;"></div>
-        </div>
-
-        <div id="typeDetailView" style="display:none;">
-          <div style="margin-bottom:18px;">
-            <button type="button" onclick="closeTypeDetailView()" class="cat-pill" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;cursor:pointer;">
-              ← Retour à tous les types
-            </button>
-          </div>
-          <div id="typeDetailHeader" style="margin-bottom:20px;padding:20px;background:var(--surface-elevated);border-radius:14px;border:1px solid var(--border-color);"></div>
-          
-          <!-- Filtre par chapitre pour ce type -->
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
-            <label style="font-size:0.88rem;color:var(--text-secondary);font-weight:600;">Filtrer par chapitre :</label>
-            <select id="typeExercisesChapterFilter" onchange="renderTypeExercisesList()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border-color);background:var(--surface-bg);color:var(--text-primary);font-size:0.88rem;cursor:pointer;">
-              <option value="">Tous les chapitres</option>
-            </select>
-            <span id="typeExercisesCount" style="margin-left:auto;font-size:0.85rem;color:var(--text-secondary);"></span>
-          </div>
-
-          <div id="typeExercisesGrid" style="display:grid;gap:12px;"></div>
-        </div>
-
-      </div>
-    </section>
-
     <!-- ==========================================
-         VUE FICHES MÉTHODE (#/algo/methodes)
+         VUE UNIFIÉE MÉTHODE (#/methode, #/algo/methodes, #/algo/erreurs, #/algo/types)
          ========================================== -->
-    <section id="view-algo-methodes" class="view-section">
+    <section id="view-methode" class="view-section">
       <div class="container">
 
         <div class="page-header-banner" style="margin-bottom:20px; padding:24px 0 10px 0;">
@@ -3565,94 +3515,120 @@ app.exec_()</code></pre>
                 📚
               </div>
               <div>
-                <h2 class="annexe-title-text" style="font-size:1.6rem;color:#c084fc;">Fiches Méthode • Baccalauréat Informatique</h2>
-                <span style="font-size:0.9rem;color:var(--text-secondary);">Les 6 méthodes et réflexes indispensables pour réussir les épreuves écrites et pratiques</span>
+                <h2 class="annexe-title-text" style="font-size:1.6rem;color:#c084fc;">Méthode, Réflexes &amp; Pièges du Bac</h2>
+                <span style="font-size:0.9rem;color:var(--text-secondary);">Les méthodes indispensables, erreurs classiques documentées et 11 types d'exercices du Bac</span>
               </div>
             </div>
             <div class="no-print" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
               <button type="button" onclick="window.print()" class="cat-pill" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;cursor:pointer;background:rgba(192,132,252,0.12);color:#c084fc;border:1px solid rgba(192,132,252,0.3);font-weight:700;">
-                🖨️ Imprimer les fiches (A4)
+                🖨️ Imprimer la sélection (A4)
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Note obligatoire de validation professeur -->
-        <div style="margin-bottom:24px;padding:14px 18px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:10px;display:flex;align-items:center;gap:12px;">
-          <span style="font-size:1.3rem;">⚠️</span>
-          <span style="font-size:0.86rem;color:var(--text-secondary);line-height:1.45;">
-            <strong style="color:#f59e0b;">Rappel pédagogique :</strong> Fiches rédigées pour la révision du Baccalauréat Informatique, basées sur le programme officiel et les pratiques d'inspection. À valider avec ton professeur.
-          </span>
+        <!-- Onglets Méthode : 1) Fiches méthode  2) Erreurs classiques  3) Types d'exercices -->
+        <div class="subject-nav-tabs no-print" id="methodeNavTabs">
+          <button type="button" class="subject-tab-btn active" id="methodeTabBtnFiches" onclick="switchMethodeTab('fiches')">
+            <span>📑 Fiches méthode</span>
+            <span class="subject-tab-badge" id="methodeTabBadgeFiches">7</span>
+          </button>
+          <button type="button" class="subject-tab-btn" id="methodeTabBtnErreurs" onclick="switchMethodeTab('erreurs')">
+            <span>⚠️ Erreurs classiques</span>
+            <span class="subject-tab-badge" id="methodeTabBadgeErreurs">12</span>
+          </button>
+          <button type="button" class="subject-tab-btn" id="methodeTabBtnTypes" onclick="switchMethodeTab('types')">
+            <span>🎯 Types d'exercices</span>
+            <span class="subject-tab-badge" id="methodeTabBadgeTypes">11</span>
+          </button>
         </div>
 
-        <!-- Sommaire rapide en pilules d'ancrage -->
-        <div class="no-print" style="margin-bottom:28px;">
-          <span style="display:block;font-size:0.82rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Accès direct aux fiches :</span>
-          <div id="methodesSummaryPills" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+        <!-- PANNEAU 1 : FICHES MÉTHODE -->
+        <div class="subject-tab-panel active" id="methodeTabPanelFiches">
+          <!-- Note obligatoire de validation professeur -->
+          <div style="margin-bottom:24px;padding:14px 18px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:10px;display:flex;align-items:center;gap:12px;">
+            <span style="font-size:1.3rem;">⚠️</span>
+            <span style="font-size:0.86rem;color:var(--text-secondary);line-height:1.45;">
+              <strong style="color:#f59e0b;">Rappel pédagogique :</strong> Fiches rédigées pour la révision du Baccalauréat Informatique, basées sur le programme officiel et les pratiques d'inspection. À valider avec ton professeur.
+            </span>
+          </div>
+
+          <!-- Sommaire rapide en pilules d'ancrage -->
+          <div class="no-print" style="margin-bottom:28px;">
+            <span style="display:block;font-size:0.82rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Accès direct aux fiches :</span>
+            <div id="methodesSummaryPills" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+          </div>
+
+          <!-- Conteneur des fiches complètes -->
+          <div id="methodesCardsContainer" style="display:flex;flex-direction:column;gap:32px;"></div>
         </div>
 
-        <!-- Conteneur des 6 fiches complètes -->
-        <div id="methodesCardsContainer" style="display:flex;flex-direction:column;gap:32px;"></div>
-
-      </div>
-    </section>
-
-    <!-- ==========================================
-         VUE CATALOGUE DES ERREURS CLASSIQUES (#/algo/erreurs)
-         ========================================== -->
-    <section id="view-algo-erreurs" class="view-section">
-      <div class="container" style="max-width: 1040px; padding: 20px 16px 40px 16px;">
-        
-        <!-- En-tête -->
-        <div class="page-header-banner" style="margin-bottom: 24px; padding: 24px 0 10px 0; border-bottom: 1px solid var(--border-soft);">
-          <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
-            <div style="display: flex; align-items: center; gap: 14px;">
-              <div style="font-size: 2.2rem; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center;">
-                ⚠️
-              </div>
-              <div>
-                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
-                  <span style="font-size: 0.76rem; font-weight: 800; color: #ef4444; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); padding: 2px 10px; border-radius: 20px; text-transform: uppercase;">
-                    Pièges d'examen &amp; Algorithmes
-                  </span>
-                  <span id="errorsCountBadge" style="font-size: 0.76rem; font-weight: 800; color: var(--text-secondary); background: var(--bg-card); border: 1px solid var(--border-soft); padding: 2px 10px; border-radius: 20px;">
-                    12 Erreurs documentées
-                  </span>
-                </div>
-                <h1 style="margin: 0; font-size: 1.6rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px;">
-                  Les Erreurs Classiques au Bac
-                </h1>
-                <p style="margin: 4px 0 0 0; font-size: 0.88rem; color: var(--text-secondary); max-width: 680px; line-height: 1.5;">
-                  Extraits de code piégés, contre-exemples concrets montrant pourquoi l'algorithme échoue, et correction officielle avec entraînement guidé.
-                </p>
-              </div>
-            </div>
+        <!-- PANNEAU 2 : ERREURS CLASSIQUES -->
+        <div class="subject-tab-panel" id="methodeTabPanelErreurs">
+          <div style="margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
             <div>
-              <button type="button" onclick="window.print()" class="no-print" style="background: var(--surface-bg); color: var(--text-primary); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.84rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
-                <span>🖨️</span>
-                <span>Imprimer le catalogue</span>
+              <h3 style="margin: 0; font-size: 1.25rem; font-weight: 800; color: var(--text-primary);">Catalogue des Pièges &amp; Erreurs Fréquentes</h3>
+              <p style="margin: 4px 0 0 0; font-size: 0.88rem; color: var(--text-secondary);">Extraits de code piégés, contre-exemples concrets montrant pourquoi l'algorithme échoue, et correction officielle.</p>
+            </div>
+            <span id="errorsCountBadge" style="font-size: 0.78rem; font-weight: 800; color: var(--text-secondary); background: var(--bg-card); border: 1px solid var(--border-soft); padding: 4px 12px; border-radius: 20px;">
+              12 Erreurs documentées
+            </span>
+          </div>
+
+          <!-- Filtres par Chapitre -->
+          <div class="no-print" style="margin-bottom: 24px;">
+            <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+              Filtrer par chapitre :
+            </div>
+            <div id="algoErreursFilterBar" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+          </div>
+
+          <!-- Grille des fiches d'erreurs -->
+          <div id="algoErreursGrid" style="display: grid; gap: 24px;"></div>
+        </div>
+
+        <!-- PANNEAU 3 : TYPES D'EXERCICES -->
+        <div class="subject-tab-panel" id="methodeTabPanelTypes">
+          <div style="margin-bottom: 20px;">
+            <h3 style="margin: 0; font-size: 1.25rem; font-weight: 800; color: var(--text-primary);">Les 11 Modèles d'Épreuves Incontournables</h3>
+            <p style="margin: 4px 0 0 0; font-size: 0.88rem; color: var(--text-secondary);">Analyse statistique et accès direct à tous les exercices réels du Bac classés par typologie.</p>
+          </div>
+
+          <!-- Mode bascule : 1) Grille des types  2) Liste détaillée par type -->
+          <div id="typesMainView">
+            <div id="typesCardsGrid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(290px, 1fr));gap:16px;"></div>
+          </div>
+
+          <div id="typeDetailView" style="display:none;">
+            <div style="margin-bottom:18px;">
+              <button type="button" onclick="closeTypeDetailView()" class="cat-pill" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;cursor:pointer;">
+                ← Retour à tous les types
               </button>
             </div>
-          </div>
-        </div>
+            <div id="typeDetailHeader" style="margin-bottom:20px;padding:20px;background:var(--surface-elevated);border-radius:14px;border:1px solid var(--border-color);"></div>
+            
+            <!-- Filtre par chapitre pour ce type -->
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+              <label style="font-size:0.88rem;color:var(--text-secondary);font-weight:600;">Filtrer par chapitre :</label>
+              <select id="typeExercisesChapterFilter" onchange="renderTypeExercisesList()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border-color);background:var(--surface-bg);color:var(--text-primary);font-size:0.88rem;cursor:pointer;">
+                <option value="">Tous les chapitres</option>
+              </select>
+              <span id="typeExercisesCount" style="margin-left:auto;font-size:0.85rem;color:var(--text-secondary);"></span>
+            </div>
 
-        <!-- Filtres par Chapitre -->
-        <div class="no-print" style="margin-bottom: 24px;">
-          <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
-            Filtrer par chapitre :
+            <div id="typeExercisesGrid" style="display:grid;gap:12px;"></div>
           </div>
-          <div id="algoErreursFilterBar" style="display: flex; flex-wrap: wrap; gap: 8px;">
-            <!-- Rempli par renderAlgoErreursPage() -->
-          </div>
-        </div>
-
-        <!-- Grille des fiches d'erreurs -->
-        <div id="algoErreursGrid" style="display: grid; gap: 24px;">
-          <!-- Injecté dynamiquement par renderAlgoErreursPage() -->
         </div>
 
       </div>
     </section>
+
+    <!-- Éléments fantômes pour compatibilité ID -->
+    <div id="view-algo-methodes" style="display:none;" aria-hidden="true"></div>
+    <div id="view-algo-erreurs" style="display:none;" aria-hidden="true"></div>
+    <div id="view-algo-types" style="display:none;" aria-hidden="true"></div>
+
+
 
     <!-- ==========================================
          VUE QUIZ RAPIDE V/F & QCM (#/algo/quiz)
@@ -3820,43 +3796,229 @@ app.exec_()</code></pre>
     </section>
 
     <!-- ==========================================
-         VUE EXAMENS : SUJETS & EXAMENS BAC
+         VUE EXAMENS : SUJETS & EXAMENS BAC (#/examens)
          ========================================== -->
     <section id="view-examens" class="view-section">
       <div class="container">
 
-        <div class="page-header-banner" style="margin-bottom:24px; padding:24px 0 10px 0;">
+        <div class="page-header-banner" style="margin-bottom:20px; padding:24px 0 10px 0;">
           <div class="annexe-title-wrap">
             <div class="annexe-logo-shield" style="background:linear-gradient(135deg,#059669,#10b981);width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">
               📋
             </div>
             <div>
-              <h2 class="annexe-title-text" style="font-size:1.6rem;color:#10b981;">Examens &amp; Sujets du Baccalauréat</h2>
-              <span style="font-size:0.9rem;color:var(--text-secondary);">Devoirs de synthèse • Devoirs de contrôle • Sujets type Bac — Algorithme Tunisie 4SI</span>
+              <h2 class="annexe-title-text" style="font-size:1.6rem;color:#10b981;">Examens, Sujets &amp; Statistiques Bac</h2>
+              <span style="font-size:0.9rem;color:var(--text-secondary);">Sujets officiels du Baccalauréat, devoirs de synthèse &amp; cartographie statistique Tunisie 4SI</span>
             </div>
           </div>
         </div>
 
-        <!-- Barre de filtres -->
-        <div id="examensFilterBar" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;padding:16px;background:var(--surface-elevated);border-radius:12px;border:1px solid var(--border-color);">
-          <select id="examensFilterType" onchange="renderExamensPage()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border-color);background:var(--surface-bg);color:var(--text-primary);font-size:0.9rem;cursor:pointer;">
-            <option value="">Tous les types</option>
-            <option value="bac">🎓 Bac</option>
-            <option value="devoir-synthese">📝 Devoir de synthèse</option>
-            <option value="devoir-controle">📌 Devoir de contrôle</option>
-            <option value="inconnu">❓ Type inconnu</option>
-          </select>
-          <select id="examensFilterYear" onchange="renderExamensPage()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border-color);background:var(--surface-bg);color:var(--text-primary);font-size:0.9rem;cursor:pointer;">
-            <option value="">Toutes les années</option>
-          </select>
-          <select id="examensFilterSchool" onchange="renderExamensPage()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border-color);background:var(--surface-bg);color:var(--text-primary);font-size:0.9rem;cursor:pointer;">
-            <option value="">Tous les établissements</option>
-          </select>
-          <span id="examensCount" style="margin-left:auto;padding:8px 12px;font-size:0.85rem;color:var(--text-secondary);align-self:center;"></span>
+        <!-- Onglets Examens : 1) Sujets & Épreuves  2) Statistiques Bac -->
+        <div class="subject-nav-tabs no-print" id="examensNavTabs">
+          <button type="button" class="subject-tab-btn active" id="examensTabBtnSujets" onclick="switchExamensTab('sujets')">
+            <span>📋 Sujets &amp; Épreuves</span>
+            <span class="subject-tab-badge" id="examensTabBadgeSujets">11</span>
+          </button>
+          <button type="button" class="subject-tab-btn" id="examensTabBtnStats" onclick="switchExamensTab('statistiques')">
+            <span>📊 Statistiques &amp; Fréquences Bac</span>
+            <span class="subject-tab-badge">Analyses</span>
+          </button>
         </div>
 
-        <!-- Grille des cartes -->
-        <div id="examensGrid" style="display:grid;gap:16px;"></div>
+        <!-- ONGLET 1 : SUJETS D'EXAMENS -->
+        <div class="subject-tab-panel active" id="examensTabPanelSujets">
+          <!-- Barre de filtres -->
+          <div id="examensFilterBar" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;padding:16px;background:var(--surface-elevated);border-radius:12px;border:1px solid var(--border-color);">
+            <select id="examensFilterType" onchange="renderExamensPage()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border-color);background:var(--surface-bg);color:var(--text-primary);font-size:0.9rem;cursor:pointer;">
+              <option value="">Tous les types</option>
+              <option value="bac">🎓 Bac</option>
+              <option value="devoir-synthese">📝 Devoir de synthèse</option>
+              <option value="devoir-controle">📌 Devoir de contrôle</option>
+              <option value="inconnu">❓ Type inconnu</option>
+            </select>
+            <select id="examensFilterYear" onchange="renderExamensPage()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border-color);background:var(--surface-bg);color:var(--text-primary);font-size:0.9rem;cursor:pointer;">
+              <option value="">Toutes les années</option>
+            </select>
+            <select id="examensFilterSchool" onchange="renderExamensPage()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border-color);background:var(--surface-bg);color:var(--text-primary);font-size:0.9rem;cursor:pointer;">
+              <option value="">Tous les établissements</option>
+            </select>
+            <span id="examensCount" style="margin-left:auto;padding:8px 12px;font-size:0.85rem;color:var(--text-secondary);align-self:center;"></span>
+          </div>
+
+          <!-- Grille des cartes -->
+          <div id="examensGrid" style="display:grid;gap:16px;"></div>
+        </div>
+
+        <!-- ONGLET 2 : STATISTIQUES BAC -->
+        <div class="subject-tab-panel" id="examensTabPanelStats">
+<div class="stats-container">
+        <!-- En-tête -->
+        <div class="stats-header">
+          <div class="stats-badge-header">
+            <span>📊</span>
+            <span>Statistiques &amp; Analyse d'Examens</span>
+          </div>
+          <h2 class="stats-title">Fréquence des Chapitres &amp; Types d'Exercices</h2>
+          <p class="stats-subtitle">
+            Cartographie interactive basée sur les 11 examens et devoirs disponibles sur la plateforme. Visualisez en un coup d'œil les notions récurrentes et commencez par les priorités du Baccalauréat.
+          </p>
+        </div>
+
+        <!-- 1. Barre de Filtres Interactifs -->
+        <div class="stats-filters-bar">
+          <div class="stats-filter-group">
+            <span class="stats-filter-label">Type d'examen :</span>
+            <div class="stats-pill-row" id="statsScopePills">
+              <button type="button" class="stats-pill-btn active" data-scope="all" onclick="setStatsScopeFilter('all', this)">Tous (<span id="statsScopeCountAll">11</span>)</button>
+              <button type="button" class="stats-pill-btn" data-scope="bac" onclick="setStatsScopeFilter('bac', this)">Baccalauréats (<span id="statsScopeCountBac">3</span>)</button>
+              <button type="button" class="stats-pill-btn" data-scope="devoirs" onclick="setStatsScopeFilter('devoirs', this)">Devoirs de synthèse &amp; contrôle (<span id="statsScopeCountDevoirs">8</span>)</button>
+            </div>
+          </div>
+
+          <div class="stats-filter-group">
+            <span class="stats-filter-label">Filtre d'année :</span>
+            <div class="stats-pill-row" id="statsYearPills">
+              <button type="button" class="stats-pill-btn active" data-year="all" onclick="setStatsYearFilter('all', this)">Toutes les dates</button>
+              <button type="button" class="stats-pill-btn" data-year="known" onclick="setStatsYearFilter('known', this)">Années précisées uniquement</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Panneau Conseils "Par où commencer ?" -->
+        <div class="stats-advice-panel" id="statsAdvicePanel">
+          <!-- Injecté dynamiquement par JS -->
+        </div>
+
+        <!-- 3. Heatmap Chapitres x Examens -->
+        <div class="stats-chart-card">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+            <div>
+              <h3 style="margin: 0; font-size: 1.2rem; font-weight: 800; color: var(--text-primary);">
+                🗺️ Cartographie Croisée : 8 Chapitres × Sujets d'Examens
+              </h3>
+              <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-secondary);">
+                Chaque case indique le nombre d'exercices portant sur le chapitre dans ce sujet. Cliquez sur une case pour ouvrir les exercices correspondants.
+              </p>
+            </div>
+
+            <!-- Légende Heatmap -->
+            <div class="stats-heatmap-legend">
+              <span style="font-size: 0.76rem; color: var(--text-muted); font-weight: 700;">Intensité :</span>
+              <span class="stats-leg-chip c0">— 0</span>
+              <span class="stats-leg-chip c1">1 ex</span>
+              <span class="stats-leg-chip c2">2 ex</span>
+              <span class="stats-leg-chip c3">3+ ex</span>
+            </div>
+          </div>
+
+          <div class="stats-heatmap-box" id="statsHeatmapContainer">
+            <!-- Table injectée dynamiquement -->
+          </div>
+
+          <p class="stats-disclaimer" id="statsHeatmapDisclaimer">
+            Basé sur les 11 examens et devoirs disponibles sur ce site (incomplets signalés). Ce n'est pas une prévision de l'examen.
+          </p>
+        </div>
+
+        <!-- 4. Bar Chart : Fréquence des 8 Chapitres -->
+        <div class="stats-chart-card">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+            <div>
+              <h3 style="margin: 0; font-size: 1.2rem; font-weight: 800; color: var(--text-primary);">
+                📈 Classement des 8 Chapitres au Bac
+              </h3>
+              <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-secondary);">
+                Fréquence globale des chapitres dans l'ensemble des épreuves analysées.
+              </p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700;">Afficher par :</span>
+              <select id="statsChapterMetricSelect" onchange="setStatsChapterMetric(this.value)" style="padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--surface-bg); color: var(--text-primary); font-size: 0.84rem; font-weight: 700;">
+                <option value="count">Nombre d'exercices</option>
+                <option value="points">Total des points connus</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="stats-svg-wrap" id="statsChapterChartWrap">
+            <!-- SVG injecté dynamiquement -->
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-top: 14px;">
+            <p class="stats-disclaimer" id="statsChapterDisclaimer">
+              Note : Les exercices des devoirs incomplets sans barème explicite ne sont pas comptabilisés dans le total des points.
+            </p>
+            <button type="button" class="cat-pill" onclick="navigateToHash('#/algo/theorique')" style="padding: 6px 14px; font-size: 0.82rem; cursor: pointer;">
+              📚 Consulter les 8 cours →
+            </button>
+          </div>
+        </div>
+
+        <!-- 5. Bar Chart : 11 Types d'Exercices -->
+        <div class="stats-chart-card">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+            <div>
+              <h3 style="margin: 0; font-size: 1.2rem; font-weight: 800; color: var(--text-primary);">
+                🎯 Répartition des 11 Types d'Exercices
+              </h3>
+              <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-secondary);">
+                Les mêmes types d'exercices reviennent dans chaque épreuve (trace manuelle, V/F QCM, TDO/TDNT, procédures sur fichiers...).
+              </p>
+            </div>
+            <button type="button" class="cat-pill" onclick="navigateToHash('#/algo/types')" style="padding: 6px 14px; font-size: 0.82rem; cursor: pointer;">
+              🔍 Voir les 11 types d'exercices →
+            </button>
+          </div>
+
+          <div class="stats-svg-wrap" id="statsTypesChartWrap">
+            <!-- SVG injecté dynamiquement -->
+          </div>
+
+          <p class="stats-disclaimer">
+            Astuce Bac : Cliquez sur une barre pour accéder à tous les exercices répertoriés pour ce type et à sa fiche méthode associée.
+          </p>
+        </div>
+
+        <!-- 6. Pied de page & Navigation rapide -->
+        <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; padding-top: 20px;">
+          <button type="button" class="fc-hero-btn" onclick="navigateToHash('#/algo/theorique')" style="padding: 10px 18px; font-size: 0.88rem;">
+            <span>📖</span>
+            <span>Cours Théorique</span>
+          </button>
+          <button type="button" class="fc-hero-btn" onclick="navigateToHash('#/algo/quiz')" style="padding: 10px 18px; font-size: 0.88rem; background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 18px rgba(245, 158, 11, 0.35);">
+            <span>⚡</span>
+            <span>Quiz Express</span>
+          </button>
+          <button type="button" class="fc-hero-btn" onclick="navigateToHash('#/algo/methodes')" style="padding: 10px 18px; font-size: 0.88rem; background: linear-gradient(135deg, #38bdf8, #0284c7); box-shadow: 0 4px 18px rgba(56, 189, 248, 0.35);">
+            <span>💡</span>
+            <span>Fiches Méthode</span>
+          </button>
+          <button type="button" class="cat-pill" onclick="navigateToHash('#/revision')" style="padding: 10px 18px; font-size: 0.88rem; cursor: pointer;">
+            <span>⭐</span>
+            <span>Ma Révision</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- MODALE DÉTAIL D'UNE CELLULE DU HEATMAP -->
+      <div id="statsCellModal" class="custom-modal-backdrop" style="display: none;" onclick="if(event.target === this) closeStatsCellModal()">
+        <div class="custom-modal-dialog" style="max-width: 620px;">
+          <div class="custom-modal-header">
+            <div>
+              <span id="statsModalSub" style="font-size: 0.76rem; font-weight: 800; color: #10b981; text-transform: uppercase;">Exercices correspondants</span>
+              <h3 id="statsModalTitle" style="margin: 4px 0 0 0; font-size: 1.15rem; font-weight: 800; color: var(--text-primary);">...</h3>
+            </div>
+            <button type="button" class="custom-modal-close" onclick="closeStatsCellModal()">✕</button>
+          </div>
+          <div class="custom-modal-body" style="padding: 20px 24px;">
+            <div id="statsModalList" style="display: grid; gap: 12px; max-height: 420px; overflow-y: auto;">
+              <!-- Injecté dynamiquement -->
+            </div>
+          </div>
+        </div>
+      </div>
+        </div>
 
       </div>
     </section>
@@ -4482,175 +4644,8 @@ app.exec_()</code></pre>
     <!-- ==========================================
          VUE STATISTIQUES DES EXAMENS (#/algo/statistiques)
          ========================================== -->
-    <section id="view-algo-statistiques" class="view-section">
-      <div class="stats-container">
-        <!-- En-tête -->
-        <div class="stats-header">
-          <div class="stats-badge-header">
-            <span>📊</span>
-            <span>Statistiques &amp; Analyse d'Examens</span>
-          </div>
-          <h2 class="stats-title">Fréquence des Chapitres &amp; Types d'Exercices</h2>
-          <p class="stats-subtitle">
-            Cartographie interactive basée sur les 11 examens et devoirs disponibles sur la plateforme. Visualisez en un coup d'œil les notions récurrentes et commencez par les priorités du Baccalauréat.
-          </p>
-        </div>
-
-        <!-- 1. Barre de Filtres Interactifs -->
-        <div class="stats-filters-bar">
-          <div class="stats-filter-group">
-            <span class="stats-filter-label">Type d'examen :</span>
-            <div class="stats-pill-row" id="statsScopePills">
-              <button type="button" class="stats-pill-btn active" data-scope="all" onclick="setStatsScopeFilter('all', this)">Tous (<span id="statsScopeCountAll">11</span>)</button>
-              <button type="button" class="stats-pill-btn" data-scope="bac" onclick="setStatsScopeFilter('bac', this)">Baccalauréats (<span id="statsScopeCountBac">3</span>)</button>
-              <button type="button" class="stats-pill-btn" data-scope="devoirs" onclick="setStatsScopeFilter('devoirs', this)">Devoirs de synthèse &amp; contrôle (<span id="statsScopeCountDevoirs">8</span>)</button>
-            </div>
-          </div>
-
-          <div class="stats-filter-group">
-            <span class="stats-filter-label">Filtre d'année :</span>
-            <div class="stats-pill-row" id="statsYearPills">
-              <button type="button" class="stats-pill-btn active" data-year="all" onclick="setStatsYearFilter('all', this)">Toutes les dates</button>
-              <button type="button" class="stats-pill-btn" data-year="known" onclick="setStatsYearFilter('known', this)">Années précisées uniquement</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- 2. Panneau Conseils "Par où commencer ?" -->
-        <div class="stats-advice-panel" id="statsAdvicePanel">
-          <!-- Injecté dynamiquement par JS -->
-        </div>
-
-        <!-- 3. Heatmap Chapitres x Examens -->
-        <div class="stats-chart-card">
-          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
-            <div>
-              <h3 style="margin: 0; font-size: 1.2rem; font-weight: 800; color: var(--text-primary);">
-                🗺️ Cartographie Croisée : 8 Chapitres × Sujets d'Examens
-              </h3>
-              <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-secondary);">
-                Chaque case indique le nombre d'exercices portant sur le chapitre dans ce sujet. Cliquez sur une case pour ouvrir les exercices correspondants.
-              </p>
-            </div>
-
-            <!-- Légende Heatmap -->
-            <div class="stats-heatmap-legend">
-              <span style="font-size: 0.76rem; color: var(--text-muted); font-weight: 700;">Intensité :</span>
-              <span class="stats-leg-chip c0">— 0</span>
-              <span class="stats-leg-chip c1">1 ex</span>
-              <span class="stats-leg-chip c2">2 ex</span>
-              <span class="stats-leg-chip c3">3+ ex</span>
-            </div>
-          </div>
-
-          <div class="stats-heatmap-box" id="statsHeatmapContainer">
-            <!-- Table injectée dynamiquement -->
-          </div>
-
-          <p class="stats-disclaimer" id="statsHeatmapDisclaimer">
-            Basé sur les 11 examens et devoirs disponibles sur ce site (incomplets signalés). Ce n'est pas une prévision de l'examen.
-          </p>
-        </div>
-
-        <!-- 4. Bar Chart : Fréquence des 8 Chapitres -->
-        <div class="stats-chart-card">
-          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
-            <div>
-              <h3 style="margin: 0; font-size: 1.2rem; font-weight: 800; color: var(--text-primary);">
-                📈 Classement des 8 Chapitres au Bac
-              </h3>
-              <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-secondary);">
-                Fréquence globale des chapitres dans l'ensemble des épreuves analysées.
-              </p>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700;">Afficher par :</span>
-              <select id="statsChapterMetricSelect" onchange="setStatsChapterMetric(this.value)" style="padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--surface-bg); color: var(--text-primary); font-size: 0.84rem; font-weight: 700;">
-                <option value="count">Nombre d'exercices</option>
-                <option value="points">Total des points connus</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="stats-svg-wrap" id="statsChapterChartWrap">
-            <!-- SVG injecté dynamiquement -->
-          </div>
-
-          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-top: 14px;">
-            <p class="stats-disclaimer" id="statsChapterDisclaimer">
-              Note : Les exercices des devoirs incomplets sans barème explicite ne sont pas comptabilisés dans le total des points.
-            </p>
-            <button type="button" class="cat-pill" onclick="navigateToHash('#/algo/theorique')" style="padding: 6px 14px; font-size: 0.82rem; cursor: pointer;">
-              📚 Consulter les 8 cours →
-            </button>
-          </div>
-        </div>
-
-        <!-- 5. Bar Chart : 11 Types d'Exercices -->
-        <div class="stats-chart-card">
-          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
-            <div>
-              <h3 style="margin: 0; font-size: 1.2rem; font-weight: 800; color: var(--text-primary);">
-                🎯 Répartition des 11 Types d'Exercices
-              </h3>
-              <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-secondary);">
-                Les mêmes types d'exercices reviennent dans chaque épreuve (trace manuelle, V/F QCM, TDO/TDNT, procédures sur fichiers...).
-              </p>
-            </div>
-            <button type="button" class="cat-pill" onclick="navigateToHash('#/algo/types')" style="padding: 6px 14px; font-size: 0.82rem; cursor: pointer;">
-              🔍 Voir les 11 types d'exercices →
-            </button>
-          </div>
-
-          <div class="stats-svg-wrap" id="statsTypesChartWrap">
-            <!-- SVG injecté dynamiquement -->
-          </div>
-
-          <p class="stats-disclaimer">
-            Astuce Bac : Cliquez sur une barre pour accéder à tous les exercices répertoriés pour ce type et à sa fiche méthode associée.
-          </p>
-        </div>
-
-        <!-- 6. Pied de page & Navigation rapide -->
-        <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; padding-top: 20px;">
-          <button type="button" class="fc-hero-btn" onclick="navigateToHash('#/algo/theorique')" style="padding: 10px 18px; font-size: 0.88rem;">
-            <span>📖</span>
-            <span>Cours Théorique</span>
-          </button>
-          <button type="button" class="fc-hero-btn" onclick="navigateToHash('#/algo/quiz')" style="padding: 10px 18px; font-size: 0.88rem; background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 18px rgba(245, 158, 11, 0.35);">
-            <span>⚡</span>
-            <span>Quiz Express</span>
-          </button>
-          <button type="button" class="fc-hero-btn" onclick="navigateToHash('#/algo/methodes')" style="padding: 10px 18px; font-size: 0.88rem; background: linear-gradient(135deg, #38bdf8, #0284c7); box-shadow: 0 4px 18px rgba(56, 189, 248, 0.35);">
-            <span>💡</span>
-            <span>Fiches Méthode</span>
-          </button>
-          <button type="button" class="cat-pill" onclick="navigateToHash('#/revision')" style="padding: 10px 18px; font-size: 0.88rem; cursor: pointer;">
-            <span>⭐</span>
-            <span>Ma Révision</span>
-          </button>
-        </div>
-
-      </div>
-
-      <!-- MODALE DÉTAIL D'UNE CELLULE DU HEATMAP -->
-      <div id="statsCellModal" class="custom-modal-backdrop" style="display: none;" onclick="if(event.target === this) closeStatsCellModal()">
-        <div class="custom-modal-dialog" style="max-width: 620px;">
-          <div class="custom-modal-header">
-            <div>
-              <span id="statsModalSub" style="font-size: 0.76rem; font-weight: 800; color: #10b981; text-transform: uppercase;">Exercices correspondants</span>
-              <h3 id="statsModalTitle" style="margin: 4px 0 0 0; font-size: 1.15rem; font-weight: 800; color: var(--text-primary);">...</h3>
-            </div>
-            <button type="button" class="custom-modal-close" onclick="closeStatsCellModal()">✕</button>
-          </div>
-          <div class="custom-modal-body" style="padding: 20px 24px;">
-            <div id="statsModalList" style="display: grid; gap: 12px; max-height: 420px; overflow-y: auto;">
-              <!-- Injecté dynamiquement -->
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+        <!-- Compatibilité ID pour anciens sélecteurs -->
+    <div id="view-algo-statistiques" style="display:none;" aria-hidden="true"></div>
 
     <!-- ==========================================
          VUE FICHE RÉSUMÉ A4 IMPRIMABLE (#/algo/theorique/:slug/resume)

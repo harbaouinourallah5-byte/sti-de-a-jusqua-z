@@ -56,6 +56,13 @@
   --sql-light: rgba(124, 58, 237, 0.1);
   --sql-glow: rgba(124, 58, 237, 0.35);
 
+  /* Variables Couleurs Matières WCAG AA (Phase 4) */
+  --subject-html: #EA580C;
+  --subject-css: #2563EB;
+  --subject-js: #B45309;
+  --subject-sql: #059669;
+  --subject-algo: #7C3AED;
+
   --hover-badge-bg: #FEF3C7;
   --hover-badge-text: #92400E;
 
@@ -123,6 +130,13 @@
   --js-light: rgba(250, 204, 21, 0.15);
   --sql-primary: #C084FC;
   --sql-light: rgba(192, 132, 252, 0.15);
+
+  /* Variables Couleurs Matières WCAG AA Sombre (Phase 4) */
+  --subject-html: #FB923C;
+  --subject-css: #60A5FA;
+  --subject-js: #FACC15;
+  --subject-sql: #34D399;
+  --subject-algo: #A78BFA;
 
   --hover-badge-bg: #854D0E;
   --hover-badge-text: #FEF08A;
@@ -12459,3 +12473,135 @@ button.topbar-action-btn svg {
   height: 28px;
   flex-shrink: 0;
 }
+
+/* =============================================================
+   NAVIGATION PAR ONGLETS (PHASES 2 & 3 : MÉTHODE, EXAMENS, MATIÈRES)
+   ============================================================= */
+.subject-nav-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 6px;
+  margin-bottom: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md, 12px);
+  scrollbar-width: none;
+}
+
+.subject-nav-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.subject-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  min-height: 44px;
+  border-radius: var(--radius-sm, 8px);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.subject-tab-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-card-hover);
+  border-color: var(--border-color);
+}
+
+.subject-tab-btn.active {
+  background: var(--primary-indigo);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 2px 10px rgba(99, 102, 241, 0.35);
+}
+
+.subject-tab-badge {
+  font-size: 0.74rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.2);
+  color: inherit;
+}
+
+.subject-tab-btn:not(.active) .subject-tab-badge {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+.subject-tab-panel {
+  display: none;
+  animation: fadeInTab 0.2s ease forwards;
+}
+
+.subject-tab-panel.active {
+  display: block;
+}
+
+@keyframes fadeInTab {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* État vide élégant pour onglets en cours d'enrichissement */
+.empty-tab-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 20px;
+  text-align: center;
+  background: var(--bg-card);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-md, 12px);
+  margin: 20px 0;
+}
+
+.empty-tab-state-icon {
+  font-size: 2.2rem;
+  margin-bottom: 12px;
+  opacity: 0.85;
+}
+
+.empty-tab-state-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.empty-tab-state-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  max-width: 460px;
+  line-height: 1.5;
+}
+
+/* =============================================================
+   COLOR CODING UTILITIES (PHASE 4)
+   ============================================================= */
+.theme-subject-html { color: var(--subject-html) !important; }
+.theme-subject-css { color: var(--subject-css) !important; }
+.theme-subject-js { color: var(--subject-js) !important; }
+.theme-subject-sql { color: var(--subject-sql) !important; }
+.theme-subject-algo { color: var(--subject-algo) !important; }
+
+.border-subject-html { border-left: 4px solid var(--subject-html) !important; }
+.border-subject-css { border-left: 4px solid var(--subject-css) !important; }
+.border-subject-js { border-left: 4px solid var(--subject-js) !important; }
+.border-subject-sql { border-left: 4px solid var(--subject-sql) !important; }
+.border-subject-algo { border-left: 4px solid var(--subject-algo) !important; }
+
