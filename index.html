@@ -259,6 +259,12 @@
             <span class="group-chevron">▾</span>
           </div>
           <div class="sidebar-group-links">
+            <a class="sidebar-link" data-view="algo-carte" onclick="switchView('algo-carte')">
+              <span class="nav-bullet algo"></span>
+              <span class="nav-icon">🗺️</span>
+              <span class="nav-label">Carte de révision</span>
+              <span class="nav-count" id="sideBadgeCarte">9</span>
+            </a>
             <a class="sidebar-link" data-view="algo-home" onclick="switchView('algo-home')">
               <span class="nav-bullet algo"></span>
               <span class="nav-icon">🧭</span>
@@ -436,7 +442,7 @@
         <!-- LES 3 GRANDS ACCÈS RÉVISION DE L'ACCUEIL -->
         <div class="home-trio-actions-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 18px 0 24px 0;">
           <!-- BOUTON 1 : JE RÉVISE UN CHAPITRE -->
-          <div class="home-trio-card card-revision-ch" onclick="navigateToHash('#/algo/theorique')" style="cursor: pointer; background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;">
+          <div class="home-trio-card card-revision-ch" onclick="navigateToHash('#/algo/carte')" style="cursor: pointer; background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;">
             <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px;">
               <div style="font-size: 2rem; background: rgba(56, 189, 248, 0.12); width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
                 📖
@@ -3392,7 +3398,48 @@ app.exec_()</code></pre>
     <!-- ==========================================
          VUE ALGO 3 : ÉPREUVE THÉORIQUE (ALGORITHMIQUE BAC TUNISIE)
          ========================================== -->
-    <section id="view-algo-theorique" class="view-section">
+    <!-- ============================================================= -->
+    <!-- VIEW: ALGO - CARTE DE RÉVISION & FRÉQUENCE BAC (#/algo/carte) -->
+    <!-- ============================================================= -->
+    <section id="view-algo-carte" class="view-section">
+      <div class="content-header">
+        <div class="content-title-wrap">
+          <span class="content-badge algo">🗺️ Carte de Révision Bac Info</span>
+          <h2 class="content-title">Carte des 9 Chapitres &amp; Fréquence aux Examens</h2>
+          <p class="content-desc" style="color: var(--text-secondary); margin-top: 4px; font-size: 0.9rem;">
+            Ordre basé sur la fréquence dans les 46 exercices du site, pas une prédiction. Cochez les compétences acquises pour suivre votre progression.
+          </p>
+        </div>
+      </div>
+
+      <!-- FILTRES & OPTIONS DE LA CARTE -->
+      <div class="carte-controls-bar" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin-bottom: 24px; padding: 14px 18px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px;">
+        <div class="carte-filter-pills" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <button type="button" class="cat-pill active" id="btnCarteFilterAll" onclick="setCarteFilter('all')">
+            <span>Tout</span>
+            <span class="cat-pill-count" id="countCarteAll">29 sections</span>
+          </button>
+          <button type="button" class="cat-pill" id="btnCarteFilterEssentiel" onclick="setCarteFilter('essentiel')">
+            <span>🔥 Seulement Essentiel</span>
+            <span class="cat-pill-count" id="countCarteEssentiel">5</span>
+          </button>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.86rem; font-weight: 700; color: var(--text-secondary); cursor: pointer; user-select: none;">
+            <input type="checkbox" id="chkCarteHideCompleted" onchange="toggleCarteHideCompleted(this.checked)" style="width: 18px; height: 18px; accent-color: #10b981; cursor: pointer;">
+            <span>👁️ Cacher ce que j'ai terminé</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- GRILLE DES 9 CHAPITRES ET LEURS SECTIONS -->
+      <div class="carte-chapters-grid" id="carteChaptersGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 20px;">
+        <!-- Injecté dynamiquement par renderAlgoCartePage() -->
+      </div>
+    </section>
+
+        <section id="view-algo-theorique" class="view-section">
       <div class="container">
         
         <div class="page-header-banner" style="margin-bottom: 24px; padding: 24px 0 10px 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">

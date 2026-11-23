@@ -12308,3 +12308,153 @@ button.topbar-action-btn svg {
   border-color: #0284c7;
   transform: translateY(-1px);
 }
+
+
+/* ===================================================================
+   RUN 11 : CARTE DE RÉVISION & FRÉQUENCE BAC (#/algo/carte)
+   =================================================================== */
+
+.carte-chapter-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.carte-chapter-card:hover {
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.carte-chapter-header {
+  padding: 14px 18px;
+  background: rgba(15, 23, 42, 0.55);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+[data-theme="light"] .carte-chapter-header {
+  background: #f1f5f9;
+}
+
+.carte-chapter-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.carte-chapter-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.carte-sections-list {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 14px;
+  gap: 8px;
+  flex: 1;
+}
+
+.carte-section-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.15s ease;
+  flex-wrap: wrap;
+}
+
+[data-theme="light"] .carte-section-row {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+
+.carte-section-row:hover {
+  background: rgba(56, 189, 248, 0.08);
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+.carte-sec-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 180px;
+}
+
+.carte-sec-title {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.carte-sec-title:hover {
+  color: #38bdf8;
+}
+
+.carte-sec-counters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.carte-sec-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.carte-row-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.carte-row-btn.revise {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+}
+.carte-row-btn.revise:hover {
+  background: #38bdf8;
+  color: #0f172a;
+}
+
+.carte-row-btn.quiz {
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.35);
+}
+.carte-row-btn.quiz:hover {
+  background: #a855f7;
+  color: #ffffff;
+}
+
+/* Anneau de progression circulaire compact SVG */
+.mini-prog-ring {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}

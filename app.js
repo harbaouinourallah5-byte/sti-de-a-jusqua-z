@@ -1623,6 +1623,10 @@ function parseAppHash(hash) {
   }
 
   // Simulateur d'examen (#/examens/simulateur/:id ou #/simulateur/:id)
+  if (clean === 'algo/carte' || clean === 'carte' || clean === 'carte-revision' || clean === 'revision-map') {
+    return { view: 'algo-carte' };
+  }
+
   if (clean.startsWith('examens/simulateur') || clean.startsWith('simulateur')) {
     const examId = clean.replace(/^(examens\/simulateur|simulateur)\/?/, '').trim();
     return { view: 'exam-simulator', examId: examId || null };
@@ -1802,6 +1806,10 @@ function handleRouteFromHash() {
     if (typeof renderAlgoMethodesPage === 'function') {
       renderAlgoMethodesPage(route.sheetSlug);
     }
+  }
+
+  if (route.view === 'algo-carte') {
+    if (typeof renderAlgoCartePage === 'function') renderAlgoCartePage();
   }
 
   if (route.view === 'algo-theorique') {
@@ -2113,7 +2121,8 @@ function switchView(viewName, skipHashUpdate = false) {
       'revision-plan': 'Planning d\'étude',
       'revision-cartes': 'Cartes Mémoire',
       'algo-statistiques': 'Statistiques',
-      'algo-theorique-resume': 'Fiche Résumé A4'
+      'algo-theorique-resume': 'Fiche Résumé A4',
+      'algo-carte': 'Carte de Révision'
     };
     mobileBrandTitle.textContent = titles[viewName] || 'STI de A à Z';
   }
@@ -2122,7 +2131,7 @@ function switchView(viewName, skipHashUpdate = false) {
     if (['html', 'css', 'js', 'sql'].includes(viewName)) {
       mobileModuleChip.textContent = 'STI';
       mobileModuleChip.className = 'mobile-module-chip sti';
-    } else if (['algo-home', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes', 'algo-quiz', 'algo-statistiques', 'algo-theorique-resume'].includes(viewName)) {
+    } else if (['algo-home', 'algo-carte', 'algo-pratique', 'algo-theorique', 'algo-types', 'algo-methodes', 'algo-quiz', 'algo-statistiques', 'algo-theorique-resume'].includes(viewName)) {
       mobileModuleChip.textContent = 'ALGO';
       mobileModuleChip.className = 'mobile-module-chip algo';
     } else if (viewName === 'lessons') {
@@ -16261,3 +16270,180 @@ function openAndPrintResume(slug) {
   }, 250);
 }
 
+
+
+// ===================================================================
+// RUN 11 : CARTE DE RÉVISION & FRÉQUENCE BAC (#/algo/carte)
+// ===================================================================
+let currentCarteFilter = 'all'; // 'all' | 'essentiel'
+let carteHideCompleted = false;
+
+window.setCarteFilter = function(filter) {
+  currentCarteFilter = filter;
+  const btnAll = document.getElementById('btnCarteFilterAll');
+  const btnEss = document.getElementById('btnCarteFilterEssentiel');
+  if (btnAll && btnEss) {
+    if (filter === 'all') {
+      btnAll.classList.add('active');
+      btnEss.classList.remove('active');
+    } else {
+      btnAll.classList.remove('active');
+      btnEss.classList.add('active');
+    }
+  }
+  renderAlgoCartePage();
+};
+
+window.toggleCarteHideCompleted = function(hide) {
+  carteHideCompleted = !!hide;
+  renderAlgoCartePage();
+};
+
+function renderAlgoCartePage() {
+  const grid = document.getElementById('carteChaptersGrid');
+  if (!grid) return;
+
+  if (typeof CURRICULUM === 'undefined' || !CURRICULUM.chapters) {
+    grid.innerHTML = '<div style="padding: 24px; color: var(--text-muted);">Curriculum indisponible.</div>';
+    return;
+  }
+
+  const prioMap = (typeof computeSectionPriorities === 'function') ? computeSectionPriorities() : {};
+  let totalSectionsCount = 0;
+  let essentielCount = 0;
+
+  CURRICULUM.chapters.forEach(ch => {
+    (ch.sections || []).forEach(s => {
+      totalSectionsCount++;
+      const p = prioMap[s.slug];
+      if (p && p.label === 'Essentiel') essentielCount++;
+    });
+  });
+
+  const countAllEl = document.getElementById('countCarteAll');
+  if (countAllEl) countAllEl.textContent = `${totalSectionsCount} sections`;
+  const countEssEl = document.getElementById('countCarteEssentiel');
+  if (countEssEl) countEssEl.textContent = essentielCount;
+
+  grid.innerHTML = CURRICULUM.chapters.map(ch => {
+    const chSections = ch.sections || [];
+    const chProgress = (typeof STI_STORE !== 'undefined')
+      ? STI_STORE.getChapterSkillProgress(ch.slug)
+      : { ticked: 0, total: 0, percent: 0 };
+
+    // Filtrer les sections selon le mode actif
+    const visibleSections = chSections.filter(sec => {
+      const p = prioMap[sec.slug];
+      if (currentCarteFilter === 'essentiel') {
+        if (!p || p.label !== 'Essentiel') return false;
+      }
+      if (carteHideCompleted) {
+        const sProg = (typeof STI_STORE !== 'undefined')
+          ? STI_STORE.getSectionSkillProgress(ch.slug, sec.slug)
+          : { percent: 0 };
+        if (sProg.percent === 100) return false;
+      }
+      return true;
+    });
+
+    if (visibleSections.length === 0 && (currentCarteFilter === 'essentiel' || carteHideCompleted)) {
+      return ''; // Masquer la carte du chapitre si aucune section ne correspond au filtre
+    }
+
+    const sectionsRowsHtml = visibleSections.map(sec => {
+      const secProgress = (typeof STI_STORE !== 'undefined')
+        ? STI_STORE.getSectionSkillProgress(ch.slug, sec.slug)
+        : { ticked: 0, total: (sec.skills || []).length, percent: 0 };
+
+      const prio = prioMap[sec.slug] || {
+        label: 'Pour aller plus loin',
+        count: 0,
+        color: '#94a3b8',
+        bg: 'rgba(148, 163, 184, 0.15)',
+        border: 'rgba(148, 163, 184, 0.35)'
+      };
+
+      const prioBadge = `<span class="sec-prio-badge" style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;font-size:0.72rem;font-weight:800;color:${prio.color};background:${prio.bg};border:1px solid ${prio.border};white-space:nowrap;" title="Basé sur la fréquence aux examens (${prio.count} sujets)">
+        <span>${prio.label === 'Essentiel' ? '🔥' : (prio.label === 'Important' ? '⭐' : '💡')}</span>
+        <span>${prio.label}</span>
+      </span>`;
+
+      const secAlgosCount = (typeof DATA !== 'undefined' && DATA.algo_theorique)
+        ? DATA.algo_theorique.filter(a => a.section === sec.slug).length
+        : 0;
+      const secExCount = (typeof EXERCISES_DATA !== 'undefined')
+        ? EXERCISES_DATA.getBySection(sec.slug).length
+        : 0;
+      const secQuizCount = (typeof QUIZ_DATA !== 'undefined' && typeof QUIZ_DATA.getQuestionsBySection === 'function')
+        ? QUIZ_DATA.getQuestionsBySection(sec.slug).length
+        : 0;
+
+      // Anneau SVG compact
+      const pct = secProgress.percent;
+      const strokeColor = pct === 100 ? '#10b981' : (pct > 0 ? '#38bdf8' : 'rgba(255,255,255,0.2)');
+
+      return `
+        <div class="carte-section-row">
+          <div class="carte-sec-info">
+            <svg class="mini-prog-ring" viewBox="0 0 36 36">
+              <path style="stroke: rgba(255,255,255,0.08); fill: none; stroke-width: 3.5;" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <path style="stroke: ${strokeColor}; fill: none; stroke-width: 3.5; stroke-linecap: round; stroke-dasharray: ${pct}, 100;" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <text x="18" y="21" style="fill: ${strokeColor}; font-size: 0.58rem; font-weight: 800; text-anchor: middle;">${pct}%</text>
+            </svg>
+            <div>
+              <a href="#/algo/theorique/${ch.slug}/${sec.slug}" onclick="navigateToHash('#/algo/theorique/${ch.slug}/${sec.slug}')" class="carte-sec-title">
+                ${escapeHtml(sec.title)}
+              </a>
+              <div class="carte-sec-counters">
+                <span>⚡ ${secAlgosCount}</span>
+                <span>📝 ${secExCount}</span>
+                <span>🎯 ${secQuizCount}</span>
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            ${prioBadge}
+            <div class="carte-sec-actions">
+              <a href="#/algo/theorique/${ch.slug}/${sec.slug}" onclick="navigateToHash('#/algo/theorique/${ch.slug}/${sec.slug}')" class="carte-row-btn revise" title="Réviser le cours de cette section">
+                Réviser
+              </a>
+              <a href="#/algo/quiz?chapitre=${ch.slug}&section=${sec.slug}" onclick="navigateToHash('#/algo/quiz?chapitre=${ch.slug}&section=${sec.slug}')" class="carte-row-btn quiz" title="Tester cette section en Quiz">
+                Quiz
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    const badgeLabel = ch.order === 0 ? 'Prérequis' : `Chapitre ${ch.order}`;
+
+    return `
+      <div class="carte-chapter-card" style="border-top: 4px solid ${ch.borderColor || '#38bdf8'};">
+        <div class="carte-chapter-header">
+          <div class="carte-chapter-title-wrap">
+            <span style="font-size: 1.35rem;">${ch.iconEmoji || '📖'}</span>
+            <div>
+              <span style="font-size: 0.74rem; font-weight: 800; text-transform: uppercase; color: ${ch.color || '#38bdf8'}; letter-spacing: 0.5px;">
+                ${badgeLabel}
+              </span>
+              <h3 class="carte-chapter-title">${escapeHtml(ch.shortTitle)}</h3>
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <a href="#/algo/theorique/${ch.slug}" onclick="navigateToHash('#/algo/theorique/${ch.slug}')" style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.8rem; font-weight: 700; color: ${ch.color || '#38bdf8'}; text-decoration: none;">
+              <span>Voir tout</span>
+              <span>→</span>
+            </a>
+            <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 2px;">
+              ${chProgress.ticked}/${chProgress.total} compétences
+            </div>
+          </div>
+        </div>
+        <div class="carte-sections-list">
+          ${sectionsRowsHtml || '<div style="padding: 14px; text-align: center; color: var(--text-muted); font-size: 0.82rem;">Toutes les sections de ce chapitre sont terminées ! 🎉</div>'}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
