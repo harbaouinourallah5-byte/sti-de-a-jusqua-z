@@ -87,7 +87,7 @@ const CSS_EXAGGERATED_MAP = {
     propName: 'a:link',
     beforeStyle: 'color: #94a3b8; text-decoration: none;',
     afterStyle: 'color: #38bdf8; text-decoration: underline; font-weight: 800; font-size: 1.15rem; text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);',
-    innerHtml: '<a href="#" style="color:inherit; text-decoration:inherit; font:inherit;">Lien non visité 🔗</a>',
+    innerHtml: '<a href="#" style="color:inherit; text-decoration:inherit; font:inherit;">Lien non visité</a>',
     min: 12, max: 26, step: 1, unit: 'px', defaultValue: 18,
     valLabel: (v) => `Taille : ${v}px`,
     applyDynamic: (v) => `color: #38bdf8; text-decoration: underline; font-weight: 800; font-size: ${v}px; text-shadow: 0 0 12px rgba(56, 189, 248, 0.7);`,
@@ -98,7 +98,7 @@ const CSS_EXAGGERATED_MAP = {
     propName: 'a:visited',
     beforeStyle: 'color: #94a3b8; text-decoration: none;',
     afterStyle: 'color: #c084fc; text-decoration: underline; font-weight: 800; font-size: 1.15rem; text-shadow: 0 0 10px rgba(192, 132, 252, 0.5);',
-    innerHtml: '<a href="#" style="color:inherit; text-decoration:inherit; font:inherit;">Lien déjà visité ✓</a>',
+    innerHtml: '<a href="#" style="color:inherit; text-decoration:inherit; font:inherit;">Lien déjà visité</a>',
     min: 12, max: 26, step: 1, unit: 'px', defaultValue: 18,
     valLabel: (v) => `Taille : ${v}px`,
     applyDynamic: (v) => `color: #c084fc; text-decoration: underline; font-weight: 800; font-size: ${v}px; text-shadow: 0 0 12px rgba(192, 132, 252, 0.7);`,
@@ -109,7 +109,7 @@ const CSS_EXAGGERATED_MAP = {
     propName: 'a:hover',
     beforeStyle: 'background: #1e293b; color: #94a3b8; border: 1px dashed #475569; transform: scale(1);',
     afterStyle: 'background: #facc15; color: #000; font-weight: 900; transform: scale(1.25); box-shadow: 0 12px 30px rgba(250, 204, 21, 0.8); border: 2px solid #fff;',
-    innerHtml: '<div style="font-size:0.9rem; font-weight:800;">SURVOL SOURIS 🖱️</div>',
+    innerHtml: '<div style="font-size:0.9rem; font-weight:800;">SURVOL SOURIS</div>',
     min: 100, max: 150, step: 5, unit: '%', defaultValue: 125,
     valLabel: (v) => `Échelle survol : ${v}%`,
     applyDynamic: (v) => `background: #facc15; color: #000; font-weight: 900; transform: scale(${v/100}); box-shadow: 0 12px 30px rgba(250, 204, 21, 0.8); border: 2px solid #fff;`,
@@ -120,7 +120,7 @@ const CSS_EXAGGERATED_MAP = {
     propName: 'a:active',
     beforeStyle: 'background: #1e293b; color: #94a3b8; transform: scale(1);',
     afterStyle: 'background: #ef4444; color: #fff; font-weight: 900; transform: scale(0.85); box-shadow: inset 0 4px 10px rgba(0,0,0,0.7);',
-    innerHtml: '<div style="font-size:0.9rem; font-weight:800;">CLIC ENFONCÉ 💥</div>',
+    innerHtml: '<div style="font-size:0.9rem; font-weight:800;">CLIC ENFONCÉ</div>',
     min: 70, max: 100, step: 5, unit: '%', defaultValue: 85,
     valLabel: (v) => `Échelle clic : ${v}%`,
     applyDynamic: (v) => `background: #ef4444; color: #fff; font-weight: 900; transform: scale(${v/100}); box-shadow: inset 0 4px 10px rgba(0,0,0,0.7);`,
@@ -223,7 +223,7 @@ const CSS_EXAGGERATED_MAP = {
     propName: 'text-align',
     beforeStyle: 'text-align: left; width: 100%; border: 1px dashed #475569; padding: 6px;',
     afterStyle: 'text-align: right; width: 100%; border: 2px solid #38bdf8; padding: 6px; color: #38bdf8; font-weight: 800;',
-    innerHtml: '<span style="display:block; width:100%;">Aligné à Droite ➔</span>',
+    innerHtml: '<span style="display:block; width:100%;">Aligné à Droite</span>',
     min: 0, max: 2, step: 1, unit: '', defaultValue: 2,
     valLabel: (v) => v === 0 ? 'left' : (v === 1 ? 'center' : 'right'),
     applyDynamic: (v) => {
@@ -293,11 +293,11 @@ const CSS_EXAGGERATED_MAP = {
   'css-list-style-image': {
     propName: 'list-style-image',
     beforeStyle: 'list-style-type: disc; padding-left: 20px;',
-    afterStyle: "list-style-type: '⭐ '; color: #facc15; font-size: 1.15rem; padding-left: 20px; font-weight: 800;",
+    afterStyle: "list-style-type: '◆ '; color: #facc15; font-size: 1.15rem; padding-left: 20px; font-weight: 800;",
     innerHtml: '<ul style="list-style:inherit; padding:inherit; margin:0;"><li>Étoile d\'or</li><li>Révision Bac</li></ul>',
     min: 14, max: 26, step: 2, unit: 'px', defaultValue: 18,
     valLabel: (v) => `Puce Étoile : ${v}px`,
-    applyDynamic: (v) => `list-style-type: '⭐ '; color: #facc15; font-size: ${v}px; padding-left: 20px; font-weight: 800;`,
+    applyDynamic: (v) => `list-style-type: '◆ '; color: #facc15; font-size: ${v}px; padding-left: 20px; font-weight: 800;`,
     highlightedLine: "list-style-image: url('icone.png');",
     snippet: 'ul {\n  /* Remplace la puce par une image/icône */\n  list-style-image: url(\'icone.png\');\n}'
   },
@@ -375,7 +375,7 @@ const CSS_EXAGGERATED_MAP = {
     propName: 'transform',
     beforeStyle: 'transform: none; border: 1px dashed #475569;',
     afterStyle: 'transform: rotate(25deg) scale(1.3) skewX(-10deg); background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-weight: 900; box-shadow: 0 15px 30px rgba(0,0,0,0.6);',
-    innerHtml: '<span>3D TRANSFORM ✨</span>',
+    innerHtml: '<span>3D TRANSFORM</span>',
     min: -60, max: 60, step: 5, unit: 'deg', defaultValue: 25,
     valLabel: (v) => `Rotation : ${v}deg`,
     applyDynamic: (v) => `transform: rotate(${v}deg) scale(${1 + Math.abs(v)/150}) skewX(${-v/2.5}deg); background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-weight: 900; box-shadow: 0 15px 30px rgba(0,0,0,0.6);`,
@@ -386,7 +386,7 @@ const CSS_EXAGGERATED_MAP = {
     propName: 'filter',
     beforeStyle: 'filter: none; background: linear-gradient(45deg, #f43f5e, #facc15); color: #000; font-weight: 900;',
     afterStyle: 'filter: blur(3px) contrast(200%) hue-rotate(180deg); background: linear-gradient(45deg, #f43f5e, #facc15); color: #000; font-weight: 900;',
-    innerHtml: '<span>FILTRE ACTIF 🎨</span>',
+    innerHtml: '<span>FILTRE ACTIF</span>',
     min: 0, max: 10, step: 1, unit: 'px', defaultValue: 3,
     valLabel: (v) => `Flou : ${v}px`,
     applyDynamic: (v) => `filter: blur(${v}px) contrast(${100 + v * 20}%) hue-rotate(${v * 36}deg); background: linear-gradient(45deg, #f43f5e, #facc15); color: #000; font-weight: 900;`,
@@ -465,7 +465,7 @@ const CSS_EXAGGERATED_MAP = {
     propName: 'box-shadow',
     beforeStyle: 'box-shadow: none; border: 1px dashed #475569; background: #1e293b;',
     afterStyle: 'box-shadow: 0 20px 45px rgba(56, 189, 248, 0.8), 0 0 20px rgba(56, 189, 248, 0.9); background: #0f172a; border: 2px solid #38bdf8; color: #38bdf8; font-weight: 900;',
-    innerHtml: '<span>HALO NÉON GÉANT ✨</span>',
+    innerHtml: '<span>HALO NÉON</span>',
     min: 0, max: 50, step: 2, unit: 'px', defaultValue: 35,
     valLabel: (v) => `Flou ombre : ${v}px`,
     applyDynamic: (v) => `box-shadow: 0 20px ${v}px rgba(56, 189, 248, 0.8), 0 0 ${v/2}px rgba(56, 189, 248, 0.9); background: #0f172a; border: 2px solid #38bdf8; color: #38bdf8; font-weight: 900;`,
@@ -793,7 +793,7 @@ function copyCardSnippet(id, btn) {
   } else if (navigator.clipboard) {
     navigator.clipboard.writeText(cfg.snippet).then(() => {
       const orig = btn.textContent;
-      btn.textContent = '✓ Copié !';
+      btn.textContent = 'Copié';
       setTimeout(() => { btn.textContent = orig; }, 1800);
     });
   }
@@ -833,7 +833,7 @@ function copyModalAnnexeCode(btn) {
   } else if (navigator.clipboard) {
     navigator.clipboard.writeText(pre.innerText).then(() => {
       const orig = btn.textContent;
-      btn.textContent = '✓ Copié !';
+      btn.textContent = 'Copié';
       setTimeout(() => { btn.textContent = orig; }, 1800);
     });
   }

@@ -42,6 +42,8 @@ var NOTEBOOKS_APP = (function () {
       .replace(/'/g, '&#39;');
   }
 
+  function ico(name, sz) { return (typeof uiIcon === 'function') ? uiIcon(name, sz || 15) : ''; }
+
   function uid(prefix) {
     return (prefix || 'id') + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 6);
   }
@@ -133,8 +135,8 @@ var NOTEBOOKS_APP = (function () {
     if (!pill) return;
     pill.className = 'nb-save-pill ' + (state.saveStatus === 'saving' ? 'saving' : (state.saveStatus === 'error' ? 'error' : ''));
     if (state.saveStatus === 'saving') pill.textContent = '⏳ Enregistrement...';
-    else if (state.saveStatus === 'error') pill.textContent = '⚠️ Échec d’enregistrement';
-    else pill.textContent = '✓ Enregistré';
+    else if (state.saveStatus === 'error') pill.innerHTML = ico('alert-triangle', 13) + ' Échec d’enregistrement';
+    else pill.innerHTML = ico('check', 13) + ' Enregistré';
   }
 
   function scheduleSave(immediate) {
@@ -261,7 +263,7 @@ var NOTEBOOKS_APP = (function () {
         '<div class="nb-account-chips">' +
         state.knownUsers.map(function (u) {
           return '<button type="button" class="nb-account-chip" onclick="NOTEBOOKS_APP.prefillLogin(\'' + esc(u.username) + '\')">' +
-            '<span>👤</span><span>' + esc(u.displayName) + '</span>' +
+            ico('user', 14) + '<span>' + esc(u.displayName) + '</span>' +
             '<span style="opacity:0.65;font-size:0.72rem;">(@' + esc(u.username) + ')</span></button>';
         }).join('') +
         '</div></div>';
@@ -274,10 +276,10 @@ var NOTEBOOKS_APP = (function () {
           '<h2 style="font-size:1.75rem;font-weight:800;margin:8px 0 10px;line-height:1.2;">Créez votre Cahier Numérique &amp; Planner sur mesure</h2>' +
           '<p style="font-size:0.92rem;opacity:0.92;line-height:1.6;">Choisissez votre couverture et laissez notre moteur générer automatiquement un thème assorti pour toutes vos pages : couleurs, bordures, polices, stickers, planning et listes de tâches.</p>' +
           '<div class="nb-auth-hero-badges">' +
-            '<span class="nb-auth-hero-pill">🎨 10 Couvertures</span>' +
-            '<span class="nb-auth-hero-pill">📄 20 Mises en page</span>' +
-            '<span class="nb-auth-hero-pill">✨ Thème Auto</span>' +
-            '<span class="nb-auth-hero-pill">📑 Export PDF A4</span>' +
+            '<span class="nb-auth-hero-pill">' + ico('palette', 13) + ' 10 Couvertures</span>' +
+            '<span class="nb-auth-hero-pill">' + ico('file-text', 13) + ' 20 Mises en page</span>' +
+            '<span class="nb-auth-hero-pill">' + ico('sparkles', 13) + ' Thème Auto</span>' +
+            '<span class="nb-auth-hero-pill">' + ico('printer', 13) + ' Export PDF A4</span>' +
           '</div>' +
         '</div>' +
         '<div class="nb-auth-preview-fan">' +
@@ -313,7 +315,7 @@ var NOTEBOOKS_APP = (function () {
               '<label for="nbRegPass2">Confirmer le mot de passe</label>' +
               '<input id="nbRegPass2" class="nb-input" type="password" placeholder="••••••••" required>' +
             '</div>' +
-            '<button type="submit" class="nb-btn nb-btn-primary" style="width:100%;">✨ Créer mon espace personnel</button>' +
+            '<button type="submit" class="nb-btn nb-btn-primary" style="width:100%;">' + ico('sparkles', 15) + ' Créer mon espace personnel</button>' +
           '</form>'
         ) : (
           '<form onsubmit="NOTEBOOKS_APP.submitLogin(event)">' +
@@ -325,14 +327,14 @@ var NOTEBOOKS_APP = (function () {
               '<label for="nbLoginPass">Mot de passe</label>' +
               '<input id="nbLoginPass" class="nb-input" type="password" placeholder="••••••••" required>' +
             '</div>' +
-            '<button type="submit" class="nb-btn nb-btn-primary" style="width:100%;">🔓 Ouvrir mes cahiers</button>' +
+            '<button type="submit" class="nb-btn nb-btn-primary" style="width:100%;">' + ico('unlock', 15) + ' Ouvrir mes cahiers</button>' +
           '</form>'
         )) +
 
         knownHtml +
 
         '<div class="nb-local-notice">' +
-          '🔒 <strong>Stockage local sécurisé (sans e-mail) :</strong> Vos comptes sont protégés par chiffrement <em>Web Crypto API</em> et vos cahiers sont sauvegardés dans <em>IndexedDB</em> sur cet appareil uniquement. Utilisez l’export JSON pour transférer vos cahiers vers un autre appareil.' +
+          ico('lock', 14) + ' <strong>Stockage local sécurisé (sans e-mail) :</strong> Vos comptes sont protégés par chiffrement <em>Web Crypto API</em> et vos cahiers sont sauvegardés dans <em>IndexedDB</em> sur cet appareil uniquement. Utilisez l’export JSON pour transférer vos cahiers vers un autre appareil.' +
         '</div>' +
       '</div>' +
     '</div>';
@@ -346,10 +348,10 @@ var NOTEBOOKS_APP = (function () {
     var cardsHtml = '';
     if (books.length === 0) {
       cardsHtml = '<div class="nb-wizard-panel" style="grid-column:1/-1;text-align:center;padding:48px 24px;">' +
-        '<div style="font-size:2.6rem;margin-bottom:10px;">📓</div>' +
+        '<div style="margin-bottom:10px;color:var(--primary-indigo);">' + ico('notebook', 40) + '</div>' +
         '<h3 style="margin:0 0 8px;">Votre bibliothèque de cahiers est vide</h3>' +
         '<p style="color:var(--text-secondary);max-width:460px;margin:0 auto 20px;">Choisissez l’une des 10 couvertures esthétiques, personnalisez votre nom et laissez l’application créer votre cahier coordonné.</p>' +
-        '<button type="button" class="nb-btn nb-btn-primary" onclick="NOTEBOOKS_APP.openWizard()">✨ Créer mon premier cahier</button>' +
+        '<button type="button" class="nb-btn nb-btn-primary" onclick="NOTEBOOKS_APP.openWizard()">' + ico('plus', 15) + ' Créer mon premier cahier</button>' +
       '</div>';
     } else {
       cardsHtml = books.map(function (nb) {
@@ -366,7 +368,7 @@ var NOTEBOOKS_APP = (function () {
               '<span style="font-size:0.74rem;color:var(--text-muted);font-weight:700;">' + nb.pages.length + ' page' + (nb.pages.length > 1 ? 's' : '') + '</span>' +
             '</div>' +
             '<h4 style="margin:0;font-size:0.98rem;font-weight:800;color:var(--text-primary);line-height:1.3;">' + esc(nb.title) + '</h4>' +
-            '<div class="nb-book-card-meta"><span>👤 ' + esc(nb.ownerDisplayName) + '</span><span>🕒 ' + esc(dateTxt) + '</span></div>' +
+            '<div class="nb-book-card-meta"><span>' + ico('user', 12) + ' ' + esc(nb.ownerDisplayName) + '</span><span>' + ico('clock', 12) + ' ' + esc(dateTxt) + '</span></div>' +
             '<div class="nb-book-card-actions">' +
               '<button type="button" class="nb-btn nb-btn-primary nb-btn-sm" onclick="NOTEBOOKS_APP.openNotebook(\'' + esc(nb.id) + '\')">Ouvrir</button>' +
               '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.openNotebook(\'' + esc(nb.id) + '\', true)">Personnaliser</button>' +
@@ -382,15 +384,15 @@ var NOTEBOOKS_APP = (function () {
       '<div class="nb-dash-top">' +
         '<div>' +
           '<div style="font-size:0.78rem;font-weight:800;color:var(--primary-indigo);text-transform:uppercase;">Espace Personnel (@' + esc(s.username) + ')</div>' +
-          '<h2 style="margin:2px 0 4px;font-size:1.45rem;font-weight:800;">Bienvenue, ' + esc(s.displayName) + ' 👋</h2>' +
+          '<h2 style="margin:2px 0 4px;font-size:1.4rem;font-weight:700;">Bienvenue, ' + esc(s.displayName) + '</h2>' +
           '<div style="font-size:0.84rem;color:var(--text-secondary);">' + books.length + ' cahier' + (books.length > 1 ? 's' : '') + ' enregistré' + (books.length > 1 ? 's' : '') + ' localement sur cet appareil.</div>' +
         '</div>' +
         '<div class="nb-dash-actions">' +
-          '<button type="button" class="nb-btn nb-btn-primary" onclick="NOTEBOOKS_APP.openWizard()">✨ Créer un cahier</button>' +
-          '<button type="button" class="nb-btn" onclick="NOTEBOOKS_APP.exportBackup()">📥 Sauvegarder JSON</button>' +
-          '<button type="button" class="nb-btn" onclick="document.getElementById(\'nbImportBackupInput\').click()">📤 Restaurer</button>' +
+          '<button type="button" class="nb-btn nb-btn-primary" onclick="NOTEBOOKS_APP.openWizard()">' + ico('plus', 15) + ' Créer un cahier</button>' +
+          '<button type="button" class="nb-btn" onclick="NOTEBOOKS_APP.exportBackup()">' + ico('download', 15) + ' Sauvegarder JSON</button>' +
+          '<button type="button" class="nb-btn" onclick="document.getElementById(\'nbImportBackupInput\').click()">' + ico('upload', 15) + ' Restaurer</button>' +
           '<input id="nbImportBackupInput" type="file" accept=".json" style="display:none;" onchange="NOTEBOOKS_APP.importBackup(event)">' +
-          '<button type="button" class="nb-btn" onclick="NOTEBOOKS_APP.switchAccount()">🔄 Changer de compte</button>' +
+          '<button type="button" class="nb-btn" onclick="NOTEBOOKS_APP.switchAccount()">' + ico('refresh', 15) + ' Changer de compte</button>' +
           '<button type="button" class="nb-btn nb-btn-danger" onclick="NOTEBOOKS_APP.logout()">Déconnexion</button>' +
         '</div>' +
       '</div>' +
@@ -428,7 +430,7 @@ var NOTEBOOKS_APP = (function () {
       '<div class="nb-topbar" style="margin-bottom:16px;">' +
         '<div class="nb-topbar-group">' +
           '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.backToDashboard()">← Retour aux cahiers</button>' +
-          '<h3 style="margin:0;font-size:1.05rem;font-weight:800;">✨ Créer un nouveau cahier personnalisé</h3>' +
+          '<h3 style="margin:0;font-size:1.05rem;font-weight:700;">' + ico('sparkles', 16) + ' Créer un nouveau cahier personnalisé</h3>' +
         '</div>' +
         '<button type="button" class="nb-btn nb-btn-primary" onclick="NOTEBOOKS_APP.createFromWizard()">Créer mon cahier →</button>' +
       '</div>' +
@@ -460,8 +462,8 @@ var NOTEBOOKS_APP = (function () {
           '<div class="nb-wizard-section-title">3. Mise en page de départ (20 modèles)</div>' +
           '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">' +
             '<button type="button" class="nb-btn nb-btn-sm ' + (w.starterPack === 'single' ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.updateWizardField(\'starterPack\', \'single\')">Modèle choisi</button>' +
-            '<button type="button" class="nb-btn nb-btn-sm ' + (w.starterPack === 'bac-student' ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.updateWizardField(\'starterPack\', \'bac-student\')">🎓 Pack Révision Bac (4 pages)</button>' +
-            '<button type="button" class="nb-btn nb-btn-sm ' + (w.starterPack === 'aesthetic-journal' ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.updateWizardField(\'starterPack\', \'aesthetic-journal\')">🌸 Pack Journal Esthétique (4 pages)</button>' +
+            '<button type="button" class="nb-btn nb-btn-sm ' + (w.starterPack === 'bac-student' ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.updateWizardField(\'starterPack\', \'bac-student\')">' + ico('graduation-cap', 14) + ' Pack Révision Bac (4 pages)</button>' +
+            '<button type="button" class="nb-btn nb-btn-sm ' + (w.starterPack === 'aesthetic-journal' ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.updateWizardField(\'starterPack\', \'aesthetic-journal\')">' + ico('sparkles', 14) + ' Pack Journal Esthétique (4 pages)</button>' +
           '</div>' +
           '<div class="nb-layout-gallery">' +
             NOTEBOOKS_DATA.PAGE_LAYOUTS.map(function (l) {
@@ -518,7 +520,7 @@ var NOTEBOOKS_APP = (function () {
 
         '<div class="nb-wizard-sticky-preview" id="nbWizardLivePreview">' +
           '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">' +
-            '<strong style="font-size:0.95rem;">👁️ Aperçu Automatique Coordonné</strong>' +
+            '<strong style="font-size:0.95rem;">' + ico('eye', 15) + ' Aperçu Automatique Coordonné</strong>' +
             '<span style="font-size:0.74rem;font-weight:800;padding:3px 10px;border-radius:999px;background:' + esc(previewNb.themeConfig.accentSoft) + ';color:' + esc(previewNb.themeConfig.accent) + ';">Thème : ' + esc(previewNb.themeConfig.themeName) + '</span>' +
           '</div>' +
           '<p style="font-size:0.78rem;color:var(--text-secondary);margin:6px 0 10px;">' + esc(cover.description) + '</p>' +
@@ -536,7 +538,7 @@ var NOTEBOOKS_APP = (function () {
               '</div>' +
             '</div>' +
           '</div>' +
-          '<button type="button" class="nb-btn nb-btn-primary" style="width:100%;margin-top:16px;" onclick="NOTEBOOKS_APP.createFromWizard()">🚀 Créer et ouvrir mon cahier</button>' +
+          '<button type="button" class="nb-btn nb-btn-primary" style="width:100%;margin-top:16px;" onclick="NOTEBOOKS_APP.createFromWizard()">' + ico('sparkles', 15) + ' Créer et ouvrir mon cahier</button>' +
         '</div>' +
       '</div>' +
     '</div>';
@@ -576,36 +578,36 @@ var NOTEBOOKS_APP = (function () {
     }
 
     var railItems = [
-      { id: 'templates',   ico: '✨', label: 'Modèles' },
-      { id: 'covers',      ico: '📕', label: 'Couvertures' },
-      { id: 'layouts',     ico: '📄', label: 'Pages (20)' },
-      { id: 'backgrounds', ico: '🖼️', label: 'Fonds' },
-      { id: 'colors',      ico: '🎨', label: 'Couleurs' },
-      { id: 'fonts',       ico: '🔤', label: 'Polices' },
-      { id: 'elements',    ico: '🌸', label: 'Éléments' },
-      { id: 'borders',     ico: '🔲', label: 'Bordures' },
-      { id: 'uploads',     ico: '📤', label: 'Imports' }
+      { id: 'templates',   ico: 'sparkles', label: 'Modèles' },
+      { id: 'covers',      ico: 'book', label: 'Couvertures' },
+      { id: 'layouts',     ico: 'file-text', label: 'Pages (20)' },
+      { id: 'backgrounds', ico: 'image', label: 'Fonds' },
+      { id: 'colors',      ico: 'palette', label: 'Couleurs' },
+      { id: 'fonts',       ico: 'type', label: 'Polices' },
+      { id: 'elements',    ico: 'sparkles', label: 'Éléments' },
+      { id: 'borders',     ico: 'layout', label: 'Bordures' },
+      { id: 'uploads',     ico: 'upload', label: 'Imports' }
     ];
 
     return '<div class="nb-studio ' + (state.readingMode ? 'nb-reading-mode' : '') + '">' +
       // TOP TOOLBAR
       '<div class="nb-topbar">' +
         '<div class="nb-topbar-group">' +
-          '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.backToDashboard()">← Cahiers</button>' +
-          '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.undo()" ' + (state.undoStack.length ? '' : 'disabled') + ' title="Annuler">↶</button>' +
-          '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.redo()" ' + (state.redoStack.length ? '' : 'disabled') + ' title="Rétablir">↷</button>' +
+          '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.backToDashboard()">' + ico('arrow-left', 14) + ' Cahiers</button>' +
+          '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.undo()" ' + (state.undoStack.length ? '' : 'disabled') + ' title="Annuler">' + ico('undo', 14) + '</button>' +
+          '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.redo()" ' + (state.redoStack.length ? '' : 'disabled') + ' title="Rétablir">' + ico('redo', 14) + '</button>' +
           '<input type="text" class="nb-title-inline" value="' + esc(nb.title) + '" onchange="NOTEBOOKS_APP.renameNotebook(this.value)" aria-label="Nom du cahier">' +
           '<span id="nbSavePill" class="nb-save-pill ' + (state.saveStatus === 'saving' ? 'saving' : (state.saveStatus === 'error' ? 'error' : '')) + '">' +
-            (state.saveStatus === 'saving' ? '⏳ Enregistrement...' : (state.saveStatus === 'error' ? '⚠️ Échec' : '✓ Enregistré')) +
+            (state.saveStatus === 'saving' ? ico('clock', 13) + ' Enregistrement...' : (state.saveStatus === 'error' ? ico('alert-triangle', 13) + ' Échec' : ico('check', 13) + ' Enregistré')) +
           '</span>' +
         '</div>' +
         '<div class="nb-topbar-group">' +
           '<button type="button" class="nb-btn nb-btn-sm ' + (state.readingMode ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.toggleReadingMode()">' +
-            (state.readingMode ? '✏️ Mode Édition' : '📖 Mode Lecture') +
+            (state.readingMode ? ico('edit', 14) + ' Mode Édition' : ico('book-open', 14) + ' Mode Lecture') +
           '</button>' +
-          '<button type="button" class="nb-btn nb-btn-sm ' + (state.showOverview ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.toggleOverview()">🗂️ Vue globale</button>' +
-          '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.exportBackup()">💾 Sauvegarde</button>' +
-          '<button type="button" class="nb-btn nb-btn-primary nb-btn-sm" onclick="NOTEBOOKS_APP.openPdfExportModal()">📄 Exporter PDF</button>' +
+          '<button type="button" class="nb-btn nb-btn-sm ' + (state.showOverview ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.toggleOverview()">' + ico('grid', 14) + ' Vue globale</button>' +
+          '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.exportBackup()">' + ico('save', 14) + ' Sauvegarde</button>' +
+          '<button type="button" class="nb-btn nb-btn-primary nb-btn-sm" onclick="NOTEBOOKS_APP.openPdfExportModal()">' + ico('file-text', 14) + ' Exporter PDF</button>' +
         '</div>' +
       '</div>' +
 
@@ -617,7 +619,7 @@ var NOTEBOOKS_APP = (function () {
             '<div class="nb-tool-rail">' +
               railItems.map(function (it) {
                 return '<button type="button" class="nb-rail-btn ' + (state.leftTab === it.id ? 'active' : '') + '" onclick="NOTEBOOKS_APP.setLeftTab(\'' + it.id + '\')">' +
-                  '<span class="nb-rail-ico">' + it.ico + '</span><span>' + esc(it.label) + '</span>' +
+                  '<span class="nb-rail-ico">' + ico(it.ico, 17) + '</span><span>' + esc(it.label) + '</span>' +
                 '</button>';
               }).join('') +
             '</div>' +
@@ -628,9 +630,9 @@ var NOTEBOOKS_APP = (function () {
         // CENTER STAGE
         '<div class="nb-center-stage">' +
           '<div class="nb-stage-mode-bar">' +
-            '<button type="button" class="nb-btn nb-btn-sm ' + (isCover ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.goToPage(-1)">📕 Couverture</button>' +
+            '<button type="button" class="nb-btn nb-btn-sm ' + (isCover ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.goToPage(-1)">' + ico('book', 14) + ' Couverture</button>' +
             (isCover && (cover.isWrap || cover.backImage) ? (
-              '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.toggleCoverFace()">🔄 ' + (state.coverFace === 'front' ? 'Voir Dos' : 'Voir Face') + '</button>'
+              '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.toggleCoverFace()">' + ico('refresh', 14) + ' ' + (state.coverFace === 'front' ? 'Voir Dos' : 'Voir Face') + '</button>'
             ) : '') +
             '<span style="font-size:0.82rem;font-weight:700;color:var(--text-secondary);">' +
               (isCover ? 'Couverture personnalisée' : ('Page ' + (state.activePageIndex + 1) + ' / ' + nb.pages.length + ' — ' + esc(curPage.title))) +
@@ -642,17 +644,17 @@ var NOTEBOOKS_APP = (function () {
           // BOTTOM STRIP
           '<div class="nb-bottom-strip">' +
             '<div style="display:flex;gap:6px;align-items:center;">' +
-              '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.prevPage()" ' + (isCover ? 'disabled' : '') + '>◀ Précédent</button>' +
-              '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.nextPage()" ' + (state.activePageIndex >= nb.pages.length - 1 ? 'disabled' : '') + '>Suivant ▶</button>' +
+              '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.prevPage()" ' + (isCover ? 'disabled' : '') + '>Précédent</button>' +
+              '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.nextPage()" ' + (state.activePageIndex >= nb.pages.length - 1 ? 'disabled' : '') + '>Suivant</button>' +
             '</div>' +
             (state.readingMode ? '' : (
               '<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">' +
                 '<button type="button" class="nb-btn nb-btn-primary nb-btn-sm" onclick="NOTEBOOKS_APP.addPage()">+ Page</button>' +
                 (!isCover ? (
-                  '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.duplicateCurrentPage()" title="Dupliquer cette page">📑</button>' +
-                  '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.moveCurrentPage(-1)" ' + (state.activePageIndex <= 0 ? 'disabled' : '') + ' title="Déplacer avant">⬅</button>' +
-                  '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.moveCurrentPage(1)" ' + (state.activePageIndex >= nb.pages.length - 1 ? 'disabled' : '') + ' title="Déplacer après">➡</button>' +
-                  '<button type="button" class="nb-btn nb-btn-danger nb-btn-sm" onclick="NOTEBOOKS_APP.deleteCurrentPage()" ' + (nb.pages.length <= 1 ? 'disabled' : '') + ' title="Supprimer cette page">🗑️</button>'
+                  '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.duplicateCurrentPage()" title="Dupliquer cette page">' + ico('copy', 14) + '</button>' +
+                  '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.moveCurrentPage(-1)" ' + (state.activePageIndex <= 0 ? 'disabled' : '') + ' title="Déplacer avant">' + ico('arrow-left', 14) + '</button>' +
+                  '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.moveCurrentPage(1)" ' + (state.activePageIndex >= nb.pages.length - 1 ? 'disabled' : '') + ' title="Déplacer après">' + ico('arrow-right', 14) + '</button>' +
+                  '<button type="button" class="nb-btn nb-btn-danger nb-btn-sm" onclick="NOTEBOOKS_APP.deleteCurrentPage()" ' + (nb.pages.length <= 1 ? 'disabled' : '') + ' title="Supprimer cette page">' + ico('trash', 14) + '</button>'
                 ) : '') +
               '</div>'
             )) +
@@ -672,23 +674,23 @@ var NOTEBOOKS_APP = (function () {
     var tab = state.leftTab;
 
     if (tab === 'templates') {
-      return '<div class="nb-panel-heading"><span>✨ Modèles rapides</span></div>' +
+      return '<div class="nb-panel-heading"><span>' + ico('sparkles', 14) + ' Modèles rapides</span></div>' +
         '<p style="font-size:0.76rem;color:var(--text-secondary);margin-top:0;">Ajoutez des pages pré-configurées assorties au thème <strong>' + esc(nb.themeConfig.themeName) + '</strong>.</p>' +
         '<div style="display:grid;gap:8px;">' +
-          '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.addPresetPage(\'06-daily-planner\', \'Planificateur du Jour\')">☀️ + Planificateur du Jour</button>' +
-          '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.addPresetPage(\'09-study-notes\', \'Fiche de Révision\')">🎓 + Fiche de Révision</button>' +
-          '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.addPresetPage(\'05-to-do-checklist\', \'Ma To-Do List\')">☑️ + Liste To-Do</button>' +
-          '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.addPresetPage(\'12-habit-tracker\', \'Suivi d’Habitudes\')">🔁 + Suivi d’Habitudes</button>' +
-          '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.addPresetPage(\'18-scrapbook\', \'Page Scrapbook\')">📷 + Scrapbook Souvenirs</button>' +
+          '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.addPresetPage(\'06-daily-planner\', \'Planificateur du Jour\')">' + ico('sun', 14) + ' Planificateur du Jour</button>' +
+          '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.addPresetPage(\'09-study-notes\', \'Fiche de Révision\')">' + ico('graduation-cap', 14) + ' Fiche de Révision</button>' +
+          '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.addPresetPage(\'05-to-do-checklist\', \'Ma To-Do List\')">' + ico('check-circle', 14) + ' Liste To-Do</button>' +
+          '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.addPresetPage(\'12-habit-tracker\', \'Suivi d’Habitudes\')">' + ico('repeat', 14) + ' Suivi d’Habitudes</button>' +
+          '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.addPresetPage(\'18-scrapbook\', \'Page Scrapbook\')">' + ico('image', 14) + ' Scrapbook Souvenirs</button>' +
         '</div>';
     }
 
     if (tab === 'covers') {
-      return '<div class="nb-panel-heading"><span>📕 10 Couvertures</span></div>' +
+      return '<div class="nb-panel-heading"><span>' + ico('book', 14) + ' 10 Couvertures</span></div>' +
         '<label style="display:flex;align-items:center;gap:6px;font-size:0.74rem;font-weight:700;margin-bottom:8px;cursor:pointer;">' +
           '<input id="nbAutoApplyThemeChk" type="checkbox" ' + (state.autoApplyTheme ? 'checked' : '') + ' onchange="NOTEBOOKS_APP.setAutoApplyTheme(this.checked)"> Appliquer le thème assorti à tout le cahier' +
         '</label>' +
-        '<button type="button" class="nb-btn nb-btn-sm" style="width:100%;margin-bottom:10px;" onclick="NOTEBOOKS_APP.reapplyCoverTheme()">🎨 Appliquer le thème de la couverture actuelle</button>' +
+        '<button type="button" class="nb-btn nb-btn-sm" style="width:100%;margin-bottom:10px;" onclick="NOTEBOOKS_APP.reapplyCoverTheme()">' + ico('palette', 14) + ' Appliquer le thème de la couverture actuelle</button>' +
         '<div class="nb-cover-gallery" style="grid-template-columns:1fr 1fr;">' +
           NOTEBOOKS_DATA.COVERS.map(function (c) {
             return '<button type="button" class="nb-cover-option ' + (c.id === nb.coverId ? 'selected' : '') + '" onclick="NOTEBOOKS_APP.changeCover(\'' + esc(c.id) + '\')">' +
@@ -701,7 +703,7 @@ var NOTEBOOKS_APP = (function () {
 
     if (tab === 'layouts') {
       var activeLayId = (state.activePageIndex >= 0 && nb.pages[state.activePageIndex]) ? nb.pages[state.activePageIndex].layoutId : '';
-      return '<div class="nb-panel-heading"><span>📄 20 Mises en page</span></div>' +
+      return '<div class="nb-panel-heading"><span>' + ico('file-text', 14) + ' 20 Mises en page</span></div>' +
         '<p style="font-size:0.74rem;color:var(--text-secondary);margin-top:0;">Cliquez pour appliquer à la page active (ou créer une nouvelle page).</p>' +
         '<div class="nb-layout-gallery" style="grid-template-columns:repeat(2, minmax(0, 1fr));">' +
           NOTEBOOKS_DATA.PAGE_LAYOUTS.map(function (l) {
@@ -719,7 +721,7 @@ var NOTEBOOKS_APP = (function () {
 
     if (tab === 'backgrounds') {
       var curSty = getEffectivePageStyle(nb, state.activePageIndex >= 0 ? nb.pages[state.activePageIndex] : null);
-      return '<div class="nb-panel-heading"><span>🖼️ Arrière-plans &amp; Textures</span></div>' +
+      return '<div class="nb-panel-heading"><span>' + ico('image', 14) + ' Arrière-plans &amp; Textures</span></div>' +
         '<div class="nb-prop-group">' +
           '<span class="nb-prop-label">Couleurs de papier</span>' +
           '<div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:6px;">' +
@@ -745,18 +747,18 @@ var NOTEBOOKS_APP = (function () {
 
     if (tab === 'colors') {
       var t = getEffectivePageStyle(nb, state.activePageIndex >= 0 ? nb.pages[state.activePageIndex] : null);
-      return '<div class="nb-panel-heading"><span>🎨 Couleurs du Thème</span></div>' +
+      return '<div class="nb-panel-heading"><span>' + ico('palette', 14) + ' Couleurs du Thème</span></div>' +
         '<div class="nb-form-field"><label>Couleur d’accent</label><input type="color" class="nb-input" style="height:38px;padding:3px;" value="' + esc(t.accent) + '" oninput="NOTEBOOKS_APP.setPageOrThemeStyle(\'accent\', this.value, true)"></div>' +
         '<div class="nb-form-field"><label>Couleur des titres</label><input type="color" class="nb-input" style="height:38px;padding:3px;" value="' + esc(t.headingColor) + '" oninput="NOTEBOOKS_APP.setPageOrThemeStyle(\'headingColor\', this.value, true)"></div>' +
         '<div class="nb-form-field"><label>Couleur des bordures</label><input type="color" class="nb-input" style="height:38px;padding:3px;" value="' + esc(t.border) + '" oninput="NOTEBOOKS_APP.setPageOrThemeStyle(\'border\', this.value, true)"></div>' +
         '<div class="nb-form-field"><label>Papier personnalisé</label><input type="color" class="nb-input" style="height:38px;padding:3px;" value="' + esc(t.paperBg) + '" oninput="NOTEBOOKS_APP.setPageOrThemeStyle(\'paperBg\', this.value, false)"></div>' +
         '<div class="nb-form-field"><label>Couleur du texte</label><input type="color" class="nb-input" style="height:38px;padding:3px;" value="' + esc(t.textColor) + '" oninput="NOTEBOOKS_APP.setPageOrThemeStyle(\'textColor\', this.value, true)"></div>' +
-        '<button type="button" class="nb-btn nb-btn-sm" style="width:100%;" onclick="NOTEBOOKS_APP.reapplyCoverTheme()">🔄 Réinitialiser au thème de la couverture</button>';
+        '<button type="button" class="nb-btn nb-btn-sm" style="width:100%;" onclick="NOTEBOOKS_APP.reapplyCoverTheme()">' + ico('refresh', 14) + ' Réinitialiser au thème de la couverture</button>';
     }
 
     if (tab === 'fonts') {
       var curF = getEffectivePageStyle(nb, state.activePageIndex >= 0 ? nb.pages[state.activePageIndex] : null);
-      return '<div class="nb-panel-heading"><span>🔤 Polices (7 styles)</span></div>' +
+      return '<div class="nb-panel-heading"><span>' + ico('type', 14) + ' Polices (7 styles)</span></div>' +
         '<div class="nb-prop-label">Police des titres</div>' +
         '<div style="display:grid;gap:5px;margin-bottom:12px;">' +
           NOTEBOOKS_DATA.FONTS.map(function (f) {
@@ -776,7 +778,7 @@ var NOTEBOOKS_APP = (function () {
     }
 
     if (tab === 'elements') {
-      return '<div class="nb-panel-heading"><span>🌸 Éléments &amp; Stickers</span></div>' +
+      return '<div class="nb-panel-heading"><span>' + ico('sparkles', 14) + ' Éléments &amp; Stickers</span></div>' +
         '<button type="button" class="nb-btn nb-btn-primary nb-btn-sm" style="width:100%;margin-bottom:10px;" onclick="NOTEBOOKS_APP.addTextElement()">+ Ajouter une zone de texte</button>' +
         '<div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:6px;">' +
           NOTEBOOKS_DATA.ELEMENTS.map(function (el) {
@@ -790,7 +792,7 @@ var NOTEBOOKS_APP = (function () {
 
     if (tab === 'borders') {
       var curB = getEffectivePageStyle(nb, state.activePageIndex >= 0 ? nb.pages[state.activePageIndex] : null);
-      return '<div class="nb-panel-heading"><span>🔲 Styles de Bordures</span></div>' +
+      return '<div class="nb-panel-heading"><span>' + ico('layout', 14) + ' Styles de Bordures</span></div>' +
         '<div style="display:grid;gap:6px;">' +
           NOTEBOOKS_DATA.BORDERS.map(function (b) {
             return '<button type="button" class="nb-btn nb-btn-sm ' + (curB.borderStyle === b.id ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.setPageOrThemeStyle(\'borderStyle\', \'' + esc(b.id) + '\', true)">' + esc(b.name) + '</button>';
@@ -799,7 +801,7 @@ var NOTEBOOKS_APP = (function () {
     }
 
     if (tab === 'uploads') {
-      return '<div class="nb-panel-heading"><span>📤 Vos Images</span></div>' +
+      return '<div class="nb-panel-heading"><span>' + ico('upload', 14) + ' Vos Images</span></div>' +
         '<button type="button" class="nb-btn nb-btn-primary nb-btn-sm" style="width:100%;margin-bottom:10px;" onclick="document.getElementById(\'nbUploadImageInput\').click()">+ Importer une image</button>' +
         '<input id="nbUploadImageInput" type="file" accept="image/*" style="display:none;" onchange="NOTEBOOKS_APP.handleUploadImage(event)">' +
         (state.uploads.length === 0
@@ -832,7 +834,7 @@ var NOTEBOOKS_APP = (function () {
       var isTitle = (selId === 'coverTitle');
       var st = isTitle ? nb.coverConfig.titleStyle : nb.coverConfig.nameStyle;
       var valText = isTitle ? nb.title : nb.ownerDisplayName;
-      return '<div class="nb-panel-heading"><span>' + (isTitle ? '✏️ Titre sur couverture' : '👤 Nom sur couverture') + '</span></div>' +
+      return '<div class="nb-panel-heading"><span>' + (isTitle ? ico('edit', 14) + ' Titre sur couverture' : ico('user', 14) + ' Nom sur couverture') + '</span></div>' +
         '<div class="nb-form-field"><label>Texte affiché</label>' +
           '<input class="nb-input" type="text" value="' + esc(valText) + '" oninput="NOTEBOOKS_APP.updateCoverText(\'' + selId + '\', this.value)">' +
         '</div>' +
@@ -850,9 +852,9 @@ var NOTEBOOKS_APP = (function () {
         '<div style="display:flex;gap:6px;margin-bottom:10px;">' +
           '<button type="button" class="nb-btn nb-btn-sm ' + (st.bold ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.updateCoverOverlayProp(\'' + selId + '\', \'bold\', ' + (!st.bold) + ')"><strong>G</strong></button>' +
           '<button type="button" class="nb-btn nb-btn-sm ' + (st.italic ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.updateCoverOverlayProp(\'' + selId + '\', \'italic\', ' + (!st.italic) + ')"><em>I</em></button>' +
-          '<button type="button" class="nb-btn nb-btn-sm ' + (st.align === 'left' ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.updateCoverOverlayProp(\'' + selId + '\', \'align\', \'left\')">⬅</button>' +
+          '<button type="button" class="nb-btn nb-btn-sm ' + (st.align === 'left' ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.updateCoverOverlayProp(\'' + selId + '\', \'align\', \'left\')">' + ico('arrow-left', 13) + '</button>' +
           '<button type="button" class="nb-btn nb-btn-sm ' + (st.align === 'center' ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.updateCoverOverlayProp(\'' + selId + '\', \'align\', \'center\')">↔</button>' +
-          '<button type="button" class="nb-btn nb-btn-sm ' + (st.align === 'right' ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.updateCoverOverlayProp(\'' + selId + '\', \'align\', \'right\')">➡</button>' +
+          '<button type="button" class="nb-btn nb-btn-sm ' + (st.align === 'right' ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.updateCoverOverlayProp(\'' + selId + '\', \'align\', \'right\')">' + ico('arrow-right', 13) + '</button>' +
         '</div>' +
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">' +
           '<div class="nb-form-field"><label>Pos X (%)</label><input type="number" class="nb-input" min="5" max="95" value="' + Math.round(st.x) + '" oninput="NOTEBOOKS_APP.updateCoverOverlayProp(\'' + selId + '\', \'x\', Number(this.value))"></div>' +
@@ -867,7 +869,7 @@ var NOTEBOOKS_APP = (function () {
     var elList = isCover ? (nb.coverConfig.elements || []) : (nb.pages[state.activePageIndex].elements || []);
     var selEl = selId ? elList.find(function (e) { return e.id === selId; }) : null;
     if (selEl) {
-      var html = '<div class="nb-panel-heading"><span>🎛️ Élément sélectionné</span></div>';
+      var html = '<div class="nb-panel-heading"><span>' + ico('sliders', 14) + ' Élément sélectionné</span></div>';
       if (selEl.type === 'text') {
         html += '<div class="nb-form-field"><label>Contenu du texte</label>' +
           '<textarea class="nb-textarea" rows="3" oninput="NOTEBOOKS_APP.updateElementProp(\'' + esc(selEl.id) + '\', \'text\', this.value)">' + esc(selEl.text) + '</textarea>' +
@@ -886,9 +888,9 @@ var NOTEBOOKS_APP = (function () {
         '<div style="display:flex;gap:6px;margin-bottom:10px;">' +
           '<button type="button" class="nb-btn nb-btn-sm ' + (selEl.bold ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.updateElementProp(\'' + esc(selEl.id) + '\', \'bold\', ' + (!selEl.bold) + ')"><strong>G</strong></button>' +
           '<button type="button" class="nb-btn nb-btn-sm ' + (selEl.italic ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.updateElementProp(\'' + esc(selEl.id) + '\', \'italic\', ' + (!selEl.italic) + ')"><em>I</em></button>' +
-          '<button type="button" class="nb-btn nb-btn-sm ' + (selEl.align === 'left' ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.updateElementProp(\'' + esc(selEl.id) + '\', \'align\', \'left\')">⬅</button>' +
+          '<button type="button" class="nb-btn nb-btn-sm ' + (selEl.align === 'left' ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.updateElementProp(\'' + esc(selEl.id) + '\', \'align\', \'left\')">' + ico('arrow-left', 13) + '</button>' +
           '<button type="button" class="nb-btn nb-btn-sm ' + (selEl.align === 'center' ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.updateElementProp(\'' + esc(selEl.id) + '\', \'align\', \'center\')">↔</button>' +
-          '<button type="button" class="nb-btn nb-btn-sm ' + (selEl.align === 'right' ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.updateElementProp(\'' + esc(selEl.id) + '\', \'align\', \'right\')">➡</button>' +
+          '<button type="button" class="nb-btn nb-btn-sm ' + (selEl.align === 'right' ? 'nb-btn-primary' : '') + '" onclick="NOTEBOOKS_APP.updateElementProp(\'' + esc(selEl.id) + '\', \'align\', \'right\')">' + ico('arrow-right', 13) + '</button>' +
         '</div>';
       } else {
         if (selEl.type === 'sticker') {
@@ -907,19 +909,19 @@ var NOTEBOOKS_APP = (function () {
 
     // 3. Aucun élément sélectionné -> Propriétés de la Couverture ou de la Page active
     if (isCover) {
-      return '<div class="nb-panel-heading"><span>📕 Propriétés Couverture</span></div>' +
+      return '<div class="nb-panel-heading"><span>' + ico('book', 14) + ' Propriétés Couverture</span></div>' +
         '<p style="font-size:0.76rem;color:var(--text-secondary);">Cliquez sur votre <strong>Nom</strong>, votre <strong>Titre</strong> ou un sticker sur la couverture pour le déplacer ou le modifier.</p>' +
         '<div class="nb-form-field"><label>Nom affiché</label><input class="nb-input" type="text" value="' + esc(nb.ownerDisplayName) + '" oninput="NOTEBOOKS_APP.updateCoverText(\'coverName\', this.value)"></div>' +
         '<div class="nb-form-field"><label>Titre du cahier</label><input class="nb-input" type="text" value="' + esc(nb.title) + '" oninput="NOTEBOOKS_APP.updateCoverText(\'coverTitle\', this.value)"></div>' +
         '<div style="display:flex;gap:8px;flex-direction:column;">' +
-          '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.selectElement(\'coverTitle\')">✏️ Styliser le Titre</button>' +
-          '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.selectElement(\'coverName\')">👤 Styliser le Nom</button>' +
-          '<button type="button" class="nb-btn nb-btn-primary nb-btn-sm" onclick="NOTEBOOKS_APP.setLeftTab(\'covers\')">🎨 Changer de couverture</button>' +
+          '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.selectElement(\'coverTitle\')">' + ico('edit', 14) + ' Styliser le Titre</button>' +
+          '<button type="button" class="nb-btn nb-btn-sm" onclick="NOTEBOOKS_APP.selectElement(\'coverName\')">' + ico('user', 14) + ' Styliser le Nom</button>' +
+          '<button type="button" class="nb-btn nb-btn-primary nb-btn-sm" onclick="NOTEBOOKS_APP.setLeftTab(\'covers\')">' + ico('palette', 14) + ' Changer de couverture</button>' +
         '</div>';
     }
 
     var page = nb.pages[state.activePageIndex];
-    return '<div class="nb-panel-heading"><span>📄 Propriétés de la Page</span></div>' +
+    return '<div class="nb-panel-heading"><span>' + ico('file-text', 14) + ' Propriétés de la Page</span></div>' +
       '<div class="nb-form-field"><label>Titre de la page</label><input class="nb-input" type="text" value="' + esc(page.title) + '" oninput="NOTEBOOKS_APP.renameCurrentPage(this.value)"></div>' +
       '<div class="nb-form-field"><label>Mise en page</label>' +
         '<select class="nb-select" onchange="NOTEBOOKS_APP.applyOrAddLayout(this.value, false)">' +
@@ -938,7 +940,7 @@ var NOTEBOOKS_APP = (function () {
         '</select>' +
       '</div>' +
       '<p style="font-size:0.74rem;color:var(--text-muted);line-height:1.45;">Astuce : ajoutez des zones de texte, stickers ou photos depuis le panneau de gauche et glissez-les n’importe où sur la page.</p>' +
-      '<button type="button" class="nb-btn nb-btn-sm" style="width:100%;" onclick="NOTEBOOKS_APP.resetPageStyleOverride()">🎨 Hériter du thème global</button>';
+      '<button type="button" class="nb-btn nb-btn-sm" style="width:100%;" onclick="NOTEBOOKS_APP.resetPageStyleOverride()">' + ico('palette', 14) + ' Hériter du thème global</button>';
   }
 
   // ── RENDU VISUEL DE LA COUVERTURE ─────────────────────────────────────
@@ -1074,7 +1076,7 @@ var NOTEBOOKS_APP = (function () {
           '<span class="nb-task-check style-' + esc(st.checkboxStyle) + ' ' + (t.done ? 'checked' : '') + '"><span>' + sym + '</span></span>' +
           '<span class="nb-task-text" style="display:inline-block;white-space:normal;word-break:break-word;line-height:1.25;">' + (t.text ? esc(t.text) : '<span style="opacity:0.45;">Nouvelle tâche...</span>') + '</span>' +
           (t.category ? '<span class="nb-task-cat-chip">' + esc(t.category) + '</span>' : '') +
-          (t.deadline ? '<span style="font-size:0.65rem;color:var(--nb-muted);white-space:nowrap;">📅 ' + esc(t.deadline) + '</span>' : '') +
+          (t.deadline ? '<span style="font-size:0.65rem;color:var(--nb-muted);white-space:nowrap;">' + ico('calendar', 11) + ' ' + esc(t.deadline) + '</span>' : '') +
           '<span class="nb-prio-pill ' + pCls + '">' + esc(prioLabels[t.priority || 'medium']) + '</span>' +
         '</div>' +
         (t.desc ? '<div class="nb-task-subrow"><span class="nb-task-desc-input" style="white-space:normal;">' + esc(t.desc) + '</span></div>' : '') +
@@ -1339,15 +1341,15 @@ var NOTEBOOKS_APP = (function () {
       var moods = f.moods || Array(35).fill('');
       var moodMeta = {
         '': { bg: '#FFFFFF', label: '' },
-        'happy': { bg: '#FBBF24', label: '😊' },
-        'calm': { bg: '#34D399', label: '😌' },
-        'neutral': { bg: '#93C5FD', label: '😐' },
-        'tired': { bg: '#C4B5FD', label: '😴' },
-        'stressed': { bg: '#FB7185', label: '😣' }
+        'happy': { bg: '#FBBF24', label: ico('smile', 13) },
+        'calm': { bg: '#34D399', label: ico('smile', 13) },
+        'neutral': { bg: '#93C5FD', label: ico('meh', 13) },
+        'tired': { bg: '#C4B5FD', label: ico('moon', 13) },
+        'stressed': { bg: '#FB7185', label: ico('frown', 13) }
       };
       return '<div class="nb-pg-header"><h3 class="nb-pg-title">Mood Tracker</h3>' + iconHtml + '</div>' +
         '<div style="display:flex;gap:8px;flex-wrap:wrap;font-size:0.68rem;margin-bottom:8px;color:var(--nb-muted);">' +
-          '<span>😊 Joyeux</span><span>😌 Calme</span><span>😐 Neutre</span><span>😴 Fatigué</span><span>😣 Stressé</span>' +
+          '<span>' + ico('smile', 12) + ' Joyeux</span><span>' + ico('smile', 12) + ' Calme</span><span>' + ico('meh', 12) + ' Neutre</span><span>' + ico('moon', 12) + ' Fatigué</span><span>' + ico('frown', 12) + ' Stressé</span>' +
         '</div>' +
         '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;justify-items:center;margin:8px 0 12px;">' +
           moods.map(function (m, mi) {
@@ -1398,7 +1400,7 @@ var NOTEBOOKS_APP = (function () {
           '<div class="nb-polaroid">' +
             '<div class="nb-polaroid-tape"></div>' +
             '<div class="nb-polaroid-img-slot" onclick="' + (isMini ? '' : 'document.getElementById(\'nbScrapImgInput\').click()') + '">' +
-              (f.scrapbookImage ? '<img src="' + esc(f.scrapbookImage) + '" alt="Souvenir">' : '<span style="font-size:0.75rem;color:var(--nb-muted);text-align:center;padding:8px;">📷 Cliquer pour ajouter une photo</span>') +
+              (f.scrapbookImage ? '<img src="' + esc(f.scrapbookImage) + '" alt="Souvenir">' : '<span style="font-size:0.75rem;color:var(--nb-muted);text-align:center;padding:8px;display:flex;flex-direction:column;align-items:center;gap:6px;">' + ico('image', 18) + '<span>Cliquer pour ajouter une photo</span></span>') +
             '</div>' +
             (isMini ? '' : '<input id="nbScrapImgInput" type="file" accept="image/*" style="display:none;" onchange="NOTEBOOKS_APP.handleScrapbookPhoto(event, ' + pIdx + ')">') +
             fieldLine('scrapbookCaption', f.scrapbookCaption, '', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'scrapbookCaption\', this.value)"', 'text-align:center;margin-top:6px;font-size:0.76rem;border:none;') +
@@ -1613,14 +1615,14 @@ var NOTEBOOKS_APP = (function () {
     modal.className = 'nb-modal-backdrop';
     modal.innerHTML = '<div class="nb-modal-card">' +
       '<div class="nb-modal-head">' +
-        '<strong style="font-size:1.02rem;">📄 Export PDF du cahier — ' + esc(nb.title) + '</strong>' +
-        '<button type="button" class="nb-btn nb-btn-sm" onclick="document.getElementById(\'nbPdfModal\').remove()">✕</button>' +
+        '<strong style="font-size:1.02rem;">' + ico('file-text', 16) + ' Export PDF du cahier — ' + esc(nb.title) + '</strong>' +
+        '<button type="button" class="nb-btn nb-btn-sm" onclick="document.getElementById(\'nbPdfModal\').remove()">' + ico('x', 15) + '</button>' +
       '</div>' +
       '<div class="nb-modal-body">' +
         '<p style="font-size:0.86rem;color:var(--text-secondary);margin-top:0;">Votre cahier complet (' + (nb.pages.length + 1) + ' pages A4 : couverture personnalisée avec votre nom + toutes les pages, tâches et décorations) est prêt à être enregistré en PDF.</p>' +
         '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">' +
-          '<button type="button" class="nb-btn nb-btn-primary" onclick="NOTEBOOKS_APP.triggerPrintPdf()">🖨️ Enregistrer en PDF / Imprimer</button>' +
-          '<button type="button" class="nb-btn" onclick="NOTEBOOKS_APP.exportBackup()">💾 Télécharger sauvegarde JSON</button>' +
+          '<button type="button" class="nb-btn nb-btn-primary" onclick="NOTEBOOKS_APP.triggerPrintPdf()">' + ico('printer', 15) + ' Enregistrer en PDF / Imprimer</button>' +
+          '<button type="button" class="nb-btn" onclick="NOTEBOOKS_APP.exportBackup()">' + ico('download', 15) + ' Télécharger sauvegarde JSON</button>' +
         '</div>' +
         '<div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));gap:12px;">' +
           '<div class="nb-book-frame is-thumb-card" style="max-width:170px;"><div class="nb-cover-surface">' + renderCoverArtworkHTML(nb, true) + '</div></div>' +
@@ -2380,7 +2382,7 @@ var NOTEBOOKS_APP = (function () {
           var count = await NOTEBOOKS_STORE.importUserBackup(payload, state.session.username);
           await loadUserWorkspace();
           render();
-          alert('✓ ' + count + ' cahier(s) restauré(s) avec succès !');
+          alert(count + ' cahier(s) restauré(s) avec succès.');
         } catch (err) {
           alert('Erreur lors de la restauration : ' + err.message);
         }

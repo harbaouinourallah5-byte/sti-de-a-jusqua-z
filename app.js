@@ -1,3 +1,5 @@
+function safeIcon(name, sz) { return (typeof uiIcon === 'function') ? uiIcon(name, sz || 15) : ''; }
+
 
 // =============================================================
 // NAVIGATION & ACCORDÉON DE LA BARRE LATÉRALE (PHASE 1)
@@ -1693,13 +1695,13 @@ const VARIETIES_CONFIG = {
       {
         "label": "onsubmit avec validation JS (Méthode POST)",
         "value": "post-valid",
-        "previewHtml": "<div style=\"background:#1e293b; padding:14px; border:2px dashed #f97316; border-radius:6px; color:#fff; font-size:13px;\">📋 Formulaire configuré avec <strong>onsubmit=\"return f();\"</strong> et method=\"post\"</div>",
+        "previewHtml": "<div style=\"background:#1e293b; padding:14px; border:2px dashed #f97316; border-radius:6px; color:#fff; font-size:13px;\">Formulaire configuré avec <strong>onsubmit=\"return f();\"</strong> et method=\"post\"</div>",
         "code": "<form id=\"f1\" method=\"post\" action=\"traitement.php\" onsubmit=\"return f();\">\n  <!-- Champs du formulaire avec vérification JS -->\n  <input type=\"text\" id=\"nom\" required>\n  <input type=\"submit\" value=\"Envoyer\">\n</form>"
       },
       {
         "label": "method='get' (Paramètres dans l'URL)",
         "value": "get",
-        "previewHtml": "<div style=\"background:#1e293b; padding:14px; border:2px dashed #38bdf8; border-radius:6px; color:#fff; font-size:13px;\">🔍 Formulaire de recherche avec method=\"get\"</div>",
+        "previewHtml": "<div style=\"background:#1e293b; padding:14px; border:2px dashed #38bdf8; border-radius:6px; color:#fff; font-size:13px;\">Formulaire de recherche avec method=\"get\"</div>",
         "code": "<form id=\"fRecherche\" method=\"get\" action=\"recherche.php\">\n  <input type=\"text\" id=\"motCle\">\n  <input type=\"submit\" value=\"Rechercher\">\n</form>"
       }
     ]
@@ -2265,6 +2267,7 @@ function setupNavigation() {
 }
 
 function switchView(viewName, skipHashUpdate = false) {
+  if (typeof hydrateIcons === "function") setTimeout(function(){ hydrateIcons(document); }, 0);
   if (typeof updatePageMeta === 'function') updatePageMeta(viewName);
   if (!viewName) return;
 
@@ -2588,7 +2591,7 @@ function renderHtmlCards() {
 
   if (filtered.length === 0) {
     container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
-      🔍 Aucune balise HTML ne correspond à votre recherche.
+      Aucune balise HTML ne correspond à votre recherche.
     </div>`;
     return;
   }
@@ -2605,7 +2608,7 @@ function renderHtmlCards() {
     banner.style.marginBottom = '12px';
     banner.innerHTML = `
       <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-        <span style="font-size:1.5rem;">⚡</span>
+        <span style="font-size:1.5rem;"></span>
         <h3 style="font-size:1.1rem; color:#38bdf8; margin:0;">Mnémonique STI : Les 5 Paires d'Événements Complémentaires</h3>
       </div>
       <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:12px;">
@@ -2653,7 +2656,7 @@ function renderHtmlCards() {
       </div>
       <p class="item-card-desc">${item.summary}</p>
       <div class="card-action-bar">
-        <span>📖 Comment utiliser & Rendu</span>
+        <span>Comment utiliser & Rendu</span>
         <span>→</span>
       </div>
     `;
@@ -2703,7 +2706,7 @@ function renderCssCards() {
 
   if (filtered.length === 0) {
     container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
-      🔍 Aucune propriété CSS ne correspond à votre recherche.
+      Aucune propriété CSS ne correspond à votre recherche.
     </div>`;
     return;
   }
@@ -2778,12 +2781,12 @@ function renderCssCards() {
       <div class="card-interactive-controls">
         <div class="controls-top-row">
           <button type="button" class="toggle-effect-btn active" id="toggleBtn_${item.id}" onclick="event.stopPropagation(); toggleCardCssEffect('${item.id}')">
-            ⚡ Basculer / Rejouer l'effet
+            Basculer / Rejouer l'effet
           </button>
           <span class="slider-val-badge" id="sliderDisplay_${item.id}">Intensité : <strong>${cfg.valLabel(cfg.defaultValue)}</strong></span>
         </div>
         <div class="slider-control-row">
-          <label for="slider_${item.id}" class="slider-label">🎚️ Ajuster en direct :</label>
+          <label for="slider_${item.id}" class="slider-label">Ajuster en direct :</label>
           <input type="range" class="live-css-slider" id="slider_${item.id}" min="${cfg.min}" max="${cfg.max}" step="${cfg.step}" value="${cfg.defaultValue}" oninput="event.stopPropagation(); handleCardSliderInput('${item.id}', Number(this.value))" onclick="event.stopPropagation()">
         </div>
       </div>
@@ -2791,21 +2794,21 @@ function renderCssCards() {
       <!-- Code officiel de l'Annexe avec ligne CSS clé surlignée -->
       <div class="annexe-code-container">
         <div class="annexe-code-header">
-          <span>📜 Extrait Annexe STI</span>
-          <button type="button" class="annexe-copy-btn" onclick="event.stopPropagation(); copyCardSnippet('${item.id}', this)" title="Copier ce code">📋 Copier</button>
+          <span>Extrait Annexe STI</span>
+          <button type="button" class="annexe-copy-btn" onclick="event.stopPropagation(); copyCardSnippet('${item.id}', this)" title="Copier ce code">Copier</button>
         </div>
         <pre class="annexe-code-pre"><code>${formattedSnippet}</code></pre>
       </div>
 
       <!-- Note :hover obligatoire sur chaque élément -->
       <div class="hover-note-badge">
-        <span>💡</span>
+        <span></span>
         <span><strong>Au survol :</strong> ajoutez <code>:hover</code> pour déclencher à la souris.</span>
       </div>
 
       <!-- Barre d'Action vers la Vidéo Dédiée et Variantes -->
       <div class="card-action-bar" onclick="openCssModalById('${item.id}')">
-        <span style="color:#38bdf8;">🎬 Voir les vidéos & variantes détaillées</span>
+        <span style="color:#38bdf8;">Voir les vidéos & variantes détaillées</span>
         <span>→</span>
       </div>
     `;
@@ -2856,7 +2859,7 @@ function renderJsCards() {
 
   if (filtered.length === 0) {
     container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
-      🔍 Aucune fonction JavaScript ne correspond à votre recherche.
+      Aucune fonction JavaScript ne correspond à votre recherche.
     </div>`;
     return;
   }
@@ -2872,7 +2875,7 @@ function renderJsCards() {
       </div>
       <p class="item-card-desc">${item.description || item.summary}</p>
       <div class="card-action-bar">
-        <span style="color:#eab308;">⚡ Explication, Code & Tester</span>
+        <span style="color:#eab308;">Explication, Code & Tester</span>
         <span>→</span>
       </div>
     `;
@@ -2921,7 +2924,7 @@ function openHtmlModal(item) {
       <div class="variety-selector-card">
         <div class="variety-header">
           <div class="variety-header-title" style="color:#f97316;">
-            <span>🎛️</span>
+            <span></span>
             <span>${varietyConfig.title}</span>
           </div>
           <div id="varietyToastHtml" class="variety-applied-toast" style="display:none; border-color:#f97316; color:#fb923c; background:rgba(249,115,22,0.15);"></div>
@@ -2942,7 +2945,7 @@ function openHtmlModal(item) {
     <!-- 1. Comment utiliser -->
     <div class="modal-section">
       <div class="modal-section-title orange">
-        <span>📘</span>
+        <span></span>
         <span>Comment utiliser (How to use)</span>
       </div>
       <p class="modal-text">${item.howToUse}</p>
@@ -2952,7 +2955,7 @@ function openHtmlModal(item) {
     <!-- 2. À quoi ça sert -->
     <div class="modal-section">
       <div class="modal-section-title orange">
-        <span>🎯</span>
+        <span></span>
         <span>À quoi ça sert ? (Utilité dans l'annexe)</span>
       </div>
       <p class="modal-text">${item.summary}</p>
@@ -2964,7 +2967,7 @@ function openHtmlModal(item) {
     <!-- 4. Code HTML d'exemple -->
     <div class="modal-section">
       <div class="modal-section-title orange">
-        <span>💻</span>
+        <span></span>
         <span>Code HTML d'exemple</span>
       </div>
       <div class="code-container">
@@ -2979,7 +2982,7 @@ function openHtmlModal(item) {
     <!-- 5. Photo / Rendu visuel du code avec animation -->
     <div class="modal-section">
       <div class="modal-section-title orange">
-        <span>📸</span>
+        <span></span>
         <span>Photo / Rendu visuel du résultat (Animé)</span>
       </div>
       <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:8px;">
@@ -3024,7 +3027,7 @@ function openCssModal(item) {
     valuesHtml = `
       <div class="modal-section">
         <div class="modal-section-title">
-          <span>⚙️</span>
+          <span></span>
           <span>Valeurs possibles & Unités (Bac STI)</span>
         </div>
         <div class="attr-tags-list">
@@ -3052,13 +3055,13 @@ function openCssModal(item) {
     playlistSectionHtml = `
       <div class="video-playlist-section">
         <div class="video-playlist-title">
-          <span>🎬</span>
+          <span></span>
           <span>Sélectionnez la Vidéo Dédiée (${opts.length} vidéos distinctes pour ${escapeHtml(item.property)}) :</span>
         </div>
         <div class="video-playlist-bar">
           ${opts.map((opt, idx) => `
             <button type="button" class="video-playlist-tab-btn ${idx === 0 ? 'active' : ''}" id="videoTabBtn_${idx}" onclick="playSpecificVideo('${item.id}', ${idx})">
-              <span class="video-tab-icon">🎬</span>
+              <span class="video-tab-icon"></span>
               <span class="video-tab-name">Vidéo ${idx + 1} : ${escapeHtml(opt.value)}</span>
             </button>
           `).join('')}
@@ -3070,7 +3073,7 @@ function openCssModal(item) {
     comparisonSectionHtml = `
       <div class="video-comparison-section">
         <div class="video-comparison-title">
-          <span>📺</span>
+          <span></span>
           <span>Toutes les vidéos disponibles (1 vidéo dédiée pour chaque valeur de la propriété) :</span>
         </div>
         <div class="video-comparison-grid">
@@ -3098,7 +3101,7 @@ function openCssModal(item) {
       <div class="variety-selector-card">
         <div class="variety-header">
           <div class="variety-header-title" style="color:#38bdf8;">
-            <span>🎛️</span>
+            <span></span>
             <span>${varietyConfig.title} (Choix de la vidéo par bouton radio)</span>
           </div>
           <div id="varietyToastCss" class="variety-applied-toast" style="display:none;"></div>
@@ -3119,7 +3122,7 @@ function openCssModal(item) {
     <!-- 1. Description & Explication Détaillée -->
     <div class="modal-section">
       <div class="modal-section-title">
-        <span>📖</span>
+        <span></span>
         <span>Description & Explication Détaillée</span>
       </div>
       <p class="modal-text" style="font-size:0.98rem; line-height:1.65;">
@@ -3133,7 +3136,7 @@ function openCssModal(item) {
     <!-- 3. Comment utiliser au Bac STI -->
     <div class="modal-section">
       <div class="modal-section-title">
-        <span>📘</span>
+        <span></span>
         <span>Comment utiliser (How to use)</span>
       </div>
       <p class="modal-text">${item.howToUse}</p>
@@ -3142,7 +3145,7 @@ function openCssModal(item) {
     <!-- 4. NOTE OBLIGATOIRE SUR :HOVER (SURVOL DE LA SOURIS) -->
     <div class="callout-hover-box">
       <div style="font-weight: 800; font-size: 1rem; margin-bottom: 6px; display:flex; align-items:center; gap:8px;">
-        <span>💡</span>
+        <span></span>
         <span>NOTE IMPORTANTE SUR LE SURVOL (:hover)</span>
       </div>
       <p style="margin-bottom:8px;">
@@ -3159,7 +3162,7 @@ function openCssModal(item) {
     <!-- 6. Code CSS d'exemple -->
     <div class="modal-section">
       <div class="modal-section-title">
-        <span>💻</span>
+        <span></span>
         <span>Code CSS d'exemple</span>
       </div>
       <div class="code-container">
@@ -3174,7 +3177,7 @@ function openCssModal(item) {
     <!-- 7. VIDÉO / DÉMONSTRATION ANIMÉE DU CODE (1 VIDÉO DÉDIÉE PAR VALEUR) -->
     <div class="modal-section">
       <div class="modal-section-title">
-        <span>🎬</span>
+        <span></span>
         <span>Démonstration Vidéo en direct du code (1 Vidéo Dédiée par Valeur)</span>
       </div>
       <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:10px;">
@@ -3202,12 +3205,12 @@ function openCssModal(item) {
         <!-- Bannière de Comparaison AVANT / APRÈS en Direct -->
         <div class="video-phase-banner" id="videoPhaseBanner">
           <div class="phase-pill phase-before active" id="phaseBeforePill" onclick="forceVideoPhase(0)" title="Cliquer pour voir l'état AVANT sans CSS">
-            <span class="phase-dot">🔴</span>
+            <span class="phase-dot"></span>
             <span class="phase-label">ÉTAT 1 : AVANT (Sans CSS)</span>
           </div>
           <div class="phase-arrow">➔</div>
           <div class="phase-pill phase-after" id="phaseAfterPill" onclick="forceVideoPhase(1)" title="Cliquer pour voir l'état APRÈS avec CSS">
-            <span class="phase-dot">🟢</span>
+            <span class="phase-dot"></span>
             <span class="phase-label" id="phaseAfterLabel">ÉTAT 2 : APRÈS (CSS Appliqué)</span>
           </div>
         </div>
@@ -3219,10 +3222,10 @@ function openCssModal(item) {
 
         <div class="video-controls-bar">
           <button class="video-btn" id="playPauseVideoBtn" title="Play / Pause" onclick="toggleVideoPlay('${item.id}')">⏸</button>
-          <button class="video-btn" title="Rejouer cette vidéo" onclick="replayVideo('${item.id}')">🔄</button>
+          <button class="video-btn" title="Rejouer cette vidéo" onclick="replayVideo('${item.id}')"></button>
           
-          <button type="button" class="video-phase-btn before-btn" onclick="forceVideoPhase(0)" title="Geler sur l'état AVANT">🔴 AVANT</button>
-          <button type="button" class="video-phase-btn after-btn" onclick="forceVideoPhase(1)" title="Geler sur l'état APRÈS">🟢 APRÈS</button>
+          <button type="button" class="video-phase-btn before-btn" onclick="forceVideoPhase(0)" title="Geler sur l'état AVANT">AVANT</button>
+          <button type="button" class="video-phase-btn after-btn" onclick="forceVideoPhase(1)" title="Geler sur l'état APRÈS">APRÈS</button>
 
           <div class="video-timeline-wrap">
             <div class="video-progress-fill" id="videoProgress"></div>
@@ -3231,15 +3234,15 @@ function openCssModal(item) {
           <span class="video-current-badge" id="videoCurrentBadge">${escapeHtml(initialBadgeVal)}</span>
 
           <button class="video-hover-toggle-btn" title="Tester avec :hover" onclick="enableHoverStageTest()">
-            🖱️ Tester :hover
+            Tester :hover
           </button>
         </div>
 
         <!-- Extrait de Code Officiel Annexe avec Ligne Active Surlignée -->
         <div class="annexe-code-container" style="margin: 14px 12px 12px 12px;">
           <div class="annexe-code-header">
-            <span>📜 Extrait Annexe STI (Ligne active surlignée)</span>
-            <button type="button" class="annexe-copy-btn" id="modalAnnexeCopyBtn" onclick="copyModalAnnexeCode(this)" title="Copier ce code">📋 Copier</button>
+            <span>Extrait Annexe STI (Ligne active surlignée)</span>
+            <button type="button" class="annexe-copy-btn" id="modalAnnexeCopyBtn" onclick="copyModalAnnexeCode(this)" title="Copier ce code">Copier</button>
           </div>
           <pre class="annexe-code-pre"><code id="modalAnnexeCodePre">${typeof buildModalHighlightedCode === 'function' ? buildModalHighlightedCode(item, 0) : escapeHtml(item.code || '')}</code></pre>
         </div>
@@ -3273,7 +3276,7 @@ function openJsModal(item) {
     valuesHtml = `
       <div class="modal-section">
         <div class="modal-section-title green">
-          <span>⚙️</span>
+          <span></span>
           <span>Syntaxe & Valeurs Autorisées (Bac STI)</span>
         </div>
         <div class="attr-tags-list">
@@ -3287,7 +3290,7 @@ function openJsModal(item) {
     <!-- 1. Description & Explication Détaillée -->
     <div class="modal-section">
       <div class="modal-section-title green">
-        <span>📖</span>
+        <span></span>
         <span>Description & Rôle au Bac STI</span>
       </div>
       <p class="modal-text" style="font-size:0.98rem; line-height:1.65;">
@@ -3298,7 +3301,7 @@ function openJsModal(item) {
     <!-- 2. Comment utiliser au Bac -->
     <div class="modal-section">
       <div class="modal-section-title green">
-        <span>📘</span>
+        <span></span>
         <span>Comment utiliser (How to use)</span>
       </div>
       <p class="modal-text">${item.howToUse || item.syntax || ''}</p>
@@ -3310,7 +3313,7 @@ function openJsModal(item) {
     <!-- 4. Définition officielle de l'Annexe -->
     <div class="modal-section">
       <div class="modal-section-title green">
-        <span>🎯</span>
+        <span></span>
         <span>Texte officiel de l'Annexe</span>
       </div>
       <p class="modal-text" style="font-style:italic; color:var(--text-secondary);">${item.summary}</p>
@@ -3319,7 +3322,7 @@ function openJsModal(item) {
     <!-- 5. Code JavaScript d'exemple -->
     <div class="modal-section">
       <div class="modal-section-title green">
-        <span>💻</span>
+        <span></span>
         <span>Code JavaScript d'exemple (Bac STI)</span>
       </div>
       <div class="code-container">
@@ -3337,7 +3340,7 @@ function openJsModal(item) {
     <!-- 7. Exécution interactive en direct -->
     <div class="modal-section">
       <div class="modal-section-title green">
-        <span>⚡</span>
+        <span></span>
         <span>Console Interactive : Tester le code en direct</span>
       </div>
       <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:10px;">
@@ -3415,7 +3418,7 @@ function runInteractiveJsTest(id) {
       }
     } catch (e) {
       console.log = origLog;
-      output.innerHTML = `<strong style="color:#ef4444;">⚠️ Info d'exécution :</strong> ${escapeHtml(e.message)}`;
+      output.innerHTML = `<strong style="color:#ef4444;">Info d'exécution :</strong> ${escapeHtml(e.message)}`;
     }
   } else {
     output.textContent = "> Fonction JavaScript exécutée avec succès.";
@@ -3432,13 +3435,13 @@ function buildJsInteractiveStage(item) {
       <!-- DÉMONSTRATION INTERACTIVE DÉDIÉE : STRUCTURE SWITCH DES SAISONS -->
       <div class="modal-section" style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 18px;">
         <div class="modal-section-title green" style="margin-bottom: 12px;">
-          <span>🔀</span>
+          <span></span>
           <span>Comprendre & Manipuler la Structure switch en Direct</span>
         </div>
 
         <!-- 1. Explication Pédagogique Claire -->
         <div style="background:#090d16; border-radius:6px; padding:12px 16px; margin-bottom:16px; font-size:0.9rem; line-height:1.6; border-left:4px solid #10b981;">
-          <strong style="color:#34d399;">🔑 Les 4 Règles d'Or du switch au Bac STI :</strong>
+          <strong style="color:#34d399;">Les 4 Règles d'Or du switch au Bac STI :</strong>
           <ul style="margin:8px 0 0 18px; padding:0; color:var(--text-secondary);">
             <li><strong style="color:#f8fafc;">1. let mois = Number(prompt(...)) :</strong> La conversion <code>Number()</code> est indispensable car <code>switch</code> teste avec égalité stricte <code>===</code> (valeur et type).</li>
             <li><strong style="color:#f8fafc;">2. Cas groupés (OU logique) :</strong> <code>case 12: case 1: case 2:</code> permet d'exécuter le même code si le mois vaut 12, 1 ou 2.</li>
@@ -3450,15 +3453,15 @@ function buildJsInteractiveStage(item) {
         <!-- 2. Test Rapide par Saison -->
         <div style="margin-bottom:14px;">
           <span style="font-size:0.85rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:8px;">
-            🧪 Test Rapide : Cliquez sur une saison pour voir le case correspondant s'activer :
+            Test Rapide : Cliquez sur une saison pour voir le case correspondant s'activer :
           </span>
           <div style="display:flex; flex-wrap:wrap; gap:8px;">
             <button onclick="demoSwitchMois(12)" class="btn-switch-demo" style="background:var(--bg-canvas); color:#38bdf8; border:1px solid var(--border-color); padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">❄️ Décembre (12) ➔ Hiver</button>
             <button onclick="demoSwitchMois(1)" class="btn-switch-demo" style="background:var(--bg-canvas); color:#38bdf8; border:1px solid var(--border-color); padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">❄️ Janvier (1) ➔ Hiver</button>
-            <button onclick="demoSwitchMois(4)" class="btn-switch-demo" style="background:var(--bg-canvas); color:#ec4899; border:1px solid var(--border-color); padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">🌸 Avril (4) ➔ Printemps</button>
-            <button onclick="demoSwitchMois(7)" class="btn-switch-demo" style="background:var(--bg-canvas); color:#facc15; border:1px solid var(--border-color); padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">☀️ Juillet (7) ➔ Été</button>
-            <button onclick="demoSwitchMois(10)" class="btn-switch-demo" style="background:var(--bg-canvas); color:#fb923c; border:1px solid var(--border-color); padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">🍂 Octobre (10) ➔ Automne</button>
-            <button onclick="demoSwitchMois(15)" class="btn-switch-demo" style="background:var(--bg-canvas); color:#ef4444; border:1px solid var(--border-color); padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">❌ Mois 15 ➔ default (Erreur)</button>
+            <button onclick="demoSwitchMois(4)" class="btn-switch-demo" style="background:var(--bg-canvas); color:#ec4899; border:1px solid var(--border-color); padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">Avril (4) ➔ Printemps</button>
+            <button onclick="demoSwitchMois(7)" class="btn-switch-demo" style="background:var(--bg-canvas); color:#facc15; border:1px solid var(--border-color); padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">Juillet (7) ➔ Été</button>
+            <button onclick="demoSwitchMois(10)" class="btn-switch-demo" style="background:var(--bg-canvas); color:#fb923c; border:1px solid var(--border-color); padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">Octobre (10) ➔ Automne</button>
+            <button onclick="demoSwitchMois(15)" class="btn-switch-demo" style="background:var(--bg-canvas); color:#ef4444; border:1px solid var(--border-color); padding:7px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; font-weight:600;">Mois 15 ➔ default (Erreur)</button>
           </div>
         </div>
 
@@ -3469,7 +3472,7 @@ function buildJsInteractiveStage(item) {
             Tester la saisie (switch)
           </button>
           <button onclick="demoSwitchRealPrompt()" style="background:#3b82f6; color:#fff; border:none; padding:8px 16px; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.9rem;">
-            🚀 Lancer le prompt() réel
+            Lancer le prompt() réel
           </button>
         </div>
 
@@ -3487,7 +3490,7 @@ function buildJsInteractiveStage(item) {
       <!-- DÉMONSTRATION INTERACTIVE DÉDIÉE : CAPTCHA & MAJUSCULES -->
       <div class="modal-section" style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 18px;">
         <div class="modal-section-title green" style="margin-bottom: 12px;">
-          <span>🔐</span>
+          <span></span>
           <span>Simulateur Interactif Captcha & Comptage de Majuscules (Bac STI)</span>
         </div>
         <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:14px;">
@@ -3499,7 +3502,7 @@ function buildJsInteractiveStage(item) {
           <label style="font-weight:600; font-size:0.88rem; color:var(--text-secondary);">Code Captcha (#cap) :</label>
           <input type="text" id="demoCapInput" readonly class="sti-input sti-input-captcha" style="width:220px;">
           <button onclick="demoActualiserCaptcha()" style="background:#0284c7; color:#fff; border:none; padding:8px 14px; border-radius:6px; font-size:0.85rem; font-weight:600; cursor:pointer;">
-            🔄 actualiser()
+            actualiser()
           </button>
         </div>
 
@@ -3508,7 +3511,7 @@ function buildJsInteractiveStage(item) {
           <label style="font-weight:600; font-size:0.88rem; color:var(--text-secondary);">Nombre de majuscules (#nbmaj) :</label>
           <input type="number" id="demoNbmajInput" class="sti-input sti-input-number" placeholder="Ex: 4" min="0" max="10" style="width:110px;">
           <button onclick="demoVerifierNbMajus()" style="background:#10b981; color:#0f172a; border:none; padding:8px 18px; border-radius:6px; font-size:0.85rem; font-weight:bold; cursor:pointer;">
-            🔍 nbmajus() (Vérifier)
+            nbmajus() (Vérifier)
           </button>
         </div>
 
@@ -3524,7 +3527,7 @@ function buildJsInteractiveStage(item) {
       <!-- DÉMONSTRATION INTERACTIVE DÉDIÉE : VALIDAGE -->
       <div class="modal-section" style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 18px;">
         <div class="modal-section-title green" style="margin-bottom: 12px;">
-          <span>📅</span>
+          <span></span>
           <span>Simulateur Interactif validage() (Objet Date)</span>
         </div>
         <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:12px;">
@@ -3534,7 +3537,7 @@ function buildJsInteractiveStage(item) {
           <label style="font-weight:600; font-size:0.88rem; color:var(--text-secondary);">Date de naissance (#dnais) :</label>
           <input type="date" id="demoDnaisInput" class="sti-input" value="2007-06-15" style="padding:6px 12px; font-size:0.9rem;">
           <button onclick="demoValidage()" style="background:#10b981; color:#0f172a; border:none; padding:8px 18px; border-radius:6px; font-size:0.85rem; font-weight:bold; cursor:pointer;">
-            🚀 Exécuter validage()
+            Exécuter validage()
           </button>
         </div>
         <div id="demoValidageFeedback" style="background:var(--bg-canvas); border:1px solid rgba(16, 185, 129, 0.3); border-radius:6px; padding:12px; font-family:Consolas, Monaco, monospace; font-size:0.88rem; color:#34d399;">
@@ -3549,7 +3552,7 @@ function buildJsInteractiveStage(item) {
       <!-- DÉMONSTRATION INTERACTIVE DÉDIÉE : FORMULAIRE COMPLET VERIF() -->
       <div class="modal-section" style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 18px;">
         <div class="modal-section-title green" style="margin-bottom: 12px;">
-          <span>📝</span>
+          <span></span>
           <span>Simulateur Interactif du Formulaire Complet (verif())</span>
         </div>
         <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:12px;">
@@ -3561,7 +3564,7 @@ function buildJsInteractiveStage(item) {
             ✓ Remplir données valides
           </button>
           <button onclick="demoFillVerif(false)" style="background:#dc2626; color:#fff; border:none; padding:6px 14px; border-radius:6px; font-size:0.82rem; cursor:pointer; font-weight:600;">
-            ⚠️ Remplir avec erreurs (passwords différents, tel faux...)
+            Remplir avec erreurs (passwords différents, tel faux...)
           </button>
         </div>
 
@@ -3616,7 +3619,7 @@ function buildJsInteractiveStage(item) {
         </div>
 
         <button onclick="demoRunVerif()" style="background:#10b981; color:#0f172a; border:none; padding:10px 22px; border-radius:6px; font-weight:800; cursor:pointer; font-size:0.95rem; box-shadow:0 3px 8px rgba(0,0,0,0.3); display:inline-flex; align-items:center; gap:8px;">
-          <span>🚀</span>
+          <span></span>
           <span>Exécuter verif() (Valider le formulaire)</span>
         </button>
 
@@ -3630,7 +3633,7 @@ function buildJsInteractiveStage(item) {
       <!-- TESTEUR INTERACTIF EN DIRECT POUR FONCTION AUXILIAIRE -->
       <div class="modal-section" style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 18px;">
         <div class="modal-section-title green" style="margin-bottom: 12px;">
-          <span>🧪</span>
+          <span></span>
           <span>Testeur Interactif en Direct : ${escapeHtml(item.name)}</span>
         </div>
         <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:12px;">
@@ -3664,31 +3667,31 @@ function demoSwitchMois(m) {
   switch (mois) {
     case 12: case 1: case 2:
       saison = "hiver";
-      icon = "❄️";
+      icon = "";
       color = "#38bdf8";
       caseExpl = "case 12 : case 1 : case 2 : (Mois d'hiver)";
       break;
     case 3: case 4: case 5:
       saison = "printemps";
-      icon = "🌸";
+      icon = "";
       color = "#ec4899";
       caseExpl = "case 3 : case 4 : case 5 : (Mois de printemps)";
       break;
     case 6: case 7: case 8:
       saison = "été";
-      icon = "☀️";
+      icon = "";
       color = "#facc15";
       caseExpl = "case 6 : case 7 : case 8 : (Mois d'été)";
       break;
     case 9: case 10: case 11:
       saison = "Automne";
-      icon = "🍂";
+      icon = "";
       color = "#fb923c";
       caseExpl = "case 9 : case 10 : case 11 : (Mois d'automne)";
       break;
     default:
       saison = "Numéro erroné";
-      icon = "❌";
+      icon = "";
       color = "#ef4444";
       caseExpl = "default : (Aucun case ne correspond)";
       break;
@@ -3793,7 +3796,7 @@ function demoVerifierNbMajus() {
       fb.style.display = 'block';
       fb.style.background = 'rgba(239, 68, 68, 0.2)';
       fb.style.color = '#fca5a5';
-      fb.innerHTML = `❌ <strong>Erreur !</strong> Vous avez saisi <code>${val}</code>, mais il y a en réalité <code>${nb}</code> majuscule(s). Comme spécifié dans le cours : <code>document.getElementById('nbmaj').style.backgroundColor = 'red';</code> !`;
+      fb.innerHTML = `<strong>Erreur !</strong> Vous avez saisi <code>${val}</code>, mais il y a en réalité <code>${nb}</code> majuscule(s). Comme spécifié dans le cours : <code>document.getElementById('nbmaj').style.backgroundColor = 'red';</code> !`;
     }
   } else {
     if (nbmaj) {
@@ -3830,7 +3833,7 @@ function demoValidage() {
     alert('age invalid');
     if (fb) {
       fb.style.color = '#ef4444';
-      fb.innerHTML = `❌ <strong>alert('age invalid') :</strong> Année courante ac = ${ac}, Année naissance ap = ${ap} ➔ Âge diff = ${diff} ans. Doit être entre 15 et 30 ans !`;
+      fb.innerHTML = `<strong>alert('age invalid') :</strong> Année courante ac = ${ac}, Année naissance ap = ${ap} ➔ Âge diff = ${diff} ans. Doit être entre 15 et 30 ans !`;
     }
   } else {
     if (fb) {
@@ -4022,7 +4025,7 @@ function demoTestHelper(id, val) {
         break;
       }
     }
-    expl = ok ? "✓ Contient uniquement des lettres et espaces" : "❌ Contient des caractères non alphabétiques";
+    expl = ok ? "✓ Contient uniquement des lettres et espaces" : "Contient des caractères non alphabétiques";
   } else if (id === 'js-fn-isnum') {
     ok = true;
     for (let i = 0; i < val.length; i++) {
@@ -4031,16 +4034,16 @@ function demoTestHelper(id, val) {
         break;
       }
     }
-    expl = ok ? "✓ Contient uniquement des chiffres ('0' à '9')" : "❌ Contient des caractères non numériques";
+    expl = ok ? "✓ Contient uniquement des chiffres ('0' à '9')" : "Contient des caractères non numériques";
   } else if (id === 'js-fn-testtel') {
     let prem = val.charAt(0);
     ok = (prem == "2" || prem == "4" || prem == "5" || prem == "7" || prem == "9");
-    expl = ok ? `✓ Commence par '${prem}' (indicatif tunisien valide)` : `❌ Commence par '${prem}' (doit être 2, 4, 5, 7 ou 9)`;
+    expl = ok ? `✓ Commence par '${prem}' (indicatif tunisien valide)` : `Commence par '${prem}' (doit être 2, 4, 5, 7 ou 9)`;
   } else if (id === 'js-fn-testmail') {
     let pA = val.indexOf("@");
     let pP = val.lastIndexOf(".");
     ok = (pA > 0 && pP > pA + 1 && pP < val.length - 1);
-    expl = ok ? "✓ Format e-mail valide (@ et . bien positionnés)" : "❌ Format e-mail invalide (@ ou . mal positionnés)";
+    expl = ok ? "✓ Format e-mail valide (@ et . bien positionnés)" : "Format e-mail invalide (@ ou . mal positionnés)";
   }
 
   res.style.color = ok ? '#34d399' : '#ef4444';
@@ -4105,7 +4108,7 @@ function renderSqlCards() {
 
   if (filtered.length === 0) {
     container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
-      🔍 Aucune commande SQL ne correspond à votre recherche "${escapeHtml(currentSqlSearch)}".
+      Aucune commande SQL ne correspond à votre recherche "${escapeHtml(currentSqlSearch)}".
     </div>`;
     return;
   }
@@ -4121,7 +4124,7 @@ function renderSqlCards() {
       </div>
       <p class="item-card-desc">${escapeHtml(item.description || item.summary)}</p>
       <div class="card-action-bar">
-        <span style="color:#c084fc; font-weight:600;">⚡ Explication, Code & Console</span>
+        <span style="color:#c084fc; font-weight:600;">Explication, Code & Console</span>
         <span>→</span>
       </div>
     `;
@@ -4179,7 +4182,7 @@ function openSqlModal(item) {
     valuesHtml = `
       <div class="modal-section">
         <div class="modal-section-title purple">
-          <span>⚙️</span>
+          <span></span>
           <span>Règles & Syntaxe au Bac STI</span>
         </div>
         <div class="attr-tags-list">
@@ -4193,7 +4196,7 @@ function openSqlModal(item) {
     <!-- 1. Description & Rôle au Bac -->
     <div class="modal-section">
       <div class="modal-section-title purple">
-        <span>📖</span>
+        <span></span>
         <span>Description & Rôle au Bac STI</span>
       </div>
       <p class="modal-text" style="font-size:0.98rem; line-height:1.65;">
@@ -4204,7 +4207,7 @@ function openSqlModal(item) {
     <!-- 2. Comment utiliser au Bac -->
     <div class="modal-section">
       <div class="modal-section-title purple">
-        <span>📘</span>
+        <span></span>
         <span>Comment utiliser (Syntaxe & Usage)</span>
       </div>
       <p class="modal-text" style="font-family:Consolas, Monaco, monospace; background:var(--bg-canvas); padding:10px 14px; border-radius:6px; border:1px solid var(--border-color); color:#a855f7; font-weight:600;">
@@ -4218,7 +4221,7 @@ function openSqlModal(item) {
     <!-- 4. Définition officielle de l'Annexe -->
     <div class="modal-section">
       <div class="modal-section-title purple">
-        <span>🎯</span>
+        <span></span>
         <span>Texte officiel de l'Annexe Bac STI</span>
       </div>
       <p class="modal-text" style="font-style:italic; color:var(--text-secondary); background:rgba(101, 163, 13, 0.08); padding:10px 14px; border-radius:6px; border-left:4px solid #65a30d;">
@@ -4229,7 +4232,7 @@ function openSqlModal(item) {
     <!-- 5. Code SQL d'exemple -->
     <div class="modal-section">
       <div class="modal-section-title purple">
-        <span>💻</span>
+        <span></span>
         <span>Code SQL d'exemple (Conforme MySQL / phpMyAdmin)</span>
       </div>
       <div class="code-container">
@@ -4258,7 +4261,7 @@ function buildSqlInteractiveStage(item) {
   return `
     <div class="modal-section">
       <div class="modal-section-title purple">
-        <span>🗄️</span>
+        <span></span>
         <span>Console Interactive MySQL / phpMyAdmin (Baccalauréat STI)</span>
       </div>
       <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:12px; line-height:1.5;">
@@ -4267,10 +4270,10 @@ function buildSqlInteractiveStage(item) {
       
       <!-- Boutons de requêtes types Bac STI -->
       <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
-        ${item.simQuery ? `<button type="button" class="sql-quick-btn" onclick="setSqlSimQuery(\`${escapeJsString(item.simQuery)}\`)">🎯 Requête Type : ${escapeHtml(item.name)}</button>` : ''}
-        <button type="button" class="sql-quick-btn" onclick="setSqlSimQuery('SELECT * FROM Eleve;')">📋 Table Eleve (Tous les élèves)</button>
-        <button type="button" class="sql-quick-btn" onclick="setSqlSimQuery('SELECT * FROM Matiere;')">📚 Table Matiere (Matières & Coefs)</button>
-        <button type="button" class="sql-quick-btn" onclick="setSqlSimQuery('SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne >= 10.00 ORDER BY moyenne DESC;')">🏆 Élèves admis (moyenne >= 10)</button>
+        ${item.simQuery ? `<button type="button" class="sql-quick-btn" onclick="setSqlSimQuery(\`${escapeJsString(item.simQuery)}\`)">Requête Type : ${escapeHtml(item.name)}</button>` : ''}
+        <button type="button" class="sql-quick-btn" onclick="setSqlSimQuery('SELECT * FROM Eleve;')">Table Eleve (Tous les élèves)</button>
+        <button type="button" class="sql-quick-btn" onclick="setSqlSimQuery('SELECT * FROM Matiere;')">Table Matiere (Matières & Coefs)</button>
+        <button type="button" class="sql-quick-btn" onclick="setSqlSimQuery('SELECT nom, prenom, moyenne FROM Eleve WHERE moyenne >= 10.00 ORDER BY moyenne DESC;')">Élèves admis (moyenne >= 10)</button>
       </div>
 
       <!-- Éditeur de requête -->
@@ -4281,11 +4284,11 @@ function buildSqlInteractiveStage(item) {
       <!-- Boutons d'action -->
       <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap; align-items:center;">
         <button type="button" onclick="executeSqlSimFromInput()" style="background: linear-gradient(135deg, #7c3aed, #9333ea); color: #fff; border:none; padding:10px 22px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:0.92rem; display:inline-flex; align-items:center; gap:8px; box-shadow: 0 2px 8px rgba(124,58,237,0.3);">
-          <span>🚀</span>
+          <span></span>
           <span>Exécuter la requête SQL</span>
         </button>
         <button type="button" onclick="resetSqlSimTable()" style="background: var(--bg-card); color: var(--text-secondary); border:1px solid var(--border-color); padding:10px 16px; border-radius:6px; font-weight:600; cursor:pointer; font-size:0.85rem;">
-          <span>🔄</span>
+          <span></span>
           <span>Réinitialiser les données d'origine</span>
         </button>
       </div>
@@ -4296,7 +4299,7 @@ function buildSqlInteractiveStage(item) {
 
       ${item.simDescription ? `
         <div style="margin-top:12px; font-size:0.85rem; color:var(--text-muted); padding:10px 14px; background:rgba(168, 85, 247, 0.08); border-left:3px solid #a855f7; border-radius:0 6px 6px 0;">
-          💡 <strong>Explication Bac STI :</strong> ${escapeHtml(item.simDescription)}
+          <strong>Explication Bac STI :</strong> ${escapeHtml(item.simDescription)}
         </div>
       ` : ''}
     </div>
@@ -4317,7 +4320,7 @@ function resetSqlSimTable() {
   if (statusBox) {
     statusBox.innerHTML = `
       <div class="sql-status-banner info">
-        <span>🔄</span>
+        <span></span>
         <span>Base de données réinitialisée aux données scolaires d'origine (Eleve et Matiere).</span>
       </div>
     `;
@@ -4335,7 +4338,7 @@ function executeSqlSimFromInput() {
   if (!rawQuery) {
     statusBox.innerHTML = `
       <div class="sql-status-banner info">
-        <span>⚠️</span>
+        <span></span>
         <span>Veuillez saisir une commande ou requête SQL à exécuter.</span>
       </div>
     `;
@@ -4348,7 +4351,7 @@ function executeSqlSimFromInput() {
   if (!res.success) {
     statusBox.innerHTML = `
       <div class="sql-status-banner" style="background:rgba(239, 68, 68, 0.15); color:#f87171; border:1px solid rgba(239, 68, 68, 0.35);">
-        <span>❌</span>
+        <span></span>
         <span><strong>Erreur MySQL :</strong> ${escapeHtml(res.message || 'Syntaxe SQL invalide')}</span>
       </div>
     `;
@@ -4754,12 +4757,12 @@ function buildSelectorsStage(itemId) {
         <span style="font-family:monospace; color:#38bdf8;">*</span>
       </div>
       <div class="selector-doc-content" id="selDocContent">
-        <div class="selector-target-item" data-sel-match="all">&lt;h1 id="titre"&gt;Titre du document&lt;/h1&gt;<span class="selector-badge-target">🎯 CIBLÉ (*)</span></div>
-        <div class="selector-target-item" data-sel-match="all">&lt;p class="texte"&gt;Premier paragraphe&lt;/p&gt;<span class="selector-badge-target">🎯 CIBLÉ (*)</span></div>
-        <div class="selector-target-item" data-sel-match="all">&lt;div id="boite"&gt;Boîte de division &lt;div&gt;&lt;/div&gt;<span class="selector-badge-target">🎯 CIBLÉ (*)</span></div>
-        <div class="selector-target-item" data-sel-match="all">&lt;a id="lien" href="#"&gt;Lien hypertexte &lt;a&gt;&lt;/a&gt;<span class="selector-badge-target">🎯 CIBLÉ (*)</span></div>
+        <div class="selector-target-item" data-sel-match="all">&lt;h1 id="titre"&gt;Titre du document&lt;/h1&gt;<span class="selector-badge-target">CIBLÉ (*)</span></div>
+        <div class="selector-target-item" data-sel-match="all">&lt;p class="texte"&gt;Premier paragraphe&lt;/p&gt;<span class="selector-badge-target">CIBLÉ (*)</span></div>
+        <div class="selector-target-item" data-sel-match="all">&lt;div id="boite"&gt;Boîte de division &lt;div&gt;&lt;/div&gt;<span class="selector-badge-target">CIBLÉ (*)</span></div>
+        <div class="selector-target-item" data-sel-match="all">&lt;a id="lien" href="#"&gt;Lien hypertexte &lt;a&gt;&lt;/a&gt;<span class="selector-badge-target">CIBLÉ (*)</span></div>
       </div>
-      <div class="selector-banner-status" id="selBannerStatus">🔴 AVANT : Aucun élément ciblé (Style HTML brut)</div>
+      <div class="selector-banner-status" id="selBannerStatus">AVANT : Aucun élément ciblé (Style HTML brut)</div>
     </div>`;
   }
 
@@ -4771,12 +4774,12 @@ function buildSelectorsStage(itemId) {
         <span style="font-family:monospace; color:#38bdf8;">Sélecteur : p</span>
       </div>
       <div class="selector-doc-content" id="selDocContent">
-        <div class="selector-target-item" data-sel-match="no">&lt;h1&gt;Titre principal (&lt;h1&gt;)&lt;/h1&gt;<span class="selector-badge-target">❌ Ignoré</span></div>
-        <div class="selector-target-item" data-sel-match="yes">&lt;p&gt;Paragraphe 1 de contenu (&lt;p&gt;)&lt;/p&gt;<span class="selector-badge-target">🎯 CIBLÉ (p)</span></div>
-        <div class="selector-target-item" data-sel-match="no">&lt;div id="boite"&gt;Boîte de division (&lt;div&gt;)&lt;/div&gt;<span class="selector-badge-target">❌ Ignoré</span></div>
-        <div class="selector-target-item" data-sel-match="yes">&lt;p&gt;Paragraphe 2 de contenu (&lt;p&gt;)&lt;/p&gt;<span class="selector-badge-target">🎯 CIBLÉ (p)</span></div>
+        <div class="selector-target-item" data-sel-match="no">&lt;h1&gt;Titre principal (&lt;h1&gt;)&lt;/h1&gt;<span class="selector-badge-target">Ignoré</span></div>
+        <div class="selector-target-item" data-sel-match="yes">&lt;p&gt;Paragraphe 1 de contenu (&lt;p&gt;)&lt;/p&gt;<span class="selector-badge-target">CIBLÉ (p)</span></div>
+        <div class="selector-target-item" data-sel-match="no">&lt;div id="boite"&gt;Boîte de division (&lt;div&gt;)&lt;/div&gt;<span class="selector-badge-target">Ignoré</span></div>
+        <div class="selector-target-item" data-sel-match="yes">&lt;p&gt;Paragraphe 2 de contenu (&lt;p&gt;)&lt;/p&gt;<span class="selector-badge-target">CIBLÉ (p)</span></div>
       </div>
-      <div class="selector-banner-status" id="selBannerStatus">🔴 AVANT : Aucun élément ciblé (Style HTML brut)</div>
+      <div class="selector-banner-status" id="selBannerStatus">AVANT : Aucun élément ciblé (Style HTML brut)</div>
     </div>`;
   }
 
@@ -4788,11 +4791,11 @@ function buildSelectorsStage(itemId) {
         <span style="font-family:monospace; color:#38bdf8;">Sélecteur : #boite</span>
       </div>
       <div class="selector-doc-content" id="selDocContent">
-        <div class="selector-target-item" data-sel-match="no">&lt;div id="menu"&gt;Menu supérieur (id="menu")&lt;/div&gt;<span class="selector-badge-target">❌ Ignoré</span></div>
-        <div class="selector-target-item" data-sel-match="yes">&lt;div id="boite"&gt;Boîte centrale unique (id="boite")&lt;/div&gt;<span class="selector-badge-target">🎯 CIBLÉ (#boite)</span></div>
-        <div class="selector-target-item" data-sel-match="no">&lt;div id="footer"&gt;Pied de page (id="footer")&lt;/div&gt;<span class="selector-badge-target">❌ Ignoré</span></div>
+        <div class="selector-target-item" data-sel-match="no">&lt;div id="menu"&gt;Menu supérieur (id="menu")&lt;/div&gt;<span class="selector-badge-target">Ignoré</span></div>
+        <div class="selector-target-item" data-sel-match="yes">&lt;div id="boite"&gt;Boîte centrale unique (id="boite")&lt;/div&gt;<span class="selector-badge-target">CIBLÉ (#boite)</span></div>
+        <div class="selector-target-item" data-sel-match="no">&lt;div id="footer"&gt;Pied de page (id="footer")&lt;/div&gt;<span class="selector-badge-target">Ignoré</span></div>
       </div>
-      <div class="selector-banner-status" id="selBannerStatus">🔴 AVANT : Aucun élément ciblé (Style HTML brut)</div>
+      <div class="selector-banner-status" id="selBannerStatus">AVANT : Aucun élément ciblé (Style HTML brut)</div>
     </div>`;
   }
 
@@ -4804,12 +4807,12 @@ function buildSelectorsStage(itemId) {
         <span style="font-family:monospace; color:#38bdf8;">Sélecteur : .important</span>
       </div>
       <div class="selector-doc-content" id="selDocContent">
-        <div class="selector-target-item" data-sel-match="yes">&lt;h2 class="important"&gt;Titre marqué .important&lt;/h2&gt;<span class="selector-badge-target">🎯 CIBLÉ (.important)</span></div>
-        <div class="selector-target-item" data-sel-match="no">&lt;p&gt;Paragraphe ordinaire sans classe&lt;/p&gt;<span class="selector-badge-target">❌ Ignoré</span></div>
-        <div class="selector-target-item" data-sel-match="yes">&lt;p class="important"&gt;Paragraphe urgent marqué .important&lt;/p&gt;<span class="selector-badge-target">🎯 CIBLÉ (.important)</span></div>
-        <div class="selector-target-item" data-sel-match="no">&lt;div&gt;Bloc sans classe&lt;/div&gt;<span class="selector-badge-target">❌ Ignoré</span></div>
+        <div class="selector-target-item" data-sel-match="yes">&lt;h2 class="important"&gt;Titre marqué .important&lt;/h2&gt;<span class="selector-badge-target">CIBLÉ (.important)</span></div>
+        <div class="selector-target-item" data-sel-match="no">&lt;p&gt;Paragraphe ordinaire sans classe&lt;/p&gt;<span class="selector-badge-target">Ignoré</span></div>
+        <div class="selector-target-item" data-sel-match="yes">&lt;p class="important"&gt;Paragraphe urgent marqué .important&lt;/p&gt;<span class="selector-badge-target">CIBLÉ (.important)</span></div>
+        <div class="selector-target-item" data-sel-match="no">&lt;div&gt;Bloc sans classe&lt;/div&gt;<span class="selector-badge-target">Ignoré</span></div>
       </div>
-      <div class="selector-banner-status" id="selBannerStatus">🔴 AVANT : Aucun élément ciblé (Style HTML brut)</div>
+      <div class="selector-banner-status" id="selBannerStatus">AVANT : Aucun élément ciblé (Style HTML brut)</div>
     </div>`;
   }
 
@@ -4821,11 +4824,11 @@ function buildSelectorsStage(itemId) {
         <span style="font-family:monospace; color:#38bdf8;">Sélecteur : input[required]</span>
       </div>
       <div class="selector-doc-content" id="selDocContent">
-        <div class="selector-target-item" data-sel-match="no">&lt;input type="text" placeholder="Prénom (facultatif)"&gt;<span class="selector-badge-target">❌ Ignoré (Pas required)</span></div>
-        <div class="selector-target-item" data-sel-match="yes">&lt;input type="email" required placeholder="Email (obligatoire)"&gt;<span class="selector-badge-target">🎯 CIBLÉ [required]</span></div>
-        <div class="selector-target-item" data-sel-match="yes">&lt;input type="password" required placeholder="Mot de passe"&gt;<span class="selector-badge-target">🎯 CIBLÉ [required]</span></div>
+        <div class="selector-target-item" data-sel-match="no">&lt;input type="text" placeholder="Prénom (facultatif)"&gt;<span class="selector-badge-target">Ignoré (Pas required)</span></div>
+        <div class="selector-target-item" data-sel-match="yes">&lt;input type="email" required placeholder="Email (obligatoire)"&gt;<span class="selector-badge-target">CIBLÉ [required]</span></div>
+        <div class="selector-target-item" data-sel-match="yes">&lt;input type="password" required placeholder="Mot de passe"&gt;<span class="selector-badge-target">CIBLÉ [required]</span></div>
       </div>
-      <div class="selector-banner-status" id="selBannerStatus">🔴 AVANT : Aucun élément ciblé (Champs de formulaire bruts)</div>
+      <div class="selector-banner-status" id="selBannerStatus">AVANT : Aucun élément ciblé (Champs de formulaire bruts)</div>
     </div>`;
   }
 
@@ -4837,11 +4840,11 @@ function buildSelectorsStage(itemId) {
         <span style="font-family:monospace; color:#38bdf8;">Sélecteur : input[type="submit"]</span>
       </div>
       <div class="selector-doc-content" id="selDocContent">
-        <div class="selector-target-item" data-sel-match="no">&lt;input type="text" value="Ali"&gt;<span class="selector-badge-target">❌ Ignoré (type="text")</span></div>
-        <div class="selector-target-item" data-sel-match="yes">&lt;input type="submit" value="Envoyer le formulaire"&gt;<span class="selector-badge-target">🎯 CIBLÉ [type="submit"]</span></div>
-        <div class="selector-target-item" data-sel-match="no">&lt;input type="reset" value="Annuler"&gt;<span class="selector-badge-target">❌ Ignoré (type="reset")</span></div>
+        <div class="selector-target-item" data-sel-match="no">&lt;input type="text" value="Ali"&gt;<span class="selector-badge-target">Ignoré (type="text")</span></div>
+        <div class="selector-target-item" data-sel-match="yes">&lt;input type="submit" value="Envoyer le formulaire"&gt;<span class="selector-badge-target">CIBLÉ [type="submit"]</span></div>
+        <div class="selector-target-item" data-sel-match="no">&lt;input type="reset" value="Annuler"&gt;<span class="selector-badge-target">Ignoré (type="reset")</span></div>
       </div>
-      <div class="selector-banner-status" id="selBannerStatus">🔴 AVANT : Aucun élément ciblé (Champs bruts)</div>
+      <div class="selector-banner-status" id="selBannerStatus">AVANT : Aucun élément ciblé (Champs bruts)</div>
     </div>`;
   }
 
@@ -4853,11 +4856,11 @@ function buildSelectorsStage(itemId) {
         <span style="font-family:monospace; color:#38bdf8;">Sélecteur : p.important</span>
       </div>
       <div class="selector-doc-content" id="selDocContent">
-        <div class="selector-target-item" data-sel-match="no">&lt;h1 class="important"&gt;Titre marqué .important&lt;/h1&gt;<span class="selector-badge-target">❌ Ignoré (Ce n'est pas un &lt;p&gt;)</span></div>
-        <div class="selector-target-item" data-sel-match="yes">&lt;p class="important"&gt;Paragraphe AVEC classe .important&lt;/p&gt;<span class="selector-badge-target">🎯 CIBLÉ (p.important)</span></div>
-        <div class="selector-target-item" data-sel-match="no">&lt;p&gt;Paragraphe ordinaire sans classe&lt;/p&gt;<span class="selector-badge-target">❌ Ignoré (Pas de classe)</span></div>
+        <div class="selector-target-item" data-sel-match="no">&lt;h1 class="important"&gt;Titre marqué .important&lt;/h1&gt;<span class="selector-badge-target">Ignoré (Ce n'est pas un &lt;p&gt;)</span></div>
+        <div class="selector-target-item" data-sel-match="yes">&lt;p class="important"&gt;Paragraphe AVEC classe .important&lt;/p&gt;<span class="selector-badge-target">CIBLÉ (p.important)</span></div>
+        <div class="selector-target-item" data-sel-match="no">&lt;p&gt;Paragraphe ordinaire sans classe&lt;/p&gt;<span class="selector-badge-target">Ignoré (Pas de classe)</span></div>
       </div>
-      <div class="selector-banner-status" id="selBannerStatus">🔴 AVANT : Aucun élément ciblé (Style HTML brut)</div>
+      <div class="selector-banner-status" id="selBannerStatus">AVANT : Aucun élément ciblé (Style HTML brut)</div>
     </div>`;
   }
 
@@ -4869,17 +4872,17 @@ function buildSelectorsStage(itemId) {
         <span style="font-family:monospace; color:#38bdf8;">Sélecteurs groupés : h1, p</span>
       </div>
       <div class="selector-doc-content" id="selDocContent">
-        <div class="selector-target-item" data-sel-match="yes">&lt;h1 id="titre"&gt;Titre du document (&lt;h1&gt;)&lt;/h1&gt;<span class="selector-badge-target">🎯 CIBLÉ (h1)</span></div>
-        <div class="selector-target-item" data-sel-match="yes">&lt;p&gt;Paragraphe de texte (&lt;p&gt;)&lt;/p&gt;<span class="selector-badge-target">🎯 CIBLÉ (p)</span></div>
-        <div class="selector-target-item" data-sel-match="no">&lt;div id="boite"&gt;Boîte de division (&lt;div&gt;)&lt;/div&gt;<span class="selector-badge-target">❌ Ignoré (Non listé dans h1, p)</span></div>
+        <div class="selector-target-item" data-sel-match="yes">&lt;h1 id="titre"&gt;Titre du document (&lt;h1&gt;)&lt;/h1&gt;<span class="selector-badge-target">CIBLÉ (h1)</span></div>
+        <div class="selector-target-item" data-sel-match="yes">&lt;p&gt;Paragraphe de texte (&lt;p&gt;)&lt;/p&gt;<span class="selector-badge-target">CIBLÉ (p)</span></div>
+        <div class="selector-target-item" data-sel-match="no">&lt;div id="boite"&gt;Boîte de division (&lt;div&gt;)&lt;/div&gt;<span class="selector-badge-target">Ignoré (Non listé dans h1, p)</span></div>
       </div>
-      <div class="selector-banner-status" id="selBannerStatus">🔴 AVANT : Aucun élément ciblé (Style HTML brut)</div>
+      <div class="selector-banner-status" id="selBannerStatus">AVANT : Aucun élément ciblé (Style HTML brut)</div>
     </div>`;
   }
 
   if (itemId === 'css-sel-hover') {
     return `<div style="position:relative; width:95%; height:190px; display:flex; align-items:center; justify-content:center;">
-      <div id="virtualCursor" class="virtual-mouse-cursor" style="top:20px; right:40px;">🖱️</div>
+      <div id="virtualCursor" class="virtual-mouse-cursor" style="top:20px; right:40px;"></div>
       <div id="boite" class="demo-box" style="padding:18px 26px; border:2px solid #334155; background:#1e293b; color:#94a3b8; transition:all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);">
         <span>&lt;div id="boite"&gt; • <strong>Survolez-moi !</strong></span>
         <div id="hoverStatusText" style="font-size:0.75rem; margin-top:5px; color:#64748b;">Curseur éloigné (Repos)</div>
@@ -4889,9 +4892,9 @@ function buildSelectorsStage(itemId) {
 
   if (itemId === 'css-sel-active') {
     return `<div style="position:relative; width:95%; height:190px; display:flex; align-items:center; justify-content:center;">
-      <div id="virtualCursor" class="virtual-mouse-cursor" style="top:25px; right:45px;">🖱️</div>
+      <div id="virtualCursor" class="virtual-mouse-cursor" style="top:25px; right:45px;"></div>
       <div id="boite" class="demo-box" style="padding:16px 28px; border:2px solid #38bdf8; background:#0284c7; color:#fff; cursor:pointer; transition:all 0.25s ease;">
-        <span>🔘 &lt;button id="boite"&gt; • <strong>Cliquez-moi !</strong></span>
+        <span>${safeIcon("target", 14)} &lt;button id="boite"&gt; • <strong>Cliquez-moi !</strong></span>
         <div id="activeStatusText" style="font-size:0.75rem; margin-top:5px; color:#bae6fd;">Bouton relâché (Repos)</div>
       </div>
     </div>`;
@@ -4902,9 +4905,9 @@ function buildSelectorsStage(itemId) {
     return `<div style="text-align:center; padding:20px;">
       <div style="font-size:0.8rem; color:#94a3b8; margin-bottom:12px;">État du lien hypertexte &lt;a id="lien"&gt; :</div>
       <a id="lien" href="javascript:void(0)" style="font-size:1.2rem; transition:all 0.4s ease; text-decoration:underline; color:#60a5fa;">
-        🔗 ${isVisited ? 'Lien Déjà Visité (Historique consulté)' : 'Lien Neuf Non Visité (a:link)'}
+        ${isVisited ? 'Lien Déjà Visité (Historique consulté)' : 'Lien Neuf Non Visité (a:link)'}
       </a>
-      <div id="linkStatusText" style="margin-top:12px; font-size:0.8rem; color:#64748b;">🔴 AVANT : Style de lien brut par défaut du navigateur</div>
+      <div id="linkStatusText" style="margin-top:12px; font-size:0.8rem; color:#64748b;">AVANT : Style de lien brut par défaut du navigateur</div>
     </div>`;
   }
 
@@ -4912,10 +4915,10 @@ function buildSelectorsStage(itemId) {
   return `<div class="selector-doc-container">
     <div class="selector-doc-bar"><span>page_web.html</span><span style="color:#38bdf8;">Sélecteur CSS</span></div>
     <div class="selector-doc-content" id="selDocContent">
-      <div class="selector-target-item" data-sel-match="yes">&lt;div id="boite"&gt;Élément ciblé&lt;/div&gt;<span class="selector-badge-target">🎯 CIBLÉ</span></div>
-      <div class="selector-target-item" data-sel-match="no">&lt;div id="autre"&gt;Élément non ciblé&lt;/div&gt;<span class="selector-badge-target">❌ Ignoré</span></div>
+      <div class="selector-target-item" data-sel-match="yes">&lt;div id="boite"&gt;Élément ciblé&lt;/div&gt;<span class="selector-badge-target">CIBLÉ</span></div>
+      <div class="selector-target-item" data-sel-match="no">&lt;div id="autre"&gt;Élément non ciblé&lt;/div&gt;<span class="selector-badge-target">Ignoré</span></div>
     </div>
-    <div class="selector-banner-status" id="selBannerStatus">🔴 AVANT : Style brut</div>
+    <div class="selector-banner-status" id="selBannerStatus">AVANT : Style brut</div>
   </div>`;
 }
 
@@ -4954,7 +4957,7 @@ function buildVideoStageElement(item) {
 
       <div class="keyframes-arena">
         <div id="boite" class="keyframes-animated-box">
-          <span id="kfBoxIcon" style="font-size:1.4rem; display:block; margin-bottom:4px;">✨</span>
+          <span id="kfBoxIcon" style="font-size:1.4rem; display:block; margin-bottom:4px;"></span>
           <div id="kfBoxLabel" style="font-weight:800; font-size:1.05rem;">#boite</div>
           <div id="kfBoxSub" style="font-size:0.75rem; opacity:0.85;">@keyframes en cours</div>
         </div>
@@ -4971,18 +4974,18 @@ function buildVideoStageElement(item) {
   if (itemId.startsWith('css-transition')) {
     return `<div class="transition-dual-track-container" style="width: 100%; max-width: 460px; display: flex; flex-direction: column; gap: 14px;">
       <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #94a3b8;">
-        <span>⚡ Comparatif Direct : Saut Brutal (0s) vs Glissement Fluide (1.5s)</span>
+        <span>Comparatif Direct : Saut Brutal (0s) vs Glissement Fluide (1.5s)</span>
         <span id="trTimerLabel" style="font-weight: 800; color: #38bdf8; font-family: monospace;">T = 0.0s</span>
       </div>
 
       <!-- Piste 1 : SANS TRANSITION (Saut brutal instantané) -->
       <div class="tr-track-wrap" style="background: rgba(15,23,42,0.8); border: 1px dashed #ef4444; border-radius: 8px; padding: 10px 14px; position: relative;">
         <div style="font-size: 0.72rem; color: #f87171; font-weight: bold; margin-bottom: 6px;">
-          🔴 Piste 1 (Sans transition - 0s) : Saut instantané brutal
+          Piste 1 (Sans transition - 0s) : Saut instantané brutal
         </div>
         <div class="tr-track-lane" style="position: relative; height: 42px; background: rgba(0,0,0,0.3); border-radius: 6px; overflow: hidden;">
           <div id="trBoxRaw" style="position: absolute; left: 0px; top: 4px; width: 85px; height: 34px; background: #ef4444; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; color: #fff; transition: none !important;">
-            ⚡ 0s Saut
+            0s Saut
           </div>
         </div>
       </div>
@@ -4990,12 +4993,12 @@ function buildVideoStageElement(item) {
       <!-- Piste 2 : AVEC TRANSITION CSS (Glissement fluide avec durée/délai) -->
       <div class="tr-track-wrap" style="background: rgba(15,23,42,0.8); border: 1px solid #10b981; border-radius: 8px; padding: 10px 14px; position: relative;">
         <div style="font-size: 0.72rem; color: #4ade80; font-weight: bold; margin-bottom: 6px; display: flex; justify-content: space-between;">
-          <span>🟢 Piste 2 (Avec transition) : Animation progressive ralentie</span>
+          <span>Piste 2 (Avec transition) : Animation progressive ralentie</span>
           <span id="trTrackBadge" style="color: #38bdf8;">transition: all 1.5s ease</span>
         </div>
         <div class="tr-track-lane" style="position: relative; height: 42px; background: rgba(0,0,0,0.3); border-radius: 6px; overflow: hidden;">
           <div id="boite" style="position: absolute; left: 0px; top: 4px; width: 85px; height: 34px; background: #0284c7; border: 2px solid #38bdf8; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; color: #fff; transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);">
-            🚀 Fluide
+            Fluide
           </div>
         </div>
       </div>
@@ -5148,7 +5151,7 @@ function buildVideoStageElement(item) {
   if (itemId === 'css-opacity') {
     return `<div class="checkerboard-bg" style="width: 100%; max-width: 380px; height: 180px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; border: 2px solid #334155;">
       <div id="boite" style="width: 220px; height: 90px; background: #0284c7; border: 2px solid #38bdf8; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; font-weight: bold; transition: opacity 0.6s ease; box-shadow: 0 8px 24px rgba(0,0,0,0.5);">
-        <span>📦 &lt;div id="boite"&gt;</span>
+        <span>&lt;div id="boite"&gt;</span>
         <small id="opacityBadge" style="font-size: 0.75rem; color: #e0f2fe; margin-top: 4px;">opacity: 1.0</small>
       </div>
     </div>`;
@@ -5159,7 +5162,7 @@ function buildVideoStageElement(item) {
     return `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:190px;">
       <div id="dimBadge" style="font-size:0.8rem; font-weight:bold; margin-bottom:8px; color:#38bdf8;"></div>
       <div id="boite" style="transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); width:150px; height:80px; padding:10px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:14px; background:#1e293b; border:2px solid #38bdf8; border-radius:8px; color:#fff; font-weight:bold;">
-        <span>📦 &lt;div id="boite"&gt;</span>
+        <span>&lt;div id="boite"&gt;</span>
       </div>
     </div>`;
   }
@@ -5170,7 +5173,7 @@ function buildVideoStageElement(item) {
     return `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:190px;">
       <div id="${itemId === 'css-border-style' ? 'borderStyleBadge' : (itemId === 'css-border-width' ? 'borderWidthBadge' : (itemId === 'css-border-color' ? 'borderColorBadge' : (isRadius ? 'borderRadiusBadge' : 'borderShBadge')))}" style="font-size:0.82rem; font-weight:bold; margin-bottom:8px;"></div>
       <div id="boite" style="transition: all 0.6s ease; width:${isRadius ? '120px' : '220px'}; height:${isRadius ? '120px' : '100px'}; padding:12px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:14px; background:#1e293b; border:3px solid #38bdf8; border-radius:0px; color:#fff; font-weight:bold;">
-        <span>📦 &lt;div id="boite"&gt;</span>
+        <span>&lt;div id="boite"&gt;</span>
       </div>
     </div>`;
   }
@@ -5180,7 +5183,7 @@ function buildVideoStageElement(item) {
     return `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:190px;">
       <div id="${itemId === 'css-background-repeat' ? 'bgRepBadge' : (itemId === 'css-background-size' ? 'bgSzBadge' : (itemId === 'css-background-color' ? 'bgBadge' : (itemId === 'css-background-image' ? 'bgImgBadge' : 'bgShBadge')))}" style="font-size:0.82rem; font-weight:bold; margin-bottom:8px;"></div>
       <div id="boite" style="transition: all 0.6s ease; width:260px; height:120px; padding:14px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:14px; background-color:#1e293b; border:2px solid #38bdf8; border-radius:8px; color:#fff; font-weight:bold;">
-        <span>📦 &lt;div id="boite"&gt;</span>
+        <span>&lt;div id="boite"&gt;</span>
       </div>
     </div>`;
   }
@@ -5189,10 +5192,10 @@ function buildVideoStageElement(item) {
   if (itemId === 'css-transform' || prop === 'transform') {
     return `<div style="position:relative; width:100%; height:200px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
       <div style="position:absolute; width:160px; height:80px; border:2px dashed rgba(239, 68, 68, 0.5); border-radius:8px; display:flex; align-items:center; justify-content:center; color:#ef4444; font-size:10px; font-weight:bold; pointer-events:none; background:rgba(239, 68, 68, 0.05);">
-        👻 Position d'origine (Repos)
+        Position d'origine (Repos)
       </div>
       <div id="boite" style="position:relative; z-index:2; width:160px; height:80px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; font-size:14px; background:#1e293b; border:2px solid #38bdf8; border-radius:8px; color:#fff; box-shadow:0 8px 24px rgba(0,0,0,0.4); transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.6s ease, border-color 0.6s ease; font-weight:bold;">
-        <span>📦 &lt;div id="boite"&gt;</span>
+        <span>&lt;div id="boite"&gt;</span>
         <small id="transformStageBadge" style="font-size:0.75rem; color:#38bdf8; margin-top:3px; font-weight:normal;">transform: none</small>
       </div>
     </div>`;
@@ -5226,14 +5229,14 @@ function buildVideoStageElement(item) {
   if (itemId === 'css-margin' || prop === 'margin') {
     return `<div id="parentConteneur" class="box-model-container">
       <div class="box-model-legend">
-        <span class="legend-badge legend-margin">🟠 Marge externe (margin)</span>
-        <span class="legend-badge legend-border">🔵 Bordure (border)</span>
-        <span class="legend-badge legend-content">🟣 Mon Élément (#boite)</span>
+        <span class="legend-badge legend-margin">Marge externe (margin)</span>
+        <span class="legend-badge legend-border">Bordure (border)</span>
+        <span class="legend-badge legend-content">Mon Élément (#boite)</span>
       </div>
       <div id="voisinHaut" class="box-model-sibling">⬆️ Élément Voisin Précédent (#voisinHaut)</div>
       <div id="marginVisualizer" style="display:flex; justify-content:center; width:100%; transition:all 0.6s ease;">
         <div id="boite" class="margin-stage-target" style="margin: 15px auto; transition:all 0.6s ease;">
-          📦 &lt;div id="boite"&gt;
+          &lt;div id="boite"&gt;
           <div id="marginIndicatorText" style="font-size:0.75rem; color:#fed7aa; margin-top:3px; font-weight:normal;">margin: 15px auto</div>
         </div>
       </div>
@@ -5245,13 +5248,13 @@ function buildVideoStageElement(item) {
   if (itemId === 'css-padding' || prop === 'padding') {
     return `<div id="parentConteneur" class="box-model-container">
       <div class="box-model-legend">
-        <span class="legend-badge legend-border">🔵 Bordure (#boite)</span>
-        <span class="legend-badge legend-padding">🟢 Marge interne (padding)</span>
-        <span class="legend-badge legend-content">📄 Contenu (#contenu)</span>
+        <span class="legend-badge legend-border">Bordure (#boite)</span>
+        <span class="legend-badge legend-padding">Marge interne (padding)</span>
+        <span class="legend-badge legend-content">Contenu (#contenu)</span>
       </div>
       <div id="boite" class="padding-stage-target" style="padding: 15px; width:85%; transition:all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);">
         <div id="contenu" class="padding-stage-inner" style="width:100%;">
-          📄 &lt;span id="contenu"&gt;Texte &amp; Contenu intérieur&lt;/span&gt;
+          &lt;span id="contenu"&gt;Texte &amp; Contenu intérieur&lt;/span&gt;
           <div id="paddingIndicatorText" style="font-size:0.75rem; color:#86efac; margin-top:3px; font-weight:normal;">padding: 15px (Aéré)</div>
         </div>
       </div>
@@ -5262,7 +5265,7 @@ function buildVideoStageElement(item) {
   if (itemId === 'css-float' || prop === 'float') {
     return `<div id="parentConteneur" class="float-stage-container">
       <div id="boite" class="float-box" style="float: left; width: 110px; margin: 4px 14px 6px 0;">
-        📦 #boite<br><small id="floatLabel">float: left</small>
+        #boite<br><small id="floatLabel">float: left</small>
       </div>
       <p id="floatText" style="margin:0; font-size:0.8rem; line-height:1.55;">
         Le texte de ce paragraphe s'enroule harmonieusement autour de l'élément &lt;div id="boite"&gt;. Au Baccalauréat STI, la propriété <strong>float</strong> permet de placer une image ou un bloc à gauche ou à droite tout en laissant le flux de texte continuer autour.
@@ -5274,9 +5277,9 @@ function buildVideoStageElement(item) {
   // 22. Positionnement (position & coordonnées)
   if (itemId === 'css-position' || itemId === 'css-coords-top-bottom-left-right' || prop === 'position' || prop.includes('top')) {
     return `<div id="parentConteneur" class="position-stage-container blueprint-grid-bg">
-      <div class="position-ghost">👻 Repère d'origine (0, 0)</div>
+      <div class="position-ghost">Repère d'origine (0, 0)</div>
       <div id="boite" class="position-target" style="position: relative; top: 0px; left: 0px;">
-        📍 &lt;div id="boite"&gt;<br><small id="posBadge" style="font-weight:normal; font-size:0.75rem;">position: relative (top: 0px, left: 0px)</small>
+        &lt;div id="boite"&gt;<br><small id="posBadge" style="font-weight:normal; font-size:0.75rem;">position: relative (top: 0px, left: 0px)</small>
       </div>
     </div>`;
   }
@@ -5285,26 +5288,26 @@ function buildVideoStageElement(item) {
   if (itemId === 'css-overflow' || prop === 'overflow') {
     return `<div class="overflow-stage-wrapper" style="display:flex; flex-direction:column; align-items:center; width:100%; max-width:320px; position:relative; overflow:visible;">
       <div style="font-size:0.75rem; color:#94a3b8; margin-bottom:8px; display:flex; justify-content:space-between; width:100%; padding:0 4px;">
-        <span>📦 Cadre fixe (Hauteur : 85px)</span>
+        <span>Cadre fixe (Hauteur : 85px)</span>
         <span id="overflowBadge" style="font-weight:bold; color:#38bdf8;">overflow: visible</span>
       </div>
       <div style="position:relative; width:100%; overflow:visible;">
         <div id="boite" class="overflow-stage-box" style="width:100%; height:85px; border:2px solid #38bdf8; background:rgba(15,23,42,0.95); border-radius:8px; padding:10px 12px; font-size:12px; line-height:1.5; color:#f1f5f9; box-sizing:border-box; transition:border-color 0.4s ease, box-shadow 0.4s ease;">
-          <div style="font-weight:bold; color:#38bdf8; margin-bottom:4px; font-size:11px;">📄 &lt;div id="boite"&gt; (Contenu long ~180px) :</div>
+          <div style="font-weight:bold; color:#38bdf8; margin-bottom:4px; font-size:11px;">&lt;div id="boite"&gt; (Contenu long ~180px) :</div>
           <div style="padding:4px 8px; background:rgba(16,185,129,0.15); border-left:3px solid #10b981; margin-bottom:6px; border-radius:2px;">
-            ✅ Ligne 1 : Contenu dans la limite des 85px
+            Ligne 1 : Contenu dans la limite des 85px
           </div>
           <div style="padding:4px 8px; background:rgba(245,158,11,0.15); border-left:3px solid #f59e0b; margin-bottom:6px; border-radius:2px;">
-            ⚠️ Ligne 2 : Hauteur limite atteinte !
+            Ligne 2 : Hauteur limite atteinte !
           </div>
           <div style="padding:4px 8px; background:rgba(239,68,68,0.25); border-left:3px solid #ef4444; margin-bottom:6px; border-radius:2px; font-weight:bold; color:#fca5a5;">
-            🚨 Ligne 3 : Ce texte DÉBORDE hors du cadre !
+            Ligne 3 : Ce texte DÉBORDE hors du cadre !
           </div>
           <div style="padding:4px 8px; background:rgba(168,85,247,0.2); border-left:3px solid #a855f7; margin-bottom:6px; border-radius:2px; color:#d8b4fe;">
-            📦 Ligne 4 : Paragraphe supplémentaire très long
+            Ligne 4 : Paragraphe supplémentaire très long
           </div>
           <div style="padding:4px 8px; background:rgba(56,189,248,0.2); border-left:3px solid #38bdf8; border-radius:2px; color:#bae6fd;">
-            🏁 Ligne 5 : Fin du contenu au Bac STI
+            Ligne 5 : Fin du contenu au Bac STI
           </div>
         </div>
         <div id="overflowLimitGuide" style="position:absolute; bottom:0; left:0; width:100%; border-bottom:2px dashed #ef4444; pointer-events:none; display:flex; justify-content:flex-end;">
@@ -5330,7 +5333,7 @@ function buildVideoStageElement(item) {
     return `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:190px;">
       <div id="shadowBadge" style="font-size:0.82rem; font-weight:bold; margin-bottom:8px;"></div>
       <div id="boite" style="transition: all 0.5s ease; width:200px; height:90px; padding:14px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:14px; background:#1e293b; border:2px solid #38bdf8; border-radius:8px; color:#fff; font-weight:bold;">
-        <span>📦 &lt;div id="boite"&gt;</span>
+        <span>&lt;div id="boite"&gt;</span>
       </div>
     </div>`;
   }
@@ -5338,7 +5341,7 @@ function buildVideoStageElement(item) {
   // 26. Liens
   if (prop.includes('a:') || prop.includes('link') || prop.includes('visited') || prop.includes('active')) {
     return `<a id="lien" href="javascript:void(0)" style="text-decoration:none; transition:all 0.6s ease; font-size:16px; padding:14px 24px; background:#1e293b; border:2px solid #38bdf8; border-radius:8px; color:#fff; font-weight:bold;">
-      🔗 Lien &lt;a id="lien"&gt;
+      Lien &lt;a id="lien"&gt;
     </a>`;
   }
 
@@ -5365,16 +5368,16 @@ function buildMiniStage(itemId, idx, opt) {
   if (itemId === 'css-overflow') {
     const val = opt.value;
     if (val === 'visible') {
-      return `<div style="position:relative; width:75%; height:32px; border:2px solid #ef4444; border-radius:4px; font-size:8px; color:#ef4444; font-weight:bold; padding:2px; background:rgba(0,0,0,0.3); overflow:visible;"><div style="position:absolute; top:2px; left:2px; width:115%; background:rgba(239,68,68,0.3); color:#fca5a5; padding:2px; border-radius:2px; border-left:2px solid #ef4444;">🚨 Dépasse !</div></div>`;
+      return `<div style="position:relative; width:75%; height:32px; border:2px solid #ef4444; border-radius:4px; font-size:8px; color:#ef4444; font-weight:bold; padding:2px; background:rgba(0,0,0,0.3); overflow:visible;"><div style="position:absolute; top:2px; left:2px; width:115%; background:rgba(239,68,68,0.3); color:#fca5a5; padding:2px; border-radius:2px; border-left:2px solid #ef4444;">Dépasse !</div></div>`;
     }
     if (val === 'hidden') {
-      return `<div style="width:75%; height:32px; border:2px solid #10b981; border-radius:4px; font-size:8px; color:#10b981; font-weight:bold; padding:2px; overflow:hidden; background:rgba(0,0,0,0.3);"><div style="background:rgba(16,185,129,0.25); padding:2px;">✂️ Coupé net</div></div>`;
+      return `<div style="width:75%; height:32px; border:2px solid #10b981; border-radius:4px; font-size:8px; color:#10b981; font-weight:bold; padding:2px; overflow:hidden; background:rgba(0,0,0,0.3);"><div style="background:rgba(16,185,129,0.25); padding:2px;">Coupé net</div></div>`;
     }
     if (val === 'scroll') {
-      return `<div style="width:75%; height:32px; border:2px solid #38bdf8; border-radius:4px; font-size:8px; color:#38bdf8; font-weight:bold; padding:2px 4px; display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3);"><span>📜 Scroll</span><div style="width:5px; height:80%; background:#38bdf8; border-radius:2px;"></div></div>`;
+      return `<div style="width:75%; height:32px; border:2px solid #38bdf8; border-radius:4px; font-size:8px; color:#38bdf8; font-weight:bold; padding:2px 4px; display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3);"><span>Scroll</span><div style="width:5px; height:80%; background:#38bdf8; border-radius:2px;"></div></div>`;
     }
     if (val === 'auto') {
-      return `<div style="width:75%; height:32px; border:2px solid #a855f7; border-radius:4px; font-size:8px; color:#a855f7; font-weight:bold; padding:2px 4px; display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3);"><span>⚙️ Auto</span><div style="width:5px; height:80%; background:#a855f7; border-radius:2px;"></div></div>`;
+      return `<div style="width:75%; height:32px; border:2px solid #a855f7; border-radius:4px; font-size:8px; color:#a855f7; font-weight:bold; padding:2px 4px; display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3);"><span>Auto</span><div style="width:5px; height:80%; background:#a855f7; border-radius:2px;"></div></div>`;
     }
   }
 
@@ -5449,7 +5452,7 @@ function buildMiniStage(itemId, idx, opt) {
   // Mode d'affichage (display)
   if (itemId === 'css-display') {
     if (opt.value === 'none') {
-      return `<div style="width:75%; height:28px; border:1px dashed #ef4444; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:9px; color:#ef4444; font-weight:bold;">🚫 none</div>`;
+      return `<div style="width:75%; height:28px; border:1px dashed #ef4444; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:9px; color:#ef4444; font-weight:bold;">none</div>`;
     }
     if (opt.value === 'block') {
       return `<div style="width:90%; height:26px; background:#38bdf8; border-radius:3px; display:flex; align-items:center; justify-content:center; color:#0f172a; font-size:9px; font-weight:bold;">100% block</div>`;
@@ -5475,7 +5478,7 @@ function buildMiniStage(itemId, idx, opt) {
 
   // Animation & Transition
   if (itemId.startsWith('css-animation') || itemId.startsWith('css-transition')) {
-    return `<div style="width:75%; height:30px; background:linear-gradient(135deg, #7c3aed, #0ea5e9); border-radius:4px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:9px; font-weight:bold; box-shadow:0 2px 8px rgba(124,58,237,0.4);">⚡ ${escapeHtml(opt.value)}</div>`;
+    return `<div style="width:75%; height:30px; background:linear-gradient(135deg, #7c3aed, #0ea5e9); border-radius:4px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:9px; font-weight:bold; box-shadow:0 2px 8px rgba(124,58,237,0.4);">${escapeHtml(opt.value)}</div>`;
   }
 
   // Couleur de bordure & Épaisseur
@@ -5505,12 +5508,12 @@ function buildMiniStage(itemId, idx, opt) {
   // Transformations (transform)
   if (itemId === 'css-transform') {
     const tr = opt.value || 'rotate(25deg)';
-    let icon = '🔄';
-    if (tr.includes('scale(1.')) icon = '🔍➕';
-    else if (tr.includes('scale(0.')) icon = '🔍➖';
+    let icon = '';
+    if (tr.includes('scale(1.')) icon = '';
+    else if (tr.includes('scale(0.')) icon = '';
     else if (tr.includes('translate')) icon = '↗️';
     else if (tr.includes('skew')) icon = '▰';
-    else if (tr.includes('scale') && tr.includes('rotate')) icon = '💫';
+    else if (tr.includes('scale') && tr.includes('rotate')) icon = '';
     return `<div style="width:75%; height:32px; display:flex; align-items:center; justify-content:center; font-size:10px; border-radius:4px; background:linear-gradient(135deg, rgba(56,189,248,0.3), rgba(37,99,235,0.3)); border:1px solid #38bdf8; color:#fff; font-weight:bold; transform:${tr}; transition:transform 0.4s ease;">${icon} ${escapeHtml(tr.split('(')[0])}</div>`;
   }
 
@@ -5586,7 +5589,7 @@ function playSpecificVideo(itemId, variantIdx) {
   const toast = document.getElementById('varietyToastCss');
   if (toast) {
     toast.style.display = 'inline-flex';
-    toast.innerHTML = `🎬 Vidéo active : <strong>${escapeHtml(opt.value)}</strong>`;
+    toast.innerHTML = `Vidéo active : <strong>${escapeHtml(opt.value)}</strong>`;
   }
 
   // 6.1 Mettre à jour l'extrait de code officiel Annexe avec ligne active surlignée
@@ -5772,9 +5775,9 @@ function applyKeyframesProgress(box, progressVal, variantIdx = 0, itemId = 'css-
       box.style.transform = `scale(${(1 + 0.25 * pulse).toFixed(2)})`;
       box.style.background = '#10b981';
       box.style.border = '2px solid #10b981';
-      if (icon) icon.textContent = '🚀';
+      if (icon) icon.innerHTML = safeIcon('zap', 16);
       if (sub) sub.textContent = `Animation active !`;
-      if (statusTxt) statusTxt.innerHTML = `<strong>🚀 ANIMATION DÉMARRÉE</strong> — Le délai de ${opt ? opt.value : ''} est écoulé !`;
+      if (statusTxt) statusTxt.innerHTML = `<strong>ANIMATION DÉMARRÉE</strong> — Le délai de ${opt ? opt.value : ''} est écoulé !`;
     }
     return;
   }
@@ -5785,7 +5788,7 @@ function applyKeyframesProgress(box, progressVal, variantIdx = 0, itemId = 'css-
     const pulse = Math.abs(Math.sin((progressVal * Math.PI) / 25));
     box.style.transform = `scale(${(1 + 0.2 * pulse).toFixed(2)})`;
     box.style.background = '#818cf8';
-    if (statusTxt) statusTxt.innerHTML = `<strong>animation-iteration-count: ${countVal}</strong> — ${countVal === 'infinite' ? 'Répétition infinie sans arrêt ♾️' : `S'exécute exactement ${countVal} fois puis s'arrête`}`;
+    if (statusTxt) statusTxt.innerHTML = `<strong>animation-iteration-count: ${countVal}</strong> — ${countVal === 'infinite' ? 'Répétition infinie sans arrêt ' : `S'exécute exactement ${countVal} fois puis s'arrête`}`;
     return;
   }
 
@@ -5939,7 +5942,7 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
         box.style.borderColor = '#475569';
         box.style.background = '#1e293b';
         box.style.color = '#94a3b8';
-        if (txt) { txt.innerHTML = '🔴 AVANT : Curseur éloigné de la boîte (État normal au repos)'; txt.style.color = '#f87171'; }
+        if (txt) { txt.innerHTML = 'AVANT : Curseur éloigné de la boîte (État normal au repos)'; txt.style.color = '#f87171'; }
       } else {
         if (cursor) { cursor.style.top = '80px'; cursor.style.right = 'auto'; cursor.style.left = '50%'; cursor.style.transform = 'translate(-50%, -50%) scale(1.15)'; }
         box.style.transform = 'scale(1.15) translateY(-4px)';
@@ -5947,7 +5950,7 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
         box.style.borderColor = '#facc15';
         box.style.background = '#854d0e';
         box.style.color = '#fef08a';
-        if (txt) { txt.innerHTML = '🟢 APRÈS (:hover) : Curseur SUR la boîte ➔ Zoom & Halo néon appliqués !'; txt.style.color = '#4ade80'; }
+        if (txt) { txt.innerHTML = 'APRÈS (:hover) : Curseur SUR la boîte ➔ Zoom & Halo néon appliqués !'; txt.style.color = '#4ade80'; }
       }
       return;
     }
@@ -5960,13 +5963,13 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
         box.style.transform = 'scale(1) translateY(0)';
         box.style.boxShadow = '0 4px 10px rgba(0,0,0,0.3)';
         box.style.background = '#0284c7';
-        if (txt) { txt.innerHTML = '🔴 AVANT : Bouton relâché au repos (Pas de clic)'; txt.style.color = '#f87171'; }
+        if (txt) { txt.innerHTML = 'AVANT : Bouton relâché au repos (Pas de clic)'; txt.style.color = '#f87171'; }
       } else {
         if (cursor) { cursor.style.top = '85px'; cursor.style.right = 'auto'; cursor.style.left = '50%'; cursor.style.transform = 'translate(-50%, -50%) scale(0.9)'; }
         box.style.transform = 'scale(0.92) translateY(5px)';
         box.style.boxShadow = 'inset 0 4px 10px rgba(0,0,0,0.7)';
         box.style.background = '#0369a1';
-        if (txt) { txt.innerHTML = '🟢 APRÈS (:active) : Pression du clic enfoncée !'; txt.style.color = '#4ade80'; }
+        if (txt) { txt.innerHTML = 'APRÈS (:active) : Pression du clic enfoncée !'; txt.style.color = '#4ade80'; }
       }
       return;
     }
@@ -5977,15 +5980,15 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
       const txt = document.getElementById('linkStatusText');
       if (step === 0) {
         if (link) { link.style.color = '#60a5fa'; link.style.textDecoration = 'underline'; link.style.fontWeight = 'normal'; }
-        if (txt) { txt.innerHTML = '🔴 AVANT : Style de lien brut par défaut du navigateur'; txt.style.color = '#f87171'; }
+        if (txt) { txt.innerHTML = 'AVANT : Style de lien brut par défaut du navigateur'; txt.style.color = '#f87171'; }
       } else {
         if (link) {
           if (isVisited) {
             link.style.color = '#c084fc'; link.style.textDecoration = 'line-through'; link.style.fontWeight = 'bold';
-            if (txt) { txt.innerHTML = '🟢 APRÈS (a:visited) : Lien violet déjà visité par l\'utilisateur'; txt.style.color = '#4ade80'; }
+            if (txt) { txt.innerHTML = 'APRÈS (a:visited) : Lien violet déjà visité par l\'utilisateur'; txt.style.color = '#4ade80'; }
           } else {
             link.style.color = '#38bdf8'; link.style.textDecoration = 'none'; link.style.borderBottom = '2px solid #38bdf8'; link.style.fontWeight = 'bold';
-            if (txt) { txt.innerHTML = '🟢 APRÈS (a:link) : Lien neuf non visité sans soulignement'; txt.style.color = '#4ade80'; }
+            if (txt) { txt.innerHTML = 'APRÈS (a:link) : Lien neuf non visité sans soulignement'; txt.style.color = '#4ade80'; }
           }
         }
       }
@@ -5998,7 +6001,7 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
         it.classList.remove('matched', 'ignored');
       });
       if (banner) {
-        banner.innerHTML = '🔴 ÉTAT 1 : AVANT ➔ Aucun élément ciblé (Style HTML brut neutre)';
+        banner.innerHTML = 'ÉTAT 1 : AVANT ➔ Aucun élément ciblé (Style HTML brut neutre)';
         banner.style.color = '#f87171';
       }
     } else {
@@ -6013,15 +6016,15 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
         }
       });
       if (banner) {
-        let msg = '🟢 ÉTAT 2 : APRÈS ➔ Règle CSS appliquée avec éclat néon aux éléments ciblés !';
-        if (itemId === 'css-sel-universal') msg = '🟢 APRÈS : L\'étoile (*) applique la règle à ABSOLUMENT TOUS les éléments du document !';
-        else if (itemId === 'css-sel-element') msg = '🟢 APRÈS : Seules les balises &lt;p&gt; sont sélectionnées (les autres sont grisées à 35%) !';
-        else if (itemId === 'css-sel-id') msg = '🟢 APRÈS : Seul l\'élément UNIQUE avec id="boite" est illuminé en bleu néon !';
-        else if (itemId === 'css-sel-class') msg = '🟢 APRÈS : TOUS les éléments portant la classe .important s\'illuminent en néon !';
-        else if (itemId === 'css-sel-element-attr') msg = '🟢 APRÈS : Seuls les champs de formulaire avec l\'attribut [required] sont ciblés !';
-        else if (itemId === 'css-sel-element-attr-val') msg = '🟢 APRÈS : Seul l\'input avec type="submit" exact est sélectionné !';
-        else if (itemId === 'css-sel-element-class') msg = '🟢 APRÈS : Seul le &lt;p&gt; qui possède AUSSI la classe .important est ciblé !';
-        else if (itemId === 'css-sel-grouped') msg = '🟢 APRÈS : &lt;h1&gt; ET &lt;p&gt; sont ciblés simultanément grâce à la virgule (,) !';
+        let msg = 'ÉTAT 2 : APRÈS ➔ Règle CSS appliquée avec éclat néon aux éléments ciblés !';
+        if (itemId === 'css-sel-universal') msg = 'APRÈS : L\'étoile (*) applique la règle à ABSOLUMENT TOUS les éléments du document !';
+        else if (itemId === 'css-sel-element') msg = 'APRÈS : Seules les balises &lt;p&gt; sont sélectionnées (les autres sont grisées à 35%) !';
+        else if (itemId === 'css-sel-id') msg = 'APRÈS : Seul l\'élément UNIQUE avec id="boite" est illuminé en bleu néon !';
+        else if (itemId === 'css-sel-class') msg = 'APRÈS : TOUS les éléments portant la classe .important s\'illuminent en néon !';
+        else if (itemId === 'css-sel-element-attr') msg = 'APRÈS : Seuls les champs de formulaire avec l\'attribut [required] sont ciblés !';
+        else if (itemId === 'css-sel-element-attr-val') msg = 'APRÈS : Seul l\'input avec type="submit" exact est sélectionné !';
+        else if (itemId === 'css-sel-element-class') msg = 'APRÈS : Seul le &lt;p&gt; qui possède AUSSI la classe .important est ciblé !';
+        else if (itemId === 'css-sel-grouped') msg = 'APRÈS : &lt;h1&gt; ET &lt;p&gt; sont ciblés simultanément grâce à la virgule (,) !';
         banner.innerHTML = msg;
         banner.style.color = '#4ade80';
       }
@@ -6038,13 +6041,13 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
       box.style.setProperty('font-family', "'Times New Roman', serif", 'important');
       box.style.setProperty('font-size', '26px', 'important');
       box.style.setProperty('color', '#94a3b8', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : Times New Roman (Serif traditionnel avec empattements)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : Times New Roman (Serif traditionnel avec empattements)'; badge.style.color = '#f87171'; }
     } else {
       const fVal = opt ? opt.value : "'Courier New', monospace";
       box.style.setProperty('font-family', fVal, 'important');
       box.style.setProperty('font-size', '26px', 'important');
       box.style.setProperty('color', '#38bdf8', 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : font-family: ${fVal}`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : font-family: ${fVal}`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6055,13 +6058,13 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
       box.style.setProperty('font-weight', '100', 'important');
       box.style.setProperty('color', '#94a3b8', 'important');
       box.style.setProperty('font-size', '30px', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : font-weight: 100 (Ultra-fin / Thin)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : font-weight: 100 (Ultra-fin / Thin)'; badge.style.color = '#f87171'; }
     } else {
       const wVal = opt ? (opt.value === 'lighter' ? '100' : (opt.value === 'bold' ? '700' : opt.value)) : '900';
       box.style.setProperty('font-weight', wVal, 'important');
       box.style.setProperty('color', '#ffffff', 'important');
       box.style.setProperty('font-size', '30px', 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : font-weight: ${opt ? opt.value : '900'} (Graisse ultra-épaisse !)`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : font-weight: ${opt ? opt.value : '900'} (Graisse ultra-épaisse !)`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6072,13 +6075,13 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
       box.style.setProperty('font-style', 'normal', 'important');
       box.style.setProperty('color', '#ffffff', 'important');
       box.style.setProperty('font-size', '28px', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : font-style: normal (Texte droit traditionnel)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : font-style: normal (Texte droit traditionnel)'; badge.style.color = '#f87171'; }
     } else {
       const sVal = opt ? opt.value : 'italic';
       box.style.setProperty('font-style', sVal, 'important');
       box.style.setProperty('color', sVal === 'italic' ? '#facc15' : '#ffffff', 'important');
       box.style.setProperty('font-size', '32px', 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : font-style: ${sVal} ${sVal === 'italic' ? '(Incliné jaune vif 32px !)' : ''}`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : font-style: ${sVal} ${sVal === 'italic' ? '(Incliné jaune vif 32px !)' : ''}`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6088,12 +6091,12 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     if (step === 0) {
       box.style.setProperty('font-size', '14px', 'important');
       box.style.setProperty('color', '#94a3b8', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : font-size: 14px (Petite taille fine)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : font-size: 14px (Petite taille fine)'; badge.style.color = '#f87171'; }
     } else {
       const sz = opt ? opt.value : '42px';
       box.style.setProperty('font-size', sz === '14px' ? '14px' : sz, 'important');
       box.style.setProperty('color', '#ffffff', 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : font-size: ${sz} (Taille géante ultra-lisible !)`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : font-size: ${sz} (Taille géante ultra-lisible !)`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6103,12 +6106,12 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     if (step === 0) {
       box.style.setProperty('font', 'normal normal 16px Arial, sans-serif', 'important');
       box.style.setProperty('color', '#94a3b8', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : font: normal 16px Arial (Style standard)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : font: normal 16px Arial (Style standard)'; badge.style.color = '#f87171'; }
     } else {
       const fVal = opt ? opt.value : 'italic bold 26px "Courier New", monospace';
       box.style.setProperty('font', fVal, 'important');
       box.style.setProperty('color', '#38bdf8', 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : font: ${fVal}`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : font: ${fVal}`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6117,11 +6120,11 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     const badge = document.getElementById('textAlignBadge');
     if (step === 0) {
       box.style.setProperty('text-align', 'left', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : text-align: left (Aligné à gauche par défaut)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : text-align: left (Aligné à gauche par défaut)'; badge.style.color = '#f87171'; }
     } else {
       const al = opt ? opt.value : 'center';
       box.style.setProperty('text-align', al, 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : text-align: ${al} (Alignement décalé avec succès !)`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : text-align: ${al} (Alignement décalé avec succès !)`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6131,12 +6134,12 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     if (step === 0) {
       box.style.setProperty('text-shadow', 'none', 'important');
       box.style.setProperty('color', '#94a3b8', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : text-shadow: none (Texte plat sans aucun relief)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : text-shadow: none (Texte plat sans aucun relief)'; badge.style.color = '#f87171'; }
     } else {
       const sh = (opt && opt.value && opt.value !== 'none') ? opt.value : '3px 3px 0px #ef4444, 6px 6px 0px #3b82f6, 0 0 20px #38bdf8';
       box.style.setProperty('text-shadow', opt && opt.value === 'none' ? 'none' : sh, 'important');
       box.style.setProperty('color', '#ffffff', 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : text-shadow: ${opt ? opt.value : '3D Néon Drop Shadow'}`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : text-shadow: ${opt ? opt.value : '3D Néon Drop Shadow'}`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6145,11 +6148,11 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     const badge = document.getElementById('textTransformBadge');
     if (step === 0) {
       box.style.setProperty('text-transform', 'none', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : text-transform: none (Casse mixte originale : bAc inFoRmaTiQue tuniSie)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : text-transform: none (Casse mixte originale : bAc inFoRmaTiQue tuniSie)'; badge.style.color = '#f87171'; }
     } else {
       const tt = opt ? opt.value : 'uppercase';
       box.style.setProperty('text-transform', tt, 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : text-transform: ${tt} (Transformation de casse active !)`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : text-transform: ${tt} (Transformation de casse active !)`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6158,11 +6161,11 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     const badge = document.getElementById('colorBadge');
     if (step === 0) {
       box.style.setProperty('color', '#64748b', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : color: #64748b (Gris neutre éteint)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : color: #64748b (Gris neutre éteint)'; badge.style.color = '#f87171'; }
     } else {
       const col = opt ? opt.value : '#22c55e';
       box.style.setProperty('color', col, 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : color: ${col} (Couleur vive éclatante appliquée !)`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : color: ${col} (Couleur vive éclatante appliquée !)`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6174,11 +6177,11 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     const txt = document.getElementById('listStatusText');
     if (step === 0) {
       box.style.setProperty('list-style-type', 'disc', 'important');
-      if (txt) { txt.textContent = '🔴 AVANT : list-style-type: disc (Puce ronde pleine standard)'; txt.style.color = '#f87171'; }
+      if (txt) { txt.textContent = 'AVANT : list-style-type: disc (Puce ronde pleine standard)'; txt.style.color = '#f87171'; }
     } else {
       const lt = opt ? opt.value : 'circle';
       box.style.setProperty('list-style-type', lt, 'important');
-      if (txt) { txt.textContent = `🟢 APRÈS : list-style-type: ${lt} (Style de puces personnalisé !)`; txt.style.color = '#4ade80'; }
+      if (txt) { txt.textContent = `APRÈS : list-style-type: ${lt} (Style de puces personnalisé !)`; txt.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6187,11 +6190,11 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     const txt = document.getElementById('listStatusText');
     if (step === 0) {
       box.style.setProperty('list-style-position', 'outside', 'important');
-      if (txt) { txt.textContent = '🔴 AVANT : list-style-position: outside (Puces situées HORS du cadre orange des <li>)'; txt.style.color = '#f87171'; }
+      if (txt) { txt.textContent = 'AVANT : list-style-position: outside (Puces situées HORS du cadre orange des <li>)'; txt.style.color = '#f87171'; }
     } else {
       const lp = opt ? opt.value : 'inside';
       box.style.setProperty('list-style-position', lp, 'important');
-      if (txt) { txt.textContent = `🟢 APRÈS : list-style-position: ${lp} ${lp === 'inside' ? '(Puces tirées DANS le cadre orange des <li> !)' : '(Puces hors cadre)'}`; txt.style.color = '#4ade80'; }
+      if (txt) { txt.textContent = `APRÈS : list-style-position: ${lp} ${lp === 'inside' ? '(Puces tirées DANS le cadre orange des <li> !)' : '(Puces hors cadre)'}`; txt.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6202,10 +6205,10 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     if (step === 0) {
       box.style.setProperty('list-style-image', 'none', 'important');
       box.style.setProperty('list-style-type', 'disc', 'important');
-      if (txt) { txt.textContent = '🔴 AVANT : list-style-image: none (Puces standard par défaut)'; txt.style.color = '#f87171'; }
+      if (txt) { txt.textContent = 'AVANT : list-style-image: none (Puces standard par défaut)'; txt.style.color = '#f87171'; }
     } else {
       box.style.setProperty('list-style-image', starUrl, 'important');
-      if (txt) { txt.textContent = '🟢 APRÈS : list-style-image: url(...) (Étoiles dorées SVG personnalisées !)'; txt.style.color = '#4ade80'; }
+      if (txt) { txt.textContent = 'APRÈS : list-style-image: url(...) (Étoiles dorées SVG personnalisées !)'; txt.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6214,11 +6217,11 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     const txt = document.getElementById('listStatusText');
     if (step === 0) {
       box.style.setProperty('list-style', 'disc outside none', 'important');
-      if (txt) { txt.textContent = '🔴 AVANT : list-style: disc outside none (Style par défaut)'; txt.style.color = '#f87171'; }
+      if (txt) { txt.textContent = 'AVANT : list-style: disc outside none (Style par défaut)'; txt.style.color = '#f87171'; }
     } else {
       const ls = opt ? opt.value : 'square inside';
       box.style.setProperty('list-style', ls, 'important');
-      if (txt) { txt.textContent = `🟢 APRÈS : list-style: ${ls}`; txt.style.color = '#4ade80'; }
+      if (txt) { txt.textContent = `APRÈS : list-style: ${ls}`; txt.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6232,11 +6235,11 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     if (step === 0) {
       table.style.setProperty('table-layout', 'auto', 'important');
       table.style.setProperty('width', '95%', 'important');
-      if (txt) { txt.textContent = '🔴 ÉTAT 1 : AVANT ➔ table-layout: auto (La colonne 1 s\'élargit à 80% pour englober le long mot entier !)'; txt.style.color = '#f87171'; }
+      if (txt) { txt.textContent = 'ÉTAT 1 : AVANT ➔ table-layout: auto (La colonne 1 s\'élargit à 80% pour englober le long mot entier !)'; txt.style.color = '#f87171'; }
     } else {
       table.style.setProperty('table-layout', 'fixed', 'important');
       table.style.setProperty('width', '360px', 'important');
-      if (txt) { txt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ table-layout: fixed (Colonnes strictement égales 50%/50% : le mot long est tronqué !)'; txt.style.color = '#4ade80'; }
+      if (txt) { txt.textContent = 'ÉTAT 2 : APRÈS ➔ table-layout: fixed (Colonnes strictement égales 50%/50% : le mot long est tronqué !)'; txt.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6249,12 +6252,12 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
       table.style.setProperty('border-collapse', 'separate', 'important');
       table.style.setProperty('border-spacing', '16px', 'important');
       cells.forEach(td => { td.style.setProperty('border-color', '#38bdf8', 'important'); });
-      if (txt) { txt.textContent = '🔴 ÉTAT 1 : AVANT ➔ border-collapse: separate (Bordures doubles disjointes : espace visible de 16px entre cellules !)'; txt.style.color = '#f87171'; }
+      if (txt) { txt.textContent = 'ÉTAT 1 : AVANT ➔ border-collapse: separate (Bordures doubles disjointes : espace visible de 16px entre cellules !)'; txt.style.color = '#f87171'; }
     } else {
       table.style.setProperty('border-collapse', 'collapse', 'important');
       table.style.setProperty('border-spacing', '0px', 'important');
       cells.forEach(td => { td.style.setProperty('border-color', '#10b981', 'important'); });
-      if (txt) { txt.textContent = '🟢 ÉTAT 2 : APRÈS ➔ border-collapse: collapse (Bordures fusionnées en un seul trait vert uni : 0px d\'écart !)'; txt.style.color = '#4ade80'; }
+      if (txt) { txt.textContent = 'ÉTAT 2 : APRÈS ➔ border-collapse: collapse (Bordures fusionnées en un seul trait vert uni : 0px d\'écart !)'; txt.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6267,12 +6270,12 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     if (step === 0) {
       box.style.setProperty('width', '80px', 'important');
       box.style.setProperty('height', '80px', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : width: 80px (Boîte étroite compacte)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : width: 80px (Boîte étroite compacte)'; badge.style.color = '#f87171'; }
     } else {
       const w = opt ? opt.value : '260px';
       box.style.setProperty('width', w, 'important');
       box.style.setProperty('height', '80px', 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : width: ${w} (Largeur étendue avec succès !)`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : width: ${w} (Largeur étendue avec succès !)`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6282,12 +6285,12 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     if (step === 0) {
       box.style.setProperty('height', '50px', 'important');
       box.style.setProperty('width', '180px', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : height: 50px (Boîte basse plate)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : height: 50px (Boîte basse plate)'; badge.style.color = '#f87171'; }
     } else {
       const h = opt ? opt.value : '140px';
       box.style.setProperty('height', h, 'important');
       box.style.setProperty('width', '180px', 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : height: ${h} (Hauteur étendue avec succès !)`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : height: ${h} (Hauteur étendue avec succès !)`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6299,13 +6302,13 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
       box.style.setProperty('top', '0px', 'important');
       box.style.setProperty('left', '0px', 'important');
       box.style.setProperty('border-color', '#475569', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : position: static (Au repos sur le repère d\'origine 0, 0)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : position: static (Au repos sur le repère d\'origine 0, 0)'; badge.style.color = '#f87171'; }
     } else {
       box.style.setProperty('position', 'relative', 'important');
       box.style.setProperty('top', '40px', 'important');
       box.style.setProperty('left', '80px', 'important');
       box.style.setProperty('border-color', '#10b981', 'important');
-      if (badge) { badge.textContent = '🟢 APRÈS : position: relative (top: 40px, left: 80px ➔ Décalé sur le repère quadrillé !)'; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = 'APRÈS : position: relative (top: 40px, left: 80px ➔ Décalé sur le repère quadrillé !)'; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6315,12 +6318,12 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     if (step === 0) {
       box.style.setProperty('float', 'none', 'important');
       box.style.setProperty('margin', '0 auto 10px auto', 'important');
-      if (lbl) { lbl.textContent = '🔴 AVANT : float: none (Flux normal : texte refoulé en-dessous)'; lbl.style.color = '#f87171'; }
+      if (lbl) { lbl.textContent = 'AVANT : float: none (Flux normal : texte refoulé en-dessous)'; lbl.style.color = '#f87171'; }
     } else {
       const fl = opt ? opt.value : 'left';
       box.style.setProperty('float', fl, 'important');
       box.style.setProperty('margin', fl === 'left' ? '4px 14px 6px 0' : '4px 0 6px 14px', 'important');
-      if (lbl) { lbl.textContent = `🟢 APRÈS : float: ${fl} (Le texte s'enroule harmonieusement autour du bloc !)`; lbl.style.color = '#4ade80'; }
+      if (lbl) { lbl.textContent = `APRÈS : float: ${fl} (Le texte s'enroule harmonieusement autour du bloc !)`; lbl.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6330,12 +6333,12 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     if (step === 0) {
       box.style.setProperty('padding', '0px', 'important');
       box.style.setProperty('border-color', '#ef4444', 'important');
-      if (txt) { txt.textContent = '🔴 AVANT : padding: 0px (Texte comprimé directement contre les bords !)'; txt.style.color = '#f87171'; }
+      if (txt) { txt.textContent = 'AVANT : padding: 0px (Texte comprimé directement contre les bords !)'; txt.style.color = '#f87171'; }
     } else {
       const p = opt ? opt.value : '24px';
       box.style.setProperty('padding', p, 'important');
       box.style.setProperty('border-color', '#10b981', 'important');
-      if (txt) { txt.textContent = `🟢 APRÈS : padding: ${p} (Espace vert intérieur de respiration créé !)`; txt.style.color = '#4ade80'; }
+      if (txt) { txt.textContent = `APRÈS : padding: ${p} (Espace vert intérieur de respiration créé !)`; txt.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6349,14 +6352,14 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
       box.style.setProperty('border-color', '#ef4444', 'important');
       if (vHaut) vHaut.style.transform = 'translateY(2px)';
       if (vBas) vBas.style.transform = 'translateY(-2px)';
-      if (txt) { txt.textContent = '🔴 AVANT : margin: 0px (Éléments voisins étouffés collés bord à bord !)'; txt.style.color = '#f87171'; }
+      if (txt) { txt.textContent = 'AVANT : margin: 0px (Éléments voisins étouffés collés bord à bord !)'; txt.style.color = '#f87171'; }
     } else {
       const m = opt ? opt.value : '28px';
       box.style.setProperty('margin', `${m} auto`, 'important');
       box.style.setProperty('border-color', '#10b981', 'important');
       if (vHaut) vHaut.style.transform = 'translateY(-14px)';
       if (vBas) vBas.style.transform = 'translateY(14px)';
-      if (txt) { txt.textContent = `🟢 APRÈS : margin: ${m} (Voisins repoussés par l'espace orange externe !)`; txt.style.color = '#4ade80'; }
+      if (txt) { txt.textContent = `APRÈS : margin: ${m} (Voisins repoussés par l'espace orange externe !)`; txt.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6366,12 +6369,12 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     if (step === 0) {
       box.style.setProperty('box-shadow', 'none', 'important');
       box.style.setProperty('transform', 'translateY(0)', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : box-shadow: none (Boîte plate sans relief)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : box-shadow: none (Boîte plate sans relief)'; badge.style.color = '#f87171'; }
     } else {
       const sh = (opt && opt.value && opt.value !== 'none') ? opt.value : '0 14px 28px rgba(56, 189, 248, 0.65), 0 0 10px rgba(56, 189, 248, 0.4)';
       box.style.setProperty('box-shadow', opt && opt.value === 'none' ? 'none' : sh, 'important');
       box.style.setProperty('transform', opt && opt.value === 'none' ? 'translateY(0)' : 'translateY(-4px)', 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : box-shadow: ${opt ? opt.value : 'relief lumineux'}`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : box-shadow: ${opt ? opt.value : 'relief lumineux'}`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6399,12 +6402,12 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     const o = opt ? opt.value : 'hidden';
     if (step === 0) {
       box.style.setProperty('overflow', o === 'visible' ? 'hidden' : 'visible', 'important');
-      if (badge) badge.textContent = o === 'visible' ? '🔴 AVANT : overflow: hidden' : '🔴 AVANT : overflow: visible';
-      if (txt) { txt.textContent = '🔴 ÉTAT 1 : AVANT (Comportement initial)'; txt.style.color = '#f87171'; }
+      if (badge) badge.textContent = o === 'visible' ? 'AVANT : overflow: hidden' : 'AVANT : overflow: visible';
+      if (txt) { txt.textContent = 'ÉTAT 1 : AVANT (Comportement initial)'; txt.style.color = '#f87171'; }
     } else {
       box.style.setProperty('overflow', o, 'important');
-      if (badge) badge.textContent = `🟢 APRÈS : overflow: ${o}`;
-      if (txt) { txt.textContent = `🟢 ÉTAT 2 : APRÈS (overflow: ${o} appliqué !)`; txt.style.color = '#4ade80'; }
+      if (badge) badge.textContent = `APRÈS : overflow: ${o}`;
+      if (txt) { txt.textContent = `ÉTAT 2 : APRÈS (overflow: ${o} appliqué !)`; txt.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6413,11 +6416,11 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     const badge = document.getElementById('opacityBadge');
     if (step === 0) {
       box.style.setProperty('opacity', '1.0', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : opacity: 1.0 (100% Opaque - Le damier sous-jacent est totalement masqué)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : opacity: 1.0 (100% Opaque - Le damier sous-jacent est totalement masqué)'; badge.style.color = '#f87171'; }
     } else {
       const op = opt ? opt.value : '0.40';
       box.style.setProperty('opacity', op, 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : opacity: ${op} (Transparence active : le damier sous-jacent apparaît clairement !)`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : opacity: ${op} (Transparence active : le damier sous-jacent apparaît clairement !)`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6430,12 +6433,12 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     if (step === 0) {
       box.style.setProperty('background-color', 'transparent', 'important');
       box.style.setProperty('border', '2px dashed #64748b', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : background-color: transparent (Fond vide transparent)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : background-color: transparent (Fond vide transparent)'; badge.style.color = '#f87171'; }
     } else {
       const bgc = opt ? opt.value : '#0284c7';
       box.style.setProperty('background-color', bgc, 'important');
       box.style.setProperty('border', '2px solid transparent', 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : background-color: ${bgc} (Fond coloré uni appliqué !)`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : background-color: ${bgc} (Fond coloré uni appliqué !)`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6445,11 +6448,11 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     if (step === 0) {
       box.style.setProperty('background-image', 'none', 'important');
       box.style.setProperty('background-color', '#1e293b', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : background-image: none (Sans image de fond)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : background-image: none (Sans image de fond)'; badge.style.color = '#f87171'; }
     } else {
       const bgi = opt ? opt.value : 'linear-gradient(135deg, #0284c7, #38bdf8)';
       box.style.setProperty('background-image', bgi, 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : background-image: ${bgi}`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : background-image: ${bgi}`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6460,11 +6463,11 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     box.style.setProperty('background-size', '24px 24px', 'important');
     if (step === 0) {
       box.style.setProperty('background-repeat', 'repeat', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : background-repeat: repeat (Mosaïque complète par défaut)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : background-repeat: repeat (Mosaïque complète par défaut)'; badge.style.color = '#f87171'; }
     } else {
       const bgr = opt ? opt.value : 'no-repeat';
       box.style.setProperty('background-repeat', bgr, 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : background-repeat: ${bgr}`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : background-repeat: ${bgr}`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6474,11 +6477,11 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     box.style.setProperty('background-image', 'linear-gradient(135deg, #0284c7, #6366f1)', 'important');
     if (step === 0) {
       box.style.setProperty('background-size', 'auto', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : background-size: auto (Taille d\'origine 24px)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : background-size: auto (Taille d\'origine 24px)'; badge.style.color = '#f87171'; }
     } else {
       const bgs = opt ? opt.value : 'cover';
       box.style.setProperty('background-size', bgs, 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : background-size: ${bgs}`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : background-size: ${bgs}`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6487,10 +6490,10 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     const badge = document.getElementById('bgShBadge');
     if (step === 0) {
       box.style.setProperty('background', '#1e293b', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : background par défaut'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : background par défaut'; badge.style.color = '#f87171'; }
     } else {
       if (opt && opt.css) box.style.cssText += opt.css;
-      if (badge) { badge.textContent = `🟢 APRÈS : background: ${opt ? opt.value : 'appliqué'}`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : background: ${opt ? opt.value : 'appliqué'}`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6501,13 +6504,13 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
       box.style.setProperty('transform', 'none', 'important');
       box.style.setProperty('border-color', '#475569', 'important');
       box.style.setProperty('box-shadow', 'none', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : transform: none (Au repos sur le repère fantôme rouge)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : transform: none (Au repos sur le repère fantôme rouge)'; badge.style.color = '#f87171'; }
     } else {
       const tr = opt ? opt.value : 'rotate(25deg)';
       box.style.setProperty('transform', tr, 'important');
       box.style.setProperty('border-color', '#10b981', 'important');
       box.style.setProperty('box-shadow', '0 12px 30px rgba(56, 189, 248, 0.45)', 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : transform: ${tr} (Transformation 2D active !)`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : transform: ${tr} (Transformation 2D active !)`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6518,12 +6521,12 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     if (step === 0) {
       img.style.setProperty('filter', 'none', 'important');
       img.style.setProperty('border-color', '#475569', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : filter: none (Couleurs éclatantes d\'origine sans aucun filtre)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : filter: none (Couleurs éclatantes d\'origine sans aucun filtre)'; badge.style.color = '#f87171'; }
     } else {
       const fl = opt ? opt.value : 'grayscale(100%)';
       img.style.setProperty('filter', fl, 'important');
       img.style.setProperty('border-color', '#10b981', 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : filter: ${fl} (Filtre visuel appliqué !)`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : filter: ${fl} (Filtre visuel appliqué !)`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6536,7 +6539,7 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     if (step === 0) {
       box.style.setProperty('border', '0px solid transparent', 'important');
       box.style.setProperty('outline', '2px dashed #475569', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : border-style: none (Sans aucune bordure)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : border-style: none (Sans aucune bordure)'; badge.style.color = '#f87171'; }
     } else {
       const bs = opt ? opt.value : 'solid';
       box.style.setProperty('outline', 'none', 'important');
@@ -6546,7 +6549,7 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
         box.style.setProperty('border', `8px ${bs} #38bdf8`, 'important');
         box.style.setProperty('box-shadow', '0 0 20px rgba(56, 189, 248, 0.55)', 'important');
       }
-      if (badge) { badge.textContent = `🟢 APRÈS : border-style: ${bs} (Bordure 8px nette !)`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : border-style: ${bs} (Bordure 8px nette !)`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6556,12 +6559,12 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     if (step === 0) {
       box.style.setProperty('border', '4px solid #334155', 'important');
       box.style.setProperty('box-shadow', 'none', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : border-color: #334155 (Gris éteint neutre)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : border-color: #334155 (Gris éteint neutre)'; badge.style.color = '#f87171'; }
     } else {
       const bc = opt ? opt.value : '#38bdf8';
       box.style.setProperty('border', `4px solid ${bc}`, 'important');
       box.style.setProperty('box-shadow', `0 0 20px ${bc}88`, 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : border-color: ${bc} (Bordure colorée éclatante !)`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : border-color: ${bc} (Bordure colorée éclatante !)`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6571,12 +6574,12 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     if (step === 0) {
       box.style.setProperty('border', '1px solid #475569', 'important');
       box.style.setProperty('box-shadow', 'none', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : border-width: 1px (Filet fin quasi invisible)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : border-width: 1px (Filet fin quasi invisible)'; badge.style.color = '#f87171'; }
     } else {
       const bw = opt ? opt.value : '8px';
       box.style.setProperty('border', `${bw} solid #38bdf8`, 'important');
       box.style.setProperty('box-shadow', '0 0 16px rgba(56, 189, 248, 0.5)', 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : border-width: ${bw} (Épaisseur nette appliquée !)`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : border-width: ${bw} (Épaisseur nette appliquée !)`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6586,12 +6589,12 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     if (step === 0) {
       box.style.setProperty('border-radius', '0px', 'important');
       box.style.setProperty('border-color', '#475569', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : border-radius: 0px (Angles droits stricts à 90°)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : border-radius: 0px (Angles droits stricts à 90°)'; badge.style.color = '#f87171'; }
     } else {
       const br = opt ? opt.value : '24px';
       box.style.setProperty('border-radius', br, 'important');
       box.style.setProperty('border-color', '#10b981', 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : border-radius: ${br} ${br === '50%' ? '(Transformation en CERCLE parfait !)' : '(Coins arrondis !)'}`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : border-radius: ${br} ${br === '50%' ? '(Transformation en CERCLE parfait !)' : '(Coins arrondis !)'}`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6601,13 +6604,13 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
     if (step === 0) {
       box.style.setProperty('border', '0px solid transparent', 'important');
       box.style.setProperty('outline', '2px dashed #475569', 'important');
-      if (badge) { badge.textContent = '🔴 AVANT : border: 0px (Contour nu)'; badge.style.color = '#f87171'; }
+      if (badge) { badge.textContent = 'AVANT : border: 0px (Contour nu)'; badge.style.color = '#f87171'; }
     } else {
       const bsh = opt ? opt.value : '4px solid #38bdf8';
       box.style.setProperty('outline', 'none', 'important');
       box.style.setProperty('border', bsh, 'important');
       box.style.setProperty('box-shadow', '0 0 20px rgba(56, 189, 248, 0.55)', 'important');
-      if (badge) { badge.textContent = `🟢 APRÈS : border: ${bsh}`; badge.style.color = '#4ade80'; }
+      if (badge) { badge.textContent = `APRÈS : border: ${bsh}`; badge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6624,13 +6627,13 @@ function applyVideoFrame(itemId, box, step, variantIdx = 0) {
       box.style.setProperty('left', '0px', 'important');
       box.style.setProperty('background-color', '#0284c7', 'important');
       if (trTimer) { trTimer.textContent = 'T = 0.0s (Repos)'; trTimer.style.color = '#94a3b8'; }
-      if (trBadge) { trBadge.textContent = '🔴 AVANT : boîtes alignées au départ (0s)'; trBadge.style.color = '#f87171'; }
+      if (trBadge) { trBadge.textContent = 'AVANT : boîtes alignées au départ (0s)'; trBadge.style.color = '#f87171'; }
     } else {
       if (trRaw) trRaw.style.setProperty('left', 'calc(100% - 95px)', 'important');
       box.style.setProperty('left', 'calc(100% - 95px)', 'important');
       box.style.setProperty('background-color', '#10b981', 'important');
       if (trTimer) { trTimer.textContent = 'T = 1.5s (Transition terminée)'; trTimer.style.color = '#4ade80'; }
-      if (trBadge) { trBadge.textContent = `🟢 APRÈS : glissement progressif fluide (${opt ? opt.value : '1.5s'}) !`; trBadge.style.color = '#4ade80'; }
+      if (trBadge) { trBadge.textContent = `APRÈS : glissement progressif fluide (${opt ? opt.value : '1.5s'}) !`; trBadge.style.color = '#4ade80'; }
     }
     return;
   }
@@ -6718,7 +6721,7 @@ function applyHtmlVariety(itemId, optionIdx, labelElement) {
   const toast = document.getElementById('varietyToastHtml');
   if (toast) {
     toast.style.display = 'inline-flex';
-    toast.innerHTML = '✨ Variante affichée : <strong>' + escapeHtml(opt.value) + '</strong>';
+    toast.innerHTML = 'Variante affichée : <strong>' + escapeHtml(opt.value) + '</strong>';
   }
 }
 
@@ -7020,9 +7023,9 @@ function buildVerifiedLocalLessons() {
       const isExam = (d.kind === 'examen');
       const isSerie = (d.kind === 'serie');
       const typeKey = isExam ? 'devoir' : (isSerie ? 'serie' : 'resume');
-      const typeLabel = isExam ? '📑 Sujet d\'Examen' : (isSerie ? '📝 Série / TP' : '📌 Extrait d\'Examen');
+      const typeLabel = isExam ? 'Sujet d\'Examen' : (isSerie ? 'Série / TP' : 'Extrait d\'Examen');
       const subj = d.module || 'algo-theorique';
-      const subjLabel = subj === 'algo-pratique' ? 'Pratique Qt ➔ Thonny' : 'Algorithme Théorique';
+      const subjLabel = subj === 'algo-pratique' ? 'Pratique Qt / Thonny' : 'Algorithme Théorique';
       list.push({
         id: d.id,
         title: d.title,
@@ -7055,7 +7058,7 @@ function buildVerifiedLocalLessons() {
       subjectLabel: 'Ch 3 : Bases',
       chapters: ['bases'],
       type: 'cours',
-      typeLabel: '📖 Cours & Support',
+      typeLabel: 'Cours & Support',
       date: 'Bac Info',
       author: 'Support de révision',
       fileSize: '4.5 Mo',
@@ -7070,7 +7073,7 @@ function buildVerifiedLocalLessons() {
       subjectLabel: 'Ch 5 : Approximation',
       chapters: ['approximation'],
       type: 'cours',
-      typeLabel: '📖 Cours & Support',
+      typeLabel: 'Cours & Support',
       date: 'Bac Info',
       author: 'Support de révision',
       fileSize: '4.2 Mo',
@@ -7085,7 +7088,7 @@ function buildVerifiedLocalLessons() {
       subjectLabel: 'Ch 7 : Matrices',
       chapters: ['matrices'],
       type: 'cours',
-      typeLabel: '📖 Cours & Support',
+      typeLabel: 'Cours & Support',
       date: 'Bac Info',
       author: 'Support de révision',
       fileSize: '1.2 Mo',
@@ -7100,7 +7103,7 @@ function buildVerifiedLocalLessons() {
       subjectLabel: 'Algorithmique Théorique',
       chapters: ['fichiers', 'recursivite', 'tableaux', 'matrices'],
       type: 'resume',
-      typeLabel: '📌 Fiche Révision',
+      typeLabel: 'Fiche Révision',
       date: 'Bac Info',
       author: 'Support de révision',
       fileSize: '2.8 Mo',
@@ -7323,7 +7326,7 @@ function renderLessons() {
     grid.innerHTML = `
       <div class="pdf-empty-state-card" style="grid-column: 1 / -1; text-align: center; padding: 50px 24px; background: var(--bg-card); border: 1px dashed var(--border-color); border-radius: 16px; margin: 20px 0;">
         <div style="width: 72px; height: 72px; margin: 0 auto 16px; border-radius: 50%; background: rgba(79, 70, 229, 0.12); display: flex; align-items: center; justify-content: center; font-size: 2.2rem;">
-          📚
+          
         </div>
         <h3 style="color: var(--text-primary); font-size: 1.25rem; font-weight: 700; margin-bottom: 8px;">
           Aucun document pour le moment
@@ -7332,7 +7335,7 @@ function renderLessons() {
           Aucun document pour le moment. Consultez les chapitres d'algorithme et les sujets d'examens disponibles.
         </p>
         <button type="button" onclick="navigateToHash('#/html5')" style="background: linear-gradient(135deg, #4f46e5, #06b6d4); color: #fff; border: none; padding: 12px 24px; border-radius: 25px; font-weight: 600; font-size: 0.95rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);">
-          <span>💻</span>
+          <span></span>
           <span>Consulter les cours en ligne (HTML, CSS...)</span>
         </button>
       </div>
@@ -7344,13 +7347,13 @@ function renderLessons() {
   if (filtered.length === 0) {
     grid.innerHTML = `
       <div style="grid-column: 1 / -1; text-align: center; padding: 50px 20px; background: var(--bg-card); border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
-        <span style="font-size: 2.4rem; display: block; margin-bottom: 10px;">🔍</span>
+        <span style="font-size: 2.4rem; display: block; margin-bottom: 10px;"></span>
         <h4 style="color: #cbd5e1; font-size: 1.05rem; margin-bottom: 6px;">Aucun document ne correspond à cette matière</h4>
         <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0 0 16px 0;">
           Aucun document n'a été publié pour cette sélection.
         </p>
         <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
-          <button class="nav-btn" onclick="filterLessonsBySubject('all')">🌟 Voir tous les documents</button>
+          <button class="nav-btn" onclick="filterLessonsBySubject('all')">Voir tous les documents</button>
         </div>
       </div>
     `;
@@ -7368,8 +7371,8 @@ function renderLessons() {
             <span style="background: var(--surface-bg, rgba(255,255,255,0.08)); border: 1px solid var(--border-color); font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; color: var(--text-secondary); font-weight: 600;">
               ${escapeHtml(lesson.typeLabel || lesson.type)}
             </span>
-            ${lesson.incomplete ? `<span style="background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); font-size: 0.74rem; padding: 3px 8px; border-radius: 4px; color: #ef4444; font-weight: 700;">⚠️ Incomplet</span>` : ''}
-            ${hasCorr ? `<span class="badge-corrigé-pill" title="Cette série contient son corrigé type">🎯 Corrigé inclus</span>` : ''}
+            ${lesson.incomplete ? `<span style="background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); font-size: 0.74rem; padding: 3px 8px; border-radius: 4px; color: #ef4444; font-weight: 700;">Incomplet</span>` : ''}
+            ${hasCorr ? `<span class="badge-corrigé-pill" title="Cette série contient son corrigé type">Corrigé inclus</span>` : ''}
           </div>
 
           <h3 class="lesson-card-title">${escapeHtml(lesson.title)}</h3>
@@ -7378,22 +7381,22 @@ function renderLessons() {
 
         <div>
           <div class="lesson-card-meta">
-            <span>📅 ${escapeHtml(lesson.date || '2025')} • ${escapeHtml(lesson.fileSize || 'PDF')}</span>
+            <span>${escapeHtml(lesson.date || '2025')} • ${escapeHtml(lesson.fileSize || 'PDF')}</span>
             <span style="font-style: italic;">${escapeHtml(lesson.author || 'Enseignant')}</span>
           </div>
 
           <div class="lesson-card-actions">
             <button class="lesson-btn-view" onclick="openPdfModal('${lesson.id}', 'enonce')" title="Consulter le document ou l'énoncé">
-              <span>👁️</span>
+              <span></span>
               <span>${hasCorr ? "Énoncé Série" : "Consulter le PDF"}</span>
             </button>
             ${hasCorr ? `
             <button class="lesson-btn-correction" onclick="openPdfModal('${lesson.id}', 'corrige')" title="Consulter le corrigé type de cette série">
-              <span>🎯</span>
+              ${safeIcon('check-circle', 14)}
               <span>Voir le Corrigé</span>
             </button>` : ''}
             <button class="lesson-btn-download" onclick="downloadLessonPdf('${lesson.id}', 'enonce')" title="Télécharger le fichier PDF sur votre appareil">
-              <span>⬇️</span>
+              ${safeIcon('download', 14)}
               <span>Télécharger</span>
             </button>
           </div>
@@ -7465,7 +7468,7 @@ function openPdfModal(lessonId, variant = 'enonce') {
 
   if (titleEl) titleEl.textContent = displayTitle;
   if (catEl) {
-    const typeTxt = isCorrige ? "🎯 Corrigé Type" : (lesson.typeLabel || lesson.type);
+    const typeTxt = isCorrige ? "Corrigé Type" : (lesson.typeLabel || lesson.type);
     const modLabel = (lesson.subject && (lesson.subject.startsWith('algo') || lesson.subject === 'algo')) ? 'Algorithmique' : 'STI Web & BD';
     catEl.textContent = `${modLabel} • ${lesson.subjectLabel || lesson.subject} • ${typeTxt}`;
     catEl.className = `category-label ${lesson.subject}`;
@@ -7485,11 +7488,11 @@ function openPdfModal(lessonId, variant = 'enonce') {
     <div style="background: #0f172a; padding: 10px 16px; border-bottom: 1px solid #334155; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
       <div class="pdf-modal-tabs-bar">
         <button class="pdf-viewer-tab-btn ${!isCorrige ? 'active' : ''}" onclick="openPdfModal('${lesson.id}', 'enonce')">
-          <span>📄</span>
+          <span></span>
           <span>Énoncé de la Série</span>
         </button>
         <button class="pdf-viewer-tab-btn ${isCorrige ? 'active' : ''}" onclick="openPdfModal('${lesson.id}', 'corrige')">
-          <span>🎯</span>
+          <span></span>
           <span>Corrigé Type</span>
         </button>
       </div>
@@ -7521,16 +7524,16 @@ function openPdfModal(lessonId, variant = 'enonce') {
       ${tabsBarHtml}
       <div style="background: #1e293b; padding: 10px 18px; border-bottom: 1px solid #334155; display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; color: #94a3b8; flex-wrap: wrap; gap: 10px;">
         <span style="display:flex; align-items:center; gap:6px;">
-          <span>${isCorrige ? '🎯' : '📄'}</span>
+          ${safeIcon(isCorrige ? 'check-circle' : 'file-text', 15)}
           <strong style="color:#f8fafc;">${escapeHtml(displayTitle)}</strong>
           <span style="color:#64748b;">(${escapeHtml(activeSize)})</span>
         </span>
         <div style="display: flex; gap: 10px; align-items: center;">
           <a href="${pdfSrc}" target="_blank" style="color: #38bdf8; text-decoration: none; font-weight: 700; padding: 5px 12px; background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.3); border-radius: 4px; display: inline-flex; align-items: center; gap: 6px;">
-            <span>🗗</span> Plein écran
+            ${safeIcon('maximize', 14)} Plein écran
           </a>
           <button onclick="downloadLessonPdf('${lesson.id}', '${isCorrige ? 'corrige' : 'enonce'}')" style="background: #10b981; color: #000; font-weight: 700; padding: 5px 14px; border-radius: 4px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
-            <span>⬇️</span> Télécharger PDF
+            ${safeIcon('download', 14)} Télécharger PDF
           </button>
         </div>
       </div>
@@ -7583,7 +7586,7 @@ function openPdfModal(lessonId, variant = 'enonce') {
 
           <div style="margin-top: 24px; text-align: center;" class="no-print">
             <button onclick="window.print()" style="background: #2563eb; color: #fff; border: none; padding: 10px 22px; border-radius: 6px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
-              <span>🖨️</span>
+              <span>${safeIcon("printer", 15)}</span>
               <span>Imprimer ou Enregistrer en PDF (Ctrl + P)</span>
             </button>
           </div>
@@ -7827,7 +7830,7 @@ function switchModule(moduleName, skipViewSwitch = false) {
     if (brandTitle) brandTitle.textContent = "ALGO & THONNY";
     if (brandBadge) brandBadge.textContent = "Bac Informatique";
     if (brandIcon) {
-      brandIcon.textContent = "🐍";
+      brandIcon.textContent = "";
       brandIcon.style.background = "linear-gradient(135deg, #059669, #10b981)";
     }
 
@@ -7947,19 +7950,19 @@ const QT_TRANSLATOR_CONFIG = {
       id: "read_plain_text",
       name: "Lire le texte multiligne (.toPlainText())",
       code: (obj) => `${obj.replace(/^(txt_|text_|te_)?/i, '') || 'texte'} = W.${obj}.toPlainText()`,
-      tip: "🚨 <strong>PIÈGE BAC MAJEUR :</strong> Pour un <code>QTextEdit</code>, on utilise <code>.toPlainText()</code> et NON <code>.text()</code> !"
+      tip: "<strong>PIÈGE BAC MAJEUR :</strong> Pour un <code>QTextEdit</code>, on utilise <code>.toPlainText()</code> et NON <code>.text()</code> !"
     },
     {
       id: "set_text",
       name: "Modifier le texte de la zone (.setText)",
       code: (obj) => `W.${obj}.setText("Nouveau contenu multiligne...")`,
-      tip: "💡 Remplace tout le contenu de la zone de texte par la nouvelle chaîne fournie."
+      tip: "Remplace tout le contenu de la zone de texte par la nouvelle chaîne fournie."
     },
     {
       id: "clear",
       name: "Vider la zone de texte (.clear())",
       code: (obj) => `W.${obj}.clear()`,
-      tip: "💡 Réinitialise et efface tout le texte saisi dans la zone."
+      tip: "Réinitialise et efface tout le texte saisi dans la zone."
     }
   ],
   QLineEdit: [
@@ -7967,45 +7970,45 @@ const QT_TRANSLATOR_CONFIG = {
       id: "read_text",
       name: "Lire le texte saisi (.text())",
       code: (obj) => `${obj.replace(/^(txt_|line_|le_)?/i, '') || 'valeur'} = windows.${obj}.text()`,
-      tip: "💡 <strong>Astuce Bac :</strong> Toujours tester si la variable est vide : <code>if nom == '': ...</code>"
+      tip: "<strong>Astuce Bac :</strong> Toujours tester si la variable est vide : <code>if nom == '': ...</code>"
     },
     {
       id: "read_int",
       name: "Convertir la saisie en Entier (int)",
       code: (obj) => `# Convertir en entier pour les calculs
 ${obj.replace(/^(txt_|line_|le_)?/i, '') || 'n'} = int(windows.${obj}.text())`,
-      tip: "⚠️ <strong>Anti-Crash Bac :</strong> Valider d'abord avec <code>.isdigit()</code> ou un bloc <code>try / except</code> pour éviter que le programme plante si la case est vide ou contient des lettres !"
+      tip: "<strong>Anti-Crash Bac :</strong> Valider d'abord avec <code>.isdigit()</code> ou un bloc <code>try / except</code> pour éviter que le programme plante si la case est vide ou contient des lettres !"
     },
     {
       id: "read_float",
       name: "Convertir la saisie en Réel / Décimal (float)",
       code: (obj) => `# Convertir en nombre à virgule (ex: moyenne, prix)
 ${obj.replace(/^(txt_|line_|le_)?/i, '') || 'montant'} = float(windows.${obj}.text())`,
-      tip: "💡 <strong>Astuce Bac :</strong> Remplacer les virgules par des points si l'élève tape '14,5' : <code>float(ch.replace(',', '.'))</code>."
+      tip: "<strong>Astuce Bac :</strong> Remplacer les virgules par des points si l'élève tape '14,5' : <code>float(ch.replace(',', '.'))</code>."
     },
     {
       id: "set_text",
       name: "Écrire ou modifier le texte (.setText)",
       code: (obj) => `windows.${obj}.setText("Nouvelle valeur")`,
-      tip: "💡 Remplace le texte affiché par la chaîne fournie."
+      tip: "Remplace le texte affiché par la chaîne fournie."
     },
     {
       id: "clear",
       name: "Vider le champ (.clear())",
       code: (obj) => `windows.${obj}.clear()`,
-      tip: "💡 Indispensable dans le bouton 'Annuler' ou 'Nouveau' pour réinitialiser le formulaire."
+      tip: "Indispensable dans le bouton 'Annuler' ou 'Nouveau' pour réinitialiser le formulaire."
     },
     {
       id: "focus",
       name: "Donner le focus au champ (.setFocus())",
       code: (obj) => `windows.${obj}.setFocus()`,
-      tip: "💡 Place directement le curseur dans la case après une erreur <code>QMessageBox.critical</code> pour que l'utilisateur n'ait pas à cliquer."
+      tip: "Place directement le curseur dans la case après une erreur <code>QMessageBox.critical</code> pour que l'utilisateur n'ait pas à cliquer."
     },
     {
       id: "read_only",
       name: "Verrouiller le champ en lecture seule (.setReadOnly)",
       code: (obj) => `windows.${obj}.setReadOnly(True)`,
-      tip: "💡 Utile pour afficher un résultat ou un identifiant calculé sans que l'élève puisse le modifier."
+      tip: "Utile pour afficher un résultat ou un identifiant calculé sans que l'élève puisse le modifier."
     }
   ],
   QPushButton: [
@@ -8014,7 +8017,7 @@ ${obj.replace(/^(txt_|line_|le_)?/i, '') || 'montant'} = float(windows.${obj}.te
       name: "Associer au clic de bouton (.clicked.connect)",
       code: (obj) => `# ATTENTION BAC : Ne JAMAIS mettre de parenthèses à la fin du nom de la fonction !
 windows.${obj}.clicked.connect(ma_fonction)`,
-      tip: "🚨 <strong>PIÈGE BAC MAJEUR :</strong> Écrire <code>ma_fonction()</code> avec parenthèses exécute la fonction au démarrage au lieu d'attendre le clic !"
+      tip: "<strong>PIÈGE BAC MAJEUR :</strong> Écrire <code>ma_fonction()</code> avec parenthèses exécute la fonction au démarrage au lieu d'attendre le clic !"
     },
     {
       id: "set_enabled",
@@ -8024,13 +8027,13 @@ windows.${obj}.setEnabled(False)
 
 # Réactiver le bouton :
 windows.${obj}.setEnabled(True)`,
-      tip: "💡 Pratique pour griser un bouton tant qu'une case obligatoire n'est pas remplie."
+      tip: "Pratique pour griser un bouton tant qu'une case obligatoire n'est pas remplie."
     },
     {
       id: "set_text",
       name: "Changer le libellé du bouton (.setText)",
       code: (obj) => `windows.${obj}.setText("Enregistrer")`,
-      tip: "💡 Modifie dynamiquement le texte affiché sur le bouton."
+      tip: "Modifie dynamiquement le texte affiché sur le bouton."
     }
   ],
   QRadioButton: [
@@ -8041,13 +8044,13 @@ windows.${obj}.setEnabled(True)`,
     choix = "Oui"
 else:
     choix = "Non"`,
-      tip: "💡 Au Bac, pour tester le Genre : <code>if windows.rb_h.isChecked(): genre = 'Homme' else: genre = 'Femme'</code>"
+      tip: "Au Bac, pour tester le Genre : <code>if windows.rb_h.isChecked(): genre = 'Homme' else: genre = 'Femme'</code>"
     },
     {
       id: "set_checked",
       name: "Cocher ce bouton radio (.setChecked(True))",
       code: (obj) => `windows.${obj}.setChecked(True)`,
-      tip: "💡 Coche automatiquement l'option radio."
+      tip: "Coche automatiquement l'option radio."
     }
   ],
   QCheckBox: [
@@ -8058,14 +8061,14 @@ else:
     accepte = True
 else:
     accepte = False`,
-      tip: "💡 Retourne un booléen pur (True ou False)."
+      tip: "Retourne un booléen pur (True ou False)."
     },
     {
       id: "set_checked",
       name: "Cocher ou Décocher (.setChecked)",
       code: (obj) => `windows.${obj}.setChecked(True)   # Pour cocher
 windows.${obj}.setChecked(False)  # Pour décocher`,
-      tip: "💡 À utiliser lors de la réinitialisation de l'interface."
+      tip: "À utiliser lors de la réinitialisation de l'interface."
     }
   ],
   QComboBox: [
@@ -8076,13 +8079,13 @@ windows.${obj}.setChecked(False)  # Pour décocher`,
 if valeur_choisie == "" or valeur_choisie == "--- Choisir ---":
     QMessageBox.critical(windows, "Erreur", "Veuillez sélectionner une option !")
     return`,
-      tip: "💡 Au Bac, la première ligne est souvent une consigne ('--- Choisir ---'). Toujours la bloquer !"
+      tip: "Au Bac, la première ligne est souvent une consigne ('--- Choisir ---'). Toujours la bloquer !"
     },
     {
       id: "set_current_index_minus_one",
       name: "Aucun choix sélectionné (.setCurrentIndex(-1))",
       code: (obj) => `# Aucun choix sélectionné (vider / réinitialiser la liste)\nW.${obj}.setCurrentIndex(-1)`,
-      tip: "💡 Permet de désélectionner tout élément par défaut dans la liste."
+      tip: "Permet de désélectionner tout élément par défaut dans la liste."
     },
     {
       id: "current_index",
@@ -8091,19 +8094,19 @@ if valeur_choisie == "" or valeur_choisie == "--- Choisir ---":
 if idx <= 0:
     QMessageBox.critical(windows, "Erreur", "Veuillez choisir un élément !")
     return`,
-      tip: "💡 L'indice commence à 0 pour le tout premier élément."
+      tip: "L'indice commence à 0 pour le tout premier élément."
     },
     {
       id: "add_item",
       name: "Ajouter un élément dans la liste (.addItem)",
       code: (obj) => `windows.${obj}.addItem("Tunis")`,
-      tip: "💡 Utilisé dans une boucle pour remplir la liste depuis une base de données ou un tableau."
+      tip: "Utilisé dans une boucle pour remplir la liste depuis une base de données ou un tableau."
     },
     {
       id: "clear",
       name: "Vider toute la liste (.clear())",
       code: (obj) => `windows.${obj}.clear()`,
-      tip: "💡 À appeler avant de re-remplir la ComboBox pour éviter les doublons."
+      tip: "À appeler avant de re-remplir la ComboBox pour éviter les doublons."
     }
   ],
   QListWidget: [
@@ -8111,13 +8114,13 @@ if idx <= 0:
       id: "add_item",
       name: "Ajouter une chaîne (.addItem)",
       code: (obj) => `windows.${obj}.addItem(chaine)`,
-      tip: "💡 Ajoute une nouvelle ligne de texte dans la Liste Widget."
+      tip: "Ajoute une nouvelle ligne de texte dans la Liste Widget."
     },
     {
       id: "clear",
       name: "Vider la liste (.clear)",
       code: (obj) => `windows.${obj}.clear()`,
-      tip: "💡 Efface tous les éléments de la Liste Widget."
+      tip: "Efface tous les éléments de la Liste Widget."
     }
   ],
   QSpinBox: [
@@ -8125,13 +8128,13 @@ if idx <= 0:
       id: "get_value",
       name: "Lire la valeur entière (.value())",
       code: (obj) => `age = windows.${obj}.value()  # Renvoie directement un entier int garanti !`,
-      tip: "💡 Inutile d'ajouter <code>int()</code> ! <code>.value()</code> garantit déjà un entier."
+      tip: "Inutile d'ajouter <code>int()</code> ! <code>.value()</code> garantit déjà un entier."
     },
     {
       id: "set_value",
       name: "Modifier la valeur (.setValue)",
       code: (obj) => `windows.${obj}.setValue(18)`,
-      tip: "💡 Règle la valeur numérique affichée."
+      tip: "Règle la valeur numérique affichée."
     }
   ],
   QDateEdit: [
@@ -8139,7 +8142,7 @@ if idx <= 0:
       id: "get_str",
       name: "Lire la date en texte formaté ISO (yyyy-MM-dd)",
       code: (obj) => `date_str = windows.${obj}.date().toString("yyyy-MM-dd")`,
-      tip: "💡 Ce format est 100% compatible avec les bases de données MySQL et le type DATE !"
+      tip: "Ce format est 100% compatible avec les bases de données MySQL et le type DATE !"
     },
     {
       id: "get_year",
@@ -8149,7 +8152,7 @@ age = 2026 - annee_naissance
 if age < 18:
     QMessageBox.critical(windows, "Erreur", "Vous devez être majeur !")
     return`,
-      tip: "💡 Idéal pour vérifier la condition d'âge requise dans l'énoncé du Bac."
+      tip: "Idéal pour vérifier la condition d'âge requise dans l'énoncé du Bac."
     }
   ],
   QLabel: [
@@ -8157,13 +8160,13 @@ if age < 18:
       id: "set_text",
       name: "Afficher un résultat ou un message (.setText)",
       code: (obj) => `windows.${obj}.setText(f"Résultat : {resultat}")`,
-      tip: "💡 Veillez à convertir toute variable numérique en chaîne : <code>str(valeur)</code> ou f-string."
+      tip: "Veillez à convertir toute variable numérique en chaîne : <code>str(valeur)</code> ou f-string."
     },
     {
       id: "clear",
       name: "Effacer l'affichage (.clear())",
       code: (obj) => `windows.${obj}.clear()`,
-      tip: "💡 Efface le contenu de l'étiquette."
+      tip: "Efface le contenu de l'étiquette."
     }
   ],
   QTableWidget: [
@@ -8171,13 +8174,13 @@ if age < 18:
       id: "insert_row",
       name: "Ajouter une ligne (.insertRow)",
       code: (obj) => `windows.${obj}.insertRow(i)`,
-      tip: "💡 Insère une nouvelle ligne dans la Table Widget à l'indice i avant de remplir avec setItem."
+      tip: "Insère une nouvelle ligne dans la Table Widget à l'indice i avant de remplir avec setItem."
     },
     {
       id: "set_row_count",
       name: "Fixer le nombre de lignes (.setRowCount)",
       code: (obj) => `windows.${obj}.setRowCount(len(mes_lignes))`,
-      tip: "💡 Indispensable AVANT d'insérer des éléments avec <code>setItem</code>."
+      tip: "Indispensable AVANT d'insérer des éléments avec <code>setItem</code>."
     },
     {
       id: "set_item",
@@ -8186,13 +8189,13 @@ if age < 18:
 
 # Insérer dans la cellule (ligne r, colonne c) :
 windows.${obj}.setItem(r, c, QTableWidgetItem(str(valeur)))`,
-      tip: "⚠️ <strong>Obligatoire :</strong> La valeur doit TOUJOURS être de type <code>str</code> !"
+      tip: "<strong>Obligatoire :</strong> La valeur doit TOUJOURS être de type <code>str</code> !"
     },
     {
       id: "clear_table",
       name: "Vider entièrement le tableau",
       code: (obj) => `windows.${obj}.setRowCount(0)`,
-      tip: "💡 L'astuce la plus rapide pour effacer toutes les lignes au Bac."
+      tip: "L'astuce la plus rapide pour effacer toutes les lignes au Bac."
     }
   ],
   QMessageBox: [
@@ -8201,19 +8204,19 @@ windows.${obj}.setItem(r, c, QTableWidgetItem(str(valeur)))`,
       name: "Boîte d'Erreur Bloquante (QMessageBox.critical)",
       code: (obj) => `QMessageBox.critical(windows, "Erreur de saisie", "Veuillez remplir tous les champs obligatoires !")
 return  # INDISPENSABLE pour stopper l'exécution du reste de la fonction !`,
-      tip: "🚨 <strong>RÈGLE D'OR AU BAC :</strong> Ne JAMAIS oublier l'instruction <code>return</code> après une alerte critique !"
+      tip: "<strong>RÈGLE D'OR AU BAC :</strong> Ne JAMAIS oublier l'instruction <code>return</code> après une alerte critique !"
     },
     {
       id: "information",
       name: "Boîte de Confirmation / Succès (QMessageBox.information)",
       code: (obj) => `QMessageBox.information(windows, "Succès", "Données enregistrées avec succès dans la base !")`,
-      tip: "💡 Informe le candidat que l'opération a abouti avec succès."
+      tip: "Informe le candidat que l'opération a abouti avec succès."
     },
     {
       id: "warning",
       name: "Boîte d'Avertissement (QMessageBox.warning)",
       code: (obj) => `QMessageBox.warning(windows, "Attention", "Vérifiez vos paramètres avant de continuer.")`,
-      tip: "💡 Message préventif sans blocage strict."
+      tip: "Message préventif sans blocage strict."
     }
   ],
   Fenêtre: [
@@ -8221,7 +8224,7 @@ return  # INDISPENSABLE pour stopper l'exécution du reste de la fonction !`,
       id: "close",
       name: "Fermer la fenêtre (.close)",
       code: (obj) => `windows.close()`,
-      tip: "💡 Ferme la fenêtre active de l'application (ex: dans le module Quitter)."
+      tip: "Ferme la fenêtre active de l'application (ex: dans le module Quitter)."
     }
   ]
 };
@@ -8302,7 +8305,7 @@ function renderAlgoPratiqueCategories() {
     const isAct = cat === currentAlgoPratiqueCategory;
     const meta = (typeof ALGO_CATEGORY_META !== 'undefined' && ALGO_CATEGORY_META[cat]) ? ALGO_CATEGORY_META[cat] : null;
     const count = cat === 'all' ? items.length : items.filter(x => x.category === cat).length;
-    const label = meta ? meta.label : (cat === 'all' ? '✨ Tout afficher' : cat);
+    const label = meta ? meta.label : (cat === 'all' ? 'Tout afficher' : cat);
     return `<button type="button" class="cat-pill ${isAct ? 'active' : ''}" onclick="setAlgoPratiqueCategory('${cat}')" title="${meta ? meta.desc : cat}">
       <span>${label}</span>
       <span class="cat-pill-count">${count}</span>
@@ -8344,7 +8347,7 @@ function renderAlgoPratiqueCards() {
   if (filtered.length === 0) {
     grid.innerHTML = `
       <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: var(--bg-card); border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
-        <p style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 10px;">🔍 Aucun composant Qt ou méthode ne correspond à votre recherche.</p>
+        <p style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 10px;">Aucun composant Qt ou méthode ne correspond à votre recherche.</p>
         <button class="nav-btn" onclick="setAlgoPratiqueCategory('all')" style="color: #34d399; border-color: rgba(52, 211, 153, 0.4);">Réinitialiser les filtres</button>
       </div>
     `;
@@ -8371,7 +8374,7 @@ function renderAlgoPratiqueCards() {
         <div class="item-card-title">
           <span>${escapeHtml(item.name)}</span>
           <span class="item-card-tag" style="color: ${meta.color}; background: ${meta.bg}; border: 1px solid ${meta.border}; font-size: 0.8rem; font-weight: 700;">
-            ⚙️ ${escapeHtml(item.qtWidget)}
+            ${escapeHtml(item.qtWidget)}
           </span>
         </div>
 
@@ -8388,7 +8391,7 @@ function renderAlgoPratiqueCards() {
         </p>
 
         <div class="card-action-bar">
-          <span style="color: ${meta.color}; font-weight: 700; font-size: 0.86rem;">⚡ Code Thonny & Simulateur Qt</span>
+          <span style="color: ${meta.color}; font-weight: 700; font-size: 0.86rem;">Code Thonny & Simulateur Qt</span>
           <span style="color: ${meta.color}; font-size: 1rem;">→</span>
         </div>
       </div>
@@ -8401,42 +8404,42 @@ function renderAlgoPratiqueCards() {
 // -------------------------------------------------------------
 const ALGO_CHAPTER_METAS = {
   "Chapitre 1 : Les fichiers binaires et fichiers texte": {
-    icon: "📁",
+    icon: "folder",
     shortName: "Ch 1 : Fichiers Binaires & Texte",
     color: "#34d399",
     border: "#10b981",
     desc: "Fichiers texte (lignes) et fichiers d'enregistrements binaires (pickle dump/load sous Thonny)."
   },
   "Chapitre 2 : Récurrence": {
-    icon: "🔄",
+    icon: "repeat",
     shortName: "Ch 2 : Récurrence",
     color: "#60a5fa",
     border: "#3b82f6",
     desc: "Sous-programmes récursifs : cas de base, condition d'arrêt et appels récursifs conformes Bac."
   },
   "Chapitre 3 : Conversion entre les bases": {
-    icon: "🔢",
+    icon: "binary",
     shortName: "Ch 3 : Conversion entre les bases",
     color: "#c084fc",
     border: "#a855f7",
     desc: "Conversions universelles : base B vers décimal, décimal vers base B (divisions successives) et conversions directes."
   },
   "Chapitre 4 : Arithmétique": {
-    icon: "🧮",
+    icon: "calculator",
     shortName: "Ch 4 : Arithmétique",
     color: "#f472b6",
     border: "#ec4899",
     desc: "Primalité, PGCD (Euclide & soustractions), PPCM, divisibilité et décomposition en facteurs premiers."
   },
   "Chapitre 5 : Approximation et optimisation": {
-    icon: "📈",
+    icon: "trending-up",
     shortName: "Ch 5 : Approximation & Optimisation",
     color: "#f59e0b",
     border: "#d97706",
     desc: "Méthodes numériques d'approximation d'aires (milieu, rectangles, trapèzes) et recherche dichotomique."
   },
   "Chapitre 6 : Matrices": {
-    icon: "📐",
+    icon: "compass",
     shortName: "Ch 6 : Matrices",
     color: "#38bdf8",
     border: "#0284c7",
@@ -8466,7 +8469,7 @@ function renderAlgoTheoriqueCategories() {
 
   const allActive = !currentAlgoTheoriqueCategory || currentAlgoTheoriqueCategory === 'all';
   let html = `<button type="button" class="cat-pill ${allActive ? 'active' : ''}" onclick="setAlgoTheoriqueCategory('all')">
-    <span>✨ Tout afficher</span>
+    <span>Tout afficher</span>
     <span class="cat-pill-count">${items.length}</span>
   </button>`;
 
@@ -8481,7 +8484,7 @@ function renderAlgoTheoriqueCategories() {
     }).length;
 
     html += `<button type="button" class="cat-pill ${isAct ? 'active' : ''}" onclick="setAlgoTheoriqueCategory('${ch.slug}')">
-      <span>${ch.iconEmoji} ${ch.shortTitle}</span>
+      <span>${safeIcon(ch.iconEmoji || "book-open", 15)} ${ch.shortTitle}</span>
       <span class="cat-pill-count">${count}</span>
     </button>`;
   });
@@ -8520,14 +8523,14 @@ let currentMatrixGuideTab = 'zones';
 const MATRIX_GUIDE_DATA = {
   zones: {
     id: 'zones',
-    label: '📐 5 Zones Stratégiques',
+    label: '5 Zones Stratégiques',
     badge: 'Méthodologie d\'or Bac',
     title: 'Structure en 5 Zones des Boucles Imbriquées',
     algoId: 'algo-mat-zones-boucles',
     imageUrl: 'img/matrices/zones_boucles_matrice.png',
     summary: 'Savoir exactement où placer chaque variable : Zone 1 (Init globale) → Zone 2 (Init par ligne/colonne) → Zone 3 (Cœur de boucle case m[i,j]) → Zone 4 (Traitement fin de ligne) → Zone 5 (Résultat final matrice entière).',
     keyLoop: '// Décomposition en 5 Zones :\ns_tot <-- 0  // Zone 1 (Global)\nPour i de 0 à L-1 faire\n  s_l <-- 0  // Zone 2 (Par ligne)\n  Pour j de 0 à C-1 faire\n    // Zone 3 (Traitement cellule)\n    s_l <-- s_l + m[i, j]\n  Fin pour\n  écrire(s_l) // Zone 4 (Fin ligne)\nFin pour\nécrire(s_tot) // Zone 5 (Final)',
-    bacTip: '💡 Astuce Support IKODE : La boucle interne (da5lenya) est TOUJOURS celle qui tourne le plus vite ! i suit les lignes, j suit les colonnes.'
+    bacTip: 'Astuce Support IKODE : La boucle interne (da5lenya) est TOUJOURS celle qui tourne le plus vite ! i suit les lignes, j suit les colonnes.'
   },
   colonne_bas_haut: {
     id: 'colonne_bas_haut',
@@ -8538,7 +8541,7 @@ const MATRIX_GUIDE_DATA = {
     imageUrl: 'img/matrices/parcours_colonne_bas_haut.png',
     summary: 'On fixe la colonne de droite (C-1) et on monte les lignes de L-1 à 0. La colonne décrémente ensuite vers la gauche jusqu\'à 0.',
     keyLoop: 'Pour j de C - 1 à 0 (pas = -1) faire\n  Pour i de L - 1 à 0 (pas = -1) faire\n    // Traitement m[i, j]\n    écrire(m[i, j])\n  Fin pour\nFin pour',
-    bacTip: '💡 Indice Bac : Comme les colonnes avancent plus lentement que les lignes qui montent, la boucle externe est sur j (colonnes) et la boucle interne sur i (lignes).'
+    bacTip: 'Indice Bac : Comme les colonnes avancent plus lentement que les lignes qui montent, la boucle externe est sur j (colonnes) et la boucle interne sur i (lignes).'
   },
   ligne_droite_gauche: {
     id: 'ligne_droite_gauche',
@@ -8549,7 +8552,7 @@ const MATRIX_GUIDE_DATA = {
     imageUrl: 'img/matrices/parcours_ligne_droite_gauche.png',
     summary: 'On commence par la dernière ligne du bas (L-1) et on lit les colonnes de droite à gauche de C-1 à 0.',
     keyLoop: 'Pour i de L - 1 à 0 (pas = -1) faire\n  Pour j de C - 1 à 0 (pas = -1) faire\n    // Traitement m[i, j]\n    écrire(m[i, j])\n  Fin pour\nFin pour',
-    bacTip: '💡 Indice Bac : Toujours se rappeler : "dima el i taba3 el ligne, el j taba3 el colonne". Ici les deux boucles ont un pas négatif (-1).'
+    bacTip: 'Indice Bac : Toujours se rappeler : "dima el i taba3 el ligne, el j taba3 el colonne". Ici les deux boucles ont un pas négatif (-1).'
   },
   sablier: {
     id: 'sablier',
@@ -8560,7 +8563,7 @@ const MATRIX_GUIDE_DATA = {
     imageUrl: 'img/matrices/pattern_sablier_pyramide.png',
     summary: 'Parcours des étoiles * formant un entonnoir ou sablier. Les bornes début (d) et fin (f) se resserrent à chaque nouvelle ligne.',
     keyLoop: 'd <-- 0\nf <-- C - 1\nPour i de 0 à L - 1 faire\n  Pour j de d à f faire\n    // Traitement m[i, j]\n  Fin pour\n  d <-- d + 1\n  f <-- f - 1\nFin pour',
-    bacTip: '💡 Indice Bac : À chaque incrémentation de ligne i, la borne gauche d augmente de 1 et la borne droite f diminue de 1.'
+    bacTip: 'Indice Bac : À chaque incrémentation de ligne i, la borne gauche d augmente de 1 et la borne droite f diminue de 1.'
   },
   diagonales: {
     id: 'diagonales',
@@ -8573,29 +8576,29 @@ const MATRIX_GUIDE_DATA = {
     imageSteps: ['Partie 1 : Moitié supérieure (au-dessus et sur la diagonale principale)', 'Partie 2 : Moitié inférieure (sous la diagonale principale)'],
     summary: 'Balaye toute la matrice par diagonales orientées vers le haut. Décomposé en deux boucles : triangle supérieur puis triangle inférieur.',
     keyLoop: '// Partie 1 : Supérieure\nPour d de 0 à L - 1 faire\n  j <-- 0\n  Pour i de d à 0 (pas = -1) faire\n    écrire(m[i, j])\n    j <-- j + 1\n  Fin pour\nFin pour\n\n// Partie 2 : Inférieure\nPour d de 1 à L - 1 faire\n  j <-- d\n  Pour i de L - 1 à d (pas = -1) faire\n    écrire(m[i, j])\n    j <-- j + 1\n  Fin pour\nFin pour',
-    bacTip: '💡 Indice Bac : i et j bougent en même temps (i décrémente pendant que j incrémente), créant ainsi une trajectoire à 45° vers le haut droite.'
+    bacTip: 'Indice Bac : i et j bougent en même temps (i décrémente pendant que j incrémente), créant ainsi une trajectoire à 45° vers le haut droite.'
   },
   tri_colonne: {
     id: 'tri_colonne',
-    label: '🔄 Tri par Colonne',
+    label: 'Tri par Colonne',
     badge: 'Feuille d\'Annexe Bac',
     title: 'Tri Indépendant de Chaque Colonne d\'une Matrice',
     algoId: 'algo-tri-mat-colonne',
     imageUrl: 'img/matrices/tri_matrice_colonne.png',
     summary: 'Fixe la colonne j de 0 à n-1, puis applique un tri à bulles optimisé avec booléen p sur les cases m[i, j] et m[i + 1, j].',
     keyLoop: 'Pour j de 0 à n - 1 faire\n  p <-- vrai\n  Tant que p faire\n    p <-- faux\n    Pour i de 0 à taille - 2 faire\n      Si m[i, j] > m[i + 1, j] alors\n        aux <-- m[i, j]\n        m[i, j] <-- m[i + 1, j]\n        m[i + 1, j] <-- aux\n        p <-- vrai\n      Fin si\n    Fin pour\n    taille <-- taille - 1\n  Fin tant que\nFin pour',
-    bacTip: '💡 Indice Bac : Chaque colonne est triée verticalement de manière totalement indépendante.'
+    bacTip: 'Indice Bac : Chaque colonne est triée verticalement de manière totalement indépendante.'
   },
   tri_ligne: {
     id: 'tri_ligne',
-    label: '🔄 Tri par Ligne',
+    label: 'Tri par Ligne',
     badge: 'Feuille d\'Annexe Bac',
     title: 'Tri Indépendant de Chaque Ligne d\'une Matrice',
     algoId: 'algo-tri-mat-ligne',
     imageUrl: 'img/matrices/tri_matrice_ligne.png',
     summary: 'Fixe la ligne i de 0 à n-1, puis applique un tri à bulles optimisé avec booléen p sur les colonnes m[i, j] et m[i, j + 1].',
     keyLoop: 'Pour i de 0 à n - 1 faire\n  p <-- vrai\n  Tant que p faire\n    p <-- faux\n    Pour j de 0 à taille - 2 faire\n      Si m[i, j] > m[i, j + 1] alors\n        aux <-- m[i, j]\n        m[i, j] <-- m[i, j + 1]\n        m[i, j + 1] <-- aux\n        p <-- vrai\n      Fin si\n    Fin pour\n    taille <-- taille - 1\n  Fin tant que\nFin pour',
-    bacTip: '💡 Indice Bac : Chaque ligne est triée horizontalement de manière totalement indépendante.'
+    bacTip: 'Indice Bac : Chaque ligne est triée horizontalement de manière totalement indépendante.'
   }
 };
 
@@ -8626,7 +8629,7 @@ function selectMatrixGuideTab(tabKey) {
           </a>
         </div>
         <div style="margin-top: 8px; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;">
-          <span style="font-size: 0.78rem; color: var(--text-muted);">🔍 Cliquez pour ouvrir en haute résolution</span>
+          <span style="font-size: 0.78rem; color: var(--text-muted);">Cliquez pour ouvrir en haute résolution</span>
           <a href="${guide.imageUrl}" target="_blank" rel="noopener noreferrer" class="link-btn-subtle" style="font-size: 0.78rem; color: #ea580c; font-weight: 700;">
             Ouvrir l'image ↗
           </a>
@@ -8650,7 +8653,7 @@ function selectMatrixGuideTab(tabKey) {
         <!-- Squelette de Boucle Clé -->
         <div style="background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(234, 88, 12, 0.3); border-radius: 8px; padding: 12px; margin-bottom: 12px;">
           <div style="font-size: 0.78rem; font-weight: 800; color: #fb923c; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-            <span>⚡</span> Structure de Boucle Bac :
+            <span></span> Structure de Boucle Bac :
           </div>
           <pre style="margin: 0; font-family: monospace; font-size: 0.84rem; color: #fef08a; white-space: pre-wrap; line-height: 1.45;"><code>${escapeHtml(guide.keyLoop)}</code></pre>
         </div>
@@ -8663,7 +8666,7 @@ function selectMatrixGuideTab(tabKey) {
         <!-- Bouton d'action pour ouvrir la fiche complète avec TDO et Python -->
         ${itemObj ? `
           <button type="button" class="btn-primary" onclick='openAlgoTheoriqueModal(${JSON.stringify(itemObj).replace(/'/g, "&#39;")})' style="background: linear-gradient(135deg, #ea580c, #f97316); color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 700; font-size: 0.88rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 3px 12px rgba(234, 88, 12, 0.35);">
-            <span>📖</span>
+            <span></span>
             <span>Voir la Fiche Complète (T.D.O & Code Python)</span>
             <span>→</span>
           </button>
@@ -8753,7 +8756,7 @@ function getSectionPriorityBadge(secSlug) {
     border: 'rgba(148, 163, 184, 0.35)'
   };
   return `<span class="sec-prio-badge" style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;font-size:0.75rem;font-weight:800;color:${info.color};background:${info.bg};border:1px solid ${info.border};white-space:nowrap;" title="Fréquence dans les sujets d'examens (${info.count} sujet${info.count > 1 ? 's' : ''})">
-    <span>${info.label === 'Essentiel' ? '🔥' : (info.label === 'Important' ? '⭐' : '💡')}</span>
+    <span>${info.label === 'Essentiel' ? '' : (info.label === 'Important' ? '' : 'lightbulb')}</span>
     <span>${info.label}</span>
   </span>`;
 }
@@ -8772,13 +8775,13 @@ function renderFunctionTableHtml(table) {
         <td class="col-pseudo" style="min-width: 210px;">
           <div class="func-code-box">
             <code>${escapeHtml(row.pseudo)}</code>
-            <button type="button" class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText(${JSON.stringify(row.pseudo)}, this)" title="Copier le pseudo-code">📋</button>
+            <button type="button" class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText(${JSON.stringify(row.pseudo)}, this)" title="Copier le pseudo-code"></button>
           </div>
         </td>
         <td class="col-python" style="min-width: 210px;">
           <div class="func-code-box" style="border-color: rgba(52, 211, 153, 0.35);">
             <code style="color: #34d399;">${escapeHtml(row.python)}</code>
-            <button type="button" class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText(${JSON.stringify(row.python)}, this)" title="Copier le code Python">📋</button>
+            <button type="button" class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText(${JSON.stringify(row.python)}, this)" title="Copier le code Python"></button>
           </div>
         </td>
       </tr>
@@ -8790,7 +8793,7 @@ function renderFunctionTableHtml(table) {
       <div class="func-table-header">
         <div>
           <h5 class="func-table-title">
-            <span>📋</span> ${escapeHtml(table.title)}
+            <span></span> ${escapeHtml(table.title)}
           </h5>
           ${table.topic ? `<span style="font-size: 0.78rem; color: var(--text-muted);">${escapeHtml(table.topic)}</span>` : ''}
         </div>
@@ -8951,7 +8954,7 @@ function renderAlgoTheoriqueCards() {
     if (docMatches === 0) {
       container.innerHTML = `
         <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); background: var(--bg-card); border-radius: var(--radius-md);">
-          🔍 Aucun sous-programme, algorithme ou document ne correspond à votre recherche.
+          Aucun sous-programme, algorithme ou document ne correspond à votre recherche.
         </div>
       `;
       return;
@@ -8979,7 +8982,7 @@ function renderAlgoTheoriqueCards() {
     }
 
     const meta = {
-      icon: ch.iconEmoji || "📖",
+      icon: ch.iconEmoji || "book-open",
       shortName: ch.shortTitle || ch.title,
       color: ch.color || "#fbbf24",
       border: ch.borderColor || "#f59e0b",
@@ -8994,7 +8997,7 @@ function renderAlgoTheoriqueCards() {
           <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px;">
             <div>
               <h4 style="margin: 0; color: #fb923c; font-size: 1.15rem; font-weight: 800; display: flex; align-items: center; gap: 8px;">
-                <span>📸</span> Guide Visuel des Types de Matrices & Schémas Manuscris (Support Bac)
+                <span></span> Guide Visuel des Types de Matrices & Schémas Manuscris (Support Bac)
               </h4>
               <p style="margin: 4px 0 0 0; color: var(--text-secondary); font-size: 0.84rem;">
                 Consultez les schémas originaux, l'architecture des boucles et les règles méthodologiques officielles.
@@ -9056,7 +9059,7 @@ function renderAlgoTheoriqueCards() {
         <div class="chapter-step-header">
           <div class="chapter-step-title-wrap">
             <span class="chapter-step-num-badge">Étape 1 / 6</span>
-            <h4 class="chapter-step-title">📖 Cours en bref &amp; Règles fondamentales</h4>
+            <h4 class="chapter-step-title">Cours en bref &amp; Règles fondamentales</h4>
           </div>
           <button type="button" class="chapter-step-toggle-btn ${summary.steps[1].done ? 'done' : ''}" onclick="toggleChapterStep('${ch.slug}', 1)">
             <span>${summary.steps[1].done ? '✓ Validé' : '○ Marquer comme terminé'}</span>
@@ -9065,7 +9068,7 @@ function renderAlgoTheoriqueCards() {
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px;">
           <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px;">
             <div style="font-size: 0.82rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
-              <span>💡</span> Notions Essentielles
+              <span></span> Notions Essentielles
             </div>
             <ul style="margin: 0; padding-left: 18px; font-size: 0.84rem; color: var(--text-primary); line-height: 1.55;">
               ${brief.keyNotions.map(n => `<li style="margin-bottom: 6px;">${escapeHtml(n)}</li>`).join('')}
@@ -9073,7 +9076,7 @@ function renderAlgoTheoriqueCards() {
           </div>
           <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px;">
             <div style="font-size: 0.82rem; font-weight: 800; color: #34d399; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
-              <span>📜</span> Conventions Pseudo-Code &amp; Python
+              <span></span> Conventions Pseudo-Code &amp; Python
             </div>
             <ul style="margin: 0; padding-left: 18px; font-size: 0.84rem; color: var(--text-primary); line-height: 1.55;">
               ${brief.syntaxRules.map(s => `<li style="margin-bottom: 6px;">${escapeHtml(s)}</li>`).join('')}
@@ -9081,7 +9084,7 @@ function renderAlgoTheoriqueCards() {
           </div>
           <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px;">
             <div style="font-size: 0.82rem; font-weight: 800; color: #f59e0b; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
-              <span>⚠️</span> Astuces &amp; Pièges Bac
+              <span></span> Astuces &amp; Pièges Bac
             </div>
             <ul style="margin: 0; padding-left: 18px; font-size: 0.84rem; color: var(--text-primary); line-height: 1.55;">
               ${brief.bacTips.map(b => `<li style="margin-bottom: 6px;">${escapeHtml(b)}</li>`).join('')}
@@ -9096,7 +9099,7 @@ function renderAlgoTheoriqueCards() {
     if (chapterItems.length === 0) {
       algosCardsHtml = `
         <div style="grid-column: 1 / -1; padding: 24px; border-radius: 12px; background: var(--surface-bg); color: var(--text-secondary); font-size: 0.88rem; text-align: center; border: 1px dashed var(--border-color);">
-          📚 Les sous-programmes types de ce chapitre sont en cours de mise en ligne.
+          Les sous-programmes types de ce chapitre sont en cours de mise en ligne.
           <span style="display: block; margin-top: 6px; font-size: 0.8rem; color: #f59e0b;">Consultez les devoirs, séries et exercices d'examens ci-dessous pour vous entraîner !</span>
         </div>
       `;
@@ -9118,7 +9121,7 @@ function renderAlgoTheoriqueCards() {
               <div style="display: flex; align-items: center; gap: 6px;">
                 ${renderBookmarkBtn('algo', item.id, { title: item.name, chapter: ch.slug })}
                 <button type="button" class="algo-studied-btn ${isStudied ? 'studied' : ''}" onclick="event.stopPropagation(); toggleAlgoStudied('${item.id}', '${ch.slug}', this)" title="${isStudied ? 'Marqué comme étudié' : 'Marquer comme étudié'}">
-                  <span>${isStudied ? '✓' : '○'}</span>
+                  <span>${isStudied ? 'check' : '○'}</span>
                   <span>${isStudied ? 'Étudié' : 'Étudier'}</span>
                 </button>
               </div>
@@ -9128,7 +9131,7 @@ function renderAlgoTheoriqueCards() {
               <div style="display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap;">
                 ${(item.imageUrl || (item.images && item.images.length)) ? `
                   <span class="item-card-tag" style="color: #38bdf8; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); font-size: 0.74rem; font-weight: 700;">
-                    📸 Schéma Inclus
+                    Schéma Inclus
                   </span>
                 ` : ''}
                 <span class="item-card-tag" style="color: ${typeBadgeColor}; background: ${typeBadgeBg}; border-color: ${typeBadgeBorder}; font-size: 0.8rem; font-weight: 700;">
@@ -9138,7 +9141,7 @@ function renderAlgoTheoriqueCards() {
             </div>
             <p class="item-card-desc">${escapeHtml(item.description || item.summary)}</p>
             <div class="card-action-bar">
-              <span style="color: ${meta.color}; font-weight: 700; font-size: 0.86rem;">⚡ Voir l'Algorithme, TDO & Python</span>
+              <span style="color: ${meta.color}; font-weight: 700; font-size: 0.86rem;">Voir l'Algorithme, TDO & Python</span>
               <span style="color: ${meta.color}; font-size: 1rem;">→</span>
             </div>
           </div>
@@ -9151,7 +9154,7 @@ function renderAlgoTheoriqueCards() {
         <div class="chapter-step-header">
           <div class="chapter-step-title-wrap">
             <span class="chapter-step-num-badge">Étape 2 / 6</span>
-            <h4 class="chapter-step-title">⚡ Algorithmes types officiels (${chapterItems.length})</h4>
+            <h4 class="chapter-step-title">Algorithmes types officiels (${chapterItems.length})</h4>
             ${chapterItems.length > 0 ? `<span style="font-size: 0.78rem; color: #10b981; font-weight: 700;">(${studiedCount}/${chapterItems.length} étudiés)</span>` : ''}
           </div>
           ${chapterItems.length > 0 ? `
@@ -9171,13 +9174,13 @@ function renderAlgoTheoriqueCards() {
     if (combinedSeries.length === 0) {
       seriesCardsHtml = `
         <div style="padding: 20px; border-radius: 10px; background: var(--surface-bg); color: var(--text-secondary); font-size: 0.86rem; text-align: center; border: 1px dashed var(--border-color);">
-          📋 Aucune série PDF spécifique pour ce chapitre pour l'instant. Consultez les devoirs de synthèse et exercices d'examens associés !
+          Aucune série PDF spécifique pour ce chapitre pour l'instant. Consultez les devoirs de synthèse et exercices d'examens associés !
         </div>
       `;
     } else {
       seriesCardsHtml = combinedSeries.map(doc => {
         const isExtrait = doc.kind === 'extrait';
-        const badgeLabel = isExtrait ? '✂️ Extrait de Révision' : '📋 Série TP';
+        const badgeLabel = isExtrait ? 'Extrait de Révision' : 'Série TP';
         const badgeColor = isExtrait ? '#818cf8' : '#38bdf8';
         const badgeBg = isExtrait ? 'rgba(99, 102, 241, 0.15)' : 'rgba(56, 189, 248, 0.15)';
         const badgeBorder = isExtrait ? 'rgba(99, 102, 241, 0.3)' : 'rgba(56, 189, 248, 0.3)';
@@ -9189,21 +9192,21 @@ function renderAlgoTheoriqueCards() {
                 <span style="font-size: 0.76rem; font-weight: 700; color: ${badgeColor}; background: ${badgeBg}; border: 1px solid ${badgeBorder}; padding: 2px 8px; border-radius: 10px;">
                   ${badgeLabel}
                 </span>
-                ${doc.incomplete ? '<span style="font-size: 0.76rem; font-weight: 700; color: #f87171; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); padding: 2px 8px; border-radius: 10px;">⚠️ Incomplet</span>' : ''}
+                ${doc.incomplete ? '<span style="font-size: 0.76rem; font-weight: 700; color: #f87171; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); padding: 2px 8px; border-radius: 10px;">Incomplet</span>' : ''}
               </div>
               <h5 style="margin: 0 0 4px 0; font-size: 0.95rem; font-weight: 700; color: var(--text-primary);">${escapeHtml(doc.title)}</h5>
               <div style="font-size: 0.8rem; color: var(--text-secondary); display: flex; flex-wrap: wrap; gap: 10px;">
-                ${credit ? `<span>✏️ ${escapeHtml(credit)}</span>` : ''}
-                ${doc.notes ? `<span>📝 ${escapeHtml(doc.notes)}</span>` : ''}
+                ${credit ? `<span>${escapeHtml(credit)}</span>` : ''}
+                ${doc.notes ? `<span>${escapeHtml(doc.notes)}</span>` : ''}
               </div>
             </div>
             <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
               <a href="${doc.file}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: linear-gradient(135deg, #4f46e5, #6366f1); color: #fff; font-size: 0.84rem; font-weight: 600; text-decoration: none; white-space: nowrap;">
-                📄 Sujet
+                Sujet
               </a>
               ${doc.correction ? `
               <a href="${doc.correction}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-size: 0.84rem; font-weight: 600; text-decoration: none; white-space: nowrap;">
-                🎯 Correction
+                Correction
               </a>` : ''}
             </div>
           </div>
@@ -9227,7 +9230,7 @@ function renderAlgoTheoriqueCards() {
       `;
     } else {
       const bestScoreBadge = bestScore !== null
-        ? `<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3);font-size:0.82rem;font-weight:700;">🏆 Meilleur score : ${bestScore}%</span>`
+        ? `<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3);font-size:0.82rem;font-weight:700;">Meilleur score : ${bestScore}%</span>`
         : `<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;background:rgba(245,158,11,0.12);color:#f59e0b;border:1px solid rgba(245,158,11,0.25);font-size:0.82rem;font-weight:700;">⏳ Non commencé</span>`;
 
       quizBlockContent = `
@@ -9235,7 +9238,7 @@ function renderAlgoTheoriqueCards() {
           <div style="flex: 1; min-width: 240px;">
             <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px;">
               <span style="font-size: 0.78rem; font-weight: 700; color: #818cf8; background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); padding: 2px 10px; border-radius: 12px;">
-                ⚡ Format Express (2 à 5 min)
+                Format Express (2 à 5 min)
               </span>
               ${bestScoreBadge}
             </div>
@@ -9248,7 +9251,7 @@ function renderAlgoTheoriqueCards() {
           </div>
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
             <a href="#/algo/quiz/${ch.slug}" onclick="navigateToHash('#/algo/quiz/${ch.slug}')" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 10px; background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; font-size: 0.88rem; font-weight: 800; text-decoration: none; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3); white-space: nowrap;">
-              <span>🚀 Lancer le Quiz (${chapterQuiz.length})</span>
+              <span>Lancer le Quiz (${chapterQuiz.length})</span>
               <span>→</span>
             </a>
           </div>
@@ -9261,7 +9264,7 @@ function renderAlgoTheoriqueCards() {
         <div class="chapter-step-header">
           <div class="chapter-step-title-wrap">
             <span class="chapter-step-num-badge">Étape 3 / 6</span>
-            <h4 class="chapter-step-title">⚡ Quiz du chapitre (${chapterQuiz.length} questions)</h4>
+            <h4 class="chapter-step-title">Quiz du chapitre (${chapterQuiz.length} questions)</h4>
           </div>
           ${chapterQuiz.length > 0 ? `
             <button type="button" class="chapter-step-toggle-btn ${isQuizStepDone ? 'done' : ''}" onclick="toggleChapterStep('${ch.slug}', 3)">
@@ -9278,7 +9281,7 @@ function renderAlgoTheoriqueCards() {
     if (chapterExercises.length === 0) {
       exercisesHtml = `
         <div style="padding: 20px; border-radius: 10px; background: var(--surface-bg); color: var(--text-secondary); font-size: 0.86rem; text-align: center; border: 1px dashed var(--border-color);">
-          🎯 Les exercices d'examens pour ce chapitre sont en cours d'indexation.
+          Les exercices d'examens pour ce chapitre sont en cours d'indexation.
         </div>
       `;
     } else {
@@ -9307,14 +9310,14 @@ function renderAlgoTheoriqueCards() {
                 ${escapeHtml(ex.exNum)}
               </span>
               <span style="font-size: 0.78rem; font-weight: 700; color: #f59e0b; background: rgba(245,158,11,0.12); padding: 2px 8px; border-radius: 6px;">
-                ⭐ ${pointsStr}
+                ${pointsStr}
               </span>
-              <span style="font-size: 0.78rem; color: var(--text-secondary);">📅 ${examDate}</span>
+              <span style="font-size: 0.78rem; color: var(--text-secondary);">${examDate}</span>
             </div>
             <h5 style="margin: 0 0 4px 0; font-size: 0.95rem; font-weight: 700; color: var(--text-primary); line-height: 1.3;">
               ${escapeHtml(examTitle)}
             </h5>
-            ${examCredit ? `<div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 6px;">🏫 ${escapeHtml(examCredit)}</div>` : ''}
+            ${examCredit ? `<div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 6px;">${escapeHtml(examCredit)}</div>` : ''}
             <div style="display: flex; flex-wrap: wrap; gap: 4px;">
               ${typeBadges}
             </div>
@@ -9324,7 +9327,7 @@ function renderAlgoTheoriqueCards() {
               ${isBookmarked ? '★' : '☆'}
             </button>
             <a href="${pdfUrl}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-size: 0.84rem; font-weight: 600; text-decoration: none; white-space: nowrap;">
-              📄 Ouvrir à la page ${ex.pdfPage || 1}
+              Ouvrir à la page ${ex.pdfPage || 1}
             </a>
           </div>
         </div>`;
@@ -9337,7 +9340,7 @@ function renderAlgoTheoriqueCards() {
         <div class="chapter-step-header">
           <div class="chapter-step-title-wrap">
             <span class="chapter-step-num-badge">Étape 4 / 6</span>
-            <h4 class="chapter-step-title">🎯 Exercices d'examens de ce chapitre (${chapterExercises.length})</h4>
+            <h4 class="chapter-step-title">Exercices d'examens de ce chapitre (${chapterExercises.length})</h4>
           </div>
           ${chapterExercises.length > 0 ? `
             <button type="button" class="chapter-step-toggle-btn ${isExStepDone ? 'done' : ''}" onclick="toggleChapterStep('${ch.slug}', 4)">
@@ -9358,7 +9361,7 @@ function renderAlgoTheoriqueCards() {
         <div class="chapter-step-header">
           <div class="chapter-step-title-wrap">
             <span class="chapter-step-num-badge">Étape 5 / 6</span>
-            <h4 class="chapter-step-title">📋 Séries &amp; Documents de travaux pratiques (${combinedSeries.length})</h4>
+            <h4 class="chapter-step-title">Séries &amp; Documents de travaux pratiques (${combinedSeries.length})</h4>
           </div>
           ${combinedSeries.length > 0 ? `
             <button type="button" class="chapter-step-toggle-btn ${isSeriesStepDone ? 'done' : ''}" onclick="toggleChapterStep('${ch.slug}', 5)">
@@ -9395,10 +9398,10 @@ function renderAlgoTheoriqueCards() {
           <div style="flex: 1; min-width: 240px;">
             <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px;">
               <span style="font-size: 0.78rem; font-weight: 700; color: #c084fc; background: rgba(192, 132, 252, 0.15); border: 1px solid rgba(192, 132, 252, 0.3); padding: 2px 10px; border-radius: 12px;">
-                🗂️ Répétition Espacée Leitner
+                Répétition Espacée Leitner
               </span>
               <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;background:rgba(56,189,248,0.12);color:#38bdf8;border:1px solid rgba(56,189,248,0.25);font-size:0.82rem;font-weight:700;">
-                📅 ${dueCardsToday > 0 ? `${dueCardsToday} carte(s) à réviser aujourd'hui` : 'Toutes les cartes sont à jour !'}
+                ${dueCardsToday > 0 ? `${dueCardsToday} carte(s) à réviser aujourd'hui` : 'Toutes les cartes sont à jour !'}
               </span>
             </div>
             <h5 style="margin: 0 0 6px 0; font-size: 1.05rem; font-weight: 800; color: var(--text-primary);">
@@ -9410,7 +9413,7 @@ function renderAlgoTheoriqueCards() {
           </div>
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
             <a href="#/revision/cartes" onclick="navigateToHash('#/revision/cartes'); if(typeof filterFlashcardDeckAlgos==='function'){setTimeout(()=>filterFlashcardDeckAlgos('${ch.slug}'),100);}" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 10px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: #fff; font-size: 0.88rem; font-weight: 800; text-decoration: none; box-shadow: 0 4px 14px rgba(139, 92, 246, 0.3); white-space: nowrap;">
-              <span>🗂️ Réviser les cartes (${chapterCards.length})</span>
+              <span>Réviser les cartes (${chapterCards.length})</span>
               <span>→</span>
             </a>
           </div>
@@ -9423,7 +9426,7 @@ function renderAlgoTheoriqueCards() {
         <div class="chapter-step-header">
           <div class="chapter-step-title-wrap">
             <span class="chapter-step-num-badge">Étape 6 / 6</span>
-            <h4 class="chapter-step-title">🗂️ Cartes mémoire du chapitre (${chapterCards.length} cartes)</h4>
+            <h4 class="chapter-step-title">Cartes mémoire du chapitre (${chapterCards.length} cartes)</h4>
           </div>
           ${chapterCards.length > 0 ? `
             <button type="button" class="chapter-step-toggle-btn ${isCardsStepDone ? 'done' : ''}" onclick="toggleChapterStep('${ch.slug}', 6)">
@@ -9460,7 +9463,7 @@ function renderAlgoTheoriqueCards() {
       sectionsTocHtml = `
         <div class="chapter-sections-toc">
           <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="font-size: 0.95rem;">📑</span>
+            <span style="font-size: 0.95rem;"></span>
             <span style="font-weight: 800; font-size: 0.84rem; color: var(--text-primary);">Sommaire :</span>
           </div>
           <div class="chapter-toc-pills">
@@ -9497,7 +9500,7 @@ function renderAlgoTheoriqueCards() {
           secAlgosHtml = `
             <div style="margin-top: 18px; margin-bottom: 20px;">
               <div style="font-size: 0.84rem; font-weight: 800; color: ${meta.color}; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-                <span>⚡</span> Algorithmes types de cette section (${secAlgos.length})
+                <span></span> Algorithmes types de cette section (${secAlgos.length})
               </div>
               <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px;">
                 ${secAlgos.map(item => {
@@ -9516,7 +9519,7 @@ function renderAlgoTheoriqueCards() {
                         <div style="display: flex; align-items: center; gap: 6px;">
                           ${renderBookmarkBtn('algo', item.id, { title: item.name, chapter: ch.slug })}
                           <button type="button" class="algo-studied-btn ${isStudied ? 'studied' : ''}" onclick="event.stopPropagation(); toggleAlgoStudied('${item.id}', '${ch.slug}', this)" title="${isStudied ? 'Marqué comme étudié' : 'Marquer comme étudié'}">
-                            <span>${isStudied ? '✓' : '○'}</span>
+                            <span>${isStudied ? 'check' : '○'}</span>
                             <span>${isStudied ? 'Étudié' : 'Étudier'}</span>
                           </button>
                         </div>
@@ -9526,7 +9529,7 @@ function renderAlgoTheoriqueCards() {
                         <div style="display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap;">
                           ${(item.imageUrl || (item.images && item.images.length)) ? `
                             <span class="item-card-tag" style="color: #38bdf8; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); font-size: 0.74rem; font-weight: 700;">
-                              📸 Schéma Inclus
+                              Schéma Inclus
                             </span>
                           ` : ''}
                           <span class="item-card-tag" style="color: ${typeBadgeColor}; background: ${typeBadgeBg}; border-color: ${typeBadgeBorder}; font-size: 0.8rem; font-weight: 700;">
@@ -9536,7 +9539,7 @@ function renderAlgoTheoriqueCards() {
                       </div>
                       <p class="item-card-desc">${escapeHtml(item.description || item.summary)}</p>
                       <div class="card-action-bar">
-                        <span style="color: ${meta.color}; font-weight: 700; font-size: 0.86rem;">⚡ Voir l'Algorithme, TDO & Python</span>
+                        <span style="color: ${meta.color}; font-weight: 700; font-size: 0.86rem;">Voir l'Algorithme, TDO & Python</span>
                         <span style="color: ${meta.color}; font-size: 1rem;">→</span>
                       </div>
                     </div>
@@ -9554,7 +9557,7 @@ function renderAlgoTheoriqueCards() {
             <div class="sec-skills-box">
               <div class="sec-skills-header">
                 <div style="font-size: 0.84rem; font-weight: 800; color: #10b981; text-transform: uppercase; display: flex; align-items: center; gap: 6px;">
-                  <span>✅</span> Compétences exigibles ("À savoir")
+                  <span></span> Compétences exigibles ("À savoir")
                 </div>
                 <span id="sec-skill-badge-${sec.slug}" style="font-size: 0.78rem; font-weight: 800; color: ${secProgress.percent === 100 ? '#10b981' : 'var(--text-secondary)'}; background: rgba(255,255,255,0.06); padding: 3px 10px; border-radius: 12px; border: 1px solid var(--border-color);">
                   ${secProgress.ticked}/${secSkills.length} acquis
@@ -9585,7 +9588,7 @@ function renderAlgoTheoriqueCards() {
           errorTipHtml = `
             <div style="margin-top: 12px; margin-bottom: 14px; padding: 10px 14px; background: rgba(245, 158, 11, 0.08); border: 1px dashed rgba(245, 158, 11, 0.35); border-radius: 8px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
               <div style="font-size: 0.82rem; color: #f59e0b; font-weight: 600; display: flex; align-items: center; gap: 6px;">
-                <span>⚠️</span> <span>${escapeHtml(err.title)} : ${escapeHtml((err.explanation || err.title || '').substring(0, 75))}...</span>
+                <span></span> <span>${escapeHtml(err.title)} : ${escapeHtml((err.explanation || err.title || '').substring(0, 75))}...</span>
               </div>
               <a href="#/algo/erreurs?chapitre=${ch.slug}" class="cat-pill" style="font-size: 0.75rem; padding: 3px 10px; text-decoration: none; border-color: rgba(245,158,11,0.4); color: #f59e0b;">
                 Voir les pièges →
@@ -9602,16 +9605,16 @@ function renderAlgoTheoriqueCards() {
         let secTrainBarHtml = `
           <div class="sec-train-bar">
             <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">
-              🏋️ S'entraîner :
+              S'entraîner :
             </span>
             ${secQuizCount > 0 ? `
               <a href="#/algo/quiz?chapitre=${ch.slug}&section=${sec.slug}" onclick="navigateToHash('#/algo/quiz?chapitre=${ch.slug}&section=${sec.slug}')" class="sec-train-btn quiz">
-                <span>🎯</span> Quiz de cette section (${secQuizCount})
+                <span></span> Quiz de cette section (${secQuizCount})
               </a>
             ` : ''}
             ${secExCount > 0 ? `
               <a href="#/examens?chapitre=${ch.slug}&section=${sec.slug}" onclick="navigateToHash('#/examens?chapitre=${ch.slug}&section=${sec.slug}')" class="sec-train-btn exam">
-                <span>📝</span> Exercices d'examens (${secExCount})
+                <span></span> Exercices d'examens (${secExCount})
               </a>
             ` : ''}
           </div>
@@ -9630,7 +9633,7 @@ function renderAlgoTheoriqueCards() {
                   ${secProgress.ticked}/${secProgress.total} acquis
                 </span>
                 <a href="#/algo/theorique/${ch.slug}/${sec.slug}" onclick="navigateToSection('${ch.slug}', '${sec.slug}', event)" style="font-size: 0.78rem; color: #38bdf8; text-decoration: none; padding: 4px 8px; border-radius: 6px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.25);">
-                  🔗 Lien
+                  Lien
                 </a>
               </div>
             </div>
@@ -9638,7 +9641,7 @@ function renderAlgoTheoriqueCards() {
             <!-- COURS EN BREF DE LA SECTION -->
             <div class="sec-cours-brief">
               <div style="font-size: 0.82rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-                <span>💡</span> Cours en bref &amp; Définitions
+                <span></span> Cours en bref &amp; Définitions
               </div>
               ${escapeHtml(sec.summary)}
             </div>
@@ -9669,13 +9672,13 @@ function renderAlgoTheoriqueCards() {
       <div class="chapter-nav-top-bar" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; padding: 10px 16px; background: rgba(15, 23, 42, 0.65); border: 1px solid var(--border-color); border-radius: 12px;">
         <a href="#/algo/theorique/${prevCh.slug}" onclick="navigateToHash('#/algo/theorique/${prevCh.slug}')" class="ch-nav-btn prev" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.84rem; font-weight: 700; color: var(--text-secondary); text-decoration: none;">
           <span>←</span>
-          <span>${prevCh.iconEmoji} ${escapeHtml(prevCh.shortTitle)}</span>
+          <span>${safeIcon(prevCh.iconEmoji || "book-open", 14)} ${escapeHtml(prevCh.shortTitle)}</span>
         </a>
         <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-muted); background: rgba(255,255,255,0.06); padding: 4px 12px; border-radius: 12px;">
           Chapitre ${ch.order} / ${allChs.length}
         </span>
         <a href="#/algo/theorique/${nextCh.slug}" onclick="navigateToHash('#/algo/theorique/${nextCh.slug}')" class="ch-nav-btn next" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.84rem; font-weight: 700; color: var(--text-secondary); text-decoration: none;">
-          <span>${nextCh.iconEmoji} ${escapeHtml(nextCh.shortTitle)}</span>
+          <span>${safeIcon(nextCh.iconEmoji || "book-open", 14)} ${escapeHtml(nextCh.shortTitle)}</span>
           <span>→</span>
         </a>
       </div>
@@ -9684,7 +9687,7 @@ function renderAlgoTheoriqueCards() {
       <div class="algo-chapter-banner" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; padding: 16px 20px; background: rgba(15, 23, 42, 0.75); border: 1px solid var(--border-color); border-left: 4px solid ${meta.border}; border-radius: var(--radius-md);">
         <div style="display: flex; align-items: center; gap: 12px;">
           <div style="font-size: 1.5rem; background: rgba(255,255,255,0.06); width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-            ${meta.icon}
+            ${safeIcon(meta.icon || "tag", 14)}
           </div>
           <div>
             <h3 style="margin: 0; font-size: 1.2rem; color: ${meta.color}; font-weight: 800;">${escapeHtml(ch.fullTitle)}</h3>
@@ -9693,7 +9696,7 @@ function renderAlgoTheoriqueCards() {
         </div>
         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
           <a href="#/algo/theorique/${ch.slug}/resume" onclick="navigateToHash('#/algo/theorique/${ch.slug}/resume')" class="cat-pill" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; font-size: 0.82rem; font-weight: 700; text-decoration: none; border-color: rgba(56, 189, 248, 0.4); color: #38bdf8;">
-            <span>🖨️ Fiche A4 à imprimer</span>
+            <span>${safeIcon("printer", 15)} Fiche A4 à imprimer</span>
           </a>
           <span style="background: rgba(255,255,255,0.08); color: ${meta.color}; border: 1px solid ${meta.border}55; font-size: 0.8rem; font-weight: 800; padding: 4px 12px; border-radius: 20px; white-space: nowrap;">
             ${countBadgeText}
@@ -9705,7 +9708,7 @@ function renderAlgoTheoriqueCards() {
       <div class="chapter-progress-box" id="ch-progbox-${ch.slug}">
         <div class="chapter-progress-header">
           <span class="chapter-progress-title">
-            <span>📈</span> Progression de votre révision :
+            <span></span> Progression de votre révision :
           </span>
           <div>
             <span class="chapter-progress-pct" id="ch-progpct-${ch.slug}">${summary.percent}% terminé</span>
@@ -9730,7 +9733,7 @@ function renderAlgoTheoriqueCards() {
       <div style="margin-top: 36px; margin-bottom: 20px; border-top: 2px dashed var(--border-color); padding-top: 24px;">
         <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 16px;">
           <h4 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
-            <span>🎯</span> Entraînement Global du Chapitre
+            <span></span> Entraînement Global du Chapitre
           </h4>
           <span id="ch-skill-total-${ch.slug}" style="font-size: 0.8rem; font-weight: 800; color: #10b981; background: rgba(16, 185, 129, 0.12); padding: 4px 12px; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.3);">
             ${chSkillProgress.ticked}/${chSkillProgress.total} compétences validées
@@ -9757,13 +9760,13 @@ function renderAlgoTheoriqueCards() {
       <div class="chapter-nav-bottom-bar" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 32px; padding: 16px; background: rgba(15, 23, 42, 0.65); border: 1px solid var(--border-color); border-radius: 12px;">
         <a href="#/algo/theorique/${prevCh.slug}" onclick="navigateToHash('#/algo/theorique/${prevCh.slug}')" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border-color); color: var(--text-primary); font-size: 0.88rem; font-weight: 700; text-decoration: none; background: var(--bg-card);">
           <span>←</span>
-          <span>Précédent : ${prevCh.iconEmoji} ${escapeHtml(prevCh.shortTitle)}</span>
+          <span>Précédent : ${safeIcon(prevCh.iconEmoji || "book-open", 14)} ${escapeHtml(prevCh.shortTitle)}</span>
         </a>
         <button type="button" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="background: none; border: 1px solid var(--border-color); padding: 8px 14px; border-radius: 8px; color: var(--text-secondary); font-size: 0.84rem; cursor: pointer; font-weight: 600;">
           ↑ Haut de page
         </button>
         <a href="#/algo/theorique/${nextCh.slug}" onclick="navigateToHash('#/algo/theorique/${nextCh.slug}')" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 8px; background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; font-size: 0.88rem; font-weight: 800; text-decoration: none;">
-          <span>Suivant : ${nextCh.iconEmoji} ${escapeHtml(nextCh.shortTitle)}</span>
+          <span>Suivant : ${safeIcon(nextCh.iconEmoji || "book-open", 14)} ${escapeHtml(nextCh.shortTitle)}</span>
           <span>→</span>
         </a>
       </div>
@@ -9783,12 +9786,12 @@ function renderAlgoTheoriqueCards() {
 
 function renderChapterStepperPills(slug, summary, counts) {
   const steps = [
-    { num: 1, icon: '📖', label: '1. Cours', count: counts.coursCount },
-    { num: 2, icon: '⚡', label: '2. Algorithmes', count: counts.algosCount },
-    { num: 3, icon: '⚡', label: '3. Quiz', count: counts.quizCount },
-    { num: 4, icon: '🎯', label: '4. Exercices', count: counts.exercisesCount },
-    { num: 5, icon: '📋', label: '5. Documents', count: counts.seriesCount },
-    { num: 6, icon: '🗂️', label: '6. Cartes', count: counts.cardsCount }
+    { num: 1, icon: 'book-open', label: '1. Cours', count: counts.coursCount },
+    { num: 2, icon: 'zap', label: '2. Algorithmes', count: counts.algosCount },
+    { num: 3, icon: 'zap', label: '3. Quiz', count: counts.quizCount },
+    { num: 4, icon: '', label: '4. Exercices', count: counts.exercisesCount },
+    { num: 5, icon: '', label: '5. Documents', count: counts.seriesCount },
+    { num: 6, icon: '', label: '6. Cartes', count: counts.cardsCount }
   ];
 
   return steps.map(st => {
@@ -9806,7 +9809,7 @@ function renderChapterStepperPills(slug, summary, counts) {
     const isDone = stepInfo.done;
     return `
       <div class="stepper-step-pill ${isDone ? 'done' : ''}" onclick="scrollToChapterStep('${slug}', ${st.num})" title="Cliquer pour accéder directement à l'étape ${st.num}">
-        <span class="stepper-pill-icon">${isDone ? '✓' : st.icon}</span>
+        <span class="stepper-pill-icon">${isDone ? 'check' : st.icon}</span>
         <span>${st.label}</span>
         ${st.count > 0 ? `<span style="font-size:0.72rem;opacity:0.75;">(${st.count})</span>` : ''}
       </div>
@@ -9848,7 +9851,7 @@ function toggleAlgoStudied(algoId, slug, btnEl) {
   // Mettre à jour l'élément visuel immédiatement si passé
   if (btnEl) {
     btnEl.classList.toggle('studied', isStudied);
-    btnEl.innerHTML = `<span>${isStudied ? '✓' : '○'}</span> <span>${isStudied ? 'Étudié' : 'Étudier'}</span>`;
+    btnEl.innerHTML = `<span>${isStudied ? 'check' : '○'}</span> <span>${isStudied ? 'Étudié' : 'Étudier'}</span>`;
   }
 
   // Si slug fourni ou trouvé, vérifier si tous les algos du chapitre sont étudiés
@@ -9870,7 +9873,7 @@ function toggleAlgoStudied(algoId, slug, btnEl) {
 }
 
 function confirmResetProgress() {
-  const ok = confirm("⚠️ Réinitialiser toute votre progression de révision ?\n\nToutes les étapes validées, sous-programmes étudiés et historiques d'évaluation seront remis à zéro.\n\nConfirmer la réinitialisation ?");
+  const ok = confirm("Réinitialiser toute votre progression de révision ?\n\nToutes les étapes validées, sous-programmes étudiés et historiques d'évaluation seront remis à zéro.\n\nConfirmer la réinitialisation ?");
   if (!ok) return;
 
   if (typeof STI_STORE !== 'undefined') {
@@ -9897,7 +9900,7 @@ function renderSidebarChapterRings() {
 
     return `
       <a class="sidebar-chapter-sublink ${isAct ? 'active' : ''}" onclick="navigateToHash('#/algo/theorique/${ch.slug}')" title="${escapeHtml(ch.shortTitle)} : ${pct}% validé">
-        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${ch.iconEmoji} ${escapeHtml(ch.shortTitle)}</span>
+        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${safeIcon(ch.iconEmoji || "book-open", 15)} ${escapeHtml(ch.shortTitle)}</span>
         <div class="sidebar-ring-wrap">
           <svg width="18" height="18" viewBox="0 0 36 36" class="sidebar-ring-svg">
             <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-width="4.5" />
@@ -9920,6 +9923,7 @@ function updateHubChapterProgressBars() {
 
     const cards = document.querySelectorAll(`[onclick*="${targetLink}"]`);
     cards.forEach(card => {
+      if (card.classList.contains('home-card-cta') || (card.closest && card.closest('#homeTodayBlock'))) return;
       let bar = card.querySelector('.hub-chapter-progress');
       if (!bar) {
         bar = document.createElement('div');
@@ -9973,7 +9977,7 @@ function openAlgoTheoriqueModal(item) {
     tdoHtml = `
       <div class="modal-section">
         <div class="modal-section-title green" style="color: #38bdf8;">
-          <span>📋</span>
+          <span></span>
           <span>Tableau de Déclaration des Objets (T.D.O)</span>
         </div>
         <table class="algo-tdo-table" style="width: 100%; border-collapse: collapse; margin-top: 8px;">
@@ -10000,7 +10004,7 @@ function openAlgoTheoriqueModal(item) {
     <!-- 1. Description & Principe de l'Algorithme -->
     <div class="modal-section">
       <div class="modal-section-title green" style="color: #fbbf24;">
-        <span>📖</span>
+        <span></span>
         <span>Rôle & Principe Algorithmique (Bac STI)</span>
       </div>
       <p class="modal-text" style="font-size: 1.02rem; line-height: 1.65; color: #e2e8f0;">
@@ -10012,7 +10016,7 @@ function openAlgoTheoriqueModal(item) {
     ${(item.imageUrl || (item.images && item.images.length)) ? `
       <div class="modal-section">
         <div class="modal-section-title green" style="color: #38bdf8;">
-          <span>📸</span>
+          <span></span>
           <span>Illustration & Schéma Manuscrit (Support Officiel Bac)</span>
         </div>
         <div class="matrix-modal-img-card" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 12px; padding: 14px; margin-top: 10px;">
@@ -10038,7 +10042,7 @@ function openAlgoTheoriqueModal(item) {
           `}
           ${item.imageCaption ? `
             <p style="margin-top: 10px; font-size: 0.85rem; color: #94a3b8; line-height: 1.45; font-style: italic;">
-              💡 ${escapeHtml(item.imageCaption)}
+              ${escapeHtml(item.imageCaption)}
               <span style="display: block; font-size: 0.76rem; color: #64748b; margin-top: 4px;">(Cliquez sur l'image pour l'ouvrir en plein écran haute résolution)</span>
             </p>
           ` : ''}
@@ -10049,14 +10053,14 @@ function openAlgoTheoriqueModal(item) {
     <!-- 2. PSEUDO-CODE OFFICIEL BAC TUNISIEN -->
     <div class="modal-section">
       <div class="modal-section-title green" style="color: #fbbf24;">
-        <span>📜</span>
+        <span></span>
         <span>Algorithme Officiel en Pseudo-Code Bac</span>
       </div>
       <div class="annexe-code-container" style="border-color: rgba(245, 158, 11, 0.35);">
         <div class="annexe-code-header" style="background: rgba(245, 158, 11, 0.1);">
           <span style="color: #fbbf24; font-weight: 800;">Algorithme (Pseudo-Code)</span>
           <button type="button" class="annexe-copy-btn" onclick='copyCodeText(${rawPseudoJson}, this)' style="background: rgba(245, 158, 11, 0.25); color: #fbbf24; border-color: rgba(245, 158, 11, 0.45);">
-            📋 Copier
+            Copier
           </button>
         </div>
         <pre class="annexe-code-pre" style="white-space: pre-wrap; word-break: break-word;"><code style="color: #fef08a;">${escapeHtml(item.pseudoCode || '')}</code></pre>
@@ -10070,14 +10074,14 @@ function openAlgoTheoriqueModal(item) {
     ${item.pythonCode ? `
       <div class="modal-section">
         <div class="modal-section-title green" style="color: #34d399;">
-          <span>🐍</span>
+          <span></span>
           <span>Traduction Équivalente en Python (Thonny)</span>
         </div>
         <div class="annexe-code-container" style="border-color: rgba(16, 185, 129, 0.35);">
           <div class="annexe-code-header">
             <span style="color: #34d399; font-weight: 800;">Code Python (Thonny)</span>
             <button type="button" class="annexe-copy-btn" onclick='copyCodeText(${rawPythonJson}, this)'>
-              📋 Copier
+              Copier
             </button>
           </div>
           <pre class="annexe-code-pre" style="white-space: pre-wrap; word-break: break-word;"><code class="python-syntax-view">${highlightedPython}</code></pre>
@@ -10088,7 +10092,7 @@ function openAlgoTheoriqueModal(item) {
     ${item.exampleTrace ? `
       <div class="modal-section">
         <div class="modal-section-title green" style="color: #38bdf8;">
-          <span>🔍</span>
+          <span></span>
           <span>Trace d'Exécution & Exemple Chiffré</span>
         </div>
         <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 8px; padding: 14px; color: #cbd5e1; font-family: monospace; font-size: 0.9rem; white-space: pre-wrap;">
@@ -10103,7 +10107,7 @@ function openAlgoTheoriqueModal(item) {
     <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
       <div style="display: flex; align-items: center; gap: 10px;">
         <button type="button" class="algo-studied-btn ${isStudied ? 'studied' : ''}" style="padding: 8px 16px; font-size: 0.88rem; border-radius: 8px;" onclick="toggleAlgoStudied('${item.id}', null, this); closeModal();">
-          <span>${isStudied ? '✓' : '○'}</span>
+          <span>${isStudied ? 'check' : '○'}</span>
           <span>${isStudied ? 'Marqué comme étudié' : 'Marquer comme étudié'}</span>
         </button>
         ${renderBookmarkBtn('algo', item.id, { title: item.name })}
@@ -10193,11 +10197,11 @@ function renderAlgoPratiqueSerials() {
     ).join(' ');
 
     const kindBadge = (doc.examType === 'epreuve-pratique')
-      ? `<span style="font-size:0.75rem;padding:2px 8px;border-radius:6px;background:rgba(14,165,233,0.15);border:1px solid rgba(14,165,233,0.3);color:#38bdf8;font-weight:700;">🛠️ Épreuve Pratique</span>`
-      : (doc.id.startsWith('tp') ? `<span style="font-size:0.75rem;padding:2px 8px;border-radius:6px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);color:#10b981;font-weight:700;">🧪 TP Qt</span>` : `<span style="font-size:0.75rem;padding:2px 8px;border-radius:6px;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);color:#818cf8;font-weight:700;">📝 Série Qt</span>`);
+      ? `<span style="font-size:0.75rem;padding:2px 8px;border-radius:6px;background:rgba(14,165,233,0.15);border:1px solid rgba(14,165,233,0.3);color:#38bdf8;font-weight:700;">${safeIcon("wrench", 13)} Épreuve Pratique</span>`
+      : (doc.id.startsWith('tp') ? `<span style="font-size:0.75rem;padding:2px 8px;border-radius:6px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);color:#10b981;font-weight:700;">TP Qt</span>` : `<span style="font-size:0.75rem;padding:2px 8px;border-radius:6px;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);color:#818cf8;font-weight:700;">Série Qt</span>`);
 
     const incompleteHtml = doc.incomplete
-      ? `<span style="font-size:0.75rem;padding:2px 8px;border-radius:6px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#f87171;font-weight:700;">⚠️ Incomplet</span>`
+      ? `<span style="font-size:0.75rem;padding:2px 8px;border-radius:6px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#f87171;font-weight:700;">Incomplet</span>`
       : '';
 
     return `
@@ -10209,20 +10213,20 @@ function renderAlgoPratiqueSerials() {
         </div>
         <h3 style="font-size:1rem;font-weight:700;color:var(--text-primary);margin:0 0 6px 0;">${escapeHtml(doc.title)}</h3>
         <div style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:8px;">
-          ${doc.teacher ? `✏️ Prof. ${escapeHtml(doc.teacher)}` : (doc.source ? `✏️ ${escapeHtml(doc.source)}` : '')}
-          ${doc.notes ? ` · 📝 ${escapeHtml(doc.notes)}` : ''}
+          ${doc.teacher ? `Prof. ${escapeHtml(doc.teacher)}` : (doc.source ? `${escapeHtml(doc.source)}` : '')}
+          ${doc.notes ? ` · ${escapeHtml(doc.notes)}` : ''}
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:4px;">${chapHtml}</div>
       </div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
         <a href="${doc.file}" target="_blank" rel="noopener"
            style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:8px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;font-weight:600;font-size:0.86rem;text-decoration:none;white-space:nowrap;">
-          📄 Sujet PDF
+          Sujet PDF
         </a>
         ${doc.correction ? `
         <a href="${doc.correction}" target="_blank" rel="noopener"
            style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:8px;background:linear-gradient(135deg,#0284c7,#38bdf8);color:#fff;font-weight:600;font-size:0.86rem;text-decoration:none;white-space:nowrap;">
-          🎯 Correction
+          Correction
         </a>` : ''}
       </div>
     </div>`;
@@ -10270,10 +10274,10 @@ function renderAlgoDevoirsFilterBar() {
     : { all: 0, dc1: 0, dc2: 0, ds: 0 };
 
   const filters = [
-    { id: 'all', label: '✨ Tous les Devoirs', count: counts.all },
-    { id: 'dc1', label: '📝 Devoir de Contrôle N°1', count: counts.dc1 },
-    { id: 'dc2', label: '📝 Devoir de Contrôle N°2', count: counts.dc2 },
-    { id: 'ds', label: '🏆 Devoir de Synthèse', count: counts.ds }
+    { id: 'all', label: 'Tous les Devoirs', count: counts.all },
+    { id: 'dc1', label: 'Devoir de Contrôle N°1', count: counts.dc1 },
+    { id: 'dc2', label: 'Devoir de Contrôle N°2', count: counts.dc2 },
+    { id: 'ds', label: 'Devoir de Synthèse', count: counts.ds }
   ];
 
   bar.innerHTML = filters.map(f => {
@@ -10317,7 +10321,7 @@ function toggleDevoirCorrige(devoirId) {
   if (panel && btn) {
     const isOpen = openDevoirCorrigeSet.has(devoirId);
     panel.style.display = isOpen ? 'block' : 'none';
-    btn.innerHTML = isOpen ? '<span>🙈</span><span>Masquer le corrigé</span>' : '<span>🎯</span><span>Voir le Corrigé Type</span>';
+    btn.innerHTML = isOpen ? '<span></span><span>Masquer le corrigé</span>' : '<span></span><span>Voir le Corrigé Type</span>';
   }
 }
 
@@ -10350,7 +10354,7 @@ function renderAlgoDevoirs() {
   if (list.length === 0) {
     container.innerHTML = `
       <div style="text-align: center; padding: 40px; color: var(--text-muted); background: var(--bg-card); border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
-        🔍 Aucune épreuve trouvée pour cette recherche ou ce filtre.
+        Aucune épreuve trouvée pour cette recherche ou ce filtre.
       </div>
     `;
     return;
@@ -10363,7 +10367,7 @@ function renderAlgoDevoirs() {
     // Chapitres évalués avec badges
     const chaptersHtml = (d.chapters || []).map(chSlug => {
       const ch = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getChapterBySlug(chSlug) : null;
-      const chTitle = ch ? `${ch.iconEmoji} ${ch.shortTitle}` : chSlug;
+      const chTitle = ch ? ch.shortTitle : chSlug;
       return `<span class="devoir-chapter-chip">${chTitle}</span>`;
     }).join('');
 
@@ -10371,7 +10375,7 @@ function renderAlgoDevoirs() {
     const enoncesHtml = (d.enonce || []).map(ex => `
       <div class="devoir-exercise-item">
         <div class="devoir-exercise-title">
-          <span>📌</span>
+          <span></span>
           <span>${escapeHtml(ex.titre)}</span>
         </div>
         <div class="devoir-exercise-details">${escapeHtml(ex.details)}</div>
@@ -10386,7 +10390,7 @@ function renderAlgoDevoirs() {
         tdoRows = `
           <div style="margin-bottom: 12px;">
             <div style="font-weight: 800; font-size: 0.86rem; color: #34d399; margin-bottom: 6px;">
-              📋 Tableau de Déclaration des Objets (T.D.O)
+              Tableau de Déclaration des Objets (T.D.O)
             </div>
             <table class="devoir-tdo-table">
               <thead>
@@ -10417,8 +10421,8 @@ function renderAlgoDevoirs() {
         pyCodeHtml = `
           <div>
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-              <span style="font-weight: 800; font-size: 0.86rem; color: #38bdf8;">⚡ Implémentation Python 3 (Thonny Conforme)</span>
-              <button type="button" class="devoir-btn" style="padding: 3px 10px; font-size: 0.74rem;" onclick="navigator.clipboard.writeText(${rawJson}); alert('Code Python du corrigé copié !');">📋 Copier</button>
+              <span style="font-weight: 800; font-size: 0.86rem; color: #38bdf8;">Implémentation Python 3 (Thonny Conforme)</span>
+              <button type="button" class="devoir-btn" style="padding: 3px 10px; font-size: 0.74rem;" onclick="navigator.clipboard.writeText(${rawJson}); alert('Code Python du corrigé copié !');">Copier</button>
             </div>
             <div class="code-container" style="background: #0f172a; border-radius: 6px; padding: 12px; font-family: monospace; font-size: 0.82rem; overflow-x: auto; color: #e2e8f0; line-height: 1.45;">
               <pre style="margin: 0;"><code>${highlighted}</code></pre>
@@ -10431,7 +10435,7 @@ function renderAlgoDevoirs() {
         <div class="devoir-corrige-panel" id="devoirCorrigePanel_${d.id}" style="display: ${isCorrigeOpen ? 'block' : 'none'};">
           <div class="devoir-corrige-header">
             <span style="color: #34d399; font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
-              <span>🎯</span> Corrigé Type &amp; Barème
+              <span></span> Corrigé Type &amp; Barème
             </span>
             <span style="font-size: 0.78rem; color: var(--text-secondary);">${escapeHtml(d.corrige.resume || '')}</span>
           </div>
@@ -10446,13 +10450,13 @@ function renderAlgoDevoirs() {
         <div class="devoir-card-header">
           <div class="devoir-meta-badges">
             <span class="devoir-type-pill ${d.type}">
-              <span>${typeMeta.icon || '📝'}</span>
+              <span>${safeIcon(typeMeta.icon || 'edit', 15)}</span>
               <span>${escapeHtml(d.typeLabel)}</span>
             </span>
-            <span class="devoir-sub-badge">🏫 ${escapeHtml(d.lycee || 'Lycée Pilote')}</span>
-            <span class="devoir-sub-badge">📅 ${escapeHtml(d.annee || '2024 / 2025')}</span>
-            <span class="devoir-sub-badge">⏱️ ${escapeHtml(d.duree || '2 heures')}</span>
-            <span class="devoir-sub-badge">⚖️ Coef ${d.coef || 3}</span>
+            <span class="devoir-sub-badge">${escapeHtml(d.lycee || 'Lycée Pilote')}</span>
+            <span class="devoir-sub-badge">${escapeHtml(d.annee || '2024 / 2025')}</span>
+            <span class="devoir-sub-badge">${escapeHtml(d.duree || '2 heures')}</span>
+            <span class="devoir-sub-badge">Coef ${d.coef || 3}</span>
           </div>
           <span style="font-size: 0.78rem; font-weight: 700; color: ${typeMeta.color}; background: ${typeMeta.bgTint}; padding: 3px 10px; border-radius: 12px; border: 1px solid ${typeMeta.border}55;">
             ${escapeHtml(d.trimestre)}
@@ -10473,11 +10477,11 @@ function renderAlgoDevoirs() {
 
         <div class="devoir-actions-bar">
           <button type="button" class="devoir-btn corrige" id="devoirCorrigeBtn_${d.id}" onclick="toggleDevoirCorrige('${d.id}')">
-            <span>${isCorrigeOpen ? '🙈' : '🎯'}</span>
+            <span>${isCorrigeOpen ? '' : ''}</span>
             <span>${isCorrigeOpen ? 'Masquer le corrigé' : 'Voir le Corrigé Type'}</span>
           </button>
           <button type="button" class="devoir-btn download" onclick="downloadDevoirSheet('${d.id}')">
-            <span>📥</span>
+            <span></span>
             <span>Télécharger Sujet &amp; Corrigé</span>
           </button>
         </div>
@@ -10670,11 +10674,11 @@ function renderExamensPage() {
   if (countEl) countEl.textContent = `${items.length} examen${items.length !== 1 ? 's' : ''}`;
 
   const typeLabels = {
-    'bac': '🎓 Bac',
-    'devoir-synthese': '📝 D. Synthèse',
-    'devoir-controle': '📌 D. Contrôle',
-    'epreuve-pratique': '🛠️ Pratique',
-    'inconnu': '❓ Inconnu'
+    'bac': 'Bac',
+    'devoir-synthese': 'D. Synthèse',
+    'devoir-controle': 'D. Contrôle',
+    'epreuve-pratique': 'Pratique',
+    'inconnu': 'Inconnu'
   };
   const typeColors = {
     'bac':              { bg: 'rgba(16,185,129,0.15)', color: '#10b981', border: 'rgba(16,185,129,0.3)' },
@@ -10692,7 +10696,7 @@ function renderExamensPage() {
   grid.innerHTML = items.map(doc => {
     const dateStr = (!doc.date || doc.date === 'inconnue') ? 'Année non précisée' : doc.date;
     const col = typeColors[doc.examType] || typeColors['inconnu'];
-    const typeLabel = typeLabels[doc.examType] || '❓';
+    const typeLabel = typeLabels[doc.examType] || '';
     const chapterNames = (doc.chapters || []).map(slug => {
       if (typeof CURRICULUM !== 'undefined') {
         const ch = CURRICULUM.getChapterBySlug(slug);
@@ -10706,13 +10710,13 @@ function renderExamensPage() {
 
     const incompleteHtml = doc.incomplete
       ? `<div style="display:flex;align-items:center;gap:6px;margin-top:8px;padding:8px 12px;border-radius:8px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#f87171;font-size:0.82rem;">
-           ⚠️ <strong>Incomplet</strong>${doc.notes ? ' — ' + doc.notes : ''}
+           <strong>Incomplet</strong>${doc.notes ? ' — ' + doc.notes : ''}
          </div>`
       : '';
 
     const creditLine = (doc.teacher || doc.source)
       ? `<div style="font-size:0.78rem;color:var(--text-secondary);margin-top:6px;">
-           ✏️ ${[doc.teacher, doc.source].filter(Boolean).join(' · ')}
+           ${[doc.teacher, doc.source].filter(Boolean).join(' · ')}
          </div>`
       : '';
 
@@ -10720,7 +10724,7 @@ function renderExamensPage() {
     const lastScoreHtml = lastScore
       ? `<div style="display:flex;align-items:center;gap:6px;margin-top:2px;">
            <span style="font-size:0.75rem;font-weight:700;color:#10b981;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25);padding:2px 8px;border-radius:6px;">Dernier essai : ${lastScore.score}/${lastScore.maxScore}</span>
-           <button type="button" onclick="openExamHistoryModal('${doc.id}')" style="background:none;border:none;color:#38bdf8;font-size:0.75rem;cursor:pointer;text-decoration:underline;">📜 Historique</button>
+           <button type="button" onclick="openExamHistoryModal('${doc.id}')" style="background:none;border:none;color:#38bdf8;font-size:0.75rem;cursor:pointer;text-decoration:underline;">Historique</button>
          </div>`
       : '';
 
@@ -10730,18 +10734,18 @@ function renderExamensPage() {
         <div style="flex:1;min-width:0;">
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
             <span style="padding:3px 10px;border-radius:20px;font-size:0.78rem;font-weight:600;background:${col.bg};color:${col.color};border:1px solid ${col.border};">${typeLabel}</span>
-            ${doc.incomplete ? '<span style="padding:3px 10px;border-radius:20px;font-size:0.78rem;font-weight:600;background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);">⚠️ Incomplet</span>' : ''}
+            ${doc.incomplete ? '<span style="padding:3px 10px;border-radius:20px;font-size:0.78rem;font-weight:600;background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);">Incomplet</span>' : ''}
           </div>
           <h3 style="font-size:1rem;font-weight:700;color:var(--text-primary);margin:0 0 4px 0;line-height:1.3;">${doc.title}</h3>
           <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:0.82rem;color:var(--text-secondary);">
-            ${doc.date && doc.date !== 'inconnue' ? `<span>📅 ${dateStr}</span>` : `<span>📅 Année non précisée</span>`}
-            ${doc.duration ? `<span>⏱ ${doc.duration}</span>` : ''}
-            ${doc.pages ? `<span>📄 ${doc.pages} page${doc.pages > 1 ? 's' : ''}</span>` : ''}
-            ${doc.classes ? `<span>🎒 ${doc.classes}</span>` : ''}
+            ${doc.date && doc.date !== 'inconnue' ? `<span>${dateStr}</span>` : `<span>Année non précisée</span>`}
+            ${doc.duration ? `<span>${doc.duration}</span>` : ''}
+            ${doc.pages ? `<span>${doc.pages} page${doc.pages > 1 ? 's' : ''}</span>` : ''}
+            ${doc.classes ? `<span>${doc.classes}</span>` : ''}
           </div>
-          ${doc.school ? `<div style="font-size:0.82rem;color:var(--text-secondary);margin-top:4px;">🏫 ${doc.school}</div>` : ''}
+          ${doc.school ? `<div style="font-size:0.82rem;color:var(--text-secondary);margin-top:4px;">${doc.school}</div>` : ''}
           ${creditLine}
-          ${doc.notes && !doc.incomplete ? `<div style="font-size:0.78rem;color:var(--text-secondary);font-style:italic;margin-top:4px;">📝 ${doc.notes}</div>` : ''}
+          ${doc.notes && !doc.incomplete ? `<div style="font-size:0.78rem;color:var(--text-secondary);font-style:italic;margin-top:4px;">${doc.notes}</div>` : ''}
           ${incompleteHtml}
           <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:4px;">${chapHtml}</div>
         </div>
@@ -10750,16 +10754,16 @@ function renderExamensPage() {
             ${renderBookmarkBtn('exam', doc.id, { title: doc.title, duration: doc.duration })}
             <a href="${doc.file}" target="_blank" rel="noopener"
                style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;background:rgba(255,255,255,0.08);border:1px solid var(--border-color);color:var(--text-primary);font-weight:600;font-size:0.84rem;text-decoration:none;white-space:nowrap;">
-              📄 Sujet PDF
+              Sujet PDF
             </a>
             ${doc.correction ? `
             <a href="${doc.correction}" target="_blank" rel="noopener"
                style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;background:linear-gradient(135deg,#0284c7,#38bdf8);color:#fff;font-weight:600;font-size:0.84rem;text-decoration:none;white-space:nowrap;">
-              🎯 Correction
+              Correction
             </a>` : ''}
             <button type="button" onclick="openExamSimulatorSetup('${doc.id}')"
                style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-weight:700;font-size:0.84rem;border:none;cursor:pointer;white-space:nowrap;box-shadow:0 2px 10px rgba(16,185,129,0.3);">
-              ⏱️ Passer cet examen
+              Passer cet examen
             </button>
           </div>
           ${lastScoreHtml}
@@ -10810,7 +10814,7 @@ function openExamSimulatorSetup(examId) {
   if (warningEl) {
     if (doc.incomplete) {
       warningEl.style.display = 'block';
-      warningEl.innerHTML = `⚠️ <strong>Attention :</strong> Ce sujet est incomplet / partiel (${escapeHtml(doc.notes || 'sujet partiel')}). Vous pouvez tout de même passer les exercices disponibles.`;
+      warningEl.innerHTML = `<strong>Attention :</strong> Ce sujet est incomplet / partiel (${escapeHtml(doc.notes || 'sujet partiel')}). Vous pouvez tout de même passer les exercices disponibles.`;
     } else {
       warningEl.style.display = 'none';
     }
@@ -10956,12 +10960,12 @@ function initExamSimulatorScreen(examId) {
       doc.school,
       doc.teacher ? 'Prof. ' + doc.teacher : null,
       doc.date && doc.date !== 'inconnue' ? doc.date : null,
-      sess.exNum ? `🎯 Exercice ciblé : ${sess.exNum}` : 'Épreuve complète'
+      sess.exNum ? `Exercice ciblé : ${sess.exNum}` : 'Épreuve complète'
     ].filter(Boolean);
     subinfoEl.textContent = parts.join(' • ');
   }
   if (modeBadge) {
-    modeBadge.textContent = sess.exNum ? `⏱️ ENTRAÎNEMENT CIBLÉ : ${sess.exNum}` : '⏱️ ÉPREUVE OFFICIELLE';
+    modeBadge.textContent = sess.exNum ? `ENTRAÎNEMENT CIBLÉ : ${sess.exNum}` : 'ÉPREUVE OFFICIELLE';
   }
   if (externalLink) {
     externalLink.href = doc.file;
@@ -11032,21 +11036,21 @@ function updateSimulatorCountdown() {
     if (alertBanner) {
       alertBanner.style.display = 'block';
       alertBanner.classList.add('alert-red');
-      alertBanner.textContent = '🚨 ATTENTION : Il reste moins de 5 minutes ! Concluez vos réponses et vérifiez votre T.D.O.';
+      alertBanner.textContent = 'ATTENTION : Il reste moins de 5 minutes ! Concluez vos réponses et vérifiez votre T.D.O.';
     }
   } else if (remainingSec <= 600) {
     if (clockEl) clockEl.classList.add('alert-orange');
     if (alertBanner) {
       alertBanner.style.display = 'block';
       alertBanner.classList.add('alert-orange');
-      alertBanner.textContent = '⚠️ Attention : Moins de 10 minutes restantes. Commencez votre relecture.';
+      alertBanner.textContent = 'Attention : Moins de 10 minutes restantes. Commencez votre relecture.';
     }
   } else if (remainingSec <= 1800) {
     if (clockEl) clockEl.classList.add('alert-amber');
     if (alertBanner) {
       alertBanner.style.display = 'block';
       alertBanner.classList.add('alert-amber');
-      alertBanner.textContent = '⏱️ Il reste 30 minutes. Gérez votre temps pour les derniers exercices.';
+      alertBanner.textContent = 'Il reste 30 minutes. Gérez votre temps pour les derniers exercices.';
     }
   }
 }
@@ -11150,7 +11154,7 @@ function openExamSimulatorReview() {
               </button>
               <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:0.8rem;font-weight:700;color:#fbbf24;">
                 <input type="checkbox" class="sim-ex-arevoir-check">
-                <span>⭐ À revoir</span>
+                <span>À revoir</span>
               </label>
             </div>
           </div>
@@ -11282,7 +11286,7 @@ function saveExamSimulatorEvaluation() {
   if (typeof renderExamensPage === 'function') renderExamensPage();
   if (typeof renderAlgoHubARevoirSection === 'function') renderAlgoHubARevoirSection();
 
-  alert(`🎉 Essai enregistré avec succès !\nScore obtenu : ${attempt.score} / ${attempt.maxScore}\nTemps utilisé : ${Math.floor(timeUsedSec / 60)} min.`);
+  alert(`Essai enregistré avec succès !\nScore obtenu : ${attempt.score} / ${attempt.maxScore}\nTemps utilisé : ${Math.floor(timeUsedSec / 60)} min.`);
   navigateToHash('#/examens');
 }
 
@@ -11307,7 +11311,7 @@ function openExamHistoryModal(examId) {
         return `
           <div class="sim-history-row">
             <div>
-              <strong style="color:var(--text-primary);font-size:0.92rem;display:block;">Essai #${history.length - idx} • 📅 ${escapeHtml(att.date)}</strong>
+              <strong style="color:var(--text-primary);font-size:0.92rem;display:block;">Essai #${history.length - idx} • ${escapeHtml(att.date)}</strong>
               <span style="font-size:0.78rem;color:var(--text-secondary);">Temps : ${minUsed} min</span>
             </div>
             <div style="font-size:1.15rem;font-weight:800;color:#10b981;">
@@ -11355,7 +11359,7 @@ function loadAndRenderPdf(pdfUrl) {
       if (loadingEl) {
         loadingEl.innerHTML = `
           <p style="color:#f87171;font-weight:700;">Impossible de charger la visionneuse PDF intégrée.</p>
-          <a href="${pdfUrl}" target="_blank" class="sim-action-finish-btn" style="display:inline-block;margin-top:10px;">📄 Ouvrir le sujet PDF directement</a>
+          <a href="${pdfUrl}" target="_blank" class="sim-action-finish-btn" style="display:inline-block;margin-top:10px;">Ouvrir le sujet PDF directement</a>
         `;
       }
     };
@@ -11383,7 +11387,7 @@ function initPdfDocument(pdfUrl) {
     if (loadingEl) {
       loadingEl.innerHTML = `
         <p style="color:#f87171;font-weight:700;">Le PDF n'a pas pu être affiché dans le lecteur intégré.</p>
-        <a href="${pdfUrl}" target="_blank" class="sim-action-finish-btn" style="display:inline-block;margin-top:10px;">📄 Ouvrir le sujet PDF</a>
+        <a href="${pdfUrl}" target="_blank" class="sim-action-finish-btn" style="display:inline-block;margin-top:10px;">Ouvrir le sujet PDF</a>
       `;
     }
   });
@@ -11449,9 +11453,9 @@ function renderAlgoHubARevoirSection() {
   if (bookmarks.length === 0) {
     container.innerHTML = `
       <div style="background:var(--surface-bg);border:1px dashed var(--border-color);border-radius:10px;padding:24px;text-align:center;color:var(--text-secondary);font-size:0.86rem;">
-        ✨ Aucun exercice marqué "À revoir" pour l'instant !
+        Aucun exercice marqué "À revoir" pour l'instant !
         <span style="display:block;margin-top:4px;color:var(--text-muted);font-size:0.78rem;">
-          Cochez l'étoile ⭐ sur un exercice d'examen ou lors de vos simulations pour le retrouver ici.
+          Cochez l'étoile sur un exercice d'examen ou lors de vos simulations pour le retrouver ici.
         </span>
       </div>
     `;
@@ -11478,7 +11482,7 @@ function renderAlgoHubARevoirSection() {
         <div style="flex:1;min-width:220px;">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
             <span style="font-size:0.82rem;font-weight:800;color:#f59e0b;background:rgba(245,158,11,0.12);padding:2px 8px;border-radius:6px;">
-              ⭐ ${escapeHtml(exNum)}
+              ${escapeHtml(exNum)}
             </span>
             <span style="font-size:0.88rem;font-weight:700;color:var(--text-primary);">${escapeHtml(examTitle)}</span>
           </div>
@@ -11487,11 +11491,11 @@ function renderAlgoHubARevoirSection() {
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
           ${mainChapter ? `
             <a href="#/algo/theorique/${mainChapter}" style="font-size:0.8rem;color:#38bdf8;text-decoration:none;padding:6px 10px;border-radius:6px;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.25);">
-              📖 Chapitre
+              Chapitre
             </a>
           ` : ''}
           <a href="${pdfUrl}" target="_blank" rel="noopener" style="font-size:0.8rem;color:#10b981;text-decoration:none;padding:6px 12px;border-radius:6px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);font-weight:700;">
-            📄 Ouvrir le sujet
+            Ouvrir le sujet
           </a>
           <button type="button" onclick="removeExerciseBookmark('${b.id}')" title="Retirer de la liste" style="background:none;border:none;color:var(--text-muted);font-size:1.1rem;cursor:pointer;padding:4px;">
             ✕
@@ -11550,7 +11554,7 @@ function renderAlgoTypesPage() {
         <div>
           <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px;">
             <div style="display:flex;align-items:center;gap:10px;">
-              <span style="font-size:1.6rem;">${t.icon}</span>
+              <span style="font-size:1.6rem;">${safeIcon(t.icon, 18)}</span>
               <h3 style="margin:0;font-size:1.05rem;font-weight:700;color:var(--text-primary);line-height:1.3;">${escapeHtml(t.label)}</h3>
             </div>
             <span style="padding:3px 10px;border-radius:20px;font-size:0.78rem;font-weight:700;background:rgba(99,102,241,0.15);color:#818cf8;border:1px solid rgba(99,102,241,0.3);white-space:nowrap;">
@@ -11567,7 +11571,7 @@ function renderAlgoTypesPage() {
 
         <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:10px;border-top:1px solid var(--border-color);margin-top:auto;">
           <a href="#/algo/methodes" onclick="event.stopPropagation(); navigateToHash('#/algo/methodes');" style="font-size:0.8rem;color:#a78bfa;text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:4px;">
-            💡 Fiche méthode →
+            Fiche méthode →
           </a>
           <span style="font-size:0.82rem;font-weight:700;color:var(--primary-indigo);">Voir les exercices →</span>
         </div>
@@ -11597,7 +11601,7 @@ function openTypeDetailView(typeSlug) {
   headerEl.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
       <div style="display:flex;align-items:center;gap:12px;">
-        <span style="font-size:2rem;">${typeMeta.icon}</span>
+        <span style="font-size:2rem;">${safeIcon(typeMeta.icon, 18)}</span>
         <div>
           <h3 style="margin:0;font-size:1.25rem;font-weight:800;color:var(--text-primary);">${escapeHtml(typeMeta.label)}</h3>
           <p style="margin:4px 0 0 0;font-size:0.86rem;color:var(--text-secondary);">${escapeHtml(typeMeta.expected)}</p>
@@ -11605,7 +11609,7 @@ function openTypeDetailView(typeSlug) {
       </div>
       <div style="display:flex;align-items:center;gap:10px;">
         <a href="#/algo/methodes" onclick="navigateToHash('#/algo/methodes')" style="padding:8px 16px;border-radius:8px;background:rgba(167,139,250,0.15);color:#a78bfa;border:1px solid rgba(167,139,250,0.3);font-size:0.82rem;font-weight:700;text-decoration:none;">
-          💡 Voir la Fiche Méthode
+          Voir la Fiche Méthode
         </a>
       </div>
     </div>
@@ -11693,14 +11697,14 @@ function renderTypeExercisesList() {
               ${escapeHtml(ex.exNum)}
             </span>
             <span style="font-size:0.8rem;font-weight:700;color:#f59e0b;background:rgba(245,158,11,0.12);padding:2px 8px;border-radius:6px;">
-              ⭐ ${pointsStr}
+              ${pointsStr}
             </span>
-            <span style="font-size:0.78rem;color:var(--text-secondary);">📅 ${examDate}</span>
+            <span style="font-size:0.78rem;color:var(--text-secondary);">${examDate}</span>
           </div>
           <h4 style="margin:0 0 4px 0;font-size:0.95rem;font-weight:700;color:var(--text-primary);line-height:1.3;">
             ${escapeHtml(examTitle)}
           </h4>
-          ${examCredit ? `<div style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:6px;">🏫 ${escapeHtml(examCredit)}</div>` : ''}
+          ${examCredit ? `<div style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:6px;">${escapeHtml(examCredit)}</div>` : ''}
           <div style="display:flex;flex-wrap:wrap;gap:4px;">
             ${chapBadges}
           </div>
@@ -11711,7 +11715,7 @@ function renderTypeExercisesList() {
             ${isBookmarked ? '★' : '☆'}
           </button>
           <a href="${pdfUrl}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;font-weight:600;font-size:0.84rem;text-decoration:none;white-space:nowrap;">
-            📄 Ouvrir à la page ${ex.pdfPage || 1}
+            Ouvrir à la page ${ex.pdfPage || 1}
           </a>
         </div>
       </div>
@@ -11744,7 +11748,7 @@ function renderAlgoMethodesPage(targetSlug = null) {
       return `
         <button type="button" onclick="scrollToMethodSheet('${m.slug}')" class="cat-pill"
                 style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;font-size:0.82rem;font-weight:600;cursor:pointer;background:var(--surface-elevated);border:1px solid var(--border-color);color:var(--text-primary);border-radius:8px;">
-          <span>${m.icon}</span>
+          <span>${safeIcon(m.icon, 16)}</span>
           <span>${escapeHtml(m.title.split(':')[0])}</span>
         </button>
       `;
@@ -11760,7 +11764,7 @@ function renderAlgoMethodesPage(targetSlug = null) {
       const typeLabel = typeObj ? typeObj.label : m.relatedType;
       typeBadge = `
         <a href="#/algo/types/${m.relatedType}" onclick="navigateToHash('#/algo/types/${m.relatedType}')" class="method-tag-pill type" title="Voir les exercices de ce type">
-          🎯 Exercice Type : ${escapeHtml(typeLabel)}
+          Exercice Type : ${escapeHtml(typeLabel)}
         </a>
       `;
     }
@@ -11771,7 +11775,7 @@ function renderAlgoMethodesPage(targetSlug = null) {
       const title = ch ? ch.shortTitle : slug;
       return `
         <a href="#/algo/theorique/${slug}" onclick="navigateToHash('#/algo/theorique/${slug}')" class="method-tag-pill chapter" title="Ouvrir le cours du chapitre">
-          📁 ${escapeHtml(title)}
+          ${escapeHtml(title)}
         </a>
       `;
     }).join('');
@@ -11795,7 +11799,7 @@ function renderAlgoMethodesPage(targetSlug = null) {
         <!-- En-tête de la fiche -->
         <div class="method-header-row">
           <div class="method-title-wrap">
-            <div class="method-icon-badge">${m.icon}</div>
+            <div class="method-icon-badge">${safeIcon(m.icon, 16)}</div>
             <div>
               <div style="font-size:0.75rem;font-weight:700;color:#c084fc;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;">
                 Fiche N°${idx + 1} • ${escapeHtml(m.category)}
@@ -11809,7 +11813,7 @@ function renderAlgoMethodesPage(targetSlug = null) {
             <button type="button" onclick="printSingleMethodSheet('${m.slug}')" class="cat-pill"
                     style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;font-size:0.8rem;font-weight:700;cursor:pointer;background:rgba(255,255,255,0.06);border:1px solid var(--border-color);color:var(--text-secondary);border-radius:8px;"
                     title="Imprimer cette fiche seule">
-              🖨️ Imprimer la fiche
+              ${safeIcon("printer", 15)} Imprimer la fiche
             </button>
           </div>
         </div>
@@ -11823,7 +11827,7 @@ function renderAlgoMethodesPage(targetSlug = null) {
         <!-- Section 1 : À retenir -->
         <div style="background:rgba(16,185,129,0.04);border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:16px;">
           <h4 class="method-section-title" style="color:#10b981;">
-            <span>📌</span> À Retenir Absolument (Points Clés Bac)
+            <span></span> À Retenir Absolument (Points Clés Bac)
           </h4>
           <ul class="method-bullet-list">
             ${aRetenirHtml}
@@ -11833,7 +11837,7 @@ function renderAlgoMethodesPage(targetSlug = null) {
         <!-- Section 2 : Exemple type pas à pas -->
         <div>
           <h4 class="method-section-title" style="color:#38bdf8;">
-            <span>📝</span> ${escapeHtml(m.exempleTitre || 'Exemple Type Pas à Pas')}
+            <span></span> ${escapeHtml(m.exempleTitre || 'Exemple Type Pas à Pas')}
           </h4>
           ${stepsHtml ? `<div class="method-steps-container">${stepsHtml}</div>` : ''}
 
@@ -11841,9 +11845,9 @@ function renderAlgoMethodesPage(targetSlug = null) {
           ${m.codePseudo ? `
             <div class="method-code-box">
               <div class="method-code-header">
-                <span class="method-code-lang">📜 Pseudo-code officiel Bac</span>
+                <span class="method-code-lang">Pseudo-code officiel Bac</span>
                 <button type="button" class="method-copy-btn no-print" onclick="copyCodeFromPre(this)">
-                  📋 Copier le pseudo-code
+                  Copier le pseudo-code
                 </button>
               </div>
               <pre class="method-code-pre"><code>${escapeHtml(m.codePseudo)}</code></pre>
@@ -11854,9 +11858,9 @@ function renderAlgoMethodesPage(targetSlug = null) {
           ${m.codePython ? `
             <div class="method-code-box">
               <div class="method-code-header">
-                <span class="method-code-lang">🐍 Équivalent Python Thonny</span>
+                <span class="method-code-lang">Équivalent Python Thonny</span>
                 <button type="button" class="method-copy-btn no-print" onclick="copyCodeFromPre(this)">
-                  📋 Copier le code Python
+                  Copier le code Python
                 </button>
               </div>
               <pre class="method-code-pre"><code>${escapeHtml(m.codePython)}</code></pre>
@@ -11868,7 +11872,7 @@ function renderAlgoMethodesPage(targetSlug = null) {
         ${erreursHtml ? `
           <div class="method-warning-box">
             <div class="method-warning-title">
-              <span>⚠️</span> Pièges & Erreurs fréquentes constatées au Bac
+              <span></span> Pièges & Erreurs fréquentes constatées au Bac
             </div>
             <ul class="method-warning-list">
               ${erreursHtml}
@@ -11882,12 +11886,12 @@ function renderAlgoMethodesPage(targetSlug = null) {
             ${m.relatedType ? `
               <a href="#/algo/types/${m.relatedType}" onclick="navigateToHash('#/algo/types/${m.relatedType}')"
                  style="font-size:0.82rem;font-weight:700;color:var(--primary-indigo);text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.25);">
-                🎯 S'entraîner sur ce type d'exercice →
+                S'entraîner sur ce type d'exercice →
               </a>
             ` : ''}
             <button type="button" onclick="printSingleMethodSheet('${m.slug}')"
                     style="background:none;border:none;color:var(--text-secondary);font-size:0.82rem;cursor:pointer;text-decoration:underline;">
-              🖨️ Format imprimable A4
+              ${safeIcon("printer", 14)} Format imprimable A4
             </button>
           </div>
           <button type="button" onclick="scrollToMethodTop()" style="background:none;border:none;color:var(--text-muted);font-size:0.8rem;cursor:pointer;">
@@ -12037,7 +12041,7 @@ function renderAlgoErreursPage(filterChapter = null) {
         const isActive = currentErrorsFilterChapter === ch.slug;
         return `
           <button type="button" onclick="renderAlgoErreursPage('${ch.slug}')" class="cat-pill ${isActive ? 'active' : ''}" style="padding: 6px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 700; cursor: pointer; background: ${isActive ? '#ef4444' : 'var(--surface-bg)'}; color: ${isActive ? '#fff' : 'var(--text-primary)'}; border: 1px solid ${isActive ? '#ef4444' : 'var(--border-color)'}; display: inline-flex; align-items: center; gap: 6px;">
-            <span>${ch.iconEmoji || '📁'}</span>
+            <span>${safeIcon(ch.iconEmoji || 'folder', 15)}</span>
             <span>${escapeHtml(ch.shortTitle)} (${count})</span>
           </button>
         `;
@@ -12049,7 +12053,7 @@ function renderAlgoErreursPage(filterChapter = null) {
   if (filtered.length === 0) {
     container.innerHTML = `
       <div style="padding: 40px 20px; text-align: center; background: var(--surface-bg); border: 1px dashed var(--border-color); border-radius: 12px; color: var(--text-secondary);">
-        <div style="font-size: 2rem; margin-bottom: 8px;">🔍</div>
+        <div style="font-size: 2rem; margin-bottom: 8px;"></div>
         <p style="margin: 0; font-size: 0.95rem; font-weight: 600;">Aucune erreur répertoriée pour ce filtre.</p>
       </div>
     `;
@@ -12059,7 +12063,7 @@ function renderAlgoErreursPage(filterChapter = null) {
   container.innerHTML = filtered.map(err => {
     const ch = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getChapterBySlug(err.chapter) : null;
     const chTitle = ch ? ch.fullTitle : err.chapter;
-    const chIcon = ch ? (ch.iconEmoji || '📁') : '📁';
+    const chIcon = safeIcon(ch ? (ch.iconEmoji || 'folder') : 'folder', 15);
 
     return `
       <article class="error-sheet-card" id="error-${err.id}">
@@ -12081,7 +12085,7 @@ function renderAlgoErreursPage(filterChapter = null) {
           </div>
           <div>
             <button type="button" class="error-train-btn no-print" onclick="startQuizForError('${err.id}')" title="S'entraîner sur ce piège dans le quiz">
-              <span>⚡</span>
+              <span></span>
               <span>S'entraîner sur cette erreur</span>
             </button>
           </div>
@@ -12089,26 +12093,26 @@ function renderAlgoErreursPage(filterChapter = null) {
 
         <!-- Grille Comparaison : Code Piégé vs Code Corrigé -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 14px;">
-          <!-- ❌ CODE ERRONÉ -->
+          <!-- CODE ERRONÉ -->
           <div>
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
               <span style="font-size: 0.78rem; font-weight: 800; color: #ef4444; text-transform: uppercase; letter-spacing: 0.5px;">
-                ❌ Ce qu'il ne faut PAS faire
+                Ce qu'il ne faut PAS faire
               </span>
-              <button type="button" class="no-print" onclick="copyCodeFromPre(this)" style="background: transparent; border: none; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer;">📋 Copier</button>
+              <button type="button" class="no-print" onclick="copyCodeFromPre(this)" style="background: transparent; border: none; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer;">Copier</button>
             </div>
             <div class="error-code-box buggy">
               <pre><code>${escapeHtml(err.buggyCode)}</code></pre>
             </div>
           </div>
 
-          <!-- ✅ CODE CORRIGÉ -->
+          <!-- CODE CORRIGÉ -->
           <div>
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
               <span style="font-size: 0.78rem; font-weight: 800; color: #10b981; text-transform: uppercase; letter-spacing: 0.5px;">
-                ✅ La Solution Recommandée
+                La Solution Recommandée
               </span>
-              <button type="button" class="no-print" onclick="copyCodeFromPre(this)" style="background: transparent; border: none; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer;">📋 Copier</button>
+              <button type="button" class="no-print" onclick="copyCodeFromPre(this)" style="background: transparent; border: none; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer;">Copier</button>
             </div>
             <div class="error-code-box fix">
               <pre><code>${escapeHtml(err.fixCode)}</code></pre>
@@ -12116,28 +12120,28 @@ function renderAlgoErreursPage(filterChapter = null) {
           </div>
         </div>
 
-        <!-- 💥 CONTRE-EXEMPLE CONCRET -->
+        <!-- CONTRE-EXEMPLE CONCRET -->
         <div class="error-counter-box">
           <div style="font-size: 0.78rem; font-weight: 800; color: #f59e0b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
-            💥 Pourquoi ça casse ? (Contre-exemple)
+            Pourquoi ça casse ? (Contre-exemple)
           </div>
           <div style="color: var(--text-primary); font-size: 0.88rem; line-height: 1.5;">
             ${escapeHtml(err.counterExample)}
           </div>
         </div>
 
-        <!-- 💡 EXPLICATION ET ASTUCE BAC -->
+        <!-- EXPLICATION ET ASTUCE BAC -->
         <div style="margin-top: 12px; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">
-          <strong style="color: var(--text-primary);">💡 Analyse du piège :</strong> ${escapeHtml(err.explanation)}
+          <strong style="color: var(--text-primary);">Analyse du piège :</strong> ${escapeHtml(err.explanation)}
         </div>
 
         <!-- LIENS DE RETOUR / COURS -->
         <div style="margin-top: 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding-top: 10px; border-top: 1px dashed var(--border-soft);">
           <a href="#/algo/theorique/${err.chapter}" onclick="navigateToHash('#/algo/theorique/${err.chapter}')" style="color: #38bdf8; font-weight: 700; font-size: 0.84rem; text-decoration: none;">
-            📖 Consulter le cours complet de ${escapeHtml(chTitle)} →
+            Consulter le cours complet de ${escapeHtml(chTitle)} →
           </a>
           <button type="button" class="no-print" onclick="startQuizForError('${err.id}')" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 6px; padding: 4px 10px; font-size: 0.78rem; font-weight: 600; cursor: pointer;">
-            ⚡ Lancer le quiz (${err.questionIds ? err.questionIds.length : 1} question)
+            Lancer le quiz (${err.questionIds ? err.questionIds.length : 1} question)
           </button>
         </div>
       </article>
@@ -12227,7 +12231,7 @@ function renderQuizChapterPicker() {
   let html = `
     <div class="quiz-chapter-card ${currentQuizState.selectedChapter === 'all' ? 'selected' : ''}"
          onclick="selectQuizChapter('all', this)">
-      <span style="font-size:1.4rem;">🌟</span>
+      <span style="font-size:1.4rem;"></span>
       <div style="flex:1;">
         <strong style="font-size:0.86rem;color:var(--text-primary);display:block;">Tous les chapitres</strong>
         <span style="font-size:0.75rem;color:var(--text-secondary);">${totalAll} questions (Mixte)</span>
@@ -12241,7 +12245,7 @@ function renderQuizChapterPicker() {
     html += `
       <div class="quiz-chapter-card ${isSelected ? 'selected' : ''}"
            onclick="selectQuizChapter('${ch.slug}', this)">
-        <span style="font-size:1.4rem;">${ch.iconEmoji || ch.icon || '📁'}</span>
+        <span style="font-size:1.4rem;">${safeIcon(ch.iconEmoji || ch.icon || 'folder', 16)}</span>
         <div style="flex:1;">
           <strong style="font-size:0.86rem;color:var(--text-primary);display:block;">${escapeHtml(ch.shortTitle)}</strong>
           <span style="font-size:0.75rem;color:var(--text-secondary);">${chQuestions.length} questions</span>
@@ -12344,7 +12348,7 @@ function renderCurrentQuizQuestion() {
     chBadge.textContent = chObj ? chObj.shortTitle : q.chapter;
   }
   if (lvlBadge) {
-    const lvlNames = { base: 'Base 🌱', moyen: 'Moyen ⚡', bac: 'Bac 🎓' };
+    const lvlNames = { base: 'Base ', moyen: 'Moyen ', bac: 'Bac ' };
     lvlBadge.textContent = lvlNames[q.level] || q.level;
   }
 
@@ -12430,7 +12434,7 @@ function selectQuizAnswer(optIdx, btn) {
 
   if (titleEl) titleEl.textContent = isCorrect ? "Bravo ! Réponse exacte" : "Réponse incorrecte";
   if (titleEl) titleEl.style.color = isCorrect ? "#10b981" : "#ef4444";
-  if (iconEl) iconEl.textContent = isCorrect ? "🎉" : "❌";
+  if (iconEl) iconEl.innerHTML = safeIcon(isCorrect ? 'check-circle' : 'x-circle', 28);
   if (textEl) textEl.textContent = q.explanation;
 
   if (linksEl) {
@@ -12440,7 +12444,7 @@ function selectQuizAnswer(optIdx, btn) {
         linkHtml += `
           <a href="#/algo/methodes/${q.links.methodSheet}" target="_blank"
              style="font-size:0.78rem;color:#c084fc;padding:4px 10px;border-radius:6px;background:rgba(192,132,252,0.1);border:1px solid rgba(192,132,252,0.3);text-decoration:none;font-weight:700;">
-            📖 Voir la Fiche Méthode
+            Voir la Fiche Méthode
           </a>
         `;
       }
@@ -12448,7 +12452,7 @@ function selectQuizAnswer(optIdx, btn) {
         linkHtml += `
           <a href="#/algo/types/${q.links.exerciseType}" target="_blank"
              style="font-size:0.78rem;color:#38bdf8;padding:4px 10px;border-radius:6px;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);text-decoration:none;font-weight:700;">
-            🎯 Exercice type associé
+            Exercice type associé
           </a>
         `;
       }
@@ -12458,7 +12462,7 @@ function selectQuizAnswer(optIdx, btn) {
 
   const isLast = (currentQuizState.currentIndex + 1 >= currentQuizState.questions.length);
   if (nextBtn) {
-    nextBtn.textContent = isLast ? "Voir mes résultats 🏁" : "Question suivante →";
+    nextBtn.textContent = isLast ? "Voir mes résultats " : "Question suivante →";
   }
 
   if (expBox) {
@@ -12510,15 +12514,15 @@ function finishQuizSession() {
   }
 
   if (pct >= 80) {
-    if (trophyEl) trophyEl.textContent = '🏆';
+    if (trophyEl) trophyEl.innerHTML = safeIcon('trophy', 44);
     if (titleEl) titleEl.textContent = 'Excellent travail !';
     if (subEl) subEl.textContent = 'Notions parfaitement assimilées pour le Bac Informatique.';
   } else if (pct >= 50) {
-    if (trophyEl) trophyEl.textContent = '👍';
+    if (trophyEl) trophyEl.innerHTML = safeIcon('award', 44);
     if (titleEl) titleEl.textContent = 'Bon résultat !';
     if (subEl) subEl.textContent = 'Quelques notions à consolider. Revois les explications ci-dessous.';
   } else {
-    if (trophyEl) trophyEl.textContent = '💪';
+    if (trophyEl) trophyEl.innerHTML = safeIcon('target', 44);
     if (titleEl) titleEl.textContent = 'Entraînement à poursuivre !';
     if (subEl) subEl.textContent = 'Révise les fiches méthode correspondantes et réessaie pour progresser.';
   }
@@ -12551,7 +12555,7 @@ function finishQuizSession() {
         <div class="quiz-recap-row">
           <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
             <div style="display:flex;align-items:center;gap:8px;">
-              <span style="font-size:1.1rem;">${a.isCorrect ? '✅' : '❌'}</span>
+              <span style="font-size:1.1rem;">${a.isCorrect ? '' : ''}</span>
               <strong style="font-size:0.88rem;color:var(--text-primary);">Question ${i + 1}</strong>
             </div>
             <div style="display:flex;align-items:center;gap:6px;">
@@ -12565,7 +12569,7 @@ function finishQuizSession() {
             <span style="color:#10b981;font-weight:700;">Bonne réponse : ${escapeHtml(rightChoiceStr)}</span>
           </div>
           <div style="font-size:0.8rem;color:var(--text-muted);border-top:1px dashed var(--border-color);padding-top:6px;margin-top:4px;">
-            💡 ${escapeHtml(q.explanation)}
+            ${escapeHtml(q.explanation)}
           </div>
         </div>
       `;
@@ -12604,7 +12608,7 @@ function bookmarkQuizMistakes() {
     }
   });
 
-  alert(`${count} question(s) ajoutée(s) à votre espace "Ma révision" ! ⭐`);
+  alert(`${count} question(s) ajoutée(s) à votre espace "Ma révision" ! `);
   const btn = document.getElementById('quizBookmarkMistakesBtn');
   if (btn) {
     btn.textContent = '✓ Ajouté aux favoris';
@@ -12761,7 +12765,7 @@ const VIEW_METAS = {
   'lessons': { module: 'all', modLabel: 'Cours & Séries', title: 'Polycopiés & Examens PDF' },
   'examens': { module: 'all', modLabel: 'Examens & Sujets', title: 'Examens & Sujets du Baccalauréat' },
   'algo-home': { module: 'algo', modLabel: 'Algorithme', title: 'Accueil Algorithme' },
-  'algo-pratique': { module: 'algo', modLabel: 'Algorithme', title: 'Pratique (Qt ➔ Thonny Python)' },
+  'algo-pratique': { module: 'algo', modLabel: 'Algorithme', title: 'Pratique (Qt / Thonny Python)' },
   'algo-types': { module: 'algo', modLabel: 'Algorithme', title: 'Types d\'Exercices du Bac' },
   'algo-methodes': { module: 'algo', modLabel: 'Algorithme', title: 'Fiches Méthode' },
   'algo-theorique': { module: 'algo', modLabel: 'Algorithme', title: (typeof CURRICULUM !== 'undefined') ? `Théorique (${CURRICULUM.getTotalAlgoChapters()} Chapitres Bac Info)` : 'Théorique (8 Chapitres)' },
@@ -12819,7 +12823,7 @@ function updateResumeStudyCard() {
       if (ch) {
         const summary = STI_STORE.getChapterProgressSummary(ch.slug);
         const targetStep = summary.firstUnfinished || 1;
-        titleText = `🎯 Continuer : ${ch.iconEmoji} ${ch.shortTitle}`;
+        titleText = `Continuer : ${ch.shortTitle}`;
         subtitleText = `Étape ${targetStep} : ${stepLabels[targetStep] || 'Exercices'} • ${summary.percent}% validé (${summary.doneCount}/${summary.availableCount} étapes)`;
         targetView = 'algo-theorique';
         hasHistory = true;
@@ -12941,22 +12945,24 @@ function renderHomeTodaySection() {
 
       planTasksHtml = `
         <div style="display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; margin-top: 10px;">
-          ${tasks.map(t => `
-            <div class="plan-task-row ${t.done ? 'done' : ''}" style="background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 8px; padding: 10px 12px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; max-width: 100%; box-sizing: border-box;">
+          ${tasks.map(t => {
+            const cleanT = String(t.title || '').replace(/^[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]\uFE0F?\s*/gu, '');
+            return `
+            <div class="plan-task-row ${t.done ? 'done' : ''}" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px 12px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; max-width: 100%; box-sizing: border-box;">
               <div style="display: flex; align-items: center; gap: 8px; flex: 1 1 160px; min-width: 0;">
-                <input type="checkbox" ${t.done ? 'checked' : ''} onchange="if(typeof togglePlanTaskCheckbox==='function'){togglePlanTaskCheckbox('${t.id}', this.checked);} renderHomeTodaySection();" style="width: 18px; height: 18px; flex-shrink: 0; cursor: pointer; accent-color: #f59e0b;" />
-                <span style="font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; background: rgba(245, 158, 11, 0.15); color: #f59e0b; white-space: nowrap; flex-shrink: 0;">${escapeHtml(t.badge || '25 min')}</span>
-                <span style="font-size: 0.88rem; font-weight: 600; color: var(--text-primary); text-decoration: ${t.done ? 'line-through' : 'none'}; opacity: ${t.done ? '0.6' : '1'}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;">${escapeHtml(t.title)}</span>
+                <input type="checkbox" ${t.done ? 'checked' : ''} onchange="if(typeof togglePlanTaskCheckbox==='function'){togglePlanTaskCheckbox('${t.id}', this.checked);} renderHomeTodaySection();" style="width: 16px; height: 16px; flex-shrink: 0; cursor: pointer; accent-color: var(--primary-indigo);" />
+                <span style="font-size: 0.72rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-secondary); white-space: nowrap; flex-shrink: 0; font-variant-numeric: tabular-nums;">${escapeHtml(t.badge || '25 min')}</span>
+                <span style="font-size: 0.84rem; font-weight: 600; color: var(--text-primary); text-decoration: ${t.done ? 'line-through' : 'none'}; opacity: ${t.done ? '0.6' : '1'}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;">${escapeHtml(cleanT)}</span>
               </div>
               <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; flex-shrink: 0;">
-                <button type="button" onclick="if(typeof startPomodoroForPlanTask==='function'){startPomodoroForPlanTask('${escapeHtml(t.title)}');}else if(typeof PomodoroEngine!=='undefined'){PomodoroEngine.openDrawer();}" style="background: rgba(234, 88, 12, 0.12); color: #ea580c; border: 1px solid rgba(234, 88, 12, 0.25); border-radius: 6px; padding: 4px 10px; font-size: 0.76rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
-                  <span>⏱️</span>
+                <button type="button" class="home-today-task-action" onclick="if(typeof startPomodoroForPlanTask==='function'){startPomodoroForPlanTask('${escapeHtml(cleanT)}');}else if(typeof PomodoroEngine!=='undefined'){PomodoroEngine.openDrawer();}">
+                  ${typeof uiIcon === 'function' ? uiIcon('clock', 13) : ''}
                   <span>25m</span>
                 </button>
-                ${t.link ? `<a href="${t.link}" onclick="navigateToHash('${t.link}')" style="background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 6px; padding: 4px 10px; font-size: 0.76rem; font-weight: 700; text-decoration: none; white-space: nowrap;">Ouvrir →</a>` : ''}
+                ${t.link ? `<a href="${t.link}" onclick="navigateToHash('${t.link}')" class="home-today-task-action"><span>Ouvrir</span>${typeof uiIcon === 'function' ? uiIcon('arrow-right', 13) : ''}</a>` : ''}
               </div>
             </div>
-          `).join('')}
+          `; }).join('')}
         </div>
       `;
     }
@@ -13010,128 +13016,120 @@ function renderHomeTodaySection() {
     }
   }
 
+  const icCal = typeof uiIcon === 'function' ? uiIcon('calendar', 14) : '';
+  const icClock = typeof uiIcon === 'function' ? uiIcon('clock', 15) : '';
+  const icZap = typeof uiIcon === 'function' ? uiIcon('zap', 18) : '';
+  const icTarget = typeof uiIcon === 'function' ? uiIcon('target', 14) : '';
+  const icLayers = typeof uiIcon === 'function' ? uiIcon('layers', 14) : '';
+  const icArr = typeof uiIcon === 'function' ? uiIcon('arrow-right', 15) : '';
+  const icNext = (nextCh && typeof uiIcon === 'function') ? uiIcon(nextCh.iconEmoji || 'book-open', 16) : '';
+
   container.innerHTML = `
-    <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);">
-      <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-soft);">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <div style="font-size: 1.4rem; background: rgba(245, 158, 11, 0.15); width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-            ⚡
-          </div>
+    <div class="home-today-shell">
+      <div class="home-today-header">
+        <div class="home-today-title-row">
+          <div class="home-today-icon-box">${icZap}</div>
           <div>
-            <h2 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+            <h2 style="margin: 0; font-size: 1.08rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
               <span>Aujourd'hui</span>
-              <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">&bull; ${escapeHtml(capitalizedDate)}</span>
+              <span style="font-size: 0.8rem; font-weight: 500; color: var(--text-muted);">&bull; ${escapeHtml(capitalizedDate)}</span>
             </h2>
           </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <button type="button" onclick="if(typeof PomodoroEngine!=='undefined'){PomodoroEngine.openDrawer();}" style="background: rgba(234, 88, 12, 0.12); color: #ea580c; border: 1px solid rgba(234, 88, 12, 0.28); padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
-            <span>⏱️</span>
+        <div class="home-today-actions">
+          <button type="button" class="home-today-btn" onclick="if(typeof PomodoroEngine!=='undefined'){PomodoroEngine.openDrawer();}">
+            ${icClock}
             <span>Pomodoro</span>
           </button>
-          <a href="#/revision/plan" onclick="navigateToHash('#/revision/plan')" style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-soft); padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
-            <span>📅</span>
+          <a href="#/revision/plan" onclick="navigateToHash('#/revision/plan')" class="home-today-btn primary-tint">
+            ${icCal}
             <span>Planning</span>
           </a>
         </div>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 14px;">
+      <div class="home-today-grid">
         <!-- SOUS-BLOC 1 : PROCHAINE ÉTAPE DU COURS -->
-        <div style="background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; overflow: hidden;">
+        <div class="home-today-subcard">
           <div>
-            <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: #38bdf8; letter-spacing: 0.5px; margin-bottom: 4px;">
-              🎯 Prochaine étape recommandée
-            </div>
+            <div class="home-today-eyebrow">${icTarget}<span>Prochaine étape</span></div>
             ${nextCh ? `
-              <h4 style="margin: 0 0 4px 0; font-size: 0.98rem; font-weight: 800; color: var(--text-primary);">
-                ${escapeHtml(nextCh.iconEmoji || '📖')} ${escapeHtml(nextCh.shortTitle)}
+              <h4 style="margin: 0 0 4px 0; font-size: 0.96rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+                ${icNext}<span>${escapeHtml(nextCh.shortTitle)}</span>
               </h4>
               <p style="margin: 0; font-size: 0.82rem; color: var(--text-secondary);">
                 Étape ${nextStepNum} : <strong>${escapeHtml(stepLabels[nextStepNum] || '')}</strong>
               </p>
             ` : `
-              <h4 style="margin: 0 0 4px 0; font-size: 0.98rem; font-weight: 800; color: #10b981;">
-                🎉 Toutes les étapes sont validées !
+              <h4 style="margin: 0 0 4px 0; font-size: 0.96rem; font-weight: 700; color: var(--text-primary);">
+                Toutes les étapes validées
               </h4>
               <p style="margin: 0; font-size: 0.82rem; color: var(--text-secondary);">
-                Excellente progression, continuez à vous entraîner sur les sujets de Bac.
+                Continuez à vous entraîner sur les sujets de Bac.
               </p>
             `}
           </div>
-          <div style="margin-top: 12px;">
+          <div>
             ${nextCh ? `
-              <a href="#/algo/theorique/${nextCh.slug}" onclick="navigateToHash('#/algo/theorique/${nextCh.slug}'); setTimeout(function() { if(typeof scrollToChapterStep==='function') scrollToChapterStep('${nextCh.slug}', ${nextStepNum}); }, 180);" style="display: inline-flex; align-items: center; justify-content: space-between; width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 8px; background: rgba(56, 189, 248, 0.12); color: #38bdf8; font-weight: 700; font-size: 0.82rem; text-decoration: none;">
+              <a href="#/algo/theorique/${nextCh.slug}" onclick="navigateToHash('#/algo/theorique/${nextCh.slug}'); setTimeout(function() { if(typeof scrollToChapterStep==='function') scrollToChapterStep('${nextCh.slug}', ${nextStepNum}); }, 180);" class="home-card-cta">
                 <span>Reprendre l'étape ${nextStepNum}</span>
-                <span>→</span>
+                ${icArr}
               </a>
             ` : `
-              <a href="#/algo/theorique" onclick="navigateToHash('#/algo/theorique')" style="display: inline-flex; align-items: center; justify-content: space-between; width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 8px; background: rgba(56, 189, 248, 0.12); color: #38bdf8; font-weight: 700; font-size: 0.82rem; text-decoration: none;">
+              <a href="#/algo/theorique" onclick="navigateToHash('#/algo/theorique')" class="home-card-cta">
                 <span>Revoir les chapitres</span>
-                <span>→</span>
+                ${icArr}
               </a>
             `}
           </div>
         </div>
 
         <!-- SOUS-BLOC 2 : CARTES MÉMOIRE DU JOUR -->
-        <div style="background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; overflow: hidden;">
+        <div class="home-today-subcard">
           <div>
-            <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: #c084fc; letter-spacing: 0.5px; margin-bottom: 4px;">
-              🗂️ Répétition Espacée Leitner
-            </div>
-            <h4 style="margin: 0 0 4px 0; font-size: 0.98rem; font-weight: 800; color: var(--text-primary);">
+            <div class="home-today-eyebrow">${icLayers}<span>Répétition Espacée</span></div>
+            <h4 style="margin: 0 0 4px 0; font-size: 0.96rem; font-weight: 700; color: var(--text-primary); font-variant-numeric: tabular-nums;">
               ${dueCardsCount > 0 ? `${dueCardsCount} carte(s) à réviser` : 'Cartes à jour'}
             </h4>
             <p style="margin: 0; font-size: 0.82rem; color: var(--text-secondary);">
-              ${dueCardsCount > 0 ? 'Des cartes sont prêtes pour consolider ta mémoire à long terme.' : 'Toutes les cartes programmées aujourd\'hui ont été révisées !'}
+              ${dueCardsCount > 0 ? 'Des cartes sont prêtes pour consolider votre mémoire.' : 'Toutes les cartes programmées aujourd\'hui ont été révisées.'}
             </p>
           </div>
-          <div style="margin-top: 12px;">
-            <a href="#/revision/cartes" onclick="navigateToHash('#/revision/cartes')" style="display: inline-flex; align-items: center; justify-content: space-between; width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 8px; background: rgba(168, 85, 247, 0.12); color: #c084fc; font-weight: 700; font-size: 0.82rem; text-decoration: none;">
+          <div>
+            <a href="#/revision/cartes" onclick="navigateToHash('#/revision/cartes')" class="home-card-cta">
               <span>${dueCardsCount > 0 ? 'Lancer la session' : 'Voir les cartes'}</span>
-              <span>→</span>
+              ${icArr}
             </a>
           </div>
         </div>
 
         <!-- SOUS-BLOC 3 : PLANNING D'ÉTUDE DU JOUR -->
-        <div style="background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; overflow: hidden;">
+        <div class="home-today-subcard">
           <div>
             <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px;">
-              <span style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: #f59e0b; letter-spacing: 0.5px;">
-                📅 Planning du jour
-              </span>
-              ${planHasTasks ? `<span style="font-size: 0.74rem; font-weight: 700; color: var(--text-secondary);">${completedCount}/${totalTasks} fait</span>` : ''}
+              <span class="home-today-eyebrow" style="margin-bottom:0;">${icCal}<span>Planning du jour</span></span>
+              ${planHasTasks ? `<span style="font-size: 0.74rem; font-weight: 600; color: var(--text-secondary); font-variant-numeric: tabular-nums;">${completedCount}/${totalTasks} fait</span>` : ''}
             </div>
             ${planHasTasks ? `
-              <h4 style="margin: 0 0 4px 0; font-size: 0.98rem; font-weight: 800; color: var(--text-primary);">
-                ${totalTasks - completedCount > 0 ? `${totalTasks - completedCount} bloc(s) restant(s)` : 'Objectif du jour atteint ! 🎉'}
+              <h4 style="margin: 0 0 4px 0; font-size: 0.96rem; font-weight: 700; color: var(--text-primary); font-variant-numeric: tabular-nums;">
+                ${totalTasks - completedCount > 0 ? `${totalTasks - completedCount} bloc(s) restant(s)` : 'Objectif du jour atteint'}
               </h4>
               ${planTasksHtml}
             ` : `
-              <h4 style="margin: 0 0 4px 0; font-size: 0.98rem; font-weight: 800; color: var(--text-primary);">
+              <h4 style="margin: 0 0 4px 0; font-size: 0.96rem; font-weight: 700; color: var(--text-primary);">
                 Planning personnalisé
               </h4>
               <p style="margin: 0; font-size: 0.82rem; color: var(--text-secondary);">
-                Générez un calendrier de révision sur mesure jusqu'à la date du Bac.
+                Générez un calendrier de révision sur mesure jusqu'au Bac.
               </p>
-              <div style="margin-top: 12px;">
-                <a href="#/revision/plan" onclick="navigateToHash('#/revision/plan')" style="display: inline-flex; align-items: center; justify-content: space-between; width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 8px; background: rgba(245, 158, 11, 0.12); color: #f59e0b; font-weight: 700; font-size: 0.82rem; text-decoration: none;">
-                  <span>Configurer mon planning</span>
-                  <span>→</span>
-                </a>
-              </div>
             `}
           </div>
-          ${planHasTasks ? `
-            <div style="margin-top: 12px;">
-              <a href="#/revision/plan" onclick="navigateToHash('#/revision/plan')" style="display: inline-flex; align-items: center; justify-content: space-between; width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 8px; background: rgba(245, 158, 11, 0.12); color: #f59e0b; font-weight: 700; font-size: 0.82rem; text-decoration: none;">
-                <span>Voir tout le calendrier</span>
-                <span>→</span>
-              </a>
-            </div>
-          ` : ''}
+          <div>
+            <a href="#/revision/plan" onclick="navigateToHash('#/revision/plan')" class="home-card-cta">
+              <span>${planHasTasks ? 'Voir tout le calendrier' : 'Configurer mon planning'}</span>
+              ${icArr}
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -13239,7 +13237,7 @@ function executeGlobalSearch(q) {
         category: 'HTML5',
         module: 'sti',
         view: 'html',
-        icon: '🌐',
+        icon: 'globe',
         item: item
       }));
     }
@@ -13251,7 +13249,7 @@ function executeGlobalSearch(q) {
         category: 'CSS3',
         module: 'sti',
         view: 'css',
-        icon: '🎨',
+        icon: 'palette',
         item: item
       }));
     }
@@ -13263,7 +13261,7 @@ function executeGlobalSearch(q) {
         category: 'JavaScript',
         module: 'sti',
         view: 'js',
-        icon: '⚡',
+        icon: 'zap',
         item: item
       }));
     }
@@ -13275,7 +13273,7 @@ function executeGlobalSearch(q) {
         category: 'SQL & BD',
         module: 'sti',
         view: 'sql',
-        icon: '🗄️',
+        icon: 'database',
         item: item
       }));
     }
@@ -13287,7 +13285,7 @@ function executeGlobalSearch(q) {
         category: item.category || 'Algorithme Théorique',
         module: 'algo',
         view: 'algo-theorique',
-        icon: '📖',
+        icon: 'book-open',
         item: item
       }));
     }
@@ -13299,7 +13297,7 @@ function executeGlobalSearch(q) {
         category: 'Pratique Qt/Thonny',
         module: 'algo',
         view: 'algo-pratique',
-        icon: '🛠️',
+        icon: 'wrench',
         item: item
       }));
     }
@@ -13314,7 +13312,7 @@ function executeGlobalSearch(q) {
       category: l.subjectLabel || 'Cours & Séries PDF',
       module: (l.subject && l.subject.includes('algo')) ? 'algo' : 'sti',
       view: 'lessons',
-      icon: '📚',
+      icon: 'book',
       isLesson: true,
       lessonId: l.id
     }));
@@ -13329,7 +13327,7 @@ function executeGlobalSearch(q) {
       category: d.kind === 'examen' ? 'Examen Bac' : (d.kind === 'serie' ? 'Série / TP' : 'Extrait d\'Examen'),
       module: 'algo',
       view: d.kind === 'examen' ? 'examens' : (d.module === 'algo-pratique' ? 'algo-pratique' : 'algo-theorique'),
-      icon: d.kind === 'examen' ? '🎓' : (d.id.startsWith('tp') ? '🧪' : '📄'),
+      icon: d.kind === 'examen' ? 'graduation-cap' : (d.id.startsWith('tp') ? 'terminal' : 'file-text'),
       file: d.file
     }));
   }
@@ -13351,7 +13349,7 @@ function executeGlobalSearch(q) {
   if (currentSearchResults.length === 0) {
     resultsList.innerHTML = `
       <div style="text-align: center; padding: 40px 16px; color: var(--text-muted);">
-        <div style="font-size: 2rem; margin-bottom: 8px;">🔍</div>
+        <div style="font-size: 2rem; margin-bottom: 8px;"></div>
         <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">Aucun résultat trouvé</div>
         <div style="font-size: 0.85rem;">Essayez un autre mot-clé (ex: getMonth, tri, pickle, flex, table...)</div>
       </div>
@@ -13363,7 +13361,7 @@ function executeGlobalSearch(q) {
     <div class="search-result-item ${idx === 0 ? 'selected' : ''}" data-idx="${idx}" onclick="navigateGlobalSearchResult(${idx})">
       <div class="search-result-main">
         <div class="search-result-icon" style="background: ${res.module === 'algo' ? 'var(--algo-accent-light)' : 'var(--sti-accent-light)'};">
-          ${res.icon}
+          ${safeIcon(res.icon, 15)}
         </div>
         <div class="search-result-info">
           <div class="search-result-name">${escapeHtml(res.name)}</div>
@@ -13491,7 +13489,7 @@ function updatePageMeta(viewName) {
       desc: `Espace de révision pour l'algorithmique au Bac tunisien : pratique Qt Designer & Thonny et ${totalAlgoCh} chapitres théoriques.`
     },
     'algo-pratique': {
-      title: "Pratique Qt Designer ➔ Thonny Python • Algorithme Bac Info",
+      title: "Pratique Qt Designer / Thonny Python • Algorithme Bac Info",
       desc: "Simulateur visuel interactif et fiches pratiques des 20 notions Qt Designer et Python pour l'épreuve pratique du Bac."
     },
     'algo-theorique': {
@@ -13574,7 +13572,7 @@ function renderBookmarkBtn(type, id, extraMeta) {
   const metaAttr = extraMeta ? JSON.stringify(extraMeta).replace(/"/g, '&quot;') : 'null';
   return `
     <button type="button" class="bookmark-star-btn ${isBm ? 'bookmarked' : ''}" onclick="event.stopPropagation(); toggleBookmarkItem('${type}', '${id}', this, ${metaAttr})" title="${isBm ? 'Retirer des favoris' : 'Marquer comme À revoir'}">
-      <span>${isBm ? '⭐' : '☆'}</span>
+      <span>${isBm ? '' : '☆'}</span>
       <span>À revoir</span>
     </button>
   `;
@@ -13587,7 +13585,7 @@ function toggleBookmarkItem(type, id, btnEl, extraMeta) {
     if (btnEl.classList.contains('bookmark-star-btn')) {
       btnEl.classList.toggle('bookmarked', isNow);
       const star = btnEl.querySelector('span:first-child');
-      if (star) star.textContent = isNow ? '⭐' : '☆';
+      if (star) star.textContent = isNow ? '★' : '☆';
       btnEl.title = isNow ? 'Retirer des favoris' : 'Marquer comme À revoir';
     } else {
       btnEl.textContent = isNow ? '★' : '☆';
@@ -13596,7 +13594,7 @@ function toggleBookmarkItem(type, id, btnEl, extraMeta) {
     }
   }
   updateDataCountersUI();
-  showToast(isNow ? '⭐ Ajouté aux notions à revoir !' : 'Retiré de vos favoris');
+  showToast(isNow ? 'Ajouté aux notions à revoir !' : 'Retiré de vos favoris');
 }
 
 function toggleExerciseBookmark(exId, btn) {
@@ -13620,9 +13618,9 @@ function updateHomeRevisionWidget() {
   const pillsWrap = document.getElementById('homeRevStatsPills');
   if (pillsWrap) {
     pillsWrap.innerHTML = `
-      <span class="home-revision-pill">📖 <strong>${studiedAlgos}</strong> / 59 algos</span>
-      <span class="home-revision-pill">⏱️ <strong>${examHistory.length}</strong> simulation${examHistory.length > 1 ? 's' : ''}</span>
-      <span class="home-revision-pill">⚡ <strong>${quizStats.overallPercent}%</strong> quiz</span>
+      <span class="home-revision-pill"><strong>${studiedAlgos}</strong> / 59 algos</span>
+      <span class="home-revision-pill"><strong>${examHistory.length}</strong> simulation${examHistory.length > 1 ? 's' : ''}</span>
+      <span class="home-revision-pill"><strong>${quizStats.overallPercent}%</strong> quiz</span>
     `;
   }
 }
@@ -13671,7 +13669,7 @@ function renderRevisionPage() {
     summaryGrid.innerHTML = `
       <div class="revision-stat-card">
         <div class="revision-stat-icon-val">
-          <span style="font-size:1.5rem;">📖</span>
+          <span style="font-size:1.5rem;"></span>
           <span class="revision-stat-val">${studiedAlgos} <span style="font-size:1rem;color:var(--text-secondary);font-weight:600;">/ ${totalAlgos}</span></span>
         </div>
         <span class="revision-stat-label">Algorithmes Étudiés</span>
@@ -13680,7 +13678,7 @@ function renderRevisionPage() {
 
       <div class="revision-stat-card">
         <div class="revision-stat-icon-val">
-          <span style="font-size:1.5rem;">🎓</span>
+          <span style="font-size:1.5rem;"></span>
           <span class="revision-stat-val">${masteredChapters} <span style="font-size:1rem;color:var(--text-secondary);font-weight:600;">/ ${totalChapters}</span></span>
         </div>
         <span class="revision-stat-label">Chapitres Maîtrisés (≥80%)</span>
@@ -13689,7 +13687,7 @@ function renderRevisionPage() {
 
       <div class="revision-stat-card">
         <div class="revision-stat-icon-val">
-          <span style="font-size:1.5rem;">⏱️</span>
+          <span style="font-size:1.5rem;"></span>
           <span class="revision-stat-val">${examHistory.length}</span>
         </div>
         <span class="revision-stat-label">Épreuves Simulées</span>
@@ -13698,7 +13696,7 @@ function renderRevisionPage() {
 
       <div class="revision-stat-card">
         <div class="revision-stat-icon-val">
-          <span style="font-size:1.5rem;">⚡</span>
+          <span style="font-size:1.5rem;"></span>
           <span class="revision-stat-val">${quizStats.overallPercent}%</span>
         </div>
         <span class="revision-stat-label">Taux de Réussite Quiz</span>
@@ -13707,7 +13705,7 @@ function renderRevisionPage() {
 
       <div class="revision-stat-card" style="border-color: rgba(245, 158, 11, 0.4);">
         <div class="revision-stat-icon-val">
-          <span style="font-size:1.5rem;">⭐</span>
+          <span style="font-size:1.5rem;"></span>
           <span class="revision-stat-val" style="color:#fbbf24;">${totalBookmarks}</span>
         </div>
         <span class="revision-stat-label">Notions « À revoir »</span>
@@ -13716,7 +13714,7 @@ function renderRevisionPage() {
 
       <div class="revision-stat-card" style="border-color: rgba(168, 85, 247, 0.4); cursor: pointer;" onclick="navigateToHash('#/revision/cartes')">
         <div class="revision-stat-icon-val">
-          <span style="font-size:1.5rem;">🗂️</span>
+          <span style="font-size:1.5rem;"></span>
           <span class="revision-stat-val" style="color:#c084fc;">${dueFlashcards}</span>
         </div>
         <span class="revision-stat-label">Cartes Mémoire Dues</span>
@@ -13738,7 +13736,7 @@ function renderRevisionPage() {
         <div style="background:var(--surface-bg);border:1px solid var(--border-color);border-radius:12px;padding:16px;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
             <div style="display:flex;align-items:center;gap:8px;">
-              <span style="font-size:1.15rem;">📅</span>
+              <span style="font-size:1.15rem;"></span>
               <strong style="color:var(--text-primary);font-size:0.95rem;">${escapeHtml(todayInfo.day.dateFormatted || todayInfo.day.date)}</strong>
               <span style="font-size:0.75rem;padding:2px 8px;border-radius:6px;background:rgba(245,158,11,0.15);color:#f59e0b;font-weight:700;">${escapeHtml(todayInfo.day.theme || 'Révision')}</span>
             </div>
@@ -13757,7 +13755,7 @@ function renderRevisionPage() {
                 </div>
                 <div class="plan-task-actions">
                   <button type="button" class="plan-pomo-trigger-btn" onclick="startPomodoroForPlanTask('${escapeHtml(t.title)}')">
-                    <span>⏱️</span>
+                    <span></span>
                     <span>25 min</span>
                   </button>
                   ${t.link ? `<a href="${t.link}" onclick="navigateToHash('${t.link}')" class="revision-bm-open-btn" style="text-decoration:none;padding:4px 8px;font-size:0.75rem;">Ouvrir →</a>` : ''}
@@ -13778,7 +13776,7 @@ function renderRevisionPage() {
         <div style="background:var(--surface-bg);border:1px solid var(--border-color);border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
           <div style="display:flex;align-items:center;gap:14px;flex:1;min-width:240px;">
             <div style="font-size:2rem;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              🚀
+              
             </div>
             <div>
               <div style="font-size:0.75rem;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:0.5px;">Prochaine étape conseillée</div>
@@ -13792,7 +13790,7 @@ function renderRevisionPage() {
           </div>
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
             <a href="#/revision/plan" onclick="navigateToHash('#/revision/plan')" style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:8px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;font-weight:800;font-size:0.88rem;text-decoration:none;">
-              <span>📅 Configurer mon Planning</span>
+              <span>Configurer mon Planning</span>
               <span>→</span>
             </a>
           </div>
@@ -13816,7 +13814,7 @@ function renderRevisionPage() {
         <div style="background:var(--surface-bg);border:1px solid var(--border-color);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
             <div style="display:flex;align-items:center;gap:8px;">
-              <span style="font-size:1.2rem;">${c.iconEmoji || '📁'}</span>
+              <span style="font-size:1.2rem;">${safeIcon(c.iconEmoji || 'folder', 15)}</span>
               <strong style="font-size:0.92rem;color:var(--text-primary);">${escapeHtml(c.shortTitle)}</strong>
             </div>
             <span style="font-size:0.85rem;font-weight:800;color:${isMastered ? '#10b981' : (p > 0 ? '#f59e0b' : 'var(--text-secondary)')};">${p}%</span>
@@ -13830,7 +13828,7 @@ function renderRevisionPage() {
           <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:2px;">
             ${bestQuiz !== null ? `
               <span style="font-size:0.75rem;padding:2px 8px;border-radius:6px;background:rgba(16,185,129,0.12);color:#10b981;font-weight:700;">
-                🏆 Quiz : ${bestQuiz}%
+                Quiz : ${bestQuiz}%
               </span>
             ` : `
               <span style="font-size:0.75rem;color:var(--text-muted);">Quiz non tenté</span>
@@ -13871,13 +13869,13 @@ function renderExamSimulatorHistorySection() {
   if (history.length === 0) {
     container.innerHTML = `
       <div class="revision-empty-state">
-        <div class="revision-empty-icon">⏱️</div>
+        <div class="revision-empty-icon"></div>
         <h4 style="margin:0 0 6px 0;font-size:1.05rem;color:var(--text-primary);font-weight:700;">Aucune épreuve simulée enregistrée</h4>
         <p class="revision-empty-text">
           Passez un examen complet avec compte à rebours, consignes réelles et auto-évaluation guidée pour mesurer votre niveau exact.
         </p>
         <button type="button" class="btn-primary" onclick="navigateToHash('#/examens')" style="padding:10px 22px;border-radius:10px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-weight:700;font-size:0.88rem;border:none;cursor:pointer;">
-          🚀 Découvrir les sujets d'examens
+          Découvrir les sujets d'examens
         </button>
       </div>
     `;
@@ -13900,8 +13898,8 @@ function renderExamSimulatorHistorySection() {
         <div style="flex:1;min-width:200px;">
           <strong style="font-size:0.92rem;color:var(--text-primary);">${escapeHtml(title)}</strong>
           <div style="display:flex;gap:12px;font-size:0.78rem;color:var(--text-secondary);margin-top:2px;">
-            <span>📅 ${att.date || 'Récemment'}</span>
-            ${durationMin !== null ? `<span>⏱️ Temps passé : ${durationMin} min</span>` : ''}
+            <span>${att.date || 'Récemment'}</span>
+            ${durationMin !== null ? `<span>Temps passé : ${durationMin} min</span>` : ''}
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:12px;">
@@ -13910,7 +13908,7 @@ function renderExamSimulatorHistorySection() {
             <span style="font-size:0.75rem;color:var(--text-secondary);">${scorePct}%</span>
           </div>
           <button type="button" onclick="openExamSimulatorSetup('${att.examId}')" class="btn-sm" style="background:rgba(255,255,255,0.06);border:1px solid var(--border-color);color:var(--text-secondary);padding:6px 10px;border-radius:6px;font-size:0.78rem;cursor:pointer;">
-            🔄 Refaire
+            Refaire
           </button>
         </div>
       </div>
@@ -13919,13 +13917,13 @@ function renderExamSimulatorHistorySection() {
 
   container.innerHTML = `
     <div style="margin-bottom:18px;">
-      <div style="font-size:0.85rem;font-weight:700;color:var(--text-primary);margin-bottom:6px;">📈 Évolution de vos notes (/20)</div>
+      <div style="font-size:0.85rem;font-weight:700;color:var(--text-primary);margin-bottom:6px;">Évolution de vos notes (/20)</div>
       <div class="revision-chart-wrap">
         ${svgHtml}
       </div>
     </div>
     <div style="display:grid;gap:8px;">
-      <div style="font-size:0.85rem;font-weight:700;color:var(--text-primary);margin-bottom:4px;">📋 Dernières tentatives</div>
+      <div style="font-size:0.85rem;font-weight:700;color:var(--text-primary);margin-bottom:4px;">Dernières tentatives</div>
       ${listHtml}
     </div>
   `;
@@ -14017,10 +14015,10 @@ function renderRevisionBookmarksSection() {
   if (list.length === 0) {
     container.innerHTML = `
       <div class="revision-empty-state" style="grid-column: 1 / -1;">
-        <div class="revision-empty-icon">⭐</div>
+        <div class="revision-empty-icon"></div>
         <h4 style="margin:0 0 6px 0;font-size:1.05rem;color:var(--text-primary);font-weight:700;">Aucune notion dans cette catégorie</h4>
         <p class="revision-empty-text">
-          Cliquez sur le bouton ⭐ « À revoir » sur les algorithmes, exercices d'examens, sujets ou fiches pour les regrouper ici.
+          Cliquez sur le bouton « À revoir » sur les algorithmes, exercices d'examens, sujets ou fiches pour les regrouper ici.
         </p>
       </div>
     `;
@@ -14041,7 +14039,7 @@ function renderRevisionBookmarksSection() {
         title = item.name;
         desc = item.summary || item.description || '';
       }
-      openActionHtml = `<button type="button" class="revision-bm-open-btn" onclick="openAlgoTheoriqueModalById('${b.id}')">📖 Ouvrir l'algo →</button>`;
+      openActionHtml = `<button type="button" class="revision-bm-open-btn" onclick="openAlgoTheoriqueModalById('${b.id}')">Ouvrir l'algo →</button>`;
     } else if (b.type === 'exercise') {
       badgeLabel = 'Exercice Examen';
       const ex = (typeof EXERCISES_DATA !== 'undefined') ? (EXERCISES_DATA.getById ? EXERCISES_DATA.getById(b.id) : EXERCISES_DATA.getAllExercises().find(x => x.id === b.id)) : null;
@@ -14050,11 +14048,11 @@ function renderRevisionBookmarksSection() {
         title = `${doc ? doc.title : ex.examId} • ${ex.exNum}`;
         desc = `Exercice de type : ${(ex.types || []).join(', ')} • Points : ${ex.points || 'Non précisé'}`;
         const pdfUrl = doc ? `${doc.file}#page=${ex.pdfPage || 1}` : '#';
-        openActionHtml = `<a href="${pdfUrl}" target="_blank" rel="noopener" class="revision-bm-open-btn" style="text-decoration:none;">📄 Ouvrir à la page ${ex.pdfPage || 1} →</a>`;
+        openActionHtml = `<a href="${pdfUrl}" target="_blank" rel="noopener" class="revision-bm-open-btn" style="text-decoration:none;">Ouvrir à la page ${ex.pdfPage || 1} →</a>`;
       } else if (b.meta) {
         title = `Examen ${b.meta.examId || ''} • ${b.meta.exNum || ''}`;
         desc = `Exercice simulé marqué à revoir (${b.meta.score || 0}/${b.meta.max || 0} pts)`;
-        openActionHtml = `<button type="button" class="revision-bm-open-btn" onclick="openExamSimulatorSetup('${b.meta.examId}')">⏱️ Relancer →</button>`;
+        openActionHtml = `<button type="button" class="revision-bm-open-btn" onclick="openExamSimulatorSetup('${b.meta.examId}')">Relancer →</button>`;
       }
     } else if (b.type === 'exam') {
       badgeLabel = 'Sujet Examen';
@@ -14062,7 +14060,7 @@ function renderRevisionBookmarksSection() {
       if (doc) {
         title = doc.title;
         desc = `Année : ${doc.date} • Durée : ${doc.duration || '2h'} • ${doc.pages || 1} pages`;
-        openActionHtml = `<a href="${doc.file}" target="_blank" rel="noopener" class="revision-bm-open-btn" style="text-decoration:none;">📄 Ouvrir le sujet →</a>`;
+        openActionHtml = `<a href="${doc.file}" target="_blank" rel="noopener" class="revision-bm-open-btn" style="text-decoration:none;">Ouvrir le sujet →</a>`;
       }
     } else if (b.type === 'method') {
       badgeLabel = 'Fiche Méthode';
@@ -14071,7 +14069,7 @@ function renderRevisionBookmarksSection() {
         title = m.title;
         desc = m.subtitle || m.category;
       }
-      openActionHtml = `<a href="#/algo/methodes/${b.id}" onclick="navigateToHash('#/algo/methodes/${b.id}')" class="revision-bm-open-btn" style="text-decoration:none;">💡 Voir la fiche →</a>`;
+      openActionHtml = `<a href="#/algo/methodes/${b.id}" onclick="navigateToHash('#/algo/methodes/${b.id}')" class="revision-bm-open-btn" style="text-decoration:none;">Voir la fiche →</a>`;
     } else if (b.type === 'quiz') {
       badgeLabel = 'Question Quiz';
       const q = (typeof QUIZ_DATA !== 'undefined') ? (QUIZ_DATA.getById ? QUIZ_DATA.getById(b.id) : QUIZ_DATA.getQuestionById(b.id)) : null;
@@ -14082,7 +14080,7 @@ function renderRevisionBookmarksSection() {
         title = b.meta.question;
         desc = `Chapitre : ${b.meta.chapter || 'Mixte'}`;
       }
-      openActionHtml = `<button type="button" class="revision-bm-open-btn" onclick="startQuizForSingleQuestion('${b.id}')">⚡ Refaire ce quiz →</button>`;
+      openActionHtml = `<button type="button" class="revision-bm-open-btn" onclick="startQuizForSingleQuestion('${b.id}')">Refaire ce quiz →</button>`;
     } else if (b.type === 'flashcard') {
       badgeLabel = 'Carte Mémoire';
       badgeClass = 'flashcard';
@@ -14095,7 +14093,7 @@ function renderRevisionBookmarksSection() {
         title = b.meta.title || b.id;
         desc = b.meta.desc || '';
       }
-      openActionHtml = `<button type="button" class="revision-bm-open-btn" onclick="startFlashcardForSingleCard('${b.id}')">🗂️ Réviser cette carte →</button>`;
+      openActionHtml = `<button type="button" class="revision-bm-open-btn" onclick="startFlashcardForSingleCard('${b.id}')">Réviser cette carte →</button>`;
     }
 
     return `
@@ -14109,7 +14107,7 @@ function renderRevisionBookmarksSection() {
         <h4 class="revision-bm-title">${escapeHtml(title)}</h4>
         ${desc ? `<p class="revision-bm-desc">${escapeHtml(desc)}</p>` : ''}
         <div class="revision-bm-note-box">
-          <span style="font-size:0.8rem;">📝</span>
+          <span style="font-size:0.8rem;"></span>
           <input type="text" class="revision-bm-note-input" placeholder="Ajouter une note de révision..." value="${escapeHtml(b.note || '')}" onchange="saveBookmarkNote('${b.type}', '${b.id}', this.value)" />
         </div>
         <div class="revision-bm-actions">
@@ -14145,7 +14143,7 @@ function saveBookmarkNote(type, id, noteVal) {
 function openAllBookmarksSequentially() {
   const bookmarks = (typeof STI_STORE !== 'undefined') ? STI_STORE.getBookmarks() : [];
   if (bookmarks.length === 0) {
-    alert("Vous n'avez aucune notion dans « À revoir ». Cliquez sur ⭐ sur les algorithmes ou exercices pour les ajouter.");
+    alert("Vous n'avez aucune notion dans « À revoir ». Cliquez sur sur les algorithmes ou exercices pour les ajouter.");
     return;
   }
   let currentIndex = 0;
@@ -14272,11 +14270,11 @@ function renderWeakPointsSection() {
 
   // 3 types de questions les plus fragiles
   const kindStats = {
-    'trace': { label: "Trace à la main d'un algorithme", icon: '📊', errors: 0, link: '#/algo/methodes/trace-execution', linkText: 'Fiche Méthode 2' },
-    'correct-ou-non': { label: "Trouver l'erreur & Débogage", icon: '⚠️', errors: 0, link: '#/algo/erreurs', linkText: 'Catalogue erreurs' },
-    'validite': { label: "Validité T.D.O & Déclarations", icon: '📋', errors: 0, link: '#/algo/methodes/tdo-tdnt', linkText: 'Fiche Méthode 1' },
-    'fonctions': { label: "Primitives chaînes & fichiers", icon: '⚙️', errors: 0, link: '#/algo/methodes/fonctions-predefinies', linkText: 'Fiche Méthode 7' },
-    'concept': { label: "Concepts théoriques & V/F", icon: '💡', errors: 0, link: '#/algo/methodes', linkText: 'Fiches méthode' }
+    'trace': { label: "Trace à la main d'un algorithme", icon: 'bar-chart', errors: 0, link: '#/algo/methodes/trace-execution', linkText: 'Fiche Méthode 2' },
+    'correct-ou-non': { label: "Trouver l'erreur & Débogage", icon: '', errors: 0, link: '#/algo/erreurs', linkText: 'Catalogue erreurs' },
+    'validite': { label: "Validité T.D.O & Déclarations", icon: '', errors: 0, link: '#/algo/methodes/tdo-tdnt', linkText: 'Fiche Méthode 1' },
+    'fonctions': { label: "Primitives chaînes & fichiers", icon: '', errors: 0, link: '#/algo/methodes/fonctions-predefinies', linkText: 'Fiche Méthode 7' },
+    'concept': { label: "Concepts théoriques & V/F", icon: 'lightbulb', errors: 0, link: '#/algo/methodes', linkText: 'Fiches méthode' }
   };
 
   wrongIds.forEach(id => {
@@ -14306,7 +14304,7 @@ function renderWeakPointsSection() {
       <div style="background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 12px; padding: 16px;">
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px;">
           <h4 style="margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
-            <span>📁</span>
+            <span></span>
             <span>3 Chapitres à consolider</span>
           </h4>
           <span style="font-size: 0.74rem; font-weight: 700; color: #ef4444; background: rgba(239, 68, 68, 0.12); padding: 2px 8px; border-radius: 12px;">Priorité</span>
@@ -14316,7 +14314,7 @@ function renderWeakPointsSection() {
           ${weakestChapters.map(item => `
             <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
               <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;">
-                <span style="font-size: 1.2rem;">${item.chapter.iconEmoji || '📁'}</span>
+                <span style="font-size: 1.2rem;">${safeIcon(item.chapter.iconEmoji || 'folder', 15)}</span>
                 <div style="overflow: hidden;">
                   <div style="font-size: 0.88rem; font-weight: 700; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(item.chapter.shortTitle)}</div>
                   <div style="font-size: 0.74rem; color: var(--text-secondary);">
@@ -14336,7 +14334,7 @@ function renderWeakPointsSection() {
       <div style="background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 12px; padding: 16px;">
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px;">
           <h4 style="margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
-            <span>⚡</span>
+            <span></span>
             <span>3 Notions clés à réviser</span>
           </h4>
           <span style="font-size: 0.74rem; font-weight: 700; color: #f59e0b; background: rgba(245, 158, 11, 0.12); padding: 2px 8px; border-radius: 12px;">Méthode</span>
@@ -14346,7 +14344,7 @@ function renderWeakPointsSection() {
           ${weakestKinds.map(([key, data]) => `
             <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
               <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;">
-                <span style="font-size: 1.2rem;">${data.icon}</span>
+                <span style="font-size: 1.2rem;">${safeIcon(data.icon, 15)}</span>
                 <div style="overflow: hidden;">
                   <div style="font-size: 0.88rem; font-weight: 700; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(data.label)}</div>
                   <div style="font-size: 0.74rem; color: var(--text-secondary);">
@@ -14376,13 +14374,13 @@ function renderQuizRecentSection() {
   if (history.length === 0) {
     container.innerHTML = `
       <div class="revision-empty-state">
-        <div class="revision-empty-icon">⚡</div>
+        <div class="revision-empty-icon"></div>
         <h4 style="margin:0 0 6px 0;font-size:1.05rem;color:var(--text-primary);font-weight:700;">Aucun quiz effectué pour le moment</h4>
         <p class="revision-empty-text">
           Entraînez-vous en format express (2 à 5 minutes) sur les 80 questions rédigées pour la révision, à valider avec ton professeur conformes aux exercices types du Bac.
         </p>
         <button type="button" onclick="navigateToHash('#/algo/quiz')" class="btn-primary" style="padding:10px 22px;border-radius:10px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;font-weight:700;font-size:0.88rem;border:none;cursor:pointer;">
-          🚀 Lancer mon premier Quiz
+          Lancer mon premier Quiz
         </button>
       </div>
     `;
@@ -14413,7 +14411,7 @@ function renderQuizRecentSection() {
         <div>
           <strong style="font-size:0.9rem;color:var(--text-primary);">${escapeHtml(name)}</strong>
           <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:2px;">
-            Mode : ${escapeHtml(h.mode || 'standard')} • 📅 ${h.date || 'Récemment'}
+            Mode : ${escapeHtml(h.mode || 'standard')} • ${h.date || 'Récemment'}
           </div>
         </div>
         <div style="text-align:right;">
@@ -14428,9 +14426,9 @@ function renderQuizRecentSection() {
     ${weakestCh ? `
       <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
         <div>
-          <span style="font-size:0.78rem;font-weight:800;color:#f87171;text-transform:uppercase;">⚠️ Chapitre à consolider en priorité</span>
+          <span style="font-size:0.78rem;font-weight:800;color:#f87171;text-transform:uppercase;">Chapitre à consolider en priorité</span>
           <div style="font-size:0.95rem;font-weight:700;color:var(--text-primary);margin-top:2px;">
-            ${weakestCh.iconEmoji || '📁'} ${escapeHtml(weakestCh.fullTitle)} (${lowestPct}% de réussite)
+            ${weakestCh.iconEmoji || 'folder'} ${escapeHtml(weakestCh.fullTitle)} (${lowestPct}% de réussite)
           </div>
         </div>
         <button type="button" onclick="navigateToHash('#/algo/quiz/${weakestSlug}')" class="btn-sm" style="background:#ef4444;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-weight:700;font-size:0.82rem;cursor:pointer;">
@@ -14457,7 +14455,7 @@ function exportStudentData() {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  showToast('📥 Progression exportée avec succès !');
+  showToast('Progression exportée avec succès !');
 }
 
 function triggerImportStudentData() {
@@ -14493,7 +14491,7 @@ function handleImportRevisionFile(e) {
 }
 
 function confirmResetAllStudentData() {
-  if (!confirm("⚠️ ATTENTION : Voulez-vous vraiment effacer TOUTES vos données locales (progression, historique des simulateurs, favoris, quiz) ?\n\nCette action est irréversible. Pensez à faire un export au préalable.")) {
+  if (!confirm("ATTENTION : Voulez-vous vraiment effacer TOUTES vos données locales (progression, historique des simulateurs, favoris, quiz) ?\n\nCette action est irréversible. Pensez à faire un export au préalable.")) {
     return;
   }
   if (typeof STI_STORE !== 'undefined') {
@@ -14658,7 +14656,7 @@ function generatePlanSchedule(config, preservedDoneTaskIds = []) {
         slug: c.slug,
         title: c.fullTitle,
         shortTitle: c.shortTitle,
-        iconEmoji: c.iconEmoji || '📁',
+        iconEmoji: c.iconEmoji || 'folder',
         count: exCount
       };
     }).sort((a, b) => b.count - a.count);
@@ -14676,7 +14674,7 @@ function generatePlanSchedule(config, preservedDoneTaskIds = []) {
       taskType: 'cours',
       stepNum: 1,
       badge: '25 min • Cours',
-      title: `${ch.iconEmoji} ${ch.shortTitle} : Synthèse du cours & Définitions`,
+      title: `${ch.shortTitle} : Synthèse du cours & Définitions`,
       link: `#/algo/theorique/${ch.slug}`,
       priority: idx * 5 + 1
     });
@@ -14690,7 +14688,7 @@ function generatePlanSchedule(config, preservedDoneTaskIds = []) {
       taskType: 'algos',
       stepNum: 2,
       badge: '25 min • Algos',
-      title: `${ch.iconEmoji} ${ch.shortTitle} : Algorithmes types & Trace`,
+      title: `${ch.shortTitle} : Algorithmes types & Trace`,
       link: `#/algo/theorique/${ch.slug}`,
       priority: idx * 5 + 2
     });
@@ -14705,7 +14703,7 @@ function generatePlanSchedule(config, preservedDoneTaskIds = []) {
         taskType: 'series',
         stepNum: 3,
         badge: '25 min • Séries',
-        title: `${ch.iconEmoji} ${ch.shortTitle} : Série d'exercices d'application`,
+        title: `${ch.shortTitle} : Série d'exercices d'application`,
         link: `#/algo/theorique/${ch.slug}`,
         priority: idx * 5 + 3
       });
@@ -14720,7 +14718,7 @@ function generatePlanSchedule(config, preservedDoneTaskIds = []) {
       taskType: 'quiz',
       stepNum: 6,
       badge: '25 min • Quiz',
-      title: `${ch.iconEmoji} ${ch.shortTitle} : Quiz V/F & QCM d'auto-évaluation`,
+      title: `${ch.shortTitle} : Quiz V/F & QCM d'auto-évaluation`,
       link: `#/algo/quiz/${ch.slug}`,
       priority: idx * 5 + 4
     });
@@ -14736,7 +14734,7 @@ function generatePlanSchedule(config, preservedDoneTaskIds = []) {
         taskType: 'exam-exos',
         stepNum: 4,
         badge: '25 min • Bac',
-        title: `${ch.iconEmoji} ${ch.shortTitle} : Exercices d'examens sous chrono (${b}/${examBlocks})`,
+        title: `${ch.shortTitle} : Exercices d'examens sous chrono (${b}/${examBlocks})`,
         link: `#/algo/theorique/${ch.slug}`,
         priority: idx * 5 + 5
       });
@@ -14778,7 +14776,7 @@ function generatePlanSchedule(config, preservedDoneTaskIds = []) {
       dayObj.tasks.push({
         id: `task-buffer-${dateStr}`,
         badge: 'Tampon',
-        title: '🛡️ Séance de consolidation : Rattrapage des retards ou repos mérité',
+        title: 'Séance de consolidation : Rattrapage des retards ou repos mérité',
         done: false,
         link: '#/revision'
       });
@@ -14816,14 +14814,14 @@ function generatePlanSchedule(config, preservedDoneTaskIds = []) {
         dayObj.tasks.push({
           id: `task-sim-${dateStr}-full`,
           badge: 'Simulation 1h30',
-          title: `📝 Épreuve blanche n°${simIdx} : Devoir ou Sujet Bac complet sous chrono`,
+          title: `Épreuve blanche n°${simIdx} : Devoir ou Sujet Bac complet sous chrono`,
           link: '#/examens',
           done: preservedDoneTaskIds.includes(`task-sim-${dateStr}-full`)
         });
         dayObj.tasks.push({
           id: `task-sim-${dateStr}-review`,
           badge: 'Correction',
-          title: `🎯 Auto-évaluation & Révision des exercices de la copie`,
+          title: `Auto-évaluation & Révision des exercices de la copie`,
           link: '#/revision',
           done: preservedDoneTaskIds.includes(`task-sim-${dateStr}-review`)
         });
@@ -14831,14 +14829,14 @@ function generatePlanSchedule(config, preservedDoneTaskIds = []) {
         dayObj.tasks.push({
           id: `task-sim-${dateStr}-single`,
           badge: '25 min • Ciblé',
-          title: `⏱️ Simulation ciblée n°${simIdx} : 1 exercice type Bac sous chrono réel`,
+          title: `Simulation ciblée n°${simIdx} : 1 exercice type Bac sous chrono réel`,
           link: '#/examens',
           done: preservedDoneTaskIds.includes(`task-sim-${dateStr}-single`)
         });
         dayObj.tasks.push({
           id: `task-sim-${dateStr}-errors`,
           badge: '25 min • À revoir',
-          title: `⭐ Reprise de vos notions et erreurs marquées dans « À revoir »`,
+          title: `Reprise de vos notions et erreurs marquées dans « À revoir »`,
           link: '#/revision',
           done: preservedDoneTaskIds.includes(`task-sim-${dateStr}-errors`)
         });
@@ -14967,7 +14965,7 @@ function renderStudyPlanPage() {
   const capNotice = document.getElementById('planCapacityNotice');
   if (capNotice) {
     if (plan.capacityNotice) {
-      capNotice.textContent = 'ℹ️ ' + plan.capacityNotice;
+      capNotice.textContent = '' + plan.capacityNotice;
       capNotice.style.display = 'block';
     } else {
       capNotice.style.display = 'none';
@@ -15017,22 +15015,24 @@ function renderPlanTodayCard(plan) {
       return;
     }
 
-    container.innerHTML = day.tasks.map(t => `
+    container.innerHTML = day.tasks.map(t => {
+      const cleanT = String(t.title || '').replace(/^[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]\uFE0F?\s*/gu, '');
+      return `
       <div class="plan-task-row ${t.done ? 'done' : ''}">
         <div class="plan-task-left">
           <input type="checkbox" class="plan-task-checkbox" ${t.done ? 'checked' : ''} onchange="togglePlanTaskCheckbox('${t.id}', this.checked)" title="Marquer comme fait" />
           <span class="plan-task-tag">${escapeHtml(t.badge || '25 min')}</span>
-          <span class="plan-task-title">${escapeHtml(t.title)}</span>
+          <span class="plan-task-title">${escapeHtml(cleanT)}</span>
         </div>
         <div class="plan-task-actions">
-          <button type="button" class="plan-pomo-trigger-btn" onclick="startPomodoroForPlanTask('${escapeHtml(t.title)}')" title="Démarrer un Pomodoro de 25 min">
-            <span>⏱️</span>
+          <button type="button" class="plan-pomo-trigger-btn" onclick="startPomodoroForPlanTask('${escapeHtml(cleanT)}')" title="Démarrer un Pomodoro de 25 min">
+            ${safeIcon('clock', 13)}
             <span>25 min</span>
           </button>
-          ${t.link ? `<a href="${t.link}" onclick="navigateToHash('${t.link}')" class="revision-bm-open-btn" style="text-decoration:none;padding:4px 8px;font-size:0.75rem;">Ouvrir →</a>` : ''}
+          ${t.link ? `<a href="${t.link}" onclick="navigateToHash('${t.link}')" class="revision-bm-open-btn" style="text-decoration:none;padding:4px 8px;font-size:0.75rem;">Ouvrir</a>` : ''}
         </div>
       </div>
-    `).join('');
+    `; }).join('');
   } else {
     if (dateLabel) dateLabel.textContent = "Aucune session";
     if (timeBadge) timeBadge.textContent = "0 min";
@@ -15081,7 +15081,7 @@ function renderPlanWeeksAccordion(plan) {
       <div class="plan-week-block">
         <button type="button" class="plan-week-toggle" onclick="togglePlanWeekBlock(this)">
           <div style="display:flex;align-items:center;gap:10px;">
-            <span style="font-size:1.1rem;">📅</span>
+            <span style="font-size:1.1rem;"></span>
             <strong>Semaine ${weekNum}</strong>
             <span style="font-size:0.8rem;color:var(--text-muted);font-weight:400;">(${startDate} au ${endDate})</span>
           </div>
@@ -15106,22 +15106,24 @@ function renderPlanWeeksAccordion(plan) {
                   <span class="plan-day-theme">${escapeHtml(d.theme || '')}</span>
                 </div>
                 <div class="plan-task-list">
-                  ${(d.tasks || []).map(t => `
+                  ${(d.tasks || []).map(t => {
+                    const cleanT = String(t.title || '').replace(/^[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]\uFE0F?\s*/gu, '');
+                    return `
                     <div class="plan-task-row ${t.done ? 'done' : ''}">
                       <div class="plan-task-left">
                         <input type="checkbox" class="plan-task-checkbox" ${t.done ? 'checked' : ''} onchange="togglePlanTaskCheckbox('${t.id}', this.checked)" />
                         <span class="plan-task-tag">${escapeHtml(t.badge || '25 min')}</span>
-                        <span class="plan-task-title">${escapeHtml(t.title)}</span>
+                        <span class="plan-task-title">${escapeHtml(cleanT)}</span>
                       </div>
                       <div class="plan-task-actions">
-                        <button type="button" class="plan-pomo-trigger-btn" onclick="startPomodoroForPlanTask('${escapeHtml(t.title)}')">
-                          <span>⏱️</span>
+                        <button type="button" class="plan-pomo-trigger-btn" onclick="startPomodoroForPlanTask('${escapeHtml(cleanT)}')">
+                          ${safeIcon('clock', 13)}
                           <span>25 min</span>
                         </button>
-                        ${t.link ? `<a href="${t.link}" onclick="navigateToHash('${t.link}')" class="revision-bm-open-btn" style="text-decoration:none;padding:4px 8px;font-size:0.75rem;">Ouvrir →</a>` : ''}
+                        ${t.link ? `<a href="${t.link}" onclick="navigateToHash('${t.link}')" class="revision-bm-open-btn" style="text-decoration:none;padding:4px 8px;font-size:0.75rem;">Ouvrir</a>` : ''}
                       </div>
                     </div>
-                  `).join('')}
+                  `; }).join('')}
                 </div>
               </div>
             `;
@@ -15158,7 +15160,7 @@ function startPomodoroForPlanTask(taskTitle) {
     if (typeof PomodoroEngine.openDrawer === 'function') {
       PomodoroEngine.openDrawer();
     }
-    showToast(`⏱️ Minuteur Pomodoro 25 min prêt pour : ${taskTitle}`);
+    showToast(`Minuteur Pomodoro 25 min prêt pour : ${taskTitle}`);
   }
 }
 
@@ -15337,7 +15339,7 @@ function getAllFlashcardCards() {
         id: 'fc-html-' + (item.id || idx),
         deckId: 'html',
         deckName: 'HTML5',
-        deckIcon: '🌐',
+        deckIcon: 'globe',
         tag: 'HTML5 • ' + (item.category || 'Balise'),
         frontTitle: item.tag || item.name,
         frontPrompt: item.name ? (`${item.name} — À quoi sert cette balise et comment l'utiliser au Bac ?`) : 'Rôle et syntaxe de cette balise HTML5',
@@ -15356,7 +15358,7 @@ function getAllFlashcardCards() {
         id: 'fc-css-' + (item.id || idx),
         deckId: 'css',
         deckName: 'CSS3',
-        deckIcon: '🎨',
+        deckIcon: 'palette',
         tag: 'CSS3 • ' + (item.category || 'Propriété'),
         frontTitle: item.property || item.name,
         frontPrompt: item.name ? (`${item.name} — Quelle est la syntaxe et l'utilité de cette règle CSS ?`) : 'Rôle et valeurs en Bac STI',
@@ -15375,7 +15377,7 @@ function getAllFlashcardCards() {
         id: 'fc-js-' + (item.id || idx),
         deckId: 'js',
         deckName: 'JavaScript',
-        deckIcon: '⚡',
+        deckIcon: 'zap',
         tag: 'JavaScript • ' + (item.category || item.section || 'Fonction'),
         frontTitle: item.tag || item.name,
         frontPrompt: item.syntax ? (`Syntaxe : ${item.syntax}`) : (`${item.name} — Rôle en contrôle de formulaire / DOM`),
@@ -15394,7 +15396,7 @@ function getAllFlashcardCards() {
         id: 'fc-sql-' + (item.id || idx),
         deckId: 'sql',
         deckName: 'SQL',
-        deckIcon: '💾',
+        deckIcon: 'save',
         tag: 'SQL • ' + (item.category || 'Commande'),
         frontTitle: item.tag || item.name,
         frontPrompt: item.syntax ? (`Syntaxe : ${item.syntax}`) : (`${item.name} — Rôle et structure de cette clause SQL`),
@@ -15413,7 +15415,7 @@ function getAllFlashcardCards() {
         id: 'fc-qt-' + (item.id || idx),
         deckId: 'qt',
         deckName: 'Qt & Python',
-        deckIcon: '🐍',
+        deckIcon: 'code',
         tag: 'Qt Designer • ' + (item.category || 'Composant'),
         frontTitle: item.qtWidget || item.name,
         frontPrompt: item.name ? (`${item.name} — Comment programmer ce widget sous Thonny avec PyQt5 ?`) : 'Rôle et code Python associé',
@@ -15438,7 +15440,7 @@ function getAllFlashcardCards() {
         id: 'fc-algo-' + (item.id || idx),
         deckId: 'algos',
         deckName: 'Algorithmique',
-        deckIcon: '📐',
+        deckIcon: 'compass',
         chapterSlug: chSlug,
         tag: 'Algorithme • ' + (item.type || 'Sous-programme'),
         frontTitle: item.name,
@@ -15463,42 +15465,42 @@ function getFlashcardDecks() {
     {
       id: 'html',
       name: 'HTML5 & Sémantique',
-      icon: '🌐',
+      icon: 'globe',
       desc: 'Balises sémantiques, attributs indispensables et formulaires du Bac STI.',
       color: '#f97316'
     },
     {
       id: 'css',
       name: 'CSS3 & Mise en Page',
-      icon: '🎨',
+      icon: 'palette',
       desc: 'Sélecteurs, Box Model, Flexbox et propriétés graphiques d\'examen.',
       color: '#38bdf8'
     },
     {
       id: 'js',
       name: 'JavaScript & DOM',
-      icon: '⚡',
+      icon: 'zap',
       desc: 'Méthodes de chaînes, validation de formulaires et fonctions Bac.',
       color: '#fbbf24'
     },
     {
       id: 'sql',
       name: 'SQL & Requêtes MySQL',
-      icon: '💾',
+      icon: 'save',
       desc: 'Création de tables, contraintes, clauses SELECT et fonctions d\'agrégation.',
       color: '#34d399'
     },
     {
       id: 'qt',
       name: 'Qt Designer & Python',
-      icon: '🐍',
+      icon: 'code',
       desc: 'Widgets PyQt5, connexions clicked.connect, fenêtres et astuces Thonny.',
       color: '#a855f7'
     },
     {
       id: 'algos',
       name: 'Algorithmes Théoriques',
-      icon: '📐',
+      icon: 'compass',
       desc: 'Démarches types, TDO, pseudo-code officiel et implémentations Python.',
       color: '#10b981'
     }
@@ -15558,7 +15560,7 @@ function renderFlashcardsPage(selectedDeckId = null) {
           <div>
             <div class="fc-deck-top">
               <div class="fc-deck-info-group">
-                <div class="fc-deck-icon">${d.icon}</div>
+                <div class="fc-deck-icon">${safeIcon(d.icon, 18)}</div>
                 <div>
                   <h4 class="fc-deck-name">${escapeHtml(d.name)}</h4>
                   <span class="fc-deck-sub">${p.total} cartes • ${p.masteredPct}% maîtrisées</span>
@@ -15580,9 +15582,9 @@ function renderFlashcardsPage(selectedDeckId = null) {
             </div>
 
             <div class="fc-leitner-legend" style="margin-top:6px;">
-              <span>📦 B1 : <strong>${p.box1}</strong> (1j)</span>
-              <span>📦 B2 : <strong>${p.box2}</strong> (3j)</span>
-              <span>📦 B3 : <strong>${p.box3}</strong> (7j)</span>
+              <span>B1 : <strong>${p.box1}</strong> (1j)</span>
+              <span>B2 : <strong>${p.box2}</strong> (3j)</span>
+              <span>B3 : <strong>${p.box3}</strong> (7j)</span>
             </div>
           </div>
 
@@ -15592,7 +15594,7 @@ function renderFlashcardsPage(selectedDeckId = null) {
               <span>${p.dueToday > 0 ? `Réviser (${p.dueToday})` : "S'entraîner"}</span>
             </button>
             <button type="button" class="plan-btn-reset" onclick="confirmResetFlashcardDeck('${d.id}', '${escapeHtml(d.name)}')" title="Réinitialiser ce paquet" style="padding:10px;font-size:0.85rem;">
-              🔄
+              
             </button>
           </div>
         </div>
@@ -15711,8 +15713,8 @@ function renderActiveFlashcard() {
   const boxPill = document.getElementById('fcCurrentCardBoxPill');
   if (boxPill) {
     boxPill.className = `fc-box-pill b${cardState.box}`;
-    const labels = { 1: '📦 Boîte 1 (1 jour)', 2: '📦 Boîte 2 (3 jours)', 3: '📦 Boîte 3 (7 jours)' };
-    boxPill.textContent = labels[cardState.box] || '📦 Boîte 1';
+    const labels = { 1: 'Boîte 1 (1 jour)', 2: 'Boîte 2 (3 jours)', 3: 'Boîte 3 (7 jours)' };
+    boxPill.textContent = labels[cardState.box] || 'Boîte 1';
   }
 
   // Boutons et sous-textes
@@ -15790,7 +15792,7 @@ function renderActiveFlashcard() {
     if (card.backNote) {
       html += `
         <div style="font-size:0.83rem;color:var(--text-secondary);background:rgba(255,255,255,0.03);padding:8px 12px;border-radius:8px;border-left:3px solid #38bdf8;">
-          💡 ${escapeHtml(card.backNote)}
+          ${escapeHtml(card.backNote)}
         </div>
       `;
     }
@@ -15810,7 +15812,7 @@ function renderActiveFlashcard() {
 
 function renderFlashcardBookmarkWrappers(card) {
   const isBm = (typeof STI_STORE !== 'undefined') ? STI_STORE.isBookmarked('flashcard', card.id) : false;
-  const starIcon = isBm ? '⭐' : '☆';
+  const starIcon = isBm ? '' : '☆';
   const starClass = isBm ? 'active' : '';
 
   const btnHtml = `
@@ -15832,7 +15834,7 @@ function toggleFlashcardBookmark(cardId, cardTitle, cardTag, event) {
   if (typeof STI_STORE === 'undefined') return;
 
   const isNow = STI_STORE.toggleBookmark('flashcard', cardId, { title: cardTitle, desc: cardTag });
-  showToast(isNow ? '⭐ Carte ajoutée à Ma Révision' : 'Carte retirée de Ma Révision');
+  showToast(isNow ? 'Carte ajoutée à Ma Révision' : 'Carte retirée de Ma Révision');
 
   if (currentFlashcardSession) {
     const card = currentFlashcardSession.cards[currentFlashcardSession.currentIndex];
@@ -16123,7 +16125,7 @@ function renderStatsAdvicePanel(filteredExercises) {
 
   panel.innerHTML = `
     <div class="stats-advice-header">
-      <span style="font-size: 1.8rem;">💡</span>
+      <span style="font-size: 1.8rem;"></span>
       <div>
         <h3 class="stats-advice-title">Par où commencer vos révisions ?</h3>
         <p style="margin: 2px 0 0 0; font-size: 0.85rem; color: var(--text-secondary);">
@@ -16137,11 +16139,11 @@ function renderStatsAdvicePanel(filteredExercises) {
       <div class="stats-advice-card" style="border-left: 4px solid #10b981;">
         <div>
           <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;">
-            <span style="font-size:0.75rem;font-weight:800;color:#10b981;text-transform:uppercase;">🔥 Incontournables au Bac</span>
+            <span style="font-size:0.75rem;font-weight:800;color:#10b981;text-transform:uppercase;">Incontournables au Bac</span>
             <span style="font-size:0.74rem;color:var(--text-muted);">Top 3 Fréquence</span>
           </div>
           <h4 style="margin:0 0 8px 0;font-size:0.98rem;font-weight:800;color:var(--text-primary);">
-            ${top3.map(t => `${t.chapter.iconEmoji || '📁'} ${t.chapter.shortTitle}`).join(' • ')}
+            ${top3.map(t => `${safeIcon(t.chapter.iconEmoji || 'folder', 13)} ${escapeHtml(t.chapter.shortTitle)}`).join(' • ')}
           </h4>
           <p style="margin:0;font-size:0.83rem;color:var(--text-secondary);line-height:1.45;">
             Ces 3 chapitres totalisent à eux seuls <strong>${top3.reduce((s, t) => s + t.count, 0)} exercices</strong> et plus de <strong>${top3.reduce((s, t) => s + t.points, 0).toFixed(0)} points</strong> dans la base d'épreuves.
@@ -16160,19 +16162,19 @@ function renderStatsAdvicePanel(filteredExercises) {
       <div class="stats-advice-card" style="border-left: 4px solid #f59e0b;">
         <div>
           <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;">
-            <span style="font-size:0.75rem;font-weight:800;color:#f59e0b;text-transform:uppercase;">🎯 Vos Priorités Personnelles</span>
+            <span style="font-size:0.75rem;font-weight:800;color:#f59e0b;text-transform:uppercase;">Vos Priorités Personnelles</span>
             <span style="font-size:0.74rem;color:var(--text-muted);">Quiz locaux</span>
           </div>
           ${weakChapters.length > 0 ? `
             <h4 style="margin:0 0 8px 0;font-size:0.98rem;font-weight:800;color:var(--text-primary);">
-              ${weakChapters.slice(0, 2).map(w => `${w.chapter.iconEmoji || '📁'} ${w.chapter.shortTitle}`).join(' et ')}
+              ${weakChapters.slice(0, 2).map(w => `${safeIcon(w.chapter.iconEmoji || 'folder', 13)} ${escapeHtml(w.chapter.shortTitle)}`).join(' et ')}
             </h4>
             <p style="margin:0;font-size:0.83rem;color:var(--text-secondary);line-height:1.45;">
               ${weakChapters[0].bestScore === null ? "Vous n'avez pas encore validé les quiz de ces chapitres." : `Score quiz le plus bas : ${weakChapters[0].bestScore}%.`} Faites un test rapide de 2 minutes pour repérer vos lacunes !
             </p>
           ` : `
             <h4 style="margin:0 0 8px 0;font-size:0.98rem;font-weight:800;color:#10b981;">
-              🎉 Excellent niveau global !
+              Excellent niveau global !
             </h4>
             <p style="margin:0;font-size:0.83rem;color:var(--text-secondary);line-height:1.45;">
               Tous vos quiz dépassent 70% de réussite. Passez aux épreuves complètes avec le simulateur d'examen !
@@ -16182,11 +16184,11 @@ function renderStatsAdvicePanel(filteredExercises) {
         <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:6px;">
           ${weakChapters.slice(0, 2).map(w => `
             <a href="#/algo/quiz/${w.chapter.slug}" onclick="navigateToHash('#/algo/quiz/${w.chapter.slug}')" class="cat-pill" style="font-size:0.75rem;padding:4px 10px;text-decoration:none;color:#fbbf24;border-color:rgba(245,158,11,0.4);">
-              Quiz ${w.chapter.shortTitle} ⚡
+              Quiz ${w.chapter.shortTitle} 
             </a>
           `).join('')}
           <a href="#/examens" onclick="navigateToHash('#/examens')" class="cat-pill" style="font-size:0.75rem;padding:4px 10px;text-decoration:none;">
-            Simuler un sujet ⏱️
+            Simuler un sujet 
           </a>
         </div>
       </div>
@@ -16201,7 +16203,7 @@ function renderStatsHeatmap(filteredExams, filteredExercises) {
   if (filteredExams.length === 0) {
     container.innerHTML = `
       <div style="text-align:center;padding:40px 20px;color:var(--text-muted);">
-        <span style="font-size:2rem;display:block;margin-bottom:8px;">🔍</span>
+        <span style="font-size:2rem;display:block;margin-bottom:8px;"></span>
         Aucun sujet d'examen ne correspond aux filtres sélectionnés.
       </div>
     `;
@@ -16249,7 +16251,7 @@ function renderStatsHeatmap(filteredExams, filteredExercises) {
     tableHtml += `
       <tr>
         <td class="stats-sticky-col" onclick="navigateToHash('#/algo/theorique/${ch.slug}')" title="Cliquer pour ouvrir le cours de ce chapitre">
-          <span style="font-size:1.1rem;margin-right:4px;">${ch.iconEmoji || '📁'}</span>
+          <span style="font-size:1.1rem;margin-right:4px;">${safeIcon(ch.iconEmoji || 'folder', 15)}</span>
           <span>${escapeHtml(ch.shortTitle)}</span>
         </td>
     `;
@@ -16334,7 +16336,7 @@ function renderStatsChapterSvg(filteredExercises) {
         
         <!-- Emoji & Titre du Chapitre -->
         <text x="44" y="${y + 18}" fill="var(--text-primary)" font-size="13" font-weight="700">
-          ${item.chapter.iconEmoji || '📁'} ${escapeHtml(item.chapter.shortTitle)}
+          ${safeIcon(item.chapter.iconEmoji || 'folder', 15)} ${escapeHtml(item.chapter.shortTitle)}
         </text>
 
         <!-- Barre de progression -->
@@ -16400,7 +16402,7 @@ function renderStatsTypesSvg(filteredExercises) {
 
         <!-- Icône & Nom du type -->
         <text x="44" y="${y + 16}" fill="var(--text-primary)" font-size="12" font-weight="700">
-          ${item.type.icon || '☑️'} ${escapeHtml(item.type.label)}
+          ${safeIcon(item.type.icon || 'check-circle', 15)} ${escapeHtml(item.type.label)}
         </text>
 
         <!-- Barre de progression violette/indigo -->
@@ -16441,7 +16443,7 @@ function openStatsCellModal(chapterSlug, examId) {
 
   const exercises = allEx.filter(e => e.examId === examId && (e.chapters || []).includes(chapterSlug));
 
-  titleEl.innerHTML = `${ch ? (ch.iconEmoji || '📁') + ' ' + escapeHtml(ch.fullTitle) : chapterSlug}`;
+  titleEl.innerHTML = `${ch ? safeIcon(ch.iconEmoji || 'folder', 16) + ' ' + escapeHtml(ch.fullTitle) : chapterSlug}`;
   if (subEl && doc) {
     subEl.textContent = `${doc.title} • ${doc.date === 'inconnue' ? 'Année non précisée' : doc.date}`;
   }
@@ -16468,7 +16470,7 @@ function openStatsCellModal(chapterSlug, examId) {
               </span>
             </div>
             <button type="button" class="plan-bookmark-toggle-btn ${isBm ? 'active' : ''}" onclick="toggleExerciseBookmark('${ex.id}', this)" style="padding:4px 8px;font-size:0.75rem;">
-              <span>${isBm ? '⭐' : '☆'}</span>
+              <span>${isBm ? '' : '☆'}</span>
               <span>À revoir</span>
             </button>
           </div>
@@ -16479,15 +16481,15 @@ function openStatsCellModal(chapterSlug, examId) {
               const meta = (typeof EXERCISES_DATA !== 'undefined' && typeof EXERCISES_DATA.getTypeMeta === 'function')
                 ? EXERCISES_DATA.getTypeMeta(tSlug)
                 : null;
-              const label = meta ? `${meta.icon || '🏷️'} ${meta.label}` : tSlug;
-              return `<span style="font-size:0.72rem;padding:2px 8px;border-radius:6px;background:rgba(255,255,255,0.05);color:var(--text-secondary);">${escapeHtml(label)}</span>`;
+              const label = meta ? `${meta.icon || 'tag'} ${meta.label}` : tSlug;
+              return `<span style="font-size:0.72rem;padding:2px 8px;border-radius:6px;background:rgba(255,255,255,0.05);color:var(--text-secondary);display:inline-flex;align-items:center;gap:4px;">${label}</span>`;
             }).join('')}
           </div>
 
           <!-- Bouton d'ouverture du PDF à la page exacte -->
           <div style="display:flex;align-items:center;justify-content:flex-end;margin-top:4px;">
             <a href="${pdfUrl}" target="_blank" rel="noopener" class="revision-bm-open-btn" style="text-decoration:none;padding:6px 12px;font-size:0.82rem;">
-              📄 Ouvrir l'examen à la page ${ex.pdfPage || 1} →
+              Ouvrir l'examen à la page ${ex.pdfPage || 1} →
             </a>
           </div>
         </div>
@@ -16567,7 +16569,7 @@ function renderAlgoChapterResumePage(chapterSlug = null) {
     return {
       slug: tSlug,
       label: meta ? meta.label : tSlug,
-      icon: meta ? meta.icon : '🏷️',
+      icon: meta ? meta.icon : 'tag',
       count: typeCounts[tSlug]
     };
   }).sort((a, b) => b.count - a.count);
@@ -16582,7 +16584,7 @@ function renderAlgoChapterResumePage(chapterSlug = null) {
             RÉPUBLIQUE TUNISIENNE • MINISTÈRE DE L'ÉDUCATION • BACCALAURÉAT SCIENCES DE L'INFORMATIQUE
           </div>
           <h2 class="print-sheet-title">
-            ${ch.iconEmoji || '📁'} ${escapeHtml(ch.fullTitle)}
+            ${safeIcon(ch.iconEmoji || 'folder', 15)} ${escapeHtml(ch.fullTitle)}
           </h2>
           <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">
             ${escapeHtml(ch.description || '')}
@@ -16599,7 +16601,7 @@ function renderAlgoChapterResumePage(chapterSlug = null) {
       <!-- 1. À Retenir — L'Essentiel en Bref -->
       <div class="print-section">
         <h4 class="print-section-title">
-          <span>💡</span> 1. À Retenir — L'Essentiel du Cours
+          <span></span> 1. À Retenir — L'Essentiel du Cours
         </h4>
         <ul class="print-bullet-list">
           ${brief.keyNotions.map(n => `<li>${escapeHtml(n)}</li>`).join('')}
@@ -16609,7 +16611,7 @@ function renderAlgoChapterResumePage(chapterSlug = null) {
       <!-- 2. Conventions & Syntaxes Officielles -->
       <div class="print-section">
         <h4 class="print-section-title">
-          <span>📜</span> 2. Syntaxes &amp; Conventions Bac (Pseudo-Code vs Python)
+          <span></span> 2. Syntaxes &amp; Conventions Bac (Pseudo-Code vs Python)
         </h4>
         <ul class="print-bullet-list">
           ${brief.syntaxRules.map(s => `<li>${escapeHtml(s)}</li>`).join('')}
@@ -16619,7 +16621,7 @@ function renderAlgoChapterResumePage(chapterSlug = null) {
       <!-- 3. Algorithmes Types du Chapitre -->
       <div class="print-section">
         <h4 class="print-section-title">
-          <span>⚡</span> 3. Algorithmes Clés au Programme (${chapterAlgos.length})
+          <span></span> 3. Algorithmes Clés au Programme (${chapterAlgos.length})
         </h4>
         ${chapterAlgos.length > 0 ? `
           <table class="print-algo-table">
@@ -16653,13 +16655,13 @@ function renderAlgoChapterResumePage(chapterSlug = null) {
       <!-- 4. Types d'Exercices en Examen -->
       <div class="print-section">
         <h4 class="print-section-title">
-          <span>🎯</span> 4. Types d'Exercices aux Épreuves du Bac (${matchingExercises.length} exercices répertoriés)
+          <span></span> 4. Types d'Exercices aux Épreuves du Bac (${matchingExercises.length} exercices répertoriés)
         </h4>
         ${sortedTypes.length > 0 ? `
           <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 6px;">
             ${sortedTypes.map(t => `
               <span style="font-size: 0.8rem; padding: 4px 10px; border-radius: 6px; background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); font-weight: 700;">
-                ${t.icon} ${escapeHtml(t.label)} (${t.count} ex)
+                ${safeIcon(t.icon, 18)} ${escapeHtml(t.label)} (${t.count} ex)
               </span>
             `).join('')}
           </div>
@@ -16671,7 +16673,7 @@ function renderAlgoChapterResumePage(chapterSlug = null) {
       <!-- 5. Pièges Fréquents & Erreurs à Éviter -->
       <div class="print-section" style="border-left: 4px solid #ef4444;">
         <h4 class="print-section-title" style="color: #ef4444;">
-          <span>🚨</span> 5. Pièges Fréquents &amp; Erreurs des Candidats
+          <span></span> 5. Pièges Fréquents &amp; Erreurs des Candidats
         </h4>
         <ul class="print-bullet-list">
           ${brief.bacTips.map(tip => `<li style="color: var(--text-primary); font-weight: 600;">${escapeHtml(tip)}</li>`).join('')}
@@ -16683,7 +16685,7 @@ function renderAlgoChapterResumePage(chapterSlug = null) {
         <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
           <div>
             <h4 style="margin: 0 0 4px 0; font-size: 0.95rem; font-weight: 800; color: var(--text-primary);">
-              ⚡ Prêt(e) à tester vos connaissances ?
+              Prêt(e) à tester vos connaissances ?
             </h4>
             <p style="margin: 0; font-size: 0.84rem; color: var(--text-secondary);">
               10 questions certifiées conformes aux exercices types du Bac (Vrai/Faux, QCM, traces manuelles).
@@ -16717,7 +16719,7 @@ function renderResumeDirectory() {
   container.innerHTML = `
     <div>
       <div style="text-align: center; margin-bottom: 28px;">
-        <span class="stats-badge-header">📚 Bibliothèque de Fiches A4</span>
+        <span class="stats-badge-header">Bibliothèque de Fiches A4</span>
         <h2 style="font-size: 1.6rem; font-weight: 800; color: var(--text-primary); margin: 6px 0 8px 0;">
           Toutes les Fiches de Révision Imprimables
         </h2>
@@ -16728,7 +16730,7 @@ function renderResumeDirectory() {
 
       <!-- Grille des 8 Chapitres -->
       <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--text-primary); margin: 0 0 14px 0; display: flex; align-items: center; gap: 8px;">
-        <span>📐</span> Les 8 Chapitres Théoriques Officiels
+        <span></span> Les 8 Chapitres Théoriques Officiels
       </h3>
       <div class="resume-directory-grid">
         ${CURRICULUM.chapters.map(ch => {
@@ -16737,7 +16739,7 @@ function renderResumeDirectory() {
             <div class="resume-directory-card">
               <div>
                 <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;">
-                  <span style="font-size: 1.5rem;">${ch.iconEmoji || '📁'}</span>
+                  <span style="font-size: 1.5rem;">${safeIcon(ch.iconEmoji || 'folder', 15)}</span>
                   <span style="font-size: 0.72rem; font-weight: 800; color: #10b981; background: rgba(16,185,129,0.12); padding: 2px 8px; border-radius: 6px;">
                     ${exCount} ex au Bac
                   </span>
@@ -16752,10 +16754,10 @@ function renderResumeDirectory() {
 
               <div style="display:flex;align-items:center;gap:8px;margin-top:10px;">
                 <a href="#/algo/theorique/${ch.slug}/resume" onclick="navigateToHash('#/algo/theorique/${ch.slug}/resume')" class="fc-hero-btn" style="flex:1;padding:8px 12px;font-size:0.84rem;text-decoration:none;justify-content:center;">
-                  <span>👁️ Consulter</span>
+                  <span>Consulter</span>
                 </a>
                 <button type="button" class="plan-btn-reset" onclick="openAndPrintResume('${ch.slug}')" title="Imprimer directement cette fiche" style="padding:8px 12px;font-size:0.84rem;">
-                  🖨️
+                  ${safeIcon("printer", 15)}
                 </button>
               </div>
             </div>
@@ -16765,14 +16767,14 @@ function renderResumeDirectory() {
 
       <!-- Grille des 4 Fiches Méthode -->
       <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--text-primary); margin: 30px 0 14px 0; display: flex; align-items: center; gap: 8px;">
-        <span>💡</span> Les 4 Fiches Méthode Pratiques
+        <span></span> Les 4 Fiches Méthode Pratiques
       </h3>
       <div class="resume-directory-grid">
         ${methods.map(m => `
           <div class="resume-directory-card">
             <div>
               <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-                <span style="font-size: 1.5rem;">${m.icon || '💡'}</span>
+                <span style="font-size: 1.5rem;">${safeIcon(m.icon || 'lightbulb', 16)}</span>
                 <span style="font-size: 0.72rem; font-weight: 800; color: #38bdf8; background: rgba(56,189,248,0.12); padding: 2px 8px; border-radius: 6px;">
                   Méthodologie
                 </span>
@@ -16787,7 +16789,7 @@ function renderResumeDirectory() {
 
             <div style="display:flex;align-items:center;gap:8px;margin-top:10px;">
               <a href="#/algo/methodes/${m.slug}" onclick="navigateToHash('#/algo/methodes/${m.slug}')" class="fc-hero-btn" style="flex:1;padding:8px 12px;font-size:0.84rem;text-decoration:none;justify-content:center;background:linear-gradient(135deg,#38bdf8,#0284c7);">
-                <span>👁️ Consulter la méthode</span>
+                <span>Consulter la méthode</span>
               </a>
             </div>
           </div>
@@ -16906,7 +16908,7 @@ function renderAlgoCartePage() {
       };
 
       const prioBadge = `<span class="sec-prio-badge" style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;font-size:0.72rem;font-weight:800;color:${prio.color};background:${prio.bg};border:1px solid ${prio.border};white-space:nowrap;" title="Basé sur la fréquence aux examens (${prio.count} sujets)">
-        <span>${prio.label === 'Essentiel' ? '🔥' : (prio.label === 'Important' ? '⭐' : '💡')}</span>
+        <span>${prio.label === 'Essentiel' ? '' : (prio.label === 'Important' ? '' : 'lightbulb')}</span>
         <span>${prio.label}</span>
       </span>`;
 
@@ -16937,9 +16939,9 @@ function renderAlgoCartePage() {
                 ${escapeHtml(sec.title)}
               </a>
               <div class="carte-sec-counters">
-                <span>⚡ ${secAlgosCount}</span>
-                <span>📝 ${secExCount}</span>
-                <span>🎯 ${secQuizCount}</span>
+                <span>${secAlgosCount}</span>
+                <span>${secExCount}</span>
+                <span>${secQuizCount}</span>
               </div>
             </div>
           </div>
@@ -16964,7 +16966,7 @@ function renderAlgoCartePage() {
       <div class="carte-chapter-card" style="border-top: 4px solid ${ch.borderColor || '#38bdf8'};">
         <div class="carte-chapter-header">
           <div class="carte-chapter-title-wrap">
-            <span style="font-size: 1.35rem;">${ch.iconEmoji || '📖'}</span>
+            <span style="font-size: 1.35rem;">${safeIcon(ch.iconEmoji || 'book-open', 16)}</span>
             <div>
               <span style="font-size: 0.74rem; font-weight: 800; text-transform: uppercase; color: ${ch.color || '#38bdf8'}; letter-spacing: 0.5px;">
                 ${badgeLabel}
@@ -16983,7 +16985,7 @@ function renderAlgoCartePage() {
           </div>
         </div>
         <div class="carte-sections-list">
-          ${sectionsRowsHtml || '<div style="padding: 14px; text-align: center; color: var(--text-muted); font-size: 0.82rem;">Toutes les sections de ce chapitre sont terminées ! 🎉</div>'}
+          ${sectionsRowsHtml || '<div style="padding: 14px; text-align: center; color: var(--text-muted); font-size: 0.82rem;">Toutes les sections de ce chapitre sont terminées ! </div>'}
         </div>
       </div>
     `;

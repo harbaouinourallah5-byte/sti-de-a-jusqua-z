@@ -1,19 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
   <defs>
-    <linearGradient id="pwaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#4F46E5"/>
-      <stop offset="50%" stop-color="#06B6D4"/>
-      <stop offset="100%" stop-color="#10B981"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#18181B"/>
+      <stop offset="1" stop-color="#312E81"/>
     </linearGradient>
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.3"/>
-    </filter>
   </defs>
-  <rect width="64" height="64" rx="16" fill="url(#pwaGrad)"/>
-  <!-- Stylized Book & Code Vectors -->
-  <path d="M16 44V22C16 19.8 17.8 18 20 18H30C31.1 18 32 18.9 32 20V46C32 44.9 31.1 44 30 44H20C17.8 44 16 45.8 16 48V44Z" fill="#FFFFFF" fill-opacity="0.95" filter="url(#shadow)"/>
-  <path d="M48 44V22C48 19.8 46.2 18 44 18H34C32.9 18 32 18.9 32 20V46C32 44.9 32.9 44 34 44H44C46.2 44 48 45.8 48 48V44Z" fill="#E0E7FF" filter="url(#shadow)"/>
-  <path d="M22 26L18 30L22 34" stroke="#4F46E5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M42 26L46 30L42 34" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="32" cy="14" r="3" fill="#FBBF24"/>
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <path d="M18 22L28 26.5C29.5 27.2 30.5 28.6 30.5 30.2V45.5L18 40V22Z" stroke="#FAF9F6" stroke-width="2.6" stroke-linejoin="round"/>
+  <path d="M46 22L36 26.5C34.5 27.2 33.5 28.6 33.5 30.2V45.5L46 40V22Z" stroke="#FAF9F6" stroke-width="2.6" stroke-linejoin="round"/>
+  <path d="M22.5 29L15 33L22.5 37" stroke="#FAF9F6" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M41.5 29L49 33L41.5 37" stroke="#FAF9F6" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M32 15L34.2 19.8L39 22L34.2 24.2L32 29L29.8 24.2L25 22L29.8 19.8L32 15Z" fill="#F59E0B"/>
 </svg>

@@ -34,31 +34,31 @@ const PomodoroEngine = (function () {
   const PRESET_STREAMS = {
     lofi: {
       id: 'jfKfPfyJRdk',
-      title: '☕ Lofi Girl — Beats to relax / study to',
+      title: 'Lofi Girl — Beats to relax / study to',
       badge: 'Lofi Beats',
       desc: 'Rythmes doux et mélodies apaisantes pour une concentration durable'
     },
     piano: {
       id: '4xDzrJKXOOY',
-      title: '🎹 Piano Calme & Concentration Douce',
+      title: 'Piano Calme & Concentration Douce',
       badge: 'Piano d\'Étude',
       desc: 'Mélodies classiques et néoclassiques épurées pour réviser sans distraction'
     },
     rain: {
       id: 'mPZkdNFkNps',
-      title: '🌧️ Pluie Cozy & Bruit Blanc Ambiance',
+      title: 'Pluie & Bruit Blanc Ambiance',
       badge: 'Pluie & Nature',
       desc: 'Son immersif de pluie douce pour masquer les bruits environnants'
     },
     synthwave: {
       id: 'f02mOEt11OQ',
-      title: '🌌 Synthwave Chill & Deep Focus Spatiale',
+      title: 'Synthwave Chill & Deep Focus',
       badge: 'Synthwave Chill',
       desc: 'Sons électroniques rétro et futuristes calmes pour la programmation'
     },
     quran: {
       id: '2OEL4P1Rz04',
-      title: '📖 Récitation Apaisante du Saint Coran (Étude & Sérénité)',
+      title: 'Récitation Apaisante du Saint Coran (Étude & Sérénité)',
       badge: 'Coran Apaisant',
       desc: 'Récitations calmes et méditatives pour une sérénité maximale pendant l\'effort'
     }
@@ -252,7 +252,7 @@ const PomodoroEngine = (function () {
       state.timeLeft = state.breakDuration * 60;
       state.totalSecondsForCurrent = state.timeLeft;
       playNotificationChime();
-      showNotificationToast(`☕ Pause relaxante de ${state.breakDuration} min démarrée automatiquement !`);
+      showNotificationToast(`Pause relaxante de ${state.breakDuration} min démarrée automatiquement.`);
       startTimer();
     } else {
       // Passer au cycle d'étude suivant et lancer immédiatement le minuteur
@@ -265,7 +265,7 @@ const PomodoroEngine = (function () {
       state.timeLeft = state.durationOption * 60;
       state.totalSecondsForCurrent = state.timeLeft;
       playNotificationChime();
-      showNotificationToast(`🚀 Session d'étude ${state.currentCycle}/${state.totalCycles} (${state.durationOption} min) démarrée automatiquement !`);
+      showNotificationToast(`Session d'étude ${state.currentCycle}/${state.totalCycles} (${state.durationOption} min) démarrée.`);
       startTimer();
     }
   }
@@ -285,7 +285,7 @@ const PomodoroEngine = (function () {
       state.mode = 'break';
       state.timeLeft = state.breakDuration * 60;
       state.totalSecondsForCurrent = state.timeLeft;
-      showNotificationToast(`☕ Session d'étude terminée ! Votre pause relaxante de ${state.breakDuration} minutes a démarré automatiquement.`);
+      showNotificationToast(`Session d'étude terminée ! Pause de ${state.breakDuration} minutes démarrée.`);
       // Démarrage immédiat sans avoir à cliquer sur Démarrer
       startTimer();
     } else {
@@ -295,7 +295,7 @@ const PomodoroEngine = (function () {
         state.mode = 'work';
         state.timeLeft = state.durationOption * 60;
         state.totalSecondsForCurrent = state.timeLeft;
-        showNotificationToast(`🎯 Pause terminée ! Début automatique de la session d'étude ${state.currentCycle}/${state.totalCycles} (${state.durationOption} min).`);
+        showNotificationToast(`Pause terminée ! Session d'étude ${state.currentCycle}/${state.totalCycles} (${state.durationOption} min).`);
         // Démarrage immédiat sans avoir à cliquer sur Démarrer
         startTimer();
       } else {
@@ -306,7 +306,7 @@ const PomodoroEngine = (function () {
         state.mode = 'work';
         state.timeLeft = state.durationOption * 60;
         state.totalSecondsForCurrent = state.timeLeft;
-        showNotificationToast(`🏆 Félicitations ! Vous avez accompli votre objectif de ${state.targetHours}h d'étude avec brio.`);
+        showNotificationToast(`Objectif accompli : ${state.targetHours}h d'étude terminées.`);
         updateAllDisplays();
       }
     }
@@ -427,11 +427,11 @@ const PomodoroEngine = (function () {
   function handleCustomYouTubeSubmit(urlValue) {
     const vidId = extractYouTubeId(urlValue);
     if (!vidId) {
-      alert("⚠️ Le lien YouTube est invalide. Veuillez coller une URL valide (ex: https://www.youtube.com/watch?v=...) ou l'ID de la vidéo.");
+      alert("Le lien YouTube est invalide. Veuillez coller une URL valide (ex: https://www.youtube.com/watch?v=...) ou l'ID de la vidéo.");
       return;
     }
     loadYouTubeTrack(vidId, 'Vidéo YouTube personnalisée');
-    showNotificationToast('🎵 Musique YouTube chargée avec succès !');
+    showNotificationToast('Musique YouTube chargée avec succès.');
   }
 
   function selectPresetStream(presetKey) {
@@ -439,7 +439,7 @@ const PomodoroEngine = (function () {
     if (!preset) return;
     loadYouTubeTrack(preset.id, preset.title);
     highlightActivePreset(presetKey);
-    showNotificationToast(`🎵 Ambiance lancée : ${preset.badge}`);
+    showNotificationToast(`Ambiance lancée : ${preset.badge}`);
   }
 
   // -------------------------------------------------------------
@@ -479,7 +479,8 @@ const PomodoroEngine = (function () {
     }
     const modalStatus = document.getElementById('pomoModalStatusBadge');
     if (modalStatus) {
-      modalStatus.textContent = state.mode === 'work' ? '🎯 Session d\'Étude' : '☕ Pause Relaxante';
+      var icStatus = (typeof uiIcon === 'function') ? uiIcon(state.mode === 'work' ? 'target' : 'coffee', 14) : '';
+      modalStatus.innerHTML = icStatus + (state.mode === 'work' ? ' Session d\'Étude' : ' Pause Relaxante');
       modalStatus.className = `pomo-status-pill ${state.mode}`;
     }
     const modalCycleText = document.getElementById('pomoModalCycleText');
@@ -490,7 +491,8 @@ const PomodoroEngine = (function () {
     // Bouton Play/Pause Modale
     const playBtn = document.getElementById('pomoModalPlayBtn');
     if (playBtn) {
-      playBtn.innerHTML = state.isRunning ? '<span>⏸️</span><span>Pause</span>' : '<span>▶️</span><span>Démarrer</span>';
+      var icPlay = (typeof uiIcon === 'function') ? uiIcon(state.isRunning ? 'pause' : 'play', 15) : '';
+      playBtn.innerHTML = state.isRunning ? icPlay + '<span>Pause</span>' : icPlay + '<span>Démarrer</span>';
       playBtn.className = `pomo-ctl-btn primary ${state.isRunning ? 'running' : ''}`;
     }
 
@@ -553,9 +555,10 @@ const PomodoroEngine = (function () {
     }
     const musicStatus = document.getElementById('pomoMusicStatus');
     if (musicStatus) {
+      var icMuted = (typeof uiIcon === 'function') ? uiIcon('volume-x', 14) : '';
       musicStatus.innerHTML = state.isMusicPlaying
         ? '<span class="audio-wave-bars"><span></span><span></span><span></span></span> Musique en cours de lecture'
-        : '🔇 Musique en pause';
+        : icMuted + ' Musique en pause';
     }
     const dockMusicIcon = document.getElementById('pomodoroDockMusicIcon');
     if (dockMusicIcon) {
@@ -563,7 +566,8 @@ const PomodoroEngine = (function () {
     }
     const toggleMusicBtn = document.getElementById('pomoToggleMusicBtn');
     if (toggleMusicBtn) {
-      toggleMusicBtn.textContent = state.isMusicPlaying ? 'Arrêter la musique ⏹️' : 'Lancer la musique ▶️';
+      var icMusBtn = (typeof uiIcon === 'function') ? uiIcon(state.isMusicPlaying ? 'stop' : 'play', 14) : '';
+      toggleMusicBtn.innerHTML = icMusBtn + (state.isMusicPlaying ? ' Arrêter la musique' : ' Lancer la musique');
       toggleMusicBtn.classList.toggle('active', state.isMusicPlaying);
     }
   }

@@ -323,26 +323,26 @@ var NOTEBOOKS_DATA = (function () {
 
   // ── 3. LES 20 MISES EN PAGE (FIDÈLES AUX 20 PNG FOURNIS) ───────────────
   var PAGE_LAYOUTS = [
-    { id: '01-classic-lined',   num: 1,  name: 'Notes lignées classiques',     category: 'Notes',       previewImage: 'img/notebooks/layouts/01-classic-lined-notes.png',    icon: '📝' },
-    { id: '02-dotted-notes',    num: 2,  name: 'Notes pointillées (Bullet)',   category: 'Notes',       previewImage: 'img/notebooks/layouts/02-dotted-notes.png',           icon: '⠿' },
-    { id: '03-grid-notes',      num: 3,  name: 'Notes quadrillées',            category: 'Notes',       previewImage: 'img/notebooks/layouts/03-grid-notes.png',             icon: '⊞' },
-    { id: '04-blank-journal',   num: 4,  name: 'Page libre (Dream Big)',       category: 'Journal',     previewImage: 'img/notebooks/layouts/04-blank-journal.png',          icon: '✨' },
-    { id: '05-to-do-checklist', num: 5,  name: 'Liste To-Do interactive',      category: 'Tâches',      previewImage: 'img/notebooks/layouts/05-to-do-checklist.png',        icon: '☑️' },
-    { id: '06-daily-planner',   num: 6,  name: 'Planificateur du jour',        category: 'Planning',    previewImage: 'img/notebooks/layouts/06-daily-planner.png',          icon: '☀️' },
-    { id: '07-weekly-planner',  num: 7,  name: 'Planificateur hebdomadaire',   category: 'Planning',    previewImage: 'img/notebooks/layouts/07-weekly-planner.png',         icon: '📅' },
-    { id: '08-monthly-planner', num: 8,  name: 'Planificateur mensuel',        category: 'Planning',    previewImage: 'img/notebooks/layouts/08-monthly-planner.png',        icon: '🗓️' },
-    { id: '09-study-notes',     num: 9,  name: 'Fiches de révision (Études)',  category: 'Études',      previewImage: 'img/notebooks/layouts/09-study-notes.png',            icon: '🎓' },
-    { id: '10-project-planner', num: 10, name: 'Planificateur de projet',      category: 'Tâches',      previewImage: 'img/notebooks/layouts/10-project-planner.png',        icon: '📁' },
-    { id: '11-brain-dump',      num: 11, name: 'Brain Dump (Idées rapides)',   category: 'Notes',       previewImage: 'img/notebooks/layouts/11-brain-dump.png',             icon: '⚡' },
-    { id: '12-habit-tracker',   num: 12, name: 'Suivi des habitudes',          category: 'Suivi',       previewImage: 'img/notebooks/layouts/12-habit-tracker.png',          icon: '🔁' },
-    { id: '13-goals-planner',   num: 13, name: 'Planificateur d’objectifs',    category: 'Suivi',       previewImage: 'img/notebooks/layouts/13-goals-planner.png',          icon: '🎯' },
-    { id: '14-gratitude',       num: 14, name: 'Journal de gratitude',         category: 'Journal',     previewImage: 'img/notebooks/layouts/14-gratitude-journal.png',      icon: '💛' },
-    { id: '15-mood-tracker',    num: 15, name: 'Suivi de l’humeur',            category: 'Suivi',       previewImage: 'img/notebooks/layouts/15-mood-tracker.png',           icon: '😊' },
-    { id: '16-reading-journal', num: 16, name: 'Journal de lecture',           category: 'Journal',     previewImage: 'img/notebooks/layouts/16-reading-journal.png',        icon: '📖' },
-    { id: '17-daily-reflection', num: 17, name: 'Bilan & Réflexion du jour',   category: 'Journal',     previewImage: 'img/notebooks/layouts/17-daily-reflection.png',       icon: '💭' },
-    { id: '18-scrapbook',       num: 18, name: 'Scrapbook & Souvenirs',        category: 'Créatif',     previewImage: 'img/notebooks/layouts/18-scrapbook-memories.png',     icon: '📷' },
-    { id: '19-daily-schedule',  num: 19, name: 'Emploi du temps horaire',      category: 'Planning',    previewImage: 'img/notebooks/layouts/19-daily-schedule.png',         icon: '⏰' },
-    { id: '20-decorative-lined', num: 20, name: 'Notes lignées décoratives',   category: 'Notes',       previewImage: 'img/notebooks/layouts/20-decorative-lined-notes.png', icon: '🎀' }
+    { id: '01-classic-lined',   num: 1,  name: 'Notes lignées classiques',     category: 'Notes',       previewImage: 'img/notebooks/layouts/01-classic-lined-notes.png',    icon: 'edit' },
+    { id: '02-dotted-notes',    num: 2,  name: 'Notes pointillées (Bullet)',   category: 'Notes',       previewImage: 'img/notebooks/layouts/02-dotted-notes.png',           icon: 'grid' },
+    { id: '03-grid-notes',      num: 3,  name: 'Notes quadrillées',            category: 'Notes',       previewImage: 'img/notebooks/layouts/03-grid-notes.png',             icon: 'grid' },
+    { id: '04-blank-journal',   num: 4,  name: 'Page libre (Dream Big)',       category: 'Journal',     previewImage: 'img/notebooks/layouts/04-blank-journal.png',          icon: 'sparkles' },
+    { id: '05-to-do-checklist', num: 5,  name: 'Liste To-Do interactive',      category: 'Tâches',      previewImage: 'img/notebooks/layouts/05-to-do-checklist.png',        icon: 'check-circle' },
+    { id: '06-daily-planner',   num: 6,  name: 'Planificateur du jour',        category: 'Planning',    previewImage: 'img/notebooks/layouts/06-daily-planner.png',          icon: 'sun' },
+    { id: '07-weekly-planner',  num: 7,  name: 'Planificateur hebdomadaire',   category: 'Planning',    previewImage: 'img/notebooks/layouts/07-weekly-planner.png',         icon: 'calendar' },
+    { id: '08-monthly-planner', num: 8,  name: 'Planificateur mensuel',        category: 'Planning',    previewImage: 'img/notebooks/layouts/08-monthly-planner.png',        icon: 'calendar' },
+    { id: '09-study-notes',     num: 9,  name: 'Fiches de révision (Études)',  category: 'Études',      previewImage: 'img/notebooks/layouts/09-study-notes.png',            icon: 'graduation-cap' },
+    { id: '10-project-planner', num: 10, name: 'Planificateur de projet',      category: 'Tâches',      previewImage: 'img/notebooks/layouts/10-project-planner.png',        icon: 'folder' },
+    { id: '11-brain-dump',      num: 11, name: 'Brain Dump (Idées rapides)',   category: 'Notes',       previewImage: 'img/notebooks/layouts/11-brain-dump.png',             icon: 'zap' },
+    { id: '12-habit-tracker',   num: 12, name: 'Suivi des habitudes',          category: 'Suivi',       previewImage: 'img/notebooks/layouts/12-habit-tracker.png',          icon: 'repeat' },
+    { id: '13-goals-planner',   num: 13, name: 'Planificateur d’objectifs',    category: 'Suivi',       previewImage: 'img/notebooks/layouts/13-goals-planner.png',          icon: 'target' },
+    { id: '14-gratitude',       num: 14, name: 'Journal de gratitude',         category: 'Journal',     previewImage: 'img/notebooks/layouts/14-gratitude-journal.png',      icon: 'heart' },
+    { id: '15-mood-tracker',    num: 15, name: 'Suivi de l’humeur',            category: 'Suivi',       previewImage: 'img/notebooks/layouts/15-mood-tracker.png',           icon: 'smile' },
+    { id: '16-reading-journal', num: 16, name: 'Journal de lecture',           category: 'Journal',     previewImage: 'img/notebooks/layouts/16-reading-journal.png',        icon: 'book-open' },
+    { id: '17-daily-reflection', num: 17, name: 'Bilan & Réflexion du jour',   category: 'Journal',     previewImage: 'img/notebooks/layouts/17-daily-reflection.png',       icon: 'info' },
+    { id: '18-scrapbook',       num: 18, name: 'Scrapbook & Souvenirs',        category: 'Créatif',     previewImage: 'img/notebooks/layouts/18-scrapbook-memories.png',     icon: 'image' },
+    { id: '19-daily-schedule',  num: 19, name: 'Emploi du temps horaire',      category: 'Planning',    previewImage: 'img/notebooks/layouts/19-daily-schedule.png',         icon: 'clock' },
+    { id: '20-decorative-lined', num: 20, name: 'Notes lignées décoratives',   category: 'Notes',       previewImage: 'img/notebooks/layouts/20-decorative-lined-notes.png', icon: 'sparkles' }
   ];
 
   // ── 4. MOTIFS DE FOND & TEXTURES DE PAPIER ─────────────────────────────

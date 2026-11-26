@@ -1,17 +1,17 @@
 // ===================================================================
-// MOTEUR DU LABORATOIRE INTERACTIF QT DESIGNER ➔ THONNY PYTHON (BAC STI)
+// MOTEUR DU LABORATOIRE INTERACTIF QT DESIGNER -> THONNY PYTHON (BAC STI)
 // Module Pratique : Simulateur Visuel Qt + Console Interactive Thonny
 // ===================================================================
 
 const ALGO_CATEGORY_META = {
-  'all': { label: '✨ Tout afficher', count: 20, icon: '✨', desc: 'Toutes les notions Qt Designer & Thonny Python' },
-  'Démarrage & Architecture': { label: '🚀 Squelette & loadUi', count: 1, icon: '🚀', desc: 'Initialisation de QApplication et chargement du fichier .ui' },
+  'all': { label: 'Tout afficher', count: 20, icon: 'sparkles', desc: 'Toutes les notions Qt Designer & Thonny Python' },
+  'Démarrage & Architecture': { label: 'Squelette & loadUi', count: 1, icon: 'terminal', desc: 'Initialisation de QApplication et chargement du fichier .ui' },
   'Widgets de Saisie': { label: '⌨️ Widgets de Saisie', count: 4, icon: '⌨️', desc: 'QLineEdit, QTextEdit, QSpinBox, QDateEdit' },
-  "Widgets d'Action & Affichage": { label: '⚡ Boutons & Affichage', count: 4, icon: '⚡', desc: 'QPushButton (.clicked), QLabel (.setText), QTableWidget, Réinitialisation' },
-  'Widgets de Choix & Sélection': { label: '☑️ Choix & Menus', count: 3, icon: '☑️', desc: 'QRadioButton, QCheckBox, QComboBox' },
-  'Boîtes de Dialogue (QMessageBox)': { label: '💬 Alertes QMessageBox', count: 3, icon: '💬', desc: 'QMessageBox.critical, information, warning' },
-  'Contrôles de Saisie Bac': { label: '🛡️ Contrôles de Saisie', count: 4, icon: '🛡️', desc: 'Vérifications obligatoires au Bac : vide, alpha, intervalle, longueur' },
-  "Modèles Types d'Examen": { label: '📝 Sujet Type Bac', count: 1, icon: '📝', desc: 'Structure complète en 4 étapes de l\'épreuve pratique' }
+  "Widgets d'Action & Affichage": { label: 'Boutons & Affichage', count: 4, icon: 'zap', desc: 'QPushButton (.clicked), QLabel (.setText), QTableWidget, Réinitialisation' },
+  'Widgets de Choix & Sélection': { label: 'Choix & Menus', count: 3, icon: 'check-circle', desc: 'QRadioButton, QCheckBox, QComboBox' },
+  'Boîtes de Dialogue (QMessageBox)': { label: 'Alertes QMessageBox', count: 3, icon: 'alert-circle', desc: 'QMessageBox.critical, information, warning' },
+  'Contrôles de Saisie Bac': { label: 'Contrôles de Saisie', count: 4, icon: 'shield', desc: 'Vérifications obligatoires au Bac : vide, alpha, intervalle, longueur' },
+  "Modèles Types d'Examen": { label: 'Sujet Type Bac', count: 1, icon: 'edit', desc: 'Structure complète en 4 étapes de l\'épreuve pratique' }
 };
 
 // -------------------------------------------------------------
@@ -89,7 +89,7 @@ function buildQtDesignerSimStage(item) {
           <span class="qt-window-title">Interface Qt Designer • 'interface.ui'</span>
         </div>
         <div class="qt-window-canvas" style="text-align: center; padding: 24px;">
-          <div style="font-size: 2.2rem; margin-bottom: 8px;">🖼️</div>
+          <div style="margin-bottom: 8px; color: var(--text-muted);">${typeof uiIcon === "function" ? uiIcon("image", 30) : ""}</div>
           <div style="font-weight: 800; color: #38bdf8; font-size: 1.05rem;">interface.ui</div>
           <div id="sim_starter_status" style="font-size: 0.85rem; color: #94a3b8; margin-top: 8px;">
             Fichier créé sous Qt Designer (En attente d'exécution dans Thonny)
@@ -123,8 +123,8 @@ function buildQtDesignerSimStage(item) {
           </div>
           <div style="display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0;">
             <button type="button" class="sim-qt-action-pill" onclick="runAlgoPratiqueSim('qt-lineedit')">▶ windows.le_nom.text()</button>
-            <button type="button" class="sim-qt-action-pill" onclick="simSetLineEditText('Admis')">✍️ setText("Admis")</button>
-            <button type="button" class="sim-qt-action-pill" onclick="simClearLineEdit()">🧹 clear()</button>
+            <button type="button" class="sim-qt-action-pill" onclick="simSetLineEditText('Admis')">setText("Admis")</button>
+            <button type="button" class="sim-qt-action-pill" onclick="simClearLineEdit()">clear()</button>
           </div>
           <div class="sim-label-display" id="sim_res_lineedit">
             <span class="sim-lbl-tag">windows.lbl_resultat :</span>
@@ -148,8 +148,8 @@ function buildQtDesignerSimStage(item) {
           <textarea id="sim_te_val" class="sim-qt-textarea" rows="3" placeholder="Saisissez plusieurs lignes...">Baccalauréat STI 2026&#10;Épreuve Pratique : Qt Designer + Thonny</textarea>
           <div style="display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0;">
             <button type="button" class="sim-qt-action-pill" onclick="runAlgoPratiqueSim('qt-textedit')">▶ toPlainText()</button>
-            <button type="button" class="sim-qt-action-pill" onclick="simSetTextEditText('Nouveau texte inséré par setText()...')">✍️ setText()</button>
-            <button type="button" class="sim-qt-action-pill" onclick="simClearTextEdit()">🧹 clear()</button>
+            <button type="button" class="sim-qt-action-pill" onclick="simSetTextEditText('Nouveau texte inséré par setText()...')">setText()</button>
+            <button type="button" class="sim-qt-action-pill" onclick="simClearTextEdit()">clear()</button>
           </div>
           <div class="sim-label-display" id="sim_res_textedit">
             <span class="sim-lbl-tag">Rapport Thonny :</span>
@@ -170,7 +170,7 @@ function buildQtDesignerSimStage(item) {
         </div>
         <div class="qt-window-canvas" style="text-align: center; padding: 18px;">
           <button type="button" id="sim_btn_valider" class="sim-qt-btn" onclick="runAlgoPratiqueSim('qt-pushbutton')">
-            🔘 windows.btn_valider (Cliquer ici)
+            windows.btn_valider (Cliquer ici)
           </button>
           <div class="sim-label-display" id="sim_res_pushbutton" style="margin-top: 14px;">
             <span class="sim-lbl-tag">Signal clicked :</span>
@@ -194,11 +194,11 @@ function buildQtDesignerSimStage(item) {
           <div class="sim-radio-group">
             <label class="sim-qt-radio">
               <input type="radio" name="sim_rb_gender" id="sim_rb_m" value="Masculin" checked onchange="runAlgoPratiqueSim('qt-radiobutton')">
-              <span>👨 windows.rb_masculin</span>
+              <span>windows.rb_masculin (Masculin)</span>
             </label>
             <label class="sim-qt-radio">
               <input type="radio" name="sim_rb_gender" id="sim_rb_f" value="Féminin" onchange="runAlgoPratiqueSim('qt-radiobutton')">
-              <span>👩 windows.rb_feminin</span>
+              <span>windows.rb_feminin (Féminin)</span>
             </label>
           </div>
           <div style="margin: 8px 0;">
@@ -228,11 +228,11 @@ function buildQtDesignerSimStage(item) {
           <div class="sim-check-group">
             <label class="sim-qt-check">
               <input type="checkbox" id="sim_cb_sport" checked onchange="runAlgoPratiqueSim('qt-checkbox')">
-              <span>⚽ windows.cb_sport</span>
+              <span>windows.cb_sport</span>
             </label>
             <label class="sim-qt-check">
               <input type="checkbox" id="sim_cb_musique" onchange="runAlgoPratiqueSim('qt-checkbox')">
-              <span>🎵 windows.cb_musique</span>
+              <span>windows.cb_musique</span>
             </label>
           </div>
           <div style="margin: 8px 0;">
@@ -270,8 +270,8 @@ function buildQtDesignerSimStage(item) {
           </div>
           <div style="display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0;">
             <button type="button" class="sim-qt-action-pill" onclick="runAlgoPratiqueSim('qt-combobox')">▶ currentText()</button>
-            <button type="button" class="sim-qt-action-pill" onclick="simAddComboItem('Monastir')">➕ addItem("Monastir")</button>
-            <button type="button" class="sim-qt-action-pill" onclick="simSetComboEmpty('qt-combobox')">⚡ setCurrentIndex(-1)</button>
+            <button type="button" class="sim-qt-action-pill" onclick="simAddComboItem('Monastir')">+ addItem("Monastir")</button>
+            <button type="button" class="sim-qt-action-pill" onclick="simSetComboEmpty('qt-combobox')">setCurrentIndex(-1)</button>
           </div>
           <div class="sim-label-display" id="sim_res_combobox">
             <span class="sim-lbl-tag">currentText() & currentIndex() :</span>
@@ -297,7 +297,7 @@ function buildQtDesignerSimStage(item) {
           </div>
           <div style="margin: 8px 0;">
             <button type="button" class="sim-qt-action-pill" onclick="runAlgoPratiqueSim('qt-label')">
-              ✍️ windows.Nom_Label.setText(...)
+              windows.Nom_Label.setText(...)
             </button>
           </div>
           <div class="sim-live-label-box">
@@ -328,7 +328,7 @@ function buildQtDesignerSimStage(item) {
           </div>
           <div style="display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0;">
             <button type="button" class="sim-qt-action-pill" onclick="runAlgoPratiqueSim('qt-spinbox')">▶ .value()</button>
-            <button type="button" class="sim-qt-action-pill" onclick="simSetSpinValue(10)">✍️ setValue(10)</button>
+            <button type="button" class="sim-qt-action-pill" onclick="simSetSpinValue(10)">setValue(10)</button>
           </div>
           <div class="sim-label-display" id="sim_res_spinbox">
             <span class="sim-lbl-tag">Calcul .value() :</span>
@@ -371,7 +371,7 @@ function buildQtDesignerSimStage(item) {
     const isCrit = id === 'qt-msgbox-critical';
     const isWarn = id === 'qt-msgbox-warning';
     const btnColor = isCrit ? '#ef4444' : (isWarn ? '#f59e0b' : '#10b981');
-    const btnLabel = isCrit ? '🚨 Déclencher QMessageBox.critical' : (isWarn ? '⚠️ Déclencher QMessageBox.warning' : 'ℹ️ Déclencher QMessageBox.information');
+    const btnLabel = isCrit ? 'Déclencher QMessageBox.critical' : (isWarn ? 'Déclencher QMessageBox.warning' : 'Déclencher QMessageBox.information');
 
     return `
       <div class="qt-window-mockup">
@@ -421,8 +421,8 @@ function buildQtDesignerSimStage(item) {
             <input type="text" id="sim_tw_inscr" placeholder="N° (ex: 103)" value="103" style="flex: 1; min-width: 50px; padding: 4px 6px; background: #0f172a; border: 1px solid #334155; color: #fff; border-radius: 4px; font-size: 0.78rem;">
             <input type="text" id="sim_tw_nom" placeholder="Nom (ex: Dridi Amine)" value="Dridi Amine" style="flex: 2; min-width: 90px; padding: 4px 6px; background: #0f172a; border: 1px solid #334155; color: #fff; border-radius: 4px; font-size: 0.78rem;">
             <input type="text" id="sim_tw_moy" placeholder="Moy (ex: 16.00)" value="16.00" style="flex: 1; min-width: 50px; padding: 4px 6px; background: #0f172a; border: 1px solid #334155; color: #fff; border-radius: 4px; font-size: 0.78rem;">
-            <button type="button" class="sim-qt-btn" onclick="simAddTableRow()" style="padding: 4px 10px; font-size: 0.78rem; background: #10b981; color: #000; font-weight: 700; border-radius: 4px; border: none; cursor: pointer;">➕ .setItem()</button>
-            <button type="button" class="sim-qt-btn" onclick="simClearTable()" style="padding: 4px 10px; font-size: 0.78rem; background: #f43f5e; color: #fff; font-weight: 700; border-radius: 4px; border: none; cursor: pointer;">🧹 Vider</button>
+            <button type="button" class="sim-qt-btn" onclick="simAddTableRow()" style="padding: 4px 10px; font-size: 0.78rem; background: #10b981; color: #000; font-weight: 700; border-radius: 4px; border: none; cursor: pointer;">+ .setItem()</button>
+            <button type="button" class="sim-qt-btn" onclick="simClearTable()" style="padding: 4px 10px; font-size: 0.78rem; background: #f43f5e; color: #fff; font-weight: 700; border-radius: 4px; border: none; cursor: pointer;">Vider</button>
           </div>
           <div class="sim-label-display" id="sim_res_tablewidget">
             <span class="sim-lbl-tag">windows.tw_eleves.rowCount() :</span>
@@ -438,10 +438,10 @@ function buildQtDesignerSimStage(item) {
     let defVal = '';
     let placeholder = '';
     let testLabel = 'Valider';
-    if (id === 'qt-valid-empty') { defVal = ''; placeholder = 'Laissez vide ou tapez un nom...'; testLabel = '🛡️ Tester if texte == ""'; }
-    else if (id === 'qt-valid-alpha') { defVal = 'Sami123'; placeholder = 'Ex: Sami (alphabétique) ou Sami12 (erreur)...'; testLabel = '🛡️ Tester if not texte.isalpha()'; }
-    else if (id === 'qt-valid-numeric') { defVal = '25'; placeholder = 'Ex: 15 (valide) ou 25 (hors 0-20)...'; testLabel = '🛡️ Tester if not (0 <= note <= 20)'; }
-    else if (id === 'qt-valid-length') { defVal = '09876'; placeholder = 'Ex: 09876543 (8 chiffres) ou 09876 (erreur)...'; testLabel = '🛡️ Tester len(cin) == 8 and cin.isdigit()'; }
+    if (id === 'qt-valid-empty') { defVal = ''; placeholder = 'Laissez vide ou tapez un nom...'; testLabel = 'Tester if texte == ""'; }
+    else if (id === 'qt-valid-alpha') { defVal = 'Sami123'; placeholder = 'Ex: Sami (alphabétique) ou Sami12 (erreur)...'; testLabel = 'Tester if not texte.isalpha()'; }
+    else if (id === 'qt-valid-numeric') { defVal = '25'; placeholder = 'Ex: 15 (valide) ou 25 (hors 0-20)...'; testLabel = 'Tester if not (0 <= note <= 20)'; }
+    else if (id === 'qt-valid-length') { defVal = '09876'; placeholder = 'Ex: 09876543 (8 chiffres) ou 09876 (erreur)...'; testLabel = 'Tester len(cin) == 8 and cin.isdigit()'; }
 
     return `
       <div class="qt-window-mockup">
@@ -493,7 +493,7 @@ function buildQtDesignerSimStage(item) {
           </div>
           <div style="margin-top: 10px;">
             <button type="button" class="sim-qt-btn" onclick="simDoClearReset()" style="background: #f43f5e; color: #fff; border: none; padding: 6px 14px; border-radius: 6px; font-weight: 700; cursor: pointer; width: 100%;">
-              🧹 windows.btn_annuler (Réinitialiser tout)
+              windows.btn_annuler (Réinitialiser)
             </button>
           </div>
           <div class="sim-label-display" id="sim_res_clear_reset" style="margin-top: 10px;">
@@ -532,7 +532,7 @@ function buildQtDesignerSimStage(item) {
           </div>
           <div style="margin-top: 10px;">
             <button type="button" class="sim-qt-btn" onclick="simRunBacWorkflow()" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff; border: none; padding: 7px 16px; border-radius: 6px; font-weight: 800; cursor: pointer; width: 100%;">
-              🚀 4. windows.btn_valider (Lancer les 4 Étapes)
+              4. windows.btn_valider (Exécuter les 4 étapes)
             </button>
           </div>
           <div class="sim-label-display" id="sim_res_workflow" style="margin-top: 10px;">
@@ -553,7 +553,7 @@ function buildQtDesignerSimStage(item) {
       </div>
       <div class="qt-window-canvas" style="text-align: center; padding: 20px;">
         <button type="button" class="sim-qt-btn" onclick="runAlgoPratiqueSim('${id}')">
-          ⚡ Tester l'interaction (${item.name})
+          Tester l'interaction (${item.name})
         </button>
         <div class="sim-label-display" id="sim_res_${id}" style="margin-top: 14px;">
           <span class="sim-lbl-tag">Statut de l'interface :</span>
@@ -579,7 +579,7 @@ function runAlgoPratiqueSim(itemId) {
   if (itemId === 'qt-starter-template') {
     const status = document.getElementById('sim_starter_status');
     if (status) {
-      status.innerHTML = '🟢 <strong style="color: #34d399;">Fenêtre Qt active et affichée à l\'écran (app.exec_())</strong>';
+      status.innerHTML = '<strong style="color: #10b981;">Fenêtre Qt active et affichée à l\'écran (app.exec_())</strong>';
     }
     logLines = [
       `>>> %Run script_bac.py`,
@@ -589,7 +589,7 @@ function runAlgoPratiqueSim(itemId) {
       `[Thonny ${now}] windows = loadUi("interface.ui")`,
       `[Thonny ${now}] windows.show()`,
       `[Thonny ${now}] app.exec_()`,
-      `✓ Fenêtre 'interface.ui' chargée et boucle d'événements lancée avec succès !`
+      `[OK] Fenêtre 'interface.ui' chargée et boucle d'événements lancée avec succès !`
     ];
   } else if (itemId === 'qt-lineedit') {
     const inputNom = document.getElementById('sim_le_nom');
@@ -603,10 +603,10 @@ function runAlgoPratiqueSim(itemId) {
     }
     logLines = [
       `>>> %Run script_bac.py`,
-      `[Thonny] texte = windows.le_nom.text() ➔ "${valNom}" (type: str)`,
-      `[Thonny] age = int(windows.le_age.text()) ➔ ${valAge} (type: int)`,
+      `[Thonny] texte = windows.le_nom.text() -> "${valNom}" (type: str)`,
+      `[Thonny] age = int(windows.le_age.text()) -> ${valAge} (type: int)`,
       `[Thonny] windows.lbl_resultat.setText("Admis : ${valNom} (${valAge} ans)")`,
-      `✓ Label Qt mis à jour avec la chaîne formatée !`
+      `[OK] Label Qt mis à jour avec la chaîne formatée !`
     ];
   } else if (itemId === 'qt-textedit') {
     const te = document.getElementById('sim_te_val');
@@ -619,20 +619,20 @@ function runAlgoPratiqueSim(itemId) {
     logLines = [
       `>>> %Run script_bac.py`,
       `[Thonny] texte = windows.nomTextEdit.toPlainText()`,
-      `➔ Longueur : ${val.length} caractères (${lineCount} lignes)`,
-      `💡 Note Bac : Pour QTextEdit, on utilise TOUJOURS .toPlainText() et NON .text() !`
+      `-> Longueur : ${val.length} caractères (${lineCount} lignes)`,
+      `[NOTE] Note Bac : Pour QTextEdit, on utilise TOUJOURS .toPlainText() et NON .text() !`
     ];
   } else if (itemId === 'qt-pushbutton') {
     const res = document.getElementById('sim_res_pushbutton');
     if (res) {
-      res.querySelector('.sim-lbl-val').innerHTML = `<strong style="color: #34d399;">✓ Signal 'clicked' reçu ! Fonction 'valider()' exécutée.</strong>`;
+      res.querySelector('.sim-lbl-val').innerHTML = `<strong style="color: #34d399;">[OK] Signal 'clicked' reçu ! Fonction 'valider()' exécutée.</strong>`;
     }
     logLines = [
       `>>> %Run script_bac.py`,
       `[Thonny] windows.btn_valider.clicked.connect(valider)`,
-      `⚡ CLIC DÉTECTÉ sur windows.btn_valider !`,
-      `➔ Appel de la fonction Python : def valider():`,
-      `✓ Traitement effectué avec succès !`
+      `CLIC DÉTECTÉ sur windows.btn_valider !`,
+      `-> Appel de la fonction Python : def valider():`,
+      `[OK] Traitement effectué avec succès !`
     ];
   } else if (itemId === 'qt-radiobutton') {
     const rbM = document.getElementById('sim_rb_m');
@@ -644,9 +644,9 @@ function runAlgoPratiqueSim(itemId) {
     }
     logLines = [
       `>>> %Run script_bac.py`,
-      `[Thonny] if windows.rb_masculin.isChecked(): genre = 'M' ➔ ${isM}`,
-      `[Thonny] elif windows.rb_feminin.isChecked(): genre = 'F' ➔ ${!isM}`,
-      `➔ Résultat final : genre = "${genre}"`
+      `[Thonny] if windows.rb_masculin.isChecked(): genre = 'M' -> ${isM}`,
+      `[Thonny] elif windows.rb_feminin.isChecked(): genre = 'F' -> ${!isM}`,
+      `-> Résultat final : genre = "${genre}"`
     ];
   } else if (itemId === 'qt-checkbox') {
     const cbS = document.getElementById('sim_cb_sport');
@@ -662,9 +662,9 @@ function runAlgoPratiqueSim(itemId) {
     logLines = [
       `>>> %Run script_bac.py`,
       `[Thonny] options = []`,
-      `[Thonny] if windows.cb_sport.isChecked(): options.append('Sport') ➔ ${cbS && cbS.checked}`,
-      `[Thonny] if windows.cb_musique.isChecked(): options.append('Musique') ➔ ${cbM && cbM.checked}`,
-      `➔ Liste options : ${displayVal}`
+      `[Thonny] if windows.cb_sport.isChecked(): options.append('Sport') -> ${cbS && cbS.checked}`,
+      `[Thonny] if windows.cb_musique.isChecked(): options.append('Musique') -> ${cbM && cbM.checked}`,
+      `-> Liste options : ${displayVal}`
     ];
   } else if (itemId === 'qt-combobox') {
     const combo = document.getElementById('sim_combo_box');
@@ -676,9 +676,9 @@ function runAlgoPratiqueSim(itemId) {
     }
     logLines = [
       `>>> %Run script_bac.py`,
-      `[Thonny] ville = windows.combo_ville.currentText() ➔ "${val}"`,
-      `[Thonny] indice = windows.combo_ville.currentIndex() ➔ ${idx}`,
-      idx === -1 ? `⚠️ Aucun choix sélectionné (indice -1). Contrôle de saisie obligatoire !` : `✓ Choix validé !`
+      `[Thonny] ville = windows.combo_ville.currentText() -> "${val}"`,
+      `[Thonny] indice = windows.combo_ville.currentIndex() -> ${idx}`,
+      idx === -1 ? `[ALERTE] Aucun choix sélectionné (indice -1). Contrôle de saisie obligatoire !` : `[OK] Choix validé !`
     ];
   } else if (itemId === 'qt-label') {
     const inp = document.getElementById('sim_input_label');
@@ -688,7 +688,7 @@ function runAlgoPratiqueSim(itemId) {
     logLines = [
       `>>> %Run script_bac.py`,
       `[Thonny] windows.lbl_resultat.setText("${val}")`,
-      `✓ Contenu du QLabel mis à jour visuellement.`
+      `[OK] Contenu du QLabel mis à jour visuellement.`
     ];
   } else if (itemId === 'qt-spinbox') {
     const sb = document.getElementById('sim_sb_val');
@@ -702,10 +702,10 @@ function runAlgoPratiqueSim(itemId) {
     }
     logLines = [
       `>>> %Run script_bac.py`,
-      `[Thonny] qte = windows.sb_quantite.value() ➔ ${valSb} (type: int)`,
-      `[Thonny] prix = windows.dsb_prix.value() ➔ ${valDsb} (type: float)`,
-      `[Thonny] total = qte * prix ➔ ${total}`,
-      `💡 Note : .value() renvoie directement un int ou float sans int() ni float() !`
+      `[Thonny] qte = windows.sb_quantite.value() -> ${valSb} (type: int)`,
+      `[Thonny] prix = windows.dsb_prix.value() -> ${valDsb} (type: float)`,
+      `[Thonny] total = qte * prix -> ${total}`,
+      `[NOTE] Note : .value() renvoie directement un int ou float sans int() ni float() !`
     ];
   } else if (itemId === 'qt-dateedit') {
     const inp = document.getElementById('sim_date_input');
@@ -719,8 +719,8 @@ function runAlgoPratiqueSim(itemId) {
     logLines = [
       `>>> %Run script_bac.py`,
       `[Thonny] date_obj = windows.de_naissance.date()`,
-      `[Thonny] ch_date = date_obj.toString("dd/MM/yyyy") ➔ "${formatted}"`,
-      `✓ Date extraite et formatée en chaîne pour traitement ou BD.`
+      `[Thonny] ch_date = date_obj.toString("dd/MM/yyyy") -> "${formatted}"`,
+      `[OK] Date extraite et formatée en chaîne pour traitement ou BD.`
     ];
   } else if (itemId === 'qt-msgbox-critical' || itemId === 'qt-msgbox-info' || itemId === 'qt-msgbox-warning') {
     const isCrit = itemId === 'qt-msgbox-critical';
@@ -733,7 +733,7 @@ function runAlgoPratiqueSim(itemId) {
     logLines = [
       `>>> %Run script_bac.py`,
       `[Thonny] QMessageBox.${isCrit ? 'critical' : (isWarn ? 'warning' : 'information')}(windows, "${title}", "${msg}")`,
-      `✓ Boîte de dialogue affichée au centre de l'écran (Bloque l'interface jusqu'à clic sur OK).`
+      `[OK] Boîte de dialogue affichée au centre de l'écran (Bloque l'interface jusqu'à clic sur OK).`
     ];
   } else if (itemId === 'qt-tablewidget') {
     logLines = [
@@ -743,7 +743,7 @@ function runAlgoPratiqueSim(itemId) {
       `[Thonny] windows.tw_eleves.setItem(rows, 0, QTableWidgetItem(str(num)))`,
       `[Thonny] windows.tw_eleves.setItem(rows, 1, QTableWidgetItem(nom))`,
       `[Thonny] windows.tw_eleves.setItem(rows, 2, QTableWidgetItem(str(moyenne)))`,
-      `✓ Ligne insérée dynamiquement dans la grille QTableWidget !`
+      `[OK] Ligne insérée dynamiquement dans la grille QTableWidget !`
     ];
   } else if (itemId === 'qt-clear-reset') {
     simDoClearReset();
@@ -775,19 +775,19 @@ function runAlgoPratiqueSim(itemId) {
     }
 
     if (isValid) {
-      if (res) res.querySelector('.sim-lbl-val').innerHTML = `<strong style="color: #34d399;">✓ CONTRÔLE VALIDE : Valeur acceptée !</strong>`;
+      if (res) res.querySelector('.sim-lbl-val').innerHTML = `<strong style="color: #34d399;">[OK] CONTRÔLE VALIDE : Valeur acceptée !</strong>`;
       logLines = [
         `>>> %Run script_bac.py`,
         `[Thonny] Contrôle de saisie sur '${val}'...`,
-        `✓ Succès : La condition est respectée, passage à l'étape suivante !`
+        `[OK] Succès : La condition est respectée, passage à l'étape suivante !`
       ];
     } else {
-      if (res) res.querySelector('.sim-lbl-val').innerHTML = `<strong style="color: #ef4444;">❌ ERREUR : ${err}</strong>`;
+      if (res) res.querySelector('.sim-lbl-val').innerHTML = `<strong style="color: #ef4444;">[ERREUR] ERREUR : ${err}</strong>`;
       showSimQtDialog('Erreur de Saisie', err, 'critical');
       logLines = [
         `>>> %Run script_bac.py`,
         `[Thonny] Contrôle de saisie sur '${val}'...`,
-        `❌ Échec du contrôle !`,
+        `[ERREUR] Échec du contrôle !`,
         `[Thonny] QMessageBox.critical(windows, "Erreur", "${err}")`,
         `[Thonny] return (Arrêt du traitement)`
       ];
@@ -796,16 +796,16 @@ function runAlgoPratiqueSim(itemId) {
     logLines = [
       `>>> %Run script_bac.py`,
       `[Thonny ${now}] Exécution de la commande...`,
-      `✓ Action effectuée avec succès !`
+      `[OK] Action effectuée avec succès !`
     ];
   }
 
   terminal.innerHTML = logLines.map(l => {
     let cl = 'py-term-line';
     if (l.startsWith('>>>')) cl += ' prompt';
-    else if (l.includes('❌') || l.includes('Erreur') || l.includes('Échec')) cl += ' error';
-    else if (l.includes('✓') || l.includes('Succès')) cl += ' success';
-    else if (l.includes('💡') || l.includes('⚠️')) cl += ' warn';
+    else if (l.includes('[ERREUR]') || l.includes('Erreur') || l.includes('Échec')) cl += ' error';
+    else if (l.includes('[OK]') || l.includes('Succès')) cl += ' success';
+    else if (l.includes('[NOTE]') || l.includes('[ALERTE]') || l.includes('obligatoire')) cl += ' warn';
     return `<div class="${cl}">${escapeHtmlSafe(l)}</div>`;
   }).join('');
   terminal.scrollTop = terminal.scrollHeight;
@@ -834,7 +834,7 @@ function simClearLineEdit() {
       <div class="py-term-line prompt">>>> %Run script_bac.py</div>
       <div class="py-term-line">[Thonny] windows.le_nom.clear()</div>
       <div class="py-term-line">[Thonny] windows.le_age.clear()</div>
-      <div class="py-term-line success">✓ Champs vidés avec succès !</div>
+      <div class="py-term-line success">[OK] Champs vidés avec succès !</div>
     `;
   }
 }
@@ -856,7 +856,7 @@ function simClearTextEdit() {
     terminal.innerHTML = `
       <div class="py-term-line prompt">>>> %Run script_bac.py</div>
       <div class="py-term-line">[Thonny] windows.nomTextEdit.clear()</div>
-      <div class="py-term-line success">✓ Zone de texte vidée !</div>
+      <div class="py-term-line success">[OK] Zone de texte vidée !</div>
     `;
   }
 }
@@ -892,8 +892,8 @@ function simSetComboEmpty(itemId) {
       terminal.innerHTML = `
         <div class="py-term-line prompt">>>> %Run script_bac.py</div>
         <div class="py-term-line">[Thonny] windows.nomComboBox.setCurrentIndex(-1)</div>
-        <div class="py-term-line warn">⚠️ currentIndex() = -1 (Sélection vide)</div>
-        <div class="py-term-line error">❌ if windows.nomComboBox.currentIndex() == -1: QMessageBox.critical(...)</div>
+        <div class="py-term-line warn">[ALERTE] currentIndex() = -1 (Sélection vide)</div>
+        <div class="py-term-line error">[ERREUR] if windows.nomComboBox.currentIndex() == -1: QMessageBox.critical(...)</div>
       `;
     }
   }
@@ -929,13 +929,13 @@ function simAddTableRow() {
     if (terminal) {
       terminal.innerHTML = `
         <div class="py-term-line prompt">>>> %Run script_bac.py</div>
-        <div class="py-term-line">[Thonny] row = windows.tw_eleves.rowCount() ➔ ${rowCount - 1}</div>
+        <div class="py-term-line">[Thonny] row = windows.tw_eleves.rowCount() -> ${rowCount - 1}</div>
         <div class="py-term-line">[Thonny] windows.tw_eleves.setRowCount(${rowCount})</div>
         <div class="py-term-line">[Thonny] windows.tw_eleves.setItem(row, 0, QTableWidgetItem("${num}"))</div>
         <div class="py-term-line">[Thonny] windows.tw_eleves.setItem(row, 1, QTableWidgetItem("${nom}"))</div>
         <div class="py-term-line">[Thonny] windows.tw_eleves.setItem(row, 2, QTableWidgetItem("${moy.toFixed(2)}"))</div>
         <div class="py-term-line">[Thonny] windows.tw_eleves.setItem(row, 3, QTableWidgetItem("${mention}"))</div>
-        <div class="py-term-line success">✓ Élève ${nom} inséré dans la table avec succès !</div>
+        <div class="py-term-line success">[OK] Élève ${nom} inséré dans la table avec succès !</div>
       `;
     }
   }
@@ -952,7 +952,7 @@ function simClearTable() {
       terminal.innerHTML = `
         <div class="py-term-line prompt">>>> %Run script_bac.py</div>
         <div class="py-term-line">[Thonny] windows.tw_eleves.setRowCount(0)</div>
-        <div class="py-term-line success">✓ Tableau réinitialisé (0 ligne).</div>
+        <div class="py-term-line success">[OK] Tableau réinitialisé (0 ligne).</div>
       `;
     }
   }
@@ -969,7 +969,7 @@ function simDoClearReset() {
   if (cb) cb.checked = false;
 
   if (res) {
-    res.querySelector('.sim-lbl-val').innerHTML = `<strong style="color: #34d399;">✓ Tous les champs ont été réinitialisés !</strong>`;
+    res.querySelector('.sim-lbl-val').innerHTML = `<strong style="color: #34d399;">[OK] Tous les champs ont été réinitialisés !</strong>`;
   }
 
   const terminal = document.getElementById('sim_terminal_qt-clear-reset');
@@ -979,7 +979,7 @@ function simDoClearReset() {
       <div class="py-term-line">[Thonny] windows.le_nom.clear()</div>
       <div class="py-term-line">[Thonny] windows.sb_note.setValue(0)</div>
       <div class="py-term-line">[Thonny] windows.cb_option.setChecked(False)</div>
-      <div class="py-term-line success">✓ Interface remise à zéro avec succès !</div>
+      <div class="py-term-line success">[OK] Interface remise à zéro avec succès !</div>
     `;
   }
 }
@@ -1002,7 +1002,7 @@ function simRunBacWorkflow() {
     if (terminal) {
       terminal.innerHTML = `
         <div class="py-term-line prompt">>>> %Run script_bac.py</div>
-        <div class="py-term-line error">❌ Étape 1 : if nom == "": QMessageBox.critical(...)</div>
+        <div class="py-term-line error">[ERREUR] Étape 1 : if nom == "": QMessageBox.critical(...)</div>
         <div class="py-term-line warn">return (Traitement stoppé)</div>
       `;
     }
@@ -1016,7 +1016,7 @@ function simRunBacWorkflow() {
     if (terminal) {
       terminal.innerHTML = `
         <div class="py-term-line prompt">>>> %Run script_bac.py</div>
-        <div class="py-term-line error">❌ Étape 2 : if not (0 <= note <= 20): QMessageBox.critical(...)</div>
+        <div class="py-term-line error">[ERREUR] Étape 2 : if not (0 <= note <= 20): QMessageBox.critical(...)</div>
         <div class="py-term-line warn">return (Traitement stoppé)</div>
       `;
     }
@@ -1037,12 +1037,12 @@ function simRunBacWorkflow() {
   if (terminal) {
     terminal.innerHTML = `
       <div class="py-term-line prompt">>>> %Run script_bac.py</div>
-      <div class="py-term-line success">✓ Étape 1 : Lecture des champs réussie (nom="${nom}", note=${note})</div>
-      <div class="py-term-line success">✓ Étape 2 : Tous les contrôles de saisie sont validés avec succès</div>
-      <div class="py-term-line">[Thonny] Étape 3 : Calcul décision ➔ "${decision}" (${mention})</div>
+      <div class="py-term-line success">[OK] Étape 1 : Lecture des champs réussie (nom="${nom}", note=${note})</div>
+      <div class="py-term-line success">[OK] Étape 2 : Tous les contrôles de saisie sont validés avec succès</div>
+      <div class="py-term-line">[Thonny] Étape 3 : Calcul décision -> "${decision}" (${mention})</div>
       <div class="py-term-line">[Thonny] Étape 4 : windows.lbl_resultat.setText("${resultText}")</div>
       <div class="py-term-line">[Thonny] QMessageBox.information(windows, "Résultat", "${resultText}")</div>
-      <div class="py-term-line success">✓ Workflow complet du sujet pratique exécuté à 100% sans erreur !</div>
+      <div class="py-term-line success">[OK] Workflow complet du sujet pratique exécuté à 100% sans erreur !</div>
     `;
   }
 }
@@ -1059,7 +1059,7 @@ function showSimQtDialog(title, message, type = 'info') {
     document.body.appendChild(overlay);
   }
 
-  const iconEmoji = type === 'critical' ? '❌' : (type === 'warning' ? '⚠️' : 'ℹ️');
+  const iconEmoji = (typeof uiIcon === 'function') ? uiIcon(type === 'critical' ? 'x-circle' : (type === 'warning' ? 'alert-triangle' : 'info'), 18) : '';
   const borderColor = type === 'critical' ? '#ef4444' : (type === 'warning' ? '#f59e0b' : '#38bdf8');
 
   overlay.innerHTML = `
@@ -1110,7 +1110,7 @@ function openAlgoModal(itemId) {
     <!-- 1. En-tête & Rôle au Bac -->
     <div class="modal-section" style="background: rgba(56, 189, 248, 0.07); border: 1px solid rgba(56, 189, 248, 0.25); border-left: 4px solid #38bdf8; border-radius: 8px; padding: 16px 20px; margin-bottom: 18px;">
       <div class="modal-section-title" style="color: #38bdf8; font-weight: 800; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-        <span>💡</span>
+        <span>${typeof uiIcon === "function" ? uiIcon("lightbulb", 15) : ""}</span>
         <span>Rôle & Explication au Bac STI</span>
       </div>
       <p class="modal-text" style="font-size: 1.02rem; line-height: 1.65; color: #e2e8f0; margin: 0;">
@@ -1122,7 +1122,7 @@ function openAlgoModal(itemId) {
     ${item.howToUse ? `
       <div class="modal-section" style="background: rgba(245, 158, 11, 0.07); border: 1px solid rgba(245, 158, 11, 0.25); border-left: 4px solid #f59e0b; border-radius: 8px; padding: 16px 20px; margin-bottom: 18px;">
         <div class="modal-section-title" style="color: #f59e0b; font-weight: 800; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-          <span>🛠️</span>
+          <span>${typeof uiIcon === "function" ? uiIcon("wrench", 15) : ""}</span>
           <span>Dans Qt Designer (Création de l'interface .ui)</span>
         </div>
         <p style="margin: 0; line-height: 1.6; color: #fde68a; font-size: 0.95rem; white-space: pre-line;">${item.howToUse}</p>
@@ -1132,7 +1132,7 @@ function openAlgoModal(itemId) {
     <!-- 3. Piège Fréquent au Bac -->
     ${item.bacTips ? `
       <div class="algo-bac-tips" style="background: rgba(244, 63, 94, 0.08); border: 1px solid rgba(244, 63, 94, 0.3); border-left: 4px solid #f43f5e; border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; font-size: 0.95rem;">
-        <strong style="color: #f43f5e;">⚠️ Piège Fréquent à l'Épreuve du Bac :</strong>
+        <strong style="color: #f43f5e;">Piège fréquent à l'épreuve du Bac :</strong>
         <span style="color: #fecdd3; margin-left: 4px;">${item.bacTips}</span>
       </div>
     ` : ''}
@@ -1141,7 +1141,7 @@ function openAlgoModal(itemId) {
     <div class="modal-section" style="margin-bottom: 22px;">
       <div class="modal-section-title" style="color: #34d399; font-weight: 800; font-size: 1.05rem; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
         <div style="display: flex; align-items: center; gap: 8px;">
-          <span>🐍</span>
+          <span>${typeof uiIcon === "function" ? uiIcon("code", 15) : ""}</span>
           <span>Ce que TU dois écrire dans Thonny (Code Python Officiel)</span>
         </div>
         <span style="font-size: 0.8rem; color: #94a3b8; font-weight: 600;">(Code complet affiché sans ascenseur)</span>
@@ -1149,18 +1149,18 @@ function openAlgoModal(itemId) {
       
       <div class="annexe-code-container" style="background: #050811; border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 10px; overflow: hidden;">
         <div class="annexe-code-header" style="background: #09131e; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
-          <span style="color: #34d399; font-weight: 800; font-size: 0.82rem; letter-spacing: 0.5px;">🐍 Code Python • Thonny</span>
-          <button type="button" class="annexe-copy-btn" onclick='copyCodeText(${rawThonnyJson}, this)' style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); padding: 5px 12px; border-radius: 6px; font-weight: 700; cursor: pointer;">📋 Copier</button>
+          <span style="color: #34d399; font-weight: 800; font-size: 0.82rem; letter-spacing: 0.5px;">Code Python • Thonny</span>
+          <button type="button" class="annexe-copy-btn" onclick='copyCodeText(${rawThonnyJson}, this)' style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); padding: 5px 12px; border-radius: 6px; font-weight: 700; cursor: pointer;">Copier</button>
         </div>
         <pre class="annexe-code-pre" style="white-space: pre-wrap !important; word-break: break-word !important; overflow: visible !important; height: auto !important; max-height: none !important; margin: 0; padding: 18px; background: transparent;"><code class="python-syntax-view">${highlightedCode}</code></pre>
       </div>
     </div>
 
-    <!-- 5. LABORATOIRE INTERACTIF : QT DESIGNER ➔ THONNY PYTHON -->
+    <!-- 5. LABORATOIRE INTERACTIF : QT DESIGNER -> THONNY PYTHON -->
     <div class="modal-section">
       <div class="modal-section-title" style="color: #38bdf8; font-weight: 800; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-        <span>🔬</span>
-        <span>Laboratoire Interactif : Qt Designer ➔ Thonny Python</span>
+        <span>${typeof uiIcon === "function" ? uiIcon("terminal", 15) : ""}</span>
+        <span>Laboratoire Interactif : Qt Designer / Thonny Python</span>
       </div>
       <p style="font-size: 0.88rem; color: var(--text-secondary); margin: 0 0 14px 0;">
         Manipulez l'interface Qt ci-dessous ou cliquez sur <strong>'Exécuter dans Thonny (Run / F5)'</strong> pour observer les variables et l'effet visuel en temps réel !
@@ -1170,7 +1170,7 @@ function openAlgoModal(itemId) {
         <!-- Colonne 1 : Fenêtre Simulée Qt Designer -->
         <div class="lab-col-qt">
           <div style="font-size: 0.76rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">
-            🖥️ Fenêtre Simulée (interface.ui)
+            Fenêtre simulée (interface.ui)
           </div>
           ${buildQtDesignerSimStage(item)}
         </div>
@@ -1178,11 +1178,11 @@ function openAlgoModal(itemId) {
         <!-- Colonne 2 : Terminal Thonny Python -->
         <div class="lab-col-thonny">
           <div style="font-size: 0.76rem; font-weight: 800; color: #34d399; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">
-            🐍 Console Thonny Python (Shell)
+            Console Thonny Python (Shell)
           </div>
           <div class="thonny-terminal-wrap">
             <div class="thonny-terminal-header">
-              <span class="thonny-term-title">🐍 Thonny Shell • script_bac.py</span>
+              <span class="thonny-term-title">Thonny Shell • script_bac.py</span>
               <button type="button" class="thonny-run-btn" onclick="runAlgoPratiqueSim('${item.id}')">
                 ▶ Exécuter dans Thonny (Run / F5)
               </button>

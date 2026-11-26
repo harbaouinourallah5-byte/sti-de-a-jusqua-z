@@ -23,7 +23,7 @@ const DATA = {
       "howToUse": "Ne contient aucun élément directement visible sur la page. On y déclare l'encodage (charset), le titre de l'onglet (<title>), les styles (<style> ou <link>) et les scripts (<script>).",
       "attributes": [],
       "code": "<head>\n  <meta charset=\"UTF-8\">\n  <title>Cours STI - Révision Web</title>\n  <link rel=\"stylesheet\" href=\"style.css\">\n</head>",
-      "previewHtml": "<div style=\"background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:10px 14px; font-size:13px; color:#475569;\">\n        ⚙️ <strong>Métadonnées configurées dans &lt;head&gt; :</strong><br>\n        • Titre d'onglet : <em>Cours STI - Révision Web</em><br>\n        • Encodage : <em>UTF-8</em> (accents supportés)<br>\n        • Feuille de style CSS liée : <em>style.css</em>\n      </div>"
+      "previewHtml": "<div style=\"background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:10px 14px; font-size:13px; color:#475569;\">\n        <strong>Métadonnées configurées dans &lt;head&gt; :</strong><br>\n        • Titre d'onglet : <em>Cours STI - Révision Web</em><br>\n        • Encodage : <em>UTF-8</em> (accents supportés)<br>\n        • Feuille de style CSS liée : <em>style.css</em>\n      </div>"
     },
     {
       "id": "tag-body",
@@ -49,7 +49,7 @@ const DATA = {
         "type (text/css)"
       ],
       "code": "<!-- Liaison officielle avec la feuille de style CSS externe (Bac STI) -->\n<link rel=\"stylesheet\" href=\"style.css\" type=\"text/css\">",
-      "previewHtml": "<div style=\"background:#eff6ff; border-left:4px solid #3b82f6; padding:12px; border-radius:4px; font-size:13px; color:#1e40af;\">\n        ✓ <strong>Feuille de style CSS connectée :</strong> Le fichier <code>style.css</code> est relié au document HTML !\n      </div>"
+      "previewHtml": "<div style=\"background:#eff6ff; border-left:4px solid #3b82f6; padding:12px; border-radius:4px; font-size:13px; color:#1e40af;\">\n        <strong>Feuille de style CSS connectée :</strong> Le fichier <code>style.css</code> est relié au document HTML !\n      </div>"
     },
     {
       "id": "tag-meta",
@@ -64,7 +64,7 @@ const DATA = {
         "content (valeur associée)"
       ],
       "code": "<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<meta name=\"author\" content=\"Élève STI\">",
-      "previewHtml": "<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">\n        <span style=\"background:#f1f5f9; border:1px solid #cbd5e1; padding:6px 12px; border-radius:20px; font-size:12px; color:#334155;\">✓ Accents gérés : é, è, à, ç, ô</span>\n        <span style=\"background:#f1f5f9; border:1px solid #cbd5e1; padding:6px 12px; border-radius:20px; font-size:12px; color:#334155;\">📱 Adapté aux mobiles et tablettes</span>\n      </div>"
+      "previewHtml": "<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">\n        <span style=\"background:#f1f5f9; border:1px solid #cbd5e1; padding:6px 12px; border-radius:20px; font-size:12px; color:#334155;\">Accents gérés : é, è, à, ç, ô</span>\n        <span style=\"background:#f1f5f9; border:1px solid #cbd5e1; padding:6px 12px; border-radius:20px; font-size:12px; color:#334155;\">Adapté aux mobiles et tablettes</span>\n      </div>"
     },
     {
       "id": "tag-script",
@@ -104,7 +104,7 @@ const DATA = {
       "howToUse": "Obligatoire dans <head>. Il donne le nom de l'onglet et apparaît en gras dans les résultats de recherche Google.",
       "attributes": [],
       "code": "<title>STI - Mon Projet Web</title>",
-      "previewHtml": "<div style=\"background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; padding:8px 12px; display:inline-flex; align-items:center; gap:8px;\">\n        <span>🌐</span>\n        <strong style=\"color:#1e293b; font-size:13px;\">STI - Mon Projet Web</strong>\n        <span style=\"color:#94a3b8; margin-left:12px; cursor:pointer;\">&times;</span>\n      </div>"
+      "previewHtml": "<div style=\"background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; padding:8px 12px; display:inline-flex; align-items:center; gap:8px;\">\n        <span></span>\n        <strong style=\"color:#1e293b; font-size:13px;\">STI - Mon Projet Web</strong>\n        <span style=\"color:#94a3b8; margin-left:12px; cursor:pointer;\">&times;</span>\n      </div>"
     },
     {
       "id": "tag-header",
@@ -115,7 +115,7 @@ const DATA = {
       "howToUse": "Englobe le logo, le titre du site h1 et la barre de menu <nav>.",
       "attributes": [],
       "code": "<header>\n  <h1>STI Révisions</h1>\n  <nav>\n    <a href=\"#html\">HTML</a> | <a href=\"#css\">CSS</a>\n  </nav>\n</header>",
-      "previewHtml": "<header style=\"background:#1e293b; color:#fff; padding:12px 18px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;\">\n        <strong style=\"font-size:16px;\">🎓 STI Révisions</strong>\n        <span style=\"font-size:13px; color:#38bdf8;\">HTML5 • CSS3 • JS</span>\n      </header>"
+      "previewHtml": "<header style=\"background:#1e293b; color:#fff; padding:12px 18px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;\">\n        <strong style=\"font-size:16px;\">STI Révisions</strong>\n        <span style=\"font-size:13px; color:#38bdf8;\">HTML5 • CSS3 • JS</span>\n      </header>"
     },
     {
       "id": "tag-nav",
@@ -170,7 +170,7 @@ const DATA = {
       "howToUse": "Parfait pour des listes de liens associés, des encadrés 'Remarque' ou des citations.",
       "attributes": [],
       "code": "<aside>\n  <h4>Rappel Formulaire :</h4>\n  <p>N'oubliez pas l'attribut name sur chaque champ pour la transmission des données !</p>\n</aside>",
-      "previewHtml": "<aside style=\"background:#fef3c7; border-left:4px solid #f59e0b; padding:10px 14px; border-radius:4px; font-size:13px;\">\n        <strong style=\"color:#b45309;\">💡 Rappel Formulaire :</strong>\n        <p style=\"margin:4px 0 0 0; color:#78350f;\">N'oubliez pas l'attribut name sur chaque champ pour la transmission des données !</p>\n      </aside>"
+      "previewHtml": "<aside style=\"background:#fef3c7; border-left:4px solid #f59e0b; padding:10px 14px; border-radius:4px; font-size:13px;\">\n        <strong style=\"color:#b45309;\">Rappel Formulaire :</strong>\n        <p style=\"margin:4px 0 0 0; color:#78350f;\">N'oubliez pas l'attribut name sur chaque champ pour la transmission des données !</p>\n      </aside>"
     },
     {
       "id": "tag-main",
@@ -218,7 +218,7 @@ const DATA = {
         "media"
       ],
       "code": "<video controls>\n  <source src=\"cours.mp4\" type=\"video/mp4\">\n  <source src=\"cours.webm\" type=\"video/webm\">\n</video>",
-      "previewHtml": "<div style=\"background:#f8fafc; border:1px solid #cbd5e1; padding:8px 12px; border-radius:4px; font-size:12px; color:#334155;\">\n        📁 Fournit plusieurs sources : MP4 ou WEBM selon le navigateur utilisé.\n      </div>"
+      "previewHtml": "<div style=\"background:#f8fafc; border:1px solid #cbd5e1; padding:8px 12px; border-radius:4px; font-size:12px; color:#334155;\">\n        Fournit plusieurs sources : MP4 ou WEBM selon le navigateur utilisé.\n      </div>"
     },
     {
       "id": "tag-hn",
@@ -301,7 +301,7 @@ const DATA = {
         "autoplay"
       ],
       "code": "<video controls width=\"320\" height=\"180\">\n  <source src=\"experience.mp4\" type=\"video/mp4\">\n</video>",
-      "previewHtml": "<div style=\"width:240px; height:120px; background:#0f172a; border-radius:6px; display:flex; flex-direction:column; justify-content:center; align-items:center; color:#fff; position:relative;\">\n        <span style=\"font-size:24px;\">🎬</span>\n        <span style=\"font-size:11px; color:#94a3b8;\">Vidéo HTML5 (320x180)</span>\n      </div>"
+      "previewHtml": "<div style=\"width:240px; height:120px; background:#0f172a; border-radius:6px; display:flex; flex-direction:column; justify-content:center; align-items:center; color:#fff; position:relative;\">\n        <span style=\"font-size:24px;\"></span>\n        <span style=\"font-size:11px; color:#94a3b8;\">Vidéo HTML5 (320x180)</span>\n      </div>"
     },
     {
       "id": "tag-a",
@@ -315,7 +315,7 @@ const DATA = {
         "target (_blank, _self)"
       ],
       "code": "<a href=\"https://lyceeste.tn\" target=\"_blank\">Accéder au site officiel</a>",
-      "previewHtml": "<a href=\"javascript:void(0)\" style=\"color:#0284c7; text-decoration:underline; font-weight:600; font-size:14px;\">\n        🔗 Accéder au site officiel (nouvel onglet)\n      </a>"
+      "previewHtml": "<a href=\"javascript:void(0)\" style=\"color:#0284c7; text-decoration:underline; font-weight:600; font-size:14px;\">\n        Accéder au site officiel (nouvel onglet)\n      </a>"
     },
     {
       "id": "tag-br",
@@ -361,7 +361,7 @@ const DATA = {
         "open (booléen)"
       ],
       "code": "<details>\n  <summary>Voir la réponse</summary>\n  <p>La balise correcte est &lt;details&gt;.</p>\n</details>",
-      "previewHtml": "<details style=\"background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:8px 12px; cursor:pointer;\" open>\n        <summary style=\"font-weight:bold; color:#0f172a; font-size:13px;\">▶ Voir la réponse</summary>\n        <p style=\"margin:6px 0 0 14px; font-size:12px; color:#15803d; font-weight:600;\">✓ La balise correcte est &lt;details&gt;.</p>\n      </details>"
+      "previewHtml": "<details style=\"background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:8px 12px; cursor:pointer;\" open>\n        <summary style=\"font-weight:bold; color:#0f172a; font-size:13px;\">▶ Voir la réponse</summary>\n        <p style=\"margin:6px 0 0 14px; font-size:12px; color:#15803d; font-weight:600;\">La balise correcte est &lt;details&gt;.</p>\n      </details>"
     },
     {
       "id": "tag-span",
@@ -407,7 +407,7 @@ const DATA = {
         "height"
       ],
       "code": "<iframe src=\"https://example.com\" width=\"300\" height=\"150\" name=\"cadre\"></iframe>",
-      "previewHtml": "<div style=\"border:2px dashed #64748b; padding:12px; border-radius:6px; text-align:center; background:#f8fafc;\">\n        <strong style=\"font-size:13px; color:#1e293b;\">🪟 Cadre &lt;iframe&gt; externe</strong>\n        <span style=\"font-size:11px; display:block; color:#64748b;\">Affiche une page isolée à l'intérieur du site.</span>\n      </div>"
+      "previewHtml": "<div style=\"border:2px dashed #64748b; padding:12px; border-radius:6px; text-align:center; background:#f8fafc;\">\n        <strong style=\"font-size:13px; color:#1e293b;\">Cadre &lt;iframe&gt; externe</strong>\n        <span style=\"font-size:11px; display:block; color:#64748b;\">Affiche une page isolée à l'intérieur du site.</span>\n      </div>"
     },
     {
       "id": "tag-ul",
@@ -474,10 +474,10 @@ const DATA = {
         "action : URL ou fichier de traitement où envoyer les données (ex: traitement.php)",
         "method : 'post' (recommandé pour masquer les données) ou 'get'",
         "onsubmit : onsubmit=\"return verif()\" pour exécuter la fonction JavaScript de validation (retourne true ou false)",
-        "⚠️ Note STI : target n'est pas utilisé dans nos formulaires"
+        "Note STI : target n'est pas utilisé dans nos formulaires"
       ],
       "code": "<!-- Structure officielle STI d'un Formulaire avec Validation JS -->\n<form action=\"traitement.php\" method=\"post\" onsubmit=\"return verif()\">\n  <label for=\"nomEleve\">Nom :</label>\n  <input type=\"text\" id=\"nomEleve\" name=\"nom\">\n\n  <label for=\"noteEleve\">Note :</label>\n  <input type=\"number\" id=\"noteEleve\" name=\"note\">\n\n  <input type=\"submit\" value=\"Valider et Envoyer\">\n</form>\n\n<script>\nfunction verif() {\n  // 1. Récupération des valeurs saisies via getElementById\n  let nom = document.getElementById(\"nomEleve\").value;\n  let note = document.getElementById(\"noteEleve\").value;\n\n  // 2. Vérification que le champ nom n'est pas vide\n  if (nom.trim() == \"\") {\n    alert(\"Erreur : Le nom est obligatoire !\");\n    return false; // BLOQUE L'ENVOI DU FORMULAIRE\n  }\n\n  // 3. Vérification de la note (entre 0 et 20)\n  if (isNaN(note) || note < 0 || note > 20) {\n    alert(\"Erreur : La note doit être comprise entre 0 et 20 !\");\n    return false; // BLOQUE L'ENVOI DU FORMULAIRE\n  }\n\n  // 4. Si toutes les conditions sont respectées :\n  alert(\"Formulaire vérifié avec succès ! Envoi des données...\");\n  return true; // AUTORISE L'ENVOI VERS ACTION=\"traitement.php\"\n}\n</script>",
-      "previewHtml": "<div style=\"background:#fff; border:1px solid #cbd5e1; border-radius:8px; padding:16px;\">\n        <div style=\"background:#e0f2fe; border-left:4px solid #0284c7; padding:8px 12px; border-radius:4px; margin-bottom:12px; font-size:12px; color:#0369a1;\">\n          💡 <strong>Modèle STI :</strong> <code>&lt;form action=\"traitement.php\" method=\"post\" onsubmit=\"return verif()\"&gt;</code> (sans <em>target</em>).\n        </div>\n        <form onsubmit=\"event.preventDefault(); let n = document.getElementById('demoNom').value.trim(); let note = parseFloat(document.getElementById('demoNote').value); let res = document.getElementById('formDemoFeedback'); if(n === '') { res.innerHTML = '❌ <strong>return false (Envoi bloqué) :</strong> Le champ Nom est vide !'; res.style.background='#fee2e2'; res.style.color='#991b1b'; return false; } if(isNaN(note) || note < 0 || note > 20) { res.innerHTML = '❌ <strong>return false (Envoi bloqué) :</strong> La note doit être entre 0 et 20 !'; res.style.background='#fee2e2'; res.style.color='#991b1b'; return false; } res.innerHTML = '✅ <strong>return true (Envoi validé) :</strong> Données conformes pour &quot;' + n + '&quot; (Note: ' + note + '/20) ! Le formulaire part vers traitement.php.'; res.style.background='#dcfce7'; res.style.color='#166534'; return true;\" style=\"display:flex; flex-direction:column; gap:10px;\">\n          <div>\n            <label style=\"display:block; font-size:12px; font-weight:600; color:#1e293b; margin-bottom:3px;\">Nom de l'élève :</label>\n            <input type=\"text\" id=\"demoNom\" placeholder=\"Tapez un nom...\" style=\"width:100%; box-sizing:border-box; padding:6px 10px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n          </div>\n          <div>\n            <label style=\"display:block; font-size:12px; font-weight:600; color:#1e293b; margin-bottom:3px;\">Note obtenue (sur 20) :</label>\n            <input type=\"number\" id=\"demoNote\" placeholder=\"Ex: 17\" style=\"width:100%; box-sizing:border-box; padding:6px 10px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n          </div>\n          <button type=\"submit\" style=\"background:#16a34a; color:#fff; border:none; padding:8px 16px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:13px; margin-top:4px;\">\n            Tester la fonction de validation (onsubmit)\n          </button>\n          <div id=\"formDemoFeedback\" style=\"font-size:12px; padding:8px 12px; border-radius:4px; background:#f8fafc; color:#64748b; font-family:monospace;\">\n            En attente de clic sur le bouton de soumission...\n          </div>\n        </form>\n      </div>"
+      "previewHtml": "<div style=\"background:#fff; border:1px solid #cbd5e1; border-radius:8px; padding:16px;\">\n        <div style=\"background:#e0f2fe; border-left:4px solid #0284c7; padding:8px 12px; border-radius:4px; margin-bottom:12px; font-size:12px; color:#0369a1;\">\n          <strong>Modèle STI :</strong> <code>&lt;form action=\"traitement.php\" method=\"post\" onsubmit=\"return verif()\"&gt;</code> (sans <em>target</em>).\n        </div>\n        <form onsubmit=\"event.preventDefault(); let n = document.getElementById('demoNom').value.trim(); let note = parseFloat(document.getElementById('demoNote').value); let res = document.getElementById('formDemoFeedback'); if(n === '') { res.innerHTML = '<strong>return false (Envoi bloqué) :</strong> Le champ Nom est vide !'; res.style.background='#fee2e2'; res.style.color='#991b1b'; return false; } if(isNaN(note) || note < 0 || note > 20) { res.innerHTML = '<strong>return false (Envoi bloqué) :</strong> La note doit être entre 0 et 20 !'; res.style.background='#fee2e2'; res.style.color='#991b1b'; return false; } res.innerHTML = '<strong>return true (Envoi validé) :</strong> Données conformes pour &quot;' + n + '&quot; (Note: ' + note + '/20) ! Le formulaire part vers traitement.php.'; res.style.background='#dcfce7'; res.style.color='#166534'; return true;\" style=\"display:flex; flex-direction:column; gap:10px;\">\n          <div>\n            <label style=\"display:block; font-size:12px; font-weight:600; color:#1e293b; margin-bottom:3px;\">Nom de l'élève :</label>\n            <input type=\"text\" id=\"demoNom\" placeholder=\"Tapez un nom...\" style=\"width:100%; box-sizing:border-box; padding:6px 10px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n          </div>\n          <div>\n            <label style=\"display:block; font-size:12px; font-weight:600; color:#1e293b; margin-bottom:3px;\">Note obtenue (sur 20) :</label>\n            <input type=\"number\" id=\"demoNote\" placeholder=\"Ex: 17\" style=\"width:100%; box-sizing:border-box; padding:6px 10px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n          </div>\n          <button type=\"submit\" style=\"background:#16a34a; color:#fff; border:none; padding:8px 16px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:13px; margin-top:4px;\">\n            Tester la fonction de validation (onsubmit)\n          </button>\n          <div id=\"formDemoFeedback\" style=\"font-size:12px; padding:8px 12px; border-radius:4px; background:#f8fafc; color:#64748b; font-family:monospace;\">\n            En attente de clic sur le bouton de soumission...\n          </div>\n        </form>\n      </div>"
     },
     {
       "id": "tag-fieldset-legend",
@@ -571,8 +571,8 @@ const DATA = {
         "disabled (désactive le bouton)",
         "form (associe le bouton à un formulaire précis par son id)"
       ],
-      "code": "<!-- Bouton d'action JavaScript -->\n<button type=\"button\" onclick=\"calculerMoyenne()\">\n  📊 Calculer la moyenne\n</button>\n\n<!-- Bouton de soumission du formulaire -->\n<button type=\"submit\">\n  🚀 Envoyer le formulaire\n</button>",
-      "previewHtml": "<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">\n        <button type=\"button\" style=\"padding:6px 14px; background:#4f46e5; color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer; font-size:12px; display:inline-flex; align-items:center; gap:6px;\">\n          <span>📊</span> Calculer\n        </button>\n        <button type=\"submit\" style=\"padding:6px 14px; background:#10b981; color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer; font-size:12px; display:inline-flex; align-items:center; gap:6px;\">\n          <span>🚀</span> Soumettre\n        </button>\n      </div>"
+      "code": "<!-- Bouton d'action JavaScript -->\n<button type=\"button\" onclick=\"calculerMoyenne()\">\n  Calculer la moyenne\n</button>\n\n<!-- Bouton de soumission du formulaire -->\n<button type=\"submit\">\n  Envoyer le formulaire\n</button>",
+      "previewHtml": "<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">\n        <button type=\"button\" style=\"padding:6px 14px; background:#4f46e5; color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer; font-size:12px; display:inline-flex; align-items:center; gap:6px;\">\n          <span></span> Calculer\n        </button>\n        <button type=\"submit\" style=\"padding:6px 14px; background:#10b981; color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer; font-size:12px; display:inline-flex; align-items:center; gap:6px;\">\n          <span></span> Soumettre\n        </button>\n      </div>"
     },
     {
       "id": "event-onclick",
@@ -585,7 +585,7 @@ const DATA = {
         "Utilisable sur presque toutes les balises : <button>, <a>, <input>, <div>, <img>"
       ],
       "code": "<!-- Déclenchement direct via onclick -->\n<button onclick=\"saluerUtilisateur()\">Cliquez pour valider</button>\n\n<script>\nfunction saluerUtilisateur() {\n  alert(\"Bravo ! Vous venez de déclencher l'événement onclick.\");\n}\n</script>",
-      "previewHtml": "<div style=\"text-align:center; padding:15px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px;\">\n        <p style=\"font-size:13px; color:#475569; margin-bottom:10px;\">Cliquez sur le bouton ci-dessous pour tester :</p>\n        <button onclick=\"let c = document.getElementById('clickCounter'); c.textContent = parseInt(c.textContent) + 1; alert('Événement onclick réussi ! Nombre de clics : ' + c.textContent);\" style=\"background:#0284c7; color:#fff; border:none; padding:8px 18px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:13px; box-shadow:0 2px 4px rgba(0,0,0,0.1);\">\n          🖱️ Cliquez-moi !\n        </button>\n        <div style=\"margin-top:10px; font-size:12px; color:#64748b;\">Compteur de clics : <strong id=\"clickCounter\" style=\"color:#0284c7;\">0</strong></div>\n      </div>"
+      "previewHtml": "<div style=\"text-align:center; padding:15px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px;\">\n        <p style=\"font-size:13px; color:#475569; margin-bottom:10px;\">Cliquez sur le bouton ci-dessous pour tester :</p>\n        <button onclick=\"let c = document.getElementById('clickCounter'); c.textContent = parseInt(c.textContent) + 1; alert('Événement onclick réussi ! Nombre de clics : ' + c.textContent);\" style=\"background:#0284c7; color:#fff; border:none; padding:8px 18px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:13px; box-shadow:0 2px 4px rgba(0,0,0,0.1);\">\n          Cliquez-moi !\n        </button>\n        <div style=\"margin-top:10px; font-size:12px; color:#64748b;\">Compteur de clics : <strong id=\"clickCounter\" style=\"color:#0284c7;\">0</strong></div>\n      </div>"
     },
     {
       "id": "event-onmouseover",
@@ -598,7 +598,7 @@ const DATA = {
         "<div>, <img>, <a>, <button>, <td>"
       ],
       "code": "<div id=\"boite\" onmouseover=\"survolEntree()\" onmouseout=\"survolSortie()\">\n  Passez votre souris ici !\n</div>\n\n<script>\nfunction survolEntree() {\n  document.getElementById(\"boite\").style.backgroundColor = \"#facc15\";\n  document.getElementById(\"boite\").textContent = \"Souris détectée au-dessus !\";\n}\n</script>",
-      "previewHtml": "<div onmouseover=\"this.style.background='#fef08a'; this.style.borderColor='#eab308'; this.querySelector('.hover-txt').textContent='🎯 OUI ! Événement onmouseover déclenché !';\" onmouseout=\"this.style.background='#ffffff'; this.style.borderColor='#cbd5e1'; this.querySelector('.hover-txt').textContent='Déplacez votre curseur au-dessus de cette boîte';\" style=\"border:2px dashed #cbd5e1; border-radius:8px; padding:20px; text-align:center; cursor:pointer; transition:all 0.2s; background:#fff;\">\n        <span style=\"font-size:24px; display:block; margin-bottom:4px;\">🖱️</span>\n        <strong class=\"hover-txt\" style=\"font-size:13px; color:#1e293b;\">Déplacez votre curseur au-dessus de cette boîte</strong>\n      </div>"
+      "previewHtml": "<div onmouseover=\"this.style.background='#fef08a'; this.style.borderColor='#eab308'; this.querySelector('.hover-txt').textContent='OUI ! Événement onmouseover déclenché !';\" onmouseout=\"this.style.background='#ffffff'; this.style.borderColor='#cbd5e1'; this.querySelector('.hover-txt').textContent='Déplacez votre curseur au-dessus de cette boîte';\" style=\"border:2px dashed #cbd5e1; border-radius:8px; padding:20px; text-align:center; cursor:pointer; transition:all 0.2s; background:#fff;\">\n        <span style=\"font-size:24px; display:block; margin-bottom:4px;\"></span>\n        <strong class=\"hover-txt\" style=\"font-size:13px; color:#1e293b;\">Déplacez votre curseur au-dessus de cette boîte</strong>\n      </div>"
     },
     {
       "id": "event-onmouseout",
@@ -611,7 +611,7 @@ const DATA = {
         "<div>, <img>, <a>, <button>, <p>"
       ],
       "code": "<img src=\"image1.jpg\" id=\"photo\"\n     onmouseover=\"this.src='image2.jpg'\"\n     onmouseout=\"this.src='image1.jpg'\">",
-      "previewHtml": "<div onmouseenter=\"document.getElementById('outStatus').textContent='Curseur à l\\'intérieur...';\" onmouseleave=\"document.getElementById('outStatus').textContent='👋 Le curseur vient de sortir : onmouseout déclenché !';\" style=\"background:#f1f5f9; border:2px solid #94a3b8; border-radius:8px; padding:15px; text-align:center;\">\n        <p style=\"margin:0 0 6px 0; font-size:13px; font-weight:600; color:#334155;\">Zone de test de sortie de souris</p>\n        <span id=\"outStatus\" style=\"font-size:12px; color:#0284c7; font-weight:bold;\">Entrez puis sortez votre souris de ce cadre</span>\n      </div>"
+      "previewHtml": "<div onmouseenter=\"document.getElementById('outStatus').textContent='Curseur à l\\'intérieur...';\" onmouseleave=\"document.getElementById('outStatus').textContent='Le curseur vient de sortir : onmouseout déclenché !';\" style=\"background:#f1f5f9; border:2px solid #94a3b8; border-radius:8px; padding:15px; text-align:center;\">\n        <p style=\"margin:0 0 6px 0; font-size:13px; font-weight:600; color:#334155;\">Zone de test de sortie de souris</p>\n        <span id=\"outStatus\" style=\"font-size:12px; color:#0284c7; font-weight:bold;\">Entrez puis sortez votre souris de ce cadre</span>\n      </div>"
     },
     {
       "id": "event-onfocus",
@@ -624,7 +624,7 @@ const DATA = {
         "<input>, <textarea>, <select>, <button>, <a>"
       ],
       "code": "<input type=\"text\" id=\"prenom\" onfocus=\"activerAide()\">\n<span id=\"aide\" style=\"display:none; color:blue;\">Tapez votre prénom en majuscules.</span>\n\n<script>\nfunction activerAide() {\n  document.getElementById(\"aide\").style.display = \"inline\";\n}\n</script>",
-      "previewHtml": "<div style=\"background:#fff; border:1px solid #e2e8f0; padding:14px; border-radius:6px;\">\n        <label style=\"display:block; font-size:12px; margin-bottom:4px; font-weight:600; color:#1e293b;\">Cliquez dans ce champ pour tester onfocus :</label>\n        <input type=\"text\" placeholder=\"Cliquez ici...\" onfocus=\"this.style.borderColor='#38bdf8'; this.style.boxShadow='0 0 0 3px rgba(56,189,248,0.3)'; document.getElementById('focusFeedback').innerHTML='🟢 <strong>onfocus activé :</strong> Vous avez sélectionné ce champ !';\" onblur=\"this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'; document.getElementById('focusFeedback').innerHTML='⚪ Champ inactif (en attente de focus)';\" style=\"width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px; outline:none; transition:0.2s;\">\n        <div id=\"focusFeedback\" style=\"margin-top:6px; font-size:12px; color:#0284c7;\">⚪ Champ inactif (en attente de focus)</div>\n      </div>"
+      "previewHtml": "<div style=\"background:#fff; border:1px solid #e2e8f0; padding:14px; border-radius:6px;\">\n        <label style=\"display:block; font-size:12px; margin-bottom:4px; font-weight:600; color:#1e293b;\">Cliquez dans ce champ pour tester onfocus :</label>\n        <input type=\"text\" placeholder=\"Cliquez ici...\" onfocus=\"this.style.borderColor='#38bdf8'; this.style.boxShadow='0 0 0 3px rgba(56,189,248,0.3)'; document.getElementById('focusFeedback').innerHTML='<strong>onfocus activé :</strong> Vous avez sélectionné ce champ !';\" onblur=\"this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'; document.getElementById('focusFeedback').innerHTML='Champ inactif (en attente de focus)';\" style=\"width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px; outline:none; transition:0.2s;\">\n        <div id=\"focusFeedback\" style=\"margin-top:6px; font-size:12px; color:#0284c7;\">Champ inactif (en attente de focus)</div>\n      </div>"
     },
     {
       "id": "event-onblur",
@@ -637,7 +637,7 @@ const DATA = {
         "<input>, <textarea>, <select>"
       ],
       "code": "<input type=\"number\" id=\"noteSTI\" onblur=\"verifierNote()\">\n\n<script>\nfunction verifierNote() {\n  let v = document.getElementById(\"noteSTI\").value;\n  if (v < 0 || v > 20) {\n    alert(\"Attention : la note doit être comprise entre 0 et 20 !\");\n  }\n}\n</script>",
-      "previewHtml": "<div style=\"background:#fff; border:1px solid #e2e8f0; padding:14px; border-radius:6px;\">\n        <label style=\"display:block; font-size:12px; margin-bottom:4px; font-weight:600; color:#1e293b;\">Tapez une note sur 20 puis cliquez en dehors du champ :</label>\n        <input type=\"number\" id=\"testNoteInput\" placeholder=\"Ex: 18 ou 25\" onblur=\"let val = parseFloat(this.value); let res = document.getElementById('blurResult'); if (isNaN(val)) { res.innerHTML = '⚪ Veuillez taper un nombre.'; } else if (val < 0 || val > 20) { res.innerHTML = '❌ <strong>onblur :</strong> Erreur ! La note ' + val + ' n\\'est pas entre 0 et 20 !'; res.style.color='#dc2626'; } else { res.innerHTML = '✅ <strong>onblur :</strong> Parfait ! Note de ' + val + '/20 valide.'; res.style.color='#16a34a'; }\" style=\"width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n        <div id=\"blurResult\" style=\"margin-top:6px; font-size:12px; color:#64748b;\">⚪ Tapez une note et cliquez en dehors pour déclencher onblur.</div>\n      </div>"
+      "previewHtml": "<div style=\"background:#fff; border:1px solid #e2e8f0; padding:14px; border-radius:6px;\">\n        <label style=\"display:block; font-size:12px; margin-bottom:4px; font-weight:600; color:#1e293b;\">Tapez une note sur 20 puis cliquez en dehors du champ :</label>\n        <input type=\"number\" id=\"testNoteInput\" placeholder=\"Ex: 18 ou 25\" onblur=\"let val = parseFloat(this.value); let res = document.getElementById('blurResult'); if (isNaN(val)) { res.innerHTML = 'Veuillez taper un nombre.'; } else if (val < 0 || val > 20) { res.innerHTML = '<strong>onblur :</strong> Erreur ! La note ' + val + ' n\\'est pas entre 0 et 20 !'; res.style.color='#dc2626'; } else { res.innerHTML = '<strong>onblur :</strong> Parfait ! Note de ' + val + '/20 valide.'; res.style.color='#16a34a'; }\" style=\"width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n        <div id=\"blurResult\" style=\"margin-top:6px; font-size:12px; color:#64748b;\">Tapez une note et cliquez en dehors pour déclencher onblur.</div>\n      </div>"
     },
     {
       "id": "event-oninput",
@@ -663,7 +663,7 @@ const DATA = {
         "<select>, <input type=\"checkbox\">, <input type=\"radio\">, <input type=\"text\">"
       ],
       "code": "<select onchange=\"changerSection(this.value)\">\n  <option value=\"STI\">Sciences et Technologies</option>\n  <option value=\"ECO\">Économie</option>\n</select>\n\n<script>\nfunction changerSection(choix) {\n  alert(\"Vous avez choisi : \" + choix);\n}\n</script>",
-      "previewHtml": "<div style=\"background:#fff; border:1px solid #e2e8f0; padding:14px; border-radius:6px;\">\n        <label style=\"display:block; font-size:12px; margin-bottom:4px; font-weight:600; color:#1e293b;\">Choisissez une filière dans la liste :</label>\n        <select onchange=\"let box = document.getElementById('changeFeedback'); box.innerHTML = '⚡ <strong>onchange déclenché :</strong> Option choisie : &quot;' + this.value + '&quot; !'; box.style.background='#dcfce7'; box.style.color='#15803d';\" style=\"width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n          <option value=\"Sciences et Technologies de l'Industrie (STI)\">Sciences et Technologies (STI)</option>\n          <option value=\"Informatique & Programmation\">Informatique & Programmation</option>\n          <option value=\"Électronique & Systèmes Numériques\">Électronique & Systèmes Numériques</option>\n        </select>\n        <div id=\"changeFeedback\" style=\"margin-top:8px; font-size:12px; padding:6px 10px; border-radius:4px; background:#f1f5f9; color:#475569;\">\n          Sélectionnez une option pour déclencher l'événement onchange.\n        </div>\n      </div>"
+      "previewHtml": "<div style=\"background:#fff; border:1px solid #e2e8f0; padding:14px; border-radius:6px;\">\n        <label style=\"display:block; font-size:12px; margin-bottom:4px; font-weight:600; color:#1e293b;\">Choisissez une filière dans la liste :</label>\n        <select onchange=\"let box = document.getElementById('changeFeedback'); box.innerHTML = '<strong>onchange déclenché :</strong> Option choisie : &quot;' + this.value + '&quot; !'; box.style.background='#dcfce7'; box.style.color='#15803d';\" style=\"width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n          <option value=\"Sciences et Technologies de l'Industrie (STI)\">Sciences et Technologies (STI)</option>\n          <option value=\"Informatique & Programmation\">Informatique & Programmation</option>\n          <option value=\"Électronique & Systèmes Numériques\">Électronique & Systèmes Numériques</option>\n        </select>\n        <div id=\"changeFeedback\" style=\"margin-top:8px; font-size:12px; padding:6px 10px; border-radius:4px; background:#f1f5f9; color:#475569;\">\n          Sélectionnez une option pour déclencher l'événement onchange.\n        </div>\n      </div>"
     },
     {
       "id": "event-onsubmit",
@@ -676,7 +676,7 @@ const DATA = {
         "<form>"
       ],
       "code": "<form onsubmit=\"return verifierTout()\">\n  <input type=\"text\" id=\"login\" placeholder=\"Nom d'utilisateur\">\n  <input type=\"submit\" value=\"Se connecter\">\n</form>\n\n<script>\nfunction verifierTout() {\n  let log = document.getElementById(\"login\").value;\n  if (log.trim() === \"\") {\n    alert(\"Le champ identifiant est obligatoire !\");\n    return false; // Bloque la soumission\n  }\n  return true; // Envoi autorisé\n}\n</script>",
-      "previewHtml": "<form onsubmit=\"event.preventDefault(); let val = document.getElementById('loginInput').value; let fb = document.getElementById('submitFeedback'); if(!val.trim()){ fb.innerHTML = '❌ <strong>onsubmit bloqué :</strong> Veuillez remplir le champ !'; fb.style.color='#dc2626'; } else { fb.innerHTML = '✅ <strong>onsubmit validé :</strong> Formulaire expédié pour &quot;' + val + '&quot; !'; fb.style.color='#16a34a'; }\" style=\"background:#fff; border:1px solid #e2e8f0; padding:14px; border-radius:6px; display:flex; flex-direction:column; gap:8px;\">\n        <label style=\"font-size:12px; font-weight:600;\">Test de validation formulaire :</label>\n        <div style=\"display:flex; gap:8px;\">\n          <input type=\"text\" id=\"loginInput\" placeholder=\"Entrez votre identifiant...\" style=\"flex:1; padding:6px 10px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n          <button type=\"submit\" style=\"background:#16a34a; color:#fff; border:none; padding:6px 14px; border-radius:4px; font-weight:bold; cursor:pointer;\">Envoyer</button>\n        </div>\n        <div id=\"submitFeedback\" style=\"font-size:12px; color:#64748b;\">Cliquez sur Envoyer pour tester la soumission.</div>\n      </form>"
+      "previewHtml": "<form onsubmit=\"event.preventDefault(); let val = document.getElementById('loginInput').value; let fb = document.getElementById('submitFeedback'); if(!val.trim()){ fb.innerHTML = '<strong>onsubmit bloqué :</strong> Veuillez remplir le champ !'; fb.style.color='#dc2626'; } else { fb.innerHTML = '<strong>onsubmit validé :</strong> Formulaire expédié pour &quot;' + val + '&quot; !'; fb.style.color='#16a34a'; }\" style=\"background:#fff; border:1px solid #e2e8f0; padding:14px; border-radius:6px; display:flex; flex-direction:column; gap:8px;\">\n        <label style=\"font-size:12px; font-weight:600;\">Test de validation formulaire :</label>\n        <div style=\"display:flex; gap:8px;\">\n          <input type=\"text\" id=\"loginInput\" placeholder=\"Entrez votre identifiant...\" style=\"flex:1; padding:6px 10px; border:1px solid #cbd5e1; border-radius:4px; font-size:13px;\">\n          <button type=\"submit\" style=\"background:#16a34a; color:#fff; border:none; padding:6px 14px; border-radius:4px; font-weight:bold; cursor:pointer;\">Envoyer</button>\n        </div>\n        <div id=\"submitFeedback\" style=\"font-size:12px; color:#64748b;\">Cliquez sur Envoyer pour tester la soumission.</div>\n      </form>"
     },
     {
       "id": "event-onkeydown",
@@ -715,7 +715,7 @@ const DATA = {
         "<body>, <img>, <iframe>, <script>"
       ],
       "code": "<body onload=\"initialiserSite()\">\n  <h1>Bienvenue</h1>\n</body>\n\n<script>\nfunction initialiserSite() {\n  alert(\"Page chargée à 100% avec succès !\");\n}\n</script>",
-      "previewHtml": "<div style=\"background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:15px; text-align:center;\">\n        <span style=\"font-size:24px;\">🌐</span>\n        <h4 style=\"margin:4px 0; color:#0f172a;\">Simulation de l'événement onload</h4>\n        <p style=\"font-size:12px; color:#64748b; margin-bottom:10px;\">Cliquez ci-dessous pour simuler le chargement complet d'une page :</p>\n        <button onclick=\"let b = document.getElementById('loadSimBar'); b.style.width='0%'; setTimeout(() => b.style.width='100%', 100); setTimeout(() => alert('Événement onload : Le document et ses ressources sont prêts !'), 1200);\" style=\"background:#0284c7; color:#fff; border:none; padding:6px 14px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:12px;\">\n          ▶ Simuler le chargement de la page\n        </button>\n        <div style=\"height:6px; background:#e2e8f0; border-radius:3px; margin-top:12px; overflow:hidden;\">\n          <div id=\"loadSimBar\" style=\"width:0%; height:100%; background:#10b981; transition:width 1s ease;\"></div>\n        </div>\n      </div>"
+      "previewHtml": "<div style=\"background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:15px; text-align:center;\">\n        <span style=\"font-size:24px;\"></span>\n        <h4 style=\"margin:4px 0; color:#0f172a;\">Simulation de l'événement onload</h4>\n        <p style=\"font-size:12px; color:#64748b; margin-bottom:10px;\">Cliquez ci-dessous pour simuler le chargement complet d'une page :</p>\n        <button onclick=\"let b = document.getElementById('loadSimBar'); b.style.width='0%'; setTimeout(() => b.style.width='100%', 100); setTimeout(() => alert('Événement onload : Le document et ses ressources sont prêts !'), 1200);\" style=\"background:#0284c7; color:#fff; border:none; padding:6px 14px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:12px;\">\n          ▶ Simuler le chargement de la page\n        </button>\n        <div style=\"height:6px; background:#e2e8f0; border-radius:3px; margin-top:12px; overflow:hidden;\">\n          <div id=\"loadSimBar\" style=\"width:0%; height:100%; background:#10b981; transition:width 1s ease;\"></div>\n        </div>\n      </div>"
     },
     {
       "id": "event-onplay",
@@ -728,7 +728,7 @@ const DATA = {
         "<audio>, <video>"
       ],
       "code": "<video controls src=\"film.mp4\" onplay=\"afficherStatutLecture()\">\n</video>\n\n<script>\nfunction afficherStatutLecture() {\n  console.log(\"Lecture du média démarrée !\");\n}\n</script>",
-      "previewHtml": "<div style=\"background:#0f172a; color:#fff; border-radius:8px; padding:15px; text-align:center;\">\n        <span style=\"font-size:28px;\">🎬</span>\n        <h4 style=\"margin:4px 0; color:#38bdf8;\">Lecteur Multimédia (onplay)</h4>\n        <p style=\"font-size:12px; color:#94a3b8; margin-bottom:10px;\">Cliquez sur Lecture pour déclencher l'événement onplay :</p>\n        <button onclick=\"let st = document.getElementById('mediaStatusPlay'); st.textContent='▶ ÉVÉNEMENT ONPLAY DÉCLENCHÉ : Lecture démarrée !'; st.style.color='#4ade80';\" style=\"background:#22c55e; color:#fff; border:none; padding:8px 16px; border-radius:20px; font-weight:bold; cursor:pointer; font-size:13px;\">\n          ▶ Lancer la lecture\n        </button>\n        <div id=\"mediaStatusPlay\" style=\"margin-top:10px; font-size:12px; color:#94a3b8; font-family:monospace;\">En attente de lecture...</div>\n      </div>"
+      "previewHtml": "<div style=\"background:#0f172a; color:#fff; border-radius:8px; padding:15px; text-align:center;\">\n        <span style=\"font-size:28px;\"></span>\n        <h4 style=\"margin:4px 0; color:#38bdf8;\">Lecteur Multimédia (onplay)</h4>\n        <p style=\"font-size:12px; color:#94a3b8; margin-bottom:10px;\">Cliquez sur Lecture pour déclencher l'événement onplay :</p>\n        <button onclick=\"let st = document.getElementById('mediaStatusPlay'); st.textContent='▶ ÉVÉNEMENT ONPLAY DÉCLENCHÉ : Lecture démarrée !'; st.style.color='#4ade80';\" style=\"background:#22c55e; color:#fff; border:none; padding:8px 16px; border-radius:20px; font-weight:bold; cursor:pointer; font-size:13px;\">\n          ▶ Lancer la lecture\n        </button>\n        <div id=\"mediaStatusPlay\" style=\"margin-top:10px; font-size:12px; color:#94a3b8; font-family:monospace;\">En attente de lecture...</div>\n      </div>"
     },
     {
       "id": "event-onpause",
@@ -771,7 +771,7 @@ const DATA = {
       "summary": "Sélectionne tous les éléments du document HTML.",
       "howToUse": "Applique un style général à l'ensemble des balises de la page. En Bac STI, on l'utilise souvent pour réinitialiser les marges à 0.",
       "code": "/* Sélectionne tous les éléments de la page */\n* {\n  margin: 0;\n  padding: 0;\n}",
-      "hoverNote": "💡 Note Bac : Pour appliquer un effet au survol d'un élément précis, ciblez son ID avec :hover (ex: #h1:hover { color: red; }).",
+      "hoverNote": "Note Bac : Pour appliquer un effet au survol d'un élément précis, ciblez son ID avec :hover (ex: #h1:hover { color: red; }).",
       "videoSimType": "boxmodel-sim",
       "description": "Le sélecteur universel symbolisé par l'étoile '*' sélectionne absolument tous les éléments HTML présents dans la page sans exception (html, body, h1, p, div, etc.). En pratique d'examen au Bac, on l'utilise au tout début du fichier CSS pour faire un 'reset' des marges (margin: 0; padding: 0;) afin que tous les navigateurs affichent la page de façon identique.",
       "values": [
@@ -786,7 +786,7 @@ const DATA = {
       "summary": "Sélectionne tous les éléments de type element (ex: h1, p, body, table).",
       "howToUse": "Cible directement le nom de la balise HTML pour lui donner un style par défaut sur toute la page.",
       "code": "/* Cible toutes les balises p */\np {\n  font-size: 14px;\n  color: #333333;\n}",
-      "hoverNote": "💡 Note Bac : Pour appliquer un effet au survol, écrivez par exemple p:hover { color: blue; } ou sur un ID : #h1:hover { color: blue; }.",
+      "hoverNote": "Note Bac : Pour appliquer un effet au survol, écrivez par exemple p:hover { color: blue; } ou sur un ID : #h1:hover { color: blue; }.",
       "videoSimType": "font-sim",
       "description": "Le sélecteur de balise cible tous les éléments qui portent ce nom de balise HTML (par exemple p pour tous les paragraphes, table pour tous les tableaux, h1 pour tous les titres). Il permet d'appliquer une apparence globale et cohérente à un type d'élément sur tout le site.",
       "values": [
@@ -816,7 +816,7 @@ const DATA = {
       "summary": "Cible un élément unique en fonction de la valeur de son attribut id.",
       "howToUse": "C'EST LE SÉLECTEUR N°1 DU BAC STI ! On donne un id à la balise (ex: <h1 id=\"h1\">) et on la cible en CSS avec le dièse # (ex: #h1).",
       "code": "/* Cible l'élément ayant l'attribut id=\"h1\" */\n#h1 {\n  color: #0284c7;\n  text-align: center;\n}",
-      "hoverNote": "💡 Note Bac : C'est la syntaxe officielle demandée au Bac pour le survol : #h1:hover { color: red; }.",
+      "hoverNote": "Note Bac : C'est la syntaxe officielle demandée au Bac pour le survol : #h1:hover { color: red; }.",
       "videoSimType": "font-sim",
       "description": "Le sélecteur par identifiant (#id) est LE sélecteur le plus important et le plus utilisé dans les examens du Baccalauréat STI ! Chaque identifiant est unique dans la page HTML (attribut id=\"h1\"). En CSS, on place obligatoirement le symbole dièse '#' devant le nom de l'identifiant pour appliquer des styles ciblés et précis à cet élément uniquement.",
       "values": [
@@ -840,7 +840,7 @@ const DATA = {
       "summary": "Cible les éléments en fonction de la valeur de leur attribut class.",
       "howToUse": "S'écrit avec un point '.' suivi du nom de la classe. Permet d'appliquer le même style à plusieurs balises différentes ayant la même classe.",
       "code": "/* Cible tous les éléments ayant class=\"rouge\" */\n.rouge {\n  color: red;\n  font-weight: bold;\n}",
-      "hoverNote": "💡 Note Bac : Pour appliquer au survol d'une classe : .rouge:hover { color: darkred; }.",
+      "hoverNote": "Note Bac : Pour appliquer au survol d'une classe : .rouge:hover { color: darkred; }.",
       "videoSimType": "font-sim",
       "description": "Le sélecteur de classe (.class) commence obligatoirement par un point '.' suivi du nom de la classe. Contrairement à un identifiant (#id) qui est unique, une classe peut être partagée par plusieurs éléments différents. Cela permet de donner le même style à un groupe de balises réparties dans toute la page.",
       "values": [
@@ -855,7 +855,7 @@ const DATA = {
       "summary": "Cible les éléments qui possèdent l'attribut spécifié attr.",
       "howToUse": "Permet de cibler tous les éléments ayant un certain attribut, comme les champs obligatoires avec [required].",
       "code": "/* Cible tous les champs input ayant l'attribut required */\ninput[required] {\n  border: 2px solid #ef4444;\n}",
-      "hoverNote": "💡 Note Bac : Au survol de la souris : input[required]:hover { border-color: red; }.",
+      "hoverNote": "Note Bac : Au survol de la souris : input[required]:hover { border-color: red; }.",
       "videoSimType": "attr-sim",
       "description": "Le sélecteur d'attribut 'element[attr]' permet de cibler des éléments qui possèdent un attribut HTML spécifique, peu importe sa valeur. Par exemple, input[required] va cibler uniquement les champs obligatoires du formulaire qui ont l'attribut required pour leur donner une bordure d'avertissement rouge.",
       "values": [
@@ -874,7 +874,7 @@ const DATA = {
       "summary": "Cible les éléments en fonction de la valeur exacte de leur attribut attr.",
       "howToUse": "Très utilisé en examen pour styliser spécifiquement un bouton d'envoi ou un champ texte.",
       "code": "/* Cible spécifiquement le bouton submit */\ninput[type=\"submit\"] {\n  background-color: #16a34a;\n  color: white;\n}",
-      "hoverNote": "💡 Note Bac : Au survol de la souris : input[type=\"submit\"]:hover { background-color: #15803d; cursor: pointer; }.",
+      "hoverNote": "Note Bac : Au survol de la souris : input[type=\"submit\"]:hover { background-color: #15803d; cursor: pointer; }.",
       "videoSimType": "attr-sim",
       "description": "Le sélecteur 'element[attr=valeur]' cible avec une précision chirurgicale un élément qui possède un attribut égal à une valeur exacte entre guillemets. C'est la méthode reine au Bac pour distinguer les différents champs d'un formulaire : input[type=\"submit\"] pour le bouton d'envoi, input[type=\"text\"] pour la saisie de texte, etc.",
       "values": [
@@ -894,7 +894,7 @@ const DATA = {
       "summary": "Cible tous les éléments de type element en fonction de la valeur de leur attribut class.",
       "howToUse": "Cible uniquement la balise spécifiée portant cette classe (ex: p.important ciblera les <p class=\"important\"> mais pas les <h1>).",
       "code": "/* Cible uniquement les paragraphes p avec la classe important */\np.important {\n  color: #dc2626;\n  font-style: italic;\n}",
-      "hoverNote": "💡 Note Bac : Au survol : p.important:hover { font-weight: bold; }.",
+      "hoverNote": "Note Bac : Au survol : p.important:hover { font-weight: bold; }.",
       "videoSimType": "font-sim",
       "description": "Ce sélecteur combiné 'element.class' associe le nom d'une balise et le nom d'une classe sans espace entre eux (ex: p.important). Il cible exclusivement les balises <p> ayant la classe 'important', en ignorant les autres balises comme <h1> ou <div> qui porteraient aussi cette classe.",
       "values": [
@@ -912,7 +912,7 @@ const DATA = {
       "summary": "Cible tous les liens hypertextes qui n'ont pas encore été visités.",
       "howToUse": "Définit la couleur par défaut d'un lien avant que l'internaute ne clique dessus.",
       "code": "/* Cible le lien id=\"lien\" non visité */\n#lien:link {\n  color: #0284c7;\n  text-decoration: none;\n}",
-      "hoverNote": "💡 Note Bac : S'associe toujours avec #lien:hover pour changer la couleur quand la souris passe dessus.",
+      "hoverNote": "Note Bac : S'associe toujours avec #lien:hover pour changer la couleur quand la souris passe dessus.",
       "videoSimType": "link-states-sim",
       "description": "La pseudo-classe a:link cible spécifiquement les liens hypertextes (<a href=\"...\">) qui n'ont pas encore été visités ou cliqués par l'internaute dans l'historique de son navigateur. Elle permet de définir la couleur et l'apparence par défaut des liens non consultés.",
       "values": [
@@ -927,7 +927,7 @@ const DATA = {
       "summary": "Cible tous les liens déjà visités dans l'historique du navigateur.",
       "howToUse": "Permet de signaler à l'utilisateur qu'il a déjà cliqué sur ce lien (généralement en violet).",
       "code": "/* Cible le lien id=\"lien\" une fois visité */\n#lien:visited {\n  color: #7c3aed;\n}",
-      "hoverNote": "💡 Note Bac : Vous pouvez aussi appliquer un survol sur un lien visité : #lien:visited:hover { text-decoration: underline; }.",
+      "hoverNote": "Note Bac : Vous pouvez aussi appliquer un survol sur un lien visité : #lien:visited:hover { text-decoration: underline; }.",
       "videoSimType": "link-states-sim",
       "description": "La pseudo-classe a:visited cible les liens hypertextes que l'internaute a déjà visités au moins une fois dans son navigateur. Par défaut dans les navigateurs, ces liens s'affichent en violet, mais en CSS vous pouvez choisir n'importe quelle couleur pour indiquer que la page a déjà été lue.",
       "values": [
@@ -942,7 +942,7 @@ const DATA = {
       "summary": "Cible l'élément au moment où l'utilisateur le survole avec le pointeur de la souris.",
       "howToUse": "LA PSEUDO-CLASSE OBLIGATOIRE DU BAC ! Utilisable sur n'importe quel ID (ex: #h1:hover, #boite:hover, #lien:hover).",
       "code": "/* Change le style au survol du titre id=\"h1\" */\n#h1:hover {\n  color: #ef4444;\n  letter-spacing: 2px;\n}",
-      "hoverNote": "💡 C'est le sélecteur :hover lui-même ! Il s'active automatiquement dès que la souris passe sur l'élément.",
+      "hoverNote": "C'est le sélecteur :hover lui-même ! Il s'active automatiquement dès que la souris passe sur l'élément.",
       "videoSimType": "font-sim",
       "description": "La pseudo-classe :hover est l'élément interactif fondamental du cours ! Elle s'active automatiquement à l'instant où l'utilisateur place le pointeur de sa souris au-dessus de l'élément (#h1:hover, #boite:hover, a:hover) et se désactive dès que la souris s'en va. C'est la question incontournable de presque tous les sujets d'examen.",
       "values": [
@@ -957,7 +957,7 @@ const DATA = {
       "summary": "Cible l'élément à l'instant où l'utilisateur clique dessus et maintient le bouton enfoncé.",
       "howToUse": "Donne un retour visuel immédiat lors du clic (effet d'enfoncement).",
       "code": "/* Cible le lien ou bouton au moment du clic */\n#btn:active {\n  background-color: #facc15;\n  transform: scale(0.98);\n}",
-      "hoverNote": "💡 Note Bac : L'ordre classique est :link, :visited, :hover, puis :active.",
+      "hoverNote": "Note Bac : L'ordre classique est :link, :visited, :hover, puis :active.",
       "videoSimType": "link-states-sim",
       "description": "La pseudo-classe a:active cible l'élément à la seconde exacte où l'utilisateur clique dessus et maintient le bouton de la souris enfoncé (pendant le clic physique). Elle donne un retour visuel d'enfoncement ou de confirmation du clic.",
       "values": [
@@ -972,7 +972,7 @@ const DATA = {
       "summary": "Pour grouper plusieurs sélecteurs dans une même règle, il suffit de les lister en les séparant par des virgules ','.",
       "howToUse": "Évite de répéter le même code CSS pour plusieurs balises ou identifiants.",
       "code": "/* Applique la même police et couleur à #h1, #h2 et #p1 */\n#h1, #h2, #p1 {\n  font-family: Arial, sans-serif;\n  color: #0f172a;\n}",
-      "hoverNote": "💡 Note Bac : Pour grouper au survol : #h1:hover, #h2:hover { color: red; }.",
+      "hoverNote": "Note Bac : Pour grouper au survol : #h1:hover, #h2:hover { color: red; }.",
       "videoSimType": "font-sim",
       "description": "Le groupement de sélecteurs permet d'appliquer la même liste de propriétés CSS à plusieurs balises ou identifiants différents à la fois, en les séparant par des virgules (,). Cela évite de copier-coller les mêmes blocs de code et rend votre fichier CSS propre et rapide à corriger par l'examinateur.",
       "values": [
@@ -987,7 +987,7 @@ const DATA = {
       "summary": "Définit la façon de disposer les cellules, lignes et colonnes d'un tableau (valeurs : auto, fixed).",
       "howToUse": "Avec 'fixed', les largeurs de colonnes sont fixées par la première ligne, ce qui accélère l'affichage.",
       "code": "#tab {\n  width: 100%;\n  table-layout: fixed;\n}",
-      "hoverNote": "💡 Note Bac : Pour modifier au survol d'une ligne du tableau : #tab tr:hover { background-color: #f1f5f9; }.",
+      "hoverNote": "Note Bac : Pour modifier au survol d'une ligne du tableau : #tab tr:hover { background-color: #f1f5f9; }.",
       "videoSimType": "table-sim",
       "description": "La propriété table-layout contrôle l'algorithme utilisé par le navigateur pour calculer la largeur des colonnes d'un tableau HTML. Avec la valeur 'fixed', la largeur des colonnes est déterminée strictement par la première ligne ou par le CSS, ce qui empêche le tableau de se déformer lorsque le texte d'une cellule est très long.",
       "values": [
@@ -1003,7 +1003,7 @@ const DATA = {
       "summary": "Définit si les bordures des cellules sont fusionnées ou séparées (valeurs : separate, collapse).",
       "howToUse": "En examen STI, on utilise presque toujours 'border-collapse: collapse;' pour avoir des bordures nettes et simples entre les cases.",
       "code": "/* Fusionne les bordures des cellules du tableau id=\"tab\" */\n#tab {\n  border-collapse: collapse;\n  width: 100%;\n}",
-      "hoverNote": "💡 Note Bac : Pour changer la bordure ou le fond au survol de la souris : #tab td:hover { background-color: #e2e8f0; }.",
+      "hoverNote": "Note Bac : Pour changer la bordure ou le fond au survol de la souris : #tab td:hover { background-color: #e2e8f0; }.",
       "videoSimType": "table-sim",
       "description": "La propriété border-collapse détermine la manière dont les bordures des cellules d'un tableau (<table id=\"tab\">) se rejoignent. Par défaut (separate), les bordures sont doublées avec un petit espace entre elles. Avec la valeur 'collapse', toutes les bordures des cellules adjacentes fusionnent en une seule ligne nette et fine. C'est la règle obligatoire demandée au Bac sur les tableaux !",
       "values": [
@@ -1019,7 +1019,7 @@ const DATA = {
       "summary": "Spécifie les noms de polices possibles par ordre de préférence.",
       "howToUse": "Indiquez la police souhaitée (ex: Arial, Tahoma, 'Times New Roman') puis la famille générique (sans-serif, serif).",
       "code": "#h1 {\n  font-family: Arial, Tahoma, sans-serif;\n}",
-      "hoverNote": "💡 Note Bac : Au survol de la souris : #h1:hover { font-family: 'Courier New', monospace; }.",
+      "hoverNote": "Note Bac : Au survol de la souris : #h1:hover { font-family: 'Courier New', monospace; }.",
       "videoSimType": "font-sim",
       "description": "La propriété font-family spécifie la police d'écriture du texte. On peut lister plusieurs noms de polices séparés par des virgules par ordre de préférence au cas où la première ne serait pas installée sur l'ordinateur de l'utilisateur (ex: Arial, Tahoma, sans-serif). Les noms comportant des espaces s'écrivent entre guillemets.",
       "values": [
@@ -1041,7 +1041,7 @@ const DATA = {
       "summary": "Spécifie la manière dont les caractères d'un texte doivent être affichés (bold ; bolder ; lighter ; normal).",
       "howToUse": "Utilisez 'bold' pour mettre le texte en gras dans l'élément ciblé.",
       "code": "/* Met le texte du paragraphe id=\"p1\" en gras */\n#p1 {\n  font-weight: bold;\n}",
-      "hoverNote": "💡 Note Bac : Pour mettre en gras au survol : #p1:hover { font-weight: bold; }.",
+      "hoverNote": "Note Bac : Pour mettre en gras au survol : #p1:hover { font-weight: bold; }.",
       "videoSimType": "font-sim",
       "description": "La propriété font-weight définit la graisse ou l'épaisseur des caractères du texte. La valeur 'bold' permet de mettre le texte en gras sans devoir utiliser la balise HTML <b> ou <strong>. Elle accepte aussi des valeurs relatives ou numériques de 100 à 900.",
       "values": [
@@ -1060,7 +1060,7 @@ const DATA = {
       "summary": "Spécifie le style d'un texte (italic ; normal).",
       "howToUse": "Utilisez 'italic' pour afficher le texte en italique sans ajouter de balise HTML.",
       "code": "/* Met le titre id=\"h1\" en italique */\n#h1 {\n  font-style: italic;\n}",
-      "hoverNote": "💡 Note Bac : Pour passer en italique au survol de la souris : #h1:hover { font-style: italic; }.",
+      "hoverNote": "Note Bac : Pour passer en italique au survol de la souris : #h1:hover { font-style: italic; }.",
       "videoSimType": "font-sim",
       "description": "La propriété font-style définit l'inclinaison ou le style du texte. La valeur 'italic' incline les caractères en italique, ce qui est souvent demandé au Bac pour les sous-titres, citations ou mentions secondaires.",
       "values": [
@@ -1077,7 +1077,7 @@ const DATA = {
       "summary": "Spécifie la taille d'une police (exprimée en px ou %).",
       "howToUse": "Détermine la grandeur des lettres (ex: 20px, 24px, 150%).",
       "code": "/* Définit la taille du titre id=\"h1\" à 24 pixels */\n#h1 {\n  font-size: 24px;\n}",
-      "hoverNote": "💡 Note Bac : Pour agrandir le texte au survol : #h1:hover { font-size: 28px; }.",
+      "hoverNote": "Note Bac : Pour agrandir le texte au survol : #h1:hover { font-size: 28px; }.",
       "videoSimType": "font-sim",
       "description": "La propriété font-size contrôle la dimension (hauteur) des caractères du texte. Au Bac, elle s'exprime principalement en pixels (px) pour une taille fixe précise (ex: 24px) ou en pourcentage (%) pour une taille relative à l'élément parent (ex: 150%).",
       "values": [
@@ -1094,7 +1094,7 @@ const DATA = {
       "summary": "Super-propriété de font. Combine font-family, font-weight, font-style, font-size.",
       "howToUse": "Permet d'écrire en une seule ligne : style, weight, size puis family.",
       "code": "/* Combine style italique, gras, 20px et police Arial sur #h1 */\n#h1 {\n  font: italic bold 20px Arial;\n}",
-      "hoverNote": "💡 Note Bac : Au survol de la souris : #h1:hover { font: normal bold 24px Tahoma; }.",
+      "hoverNote": "Note Bac : Au survol de la souris : #h1:hover { font: normal bold 24px Tahoma; }.",
       "videoSimType": "font-sim",
       "description": "La super-propriété 'font' permet de combiner en une seule ligne de code : font-style, font-weight, font-size et font-family dans cet ordre précis. Exemple classique du Bac : font: italic bold 20px Arial;",
       "values": [
@@ -1109,7 +1109,7 @@ const DATA = {
       "summary": "Spécifie l'alignement horizontal d'un texte (left ; center ; right ; justify).",
       "howToUse": "center pour centrer, right pour aligner à droite, justify pour justifier les deux côtés.",
       "code": "/* Centre le texte du titre id=\"h1\" */\n#h1 {\n  text-align: center;\n}",
-      "hoverNote": "💡 Note Bac : Au survol de la souris : #h1:hover { text-align: right; }.",
+      "hoverNote": "Note Bac : Au survol de la souris : #h1:hover { text-align: right; }.",
       "videoSimType": "align-transform-sim",
       "description": "La propriété text-align régit l'alignement horizontal du texte à l'intérieur de son bloc conteneur. Elle est indispensable pour centrer les titres principaux (center), aligner les paragraphes à gauche (left), à droite (right) ou répartir les espaces équitablement sur toute la largeur (justify).",
       "values": [
@@ -1127,7 +1127,7 @@ const DATA = {
       "summary": "Définit une ombre au texte (décalage horizontal, vertical, flou, couleur).",
       "howToUse": "Syntaxe : text-shadow: decalageX decalageY flou couleur; (ex: 2px 2px 4px #888888).",
       "code": "/* Ajoute une ombre portée sur le titre id=\"h1\" */\n#h1 {\n  text-shadow: 2px 2px 4px #888888;\n}",
-      "hoverNote": "💡 Note Bac : Pour faire briller le titre au survol de la souris : #h1:hover { text-shadow: 0 0 8px #0284c7; }.",
+      "hoverNote": "Note Bac : Pour faire briller le titre au survol de la souris : #h1:hover { text-shadow: 0 0 8px #0284c7; }.",
       "videoSimType": "text-shadow-sim",
       "description": "La propriété text-shadow projette une ou plusieurs ombres sous les caractères du texte. On indique dans l'ordre : le décalage horizontal (X), le décalage vertical (Y), le rayon de flou (blur) et la couleur de l'ombre. Elle permet de créer des effets de relief, de profondeur ou de halo lumineux (néon).",
       "values": [
@@ -1142,7 +1142,7 @@ const DATA = {
       "summary": "Spécifie la façon de transformer les caractères d'un texte en majuscules ou minuscules (uppercase ; lowercase ; capitalize).",
       "howToUse": "uppercase transforme tout en majuscules, lowercase en minuscules, capitalize met la 1ère lettre de chaque mot en majuscule.",
       "code": "/* Met le texte de #h1 en majuscules automatiquement */\n#h1 {\n  text-transform: uppercase;\n}",
-      "hoverNote": "💡 Note Bac : Au survol de la souris : #h1:hover { text-transform: uppercase; }.",
+      "hoverNote": "Note Bac : Au survol de la souris : #h1:hover { text-transform: uppercase; }.",
       "videoSimType": "align-transform-sim",
       "description": "La propriété text-transform modifie la casse du texte sans avoir à réécrire le contenu HTML. 'uppercase' transforme toutes les lettres en majuscules (très fréquent sur les titres #h1 au Bac), 'lowercase' convertit tout en minuscules, et 'capitalize' met la première lettre de chaque mot en majuscule.",
       "values": [
@@ -1160,7 +1160,7 @@ const DATA = {
       "summary": "Spécifie la couleur du texte.",
       "howToUse": "Peut être un nom de couleur en anglais (red, blue, green) ou un code hexadécimal (#ff0000).",
       "code": "/* Définit la couleur du texte de #h1 en rouge */\n#h1 {\n  color: red;\n}",
-      "hoverNote": "💡 Note Bac : C'est la question la plus fréquente au Bac : changer la couleur au survol : #h1:hover { color: blue; }.",
+      "hoverNote": "Note Bac : C'est la question la plus fréquente au Bac : changer la couleur au survol : #h1:hover { color: blue; }.",
       "videoSimType": "font-sim",
       "description": "La propriété color définit la couleur d'affichage des caractères du texte. Elle s'exprime soit par un nom de couleur standard en anglais (red, blue, green, yellow, black, white), soit par un code hexadécimal commençant par # (ex: #ff0000, #0284c7) ou en rgb().",
       "values": [
@@ -1177,7 +1177,7 @@ const DATA = {
       "summary": "Définit le type de marqueur d'éléments de liste (circle ; square ; upper-roman ; lower-alpha).",
       "howToUse": "square donne des carrés pleins, circle des cercles vides, upper-roman des chiffres romains I, II, III.",
       "code": "/* Définit des marqueurs carrés pour la liste id=\"liste\" */\n#liste {\n  list-style-type: square;\n}",
-      "hoverNote": "💡 Note Bac : Pour changer la puce au survol de la souris : #liste li:hover { list-style-type: circle; color: red; }.",
+      "hoverNote": "Note Bac : Pour changer la puce au survol de la souris : #liste li:hover { list-style-type: circle; color: red; }.",
       "videoSimType": "list-style-sim",
       "description": "La propriété list-style-type change le symbole du marqueur (la puce) situé devant chaque élément d'une liste (<ul> ou <ol>). Elle permet de remplacer les disques pleins par des cercles évidés (circle), des carrés pleins (square), des chiffres romains en majuscules (upper-roman : I, II, III) ou des lettres minuscules (lower-alpha : a, b, c).",
       "values": [
@@ -1197,7 +1197,7 @@ const DATA = {
       "summary": "Spécifie la position des marqueurs d'éléments d'une liste à puces (outside ; inside).",
       "howToUse": "outside place la puce à l'extérieur du bloc de texte (défaut), inside place la puce à l'intérieur du texte.",
       "code": "#liste {\n  list-style-position: inside;\n}",
-      "hoverNote": "💡 Note Bac : Au survol de la souris : #liste:hover { list-style-position: inside; }.",
+      "hoverNote": "Note Bac : Au survol de la souris : #liste:hover { list-style-position: inside; }.",
       "videoSimType": "list-style-sim",
       "description": "La propriété list-style-position contrôle l'emplacement de la puce par rapport au bloc de texte de l'élément de liste. 'outside' (défaut) place la puce à l'extérieur de la colonne de texte, alors que 'inside' intègre la puce directement à l'intérieur du paragraphe de texte.",
       "values": [
@@ -1213,7 +1213,7 @@ const DATA = {
       "summary": "Spécifie une image comme marqueur d'éléments de liste.",
       "howToUse": "Utilise url('monImage.png') pour remplacer la puce classique par une petite image ou icône.",
       "code": "#liste {\n  list-style-image: url('icone.png');\n}",
-      "hoverNote": "💡 Note Bac : Au survol de la souris : #liste li:hover { list-style-image: url('icone2.png'); }.",
+      "hoverNote": "Note Bac : Au survol de la souris : #liste li:hover { list-style-image: url('icone2.png'); }.",
       "videoSimType": "list-style-sim",
       "description": "La propriété list-style-image remplace les marqueurs géométriques classiques par une petite image graphique personnalisée grâce à la fonction url('nom_image.png').",
       "values": [
@@ -1229,7 +1229,7 @@ const DATA = {
       "summary": "Super-propriété de liste. Combine list-style-type, list-style-position, list-style-image.",
       "howToUse": "Permet de tout regrouper en une ligne, ou de mettre 'none' pour supprimer les puces d'un menu.",
       "code": "/* Supprime les puces ou combine type et position sur #liste */\n#liste {\n  list-style: square inside;\n}",
-      "hoverNote": "💡 Note Bac : Au survol de la souris : #liste li:hover { list-style: circle outside; }.",
+      "hoverNote": "Note Bac : Au survol de la souris : #liste li:hover { list-style: circle outside; }.",
       "videoSimType": "list-style-sim",
       "description": "La super-propriété list-style combine list-style-type, list-style-position et list-style-image en une unique ligne. On l'utilise aussi avec la valeur 'none' (list-style: none;) pour enlever totalement les puces lors de la création d'un menu de navigation horizontal.",
       "values": [
@@ -1245,7 +1245,7 @@ const DATA = {
       "summary": "Définit la couleur d'arrière-plan d'un élément.",
       "howToUse": "Colore le fond de l'élément (ex: yellow, #e2e8f0, #0284c7).",
       "code": "/* Définit la couleur de fond du titre #h1 en jaune */\n#h1 {\n  background-color: yellow;\n}",
-      "hoverNote": "💡 Note Bac : Changement de fond classique au survol : #h1:hover { background-color: orange; }.",
+      "hoverNote": "Note Bac : Changement de fond classique au survol : #h1:hover { background-color: orange; }.",
       "videoSimType": "background-sim",
       "description": "La propriété background-color définit la couleur uniforme d'arrière-plan de l'élément (titre, paragraphe, boîte, cellule de tableau, page entière). Elle remplit toute la surface de la boîte jusqu'à sa bordure.",
       "values": [
@@ -1263,7 +1263,7 @@ const DATA = {
       "summary": "Définit une image d'arrière-plan pour un élément.",
       "howToUse": "Indiquez l'URL ou le nom du fichier image entre guillemets dans url('image.jpg').",
       "code": "/* Applique une image de fond à la boîte #boite */\n#boite {\n  background-image: url('fond.jpg');\n}",
-      "hoverNote": "💡 Note Bac : Au survol de la souris : #boite:hover { background-image: url('fond2.jpg'); }.",
+      "hoverNote": "Note Bac : Au survol de la souris : #boite:hover { background-image: url('fond2.jpg'); }.",
       "videoSimType": "background-sim",
       "description": "La propriété background-image applique une image en arrière-plan derrière le contenu de l'élément. L'adresse de l'image est indiquée dans la fonction url('nom_fichier.jpg').",
       "values": [
@@ -1279,7 +1279,7 @@ const DATA = {
       "summary": "Définit la façon dont une image d'arrière-plan est répétée (repeat ; repeat-x ; repeat-y ; no-repeat).",
       "howToUse": "no-repeat empêche l'image de se dédoubler ; repeat-x répète uniquement horizontalement.",
       "code": "#boite {\n  background-image: url('motif.png');\n  background-repeat: no-repeat;\n}",
-      "hoverNote": "💡 Note Bac : Au survol de la souris : #boite:hover { background-repeat: repeat-x; }.",
+      "hoverNote": "Note Bac : Au survol de la souris : #boite:hover { background-repeat: repeat-x; }.",
       "videoSimType": "background-sim",
       "description": "La propriété background-repeat régit la manière dont l'image de fond est dupliquée si elle est plus petite que la boîte. 'no-repeat' empêche l'image de se répéter (très fréquent en examen), 'repeat-x' la répète uniquement sur l'axe horizontal, et 'repeat-y' sur l'axe vertical.",
       "values": [
@@ -1297,7 +1297,7 @@ const DATA = {
       "summary": "Spécifie la taille d'une image d'arrière-plan (cover ; contain ; dimensions en px ou %).",
       "howToUse": "cover adapte l'image pour couvrir toute la boîte ; 100% 100% étire l'image exactement à la boîte.",
       "code": "#boite {\n  background-image: url('photo.jpg');\n  background-size: cover;\n}",
-      "hoverNote": "💡 Note Bac : Au survol de la souris : #boite:hover { background-size: 110%; }.",
+      "hoverNote": "Note Bac : Au survol de la souris : #boite:hover { background-size: 110%; }.",
       "videoSimType": "background-sim",
       "description": "La propriété background-size redimensionne l'image d'arrière-plan. 'cover' étire et recadre l'image pour recouvrir entièrement toute la boîte sans déformation, tandis que '100% 100%' l'étire exactement aux dimensions de la boîte.",
       "values": [
@@ -1314,7 +1314,7 @@ const DATA = {
       "summary": "Super-propriété d'arrière-plan. Combine background-color, background-image, background-repeat, background-size.",
       "howToUse": "Regroupe la couleur, l'image et la répétition en une seule instruction.",
       "code": "/* Super-propriété combinée sur la boîte #boite */\n#boite {\n  background: #f0f0f0 url('motif.png') no-repeat;\n}",
-      "hoverNote": "💡 Note Bac : Au survol de la souris : #boite:hover { background: #fee2e2 url('motif.png') no-repeat; }.",
+      "hoverNote": "Note Bac : Au survol de la souris : #boite:hover { background: #fee2e2 url('motif.png') no-repeat; }.",
       "videoSimType": "background-sim",
       "description": "La super-propriété background rassemble couleur, image, répétition et taille en une seule ligne d'instruction rapide. Exemple Bac : background: #f0f0f0 url('fond.jpg') no-repeat center / cover;",
       "values": [
@@ -1329,7 +1329,7 @@ const DATA = {
       "summary": "Applique un effet de transformation 2D ou 3D à un élément (rotate() ; skew() ; scale() ; translate()).",
       "howToUse": "rotate(deg) effectue une rotation ; scale(facteur) agrandit ou rétrécit ; translate(x,y) déplace ; skew(deg) incline.",
       "code": "/* Effectue une rotation de 10 degrés sur le titre #h1 */\n#h1 {\n  transform: rotate(10deg);\n}",
-      "hoverNote": "💡 Note Bac : Utilisé très souvent avec :hover pour zoomer ou tourner au survol : #h1:hover { transform: scale(1.1) rotate(5deg); }.",
+      "hoverNote": "Note Bac : Utilisé très souvent avec :hover pour zoomer ou tourner au survol : #h1:hover { transform: scale(1.1) rotate(5deg); }.",
       "videoSimType": "transform-sim",
       "description": "La propriété transform applique des transformations géométriques en 2D ou 3D à l'élément sans altérer le flux normal du document. Les 4 fonctions au programme du Bac sont : rotate(angle en deg) pour tourner, scale(facteur) pour zoomer ou réduire, translate(X, Y) pour déplacer, et skew(angle en deg) pour incliner.",
       "values": [
@@ -1348,7 +1348,7 @@ const DATA = {
       "summary": "Définit un filtre pour un élément (blur() ; grayscale() ; sepia() ; brightness() ; contrast()).",
       "howToUse": "grayscale(100%) rend l'image en noir et blanc ; blur(4px) applique un flou.",
       "code": "/* Passe l'image id=\"img1\" en noir et blanc */\n#img1 {\n  filter: grayscale(100%);\n}",
-      "hoverNote": "💡 Note Bac : Au survol de la souris, on rétablit la couleur naturelle : #img1:hover { filter: grayscale(0%); }.",
+      "hoverNote": "Note Bac : Au survol de la souris, on rétablit la couleur naturelle : #img1:hover { filter: grayscale(0%); }.",
       "videoSimType": "filter-sim",
       "description": "La propriété filter applique des effets optiques et graphiques directement sur une image (#img1) ou un conteneur. Au Bac STI, grayscale(100%) est la plus demandée pour afficher une image en noir et blanc complet, et blur(4px) pour appliquer un flou gaussien.",
       "values": [
@@ -1368,7 +1368,7 @@ const DATA = {
       "summary": "Définit la largeur d'un élément (en pixel px ou en pourcentage %).",
       "howToUse": "Fixe la dimension horizontale de la boîte ou de l'image (ex: width: 300px; ou width: 80%;).",
       "code": "/* Définit la largeur de la boîte #boite à 300px */\n#boite {\n  width: 300px;\n}",
-      "hoverNote": "💡 Note Bac : Pour élargir au survol de la souris : #boite:hover { width: 350px; }.",
+      "hoverNote": "Note Bac : Pour élargir au survol de la souris : #boite:hover { width: 350px; }.",
       "videoSimType": "boxmodel-sim",
       "description": "La propriété width définit la largeur du contenu de la boîte ou de l'image. Elle s'exprime en pixels (px) pour une mesure fixe ou en pourcentage (%) pour s'adapter à la largeur de l'écran ou de l'élément parent.",
       "values": [
@@ -1385,7 +1385,7 @@ const DATA = {
       "summary": "Définit la hauteur d'un élément (en pixel px ou en pourcentage %).",
       "howToUse": "Fixe la dimension verticale de la boîte (ex: height: 150px;).",
       "code": "/* Définit la hauteur de la boîte #boite à 150px */\n#boite {\n  height: 150px;\n}",
-      "hoverNote": "💡 Note Bac : Pour agrandir en hauteur au survol : #boite:hover { height: 180px; }.",
+      "hoverNote": "Note Bac : Pour agrandir en hauteur au survol : #boite:hover { height: 180px; }.",
       "videoSimType": "boxmodel-sim",
       "description": "La propriété height définit la hauteur du contenu de la boîte. Elle s'exprime généralement en pixels (px). Si le contenu intérieur dépasse cette hauteur, utilisez overflow pour gérer le débordement.",
       "values": [
@@ -1402,7 +1402,7 @@ const DATA = {
       "summary": "Spécifie le type de la méthode de positionnement utilisée pour un élément (absolute ; fixed ; relative ; static ; sticky).",
       "howToUse": "relative permet de décaler l'élément par rapport à sa place normale avec top/left ; absolute le place par rapport à son parent.",
       "code": "#boite {\n  position: relative;\n  top: 10px;\n  left: 20px;\n}",
-      "hoverNote": "💡 Note Bac : Pour déplacer au survol de la souris : #boite:hover { top: -5px; }.",
+      "hoverNote": "Note Bac : Pour déplacer au survol de la souris : #boite:hover { top: -5px; }.",
       "videoSimType": "position-sim",
       "description": "La propriété position spécifie le mode de calcul des coordonnées de l'élément : 'relative' décale l'élément par rapport à son emplacement initial avec top/left ; 'absolute' le détache du flux pour le placer par rapport au premier parent positionné ; 'fixed' le fige à l'écran lors du défilement ; 'static' est la position par défaut.",
       "values": [
@@ -1421,7 +1421,7 @@ const DATA = {
       "summary": "Place/Fait flotter un élément dans un conteneur (left ; right ; none).",
       "howToUse": "Fait flotter une image à gauche (left) ou à droite (right) pour que le texte coule autour d'elle.",
       "code": "/* Fait flotter l'image #img1 à gauche */\n#img1 {\n  float: left;\n  margin-right: 15px;\n}",
-      "hoverNote": "💡 Note Bac : Au survol de la souris : #img1:hover { opacity: 0.8; }.",
+      "hoverNote": "Note Bac : Au survol de la souris : #img1:hover { opacity: 0.8; }.",
       "videoSimType": "boxmodel-sim",
       "description": "La propriété float fait flotter un élément (souvent une image #img1 ou un bloc) à gauche (left) ou à droite (right) de son conteneur, permettant au texte suivant d'envelopper son contour.",
       "values": [
@@ -1438,7 +1438,7 @@ const DATA = {
       "summary": "Marge INTÉRIEURE : espace de respiration interne entre le contenu (texte) et la bordure.",
       "howToUse": "Crée un espace d'aération interne entre le contenu texte (#contenu) et la bordure extérieure de la boîte (#boite). Ne repousse pas les voisins extérieurs.",
       "code": "/* Marge intérieure de 15px autour du texte de #boite */\n#boite {\n  padding: 15px;\n}",
-      "hoverNote": "💡 Note Bac : Pour augmenter la marge intérieure au survol : #boite:hover { padding: 25px; }.",
+      "hoverNote": "Note Bac : Pour augmenter la marge intérieure au survol : #boite:hover { padding: 25px; }.",
       "videoSimType": "boxmodel-sim",
       "description": "La propriété padding définit la marge INTÉRIEURE située DEDANS la boîte, entre le contenu (texte, bouton ou image) et la bordure (border). Elle apporte du confort de lecture et de l'aération en évitant que les lettres ne touchent les bords du cadre. Contrairement à margin (qui repousse les voisins dehors), padding gonfle la boîte de l'intérieur.",
       "values": [
@@ -1455,7 +1455,7 @@ const DATA = {
       "summary": "Marge EXTÉRIEURE : espace situé en dehors de la boîte qui repousse les éléments voisins.",
       "howToUse": "Repousse les éléments voisins en dehors de la boîte. 'margin: 20px auto;' permet d'espacer de 20px en haut/bas et de centrer horizontalement l'élément dans son conteneur.",
       "code": "/* Marge extérieure de 20px et centrage horizontal */\n#boite {\n  margin: 20px auto;\n}",
-      "hoverNote": "💡 Note Bac : Au survol de la souris pour créer un décalage externe : #boite:hover { margin-top: 10px; }.",
+      "hoverNote": "Note Bac : Au survol de la souris pour créer un décalage externe : #boite:hover { margin-top: 10px; }.",
       "videoSimType": "boxmodel-sim",
       "description": "La propriété margin définit la marge EXTÉRIEURE située HORS du cadre de l'élément (#boite). Contrairement au padding (qui agit à l'intérieur), margin repousse physiquement les autres éléments frères ou les bords du conteneur parent. L'écriture 'margin: auto;' ou 'margin: 0 auto;' est la technique officielle au Baccalauréat STI pour centrer parfaitement un bloc (<div id=\"boite\">, <table id=\"tab\">) sur la page.",
       "values": [
@@ -1472,7 +1472,7 @@ const DATA = {
       "summary": "Ajoute des ombres à la boîte d'un élément (décalage-x, décalage-y, flou, couleur).",
       "howToUse": "Syntaxe : box-shadow: decalageX decalageY flou couleur; (ex: 5px 5px 10px #888888).",
       "code": "/* Ajoute une ombre portée sur la boîte #boite */\n#boite {\n  box-shadow: 5px 5px 10px #888888;\n}",
-      "hoverNote": "💡 Note Bac : Très fréquent au Bac : faire flotter au survol avec une ombre plus marquée : #boite:hover { box-shadow: 10px 10px 20px #555555; }.",
+      "hoverNote": "Note Bac : Très fréquent au Bac : faire flotter au survol avec une ombre plus marquée : #boite:hover { box-shadow: 10px 10px 20px #555555; }.",
       "videoSimType": "box-shadow-sim",
       "description": "La propriété box-shadow projette une ombre portée tout autour du rectangle de la boîte. On indique dans l'ordre : le décalage horizontal (X), le décalage vertical (Y), le rayon de flou (blur) et la couleur de l'ombre (ex: 5px 5px 10px #888888). Elle donne un relief 3D saisissant aux cartes et boutons.",
       "values": [
@@ -1487,7 +1487,7 @@ const DATA = {
       "summary": "Spécifie le comportement d'affichage d'un élément (inline ; block ; inline-block ; none).",
       "howToUse": "block donne une largeur de 100% avec saut de ligne ; inline reste sur la même ligne ; none masque l'élément.",
       "code": "/* Transforme le lien #lien en élément de type block */\n#lien {\n  display: block;\n}",
-      "hoverNote": "💡 Note Bac : Au survol de la souris : #lien:hover { background-color: yellow; }.",
+      "hoverNote": "Note Bac : Au survol de la souris : #lien:hover { background-color: yellow; }.",
       "videoSimType": "display-opacity-sim",
       "description": "La propriété display change la manière dont un élément s'insère dans la page : 'block' fait occuper à l'élément toute la largeur disponible avec un saut de ligne automatique ; 'inline' l'affiche sur la même ligne sans saut ; 'inline-block' garde l'alignement sur la même ligne tout en permettant de lui donner width, height et padding ; 'none' masque complètement l'élément.",
       "values": [
@@ -1505,7 +1505,7 @@ const DATA = {
       "summary": "Spécifie la position verticale, par rapport au haut/bas, et horizontale, par rapport à la gauche/droite d'un élément positionné.",
       "howToUse": "Fonctionne uniquement si la propriété position (relative, absolute ou fixed) est définie.",
       "code": "#boite {\n  position: absolute;\n  top: 50px;\n  left: 100px;\n}",
-      "hoverNote": "💡 Note Bac : Pour déplacer au survol de la souris : #boite:hover { top: 40px; }.",
+      "hoverNote": "Note Bac : Pour déplacer au survol de la souris : #boite:hover { top: 40px; }.",
       "videoSimType": "position-sim",
       "description": "Ces 4 propriétés (top, bottom, left, right) définissent le décalage précis en pixels ou pourcentage de l'élément par rapport aux bords haut, bas, gauche et droite. ATTENTION : elles ne fonctionnent que si l'élément possède une propriété position différente de static (position: relative, absolute ou fixed).",
       "values": [
@@ -1522,7 +1522,7 @@ const DATA = {
       "summary": "Spécifie le comportement du contenu lorsqu'il déborde de la boîte d'un élément (visible ; hidden ; clip ; scroll ; auto).",
       "howToUse": "hidden masque ce qui dépasse ; scroll ajoute toujours des barres de défilement ; auto en ajoute si nécessaire.",
       "code": "/* Masque tout ce qui déborde de la boîte #boite */\n#boite {\n  width: 200px;\n  height: 100px;\n  overflow: hidden;\n}",
-      "hoverNote": "💡 Note Bac : Au survol de la souris : #boite:hover { overflow: visible; }.",
+      "hoverNote": "Note Bac : Au survol de la souris : #boite:hover { overflow: visible; }.",
       "videoSimType": "display-opacity-sim",
       "description": "La propriété overflow détermine ce qui se passe lorsque le contenu intérieur d'un élément dépasse la taille (width ou height) de sa boîte : 'hidden' coupe et masque tout ce qui déborde ; 'scroll' ajoute obligatoirement des barres de défilement horizontale et verticale ; 'auto' n'affiche la barre de défilement que si le contenu déborde réellement ; 'visible' laisse déborder le contenu à l'extérieur.",
       "values": [
@@ -1540,7 +1540,7 @@ const DATA = {
       "summary": "Définit le niveau de transparence d'un élément (de 0.0 complètement transparent à 1.0 opaque).",
       "howToUse": "0.5 rend l'élément semi-transparent à 50%.",
       "code": "/* Rend la boîte #boite semi-transparente */\n#boite {\n  opacity: 0.5;\n}",
-      "hoverNote": "💡 Note Bac : Classique d'examen : rendre totalement opaque au survol de la souris : #boite:hover { opacity: 1.0; }.",
+      "hoverNote": "Note Bac : Classique d'examen : rendre totalement opaque au survol de la souris : #boite:hover { opacity: 1.0; }.",
       "videoSimType": "display-opacity-sim",
       "description": "La propriété opacity contrôle le degré de transparence globale de l'élément et de tout ce qu'il contient. Sa valeur s'exprime par un nombre décimal entre 0.0 (totalement invisible et transparent) et 1.0 (totalement opaque et visible). Exemple Bac : opacity: 0.5 donne une semi-transparence à 50%.",
       "values": [
@@ -1557,7 +1557,7 @@ const DATA = {
       "summary": "Définit la couleur des bordures d'un élément.",
       "howToUse": "Spécifie la couleur du cadre (ex: red, blue, #0284c7).",
       "code": "/* Définit la couleur de bordure de #boite en rouge */\n#boite {\n  border-style: solid;\n  border-color: red;\n}",
-      "hoverNote": "💡 Note Bac : Pour changer la couleur de bordure au survol : #boite:hover { border-color: blue; }.",
+      "hoverNote": "Note Bac : Pour changer la couleur de bordure au survol : #boite:hover { border-color: blue; }.",
       "videoSimType": "border-sim",
       "description": "La propriété border-color définit la couleur du trait de bordure autour de l'élément. Elle s'utilise conjointement avec border-style et border-width.",
       "values": [
@@ -1574,7 +1574,7 @@ const DATA = {
       "summary": "Définit le style des bordures d'un élément (solid ; dashed ; dotted ; double ; none).",
       "howToUse": "solid = trait plein ; dashed = tirets ; dotted = pointillés ; double = double ligne.",
       "code": "/* Bordure en trait plein pour la boîte #boite */\n#boite {\n  border-style: solid;\n}",
-      "hoverNote": "💡 Note Bac : Pour passer en pointillés au survol de la souris : #boite:hover { border-style: dashed; }.",
+      "hoverNote": "Note Bac : Pour passer en pointillés au survol de la souris : #boite:hover { border-style: dashed; }.",
       "videoSimType": "border-sim",
       "description": "La propriété border-style détermine l'aspect graphique du tracé de la bordure. Sans cette propriété (ou si elle vaut 'none'), aucune bordure n'apparaît ! 'solid' trace une ligne continue pleine, 'dashed' trace une ligne de tirets, 'dotted' des pointillés, et 'double' deux lignes parallèles.",
       "values": [
@@ -1593,7 +1593,7 @@ const DATA = {
       "summary": "Définit le rayon des coins arrondis d'un élément.",
       "howToUse": "10px arrondit légèrement les 4 angles ; 50% transforme un carré en cercle parfait.",
       "code": "/* Arrondit les coins de la boîte #boite de 10px */\n#boite {\n  border: 2px solid #0284c7;\n  border-radius: 10px;\n}",
-      "hoverNote": "💡 Note Bac : Pour accentuer l'arrondi au survol : #boite:hover { border-radius: 25px; }.",
+      "hoverNote": "Note Bac : Pour accentuer l'arrondi au survol : #boite:hover { border-radius: 25px; }.",
       "videoSimType": "border-sim",
       "description": "La propriété border-radius adoucit et arrondit les 4 angles de la boîte. Plus le rayon en pixels est grand, plus les coins sont arrondis. Une valeur de 50% sur une boîte carrée la transforme instantanément en cercle parfait !",
       "values": [
@@ -1610,7 +1610,7 @@ const DATA = {
       "summary": "Définit la largeur des bordures d'un élément (medium ; thin ; thick ; valeur en px).",
       "howToUse": "Définit l'épaisseur du trait (ex: 1px, 2px, 5px).",
       "code": "/* Épaisseur de 3px sur #boite */\n#boite {\n  border-style: solid;\n  border-width: 3px;\n}",
-      "hoverNote": "💡 Note Bac : Pour épaissir la bordure au survol de la souris : #boite:hover { border-width: 5px; }.",
+      "hoverNote": "Note Bac : Pour épaissir la bordure au survol de la souris : #boite:hover { border-width: 5px; }.",
       "videoSimType": "border-sim",
       "description": "La propriété border-width spécifie l'épaisseur du trait de la bordure. Elle s'exprime en pixels (px) pour une mesure précise (ex: 1px, 2px, 4px) ou par les mots-clés thin (fin), medium (moyen) ou thick (épais).",
       "values": [
@@ -1628,7 +1628,7 @@ const DATA = {
       "summary": "Super-propriété de bordure. Combine border-color, border-style, border-width, border-radius.",
       "howToUse": "Syntaxe standard au Bac : border: epaisseur style couleur; (ex: 2px solid red).",
       "code": "/* Définit une bordure complète de 2px solide rouge sur #boite */\n#boite {\n  border: 2px solid red;\n}",
-      "hoverNote": "💡 Note Bac : Pour changer la bordure au survol de la souris : #boite:hover { border: 2px solid blue; }.",
+      "hoverNote": "Note Bac : Pour changer la bordure au survol de la souris : #boite:hover { border: 2px solid blue; }.",
       "videoSimType": "border-sim",
       "description": "La super-propriété border est la formule standard incontournable du Baccalauréat STI ! Elle réunit en une seule ligne : l'épaisseur (width), le style de tracé (style) et la couleur (color). Exemple officiel : border: 2px solid red;",
       "values": [
@@ -1643,7 +1643,7 @@ const DATA = {
       "summary": "Spécifie le délai nécessaire avant que la transition commence (en secondes s ou ms).",
       "howToUse": "Ex: 1s attend 1 seconde avant de démarrer l'animation.",
       "code": "#boite {\n  transition-delay: 1s;\n}",
-      "hoverNote": "💡 Note Bac : Définit le temps d'attente avant que l'effet :hover ne démarre.",
+      "hoverNote": "Note Bac : Définit le temps d'attente avant que l'effet :hover ne démarre.",
       "videoSimType": "transition-sim",
       "description": "La propriété transition-delay indique le temps d'attente (délai en secondes 's') avant que la transition ne commence à s'animer après le passage de la souris (:hover). Une valeur de 1s attendra 1 seconde avant de débuter l'effet.",
       "values": [
@@ -1659,7 +1659,7 @@ const DATA = {
       "summary": "Spécifie la durée de la transition (en secondes s).",
       "howToUse": "Définit le temps que met l'effet à s'accomplir (ex: 2s pour 2 secondes).",
       "code": "#boite {\n  transition-duration: 2s;\n}",
-      "hoverNote": "💡 Note Bac : Permet de rendre l'effet de #boite:hover doux et progressif pendant 2 secondes.",
+      "hoverNote": "Note Bac : Permet de rendre l'effet de #boite:hover doux et progressif pendant 2 secondes.",
       "videoSimType": "transition-sim",
       "description": "La propriété transition-duration détermine la durée totale que met la transformation à s'accomplir en douceur de l'état A vers l'état B. Par exemple, transition-duration: 2s étale l'animation sur 2 secondes entières.",
       "values": [
@@ -1675,7 +1675,7 @@ const DATA = {
       "summary": "Spécifie les propriétés CSS sur lesquelles l'effet de transition sera appliqué.",
       "howToUse": "Ex: width pour animer uniquement la largeur, ou all pour toutes les propriétés.",
       "code": "#boite {\n  transition-property: width, background-color;\n}",
-      "hoverNote": "💡 Note Bac : Indique quelle propriété changera en douceur lors du survol :hover.",
+      "hoverNote": "Note Bac : Indique quelle propriété changera en douceur lors du survol :hover.",
       "videoSimType": "transition-sim",
       "description": "La propriété transition-property nomme explicitement quelles propriétés CSS précises doivent être animées lors du changement d'état (ex: width, background-color, transform). On peut utiliser le mot-clé 'all' pour animer toutes les propriétés modifiées en même temps.",
       "values": [
@@ -1691,7 +1691,7 @@ const DATA = {
       "summary": "Super-propriété de transition. Combine transition-property, transition-duration et transition-delay.",
       "howToUse": "RÈGLE D'OR STI : Se place sur l'élément de base #boite pour rendre le survol :hover fluide !",
       "code": "/* Transition de 2 secondes sur la largeur de #boite */\n#boite {\n  width: 100px;\n  transition: width 2s;\n}\n\n#boite:hover {\n  width: 200px;\n}",
-      "hoverNote": "💡 Note Bac : La transition est créée spécifiquement pour adoucir le survol :hover !",
+      "hoverNote": "Note Bac : La transition est créée spécifiquement pour adoucir le survol :hover !",
       "videoSimType": "transition-sim",
       "description": "La super-propriété transition condense en une ligne : la propriété ciblée, la durée et le délai. RÈGLE D'OR STI : elle se place toujours sur l'élément de base (#boite) pour que le mouvement soit fluide à l'aller comme au retour du survol de la souris (:hover) !",
       "values": [
@@ -1706,7 +1706,7 @@ const DATA = {
       "summary": "Spécifie les étapes clés de l'animation en pourcentages (0%, 50%, 100%) ou avec from / to.",
       "howToUse": "Définit le scénario de l'animation avec son nom et ses étapes en pourcentages %.",
       "code": "/* Déclaration des étapes clés avec pourcentages (%) */\n@keyframes animCouleur {\n  0% {\n    background-color: #ef4444;\n    transform: scale(1);\n  }\n  50% {\n    background-color: #f59e0b;\n    transform: scale(1.2) rotate(6deg);\n  }\n  100% {\n    background-color: #10b981;\n    transform: scale(1);\n  }\n}\n\n#boite {\n  animation: animCouleur 3s infinite alternate;\n}",
-      "hoverNote": "💡 Note Bac : Une animation déclarée avec @keyframes peut ensuite être déclenchée sur #boite ou #boite:hover.",
+      "hoverNote": "Note Bac : Une animation déclarée avec @keyframes peut ensuite être déclenchée sur #boite ou #boite:hover.",
       "videoSimType": "animation-sim",
       "description": "La règle @keyframes définit les étapes intermédiaires d'une animation en utilisant des pourcentages (%) : 0% (début), 50% (milieu), 100% (fin), ou from / to. À chaque pourcentage, vous définissez les styles CSS (couleurs, positions, rotations, dimensions) que le navigateur anime de manière fluide et continue.",
       "values": [
@@ -1726,7 +1726,7 @@ const DATA = {
       "summary": "Spécifie le nom de l'animation déclarée dans @keyframes.",
       "howToUse": "Relie la boîte #boite à la règle @keyframes anim1.",
       "code": "#boite {\n  animation-name: anim1;\n}",
-      "hoverNote": "💡 Note Bac : Au survol de la souris : #boite:hover { animation-name: anim1; }.",
+      "hoverNote": "Note Bac : Au survol de la souris : #boite:hover { animation-name: anim1; }.",
       "videoSimType": "animation-sim",
       "description": "La propriété animation-name fait le lien entre l'élément HTML (#boite) et le scénario d'animation déclaré préalablement dans la règle @keyframes (ex: animation-name: anim1;).",
       "values": [
@@ -1741,7 +1741,7 @@ const DATA = {
       "summary": "Spécifie le délai nécessaire avant que l'animation commence.",
       "howToUse": "Indique le temps d'attente (ex: 1s) avant le démarrage de l'animation.",
       "code": "#boite {\n  animation-delay: 1s;\n}",
-      "hoverNote": "💡 Note Bac : Définit le temps d'attente au survol de la souris :hover.",
+      "hoverNote": "Note Bac : Définit le temps d'attente au survol de la souris :hover.",
       "videoSimType": "animation-sim",
       "description": "La propriété animation-delay spécifie le temps d'attente (en secondes) avant le déclenchement de la première itération de l'animation une fois la page chargée ou l'élément survolé.",
       "values": [
@@ -1757,7 +1757,7 @@ const DATA = {
       "summary": "Spécifie la durée d'un cycle complet de l'animation.",
       "howToUse": "Ex: 3s pour que l'animation prenne 3 secondes de 0% à 100%.",
       "code": "#boite {\n  animation-duration: 3s;\n}",
-      "hoverNote": "💡 Note Bac : Au survol : #boite:hover { animation-duration: 1s; }.",
+      "hoverNote": "Note Bac : Au survol : #boite:hover { animation-duration: 1s; }.",
       "videoSimType": "animation-sim",
       "description": "La propriété animation-duration définit le temps nécessaire en secondes (s) pour exécuter un cycle complet de l'animation du début (0%) à la fin (100%).",
       "values": [
@@ -1772,7 +1772,7 @@ const DATA = {
       "summary": "Spécifie le nombre de répétitions de l'animation (nombre ou infinite).",
       "howToUse": "infinite répète l'animation en boucle sans fin.",
       "code": "#boite {\n  animation-iteration-count: infinite;\n}",
-      "hoverNote": "💡 Note Bac : Au survol de la souris : #boite:hover { animation-iteration-count: infinite; }.",
+      "hoverNote": "Note Bac : Au survol de la souris : #boite:hover { animation-iteration-count: infinite; }.",
       "videoSimType": "animation-sim",
       "description": "La propriété animation-iteration-count spécifie combien de fois l'animation doit se rejouer. On peut donner un nombre entier précis (ex: 3 pour trois répétitions) ou le mot-clé 'infinite' pour que l'animation boucle sans fin indéfiniment.",
       "values": [
@@ -1788,7 +1788,7 @@ const DATA = {
       "summary": "Définit la direction de l'animation (normal ; reverse ; alternate).",
       "howToUse": "alternate fait l'animation de départ vers la fin puis revient en arrière en boucle continue.",
       "code": "#boite {\n  animation-direction: alternate;\n}",
-      "hoverNote": "💡 Note Bac : Au survol : #boite:hover { animation-direction: alternate; }.",
+      "hoverNote": "Note Bac : Au survol : #boite:hover { animation-direction: alternate; }.",
       "videoSimType": "animation-sim",
       "description": "La propriété animation-direction détermine le sens de lecture du cycle d'animation : 'normal' joue toujours de 0% vers 100% ; 'reverse' joue à l'envers de 100% vers 0% ; 'alternate' joue de 0% à 100% puis fait marche arrière de 100% à 0% en va-et-vient continu et fluide.",
       "values": [
@@ -1805,7 +1805,7 @@ const DATA = {
       "summary": "Super-propriété de l'animation. Combine animation-name, animation-duration, animation-delay, animation-iteration-count, animation-direction.",
       "howToUse": "Syntaxe classique du Bac : animation: nom duree iteration-count direction; (ex: anim1 3s infinite alternate;).",
       "code": "/* Déclenche l'animation complète sur la boîte #boite */\n#boite {\n  animation: anim1 3s infinite alternate;\n}",
-      "hoverNote": "💡 Note Bac : Pour lancer l'animation uniquement lorsque la souris survole la boîte : #boite:hover { animation: anim1 2s infinite alternate; }.",
+      "hoverNote": "Note Bac : Pour lancer l'animation uniquement lorsque la souris survole la boîte : #boite:hover { animation: anim1 2s infinite alternate; }.",
       "videoSimType": "animation-sim",
       "description": "La super-propriété animation est la formule synthétique complète utilisée en examen pour lancer l'animation : animation: nom duree repetition direction; Exemple officiel Bac : animation: anim1 3s infinite alternate;",
       "values": [
@@ -2114,7 +2114,7 @@ const DATA = {
         "element.innerHTML = 'texte'",
         "element.innerHTML = '<b>Gras</b>'"
       ],
-      "code": "// Afficher un message de validation stylé sans recharger la page\nfunction afficherStatut() {\n  var zone = document.getElementById(\"zoneMessage\");\n  zone.innerHTML = \"<span style='color: green; font-weight: bold;'>✔ Données enregistrées avec succès !</span>\";\n}",
+      "code": "// Afficher un message de validation stylé sans recharger la page\nfunction afficherStatut() {\n  var zone = document.getElementById(\"zoneMessage\");\n  zone.innerHTML = \"<span style='color: green; font-weight: bold;'>Données enregistrées avec succès !</span>\";\n}",
       "runnableCode": "// Exemple conceptuel\nvar contenu = \"<span style='color:green;'>Succès !</span>\";\nconsole.log(\"Contenu injecté via innerHTML : \" + contenu);"
     },
     {
@@ -2767,7 +2767,7 @@ const DATA = {
         "req == '' || req.length > 50"
       ],
       "code": "function verif() {\n  // Récupération des valeurs des champs\n  let np = document.getElementById(\"np\").value;\n  let ntel = document.getElementById(\"ntel\").value;\n  let mail = document.getElementById(\"mail\").value;\n  let mps = document.getElementById(\"mps\").value;\n  let cfmps = document.getElementById(\"cfmps\").value;\n  let adr = document.getElementById(\"adr\").value;\n  let vil = document.getElementById(\"vill\");\n  let cp = document.getElementById(\"cp\").value;\n  let req = document.getElementById(\"rq\").value;\n\n  // Validation du cocher civilité 1ére méthode\n  /* let f = document.getElementById('f').checked;\n     let h = document.getElementById('h').checked;\n     if (f == false && h == false) {\n       alert('Veuillez cocher la civilité');\n       return false;\n     }\n  */\n\n  // Validation du cocher civilité 2ème Méthode\n  let civ = document.getElementsByName(\"civ\");\n  if (civ[0].checked == false && civ[1].checked == false) {\n    alert(\"Veuillez cocher la civilité\");\n    return false;\n  }\n\n  // Validation du champ Nom et prénom\n  if (np == \"\" || np.length > 30 || alpha(np) == false) {\n    alert(\"Nom vide ou incorrect\");\n    return false;\n  }\n\n  // Validation du champ Numéro téléphone\n  if (ntel.length != 8 || testtel(ntel) == false || isnum(ntel) == false) {\n    alert(\"numéro téléphone vide ou incorrect\");\n    return false;\n  }\n\n  // Validation du champ Mail\n  if (mail == \"\" || mail.indexOf(\"@\") == -1 || testmail(mail) == false) {\n    alert(\"Mail obligatoire ou invalide\");\n    return false;\n  }\n\n  // Validation du champ mot de passe\n  if (mps.length != 8) {\n    alert(\"Mot de Passe obligatoire ou invalide\");\n    return false;\n  }\n\n  // Validation du confirmation du mot de passe\n  if (cfmps != mps) {\n    alert(\"Mot de Passe incorrect\");\n    document.getElementById('cfmps').style.backgroundColor = 'red';\n    return false;\n  }\n\n  // Validation du champ Adresse\n  if (adr == \"\" || adr.indexOf(\" \") == -1) {\n    alert(\"adresse vide ou incorrecte\");\n    return false;\n  }\n\n  // Validation du cocher ville\n  if (vil.selectedIndex == 0) {\n    alert(\"selectionner une ville\");\n    return false;\n  }\n\n  // Validation du champ code postal\n  if (Number(cp) < 1000 || Number(cp) > 9999) {\n    alert(\"code postal obligatoire ou invalid\");\n    return false;\n  }\n\n  // Validation du champ Remarque\n  if (req == \"\" || req.length > 50) {\n    alert(\"remarque obligatoire ou invalid\");\n    return false;\n  }\n} /// fin fonction verif",
-      "runnableCode": "console.log(\"=== SIMULATION DE VERIF() AU BAC STI ===\");\nconsole.log(\"1. Civilité : civ[0].checked et civ[1].checked vérifiés.\");\nconsole.log(\"2. Nom et Prénom : longueur <= 30 et alpha(np) == true.\");\nconsole.log(\"3. Tél : 8 chiffres exacts, premier chiffre valide (testtel) et isnum.\");\nconsole.log(\"4. Mail : non vide, présence de '@' et format testmail valide.\");\nconsole.log(\"5. Mot de passe : longueur == 8.\");\nconsole.log(\"6. Confirmation : si cfmps != mps, style.backgroundColor = 'red'.\");\nconsole.log(\"7. Adresse : présence obligatoire d'au moins un espace ' ' (indexOf != -1).\");\nconsole.log(\"8. Ville : menu déroulant vil.selectedIndex != 0.\");\nconsole.log(\"9. Code postal : Number(cp) entre 1000 et 9999 (4 chiffres).\");\nconsole.log(\"10. Remarque : non vide et longueur <= 50 caractères.\");\nconsole.log(\"✓ Tous les contrôles sont conformes au barème officiel du Bac STI !\");"
+      "runnableCode": "console.log(\"=== SIMULATION DE VERIF() AU BAC STI ===\");\nconsole.log(\"1. Civilité : civ[0].checked et civ[1].checked vérifiés.\");\nconsole.log(\"2. Nom et Prénom : longueur <= 30 et alpha(np) == true.\");\nconsole.log(\"3. Tél : 8 chiffres exacts, premier chiffre valide (testtel) et isnum.\");\nconsole.log(\"4. Mail : non vide, présence de '@' et format testmail valide.\");\nconsole.log(\"5. Mot de passe : longueur == 8.\");\nconsole.log(\"6. Confirmation : si cfmps != mps, style.backgroundColor = 'red'.\");\nconsole.log(\"7. Adresse : présence obligatoire d'au moins un espace ' ' (indexOf != -1).\");\nconsole.log(\"8. Ville : menu déroulant vil.selectedIndex != 0.\");\nconsole.log(\"9. Code postal : Number(cp) entre 1000 et 9999 (4 chiffres).\");\nconsole.log(\"10. Remarque : non vide et longueur <= 50 caractères.\");\nconsole.log(\"Tous les contrôles sont conformes au barème officiel du Bac STI !\");"
     },
     {
       "id": "js-fn-validage",
@@ -2788,7 +2788,7 @@ const DATA = {
         "if (diff < 15 || diff > 30) alert('age invalid');"
       ],
       "code": "function validage() {\n  let dt = document.getElementById('dnais').value;\n  let dc = new Date(); // Retourne la date courante\n  let dp = new Date(dt); // Convertir la variable dt en un objet date\n  let ap = dp.getFullYear(); // Retourne l'année à partir de la date dp sur 4 chiffres\n  let ac = dc.getFullYear();\n  let diff = ac - ap;\n  if (diff < 15 || diff > 30) {\n    alert('age invalid');\n  }\n}",
-      "runnableCode": "const anneeCourante = new Date().getFullYear();\nconst anneeNaissanceTest = anneeCourante - 18; // 18 ans\nconst diff = anneeCourante - anneeNaissanceTest;\nconsole.log(\"Année courante (ac) : \" + anneeCourante);\nconsole.log(\"Année de naissance test (ap) : \" + anneeNaissanceTest);\nconsole.log(\"Âge calculé (diff = ac - ap) : \" + diff + \" ans\");\nif (diff < 15 || diff > 30) {\n  console.log(\"Résultat : ❌ Âge invalide (doit être entre 15 et 30 ans)\");\n} else {\n  console.log(\"Résultat : ✓ Âge valide pour le Bac STI !\");\n}"
+      "runnableCode": "const anneeCourante = new Date().getFullYear();\nconst anneeNaissanceTest = anneeCourante - 18; // 18 ans\nconst diff = anneeCourante - anneeNaissanceTest;\nconsole.log(\"Année courante (ac) : \" + anneeCourante);\nconsole.log(\"Année de naissance test (ap) : \" + anneeNaissanceTest);\nconsole.log(\"Âge calculé (diff = ac - ap) : \" + diff + \" ans\");\nif (diff < 15 || diff > 30) {\n  console.log(\"Résultat : Âge invalide (doit être entre 15 et 30 ans)\");\n} else {\n  console.log(\"Résultat : Âge valide pour le Bac STI !\");\n}"
     },
     {
       "id": "js-fn-captcha",
@@ -2825,7 +2825,7 @@ const DATA = {
         "document.getElementById('nbmaj').style.backgroundColor = 'red'"
       ],
       "code": "function nbmajus() {\n  let ch = document.getElementById('cap').value;\n  let nb = 0;\n  for (let i = 0; i < ch.length; i++) {\n    if (ch[i] >= \"A\" && ch[i] <= \"Z\") {\n      nb = nb + 1;\n    }\n  }\n  let val = document.getElementById('nbmaj').value;\n  if (nb != val) {\n    document.getElementById('nbmaj').style.backgroundColor = 'red';\n  }\n}",
-      "runnableCode": "const testChaine = \"AbCDeFgHiJ\";\nlet nb = 0;\nfor (let i = 0; i < testChaine.length; i++) {\n  if (testChaine[i] >= \"A\" && testChaine[i] <= \"Z\") {\n    nb = nb + 1;\n  }\n}\nconsole.log(\"Chaîne analysée : \" + testChaine);\nconsole.log(\"Nombre de majuscules trouvées : \" + nb + \" sur \" + testChaine.length + \" caractères\");\nconsole.log(\"Test utilisateur saisissant 5 : \" + (nb == 5 ? \"✓ Correct !\" : \"❌ Incorrect -> fond rouge !\"));"
+      "runnableCode": "const testChaine = \"AbCDeFgHiJ\";\nlet nb = 0;\nfor (let i = 0; i < testChaine.length; i++) {\n  if (testChaine[i] >= \"A\" && testChaine[i] <= \"Z\") {\n    nb = nb + 1;\n  }\n}\nconsole.log(\"Chaîne analysée : \" + testChaine);\nconsole.log(\"Nombre de majuscules trouvées : \" + nb + \" sur \" + testChaine.length + \" caractères\");\nconsole.log(\"Test utilisateur saisissant 5 : \" + (nb == 5 ? \"Correct !\" : \"Incorrect -> fond rouge !\"));"
     },
     {
       "id": "js-fn-actualiser",
@@ -2836,14 +2836,14 @@ const DATA = {
       "syntax": "function actualiser() { ... }",
       "summary": "Permet à l'utilisateur de renouveler le code Captcha aléatoire s'il le trouve illisible, en régénérant 10 nouveaux caractères et en actualisant le champ #cap.",
       "description": "Fonction liée au bouton d'actualisation du Captcha :\\n1. Réinitialise le code aléatoire.\\n2. Exécute la boucle for de 10 itérations avec tirage aléatoire Math.random() et conversion ASCII String.fromCharCode().\\n3. Met à jour la valeur affichée dans document.getElementById('cap').value.\\n4. Réinitialise également si nécessaire la couleur de fond du champ réponse.",
-      "howToUse": "Associer à un bouton rafraîchir : <button type=\"button\" onclick=\"actualiser()\">🔄 Actualiser le Captcha</button>.",
+      "howToUse": "Associer à un bouton rafraîchir : <button type=\"button\" onclick=\"actualiser()\">Actualiser le Captcha</button>.",
       "values": [
         "code = ''",
         "Math.trunc(Math.random() * 26)",
         "document.getElementById('cap').value = code"
       ],
       "code": "function actualiser() {\n  let code = \"\";\n  for (let i = 1; i <= 10; i++) {\n    let n = Math.trunc(Math.random() * 26);\n    if (n % 2 == 0) {\n      code = code + String.fromCharCode(n + 65);\n    } else {\n      code = code + String.fromCharCode(n + 97);\n    }\n  }\n  document.getElementById('cap').value = code;\n}",
-      "runnableCode": "let code = \"\";\nfor (let i = 1; i <= 10; i++) {\n  let n = Math.trunc(Math.random() * 26);\n  if (n % 2 == 0) {\n    code = code + String.fromCharCode(n + 65);\n  } else {\n    code = code + String.fromCharCode(n + 97);\n  }\n}\nconsole.log(\"Ancien code : aB3kL9pQxZ\");\nconsole.log(\"Nouveau code actualisé : \" + code);\nconsole.log(\"✓ Champ #cap mis à jour avec succès !\");"
+      "runnableCode": "let code = \"\";\nfor (let i = 1; i <= 10; i++) {\n  let n = Math.trunc(Math.random() * 26);\n  if (n % 2 == 0) {\n    code = code + String.fromCharCode(n + 65);\n  } else {\n    code = code + String.fromCharCode(n + 97);\n  }\n}\nconsole.log(\"Ancien code : aB3kL9pQxZ\");\nconsole.log(\"Nouveau code actualisé : \" + code);\nconsole.log(\"Champ #cap mis à jour avec succès !\");"
     },
     {
       "id": "js-structure-switch-saisons",
@@ -2865,7 +2865,7 @@ const DATA = {
         "default: alert('Numéro erroné'); break;"
       ],
       "code": "<script>\n// déterminer la saison à partir du numéro du mois saisi\nlet mois = prompt(\"mois=\");\nmois = Number(mois);\nswitch (mois) {\n  case 12: case 1: case 2:\n    alert(\"hiver\");\n    break;\n  case 3: case 4: case 5:\n    alert(\"printemps\");\n    break;\n  case 6: case 7: case 8:\n    alert(\"été\");\n    break;\n  case 9: case 10: case 11:\n    alert(\"Automne\");\n    break;\n  default:\n    alert(\"Numéro erroné\");\n    break;\n}\n</script>",
-      "runnableCode": "function getSaison(m) {\n  m = Number(m);\n  switch (m) {\n    case 12: case 1: case 2:\n      return \"❄️ hiver\";\n    case 3: case 4: case 5:\n      return \"🌸 printemps\";\n    case 6: case 7: case 8:\n      return \"☀️ été\";\n    case 9: case 10: case 11:\n      return \"🍂 Automne\";\n    default:\n      return \"❌ Numéro erroné\";\n  }\n}\n\nconsole.log(\"=== DÉMONSTRATION STRUCTURE SWITCH (BAC STI) ===\");\nconsole.log(\"Mois 1 (Janvier)   -> \" + getSaison(1));\nconsole.log(\"Mois 4 (Avril)     -> \" + getSaison(4));\nconsole.log(\"Mois 7 (Juillet)   -> \" + getSaison(7));\nconsole.log(\"Mois 10 (Octobre)  -> \" + getSaison(10));\nconsole.log(\"Mois 12 (Décembre) -> \" + getSaison(12));\nconsole.log(\"Mois 15 (Invalide) -> \" + getSaison(15));\nconsole.log(\"✓ Fonction switch testée sur tous les cas possibles !\");"
+      "runnableCode": "function getSaison(m) {\n  m = Number(m);\n  switch (m) {\n    case 12: case 1: case 2:\n      return \"hiver\";\n    case 3: case 4: case 5:\n      return \"printemps\";\n    case 6: case 7: case 8:\n      return \"été\";\n    case 9: case 10: case 11:\n      return \"Automne\";\n    default:\n      return \"Numéro erroné\";\n  }\n}\n\nconsole.log(\"=== DÉMONSTRATION STRUCTURE SWITCH (BAC STI) ===\");\nconsole.log(\"Mois 1 (Janvier)   -> \" + getSaison(1));\nconsole.log(\"Mois 4 (Avril)     -> \" + getSaison(4));\nconsole.log(\"Mois 7 (Juillet)   -> \" + getSaison(7));\nconsole.log(\"Mois 10 (Octobre)  -> \" + getSaison(10));\nconsole.log(\"Mois 12 (Décembre) -> \" + getSaison(12));\nconsole.log(\"Mois 15 (Invalide) -> \" + getSaison(15));\nconsole.log(\"Fonction switch testée sur tous les cas possibles !\");"
     },
     {
       "id": "js-fn-alpha",
@@ -2947,7 +2947,7 @@ const DATA = {
       "subject": "html",
       "subjectLabel": "HTML5",
       "type": "cours",
-      "typeLabel": "📖 Cours Officiel",
+      "typeLabel": "Cours",
       "date": "2025-09-15",
       "author": "Inspection Générale STI",
       "fileSize": "2.8 Mo",
@@ -2962,7 +2962,7 @@ const DATA = {
       "subject": "css",
       "subjectLabel": "CSS3",
       "type": "cours",
-      "typeLabel": "📖 Cours Officiel",
+      "typeLabel": "Cours",
       "date": "2025-10-01",
       "author": "Inspection Générale STI",
       "fileSize": "3.2 Mo",
@@ -2977,7 +2977,7 @@ const DATA = {
       "subject": "js",
       "subjectLabel": "JavaScript",
       "type": "cours",
-      "typeLabel": "📖 Cours Officiel",
+      "typeLabel": "Cours",
       "date": "2025-11-10",
       "author": "Coordination Pédagogique STI",
       "fileSize": "3.6 Mo",
@@ -2992,7 +2992,7 @@ const DATA = {
       "subject": "sql",
       "subjectLabel": "SQL MySQL",
       "type": "cours",
-      "typeLabel": "📖 Cours Officiel",
+      "typeLabel": "Cours",
       "date": "2025-12-05",
       "author": "Inspection Générale STI",
       "fileSize": "4.1 Mo",
@@ -3003,11 +3003,11 @@ const DATA = {
     },
     {
       "id": "lesson-algo-pratique-official",
-      "title": "Support Officiel : Laboratoire Qt Designer ➔ Thonny Python",
+      "title": "Support Officiel : Laboratoire Qt Designer / Thonny Python",
       "subject": "algo-pratique",
-      "subjectLabel": "Pratique Qt ➔ Thonny",
+      "subjectLabel": "Pratique Qt / Thonny",
       "type": "cours",
-      "typeLabel": "🛠️ Épreuve Pratique",
+      "typeLabel": "Épreuve Pratique",
       "date": "2026-01-15",
       "author": "Coordination Pédagogique Informatique",
       "fileSize": "4.8 Mo",
@@ -3022,7 +3022,7 @@ const DATA = {
       "subject": "algo-ch1-fichiers",
       "subjectLabel": "Ch 1 : Fichiers",
       "type": "cours",
-      "typeLabel": "📖 Cours Officiel",
+      "typeLabel": "Cours",
       "date": "2026-02-01",
       "author": "Inspection Générale de l'Informatique",
       "fileSize": "3.5 Mo",
@@ -3037,7 +3037,7 @@ const DATA = {
       "subject": "algo-ch2-recurrence",
       "subjectLabel": "Ch 2 : Récurrence",
       "type": "cours",
-      "typeLabel": "📖 Cours Officiel",
+      "typeLabel": "Cours",
       "date": "2026-02-15",
       "author": "Inspection Générale de l'Informatique",
       "fileSize": "2.9 Mo",
@@ -3052,7 +3052,7 @@ const DATA = {
       "subject": "algo-ch3-bases",
       "subjectLabel": "Ch 3 : Bases",
       "type": "cours",
-      "typeLabel": "📖 Cours Officiel",
+      "typeLabel": "Cours",
       "date": "2026-03-01",
       "author": "Inspection Générale de l'Informatique",
       "fileSize": "4.5 Mo",
@@ -3067,7 +3067,7 @@ const DATA = {
       "subject": "algo-ch4-arithmetique",
       "subjectLabel": "Ch 4 : Arithmétique",
       "type": "cours",
-      "typeLabel": "📖 Cours Officiel",
+      "typeLabel": "Cours",
       "date": "2026-03-15",
       "author": "Inspection Générale de l'Informatique",
       "fileSize": "3.7 Mo",
@@ -3082,7 +3082,7 @@ const DATA = {
       "subject": "algo-ch5-approximation",
       "subjectLabel": "Ch 5 : Approx",
       "type": "cours",
-      "typeLabel": "📖 Cours Officiel",
+      "typeLabel": "Cours",
       "date": "2026-04-01",
       "author": "Inspection Générale de l'Informatique",
       "fileSize": "4.2 Mo",
@@ -3097,7 +3097,7 @@ const DATA = {
       "subject": "algo-ch6-matrices",
       "subjectLabel": "Ch 6 : Matrices",
       "type": "cours",
-      "typeLabel": "📖 Cours Officiel",
+      "typeLabel": "Cours",
       "date": "2026-04-15",
       "author": "Inspection Générale de l'Informatique",
       "fileSize": "5.1 Mo",
@@ -3112,7 +3112,7 @@ const DATA = {
       "subject": "js",
       "subjectLabel": "JavaScript",
       "type": "serie",
-      "typeLabel": "📝 Série d'exercices",
+      "typeLabel": "Série d'exercices",
       "date": "2026-04-20",
       "author": "Coordination Pédagogique STI",
       "fileSize": "3.6 Mo",
@@ -3132,7 +3132,7 @@ const DATA = {
       "subject": "algo-ch6-matrices",
       "subjectLabel": "Ch 6 : Matrices",
       "type": "serie",
-      "typeLabel": "📝 Série d'exercices",
+      "typeLabel": "Série d'exercices",
       "date": "2026-04-22",
       "author": "Inspection Générale de l'Informatique",
       "fileSize": "5.1 Mo",
@@ -4272,7 +4272,7 @@ const DATA = {
           "code": "windows.show()\napp.exec_()"
         }
       ],
-      "bacTips": "🚨 PIÈGE FRÉQUENT : Si Thonny affiche 'FileNotFoundError: [Errno 2] No such file or directory: interface.ui', c'est que votre script Python n'est pas enregistré dans le même dossier que le fichier .ui !"
+      "bacTips": "PIÈGE FRÉQUENT : Si Thonny affiche 'FileNotFoundError: [Errno 2] No such file or directory: interface.ui', c'est que votre script Python n'est pas enregistré dans le même dossier que le fichier .ui !"
     },
     {
       "id": "qt-lineedit",
@@ -4302,7 +4302,7 @@ const DATA = {
           "code": "windows.le_nom.clear()"
         }
       ],
-      "bacTips": "⚠️ Attention : windows.le_nom.text() renvoie une chaîne vide \"\" si l'élève n'a rien saisi. Toujours tester `if nom == \"\":` avant d'appliquer int() pour éviter le plantage ValueError !"
+      "bacTips": "Attention : windows.le_nom.text() renvoie une chaîne vide \"\" si l'élève n'a rien saisi. Toujours tester `if nom == \"\":` avant d'appliquer int() pour éviter le plantage ValueError !"
     },
     {
       "id": "qt-textedit",
@@ -4324,7 +4324,7 @@ const DATA = {
           "code": "W.nomTextEdit.setText('Résultat : Validé')"
         }
       ],
-      "bacTips": "🚨 PIÈGE MAJEUR BAC : Pour un Line Edit c'est .text(), mais pour un Text Edit c'est .toPlainText() ! Si vous écrivez .text() sur un TextEdit, Python plantera avec une erreur AttributeError."
+      "bacTips": "PIÈGE MAJEUR BAC : Pour un Line Edit c'est .text(), mais pour un Text Edit c'est .toPlainText() ! Si vous écrivez .text() sur un TextEdit, Python plantera avec une erreur AttributeError."
     },
     {
       "id": "qt-pushbutton",
@@ -4350,7 +4350,7 @@ const DATA = {
           "code": "windows.btn_quitter.clicked.connect(windows.close)"
         }
       ],
-      "bacTips": "🚨 ERREUR CLASSIQUE DU BAC : Ne JAMAIS mettre de parenthèses lors du connect ! Écrire `windows.btn.clicked.connect(calculer)` et SURTOUT PAS `connect(calculer())` sinon la fonction s'exécute au lancement !"
+      "bacTips": "ERREUR CLASSIQUE DU BAC : Ne JAMAIS mettre de parenthèses lors du connect ! Écrire `windows.btn.clicked.connect(calculer)` et SURTOUT PAS `connect(calculer())` sinon la fonction s'exécute au lancement !"
     },
     {
       "id": "qt-radiobutton",
@@ -4372,7 +4372,7 @@ const DATA = {
           "code": "windows.rb_homme.setChecked(True)"
         }
       ],
-      "bacTips": "💡 Pensez toujours à vérifier si aucun bouton n'est coché en affichant une alerte QMessageBox si les deux renvoient False !"
+      "bacTips": "Pensez toujours à vérifier si aucun bouton n'est coché en affichant une alerte QMessageBox si les deux renvoient False !"
     },
     {
       "id": "qt-checkbox",
@@ -4420,7 +4420,7 @@ const DATA = {
           "code": "windows.combo_pays.addItem('Tunisie')"
         }
       ],
-      "bacTips": "⭐ ASTUCE BAC : Si vous mettez '-- Sélectionner --' en premier élément dans Qt Designer, vérifiez toujours `if windows.combo.currentIndex() == 0:` pour forcer l'utilisateur à faire un vrai choix !"
+      "bacTips": "ASTUCE BAC : Si vous mettez '-- Sélectionner --' en premier élément dans Qt Designer, vérifiez toujours `if windows.combo.currentIndex() == 0:` pour forcer l'utilisateur à faire un vrai choix !"
     },
     {
       "id": "qt-label",
@@ -4442,7 +4442,7 @@ const DATA = {
           "code": "windows.lbl_res.setText(str(pgcd_val))"
         }
       ],
-      "bacTips": "🚨 TypeError : Ne passez jamais un entier directement à setText ! `setText(42)` déclenche une erreur ; écrivez toujours `setText(str(42))`."
+      "bacTips": "TypeError : Ne passez jamais un entier directement à setText ! `setText(42)` déclenche une erreur ; écrivez toujours `setText(str(42))`."
     },
     {
       "id": "qt-spinbox",
@@ -4508,7 +4508,7 @@ const DATA = {
           "code": "if not (1 <= n <= 100):\n    QMessageBox.critical(windows, 'Erreur', 'N doit être entre 1 et 100 !')\n    return"
         }
       ],
-      "bacTips": "⭐ BARÈME DU BAC : Un point entier est souvent attribué au contrôle de saisie avec QMessageBox. N'oubliez jamais d'ajouter `return` immédiatement après le message pour ne pas continuer le calcul avec des données erronées !"
+      "bacTips": "BARÈME DU BAC : Un point entier est souvent attribué au contrôle de saisie avec QMessageBox. N'oubliez jamais d'ajouter `return` immédiatement après le message pour ne pas continuer le calcul avec des données erronées !"
     },
     {
       "id": "qt-msgbox-info",
@@ -4566,7 +4566,7 @@ const DATA = {
           "code": "windows.table.setRowCount(0)"
         }
       ],
-      "bacTips": "⚠️ Chaque cellule attend obligatoirement un objet `QTableWidgetItem(str)`. N'oubliez pas d'importer QTableWidgetItem !"
+      "bacTips": "Chaque cellule attend obligatoirement un objet `QTableWidgetItem(str)`. N'oubliez pas d'importer QTableWidgetItem !"
     },
     {
       "id": "qt-valid-empty",
@@ -4624,7 +4624,7 @@ const DATA = {
           "code": "if not (0 <= float(note) <= 20): alerte()"
         }
       ],
-      "bacTips": "⭐ Formule favorite des épreuves pratiques : 'L'âge doit être un entier compris entre 15 et 30'."
+      "bacTips": "Formule favorite des épreuves pratiques : 'L'âge doit être un entier compris entre 15 et 30'."
     },
     {
       "id": "qt-valid-length",
@@ -4678,7 +4678,7 @@ const DATA = {
           "code": "# Suivre les 4 étapes numérotées"
         }
       ],
-      "bacTips": "⭐ La séparation entre les fonctions algorithmiques pures et la fonction liée à Qt Designer est la marque des excellents candidats !"
+      "bacTips": "La séparation entre les fonctions algorithmiques pures et la fonction liée à Qt Designer est la marque des excellents candidats !"
     }
   ],
   "algo_theorique": [

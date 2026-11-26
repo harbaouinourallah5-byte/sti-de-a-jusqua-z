@@ -10,7 +10,7 @@ var EXERCISES_DATA = (function () {
       slug: 'fonction-inconnue',
       label: 'Fonction inconnue',
       expected: 'Trace d\'exécution manuelle, tableau des variables + déduction du rôle de la fonction',
-      icon: '🔍',
+      icon: 'search',
       methodSheetId: 'fonction-inconnue',
       chapters: ['recursivite', 'fichiers']
     },
@@ -18,7 +18,7 @@ var EXERCISES_DATA = (function () {
       slug: 'vf-qcm',
       label: 'Vrai/Faux & QCM',
       expected: 'V/F ou cocher la bonne réponse (tris, suites, fichiers, récursivité)',
-      icon: '☑️',
+      icon: 'check-circle',
       methodSheetId: 'avant-de-rendre',
       chapters: ['fichiers', 'recursivite', 'tableaux', 'suites']
     },
@@ -26,7 +26,7 @@ var EXERCISES_DATA = (function () {
       slug: 'tdo-tdnt',
       label: 'Déclarations T.D.N.T & T.D.O',
       expected: 'Déclarations T.D.N.T / T.D.O et analyse de la validité d\'instructions',
-      icon: '📋',
+      icon: 'clipboard',
       methodSheetId: 'tdo-tdnt',
       chapters: ['fichiers', 'tableaux', 'matrices']
     },
@@ -34,7 +34,7 @@ var EXERCISES_DATA = (function () {
       slug: 'ecrire-recursif',
       label: 'Écrire un sous-programme récursif',
       expected: 'Écrire une fonction ou procédure récursive avec cas de base et décomposition',
-      icon: '🔄',
+      icon: 'repeat',
       methodSheetId: 'recursivite',
       chapters: ['recursivite', 'tableaux', 'approximation']
     },
@@ -42,7 +42,7 @@ var EXERCISES_DATA = (function () {
       slug: 'fichiers',
       label: 'Procédures sur fichiers',
       expected: 'Manipulation de fichiers texte ou d\'enregistrements binaires (pickle)',
-      icon: '📁',
+      icon: 'folder',
       methodSheetId: 'fichiers',
       chapters: ['fichiers', 'tableaux', 'arithmetique']
     },
@@ -50,7 +50,7 @@ var EXERCISES_DATA = (function () {
       slug: 'contenu-fichier',
       label: 'Contenu d\'un fichier après exécution',
       expected: 'Donner le contenu d\'un fichier ou d\'un tableau après exécution du programme',
-      icon: '📄',
+      icon: 'file-text',
       methodSheetId: 'fichiers',
       chapters: ['fichiers', 'matrices']
     },
@@ -58,7 +58,7 @@ var EXERCISES_DATA = (function () {
       slug: 'matrices',
       label: 'Problème sur une matrice',
       expected: 'Parcours 2D, calculs diagonales, point-selle, filtrage ou motifs matriciels',
-      icon: '📐',
+      icon: 'compass',
       methodSheetId: 'matrices',
       chapters: ['matrices', 'tableaux']
     },
@@ -66,7 +66,7 @@ var EXERCISES_DATA = (function () {
       slug: 'suites-approx',
       label: 'Suites & Approximation avec epsilon',
       expected: 'Calcul de terme de suite récurrente ou approximation numérique d\'aires',
-      icon: '📈',
+      icon: 'trending-up',
       methodSheetId: 'suites',
       chapters: ['suites', 'approximation']
     },
@@ -74,7 +74,7 @@ var EXERCISES_DATA = (function () {
       slug: 'tableaux-tris',
       label: 'Tableaux, tris & chaînes',
       expected: 'Algorithmes de tri, recherche, manipulation de vecteurs et chaînes de caractères',
-      icon: '📊',
+      icon: 'bar-chart',
       methodSheetId: 'tableaux',
       chapters: ['tableaux', 'fichiers']
     },
@@ -82,7 +82,7 @@ var EXERCISES_DATA = (function () {
       slug: 'conversion-bases',
       label: 'Conversion entre les bases',
       expected: 'Conversions universelles (base B vers 10, 10 vers B) et directes (bin/oct/hex)',
-      icon: '🔢',
+      icon: 'binary',
       methodSheetId: 'bases',
       chapters: ['bases', 'tableaux']
     },
@@ -90,7 +90,7 @@ var EXERCISES_DATA = (function () {
       slug: 'corriger-erreurs',
       label: 'Corriger les erreurs d\'un algorithme',
       expected: 'Identifier et corriger les erreurs de syntaxe, types ou logique d\'un algorithme',
-      icon: '🛠️',
+      icon: 'wrench',
       methodSheetId: 'avant-de-rendre',
       chapters: ['recursivite', 'fichiers']
     }
