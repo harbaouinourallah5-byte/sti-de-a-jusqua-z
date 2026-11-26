@@ -3086,7 +3086,7 @@ const DATA = {
       "date": "2026-04-01",
       "author": "Inspection Générale de l'Informatique",
       "fileSize": "4.2 Mo",
-      "pdfUrl": "pdf/Support_Calcul_Aires_Approximation.pdf",
+      "pdfUrl": "pdf/Support_Calcul_Aires.pdf",
       "description": "Méthodes numériques d'intégration : rectangles (gauche, droite, point médian) et formule des trapèzes sur l'intervalle [a, b]. Recherche dichotomique.",
       "summary": "Calculs approchés d'intégrales définies et convergence de suites d'aires.",
       "downloadName": "Support_Officiel_Ch5_Approximation.pdf"

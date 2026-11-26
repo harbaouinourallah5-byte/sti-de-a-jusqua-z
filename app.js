@@ -2043,7 +2043,7 @@ function updateDataCountersUI() {
     const algoTheoriqueCount = (typeof DATA !== 'undefined' && DATA.algo_theorique) ? DATA.algo_theorique.length : 80;
     const totalChapters = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getTotalAlgoChapters() : 8;
     const methodCount = (typeof METHODS_DATA !== 'undefined') ? METHODS_DATA.length : 7;
-    const examCount = (typeof EXERCISES_DATA !== 'undefined' && EXERCISES_DATA.getAllExams) ? EXERCISES_DATA.getAllExams().length : 11;
+    const examCount = (typeof DOCUMENTS_DATA !== 'undefined' && DOCUMENTS_DATA.getExamens) ? DOCUMENTS_DATA.getExamens().length : 12;
 
     const elHtmlBadge = document.getElementById('htmlBadgeCount');
     if (elHtmlBadge) elHtmlBadge.textContent = htmlCount;
@@ -2086,6 +2086,8 @@ function updateDataCountersUI() {
 
     const homeChBadge = document.getElementById('homeChBadgeCount');
     if (homeChBadge) homeChBadge.textContent = `${totalChapters} Chapitres`;
+    const sideProgAlgo = document.getElementById('sideProgAlgo');
+    if (sideProgAlgo) sideProgAlgo.textContent = `${totalChapters} chapitres`;
     const homeExamBadge = document.getElementById('homeExamCountBadge');
     if (homeExamBadge) homeExamBadge.textContent = `${examCount} Sujets d'examens`;
 
@@ -2166,6 +2168,9 @@ function updateDataCountersUI() {
     }
     if (typeof updateAllProgressUI === 'function') {
       updateAllProgressUI();
+    }
+    if (typeof updateSidebarProgressIndicators === 'function') {
+      updateSidebarProgressIndicators();
     }
   } catch (err) {
     console.warn('Erreur mise à jour des compteurs:', err);
@@ -2426,6 +2431,14 @@ function switchView(viewName, skipHashUpdate = false) {
     currentLessonSubject = 'all';
     currentLessonType = 'all';
     currentLessonSearch = '';
+    const selMat = document.getElementById('lessonsFilterMatiere');
+    if (selMat) selMat.value = 'all';
+    const selTyp = document.getElementById('lessonsFilterType');
+    if (selTyp) selTyp.value = 'all';
+    const selCh = document.getElementById('lessonsFilterChapitre');
+    if (selCh) selCh.value = 'all';
+    const chapGroup = document.getElementById('lessonsChapitreGroup');
+    if (chapGroup) chapGroup.style.display = 'flex';
     document.querySelectorAll('#lessonsSubjectTabsBar .subject-tab').forEach(btn => {
       if (btn.getAttribute('data-subject') === 'all') btn.classList.add('active');
       else btn.classList.remove('active');
@@ -7046,8 +7059,65 @@ function checkUrlRouting() {
 // -------------------------------------------------------------
 // Rendu & Filtres des Leçons Élèves (STI + ALGORITHME)
 // -------------------------------------------------------------
+function handleLessonsFilterChange() {
+  const selMat = document.getElementById('lessonsFilterMatiere');
+  const selType = document.getElementById('lessonsFilterType');
+  const selChap = document.getElementById('lessonsFilterChapitre');
+  const chapGroup = document.getElementById('lessonsChapitreGroup');
+
+  const matiere = selMat ? selMat.value : 'all';
+  const type = selType ? selType.value : 'all';
+  const chapitre = selChap ? selChap.value : 'all';
+
+  if (chapGroup) {
+    if (matiere === 'algo-theorique' || matiere === 'all') {
+      chapGroup.style.display = 'flex';
+    } else {
+      chapGroup.style.display = 'none';
+      if (selChap) selChap.value = 'all';
+    }
+  }
+
+  currentLessonType = type;
+
+  if (chapitre !== 'all' && (matiere === 'algo-theorique' || matiere === 'all')) {
+    currentLessonSubject = chapitre;
+  } else {
+    currentLessonSubject = matiere;
+  }
+
+  renderLessons();
+}
+
 function filterLessonsBySubject(subj) {
   currentLessonSubject = (subj || 'all').trim().toLowerCase();
+  
+  const selMat = document.getElementById('lessonsFilterMatiere');
+  const selChap = document.getElementById('lessonsFilterChapitre');
+  const chapGroup = document.getElementById('lessonsChapitreGroup');
+
+  if (selMat) {
+    if (currentLessonSubject.startsWith('algo-ch')) {
+      selMat.value = 'algo-theorique';
+      if (selChap) selChap.value = currentLessonSubject;
+      if (chapGroup) chapGroup.style.display = 'flex';
+    } else if (currentLessonSubject === 'all-algo' || currentLessonSubject === 'algo-theorique') {
+      selMat.value = 'algo-theorique';
+      if (selChap) selChap.value = 'all';
+      if (chapGroup) chapGroup.style.display = 'flex';
+    } else if (currentLessonSubject === 'all-sti') {
+      selMat.value = 'all';
+      if (selChap) selChap.value = 'all';
+      if (chapGroup) chapGroup.style.display = 'flex';
+    } else {
+      selMat.value = currentLessonSubject;
+      if (selChap) selChap.value = 'all';
+      if (chapGroup) {
+        chapGroup.style.display = (currentLessonSubject === 'all' || currentLessonSubject === 'algo-theorique') ? 'flex' : 'none';
+      }
+    }
+  }
+
   document.querySelectorAll('#lessonsSubjectTabsBar .subject-tab').forEach(btn => {
     const btnSubj = (btn.getAttribute('data-subject') || '').trim().toLowerCase();
     if (btnSubj === currentLessonSubject) {
@@ -8966,10 +9036,11 @@ function renderAlgoTheoriqueCards() {
         return `
           <div style="background: var(--surface-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
             <div style="flex: 1; min-width: 220px;">
-              <div style="margin-bottom: 4px;">
+              <div style="margin-bottom: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
                 <span style="font-size: 0.76rem; font-weight: 700; color: ${badgeColor}; background: ${badgeBg}; border: 1px solid ${badgeBorder}; padding: 2px 8px; border-radius: 10px;">
                   ${badgeLabel}
                 </span>
+                ${doc.incomplete ? '<span style="font-size: 0.76rem; font-weight: 700; color: #f87171; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); padding: 2px 8px; border-radius: 10px;">⚠️ Incomplet</span>' : ''}
               </div>
               <h5 style="margin: 0 0 4px 0; font-size: 0.95rem; font-weight: 700; color: var(--text-primary);">${escapeHtml(doc.title)}</h5>
               <div style="font-size: 0.8rem; color: var(--text-secondary); display: flex; flex-wrap: wrap; gap: 10px;">
@@ -8977,10 +9048,14 @@ function renderAlgoTheoriqueCards() {
                 ${doc.notes ? `<span>📝 ${escapeHtml(doc.notes)}</span>` : ''}
               </div>
             </div>
-            <div>
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
               <a href="${doc.file}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: linear-gradient(135deg, #4f46e5, #6366f1); color: #fff; font-size: 0.84rem; font-weight: 600; text-decoration: none; white-space: nowrap;">
                 📄 Sujet
               </a>
+              ${doc.correction ? `
+              <a href="${doc.correction}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-size: 0.84rem; font-weight: 600; text-decoration: none; white-space: nowrap;">
+                🎯 Correction
+              </a>` : ''}
             </div>
           </div>
         `;
@@ -9967,17 +10042,40 @@ function renderAlgoPratiqueSerials() {
     const chapHtml = chapterNames.map(n =>
       `<span style="display:inline-block;padding:2px 8px;border-radius:6px;font-size:0.75rem;background:var(--surface-bg);border:1px solid var(--border-color);color:var(--text-secondary);">${n}</span>`
     ).join(' ');
+
+    const kindBadge = (doc.examType === 'epreuve-pratique')
+      ? `<span style="font-size:0.75rem;padding:2px 8px;border-radius:6px;background:rgba(14,165,233,0.15);border:1px solid rgba(14,165,233,0.3);color:#38bdf8;font-weight:700;">🛠️ Épreuve Pratique</span>`
+      : (doc.id.startsWith('tp') ? `<span style="font-size:0.75rem;padding:2px 8px;border-radius:6px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);color:#10b981;font-weight:700;">🧪 TP Qt</span>` : `<span style="font-size:0.75rem;padding:2px 8px;border-radius:6px;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);color:#818cf8;font-weight:700;">📝 Série Qt</span>`);
+
+    const incompleteHtml = doc.incomplete
+      ? `<span style="font-size:0.75rem;padding:2px 8px;border-radius:6px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#f87171;font-weight:700;">⚠️ Incomplet</span>`
+      : '';
+
     return `
     <div style="background:var(--surface-elevated);border:1px solid var(--border-color);border-radius:14px;padding:18px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
       <div style="flex:1;min-width:0;">
-        <h3 style="font-size:1rem;font-weight:700;color:var(--text-primary);margin:0 0 6px 0;">${doc.title}</h3>
-        <div style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:8px;">✏️ ${doc.teacher || doc.source || ''}${doc.notes ? ' · ' + doc.notes : ''}</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
+          ${kindBadge}
+          ${incompleteHtml}
+        </div>
+        <h3 style="font-size:1rem;font-weight:700;color:var(--text-primary);margin:0 0 6px 0;">${escapeHtml(doc.title)}</h3>
+        <div style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:8px;">
+          ${doc.teacher ? `✏️ Prof. ${escapeHtml(doc.teacher)}` : (doc.source ? `✏️ ${escapeHtml(doc.source)}` : '')}
+          ${doc.notes ? ` · 📝 ${escapeHtml(doc.notes)}` : ''}
+        </div>
         <div style="display:flex;flex-wrap:wrap;gap:4px;">${chapHtml}</div>
       </div>
-      <a href="${doc.file}" target="_blank" rel="noopener"
-         style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:10px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;font-weight:600;font-size:0.88rem;text-decoration:none;white-space:nowrap;">
-        📄 Sujet PDF
-      </a>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <a href="${doc.file}" target="_blank" rel="noopener"
+           style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:8px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;font-weight:600;font-size:0.86rem;text-decoration:none;white-space:nowrap;">
+          📄 Sujet PDF
+        </a>
+        ${doc.correction ? `
+        <a href="${doc.correction}" target="_blank" rel="noopener"
+           style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:8px;background:linear-gradient(135deg,#0284c7,#38bdf8);color:#fff;font-weight:600;font-size:0.86rem;text-decoration:none;white-space:nowrap;">
+          🎯 Correction
+        </a>` : ''}
+      </div>
     </div>`;
   }).join('');
 }
@@ -10426,12 +10524,14 @@ function renderExamensPage() {
     'bac': '🎓 Bac',
     'devoir-synthese': '📝 D. Synthèse',
     'devoir-controle': '📌 D. Contrôle',
+    'epreuve-pratique': '🛠️ Pratique',
     'inconnu': '❓ Inconnu'
   };
   const typeColors = {
     'bac':              { bg: 'rgba(16,185,129,0.15)', color: '#10b981', border: 'rgba(16,185,129,0.3)' },
     'devoir-synthese':  { bg: 'rgba(99,102,241,0.15)',  color: '#818cf8', border: 'rgba(99,102,241,0.3)' },
     'devoir-controle':  { bg: 'rgba(245,158,11,0.15)',  color: '#fbbf24', border: 'rgba(245,158,11,0.3)' },
+    'epreuve-pratique': { bg: 'rgba(14,165,233,0.15)', color: '#38bdf8', border: 'rgba(14,165,233,0.3)' },
     'inconnu':          { bg: 'rgba(107,114,128,0.15)', color: '#9ca3af', border: 'rgba(107,114,128,0.3)' }
   };
 
@@ -10503,6 +10603,11 @@ function renderExamensPage() {
                style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;background:rgba(255,255,255,0.08);border:1px solid var(--border-color);color:var(--text-primary);font-weight:600;font-size:0.84rem;text-decoration:none;white-space:nowrap;">
               📄 Sujet PDF
             </a>
+            ${doc.correction ? `
+            <a href="${doc.correction}" target="_blank" rel="noopener"
+               style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;background:linear-gradient(135deg,#0284c7,#38bdf8);color:#fff;font-weight:600;font-size:0.84rem;text-decoration:none;white-space:nowrap;">
+              🎯 Correction
+            </a>` : ''}
             <button type="button" onclick="openExamSimulatorSetup('${doc.id}')"
                style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-weight:700;font-size:0.84rem;border:none;cursor:pointer;white-space:nowrap;box-shadow:0 2px 10px rgba(16,185,129,0.3);">
               ⏱️ Passer cet examen
@@ -13065,6 +13170,20 @@ function executeGlobalSearch(q) {
     }));
   }
 
+  // Documents & Examens PDF (DOCUMENTS_DATA)
+  if ((currentSearchFilter === 'all' || currentSearchFilter === 'pdf' || currentSearchFilter === 'algo') && typeof DOCUMENTS_DATA !== 'undefined') {
+    DOCUMENTS_DATA.getAllDocuments().forEach(d => pool.push({
+      id: d.id,
+      name: d.title,
+      summary: [d.teacher ? 'Prof. ' + d.teacher : '', d.school, d.notes].filter(Boolean).join(' • '),
+      category: d.kind === 'examen' ? 'Examen Bac' : (d.kind === 'serie' ? 'Série / TP' : 'Extrait d\'Examen'),
+      module: 'algo',
+      view: d.kind === 'examen' ? 'examens' : (d.module === 'algo-pratique' ? 'algo-pratique' : 'algo-theorique'),
+      icon: d.kind === 'examen' ? '🎓' : (d.id.startsWith('tp') ? '🧪' : '📄'),
+      file: d.file
+    }));
+  }
+
   // Filtrage selon la requête
   let filtered = pool;
   if (query) {
@@ -13162,6 +13281,12 @@ function navigateGlobalSearchResult(index) {
   // Si c'est une leçon PDF
   if (target.isLesson && typeof openPdfModal === 'function') {
     setTimeout(() => openPdfModal(target.lessonId), 150);
+    return;
+  }
+
+  // Si c'est un document PDF issu de DOCUMENTS_DATA
+  if (target.file) {
+    window.open(target.file, '_blank');
     return;
   }
 

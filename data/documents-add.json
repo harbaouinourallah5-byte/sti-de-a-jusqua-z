@@ -1,0 +1,220 @@
+[
+ {
+  "id": "tp1-qt-min-max",
+  "kind": "serie",
+  "title": "TP1 Qt : remplir, MinMax, afficher (fichiers)",
+  "module": "algo-pratique",
+  "chapters": [
+   "fichiers",
+   "tableaux"
+  ],
+  "teacher": "Aymen Jamazi",
+  "file": "pdf/series/pratique/tp1-qt-min-max/sujet.pdf",
+  "correction": "pdf/series/pratique/tp1-qt-min-max/correction.pdf",
+  "notes": "Le corrigé est du code Python PyQt5 (2 pages)."
+ },
+ {
+  "id": "tp2-qt-tourisme-hotels",
+  "kind": "serie",
+  "title": "TP2 Qt : Tourisme en Tunisie (hôtels, fichier d'enregistrements)",
+  "module": "algo-pratique",
+  "chapters": [
+   "fichiers"
+  ],
+  "teacher": "Aymen Jamazi",
+  "file": "pdf/series/pratique/tp2-qt-tourisme-hotels/sujet.pdf",
+  "correction": "pdf/series/pratique/tp2-qt-tourisme-hotels/correction.pdf",
+  "notes": "Sujet sur 1 page (recollé depuis 2 pages du scan). Corrigé du code sur 2 pages."
+ },
+ {
+  "id": "epreuve-pratique-n2-4si14",
+  "kind": "examen",
+  "examType": "epreuve-pratique",
+  "title": "Épreuve pratique n°2 : suite des sommes de diviseurs et conversion de base (Qt)",
+  "date": "inconnue",
+  "classes": "4SI 1, 4",
+  "school": "",
+  "teacher": "Aymen Jamazi",
+  "duration": "1h",
+  "pages": 2,
+  "module": "algo-pratique",
+  "chapters": [
+   "suites",
+   "fichiers",
+   "bases",
+   "arithmetique"
+  ],
+  "file": "pdf/examens/pratique/epreuve-pratique-n2_4si1-4_jamazi.pdf",
+  "correction": null,
+  "incomplete": false,
+  "notes": "Pas de corrigé dans le scan. Date non imprimée."
+ },
+ {
+  "id": "x-bac2014-pr-molecules",
+  "kind": "extrait",
+  "title": "Bac 2014 Pr : molécules et masse molaire (fichiers)",
+  "module": "algo-theorique",
+  "chapters": [
+   "fichiers"
+  ],
+  "source": "Révision PART 3 (Prof. Aymen Jamazi), exercice 1 ; annale écrite 'Bac 2014 Pr'",
+  "file": "pdf/extraits/fichiers/bac2014-pr_molecules-masse-molaire.pdf",
+  "correction": null
+ },
+ {
+  "id": "x-bac2015-ctrl-ordonnancement",
+  "kind": "extrait",
+  "title": "Bac 2015 Ctrl : ordonnancement de processus (fichiers)",
+  "module": "algo-theorique",
+  "chapters": [
+   "fichiers",
+   "tableaux"
+  ],
+  "source": "Révision PART 3, exercice 2 ; annale écrite 'Bac 2015 Ctrl'",
+  "file": "pdf/extraits/fichiers/bac2015-ctrl_ordonnancement-processus.pdf",
+  "correction": null,
+  "notes": "Recollé depuis 2 pages."
+ },
+ {
+  "id": "x-bac2011-pr-zones",
+  "kind": "extrait",
+  "title": "Bac 2011 Pr : zones de concentration dans une matrice",
+  "module": "algo-theorique",
+  "chapters": [
+   "matrices"
+  ],
+  "source": "Révision PART 3, exercice 3 ; annale écrite 'Bac 2011 Pr'",
+  "file": "pdf/extraits/matrices/bac2011-pr_zones-de-concentration.pdf",
+  "correction": null,
+  "notes": "Recollé depuis 2 pages."
+ },
+ {
+  "id": "x-part3-ex4-recursivite",
+  "kind": "extrait",
+  "title": "Série de récursivité : Somme, nbchiffres et fonctions Quoi",
+  "module": "algo-theorique",
+  "chapters": [
+   "recursivite"
+  ],
+  "source": "Révision PART 3, exercice 4",
+  "file": "pdf/extraits/recursivite/revision-part3_ex4-la-recursivite.pdf",
+  "correction": null
+ },
+ {
+  "id": "x-t2-ex1-fonction-f",
+  "kind": "extrait",
+  "title": "Fonction F récursive, trace, factorielle et nombre valide (X = n! + 1)",
+  "module": "algo-theorique",
+  "chapters": [
+   "recursivite",
+   "arithmetique"
+  ],
+  "source": "Révision Trimestre 2, exercice 1",
+  "file": "pdf/extraits/recursivite/revision-t2_ex1-fonction-f-et-nombre-valide.pdf",
+  "correction": null
+ },
+ {
+  "id": "x-t2-ex2-baum-sweet",
+  "kind": "extrait",
+  "title": "Suite de Baum-Sweet : matrice et chemins rectilignes",
+  "module": "algo-theorique",
+  "chapters": [
+   "suites",
+   "matrices",
+   "bases",
+   "fichiers"
+  ],
+  "source": "Révision Trimestre 2, exercice 2",
+  "file": "pdf/extraits/suites/revision-t2_ex2-suite-baum-sweet.pdf",
+  "correction": null,
+  "notes": "Recollé depuis 2 pages."
+ },
+ {
+  "id": "x-t2-ex3-triangulaires",
+  "kind": "extrait",
+  "title": "Matrices triangulaires supérieure et inférieure",
+  "module": "algo-theorique",
+  "chapters": [
+   "matrices"
+  ],
+  "source": "Révision Trimestre 2, exercice 3",
+  "file": "pdf/extraits/matrices/revision-t2_ex3-matrices-triangulaires.pdf",
+  "correction": null
+ },
+ {
+  "id": "serie-5-exercices-recursivite",
+  "kind": "serie",
+  "title": "Série de 5 exercices : récursivité (ex. 1 à 4) et tableaux / chaînes (ex. 5)",
+  "module": "algo-theorique",
+  "chapters": [
+   "recursivite",
+   "tableaux"
+  ],
+  "teacher": "Aymen Jamazi",
+  "exercises": [
+   {
+    "n": 1,
+    "chapters": [
+     "recursivite"
+    ]
+   },
+   {
+    "n": 2,
+    "chapters": [
+     "recursivite"
+    ]
+   },
+   {
+    "n": 3,
+    "chapters": [
+     "recursivite"
+    ]
+   },
+   {
+    "n": 4,
+    "chapters": [
+     "recursivite"
+    ]
+   },
+   {
+    "n": 5,
+    "chapters": [
+     "tableaux"
+    ]
+   }
+  ],
+  "file": "pdf/series/recursivite/serie-5-exercices-recursivite-et-tableaux.pdf",
+  "correction": null,
+  "notes": "Le fichier contient les 5 exercices ; chaque exercice est étiqueté par chapitre ci-dessus (pas de copie en double)."
+ },
+ {
+  "id": "serie-polydivisible-diagonale",
+  "kind": "serie",
+  "title": "Matrices et fichiers : nombres polydivisibles, bistochastique, diagonale (page 1)",
+  "module": "algo-theorique",
+  "chapters": [
+   "matrices",
+   "fichiers"
+  ],
+  "teacher": "Aymen Jamazi",
+  "file": "pdf/series/matrices/serie-polydivisible-diagonale_page-1-seulement.pdf",
+  "correction": null,
+  "incomplete": true,
+  "notes": "INCOMPLET : l'énoncé de l'exercice 3 est sur une page absente du scan. Cette page apparaissait 2 fois dans le scan : une seule copie est gardée."
+ },
+ {
+  "id": "x-symetrie-lignes-colonnes",
+  "kind": "extrait",
+  "title": "Lignes et colonnes symétriques d'une matrice (fichier Symetrie.txt)",
+  "module": "algo-theorique",
+  "chapters": [
+   "matrices",
+   "fichiers",
+   "tableaux"
+  ],
+  "source": "Feuille d'exercices sans titre (page 1)",
+  "file": "pdf/extraits/matrices/symetrie-lignes-et-colonnes.pdf",
+  "correction": null,
+  "notes": "Le début de la première ligne de l'énoncé est coupé sur la photo."
+ }
+]
