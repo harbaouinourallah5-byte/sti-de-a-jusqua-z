@@ -27,6 +27,7 @@ var NOTEBOOKS_APP = (function () {
     saveStatus: 'saved',     // 'saved' | 'saving' | 'error'
     saveTimer: null,
     turnAnim: '',
+    autoApplyTheme: true,
     undoStack: [],
     redoStack: [],
     wizard: null
@@ -58,6 +59,21 @@ var NOTEBOOKS_APP = (function () {
         if (state.subView === 'auth') state.subView = 'dashboard';
       } else {
         state.subView = 'auth';
+      }
+      if (!state.initialized) {
+        document.addEventListener('keydown', function (ev) {
+          var viewNb = document.getElementById('view-notebooks');
+          if (!viewNb || !viewNb.classList.contains('active') || state.subView !== 'editor' || state.readingMode) return;
+          var tag = (document.activeElement && document.activeElement.tagName) || '';
+          var isTyping = (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT');
+          if ((ev.ctrlKey || ev.metaKey) && !isTyping) {
+            if (ev.key.toLowerCase() === 'z' && !ev.shiftKey) { ev.preventDefault(); undo(); }
+            else if (ev.key.toLowerCase() === 'y' || (ev.key.toLowerCase() === 'z' && ev.shiftKey)) { ev.preventDefault(); redo(); }
+          } else if ((ev.key === 'Delete' || ev.key === 'Backspace') && !isTyping && state.selectedElementId && state.selectedElementId !== 'coverTitle' && state.selectedElementId !== 'coverName') {
+            ev.preventDefault();
+            NOTEBOOKS_APP.deleteElement(state.selectedElementId);
+          }
+        });
       }
       state.initialized = true;
       render();
@@ -287,7 +303,7 @@ var NOTEBOOKS_APP = (function () {
             '</div>' +
             '<div class="nb-form-field">' +
               '<label for="nbRegUser">Nom d’utilisateur (identifiant unique)</label>' +
-              '<input id="nbRegUser" class="nb-input" type="text" placeholder="Ex: ranim" required>' +
+              '<input id="nbRegUser" class="nb-input" type="text" placeholder="Ex: ranim" required oninput="this.dataset.touched = this.value.trim() ? \'1\' : \'\'">' +
             '</div>' +
             '<div class="nb-form-field">' +
               '<label for="nbRegPass">Mot de passe (min. 4 caractères)</label>' +
@@ -422,12 +438,12 @@ var NOTEBOOKS_APP = (function () {
           '<div class="nb-wizard-section-title">1. Identité du cahier (affichée sur la couverture)</div>' +
           '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">' +
             '<div class="nb-form-field">' +
-              '<label>Votre Prénom / Nom sur la couverture</label>' +
-              '<input class="nb-input" type="text" value="' + esc(w.ownerName) + '" oninput="NOTEBOOKS_APP.updateWizardField(\'ownerName\', this.value)">' +
+              '<label for="nbWizOwnerName">Votre Prénom / Nom sur la couverture</label>' +
+              '<input id="nbWizOwnerName" class="nb-input" type="text" value="' + esc(w.ownerName) + '" oninput="NOTEBOOKS_APP.updateWizardTextField(\'ownerName\', this.value)">' +
             '</div>' +
             '<div class="nb-form-field">' +
-              '<label>Titre du cahier</label>' +
-              '<input class="nb-input" type="text" value="' + esc(w.title) + '" oninput="NOTEBOOKS_APP.updateWizardField(\'title\', this.value)">' +
+              '<label for="nbWizTitle">Titre du cahier</label>' +
+              '<input id="nbWizTitle" class="nb-input" type="text" value="' + esc(w.title) + '" oninput="NOTEBOOKS_APP.updateWizardTextField(\'title\', this.value)">' +
             '</div>' +
           '</div>' +
 
@@ -500,7 +516,7 @@ var NOTEBOOKS_APP = (function () {
           '</div>' +
         '</div>' +
 
-        '<div class="nb-wizard-sticky-preview">' +
+        '<div class="nb-wizard-sticky-preview" id="nbWizardLivePreview">' +
           '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">' +
             '<strong style="font-size:0.95rem;">👁️ Aperçu Automatique Coordonné</strong>' +
             '<span style="font-size:0.74rem;font-weight:800;padding:3px 10px;border-radius:999px;background:' + esc(previewNb.themeConfig.accentSoft) + ';color:' + esc(previewNb.themeConfig.accent) + ';">Thème : ' + esc(previewNb.themeConfig.themeName) + '</span>' +
@@ -509,14 +525,14 @@ var NOTEBOOKS_APP = (function () {
           '<div class="nb-dual-preview">' +
             '<div>' +
               '<div style="font-size:0.72rem;font-weight:700;margin-bottom:4px;color:var(--text-muted);">Couverture</div>' +
-              '<div class="nb-book-frame" style="max-width:260px;">' +
-                '<div class="nb-cover-surface">' + renderCoverArtworkHTML(previewNb, false) + '</div>' +
+              '<div class="nb-book-frame is-thumb-card" style="max-width:260px;">' +
+                '<div class="nb-cover-surface">' + renderCoverArtworkHTML(previewNb, 'wizard') + '</div>' +
               '</div>' +
             '</div>' +
             '<div>' +
               '<div style="font-size:0.72rem;font-weight:700;margin-bottom:4px;color:var(--text-muted);">Page intérieure assortie</div>' +
-              '<div class="nb-book-frame" style="max-width:260px;">' +
-                renderPageSurfaceHTML(previewNb, previewNb.pages[0], 0, true) +
+              '<div class="nb-book-frame is-thumb-card" style="max-width:260px;">' +
+                renderPageSurfaceHTML(previewNb, previewNb.pages[0], 0, 'thumb') +
               '</div>' +
             '</div>' +
           '</div>' +
@@ -669,9 +685,10 @@ var NOTEBOOKS_APP = (function () {
 
     if (tab === 'covers') {
       return '<div class="nb-panel-heading"><span>📕 10 Couvertures</span></div>' +
-        '<label style="display:flex;align-items:center;gap:6px;font-size:0.74rem;font-weight:700;margin-bottom:10px;cursor:pointer;">' +
-          '<input id="nbAutoApplyThemeChk" type="checkbox" checked> Appliquer le thème assorti à tout le cahier' +
+        '<label style="display:flex;align-items:center;gap:6px;font-size:0.74rem;font-weight:700;margin-bottom:8px;cursor:pointer;">' +
+          '<input id="nbAutoApplyThemeChk" type="checkbox" ' + (state.autoApplyTheme ? 'checked' : '') + ' onchange="NOTEBOOKS_APP.setAutoApplyTheme(this.checked)"> Appliquer le thème assorti à tout le cahier' +
         '</label>' +
+        '<button type="button" class="nb-btn nb-btn-sm" style="width:100%;margin-bottom:10px;" onclick="NOTEBOOKS_APP.reapplyCoverTheme()">🎨 Appliquer le thème de la couverture actuelle</button>' +
         '<div class="nb-cover-gallery" style="grid-template-columns:1fr 1fr;">' +
           NOTEBOOKS_DATA.COVERS.map(function (c) {
             return '<button type="button" class="nb-cover-option ' + (c.id === nb.coverId ? 'selected' : '') + '" onclick="NOTEBOOKS_APP.changeCover(\'' + esc(c.id) + '\')">' +
@@ -686,14 +703,14 @@ var NOTEBOOKS_APP = (function () {
       var activeLayId = (state.activePageIndex >= 0 && nb.pages[state.activePageIndex]) ? nb.pages[state.activePageIndex].layoutId : '';
       return '<div class="nb-panel-heading"><span>📄 20 Mises en page</span></div>' +
         '<p style="font-size:0.74rem;color:var(--text-secondary);margin-top:0;">Cliquez pour appliquer à la page active (ou créer une nouvelle page).</p>' +
-        '<div class="nb-layout-gallery" style="grid-template-columns:1fr 1fr;">' +
+        '<div class="nb-layout-gallery" style="grid-template-columns:repeat(2, minmax(0, 1fr));">' +
           NOTEBOOKS_DATA.PAGE_LAYOUTS.map(function (l) {
-            return '<div class="nb-layout-option ' + (l.id === activeLayId ? 'selected' : '') + '" style="padding-bottom:4px;">' +
+            return '<div class="nb-layout-option ' + (l.id === activeLayId ? 'selected' : '') + '" style="padding-bottom:6px;">' +
               '<img src="' + esc(l.previewImage) + '" alt="' + esc(l.name) + '" onclick="NOTEBOOKS_APP.applyOrAddLayout(\'' + esc(l.id) + '\', false)" style="cursor:pointer;">' +
               '<div class="nb-layout-option-name">' + esc(l.num + '. ' + l.name) + '</div>' +
-              '<div style="display:flex;gap:4px;padding:4px 4px 0;justify-content:center;">' +
-                '<button type="button" class="nb-btn nb-btn-sm" style="padding:2px 6px;min-height:24px;font-size:0.66rem;" onclick="NOTEBOOKS_APP.applyOrAddLayout(\'' + esc(l.id) + '\', false)">Appliquer</button>' +
-                '<button type="button" class="nb-btn nb-btn-primary nb-btn-sm" style="padding:2px 6px;min-height:24px;font-size:0.66rem;" onclick="NOTEBOOKS_APP.applyOrAddLayout(\'' + esc(l.id) + '\', true)">+ Page</button>' +
+              '<div style="display:flex;flex-wrap:wrap;gap:4px;padding:4px 4px 0;justify-content:center;">' +
+                '<button type="button" class="nb-btn nb-btn-sm" style="padding:2px 6px;min-height:22px;font-size:0.63rem;" onclick="NOTEBOOKS_APP.applyOrAddLayout(\'' + esc(l.id) + '\', false)">Appliquer</button>' +
+                '<button type="button" class="nb-btn nb-btn-primary nb-btn-sm" style="padding:2px 6px;min-height:22px;font-size:0.63rem;" onclick="NOTEBOOKS_APP.applyOrAddLayout(\'' + esc(l.id) + '\', true)">+ Page</button>' +
               '</div>' +
             '</div>';
           }).join('') +
@@ -743,7 +760,7 @@ var NOTEBOOKS_APP = (function () {
         '<div class="nb-prop-label">Police des titres</div>' +
         '<div style="display:grid;gap:5px;margin-bottom:12px;">' +
           NOTEBOOKS_DATA.FONTS.map(function (f) {
-            return '<button type="button" class="nb-btn nb-btn-sm ' + (curF.fontHeading === f.css ? 'nb-btn-primary' : '') + '" style="justify-content:space-between;font-family:' + esc(f.css) + ';" onclick="NOTEBOOKS_APP.setPageOrThemeStyle(\'fontHeading\', \'' + esc(f.css).replace(/'/g, "\\'") + '\', true)">' +
+            return '<button type="button" class="nb-btn nb-btn-sm ' + (curF.fontHeading === f.css ? 'nb-btn-primary' : '') + '" style="justify-content:space-between;font-family:' + esc(f.css) + ';" onclick="NOTEBOOKS_APP.setFontById(\'fontHeading\', \'' + esc(f.id) + '\')">' +
               '<span>' + esc(f.name) + '</span><span style="font-size:0.68rem;opacity:0.75;">' + esc(f.styleLabel) + '</span>' +
             '</button>';
           }).join('') +
@@ -751,7 +768,7 @@ var NOTEBOOKS_APP = (function () {
         '<div class="nb-prop-label">Police du texte &amp; notes</div>' +
         '<div style="display:grid;gap:5px;">' +
           NOTEBOOKS_DATA.FONTS.map(function (f) {
-            return '<button type="button" class="nb-btn nb-btn-sm ' + (curF.fontBody === f.css ? 'nb-btn-primary' : '') + '" style="justify-content:space-between;font-family:' + esc(f.css) + ';" onclick="NOTEBOOKS_APP.setPageOrThemeStyle(\'fontBody\', \'' + esc(f.css).replace(/'/g, "\\'") + '\', true)">' +
+            return '<button type="button" class="nb-btn nb-btn-sm ' + (curF.fontBody === f.css ? 'nb-btn-primary' : '') + '" style="justify-content:space-between;font-family:' + esc(f.css) + ';" onclick="NOTEBOOKS_APP.setFontById(\'fontBody\', \'' + esc(f.id) + '\')">' +
               '<span>' + esc(f.name) + '</span><span style="font-size:0.68rem;opacity:0.75;">' + esc(f.styleLabel) + '</span>' +
             '</button>';
           }).join('') +
@@ -761,7 +778,7 @@ var NOTEBOOKS_APP = (function () {
     if (tab === 'elements') {
       return '<div class="nb-panel-heading"><span>🌸 Éléments &amp; Stickers</span></div>' +
         '<button type="button" class="nb-btn nb-btn-primary nb-btn-sm" style="width:100%;margin-bottom:10px;" onclick="NOTEBOOKS_APP.addTextElement()">+ Ajouter une zone de texte</button>' +
-        '<div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:6px;">' +
+        '<div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:6px;">' +
           NOTEBOOKS_DATA.ELEMENTS.map(function (el) {
             return '<button type="button" class="nb-btn nb-btn-sm" style="flex-direction:column;height:66px;padding:6px 4px;" onclick="NOTEBOOKS_APP.addStickerElement(\'' + esc(el.id) + '\')" title="' + esc(el.name) + '">' +
               '<span style="width:26px;height:26px;display:inline-flex;color:' + esc(nb.themeConfig.accent) + ';">' + el.svg + '</span>' +
@@ -948,27 +965,27 @@ var NOTEBOOKS_APP = (function () {
       bgStyle += 'background-size:200% 100%;background-position:left center;';
     }
 
-    var scaleFactor = isThumb ? 0.45 : 1;
+    var scaleFactor = (isThumb === 'wizard') ? 0.56 : (isThumb ? 0.44 : 1);
 
     var overlays = '';
     if (isThumb || state.coverFace === 'front') {
       overlays += '<div class="' + (!isThumb && state.selectedElementId === 'coverTitle' ? 'nb-el-box selected' : 'nb-el-box') + '" ' +
         (isThumb ? '' : 'data-drag-id="coverTitle" onclick="event.stopPropagation();NOTEBOOKS_APP.selectElement(\'coverTitle\')" ') +
         'style="left:' + tSt.x + '%;top:' + tSt.y + '%;transform:translate(-50%,-50%);' +
-        'font-family:' + esc(tSt.fontFamily) + ';font-size:' + Math.max(10, Math.round(tSt.fontSize * scaleFactor)) + 'px;' +
+        'font-family:' + esc(tSt.fontFamily) + ';font-size:' + Math.max(9, Math.round(tSt.fontSize * scaleFactor)) + 'px;' +
         'color:' + esc(tSt.color) + ';font-weight:' + (tSt.bold ? '700' : '400') + ';font-style:' + (tSt.italic ? 'italic' : 'normal') + ';' +
         'text-align:' + esc(tSt.align || 'center') + ';background:' + esc(tSt.pillBg || 'transparent') + ';' +
-        'padding:' + (isThumb ? '2px 6px' : '5px 14px') + ';border-radius:10px;max-width:86%;line-height:1.2;box-shadow:' + (tSt.pillBg && tSt.pillBg !== 'transparent' ? '0 2px 10px rgba(0,0,0,0.18)' : 'none') + ';">' +
+        'padding:' + (isThumb ? '2px 5px' : '5px 14px') + ';border-radius:10px;max-width:84%;line-height:1.18;box-shadow:' + (tSt.pillBg && tSt.pillBg !== 'transparent' ? '0 2px 10px rgba(0,0,0,0.18)' : 'none') + ';">' +
         esc(nb.title) +
       '</div>';
 
       overlays += '<div class="' + (!isThumb && state.selectedElementId === 'coverName' ? 'nb-el-box selected' : 'nb-el-box') + '" ' +
         (isThumb ? '' : 'data-drag-id="coverName" onclick="event.stopPropagation();NOTEBOOKS_APP.selectElement(\'coverName\')" ') +
         'style="left:' + nSt.x + '%;top:' + nSt.y + '%;transform:translate(-50%,-50%);' +
-        'font-family:' + esc(nSt.fontFamily) + ';font-size:' + Math.max(9, Math.round(nSt.fontSize * scaleFactor)) + 'px;' +
+        'font-family:' + esc(nSt.fontFamily) + ';font-size:' + Math.max(8, Math.round(nSt.fontSize * scaleFactor)) + 'px;' +
         'color:' + esc(nSt.color) + ';font-weight:' + (nSt.bold ? '700' : '400') + ';font-style:' + (nSt.italic ? 'italic' : 'normal') + ';' +
         'text-align:' + esc(nSt.align || 'center') + ';background:' + esc(nSt.pillBg || 'transparent') + ';' +
-        'padding:' + (isThumb ? '2px 6px' : '4px 12px') + ';border-radius:8px;max-width:82%;line-height:1.2;">' +
+        'padding:' + (isThumb ? '1px 5px' : '4px 12px') + ';border-radius:8px;max-width:80%;line-height:1.18;">' +
         esc(nb.ownerDisplayName) +
       '</div>';
 
@@ -1014,9 +1031,15 @@ var NOTEBOOKS_APP = (function () {
       : '';
 
     var bodyHtml = renderLayoutInnerHTML(nb, page, pageIndex, st, isMiniPreview);
-    var floatHtml = isMiniPreview ? '' : '<div class="nb-floating-layer">' + renderFloatingElementsHTML(page.elements || [], false) + '</div>';
+    var floatHtml = (page.elements && page.elements.length)
+      ? '<div class="nb-floating-layer">' + renderFloatingElementsHTML(page.elements || [], isMiniPreview) + '</div>'
+      : '';
 
-    return '<div class="nb-page-surface ' + esc(isMiniPreview ? '' : state.turnAnim) + '" style="' + cssVars + (isMiniPreview ? 'padding:12px;font-size:0.75em;' : '') + '" onclick="NOTEBOOKS_APP.onSurfaceClick(event)">' +
+    var miniInline = (isMiniPreview === 'thumb')
+      ? 'padding:8px;font-size:0.58rem;min-height:0;height:100%;'
+      : (isMiniPreview ? 'padding:18px;font-size:0.95rem;' : '');
+
+    return '<div class="nb-page-surface ' + esc(isMiniPreview ? '' : state.turnAnim) + '" style="' + cssVars + miniInline + '" onclick="NOTEBOOKS_APP.onSurfaceClick(event)">' +
       bgImgHtml +
       '<div class="nb-page-pattern-layer ' + esc(patObj.cssClass) + '"></div>' +
       '<div class="nb-page-inner-frame nb-border-' + esc(st.borderStyle) + '">' +
@@ -1044,12 +1067,31 @@ var NOTEBOOKS_APP = (function () {
     var sym = t.done ? '✓' : '';
     var prioLabels = { low: 'Basse', medium: 'Moy', high: 'Haute' };
     var pCls = 'nb-prio-' + (t.priority || 'medium');
-    return '<div class="nb-task-row ' + (t.done ? 'done' : '') + '">' +
-      '<button type="button" class="nb-task-check style-' + esc(st.checkboxStyle) + ' ' + (t.done ? 'checked' : '') + '" onclick="NOTEBOOKS_APP.toggleTask(' + pageIdx + ', \'' + esc(t.id) + '\')"><span>' + sym + '</span></button>' +
-      '<input type="text" class="nb-task-text" value="' + esc(t.text) + '" oninput="NOTEBOOKS_APP.updateTaskField(' + pageIdx + ', \'' + esc(t.id) + '\', \'text\', this.value)" placeholder="Nouvelle tâche...">' +
-      '<input type="text" class="nb-task-text nb-edit-only" style="max-width:70px;font-size:0.7rem;color:var(--nb-muted);text-align:right;" value="' + esc(t.deadline || '') + '" oninput="NOTEBOOKS_APP.updateTaskField(' + pageIdx + ', \'' + esc(t.id) + '\', \'deadline\', this.value)" placeholder="Date">' +
-      '<button type="button" class="nb-prio-pill ' + pCls + '" onclick="NOTEBOOKS_APP.cycleTaskPriority(' + pageIdx + ', \'' + esc(t.id) + '\')" title="Changer priorité">' + esc(prioLabels[t.priority || 'medium']) + '</button>' +
-      '<button type="button" class="nb-edit-only" style="border:none;background:transparent;color:#ef4444;cursor:pointer;font-weight:800;padding:0 3px;" onclick="NOTEBOOKS_APP.deleteTask(' + pageIdx + ', \'' + esc(t.id) + '\')">×</button>' +
+    var isStatic = (pageIdx < 0);
+    if (isStatic) {
+      return '<div class="nb-task-wrap">' +
+        '<div class="nb-task-row ' + (t.done ? 'done' : '') + '">' +
+          '<span class="nb-task-check style-' + esc(st.checkboxStyle) + ' ' + (t.done ? 'checked' : '') + '"><span>' + sym + '</span></span>' +
+          '<span class="nb-task-text" style="display:inline-block;white-space:normal;word-break:break-word;line-height:1.25;">' + (t.text ? esc(t.text) : '<span style="opacity:0.45;">Nouvelle tâche...</span>') + '</span>' +
+          (t.category ? '<span class="nb-task-cat-chip">' + esc(t.category) + '</span>' : '') +
+          (t.deadline ? '<span style="font-size:0.65rem;color:var(--nb-muted);white-space:nowrap;">📅 ' + esc(t.deadline) + '</span>' : '') +
+          '<span class="nb-prio-pill ' + pCls + '">' + esc(prioLabels[t.priority || 'medium']) + '</span>' +
+        '</div>' +
+        (t.desc ? '<div class="nb-task-subrow"><span class="nb-task-desc-input" style="white-space:normal;">' + esc(t.desc) + '</span></div>' : '') +
+      '</div>';
+    }
+    return '<div class="nb-task-wrap">' +
+      '<div class="nb-task-row ' + (t.done ? 'done' : '') + '">' +
+        '<button type="button" aria-label="Marquer terminée" class="nb-task-check style-' + esc(st.checkboxStyle) + ' ' + (t.done ? 'checked' : '') + '" onclick="NOTEBOOKS_APP.toggleTask(' + pageIdx + ', \'' + esc(t.id) + '\')"><span>' + sym + '</span></button>' +
+        '<input type="text" class="nb-task-text" value="' + esc(t.text) + '" oninput="NOTEBOOKS_APP.updateTaskField(' + pageIdx + ', \'' + esc(t.id) + '\', \'text\', this.value)" placeholder="Nouvelle tâche...">' +
+        '<input type="text" class="nb-task-text nb-edit-only" style="flex:0 1 48px;max-width:48px;font-size:0.68rem;color:var(--nb-muted);text-align:center;" value="' + esc(t.category || '') + '" oninput="NOTEBOOKS_APP.updateTaskField(' + pageIdx + ', \'' + esc(t.id) + '\', \'category\', this.value)" placeholder="Cat.">' +
+        '<input type="text" class="nb-task-text nb-edit-only" style="flex:0 1 52px;max-width:52px;font-size:0.68rem;color:var(--nb-muted);text-align:right;" value="' + esc(t.deadline || '') + '" oninput="NOTEBOOKS_APP.updateTaskField(' + pageIdx + ', \'' + esc(t.id) + '\', \'deadline\', this.value)" placeholder="Date">' +
+        '<button type="button" class="nb-prio-pill ' + pCls + '" onclick="NOTEBOOKS_APP.cycleTaskPriority(' + pageIdx + ', \'' + esc(t.id) + '\')" title="Changer priorité">' + esc(prioLabels[t.priority || 'medium']) + '</button>' +
+        '<button type="button" aria-label="Supprimer tâche" class="nb-edit-only" style="border:none;background:transparent;color:#ef4444;cursor:pointer;font-weight:800;padding:0 3px;" onclick="NOTEBOOKS_APP.deleteTask(' + pageIdx + ', \'' + esc(t.id) + '\')">×</button>' +
+      '</div>' +
+      '<div class="nb-task-subrow">' +
+        '<input type="text" class="nb-task-desc-input" value="' + esc(t.desc || '') + '" oninput="NOTEBOOKS_APP.updateTaskField(' + pageIdx + ', \'' + esc(t.id) + '\', \'desc\', this.value)" placeholder="Description / détail...">' +
+      '</div>' +
     '</div>';
   }
 
@@ -1057,11 +1099,28 @@ var NOTEBOOKS_APP = (function () {
     var f = page.fields || {};
     var lid = page.layoutId;
     var pIdx = isMini ? -1 : pageIndex;
-    var ro = isMini ? 'disabled' : '';
     var iconHtml = headerIconForLayout(lid, st);
 
+    function fieldLine(key, val, placeholder, extraAttrs, extraStyle) {
+      if (isMini) {
+        return '<span class="nb-pg-input-line" style="display:inline-block;' + (extraStyle || '') + '">' +
+          (val ? esc(val) : '<span style="opacity:0.35;">' + esc(placeholder || '...') + '</span>') +
+        '</span>';
+      }
+      return '<input type="text" class="nb-pg-input-line" ' + (extraStyle ? 'style="' + extraStyle + '" ' : '') + 'value="' + esc(val || '') + '" placeholder="' + esc(placeholder || '') + '" ' + extraAttrs + '>';
+    }
+
+    function fieldArea(cls, val, placeholder, extraAttrs, extraStyle) {
+      if (isMini) {
+        return '<div class="' + cls + '" style="white-space:pre-wrap;overflow:hidden;' + (extraStyle || '') + '">' +
+          (val ? esc(val) : '<span style="opacity:0.35;">' + esc(placeholder || '') + '</span>') +
+        '</div>';
+      }
+      return '<textarea class="' + cls + '" ' + (extraStyle ? 'style="' + extraStyle + '" ' : '') + 'placeholder="' + esc(placeholder || '') + '" ' + extraAttrs + '>' + esc(val || '') + '</textarea>';
+    }
+
     var footerHtml = '<div class="nb-pg-footer">' +
-      '<span>Date : <input type="text" ' + ro + ' class="nb-pg-input-line" style="width:105px;display:inline;" value="' + esc(f.headerDate || '') + '" oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'headerDate\', this.value)"></span>' +
+      '<span>Date : ' + fieldLine('headerDate', f.headerDate, '...', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'headerDate\', this.value)"', 'width:105px;display:inline;') + '</span>' +
       '<span style="font-weight:700;">' + esc(nb.ownerDisplayName) + ' • p.' + (pageIndex + 1) + '</span>' +
     '</div>';
 
@@ -1069,7 +1128,7 @@ var NOTEBOOKS_APP = (function () {
     if (lid === '01-classic-lined' || lid === '11-brain-dump' || lid === '20-decorative-lined') {
       var hTitle = lid === '11-brain-dump' ? 'Brain Dump' : 'Notes';
       return '<div class="nb-pg-header"><h3 class="nb-pg-title">' + hTitle + '</h3>' + iconHtml + '</div>' +
-        '<textarea ' + ro + ' class="nb-pg-lined-area" placeholder="Écrivez vos notes ici..." oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)">' + esc(f.notesText || '') + '</textarea>' +
+        fieldArea('nb-pg-lined-area', f.notesText, 'Écrivez vos notes ici...', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)"', '') +
         (lid === '20-decorative-lined' ? '<div style="text-align:center;color:var(--nb-accent);height:20px;margin:4px 0;">' + NOTEBOOKS_DATA.getElementById('bow-coquette').svg.replace('<svg ', '<svg style="height:20px;" ') + '</div>' : '') +
         footerHtml;
     }
@@ -1077,21 +1136,21 @@ var NOTEBOOKS_APP = (function () {
     // 2. Dotted Notes
     if (lid === '02-dotted-notes') {
       return '<div class="nb-pg-header"><h3 class="nb-pg-title">Bullet Notes</h3>' + iconHtml + '</div>' +
-        '<textarea ' + ro + ' class="nb-pg-plain-area nb-pg-dots-bg" placeholder="Page pointillée libre..." oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)">' + esc(f.notesText || '') + '</textarea>' +
+        fieldArea('nb-pg-plain-area nb-pg-dots-bg', f.notesText, 'Page pointillée libre...', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)"', '') +
         footerHtml;
     }
 
     // 3. Grid Notes
     if (lid === '03-grid-notes') {
       return '<div class="nb-pg-header"><h3 class="nb-pg-title">Notes Quadrillées</h3>' + iconHtml + '</div>' +
-        '<textarea ' + ro + ' class="nb-pg-plain-area nb-pg-grid-bg" placeholder="Schémas, algorithmes ou notes..." oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)">' + esc(f.notesText || '') + '</textarea>' +
+        fieldArea('nb-pg-plain-area nb-pg-grid-bg', f.notesText, 'Schémas, algorithmes ou notes...', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)"', '') +
         footerHtml;
     }
 
     // 4. Blank Journal
     if (lid === '04-blank-journal') {
       return '<div class="nb-pg-header"><h3 class="nb-pg-title">Dream Big ♡</h3>' + iconHtml + '</div>' +
-        '<textarea ' + ro + ' class="nb-pg-plain-area" placeholder="Exprimez-vous librement, collez des stickers et des souvenirs..." oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)">' + esc(f.notesText || '') + '</textarea>' +
+        fieldArea('nb-pg-plain-area', f.notesText, 'Exprimez-vous librement, collez des stickers et des souvenirs...', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)"', '') +
         footerHtml;
     }
 
@@ -1100,10 +1159,10 @@ var NOTEBOOKS_APP = (function () {
       var tasksHtml = (page.tasks || []).map(function (t) { return renderTaskRowHTML(t, st, pIdx); }).join('');
       return '<div class="nb-pg-header"><h3 class="nb-pg-title">To-Do List</h3>' + iconHtml + '</div>' +
         '<div style="flex:1;overflow-y:auto;">' + tasksHtml +
-          '<button type="button" class="nb-btn nb-btn-sm nb-edit-only" style="margin-top:8px;width:100%;" onclick="NOTEBOOKS_APP.addTask(' + pIdx + ')">+ Ajouter une tâche</button>' +
+          (isMini ? '' : '<button type="button" class="nb-btn nb-btn-sm nb-edit-only" style="margin-top:8px;width:100%;" onclick="NOTEBOOKS_APP.addTask(' + pIdx + ')">+ Ajouter une tâche</button>') +
         '</div>' +
-        '<div class="nb-pg-box" style="margin-top:8px;min-height:68px;"><span class="nb-pg-box-label">Notes</span>' +
-          '<textarea ' + ro + ' class="nb-pg-plain-area" style="font-size:0.78rem;" placeholder="Détails ou rappels..." oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)">' + esc(f.notesText || '') + '</textarea>' +
+        '<div class="nb-pg-box" style="margin-top:8px;min-height:60px;"><span class="nb-pg-box-label">Notes</span>' +
+          fieldArea('nb-pg-plain-area', f.notesText, 'Détails ou rappels...', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)"', 'font-size:0.78rem;') +
         '</div>' + footerHtml;
     }
 
@@ -1117,7 +1176,7 @@ var NOTEBOOKS_APP = (function () {
             '<div class="nb-pg-box-label">Priorités du jour</div>' +
             [0, 1, 2].map(function (pi) {
               return '<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;"><strong style="color:var(--nb-accent);font-size:0.8rem;">' + (pi + 1) + '.</strong>' +
-                '<input type="text" ' + ro + ' class="nb-pg-input-line" value="' + esc(prios[pi] || '') + '" oninput="NOTEBOOKS_APP.updateArrayField(' + pIdx + ', \'priorities\', ' + pi + ', this.value)" placeholder="Priorité ' + (pi + 1) + '"></div>';
+                fieldLine('prio_' + pi, prios[pi], 'Priorité ' + (pi + 1), 'oninput="NOTEBOOKS_APP.updateArrayField(' + pIdx + ', \'priorities\', ' + pi + ', this.value)"', '') + '</div>';
             }).join('') +
           '</div>'
         ) : '') +
@@ -1126,13 +1185,18 @@ var NOTEBOOKS_APP = (function () {
             '<div class="nb-pg-box-label">Programme</div>' +
             sched.map(function (slot, si) {
               return '<div class="nb-task-row ' + (slot.done ? 'done' : '') + '">' +
-                '<button type="button" class="nb-task-check style-' + esc(st.checkboxStyle) + ' ' + (slot.done ? 'checked' : '') + '" onclick="NOTEBOOKS_APP.toggleScheduleDone(' + pIdx + ', ' + si + ')"><span>' + (slot.done ? '✓' : '') + '</span></button>' +
+                (isMini
+                  ? '<span class="nb-task-check style-' + esc(st.checkboxStyle) + ' ' + (slot.done ? 'checked' : '') + '"><span>' + (slot.done ? '✓' : '') + '</span></span>'
+                  : '<button type="button" class="nb-task-check style-' + esc(st.checkboxStyle) + ' ' + (slot.done ? 'checked' : '') + '" onclick="NOTEBOOKS_APP.toggleScheduleDone(' + pIdx + ', ' + si + ')"><span>' + (slot.done ? '✓' : '') + '</span></button>') +
                 '<span style="font-size:0.72rem;font-weight:800;color:var(--nb-accent);min-width:36px;">' + esc(slot.time) + '</span>' +
-                '<input type="text" ' + ro + ' class="nb-task-text" value="' + esc(slot.text || '') + '" oninput="NOTEBOOKS_APP.updateScheduleText(' + pIdx + ', ' + si + ', this.value)" placeholder="..."></div>';
+                (isMini
+                  ? '<span class="nb-task-text" style="display:inline-block;">' + (slot.text ? esc(slot.text) : '') + '</span>'
+                  : '<input type="text" class="nb-task-text" value="' + esc(slot.text || '') + '" oninput="NOTEBOOKS_APP.updateScheduleText(' + pIdx + ', ' + si + ', this.value)" placeholder="...">') +
+              '</div>';
             }).join('') +
           '</div>' +
           '<div class="nb-pg-box"><span class="nb-pg-box-label">Notes</span>' +
-            '<textarea ' + ro + ' class="nb-pg-plain-area" style="font-size:0.78rem;" placeholder="Notes du jour..." oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)">' + esc(f.notesText || '') + '</textarea>' +
+            fieldArea('nb-pg-plain-area', f.notesText, 'Notes du jour...', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)"', 'font-size:0.78rem;') +
           '</div>' +
         '</div>' + footerHtml;
     }
@@ -1146,12 +1210,12 @@ var NOTEBOOKS_APP = (function () {
           '<div style="display:flex;flex-direction:column;gap:5px;overflow-y:auto;">' +
             days.map(function (d) {
               return '<div style="display:flex;align-items:center;gap:6px;">' +
-                '<span style="background:var(--nb-accent-soft);color:var(--nb-heading);font-weight:800;font-size:0.68rem;padding:3px 7px;border-radius:8px;min-width:62px;text-align:center;">' + d.slice(0, 3) + '</span>' +
-                '<input type="text" ' + ro + ' class="nb-pg-input-line" value="' + esc(wd[d] || '') + '" oninput="NOTEBOOKS_APP.updateWeekDay(' + pIdx + ', \'' + d + '\', this.value)" placeholder="..."></div>';
+                '<span style="background:var(--nb-accent-soft);color:var(--nb-heading);font-weight:800;font-size:0.68rem;padding:3px 7px;border-radius:8px;min-width:52px;text-align:center;">' + d.slice(0, 3) + '</span>' +
+                fieldLine('wd_' + d, wd[d], '...', 'oninput="NOTEBOOKS_APP.updateWeekDay(' + pIdx + ', \'' + d + '\', this.value)"', '') + '</div>';
             }).join('') +
           '</div>' +
           '<div class="nb-pg-box"><span class="nb-pg-box-label">Notes semaine</span>' +
-            '<textarea ' + ro + ' class="nb-pg-plain-area" style="font-size:0.78rem;" oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)">' + esc(f.notesText || '') + '</textarea>' +
+            fieldArea('nb-pg-plain-area', f.notesText, '', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)"', 'font-size:0.78rem;') +
           '</div>' +
         '</div>' + footerHtml;
     }
@@ -1159,17 +1223,24 @@ var NOTEBOOKS_APP = (function () {
     // 8. Monthly Planner
     if (lid === '08-monthly-planner') {
       var cells = f.monthlyCells || Array(35).fill('');
-      return '<div class="nb-pg-header"><input type="text" ' + ro + ' class="nb-pg-title" style="border:none;background:transparent;width:80%;" value="' + esc(f.monthName || 'Mois') + '" oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'monthName\', this.value)">' + iconHtml + '</div>' +
+      return '<div class="nb-pg-header">' +
+        (isMini ? '<h3 class="nb-pg-title">' + esc(f.monthName || 'Mois') + '</h3>' : '<input type="text" class="nb-pg-title" style="border:none;background:transparent;width:80%;" value="' + esc(f.monthName || 'Mois') + '" oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'monthName\', this.value)">') +
+        iconHtml + '</div>' +
         '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;font-size:0.66rem;font-weight:800;text-align:center;color:var(--nb-heading);margin-bottom:3px;">' +
           '<span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span>' +
         '</div>' +
         '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;flex:1;">' +
           cells.map(function (val, ci) {
-            return '<textarea ' + ro + ' style="border:1px solid var(--nb-border);border-radius:4px;background:rgba(255,255,255,0.65);resize:none;font-size:0.66rem;padding:3px;color:var(--nb-text);" placeholder="' + (ci < 31 ? (ci + 1) : '') + '" oninput="NOTEBOOKS_APP.updateArrayField(' + pIdx + ', \'monthlyCells\', ' + ci + ', this.value)">' + esc(val) + '</textarea>';
+            if (isMini) {
+              return '<div style="border:1px solid var(--nb-border);border-radius:4px;background:rgba(255,255,255,0.65);font-size:0.64rem;padding:2px;color:var(--nb-text);overflow:hidden;">' +
+                (val ? esc(val) : '<span style="opacity:0.4;">' + (ci < 31 ? (ci + 1) : '') + '</span>') +
+              '</div>';
+            }
+            return '<textarea style="border:1px solid var(--nb-border);border-radius:4px;background:rgba(255,255,255,0.65);resize:none;font-size:0.66rem;padding:3px;color:var(--nb-text);" placeholder="' + (ci < 31 ? (ci + 1) : '') + '" oninput="NOTEBOOKS_APP.updateArrayField(' + pIdx + ', \'monthlyCells\', ' + ci + ', this.value)">' + esc(val) + '</textarea>';
           }).join('') +
         '</div>' +
         '<div class="nb-pg-box" style="margin-top:6px;height:54px;"><span class="nb-pg-box-label">Notes du mois</span>' +
-          '<textarea ' + ro + ' class="nb-pg-plain-area" style="font-size:0.75rem;" oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)">' + esc(f.notesText || '') + '</textarea>' +
+          fieldArea('nb-pg-plain-area', f.notesText, '', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)"', 'font-size:0.75rem;') +
         '</div>';
     }
 
@@ -1177,12 +1248,12 @@ var NOTEBOOKS_APP = (function () {
     if (lid === '09-study-notes') {
       return '<div class="nb-pg-header"><h3 class="nb-pg-title">Study Notes</h3>' + iconHtml + '</div>' +
         '<div style="display:grid;grid-template-columns:1.3fr 1fr;gap:8px;margin-bottom:8px;">' +
-          '<div><span class="nb-pg-box-label">Matière :</span><input type="text" ' + ro + ' class="nb-pg-input-line" value="' + esc(f.subject || '') + '" placeholder="Algorithmique / STI..." oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'subject\', this.value)"></div>' +
-          '<div><span class="nb-pg-box-label">Date :</span><input type="text" ' + ro + ' class="nb-pg-input-line" value="' + esc(f.headerDate || '') + '" oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'headerDate\', this.value)"></div>' +
+          '<div><span class="nb-pg-box-label">Matière :</span>' + fieldLine('subject', f.subject, 'Algorithmique / STI...', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'subject\', this.value)"', '') + '</div>' +
+          '<div><span class="nb-pg-box-label">Date :</span>' + fieldLine('headerDate', f.headerDate, '...', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'headerDate\', this.value)"', '') + '</div>' +
         '</div>' +
-        '<textarea ' + ro + ' class="nb-pg-lined-area" placeholder="Résumé de cours, formules, algorithmes..." oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)">' + esc(f.notesText || '') + '</textarea>' +
+        fieldArea('nb-pg-lined-area', f.notesText, 'Résumé de cours, formules, algorithmes...', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)"', '') +
         '<div class="nb-pg-box" style="margin-top:6px;height:62px;"><span class="nb-pg-box-label">À retenir absolument</span>' +
-          '<textarea ' + ro + ' class="nb-pg-plain-area" style="font-size:0.76rem;" oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesSecondary\', this.value)">' + esc(f.notesSecondary || '') + '</textarea>' +
+          fieldArea('nb-pg-plain-area', f.notesSecondary, '', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesSecondary\', this.value)"', 'font-size:0.76rem;') +
         '</div>';
     }
 
@@ -1191,15 +1262,15 @@ var NOTEBOOKS_APP = (function () {
       var pTasks = (page.tasks || []).map(function (t) { return renderTaskRowHTML(t, st, pIdx); }).join('');
       return '<div class="nb-pg-header"><h3 class="nb-pg-title">Project Planner</h3>' + iconHtml + '</div>' +
         '<div style="display:grid;grid-template-columns:1.3fr 1fr;gap:8px;margin-bottom:8px;">' +
-          '<div><span class="nb-pg-box-label">Projet :</span><input type="text" ' + ro + ' class="nb-pg-input-line" value="' + esc(f.projectTitle || '') + '" placeholder="Nom du projet" oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'projectTitle\', this.value)"></div>' +
-          '<div><span class="nb-pg-box-label">Échéance :</span><input type="text" ' + ro + ' class="nb-pg-input-line" value="' + esc(f.projectDeadline || '') + '" placeholder="Date limite" oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'projectDeadline\', this.value)"></div>' +
+          '<div><span class="nb-pg-box-label">Projet :</span>' + fieldLine('projectTitle', f.projectTitle, 'Nom du projet', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'projectTitle\', this.value)"', '') + '</div>' +
+          '<div><span class="nb-pg-box-label">Échéance :</span>' + fieldLine('projectDeadline', f.projectDeadline, 'Date limite', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'projectDeadline\', this.value)"', '') + '</div>' +
         '</div>' +
         '<div class="nb-pg-box-label">Étapes &amp; Tâches</div>' +
         '<div style="flex:1;overflow-y:auto;">' + pTasks +
-          '<button type="button" class="nb-btn nb-btn-sm nb-edit-only" style="margin-top:6px;width:100%;" onclick="NOTEBOOKS_APP.addTask(' + pIdx + ')">+ Ajouter une étape</button>' +
+          (isMini ? '' : '<button type="button" class="nb-btn nb-btn-sm nb-edit-only" style="margin-top:6px;width:100%;" onclick="NOTEBOOKS_APP.addTask(' + pIdx + ')">+ Ajouter une étape</button>') +
         '</div>' +
         '<div class="nb-pg-box" style="margin-top:8px;height:70px;"><span class="nb-pg-box-label">Notes projet</span>' +
-          '<textarea ' + ro + ' class="nb-pg-plain-area" style="font-size:0.78rem;" oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)">' + esc(f.notesText || '') + '</textarea>' +
+          fieldArea('nb-pg-plain-area', f.notesText, '', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)"', 'font-size:0.78rem;') +
         '</div>';
     }
 
@@ -1213,17 +1284,17 @@ var NOTEBOOKS_APP = (function () {
         '<div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;">' +
           habits.map(function (hb, hi) {
             return '<div style="display:grid;grid-template-columns:1fr repeat(7,22px) 18px;gap:4px;align-items:center;">' +
-              '<input type="text" ' + ro + ' class="nb-pg-input-line" style="font-size:0.78rem;" value="' + esc(hb.name) + '" oninput="NOTEBOOKS_APP.updateHabitName(' + pIdx + ', ' + hi + ', this.value)">' +
+              fieldLine('hb_' + hi, hb.name, 'Habitude', 'oninput="NOTEBOOKS_APP.updateHabitName(' + pIdx + ', ' + hi + ', this.value)"', 'font-size:0.78rem;') +
               hb.days.map(function (on, di) {
                 return '<button type="button" class="nb-habit-dot ' + (on ? 'active' : '') + '" onclick="NOTEBOOKS_APP.toggleHabitDay(' + pIdx + ', ' + hi + ', ' + di + ')"></button>';
               }).join('') +
-              '<button type="button" class="nb-edit-only" style="border:none;background:transparent;color:#ef4444;cursor:pointer;font-weight:800;" onclick="NOTEBOOKS_APP.deleteHabit(' + pIdx + ', ' + hi + ')">×</button>' +
+              (isMini ? '<span></span>' : '<button type="button" class="nb-edit-only" style="border:none;background:transparent;color:#ef4444;cursor:pointer;font-weight:800;" onclick="NOTEBOOKS_APP.deleteHabit(' + pIdx + ', ' + hi + ')">×</button>') +
             '</div>';
           }).join('') +
-          '<button type="button" class="nb-btn nb-btn-sm nb-edit-only" onclick="NOTEBOOKS_APP.addHabit(' + pIdx + ')">+ Ajouter une habitude</button>' +
+          (isMini ? '' : '<button type="button" class="nb-btn nb-btn-sm nb-edit-only" onclick="NOTEBOOKS_APP.addHabit(' + pIdx + ')">+ Ajouter une habitude</button>') +
         '</div>' +
         '<div class="nb-pg-box" style="margin-top:8px;height:70px;"><span class="nb-pg-box-label">Bilan &amp; Notes</span>' +
-          '<textarea ' + ro + ' class="nb-pg-plain-area" style="font-size:0.78rem;" oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)">' + esc(f.notesText || '') + '</textarea>' +
+          fieldArea('nb-pg-plain-area', f.notesText, '', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)"', 'font-size:0.78rem;') +
         '</div>';
     }
 
@@ -1236,16 +1307,16 @@ var NOTEBOOKS_APP = (function () {
           '<div class="nb-pg-box-label">Mes Objectifs</div>' +
           [0, 1, 2].map(function (gi) {
             return '<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;"><strong style="color:var(--nb-accent);">' + (gi + 1) + '.</strong>' +
-              '<input type="text" ' + ro + ' class="nb-pg-input-line" value="' + esc(gPrios[gi] || '') + '" oninput="NOTEBOOKS_APP.updateArrayField(' + pIdx + ', \'priorities\', ' + gi + ', this.value)" placeholder="Objectif ' + (gi + 1) + '"></div>';
+              fieldLine('gprio_' + gi, gPrios[gi], 'Objectif ' + (gi + 1), 'oninput="NOTEBOOKS_APP.updateArrayField(' + pIdx + ', \'priorities\', ' + gi + ', this.value)"', '') + '</div>';
           }).join('') +
         '</div>' +
         '<div class="nb-pg-box-label">Actions pour réussir</div>' +
         '<div style="flex:1;overflow-y:auto;">' + gTasks +
-          '<button type="button" class="nb-btn nb-btn-sm nb-edit-only" style="margin-top:6px;width:100%;" onclick="NOTEBOOKS_APP.addTask(' + pIdx + ')">+ Ajouter une action</button>' +
+          (isMini ? '' : '<button type="button" class="nb-btn nb-btn-sm nb-edit-only" style="margin-top:6px;width:100%;" onclick="NOTEBOOKS_APP.addTask(' + pIdx + ')">+ Ajouter une action</button>') +
         '</div>' +
         '<div class="nb-pg-box" style="margin-top:8px;flex-direction:row;align-items:center;gap:8px;">' +
           '<span class="nb-pg-box-label" style="margin:0;">Rappel :</span>' +
-          '<input type="text" ' + ro + ' class="nb-pg-input-line" style="border:none;" value="' + esc(f.reminderText || '') + '" placeholder="Garder le cap !" oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'reminderText\', this.value)">' +
+          fieldLine('reminderText', f.reminderText, 'Garder le cap !', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'reminderText\', this.value)"', 'border:none;') +
         '</div>';
     }
 
@@ -1256,10 +1327,10 @@ var NOTEBOOKS_APP = (function () {
         '<div class="nb-pg-box-label" style="margin-bottom:6px;">Aujourd’hui, je suis reconnaissant(e) pour :</div>' +
         [0, 1, 2].map(function (gi) {
           return '<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;"><strong style="color:var(--nb-accent);">' + (gi + 1) + '.</strong>' +
-            '<input type="text" ' + ro + ' class="nb-pg-input-line" value="' + esc(grat[gi] || '') + '" oninput="NOTEBOOKS_APP.updateArrayField(' + pIdx + ', \'gratitude\', ' + gi + ', this.value)" placeholder="Un beau moment..."></div>';
+            fieldLine('grat_' + gi, grat[gi], 'Un beau moment...', 'oninput="NOTEBOOKS_APP.updateArrayField(' + pIdx + ', \'gratitude\', ' + gi + ', this.value)"', '') + '</div>';
         }).join('') +
         '<div class="nb-pg-box-label" style="margin-top:6px;">Notes &amp; pensées positives</div>' +
-        '<textarea ' + ro + ' class="nb-pg-lined-area" oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)">' + esc(f.notesText || '') + '</textarea>' +
+        fieldArea('nb-pg-lined-area', f.notesText, '', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)"', '') +
         footerHtml;
     }
 
@@ -1288,7 +1359,7 @@ var NOTEBOOKS_APP = (function () {
           }).join('') +
         '</div>' +
         '<div class="nb-pg-box" style="flex:1;"><span class="nb-pg-box-label">Notes sur mon humeur</span>' +
-          '<textarea ' + ro + ' class="nb-pg-plain-area" style="font-size:0.78rem;" oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)">' + esc(f.notesText || '') + '</textarea>' +
+          fieldArea('nb-pg-plain-area', f.notesText, '', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)"', 'font-size:0.78rem;') +
         '</div>';
     }
 
@@ -1297,8 +1368,8 @@ var NOTEBOOKS_APP = (function () {
       var rating = f.bookRating || 0;
       return '<div class="nb-pg-header"><h3 class="nb-pg-title">Reading Journal</h3>' + iconHtml + '</div>' +
         '<div style="display:grid;gap:6px;margin-bottom:8px;">' +
-          '<div style="display:flex;align-items:center;gap:6px;"><span class="nb-pg-box-label" style="margin:0;min-width:60px;">Titre :</span><input type="text" ' + ro + ' class="nb-pg-input-line" value="' + esc(f.bookTitle || '') + '" oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'bookTitle\', this.value)"></div>' +
-          '<div style="display:flex;align-items:center;gap:6px;"><span class="nb-pg-box-label" style="margin:0;min-width:60px;">Auteur :</span><input type="text" ' + ro + ' class="nb-pg-input-line" value="' + esc(f.bookAuthor || '') + '" oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'bookAuthor\', this.value)"></div>' +
+          '<div style="display:flex;align-items:center;gap:6px;"><span class="nb-pg-box-label" style="margin:0;min-width:60px;">Titre :</span>' + fieldLine('bookTitle', f.bookTitle, '', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'bookTitle\', this.value)"', '') + '</div>' +
+          '<div style="display:flex;align-items:center;gap:6px;"><span class="nb-pg-box-label" style="margin:0;min-width:60px;">Auteur :</span>' + fieldLine('bookAuthor', f.bookAuthor, '', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'bookAuthor\', this.value)"', '') + '</div>' +
           '<div style="display:flex;align-items:center;gap:6px;"><span class="nb-pg-box-label" style="margin:0;min-width:60px;">Note :</span>' +
             [1, 2, 3, 4, 5].map(function (star) {
               return '<button type="button" onclick="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'bookRating\', ' + star + ')" style="border:none;background:transparent;cursor:pointer;font-size:1.15rem;color:' + (star <= rating ? 'var(--nb-accent)' : '#cbd5e1') + ';">★</button>';
@@ -1306,7 +1377,7 @@ var NOTEBOOKS_APP = (function () {
           '</div>' +
         '</div>' +
         '<div class="nb-pg-box-label">Citations &amp; Résumé</div>' +
-        '<textarea ' + ro + ' class="nb-pg-lined-area" oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)">' + esc(f.notesText || '') + '</textarea>' +
+        fieldArea('nb-pg-lined-area', f.notesText, '', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)"', '') +
         footerHtml;
     }
 
@@ -1314,9 +1385,9 @@ var NOTEBOOKS_APP = (function () {
     if (lid === '17-daily-reflection') {
       return '<div class="nb-pg-header"><h3 class="nb-pg-title">Daily Reflection</h3>' + iconHtml + '</div>' +
         '<div class="nb-pg-box-label" style="margin-bottom:4px;">Ce qui s’est bien passé aujourd’hui :</div>' +
-        '<textarea ' + ro + ' class="nb-pg-lined-area" style="flex:0.85;" oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)">' + esc(f.notesText || '') + '</textarea>' +
+        fieldArea('nb-pg-lined-area', f.notesText, '', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)"', 'flex:0.85;') +
         '<div class="nb-pg-box-label" style="margin:10px 0 4px;">Ce que je peux améliorer demain :</div>' +
-        '<textarea ' + ro + ' class="nb-pg-lined-area" style="flex:0.85;" oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesSecondary\', this.value)">' + esc(f.notesSecondary || '') + '</textarea>' +
+        fieldArea('nb-pg-lined-area', f.notesSecondary, '', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesSecondary\', this.value)"', 'flex:0.85;') +
         footerHtml;
     }
 
@@ -1330,16 +1401,16 @@ var NOTEBOOKS_APP = (function () {
               (f.scrapbookImage ? '<img src="' + esc(f.scrapbookImage) + '" alt="Souvenir">' : '<span style="font-size:0.75rem;color:var(--nb-muted);text-align:center;padding:8px;">📷 Cliquer pour ajouter une photo</span>') +
             '</div>' +
             (isMini ? '' : '<input id="nbScrapImgInput" type="file" accept="image/*" style="display:none;" onchange="NOTEBOOKS_APP.handleScrapbookPhoto(event, ' + pIdx + ')">') +
-            '<input type="text" ' + ro + ' class="nb-pg-input-line" style="text-align:center;margin-top:6px;font-size:0.76rem;border:none;" value="' + esc(f.scrapbookCaption || '') + '" oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'scrapbookCaption\', this.value)">' +
+            fieldLine('scrapbookCaption', f.scrapbookCaption, '', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'scrapbookCaption\', this.value)"', 'text-align:center;margin-top:6px;font-size:0.76rem;border:none;') +
           '</div>' +
           '<div class="nb-pg-box" style="height:82%;"><span class="nb-pg-box-label">Souvenirs &amp; Notes</span>' +
-            '<textarea ' + ro + ' class="nb-pg-plain-area" placeholder="Racontez ce moment..." oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)">' + esc(f.notesText || '') + '</textarea>' +
+            fieldArea('nb-pg-plain-area', f.notesText, 'Racontez ce moment...', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)"', '') +
           '</div>' +
         '</div>' + footerHtml;
     }
 
     return '<div class="nb-pg-header"><h3 class="nb-pg-title">' + esc(page.title) + '</h3>' + iconHtml + '</div>' +
-      '<textarea ' + ro + ' class="nb-pg-lined-area" oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)">' + esc(f.notesText || '') + '</textarea>' + footerHtml;
+      fieldArea('nb-pg-lined-area', f.notesText, '', 'oninput="NOTEBOOKS_APP.updatePageField(' + pIdx + ', \'notesText\', this.value)"', '') + footerHtml;
   }
 
   // ── RENDU DES ÉLÉMENTS FLOTTANTS (DRAG/RESIZE/ROTATE) ─────────────────
@@ -1372,20 +1443,85 @@ var NOTEBOOKS_APP = (function () {
       return '<div class="nb-el-box ' + (isSel ? 'selected' : '') + '" ' +
         (isThumb ? '' : 'data-drag-id="' + esc(el.id) + '" onclick="event.stopPropagation();NOTEBOOKS_APP.selectElement(\'' + esc(el.id) + '\')" ') +
         'style="' + style + '">' +
-        (isThumb ? '' : '<button type="button" class="nb-el-delete-dot" onclick="event.stopPropagation();NOTEBOOKS_APP.deleteElement(\'' + esc(el.id) + '\')">×</button>') +
+        (isThumb ? '' : '<button type="button" aria-label="Supprimer élément" class="nb-el-delete-dot" onclick="event.stopPropagation();NOTEBOOKS_APP.deleteElement(\'' + esc(el.id) + '\')">×</button>' +
+          '<span class="nb-el-resize-dot nb-edit-only" data-resize-id="' + esc(el.id) + '" title="Redimensionner"></span>') +
         inner +
       '</div>';
     }).join('');
   }
 
-  // ── DRAG & DROP FLUIDE (SOURIS + TACTILE) ─────────────────────────────
+  // ── DRAG & DROP, RESIZE & GESTES TACTILES ─────────────────────────────
   function bindEditorDragEvents() {
     var frame = document.getElementById('nbBookFrame');
-    if (!frame || state.readingMode) return;
+    if (!frame) return;
+
+    // Swipe tactile gauche/droite pour tourner les pages en Mode Lecture
+    var swipeStartX = null;
+    frame.ontouchstart = function (e) {
+      if (!state.readingMode || !e.touches || e.touches.length !== 1) return;
+      swipeStartX = e.touches[0].clientX;
+    };
+    frame.ontouchend = function (e) {
+      if (!state.readingMode || swipeStartX === null || !e.changedTouches || !e.changedTouches.length) return;
+      var dx = e.changedTouches[0].clientX - swipeStartX;
+      swipeStartX = null;
+      if (Math.abs(dx) > 48) {
+        if (dx < 0) NOTEBOOKS_APP.nextPage();
+        else NOTEBOOKS_APP.prevPage();
+      }
+    };
+
+    if (state.readingMode) return;
+
+    // Poignée de redimensionnement directe sur le canevas
+    frame.querySelectorAll('[data-resize-id]').forEach(function (handle) {
+      handle.onpointerdown = function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        var id = handle.getAttribute('data-resize-id');
+        var obj = getDraggableObjectById(id);
+        if (!obj) return;
+        var startX = ev.clientX;
+        var origW = obj.width || 64;
+        var origFs = obj.fontSize || 16;
+        var resized = false;
+        pushHistory();
+
+        function onResizeMove(mv) {
+          var dx = mv.clientX - startX;
+          resized = true;
+          if (obj.type === 'text') {
+            obj.fontSize = Math.max(10, Math.min(44, Math.round(origFs + dx / 6)));
+            obj.width = Math.max(60, Math.min(340, Math.round(origW + dx)));
+            var innerDiv = handle.parentElement.querySelector('div');
+            if (innerDiv) {
+              innerDiv.style.fontSize = obj.fontSize + 'px';
+              innerDiv.style.maxWidth = obj.width + 'px';
+            }
+          } else {
+            obj.width = Math.max(24, Math.min(340, Math.round(origW + dx)));
+            var targetChild = handle.parentElement.querySelector('div, img');
+            if (targetChild) targetChild.style.width = obj.width + 'px';
+          }
+        }
+        function onResizeUp() {
+          window.removeEventListener('pointermove', onResizeMove);
+          window.removeEventListener('pointerup', onResizeUp);
+          if (resized) {
+            scheduleSave();
+            var insp = document.querySelector('.nb-right-inspector');
+            if (insp) insp.innerHTML = renderRightInspectorHTML();
+          }
+        }
+        window.addEventListener('pointermove', onResizeMove);
+        window.addEventListener('pointerup', onResizeUp);
+      };
+    });
+
     var els = frame.querySelectorAll('[data-drag-id]');
     els.forEach(function (node) {
       node.onpointerdown = function (ev) {
-        if (ev.target.classList.contains('nb-el-delete-dot')) return;
+        if (ev.target.classList.contains('nb-el-delete-dot') || ev.target.classList.contains('nb-el-resize-dot')) return;
         var dragId = node.getAttribute('data-drag-id');
         if (!dragId) return;
         ev.stopPropagation();
@@ -1487,9 +1623,9 @@ var NOTEBOOKS_APP = (function () {
           '<button type="button" class="nb-btn" onclick="NOTEBOOKS_APP.exportBackup()">💾 Télécharger sauvegarde JSON</button>' +
         '</div>' +
         '<div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));gap:12px;">' +
-          '<div class="nb-book-frame" style="max-width:170px;"><div class="nb-cover-surface">' + renderCoverArtworkHTML(nb, true) + '</div></div>' +
+          '<div class="nb-book-frame is-thumb-card" style="max-width:170px;"><div class="nb-cover-surface">' + renderCoverArtworkHTML(nb, true) + '</div></div>' +
           nb.pages.map(function (p, i) {
-            return '<div class="nb-book-frame" style="max-width:170px;">' + renderPageSurfaceHTML(nb, p, i, true) + '</div>';
+            return '<div class="nb-book-frame is-thumb-card" style="max-width:170px;">' + renderPageSurfaceHTML(nb, p, i, 'thumb') + '</div>';
           }).join('') +
         '</div>' +
       '</div>' +
@@ -1498,18 +1634,88 @@ var NOTEBOOKS_APP = (function () {
   }
 
   function triggerPrintPdf() {
+    var nb = state.activeNotebook;
+    if (!nb) return;
     var modal = document.getElementById('nbPdfModal');
     if (modal) modal.remove();
-    document.body.classList.add('nb-printing-mode');
-    var cleanup = function () {
-      document.body.classList.remove('nb-printing-mode');
-      window.removeEventListener('afterprint', cleanup);
+
+    var printRoot = document.getElementById('nbPrintContainer');
+    var pagesHtml = printRoot ? printRoot.innerHTML : (
+      '<div class="nb-print-page"><div class="nb-cover-surface">' + renderCoverArtworkHTML(nb, false) + '</div></div>' +
+      nb.pages.map(function (p, i) { return '<div class="nb-print-page">' + renderPageSurfaceHTML(nb, p, i, true) + '</div>'; }).join('')
+    );
+
+    var oldIframe = document.getElementById('nbPdfPrintIframe');
+    if (oldIframe) oldIframe.remove();
+
+    var iframe = document.createElement('iframe');
+    iframe.id = 'nbPdfPrintIframe';
+    iframe.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden;';
+    document.body.appendChild(iframe);
+
+    var doc = iframe.contentWindow.document;
+    var baseHref = window.location.href.split('#')[0].replace(/\/[^\/]*$/, '/');
+    var fontLinks = Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
+      .filter(function (l) { return l.href.indexOf('fonts.googleapis.com') !== -1 || l.href.indexOf('notebooks.css') !== -1; })
+      .map(function (l) { return '<link rel="stylesheet" href="' + esc(l.href) + '">'; })
+      .join('\n');
+
+    doc.open();
+    doc.write('<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">' +
+      '<base href="' + esc(baseHref) + '">' +
+      '<title>' + esc(nb.title) + ' — Export PDF</title>' +
+      fontLinks +
+      '<style>' +
+        '@page { size: A4 portrait; margin: 0; }' +
+        'html, body { margin: 0; padding: 0; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }' +
+        '.nb-print-page { width: 210mm; height: 297mm; page-break-after: always; break-after: page; overflow: hidden; position: relative; box-sizing: border-box; }' +
+        '.nb-print-page:last-child { page-break-after: auto; break-after: auto; }' +
+        '.nb-print-page .nb-cover-surface, .nb-print-page .nb-page-surface { width: 100%; height: 100%; border-radius: 0; box-shadow: none; }' +
+        '.nb-task-check, .nb-habit-dot { display: inline-flex !important; }' +
+        '.nb-edit-only { display: none !important; }' +
+      '</style></head><body>' + pagesHtml + '</body></html>');
+    doc.close();
+
+    var printed = false;
+    var doPrint = function () {
+      if (printed) return;
+      printed = true;
+      try {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+      } catch (e) {
+        window.print();
+      }
+      setTimeout(function () { if (iframe && iframe.parentNode) iframe.remove(); }, 2500);
     };
-    window.addEventListener('afterprint', cleanup);
-    setTimeout(function () {
-      window.print();
-      setTimeout(cleanup, 1000);
-    }, 100);
+
+    iframe.onload = function () { setTimeout(doPrint, 280); };
+    setTimeout(doPrint, 900);
+  }
+
+  function compressImageDataUrl(dataUrl, maxDim, callback) {
+    if (!dataUrl || dataUrl.length < 180000) return callback(dataUrl);
+    var img = new Image();
+    img.onload = function () {
+      var w = img.width;
+      var h = img.height;
+      if (w <= maxDim && h <= maxDim) return callback(dataUrl);
+      var ratio = Math.min(maxDim / w, maxDim / h);
+      var cw = Math.round(w * ratio);
+      var ch = Math.round(h * ratio);
+      var canvas = document.createElement('canvas');
+      canvas.width = cw;
+      canvas.height = ch;
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, cw, ch);
+      try {
+        callback(canvas.toDataURL('image/jpeg', 0.85));
+      } catch (e) {
+        callback(dataUrl);
+      }
+    };
+    img.onerror = function () { callback(dataUrl); };
+    img.src = dataUrl;
   }
 
   // ── ACTIONS PUBLIQUES ─────────────────────────────────────────────────
@@ -1605,6 +1811,23 @@ var NOTEBOOKS_APP = (function () {
       ensureWizardState();
       state.wizard[k] = v;
       render();
+    },
+    updateWizardTextField: function (k, v) {
+      ensureWizardState();
+      state.wizard[k] = v;
+      var previewBox = document.getElementById('nbWizardLivePreview');
+      if (previewBox) {
+        var cover = NOTEBOOKS_DATA.getCoverById(state.wizard.coverId);
+        var previewNb = buildNotebookFromOptions(state.wizard);
+        var frames = previewBox.querySelectorAll('.nb-book-frame');
+        if (frames[0]) frames[0].innerHTML = '<div class="nb-cover-surface">' + renderCoverArtworkHTML(previewNb, 'wizard') + '</div>';
+        if (frames[1]) frames[1].innerHTML = renderPageSurfaceHTML(previewNb, previewNb.pages[0], 0, 'thumb');
+      }
+    },
+    setFontById: function (prop, fontId) {
+      var font = NOTEBOOKS_DATA.FONTS.find(function (f) { return f.id === fontId; });
+      if (!font) return;
+      this.setPageOrThemeStyle(prop, font.css, true);
     },
     updateWizardFont: function (css) {
       ensureWizardState();
@@ -1728,14 +1951,15 @@ var NOTEBOOKS_APP = (function () {
       render();
     },
 
+    setAutoApplyTheme: function (val) {
+      state.autoApplyTheme = !!val;
+    },
     changeCover: function (coverId) {
       if (!state.activeNotebook) return;
       pushHistory();
       var newCover = NOTEBOOKS_DATA.getCoverById(coverId);
       state.activeNotebook.coverId = newCover.id;
-      var chk = document.getElementById('nbAutoApplyThemeChk');
-      var applyTheme = chk ? chk.checked : true;
-      if (applyTheme) {
+      if (state.autoApplyTheme) {
         state.activeNotebook.themeConfig = NOTEBOOKS_DATA.cloneTheme(newCover.theme);
         state.activeNotebook.coverConfig.titleStyle = NOTEBOOKS_DATA.cloneTheme(newCover.theme.coverTitleDefaults);
         state.activeNotebook.coverConfig.nameStyle = NOTEBOOKS_DATA.cloneTheme(newCover.theme.coverNameDefaults);
@@ -2092,34 +2316,40 @@ var NOTEBOOKS_APP = (function () {
       var file = ev.target.files && ev.target.files[0];
       if (!file || !state.session) return;
       var reader = new FileReader();
-      reader.onload = async function (e) {
-        try {
-          var rec = await NOTEBOOKS_STORE.saveUpload(state.session.username, file.name, e.target.result);
-          state.uploads.unshift(rec);
-          render();
-        } catch (err) {
-          alert('Erreur import image : ' + err.message);
-        }
+      reader.onload = function (e) {
+        compressImageDataUrl(e.target.result, 1200, async function (compressed) {
+          try {
+            var rec = await NOTEBOOKS_STORE.saveUpload(state.session.username, file.name, compressed);
+            state.uploads.unshift(rec);
+            render();
+          } catch (err) {
+            alert('Erreur import image : ' + err.message);
+          }
+        });
       };
       reader.readAsDataURL(file);
+      ev.target.value = '';
     },
     handleScrapbookPhoto: function (ev, pageIdx) {
       var file = ev.target.files && ev.target.files[0];
       if (!file || !state.session || pageIdx < 0) return;
       var reader = new FileReader();
-      reader.onload = async function (e) {
-        try {
-          await NOTEBOOKS_STORE.saveUpload(state.session.username, file.name, e.target.result);
-          state.uploads = await NOTEBOOKS_STORE.getUserUploads(state.session.username);
-          pushHistory();
-          state.activeNotebook.pages[pageIdx].fields.scrapbookImage = e.target.result;
-          scheduleSave();
-          render();
-        } catch (err) {
-          alert('Erreur photo Scrapbook : ' + err.message);
-        }
+      reader.onload = function (e) {
+        compressImageDataUrl(e.target.result, 1200, async function (compressed) {
+          try {
+            await NOTEBOOKS_STORE.saveUpload(state.session.username, file.name, compressed);
+            state.uploads = await NOTEBOOKS_STORE.getUserUploads(state.session.username);
+            pushHistory();
+            state.activeNotebook.pages[pageIdx].fields.scrapbookImage = compressed;
+            scheduleSave();
+            render();
+          } catch (err) {
+            alert('Erreur photo Scrapbook : ' + err.message);
+          }
+        });
       };
       reader.readAsDataURL(file);
+      ev.target.value = '';
     },
     deleteUpload: async function (uploadId) {
       if (!state.session) return;

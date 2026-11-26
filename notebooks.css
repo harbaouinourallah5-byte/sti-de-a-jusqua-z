@@ -565,8 +565,8 @@
 
 .nb-workspace {
   display: grid;
-  grid-template-columns: 300px minmax(0, 1fr) 275px;
-  gap: 14px;
+  grid-template-columns: 268px minmax(0, 1fr) 244px;
+  gap: 12px;
   align-items: start;
 }
 
@@ -581,7 +581,7 @@
   border-radius: 16px;
   overflow: hidden;
   display: grid;
-  grid-template-columns: 72px 1fr;
+  grid-template-columns: 60px minmax(0, 1fr);
   min-height: 610px;
   max-height: 78vh;
   box-shadow: var(--shadow-sm);
@@ -592,7 +592,7 @@
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  padding: 6px 4px;
+  padding: 6px 3px;
   gap: 4px;
   overflow-y: auto;
 }
@@ -630,8 +630,10 @@
 }
 
 .nb-left-panel {
-  padding: 12px;
+  padding: 10px;
   overflow-y: auto;
+  overflow-x: hidden;
+  min-width: 0;
   max-height: 78vh;
 }
 
@@ -932,9 +934,10 @@
   margin-top: auto;
   padding-top: 8px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 6px 8px;
   font-size: 0.74rem;
   color: var(--nb-muted, #64748b);
   border-top: 1px solid var(--nb-accent-soft, rgba(0,0,0,0.08));
@@ -1026,11 +1029,15 @@
 /* Checkboxes thématiques interactives */
 .nb-task-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 7px;
+  gap: 5px 6px;
   padding: 4px 6px;
   border-bottom: 1px dashed var(--nb-border, rgba(148,163,184,0.35));
   font-size: 0.82rem;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .nb-task-check {
@@ -1063,7 +1070,7 @@
 }
 
 .nb-task-text {
-  flex: 1;
+  flex: 1 1 110px;
   border: none;
   background: transparent;
   color: var(--nb-text, #1e293b);
@@ -1187,8 +1194,88 @@
   z-index: 12;
 }
 
+.nb-btn:focus-visible,
+.nb-rail-btn:focus-visible,
+.nb-cover-option:focus-visible,
+.nb-layout-option:focus-visible,
+.nb-task-check:focus-visible,
+.nb-habit-dot:focus-visible {
+  outline: 2px solid var(--primary-indigo);
+  outline-offset: 2px;
+}
+
+.nb-page-surface input,
+.nb-page-surface textarea,
+.nb-page-surface select {
+  color: var(--nb-text, #1e293b);
+}
+
+.nb-page-surface input::placeholder,
+.nb-page-surface textarea::placeholder {
+  color: var(--nb-muted, #64748b);
+  opacity: 0.72;
+}
+
+.nb-task-wrap {
+  border-bottom: 1px dashed var(--nb-border, rgba(148,163,184,0.35));
+  padding-bottom: 3px;
+}
+
+.nb-task-wrap .nb-task-row {
+  border-bottom: none;
+  padding-bottom: 2px;
+}
+
+.nb-task-subrow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 6px 2px 26px;
+}
+
+.nb-task-desc-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 0.7rem;
+  color: var(--nb-muted, #64748b);
+  min-width: 0;
+}
+
+.nb-task-desc-input:focus {
+  outline: none;
+}
+
+.nb-task-cat-chip {
+  font-size: 0.64rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--nb-accent-soft, rgba(79, 70, 229, 0.1));
+  color: var(--nb-heading, #334155);
+}
+
 .nb-el-box.selected .nb-el-delete-dot {
   display: flex;
+}
+
+.nb-el-resize-dot {
+  display: none;
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  background: var(--primary-indigo, #4F46E5);
+  border: 2px solid #ffffff;
+  cursor: nwse-resize;
+  z-index: 12;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.nb-el-box.selected .nb-el-resize-dot {
+  display: block;
 }
 
 .nb-reading-mode .nb-el-box {
@@ -1196,13 +1283,15 @@
   outline: none !important;
 }
 .nb-reading-mode .nb-el-delete-dot,
+.nb-reading-mode .nb-el-resize-dot,
 .nb-reading-mode .nb-edit-only {
   display: none !important;
 }
 .nb-reading-mode .nb-pg-input-line,
 .nb-reading-mode .nb-pg-lined-area,
 .nb-reading-mode .nb-pg-plain-area,
-.nb-reading-mode .nb-task-text {
+.nb-reading-mode .nb-task-text,
+.nb-reading-mode .nb-task-desc-input {
   pointer-events: none;
 }
 
@@ -1293,6 +1382,13 @@
   display: none;
 }
 
+@media (max-width: 1360px) {
+  .nb-workspace {
+    grid-template-columns: 248px minmax(0, 1fr) 224px;
+    gap: 10px;
+  }
+}
+
 @media (max-width: 1120px) {
   .nb-workspace {
     grid-template-columns: 260px minmax(0, 1fr);
@@ -1374,6 +1470,69 @@
   .nb-task-text {
     font-size: 0.76rem;
   }
+}
+
+.nb-book-frame.is-thumb-card .nb-page-surface {
+  min-height: 0 !important;
+  height: 100% !important;
+  padding: 9px 10px 8px 14px !important;
+}
+
+.nb-book-frame.is-thumb-card .nb-page-inner-frame {
+  overflow: hidden;
+}
+
+.nb-book-frame.is-thumb-card .nb-pg-box-label {
+  font-size: 0.44rem;
+  margin-bottom: 1px;
+}
+
+.nb-book-frame.is-thumb-card .nb-pg-header {
+  padding-bottom: 3px;
+  margin-bottom: 4px;
+}
+
+.nb-book-frame.is-thumb-card .nb-pg-title {
+  font-size: 0.78rem;
+}
+
+.nb-book-frame.is-thumb-card .nb-pg-header-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.nb-book-frame.is-thumb-card .nb-pg-footer {
+  font-size: 0.5rem;
+  padding-top: 3px;
+}
+
+.nb-book-frame.is-thumb-card .nb-task-row {
+  font-size: 0.54rem;
+  padding: 2px;
+  gap: 3px;
+}
+
+.nb-book-frame.is-thumb-card .nb-task-check {
+  width: 10px;
+  height: 10px;
+  font-size: 0.5rem;
+  border-width: 1px;
+}
+
+.nb-book-frame.is-thumb-card .nb-prio-pill {
+  font-size: 0.45rem;
+  padding: 1px 4px;
+}
+
+.nb-book-frame.is-thumb-card .nb-pg-lined-area,
+.nb-book-frame.is-thumb-card .nb-pg-plain-area {
+  font-size: 0.54rem;
+  line-height: 14px;
+  background-size: 100% 14px;
+}
+
+.nb-book-frame.is-thumb-card .nb-edit-only {
+  display: none !important;
 }
 
 /* ── 9. IMPRESSION / EXPORT PDF A4 FIDÈLE ──────────────────────────── */

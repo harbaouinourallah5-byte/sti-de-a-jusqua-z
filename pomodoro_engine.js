@@ -67,12 +67,25 @@ const PomodoroEngine = (function () {
   // -------------------------------------------------------------
   // Initialisation et Chargement des Préférences
   // -------------------------------------------------------------
+  let escapeBound = false;
+
   function init() {
     loadPreferences();
     calculateTotalCycles();
     resetTimer(false);
     updateAllDisplays();
     setupYouTubeContainer();
+    if (!escapeBound) {
+      escapeBound = true;
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          const modal = document.getElementById('pomodoroModal');
+          if (modal && modal.classList.contains('active')) {
+            closeDrawer();
+          }
+        }
+      });
+    }
   }
 
   function loadPreferences() {

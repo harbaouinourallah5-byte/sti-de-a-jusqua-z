@@ -54,8 +54,8 @@ var NOTEBOOKS_DATA = (function () {
         checkboxStyle: 'diamond',
         pattern: 'luxury-lines',
         stickers: ['sparkle-gold', 'star-outline', 'crown', 'divider-ornate'],
-        coverTitleDefaults: { x: 50, y: 57, fontSize: 26, color: '#F3EFE6', fontFamily: "'Playfair Display', Georgia, serif", bold: true, italic: false, align: 'center', pillBg: 'rgba(20, 20, 20, 0.65)' },
-        coverNameDefaults:  { x: 50, y: 69, fontSize: 17, color: '#E5C468', fontFamily: "'Inter', system-ui, sans-serif", bold: true, italic: false, align: 'center', pillBg: 'rgba(20, 20, 20, 0.55)' }
+        coverTitleDefaults: { x: 50, y: 53, fontSize: 24, color: '#F3EFE6', fontFamily: "'Playfair Display', Georgia, serif", bold: true, italic: false, align: 'center', pillBg: 'rgba(20, 20, 20, 0.65)' },
+        coverNameDefaults:  { x: 50, y: 74, fontSize: 16, color: '#E5C468', fontFamily: "'Inter', system-ui, sans-serif", bold: true, italic: false, align: 'center', pillBg: 'rgba(20, 20, 20, 0.55)' }
       }
     },
     {

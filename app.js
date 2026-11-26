@@ -108,8 +108,11 @@ function updateSidebarProgressIndicators() {
 
     // 5. Bibliothèque PDF
     const sideBadgeLessons = document.getElementById('sideBadgeLessons');
-    if (sideBadgeLessons && typeof DOCUMENTS_DATA !== 'undefined' && DOCUMENTS_DATA.getAll) {
-      sideBadgeLessons.textContent = DOCUMENTS_DATA.getAll().length;
+    if (sideBadgeLessons) {
+      const pdfCount = (typeof allLessons !== 'undefined' && allLessons.length > 0)
+        ? allLessons.length
+        : ((typeof DOCUMENTS_DATA !== 'undefined' && DOCUMENTS_DATA.getAll) ? DOCUMENTS_DATA.getAll().length : 35);
+      sideBadgeLessons.textContent = pdfCount;
     }
   } catch (err) {
     console.warn('[Sidebar] Erreur mise à jour compteurs & progression:', err);
@@ -7006,9 +7009,125 @@ async function fetchLessonsFromSupabase() {
 // -------------------------------------------------------------
 // Initialisation du Module Leçons & Vérification Routage URL
 // -------------------------------------------------------------
+function buildVerifiedLocalLessons() {
+  const list = [];
+  const seenFiles = new Set();
+
+  if (typeof DOCUMENTS_DATA !== 'undefined' && typeof DOCUMENTS_DATA.getAllDocuments === 'function') {
+    DOCUMENTS_DATA.getAllDocuments().forEach(d => {
+      if (!d || !d.file) return;
+      seenFiles.add(d.file);
+      const isExam = (d.kind === 'examen');
+      const isSerie = (d.kind === 'serie');
+      const typeKey = isExam ? 'devoir' : (isSerie ? 'serie' : 'resume');
+      const typeLabel = isExam ? '📑 Sujet d\'Examen' : (isSerie ? '📝 Série / TP' : '📌 Extrait d\'Examen');
+      const subj = d.module || 'algo-theorique';
+      const subjLabel = subj === 'algo-pratique' ? 'Pratique Qt ➔ Thonny' : 'Algorithme Théorique';
+      list.push({
+        id: d.id,
+        title: d.title,
+        subject: subj,
+        subjectLabel: subjLabel,
+        chapters: Array.isArray(d.chapters) ? d.chapters : [],
+        tags: [...(d.chapters || []), d.teacher || '', d.school || ''].filter(Boolean),
+        type: typeKey,
+        typeLabel: typeLabel,
+        date: (d.date && d.date !== 'inconnue') ? d.date : 'Bac Info',
+        author: d.teacher ? `Prof. ${d.teacher}` : (d.source || 'Enseignant'),
+        fileSize: d.pages ? `${d.pages} page${d.pages > 1 ? 's' : ''}` : 'PDF',
+        description: d.notes || d.source || (d.school ? `${d.school}${d.classes ? ' • ' + d.classes : ''}` : 'Document de révision PDF.'),
+        summary: d.notes || '',
+        pdfUrl: d.file,
+        hasCorrection: Boolean(d.correction),
+        correctionUrl: d.correction || null,
+        incomplete: Boolean(d.incomplete),
+        downloadName: (d.id || 'document') + '.pdf'
+      });
+    });
+  }
+
+  // Ajouter les supports locaux vérifiés existants (sans liens cassés)
+  const verifiedRootPdfs = [
+    {
+      id: 'local-support-bases',
+      title: 'Support : Conversion Entre Les Bases de Numération',
+      subject: 'algo-ch3-bases',
+      subjectLabel: 'Ch 3 : Bases',
+      chapters: ['bases'],
+      type: 'cours',
+      typeLabel: '📖 Cours & Support',
+      date: 'Bac Info',
+      author: 'Support de révision',
+      fileSize: '4.5 Mo',
+      pdfUrl: 'pdf/Conversion_Bases_Numeration.pdf',
+      description: 'Conversions décimal ↔ binaire, octal et hexadécimal avec traces détaillées.',
+      downloadName: 'Conversion_Bases_Numeration.pdf'
+    },
+    {
+      id: 'local-support-aires',
+      title: "Support : Calcul d'Aires & Approximation Numérique",
+      subject: 'algo-ch5-approximation',
+      subjectLabel: 'Ch 5 : Approximation',
+      chapters: ['approximation'],
+      type: 'cours',
+      typeLabel: '📖 Cours & Support',
+      date: 'Bac Info',
+      author: 'Support de révision',
+      fileSize: '4.2 Mo',
+      pdfUrl: 'pdf/Support_Calcul_Aires.pdf',
+      description: 'Méthodes des rectangles, trapèzes et recherche dichotomique.',
+      downloadName: 'Support_Calcul_Aires.pdf'
+    },
+    {
+      id: 'local-support-matrices',
+      title: 'Support : Matrices & Motifs (Diagonales & Sablier)',
+      subject: 'algo-ch7-matrices',
+      subjectLabel: 'Ch 7 : Matrices',
+      chapters: ['matrices'],
+      type: 'cours',
+      typeLabel: '📖 Cours & Support',
+      date: 'Bac Info',
+      author: 'Support de révision',
+      fileSize: '1.2 Mo',
+      pdfUrl: 'pdf/Support_Officiel_Matrices_Patterns.pdf',
+      description: 'Parcours par lignes/colonnes, diagonales et motifs d\'affichage.',
+      downloadName: 'Support_Matrices_Patterns.pdf'
+    },
+    {
+      id: 'local-revision-algo',
+      title: 'Fichier de Révision Générale Algorithmique',
+      subject: 'algo-theorique',
+      subjectLabel: 'Algorithmique Théorique',
+      chapters: ['fichiers', 'recursivite', 'tableaux', 'matrices'],
+      type: 'resume',
+      typeLabel: '📌 Fiche Révision',
+      date: 'Bac Info',
+      author: 'Support de révision',
+      fileSize: '2.8 Mo',
+      pdfUrl: 'pdf/Fichier_Revision_Algorithme.pdf',
+      description: 'Synthèse complète des chapitres essentiels d\'algorithmique.',
+      downloadName: 'Fichier_Revision_Algorithme.pdf'
+    }
+  ];
+
+  verifiedRootPdfs.forEach(item => {
+    if (!seenFiles.has(item.pdfUrl)) {
+      list.push(item);
+      seenFiles.add(item.pdfUrl);
+    }
+  });
+
+  return list;
+}
+
 async function initLessonsModule() {
   await STILessonsDB.init();
 
+  const verifiedLocal = buildVerifiedLocalLessons();
+  allLessons = verifiedLocal;
+  if (typeof updateSidebarProgressIndicators === 'function') {
+    updateSidebarProgressIndicators();
+  }
   let cloudLessons = null;
   try {
     cloudLessons = await fetchLessonsFromSupabase();
@@ -7016,22 +7135,19 @@ async function initLessonsModule() {
     console.warn('Erreur chargement Supabase:', err);
   }
 
-  const localCustom = await STILessonsDB.getAll();
-  const defaultLessons = (DATA && DATA.lessons) ? DATA.lessons : [];
-
   if (cloudLessons && Array.isArray(cloudLessons) && cloudLessons.length > 0) {
-    allLessons = cloudLessons;
-    for (const l of cloudLessons) {
-      await STILessonsDB.save(l);
-    }
-  } else if (localCustom && localCustom.length > 0) {
-    allLessons = localCustom;
+    const merged = [...verifiedLocal];
+    const existingIds = new Set(merged.map(x => x.id));
+    cloudLessons.forEach(cl => {
+      if (cl && cl.pdfUrl && !existingIds.has(cl.id)) merged.push(cl);
+    });
+    allLessons = merged;
   } else {
-    allLessons = [...defaultLessons];
+    allLessons = verifiedLocal;
   }
 
   renderLessons();
-  
+  updateDataCountersUI();
 
   // Écoute des changements d'URL hash
   window.addEventListener('hashchange', checkUrlRouting);
@@ -7142,7 +7258,21 @@ function filterLessonsBySubject(subj) {
 function renderLessons() {
   const grid = document.getElementById('lessonsGrid');
   const counterBadge = document.getElementById('lessonsCounterBadge');
+  const heroCounterBadge = document.getElementById('lessonsHeroCounterBadge');
   if (!grid) return;
+
+  const chMap = {
+    'algo-ch1-fichiers': 'fichiers',
+    'algo-ch2-recursivite': 'recursivite',
+    'algo-ch2-recurrence': 'recursivite',
+    'algo-ch3-bases': 'bases',
+    'algo-ch4-arithmetique': 'arithmetique',
+    'algo-ch5-approximation': 'approximation',
+    'algo-ch6-tableaux': 'tableaux',
+    'algo-ch6-matrices': 'matrices',
+    'algo-ch7-matrices': 'matrices',
+    'algo-ch8-suites': 'suites'
+  };
 
   const filtered = allLessons.filter(lesson => {
     if (!lesson) return false;
@@ -7156,6 +7286,10 @@ function renderLessons() {
         if (!['html', 'css', 'js', 'sql'].includes(lSubj)) return false;
       } else if (targetSubj === 'algo-theorique') {
         if (lSubj !== 'algo-theorique' && !lSubj.startsWith('algo-ch')) return false;
+      } else if (chMap[targetSubj]) {
+        const mappedSlug = chMap[targetSubj];
+        const hasChap = Array.isArray(lesson.chapters) && lesson.chapters.includes(mappedSlug);
+        if (!hasChap && lSubj !== targetSubj) return false;
       } else if (lSubj !== targetSubj) {
         return false;
       }
@@ -7166,6 +7300,7 @@ function renderLessons() {
     const matchSearch = !q ||
       ((lesson.title || '').toLowerCase().includes(q)) ||
       ((lesson.description || '').toLowerCase().includes(q)) ||
+      ((lesson.author || '').toLowerCase().includes(q)) ||
       ((lesson.subjectLabel || '').toLowerCase().includes(q)) ||
       (Array.isArray(lesson.tags) && lesson.tags.some(t => t && t.toLowerCase().includes(q)));
     return matchType && matchSearch;
@@ -7178,6 +7313,9 @@ function renderLessons() {
       counterBadge.style.display = '';
       counterBadge.textContent = `${filtered.length} document${filtered.length > 1 ? 's' : ''}`;
     }
+  }
+  if (heroCounterBadge) {
+    heroCounterBadge.textContent = `${allLessons.length} documents vérifiés`;
   }
 
   // Si aucun document n'est disponible
@@ -7227,9 +7365,10 @@ function renderLessons() {
         <div>
           <div class="lesson-card-header">
             <span class="subject-badge ${subjClass}">${escapeHtml(lesson.subjectLabel || lesson.subject.toUpperCase())}</span>
-            <span style="background: rgba(255,255,255,0.08); font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; color: #cbd5e1; font-weight: 600;">
+            <span style="background: var(--surface-bg, rgba(255,255,255,0.08)); border: 1px solid var(--border-color); font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; color: var(--text-secondary); font-weight: 600;">
               ${escapeHtml(lesson.typeLabel || lesson.type)}
             </span>
+            ${lesson.incomplete ? `<span style="background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); font-size: 0.74rem; padding: 3px 8px; border-radius: 4px; color: #ef4444; font-weight: 700;">⚠️ Incomplet</span>` : ''}
             ${hasCorr ? `<span class="badge-corrigé-pill" title="Cette série contient son corrigé type">🎯 Corrigé inclus</span>` : ''}
           </div>
 
@@ -12801,20 +12940,20 @@ function renderHomeTodaySection() {
       completedCount = tasks.filter(t => t.done).length;
 
       planTasksHtml = `
-        <div style="display: grid; gap: 8px; margin-top: 10px;">
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; margin-top: 10px;">
           ${tasks.map(t => `
-            <div class="plan-task-row ${t.done ? 'done' : ''}" style="background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-              <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0;">
-                <input type="checkbox" ${t.done ? 'checked' : ''} onchange="if(typeof togglePlanTaskCheckbox==='function'){togglePlanTaskCheckbox('${t.id}', this.checked);} renderHomeTodaySection();" style="width: 18px; height: 18px; cursor: pointer; accent-color: #f59e0b;" />
-                <span style="font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; background: rgba(245, 158, 11, 0.15); color: #f59e0b; white-space: nowrap;">${escapeHtml(t.badge || '25 min')}</span>
-                <span style="font-size: 0.88rem; font-weight: 600; color: var(--text-primary); text-decoration: ${t.done ? 'line-through' : 'none'}; opacity: ${t.done ? '0.6' : '1'}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(t.title)}</span>
+            <div class="plan-task-row ${t.done ? 'done' : ''}" style="background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 8px; padding: 10px 12px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; max-width: 100%; box-sizing: border-box;">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1 1 160px; min-width: 0;">
+                <input type="checkbox" ${t.done ? 'checked' : ''} onchange="if(typeof togglePlanTaskCheckbox==='function'){togglePlanTaskCheckbox('${t.id}', this.checked);} renderHomeTodaySection();" style="width: 18px; height: 18px; flex-shrink: 0; cursor: pointer; accent-color: #f59e0b;" />
+                <span style="font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; background: rgba(245, 158, 11, 0.15); color: #f59e0b; white-space: nowrap; flex-shrink: 0;">${escapeHtml(t.badge || '25 min')}</span>
+                <span style="font-size: 0.88rem; font-weight: 600; color: var(--text-primary); text-decoration: ${t.done ? 'line-through' : 'none'}; opacity: ${t.done ? '0.6' : '1'}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;">${escapeHtml(t.title)}</span>
               </div>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <button type="button" onclick="if(typeof startPomodoroForPlanTask==='function'){startPomodoroForPlanTask('${escapeHtml(t.title)}');}else if(typeof PomodoroEngine!=='undefined'){PomodoroEngine.openDrawer();}" style="background: rgba(234, 88, 12, 0.12); color: #ea580c; border: 1px solid rgba(234, 88, 12, 0.25); border-radius: 6px; padding: 4px 10px; font-size: 0.76rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+              <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; flex-shrink: 0;">
+                <button type="button" onclick="if(typeof startPomodoroForPlanTask==='function'){startPomodoroForPlanTask('${escapeHtml(t.title)}');}else if(typeof PomodoroEngine!=='undefined'){PomodoroEngine.openDrawer();}" style="background: rgba(234, 88, 12, 0.12); color: #ea580c; border: 1px solid rgba(234, 88, 12, 0.25); border-radius: 6px; padding: 4px 10px; font-size: 0.76rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
                   <span>⏱️</span>
                   <span>25m</span>
                 </button>
-                ${t.link ? `<a href="${t.link}" onclick="navigateToHash('${t.link}')" style="background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 6px; padding: 4px 10px; font-size: 0.76rem; font-weight: 700; text-decoration: none;">Ouvrir →</a>` : ''}
+                ${t.link ? `<a href="${t.link}" onclick="navigateToHash('${t.link}')" style="background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 6px; padding: 4px 10px; font-size: 0.76rem; font-weight: 700; text-decoration: none; white-space: nowrap;">Ouvrir →</a>` : ''}
               </div>
             </div>
           `).join('')}
@@ -12897,9 +13036,9 @@ function renderHomeTodaySection() {
         </div>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 14px;">
         <!-- SOUS-BLOC 1 : PROCHAINE ÉTAPE DU COURS -->
-        <div style="background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between;">
+        <div style="background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; overflow: hidden;">
           <div>
             <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: #38bdf8; letter-spacing: 0.5px; margin-bottom: 4px;">
               🎯 Prochaine étape recommandée
@@ -12936,7 +13075,7 @@ function renderHomeTodaySection() {
         </div>
 
         <!-- SOUS-BLOC 2 : CARTES MÉMOIRE DU JOUR -->
-        <div style="background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between;">
+        <div style="background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; overflow: hidden;">
           <div>
             <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: #c084fc; letter-spacing: 0.5px; margin-bottom: 4px;">
               🗂️ Répétition Espacée Leitner
@@ -12957,7 +13096,7 @@ function renderHomeTodaySection() {
         </div>
 
         <!-- SOUS-BLOC 3 : PLANNING D'ÉTUDE DU JOUR -->
-        <div style="background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between;">
+        <div style="background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; overflow: hidden;">
           <div>
             <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px;">
               <span style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: #f59e0b; letter-spacing: 0.5px;">

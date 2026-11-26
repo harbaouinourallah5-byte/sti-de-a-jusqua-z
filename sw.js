@@ -1,42 +1,42 @@
-const CACHE_NAME = 'sti-de-a-z-v39.0';
+﻿const CACHE_NAME = 'sti-de-a-z-v43.0';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
-  '/style.css?v=39.0',
-  '/notebooks.css?v=39.0',
-  '/store.js?v=39.0',
-  '/data.js?v=39.0',
-  '/data/curriculum.js?v=39.0',
-  '/data/documents.js?v=39.0',
-  '/data/exercises.js?v=39.0',
-  '/data/methods.js?v=39.0',
-  '/data/errors.js?v=39.0',
-  '/data/tables/rappels.js?v=39.0',
-  '/data/tables/fichiers.js?v=39.0',
-  '/data/tables/recursivite.js?v=39.0',
-  '/data/tables/bases.js?v=39.0',
-  '/data/tables/arithmetique.js?v=39.0',
-  '/data/tables/approximation.js?v=39.0',
-  '/data/tables/tableaux.js?v=39.0',
-  '/data/tables/matrices.js?v=39.0',
-  '/data/tables/suites.js?v=39.0',
-  '/data/tables.js?v=39.0',
-  '/data/quiz/fichiers.js?v=39.0',
-  '/data/quiz/recursivite.js?v=39.0',
-  '/data/quiz/bases.js?v=39.0',
-  '/data/quiz/arithmetique.js?v=39.0',
-  '/data/quiz/approximation.js?v=39.0',
-  '/data/quiz/tableaux.js?v=39.0',
-  '/data/quiz/matrices.js?v=39.0',
-  '/data/quiz/suites.js?v=39.0',
-  '/data/quiz.js?v=39.0',
-  '/data/notebooks_data.js?v=39.0',
-  '/notebooks_store.js?v=39.0',
-  '/notebooks_engine.js?v=39.0',
-  '/app.js?v=39.0',
-  '/css_engine.js?v=39.0',
-  '/algo_pratique_engine.js?v=39.0',
-  '/pomodoro_engine.js?v=39.0',
+  '/style.css?v=41.0',
+  '/notebooks.css?v=41.0',
+  '/store.js?v=41.0',
+  '/data.js?v=41.0',
+  '/data/curriculum.js?v=41.0',
+  '/data/documents.js?v=41.0',
+  '/data/exercises.js?v=41.0',
+  '/data/methods.js?v=41.0',
+  '/data/errors.js?v=41.0',
+  '/data/tables/rappels.js?v=41.0',
+  '/data/tables/fichiers.js?v=41.0',
+  '/data/tables/recursivite.js?v=41.0',
+  '/data/tables/bases.js?v=41.0',
+  '/data/tables/arithmetique.js?v=41.0',
+  '/data/tables/approximation.js?v=41.0',
+  '/data/tables/tableaux.js?v=41.0',
+  '/data/tables/matrices.js?v=41.0',
+  '/data/tables/suites.js?v=41.0',
+  '/data/tables.js?v=41.0',
+  '/data/quiz/fichiers.js?v=41.0',
+  '/data/quiz/recursivite.js?v=41.0',
+  '/data/quiz/bases.js?v=41.0',
+  '/data/quiz/arithmetique.js?v=41.0',
+  '/data/quiz/approximation.js?v=41.0',
+  '/data/quiz/tableaux.js?v=41.0',
+  '/data/quiz/matrices.js?v=41.0',
+  '/data/quiz/suites.js?v=41.0',
+  '/data/quiz.js?v=41.0',
+  '/data/notebooks_data.js?v=41.0',
+  '/notebooks_store.js?v=41.0',
+  '/notebooks_engine.js?v=41.0',
+  '/app.js?v=41.0',
+  '/css_engine.js?v=41.0',
+  '/algo_pratique_engine.js?v=41.0',
+  '/pomodoro_engine.js?v=41.0',
   '/favicon.svg',
   '/manifest.webmanifest'
 ];
@@ -72,10 +72,10 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(e.request.url);
   if (url.origin !== self.location.origin) return;
 
-  // Stratégie Network-First pour HTML, JS et CSS : garantit la réception immédiate des dernières mises à jour
+  // StratÃ©gie Network-First sans cache HTTP pour HTML, JS et CSS : garantit la rÃ©ception immÃ©diate des derniÃ¨res mises Ã  jour
   if (e.request.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname.endsWith('.js') || url.pathname.endsWith('.css') || url.pathname === '/') {
     e.respondWith(
-      fetch(e.request)
+      fetch(new Request(e.request, { cache: 'no-cache' }))
         .then((networkResponse) => {
           if (networkResponse && networkResponse.status === 200) {
             const responseClone = networkResponse.clone();

@@ -875,7 +875,7 @@ input, select, textarea {
   bottom: 0;
   background: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(8px);
-  z-index: 999;
+  z-index: 1200;
   align-items: center;
   justify-content: center;
   padding: 20px;
@@ -7161,7 +7161,7 @@ input, select, textarea {
   inset: 0;
   background: rgba(15, 23, 42, 0.72);
   backdrop-filter: blur(8px);
-  z-index: 1000;
+  z-index: 1250;
   display: flex;
   align-items: center;
   justify-content: center;
