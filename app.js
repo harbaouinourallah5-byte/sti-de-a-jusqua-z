@@ -1786,7 +1786,8 @@ const VIEW_TO_HASH_MAP = {
   'revision': '#/revision',
   'revision-cartes': '#/revision/cartes',
   'revision-plan': '#/revision/plan',
-  'algo-statistiques': '#/algo/statistiques'
+  'algo-statistiques': '#/algo/statistiques',
+  'notebooks': '#/cahiers'
 };
 
 function getHashForView(viewName) {
@@ -1927,7 +1928,11 @@ function parseAppHash(hash) {
     'pratique': 'algo-pratique',
     'algo/theorique': 'algo-theorique',
     'algo-theorique': 'algo-theorique',
-    'theorique': 'algo-theorique'
+    'theorique': 'algo-theorique',
+    'cahiers': 'notebooks',
+    'cahier': 'notebooks',
+    'notebooks': 'notebooks',
+    'notebook': 'notebooks'
   };
 
   return { view: map[clean] || 'home' };
@@ -2346,7 +2351,8 @@ function switchView(viewName, skipHashUpdate = false) {
       'revision-cartes': 'Cartes Mémoire',
       'algo-statistiques': 'Statistiques',
       'algo-theorique-resume': 'Fiche Résumé A4',
-      'algo-carte': 'Carte de Révision'
+      'algo-carte': 'Carte de Révision',
+      'notebooks': 'Mes Cahiers'
     };
     mobileBrandTitle.textContent = titles[viewName] || 'STI de A à Z';
   }
@@ -2507,6 +2513,10 @@ function switchView(viewName, skipHashUpdate = false) {
     }
     if (typeof updateResumeStudyCard === 'function') {
       updateResumeStudyCard();
+    }
+  } else if (viewName === 'notebooks') {
+    if (typeof NOTEBOOKS_APP !== 'undefined') {
+      NOTEBOOKS_APP.init();
     }
   }
 }
@@ -12615,7 +12625,8 @@ const VIEW_METAS = {
   'algo-pratique': { module: 'algo', modLabel: 'Algorithme', title: 'Pratique (Qt ➔ Thonny Python)' },
   'algo-types': { module: 'algo', modLabel: 'Algorithme', title: 'Types d\'Exercices du Bac' },
   'algo-methodes': { module: 'algo', modLabel: 'Algorithme', title: 'Fiches Méthode' },
-  'algo-theorique': { module: 'algo', modLabel: 'Algorithme', title: (typeof CURRICULUM !== 'undefined') ? `Théorique (${CURRICULUM.getTotalAlgoChapters()} Chapitres Bac Info)` : 'Théorique (8 Chapitres)' }
+  'algo-theorique': { module: 'algo', modLabel: 'Algorithme', title: (typeof CURRICULUM !== 'undefined') ? `Théorique (${CURRICULUM.getTotalAlgoChapters()} Chapitres Bac Info)` : 'Théorique (8 Chapitres)' },
+  'notebooks': { module: 'all', modLabel: 'Studio Créatif', title: 'Mes Cahiers Numériques' }
 };
 
 function updateBreadcrumbBar(viewName) {
@@ -13355,6 +13366,10 @@ function updatePageMeta(viewName) {
     'revision-plan': {
       title: "Planning de Révision • Calendrier Personnalisé Pomodoro Bac Info",
       desc: "Planning d'étude personnalisé découpé en blocs Pomodoro (25 min) calculé selon la fréquence réelle des chapitres au Bac."
+    },
+    'notebooks': {
+      title: "Mes Cahiers Numériques & Planner • Studio Créatif STI de A à Z",
+      desc: "Créez votre cahier numérique personnalisé façon Canva avec couvertures assorties, mises en page, tâches, stickers et export PDF."
     },
     'revision-cartes': {
       title: "Cartes Mémoire • Flashcards Système Leitner Bac Info",
