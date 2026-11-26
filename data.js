@@ -3013,7 +3013,7 @@ const DATA = {
       "fileSize": "4.8 Mo",
       "pdfUrl": "pdf/Support_Officiel_QtDesigner_Thonny.pdf",
       "description": "Guide méthodologique complet en 4 étapes pour réussir l'épreuve pratique : chargement de loadUi, signaux .clicked, widgets de saisie et QMessageBox.",
-      "summary": "Les 20 notions officielles et le starter template pour l'épreuve pratique.",
+      "summary": "Les 6 modèles officiels d'affichage (fichiers texte, fichiers de données et tableaux) pour l'épreuve pratique.",
       "downloadName": "Support_Officiel_QtDesigner_Thonny.pdf"
     },
     {
@@ -4249,436 +4249,116 @@ const DATA = {
   ],
   "algo_pratique": [
     {
-      "id": "qt-starter-template",
-      "category": "Démarrage & Architecture",
-      "name": "Squelette officiel Thonny / PyQt5 (loadUi)",
-      "qtWidget": "Fichier interface.ui",
-      "qtProperty": "Nom de fichier : interface.ui",
-      "thonnyCode": "from PyQt5.uic import loadUi\nfrom PyQt5.QtWidgets import QApplication\n\n# 1. Initialiser l'application Qt\napp = QApplication([])\n\n# 2. Charger le fichier .ui créé avec Qt Designer\nwindows = loadUi(\"interface.ui\")\n\n# 3. Lier les boutons aux fonctions de traitement\n# windows.btn_valider.clicked.connect(traiter)\n\n# 4. Afficher la fenêtre et lancer la boucle d'événements\nwindows.show()\napp.exec_()",
-      "summary": "Code indispensable à connaître par cœur pour lancer n'importe quelle interface Qt Designer dans Thonny.",
-      "description": "Au Bac Pratique tunisien, l'épreuve commence par la création de l'interface graphique sous Qt Designer enregistrée sous le nom 'interface.ui' dans le dossier de travail. Dans Thonny, ce code minimal permet de charger l'interface et de démarrer l'application.",
-      "howToUse": "1. Enregistrer le fichier .ui dans le MÊME dossier que votre script Python (.py) dans Thonny.\n2. Écrire ce squelette au tout début du fichier.\n3. Créer vos fonctions de traitement AVANT l'instruction windows.show().",
+      "id": "qt-afficher-ftexte-liste",
+      "category": "Fichiers → Liste Widget",
+      "name": "Afficher un fichier texte dans une liste widget",
+      "qtWidget": "QListWidget (.txt)",
+      "qtProperty": "w.lw.clear() + f.readline() + w.lw.addItem(ch)",
+      "thonnyCode": "def afficher():\n    w.lw.clear()\n    f=open(\"nomfichier.txt\",\"r\")\n    ch=f.readline()\n    while ch != \"\":\n        ch=ch[:len(ch)-1]\n        w.lw.addItem(ch)\n        ch=f.readline()\n    f.close()",
+      "summary": "Lire un fichier texte ligne par ligne et afficher chaque ligne dans une liste widget.",
+      "description": "Vide d'abord la liste widget avec w.lw.clear(), ouvre nomfichier.txt en lecture (\"r\"), lit ligne par ligne tant que ch != \"\", retire le saut de ligne final ch[:len(ch)-1] puis ajoute chaque ligne dans la liste avec w.lw.addItem(ch).",
+      "howToUse": "Dans Qt Designer : placer une List Widget nommée lw.\nDans Thonny : vider lw avant la boucle while et penser à appeler f.close() à la fin.",
       "examples": [
         {
-          "label": "Chargement direct",
-          "code": "windows = loadUi('interface.ui')"
+          "label": "Retirer \\n",
+          "code": "ch=ch[:len(ch)-1]"
         },
         {
-          "label": "Connexion d'un bouton",
-          "code": "windows.btn_calculer.clicked.connect(calculer)"
-        },
-        {
-          "label": "Lancement",
-          "code": "windows.show()\napp.exec_()"
+          "label": "Ajouter dans lw",
+          "code": "w.lw.addItem(ch)"
         }
       ],
-      "bacTips": "PIÈGE FRÉQUENT : Si Thonny affiche 'FileNotFoundError: [Errno 2] No such file or directory: interface.ui', c'est que votre script Python n'est pas enregistré dans le même dossier que le fichier .ui !"
+      "bacTips": "Toujours appeler w.lw.clear() avant la boucle pour éviter les doublons si l'utilisateur clique plusieurs fois sur Afficher !"
     },
     {
-      "id": "qt-lineedit",
-      "category": "Widgets de Saisie",
-      "name": "QLineEdit (Zone de saisie de texte)",
-      "qtWidget": "QLineEdit",
-      "qtProperty": "objectName (ex: le_nom, le_age)",
-      "thonnyCode": "# 1. Lire la valeur saisie (toujours renvoyée sous forme de str)\ntexte = windows.le_nom.text()\n\n# 2. Convertir en nombre si nécessaire\nage = int(windows.le_age.text())\nmoyenne = float(windows.le_moy.text())\n\n# 3. Écrire ou modifier le texte par code\nwindows.le_resultat.setText(\"Admis\")\n\n# 4. Vider le champ\nwindows.le_nom.clear()\n\n# 5. Donner le focus au curseur\nwindows.le_nom.setFocus()",
-      "summary": "Permet à l'utilisateur de saisir une ligne de texte ou un nombre.",
-      "description": "Le QLineEdit est le widget de saisie le plus utilisé dans les examens pratiques du Bac. La méthode .text() renvoie TOUJOURS une chaîne de caractères (str). Pour effectuer des calculs arithmétiques, il est indispensable de convertir la valeur avec int() ou float().",
-      "howToUse": "Dans Qt Designer : glisser 'Line Edit', lui donner un objectName clair (ex: le_nom, le_note). Dans Thonny : windows.objectName.text() pour lire, windows.objectName.setText('...') pour écrire.",
+      "id": "qt-afficher-fdat-liste",
+      "category": "Fichiers → Liste Widget",
+      "name": "Afficher un fichier de données dans une liste widget",
+      "qtWidget": "QListWidget (.dat)",
+      "qtProperty": "open(..., \"rb\") + load(f) + w.lw.addItem(ch)",
+      "thonnyCode": "def afficher():\n    w.lw.clear()\n    f=open(\"nomfichier.dat\",\"rb\")\n    finfichier=False\n    while not finfichier :\n        try:\n            e=load(f)\n            ch=str(e[\"champ1\"])+\" \"+str(e[\"champ2\"])+\" \"+str(e[\"champ3\"])\n            w.lw.addItem(ch)\n        except:\n            finfichier=True\n    f.close()",
+      "summary": "Parcourir un fichier binaire d'enregistrements (.dat) et afficher chaque enregistrement dans une liste widget.",
+      "description": "Ouvre nomfichier.dat en mode lecture binaire (\"rb\"), lit chaque enregistrement e=load(f) dans un bloc try/except jusqu'à EOF, formate ch avec str(e[\"champX\"]) puis ajoute la ligne dans w.lw.",
+      "howToUse": "Importer load depuis pickle (from pickle import load).\nConvertir chaque champ avec str(...) avant de les concaténer dans ch.",
       "examples": [
         {
-          "label": "Lecture de chaîne",
-          "code": "nom = windows.le_nom.text()"
-        },
-        {
-          "label": "Lecture d'entier",
-          "code": "n = int(windows.le_n.text())"
-        },
-        {
-          "label": "Affichage de résultat",
-          "code": "windows.le_res.setText(str(total))"
-        },
-        {
-          "label": "Vider le champ",
-          "code": "windows.le_nom.clear()"
+          "label": "Boucle binaire EOF",
+          "code": "try:\n    e=load(f)\nexcept:\n    finfichier=True"
         }
       ],
-      "bacTips": "Attention : windows.le_nom.text() renvoie une chaîne vide \"\" si l'élève n'a rien saisi. Toujours tester `if nom == \"\":` avant d'appliquer int() pour éviter le plantage ValueError !"
+      "bacTips": "Ne jamais oublier str(...) autour d'un champ numérique avant de le concaténer dans ch !"
     },
     {
-      "id": "qt-textedit",
-      "category": "Widgets de Saisie",
-      "name": "Text Edit (QTextEdit - Zone de texte multilignes)",
-      "qtWidget": "QTextEdit",
-      "qtProperty": "toPlainText() / setText() / clear() / setFocus()",
-      "thonnyCode": "# 1. Récupérer le contenu de la zone de saisie (multiligne)\ntexte = W.nomTextEdit.toPlainText()\n\n# 2. Modifier le contenu de la zone de texte\nW.nomTextEdit.setText(\"Nouveau texte multiligne...\")\n\n# 3. Vider la zone de texte\nW.nomTextEdit.clear()\n\n# 4. Mettre le curseur dans la zone de texte\nW.nomTextEdit.setFocus()",
-      "summary": "Zone de saisie de texte multiligne pour saisir ou afficher de longs paragraphes ou plusieurs lignes.",
-      "description": "Dans Qt Designer, glissez 'Text Edit' (QTextEdit). Dans Thonny Python, attention : on n'utilise PAS .text(), mais .toPlainText() pour extraire le texte saisi !",
-      "howToUse": "Dans Qt Designer : glisser 'Text Edit', nommer son objectName (ex: nomTextEdit). Dans Thonny : W.nomTextEdit.toPlainText(), setText(chaine), clear() et setFocus().",
+      "id": "qt-afficher-ftexte-table",
+      "category": "Fichiers → Table Widget",
+      "name": "Afficher un fichier texte dans une table widget",
+      "qtWidget": "QTableWidget (.txt)",
+      "qtProperty": "w.tw.setRowCount(0) + insertRow(i) + setItem(i, col, ...)",
+      "thonnyCode": "def afficher():\n    f=open(\"nomfichier.txt\",\"r\")\n    i=0\n    w.tw.setRowCount(0)\n    ch=f.readline()\n    while ch != \"\":\n        ch=ch[:len(ch)-1]\n        w.tw.insertRow(i)\n        mot=ch[:ch.find(\" \")]\n        w.tw.setItem(i,0,QTableWidgetItem(mot))\n        ch=ch[ch.find(\" \")+1:]\n        mot=ch[:ch.find(\" \")]\n        w.tw.setItem(i,1,QTableWidgetItem(mot))\n        ch=ch[ch.find(\" \")+1:]\n        mot=ch\n        w.tw.setItem(i,2,QTableWidgetItem(mot))\n        i=i+1\n        ch=f.readline()\n    f.close()",
+      "summary": "Découper chaque ligne d'un fichier texte séparée par des espaces et remplir les colonnes d'une table widget.",
+      "description": "Réinitialise la table avec w.tw.setRowCount(0), puis pour chaque ligne du fichier texte, insère la ligne i (insertRow(i)) et découpe les champs à l'aide de ch.find(\" \") pour remplir chaque colonne avec QTableWidgetItem(mot).",
+      "howToUse": "Importer QTableWidgetItem depuis PyQt5.QtWidgets.\nConfigurer les colonnes dans Qt Designer (ici 3 colonnes d'indices 0, 1 et 2).",
       "examples": [
         {
-          "label": "Récupérer le texte",
-          "code": "contenu = W.nomTextEdit.toPlainText()"
-        },
-        {
-          "label": "Modifier le texte",
-          "code": "W.nomTextEdit.setText('Résultat : Validé')"
+          "label": "Extraire un mot",
+          "code": "mot=ch[:ch.find(\" \")]\nch=ch[ch.find(\" \")+1:]"
         }
       ],
-      "bacTips": "PIÈGE MAJEUR BAC : Pour un Line Edit c'est .text(), mais pour un Text Edit c'est .toPlainText() ! Si vous écrivez .text() sur un TextEdit, Python plantera avec une erreur AttributeError."
+      "bacTips": "Toujours importer QTableWidgetItem et penser à appeler w.tw.setRowCount(0) avant la boucle !"
     },
     {
-      "id": "qt-pushbutton",
-      "category": "Widgets d'Action & Affichage",
-      "name": "QPushButton (Bouton d'action / Clic)",
-      "qtWidget": "QPushButton",
-      "qtProperty": "objectName (ex: btn_valider, btn_quitter)",
-      "thonnyCode": "# Définir la fonction exécutée lors du clic\ndef valider():\n    nom = windows.le_nom.text()\n    if nom == \"\":\n        QMessageBox.critical(windows, \"Erreur\", \"Veuillez remplir le nom !\")\n        return\n    windows.lbl_res.setText(\"Bienvenue \" + nom)\n\n# Lier le signal 'clicked' du bouton à la fonction (SANS parenthèses !)\nwindows.btn_valider.clicked.connect(valider)\n\n# Activer ou désactiver le bouton\nwindows.btn_valider.setEnabled(True)   # Activé\nwindows.btn_valider.setEnabled(False)  # Grisé/Désactivé",
-      "summary": "Déclenche l'exécution d'une fonction Python quand le candidat clique dessus.",
-      "description": "Le QPushButton déclenche le signal .clicked. Dans Thonny, on connecte ce signal à notre fonction avec .connect(nom_fonction). C'est le cœur de l'interactivité au Bac Pratique.",
-      "howToUse": "Dans Qt Designer : glisser 'Push Button', régler objectName='btn_valider' et le texte 'Valider'. Dans Thonny : windows.btn_valider.clicked.connect(ma_fonction).",
+      "id": "qt-afficher-fdat-table",
+      "category": "Fichiers → Table Widget",
+      "name": "Afficher un fichier de données dans une table widget",
+      "qtWidget": "QTableWidget (.dat)",
+      "qtProperty": "open(..., \"rb\") + insertRow(i) + QTableWidgetItem(str(...))",
+      "thonnyCode": "def afficher():\n    f=open(\"nomfichier.dat\",\"rb\")\n    finfichier=False\n    i=0\n    w.tw.setRowCount(0)\n    while not finfichier:\n        try:\n            e=load(f)\n            w.tw.insertRow(i)\n            w.tw.setItem(i,0,QTableWidgetItem(str(e[\"champ1\"])))\n            w.tw.setItem(i,1,QTableWidgetItem(str(e[\"champ2\"])))\n            w.tw.setItem(i,2,QTableWidgetItem(str(e[\"champ3\"])))\n            w.tw.setItem(i,3,QTableWidgetItem(str(e[\"champ4\"])))\n            w.tw.setItem(i,4,QTableWidgetItem(str(e[\"champ5\"])))\n            i=i+1\n        except:\n            finfichier=True\n    f.close()",
+      "summary": "Charger les enregistrements d'un fichier binaire (.dat) et afficher leurs champs dans une table widget.",
+      "description": "Vide d'abord la table (w.tw.setRowCount(0)), puis lit chaque enregistrement binaire e=load(f), insère une ligne i avec w.tw.insertRow(i) et remplit les colonnes 0 à 4 avec QTableWidgetItem(str(e[\"champX\"])).",
+      "howToUse": "Utiliser from pickle import load et from PyQt5.QtWidgets import QTableWidgetItem.\nAdapter les clés champ1..champN et les indices de colonnes selon le sujet.",
       "examples": [
         {
-          "label": "Connexion",
-          "code": "windows.btn_calculer.clicked.connect(calculer)"
-        },
-        {
-          "label": "Désactiver bouton",
-          "code": "windows.btn_valider.setEnabled(False)"
-        },
-        {
-          "label": "Quitter l'application",
-          "code": "windows.btn_quitter.clicked.connect(windows.close)"
+          "label": "Cellule depuis champ",
+          "code": "w.tw.setItem(i,0,QTableWidgetItem(str(e[\"champ1\"])))"
         }
       ],
-      "bacTips": "ERREUR CLASSIQUE DU BAC : Ne JAMAIS mettre de parenthèses lors du connect ! Écrire `windows.btn.clicked.connect(calculer)` et SURTOUT PAS `connect(calculer())` sinon la fonction s'exécute au lancement !"
+      "bacTips": "QTableWidgetItem attend obligatoirement une chaîne (str) : toujours écrire str(e[\"champ\"]) !"
     },
     {
-      "id": "qt-radiobutton",
-      "category": "Widgets de Choix & Sélection",
-      "name": "QRadioButton (Bouton radio - Choix exclusif unique)",
-      "qtWidget": "QRadioButton",
-      "qtProperty": "objectName (ex: rb_homme, rb_femme)",
-      "thonnyCode": "# 1. Tester quel bouton radio est coché\nif windows.rb_homme.isChecked():\n    genre = \"Masculin\"\nelif windows.rb_femme.isChecked():\n    genre = \"Féminin\"\nelse:\n    QMessageBox.warning(windows, \"Attention\", \"Veuillez sélectionner un genre !\")\n    return\n\n# 2. Cocher un bouton radio par programmation\nwindows.rb_homme.setChecked(True)",
-      "summary": "Permet de sélectionner UNE SEULE option parmi un groupe d'options exclusives.",
-      "description": "Utilisé pour le genre (Homme/Femme), le type d'opération (Cryptage/Décryptage), ou le mode de calcul. Pour que les boutons soient exclusifs, placez-les dans un même conteneur (QGroupBox) dans Qt Designer.",
-      "howToUse": "Dans Qt Designer : glisser 'Radio Button' dans une 'Group Box'. Dans Thonny : utiliser la méthode .isChecked() qui retourne True ou False.",
+      "id": "qt-afficher-tab-table",
+      "category": "Tableau → Affichage",
+      "name": "Afficher un tableau dans une table widget",
+      "qtWidget": "QTableWidget (Tableau)",
+      "qtProperty": "windows.tw.setRowCount(0) + for i in range(n):",
+      "thonnyCode": "windows.tw.setRowCount(0)\nfor i in range(n):\n    windows.tw.insertRow(i)\n    windows.tw.setItem(i,0,QTableWidgetItem(str(T[i][\"champ1\"])))\n    windows.tw.setItem(i,1,QTableWidgetItem(str(T[i][\"champ2\"])))",
+      "summary": "Parcourir un tableau T d'enregistrements de taille n et afficher ses colonnes dans une table widget.",
+      "description": "Réinitialise la table à 0 ligne (windows.tw.setRowCount(0)), puis parcourt T[0..n-1] avec for i in range(n) pour insérer chaque ligne et afficher T[i][\"champ1\"] et T[i][\"champ2\"].",
+      "howToUse": "S'assurer que n contient le nombre réel d'éléments de T et que la table widget comporte assez de colonnes.",
       "examples": [
         {
-          "label": "Vérifier si coché",
-          "code": "if windows.rb_facile.isChecked(): niveau = 1"
-        },
-        {
-          "label": "Cocher par défaut",
-          "code": "windows.rb_homme.setChecked(True)"
+          "label": "Cellule tableau",
+          "code": "windows.tw.setItem(i,0,QTableWidgetItem(str(T[i][\"champ1\"])))"
         }
       ],
-      "bacTips": "Pensez toujours à vérifier si aucun bouton n'est coché en affichant une alerte QMessageBox si les deux renvoient False !"
+      "bacTips": "Pour un tableau simple à une dimension (sans champs), utiliser QTableWidgetItem(str(T[i]))."
     },
     {
-      "id": "qt-checkbox",
-      "category": "Widgets de Choix & Sélection",
-      "name": "QCheckBox (Case à cocher - Choix multiples)",
-      "qtWidget": "QCheckBox",
-      "qtProperty": "objectName (ex: cb_sport, cb_musique)",
-      "thonnyCode": "# Récupérer l'état de plusieurs cases indépendantes\ninterets = []\n\nif windows.cb_sport.isChecked():\n    interets.append(\"Sport\")\n\nif windows.cb_musique.isChecked():\n    interets.append(\"Musique\")\n\nif windows.cb_lecture.isChecked():\n    interets.append(\"Lecture\")\n\n# Forcer une case à être cochée ou décochée\nwindows.cb_sport.setChecked(False)",
-      "summary": "Permet de cocher zéro, une ou plusieurs options indépendantes.",
-      "description": "Contrairement aux radio buttons, les cases à cocher QCheckBox ne sont pas exclusives. L'élève peut en cocher plusieurs simultanément. Chaque case possède sa méthode .isChecked().",
-      "howToUse": "Dans Qt Designer : glisser 'Check Box'. Dans Thonny : tester `if windows.cb_nom.isChecked():` pour chaque case.",
+      "id": "qt-afficher-tab-liste",
+      "category": "Tableau → Affichage",
+      "name": "Afficher un tableau dans une liste widget",
+      "qtWidget": "QListWidget (Tableau)",
+      "qtProperty": "windows.lw.clear() + for i in range(n):",
+      "thonnyCode": "windows.lw.clear()\nfor i in range(n):\n    windows.lw.addItem(str(T[i]))",
+      "summary": "Vider une liste widget et y afficher les n éléments d'un tableau T.",
+      "description": "Efface le contenu existant via windows.lw.clear(), puis parcourt T[0..n-1] avec for i in range(n) en convertissant chaque élément en chaîne str(T[i]) pour l'ajouter dans windows.lw.",
+      "howToUse": "Dans Qt Designer : placer une List Widget nommée lw.\nDans Thonny : utiliser str(T[i]) pour que tout type d'élément s'affiche sans erreur.",
       "examples": [
         {
-          "label": "Test d'une case",
-          "code": "if windows.cb_accepter.isChecked(): autoriser()"
-        },
-        {
-          "label": "Décocher",
-          "code": "windows.cb_option.setChecked(False)"
+          "label": "Ajout dans la liste",
+          "code": "windows.lw.addItem(str(T[i]))"
         }
       ],
-      "bacTips": "Au Bac, souvent utilisé pour les critères de filtre ou les options facultatives (ex: ajouter une remise de 10%)."
-    },
-    {
-      "id": "qt-combobox",
-      "category": "Widgets de Choix & Sélection",
-      "name": "QComboBox (Menu déroulant / Liste de sélection)",
-      "qtWidget": "QComboBox",
-      "qtProperty": "objectName (ex: combo_ville, combo_classe)",
-      "thonnyCode": "# 1. Récupérer le texte de l'élément sélectionné\nville = windows.combo_ville.currentText()\n\n# 2. Récupérer l'indice de l'élément sélectionné (0 pour le 1er, 1 pour le 2ème...)\nidx = windows.combo_ville.currentIndex()\n\n# 3. Réinitialiser la sélection (aucun choix sélectionné / vider liste)\nwindows.combo_ville.setCurrentIndex(-1)\n\n# 3. Vérifier qu'un choix a bien été fait (si le 1er élément est '-- Choisir --')\nif windows.combo_ville.currentIndex() == 0:\n    QMessageBox.critical(windows, \"Erreur\", \"Veuillez choisir une ville !\")\n    return\n\n# 4. Ajouter des éléments dynamiquement par code\nwindows.combo_ville.addItem(\"Sousse\")\nwindows.combo_ville.addItem(\"Sfax\")\n\n# 5. Vider le menu déroulant\nwindows.combo_ville.clear()",
-      "summary": "Affiche une liste déroulante où le candidat choisit une option parmi plusieurs.",
-      "description": "Dans Qt Designer, double-cliquez sur le QComboBox pour ajouter des éléments par défaut (ex: '-- Choisir --', 'Tunis', 'Sousse', 'Sfax'). Dans Thonny, .currentText() donne la chaîne et .currentIndex() donne la position numérique (commence à 0).",
-      "howToUse": "Dans Qt Designer : double-clic sur la ComboBox pour saisir les choix. Dans Thonny : windows.combo.currentText() pour lire le texte choisi.",
-      "examples": [
-        {
-          "label": "Lire le texte",
-          "code": "choix = windows.combo_pays.currentText()"
-        },
-        {
-          "label": "Lire l'indice",
-          "code": "position = windows.combo_pays.currentIndex()"
-        },
-        {
-          "label": "Ajouter un item",
-          "code": "windows.combo_pays.addItem('Tunisie')"
-        }
-      ],
-      "bacTips": "ASTUCE BAC : Si vous mettez '-- Sélectionner --' en premier élément dans Qt Designer, vérifiez toujours `if windows.combo.currentIndex() == 0:` pour forcer l'utilisateur à faire un vrai choix !"
-    },
-    {
-      "id": "qt-label",
-      "category": "Widgets d'Action & Affichage",
-      "name": "QLabel (Texte d'affichage / Résultat)",
-      "qtWidget": "QLabel",
-      "qtProperty": "objectName (ex: lbl_titre, lbl_resultat)",
-      "thonnyCode": "# 1. Afficher un texte simple ou un message\nwindows.lbl_resultat.setText(\"Le nombre 17 est Premier !\")\n\n# 2. Afficher une variable numérique (toujours convertir en str)\ntotal = 145.5\nwindows.lbl_resultat.setText(\"Total : \" + str(total) + \" DT\")\n\n# 3. Formater avec des f-strings en Python 3\nwindows.lbl_resultat.setText(f\"Moyenne : {moyenne:.2f} / 20\")\n\n# 4. Effacer le texte du label\nwindows.lbl_resultat.clear()",
-      "summary": "Utilisé pour afficher des titres, des instructions ou le résultat final d'un algorithme.",
-      "description": "Le QLabel est un widget passif d'affichage. Contrairement au QLineEdit, l'utilisateur ne peut pas modifier son contenu à la souris. La méthode .setText() attend obligatoirement une chaîne de caractères (str).",
-      "howToUse": "Dans Qt Designer : placer un 'Label', vider son texte par défaut si c'est un résultat, et lui donner un objectName='lbl_res'. Dans Thonny : windows.lbl_res.setText(str(valeur)).",
-      "examples": [
-        {
-          "label": "Texte simple",
-          "code": "windows.lbl_msg.setText('Opération réussie')"
-        },
-        {
-          "label": "Nombre converti",
-          "code": "windows.lbl_res.setText(str(pgcd_val))"
-        }
-      ],
-      "bacTips": "TypeError : Ne passez jamais un entier directement à setText ! `setText(42)` déclenche une erreur ; écrivez toujours `setText(str(42))`."
-    },
-    {
-      "id": "qt-spinbox",
-      "category": "Widgets de Saisie",
-      "name": "QSpinBox / QDoubleSpinBox (Compteur numérique)",
-      "qtWidget": "QSpinBox / QDoubleSpinBox",
-      "qtProperty": "minimum, maximum, value, objectName",
-      "thonnyCode": "# 1. Lire la valeur numérique (renvoie directement un int ou float, pas de str !)\nquantite = windows.sb_quantite.value()       # int pour QSpinBox\nprix = windows.dsb_prix.value()             # float pour QDoubleSpinBox\n\n# 2. Modifier la valeur par code\nwindows.sb_quantite.setValue(10)\n\n# 3. Calcul direct sans conversion str !\ntotal = quantite * prix\nwindows.lbl_total.setText(str(total) + \" DT\")",
-      "summary": "Champ de saisie numérique avec flèches haut/bas garantissant une valeur valide sans risque d'erreur de frappe.",
-      "description": "QSpinBox gère les entiers et QDoubleSpinBox gère les réels avec virgule. Le gros avantage est que la méthode .value() renvoie directement un int ou float, sans conversion nécessaire.",
-      "howToUse": "Dans Qt Designer : régler 'minimum' (ex: 1) et 'maximum' (ex: 100). Dans Thonny : `val = windows.sb_nb.value()`.",
-      "examples": [
-        {
-          "label": "Lire un entier",
-          "code": "n = windows.sb_n.value()"
-        },
-        {
-          "label": "Modifier la valeur",
-          "code": "windows.sb_n.setValue(25)"
-        }
-      ],
-      "bacTips": "Pratique pour les notes (0 à 20) ou les effectifs (N élèves entre 5 et 30) car il empêche automatiquement la saisie de texte !"
-    },
-    {
-      "id": "qt-dateedit",
-      "category": "Widgets de Saisie",
-      "name": "QDateEdit (Sélecteur de date)",
-      "qtWidget": "QDateEdit",
-      "qtProperty": "displayFormat, calendarPopup, objectName",
-      "thonnyCode": "# 1. Récupérer la date sous forme de texte formaté\ndate_str = windows.date_naiss.date().toString(\"yyyy-MM-dd\")  # Ex: '2006-05-14'\n\n# 2. Récupérer l'année, le mois ou le jour séparément\nannee = windows.date_naiss.date().year()\nmois = windows.date_naiss.date().month()\njour = windows.date_naiss.date().day()\n\n# 3. Calculer l'âge\nage = 2026 - annee\nif age < 18:\n    QMessageBox.critical(windows, \"Erreur\", \"Candidat mineur non autorisé !\")",
-      "summary": "Permet la saisie et la sélection d'une date via un calendrier ou des flèches.",
-      "description": "Le QDateEdit évite les erreurs de format de date. Dans Qt Designer, activez la case 'calendarPopup' pour afficher un calendrier déroulant. Dans Thonny, .date().toString('dd/MM/yyyy') extrait la date formatée.",
-      "howToUse": "Dans Qt Designer : cocher calendarPopup=True. Dans Thonny : `d = windows.date_widget.date().toString('yyyy-MM-dd')`.",
-      "examples": [
-        {
-          "label": "Format SQL standard",
-          "code": "d = windows.date_box.date().toString('yyyy-MM-dd')"
-        },
-        {
-          "label": "Extraire l'année",
-          "code": "annee = windows.date_box.date().year()"
-        }
-      ],
-      "bacTips": "Pour les bases de données SQL du Bac, utilisez le format 'yyyy-MM-dd' pour l'insérer directement dans une colonne de type DATE."
-    },
-    {
-      "id": "qt-msgbox-critical",
-      "category": "Boîtes de Dialogue (QMessageBox)",
-      "name": "QMessageBox.critical (Alerte d'erreur bloquante)",
-      "qtWidget": "QMessageBox",
-      "qtProperty": "Import : from PyQt5.QtWidgets import QMessageBox",
-      "thonnyCode": "from PyQt5.QtWidgets import QMessageBox\n\n# Afficher une boîte modale d'erreur bloquante avec icône rouge (X)\nQMessageBox.critical(\n    windows,           # Fenêtre parente\n    \"Erreur de saisie\",# Titre de la boîte de dialogue\n    \"Le code élève doit comporter exactement 8 chiffres !\" # Message\n)\n\n# Toujours arrêter la fonction après l'erreur :\nreturn",
-      "summary": "Ouvre une fenêtre pop-up d'erreur critique avec icône rouge et son d'alerte pour bloquer une saisie invalide.",
-      "description": "C'est l'instruction reine du contrôle de saisie au Bac Pratique. Dès qu'une condition n'est pas remplie (champ vide, valeur hors limites, longueur incorrecte), on affiche cette boîte et on stoppe le traitement avec 'return'.",
-      "howToUse": "Syntaxe : `QMessageBox.critical(windows, 'Titre', 'Texte de l\\'erreur')`.",
-      "examples": [
-        {
-          "label": "Champ obligatoire",
-          "code": "if nom == '':\n    QMessageBox.critical(windows, 'Erreur', 'Nom obligatoire !')\n    return"
-        },
-        {
-          "label": "Nombre hors limite",
-          "code": "if not (1 <= n <= 100):\n    QMessageBox.critical(windows, 'Erreur', 'N doit être entre 1 et 100 !')\n    return"
-        }
-      ],
-      "bacTips": "BARÈME DU BAC : Un point entier est souvent attribué au contrôle de saisie avec QMessageBox. N'oubliez jamais d'ajouter `return` immédiatement après le message pour ne pas continuer le calcul avec des données erronées !"
-    },
-    {
-      "id": "qt-msgbox-info",
-      "category": "Boîtes de Dialogue (QMessageBox)",
-      "name": "QMessageBox.information (Message de succès / Info)",
-      "qtWidget": "QMessageBox",
-      "qtProperty": "Import : from PyQt5.QtWidgets import QMessageBox",
-      "thonnyCode": "from PyQt5.QtWidgets import QMessageBox\n\n# Afficher un message d'information ou de succès avec icône bleue (i)\nQMessageBox.information(\n    windows,\n    \"Succès de l'enregistrement\",\n    f\"L'élève {nom} a été enregistré avec succès dans la base !\"\n)",
-      "summary": "Affiche une boîte d'information avec icône bleue pour confirmer la réussite d'un calcul ou d'une sauvegarde.",
-      "description": "Utilisé pour annoncer le résultat positif d'un traitement : enregistrement réussi dans un fichier/base, nombre premier validé, ou fin de traitement.",
-      "howToUse": "Syntaxe : `QMessageBox.information(windows, 'Titre', 'Message')`.",
-      "examples": [
-        {
-          "label": "Succès du traitement",
-          "code": "QMessageBox.information(windows, 'Bravo', 'Calcul terminé avec succès !')"
-        }
-      ],
-      "bacTips": "L'icône bleue rassure le correcteur et indique clairement que le scénario normal s'est déroulé jusqu'au bout."
-    },
-    {
-      "id": "qt-msgbox-warning",
-      "category": "Boîtes de Dialogue (QMessageBox)",
-      "name": "QMessageBox.warning (Boîte d'avertissement jaune)",
-      "qtWidget": "QMessageBox",
-      "qtProperty": "Import : from PyQt5.QtWidgets import QMessageBox",
-      "thonnyCode": "from PyQt5.QtWidgets import QMessageBox\n\n# Afficher un avertissement avec icône jaune triangulaire (!)\nQMessageBox.warning(\n    windows,\n    \"Attention\",\n    \"Attention : le tableau est déjà plein (N maximum atteint) !\"\n)",
-      "summary": "Affiche une boîte d'avertissement avec triangle jaune pour signaler une situation anormale non bloquante.",
-      "description": "Parfaite pour avertir l'utilisateur d'un doublon, d'une capacité maximale atteinte ou d'une confirmation requise.",
-      "howToUse": "Syntaxe : `QMessageBox.warning(windows, 'Titre', 'Message')`.",
-      "examples": [
-        {
-          "label": "Avertissement capacité",
-          "code": "QMessageBox.warning(windows, 'Attention', 'Nombre maximum atteint')"
-        }
-      ],
-      "bacTips": "Très appréciée dans les sujets demandant de vérifier si un élément existe déjà dans un tableau."
-    },
-    {
-      "id": "qt-tablewidget",
-      "category": "Widgets d'Action & Affichage",
-      "name": "QTableWidget (Grille / Tableau de données)",
-      "qtWidget": "QTableWidget",
-      "qtProperty": "objectName (ex: table_res)",
-      "thonnyCode": "from PyQt5.QtWidgets import QTableWidgetItem\n\n# 1. Définir le nombre de colonnes et de lignes\nwindows.table_res.setColumnCount(3)\nwindows.table_res.setHorizontalHeaderLabels([\"ID\", \"Nom\", \"Moyenne\"])\nwindows.table_res.setRowCount(len(liste_eleves))\n\n# 2. Remplir le tableau cellule par cellule\nfor row, eleve in enumerate(liste_eleves):\n    windows.table_res.setItem(row, 0, QTableWidgetItem(str(eleve['id'])))\n    windows.table_res.setItem(row, 1, QTableWidgetItem(eleve['nom']))\n    windows.table_res.setItem(row, 2, QTableWidgetItem(str(eleve['moyenne'])))\n\n# 3. Vider le tableau\nwindows.table_res.clearContents()\nwindows.table_res.setRowCount(0)",
-      "summary": "Affiche des données tabulaires sous forme de grille avec lignes et colonnes.",
-      "description": "Fréquent dans les épreuves pratiques de synthèse : afficher les résultats d'un tri, les élèves admis, ou des enregistrements extraits d'une base de données ou d'un fichier.",
-      "howToUse": "1. Importer `QTableWidgetItem` depuis `PyQt5.QtWidgets`.\n2. Fixer `setRowCount(n)`.\n3. Remplir avec `setItem(ligne, colonne, QTableWidgetItem(str(val)))`.",
-      "examples": [
-        {
-          "label": "Remplir une cellule",
-          "code": "windows.table.setItem(0, 0, QTableWidgetItem('Valeur'))"
-        },
-        {
-          "label": "Vider le tableau",
-          "code": "windows.table.setRowCount(0)"
-        }
-      ],
-      "bacTips": "Chaque cellule attend obligatoirement un objet `QTableWidgetItem(str)`. N'oubliez pas d'importer QTableWidgetItem !"
-    },
-    {
-      "id": "qt-valid-empty",
-      "category": "Contrôles de Saisie Bac",
-      "name": "Contrôle 1 : Vérification champ obligatoire non vide",
-      "qtWidget": "QLineEdit / QComboBox",
-      "qtProperty": "Vérification if ch == '':",
-      "thonnyCode": "def valider_formulaire():\n    nom = windows.le_nom.text().strip()\n    \n    # Test si la chaîne est vide ou composée uniquement d'espaces\n    if nom == \"\":\n        QMessageBox.critical(windows, \"Erreur\", \"Le champ Nom est obligatoire !\")\n        windows.le_nom.setFocus() # Remet le curseur dans le champ\n        return False\n        \n    return True",
-      "summary": "Vérifie qu'un champ requis a bien été renseigné par le candidat.",
-      "description": "La méthode `.strip()` supprime les espaces au début et à la fin. Si la chaîne résultante est égale à \"\", on affiche un message d'erreur et on remet le curseur avec `.setFocus()`.",
-      "howToUse": "Toujours placer ce contrôle en premier avant toute autre validation ou conversion.",
-      "examples": [
-        {
-          "label": "Contrôle champ vide",
-          "code": "if windows.le_saisie.text().strip() == '':\n    QMessageBox.critical(windows, 'Erreur', 'Champ vide !')\n    return"
-        }
-      ],
-      "bacTips": "L'utilisation de `.strip()` évite que l'élève tape simplement des espaces pour tromper le test !"
-    },
-    {
-      "id": "qt-valid-alpha",
-      "category": "Contrôles de Saisie Bac",
-      "name": "Contrôle 2 : Chaîne purement alphabétique",
-      "qtWidget": "QLineEdit",
-      "qtProperty": "Test nom.isalpha() ou test caractère par caractère",
-      "thonnyCode": "def est_alphabetique(chaine):\n    # Vérifier que la chaîne ne contient que des lettres et des espaces\n    if len(chaine) == 0:\n        return False\n    for c in chaine:\n        if not (('A' <= c <= 'Z') or ('a' <= c <= 'z') or c == ' '):\n            return False\n    return True\n\n# Utilisation dans le bouton valider :\nnom = windows.le_nom.text().strip()\nif not est_alphabetique(nom):\n    QMessageBox.critical(windows, \"Erreur\", \"Le nom doit contenir uniquement des lettres !\")\n    return",
-      "summary": "Vérifie qu'un prénom ou nom ne contient aucun chiffre ni caractère spécial.",
-      "description": "Au Bac STI tunisien, le correcteur teste souvent d'entrer 'Ali123' ou 'Mohamed@'. Deux méthodes sont acceptées : la boucle caractère par caractère (conforme au pseudo-code Bac) ou la fonction Python `ch.replace(' ', '').isalpha()`.",
-      "howToUse": "Appliquer la fonction de validation sur le texte récupéré du QLineEdit.",
-      "examples": [
-        {
-          "label": "Méthode boucle Bac",
-          "code": "valide = all(('a'<=c<='z' or 'A'<=c<='Z' or c==' ') for c in ch)"
-        },
-        {
-          "label": "Méthode isalpha",
-          "code": "valide = ch.replace(' ', '').isalpha()"
-        }
-      ],
-      "bacTips": "N'oubliez pas d'autoriser l'espace `c == ' '` pour les prénoms composés comme 'Mohamed Ali' !"
-    },
-    {
-      "id": "qt-valid-numeric",
-      "category": "Contrôles de Saisie Bac",
-      "name": "Contrôle 3 : Nombre entier valide dans un intervalle",
-      "qtWidget": "QLineEdit",
-      "qtProperty": "isnumeric() et encadrement (ex: 15 <= age <= 30)",
-      "thonnyCode": "def valider_age():\n    ch_age = windows.le_age.text().strip()\n    \n    # 1. Vérifier que c'est composé de chiffres uniquement\n    if not ch_age.isnumeric():\n        QMessageBox.critical(windows, \"Erreur\", \"L'âge doit être un nombre entier !\")\n        return False\n        \n    # 2. Convertir et vérifier l'intervalle officiel\n    age = int(ch_age)\n    if not (15 <= age <= 30):\n        QMessageBox.critical(windows, \"Erreur\", \"L'âge doit être compris entre 15 et 30 ans !\")\n        return False\n        \n    return True",
-      "summary": "Vérifie qu'une saisie est un entier valide puis qu'il respecte l'intervalle demandé (ex: note entre 0 et 20, âge entre 15 et 30).",
-      "description": "Le test `.isnumeric()` empêche le plantage sur des lettres. Une fois le test réussi, on peut convertir sans risque avec `int()` et tester les bornes.",
-      "howToUse": "Test `.isnumeric()` d'abord, puis `int()`, puis test d'encadrement `min <= n <= max`.",
-      "examples": [
-        {
-          "label": "Note 0 à 20",
-          "code": "if not (0 <= float(note) <= 20): alerte()"
-        }
-      ],
-      "bacTips": "Formule favorite des épreuves pratiques : 'L'âge doit être un entier compris entre 15 et 30'."
-    },
-    {
-      "id": "qt-valid-length",
-      "category": "Contrôles de Saisie Bac",
-      "name": "Contrôle 4 : Longueur fixe (CIN 8 chiffres, Tél)",
-      "qtWidget": "QLineEdit",
-      "qtProperty": "len(cin) == 8 and cin.isnumeric()",
-      "thonnyCode": "def valider_cin():\n    cin = windows.le_cin.text().strip()\n    \n    # Le CIN tunisien doit comporter exactement 8 chiffres numériques\n    if len(cin) != 8 or not cin.isnumeric():\n        QMessageBox.critical(\n            windows, \n            \"Erreur CIN\", \n            \"Le Numéro de CIN doit comporter exactement 8 chiffres !\"\n        )\n        return False\n        \n    return True",
-      "summary": "Vérifie qu'un identifiant respecte une longueur fixe stricte (ex: Numéro CIN 8 chiffres, Numéro Téléphone 8 chiffres).",
-      "description": "Classique absolu des examens du Bac : tester `len(ch) == 8` combiné avec `ch.isnumeric()` pour s'assurer que le candidat a saisi exactement 8 chiffres.",
-      "howToUse": "Combiner `len(ch) == 8` et `ch.isnumeric()` avec un opérateur `and`.",
-      "examples": [
-        {
-          "label": "Test CIN",
-          "code": "if len(cin) != 8 or not cin.isnumeric(): QMessageBox.critical(...)"
-        }
-      ],
-      "bacTips": "Attention à bien utiliser `!= 8` pour bloquer si c'est plus court OU plus long !"
-    },
-    {
-      "id": "qt-clear-reset",
-      "category": "Widgets d'Action & Affichage",
-      "name": "Réinitialisation complète de l'interface (Vider)",
-      "qtWidget": "QPushButton 'Annuler / Nouveau'",
-      "qtProperty": "Remise à zéro des champs",
-      "thonnyCode": "def reinitialiser():\n    # Vider les zones de texte\n    windows.le_nom.clear()\n    windows.le_cin.clear()\n    windows.le_note.clear()\n    \n    # Décocher les boutons radio et cases\n    windows.rb_homme.setChecked(False)\n    windows.rb_femme.setChecked(False)\n    windows.cb_sport.setChecked(False)\n    \n    # Remettre la liste déroulante au premier choix\n    windows.combo_ville.setCurrentIndex(0)\n    \n    # Effacer le résultat affiché\n    windows.lbl_resultat.setText(\"\")\n    \n    # Replacer le curseur dans le premier champ\n    windows.le_nom.setFocus()\n\nwindows.btn_annuler.clicked.connect(reinitialiser)",
-      "summary": "Fonction liée au bouton Annuler/Nouveau qui remet tous les composants de l'interface à leur état initial.",
-      "description": "Très souvent demandée comme dernière question d'un sujet pratique : un bouton 'Annuler' ou 'Nouveau' qui efface toutes les saisies et repositionne le curseur dans le premier champ.",
-      "howToUse": "Appeler `.clear()` sur les QLineEdit, `.setChecked(False)` sur les radios/cases, et `.setCurrentIndex(0)` sur la ComboBox.",
-      "examples": [
-        {
-          "label": "Remise à zéro",
-          "code": "windows.btn_reset.clicked.connect(reinitialiser)"
-        }
-      ],
-      "bacTips": "Ajouter `windows.le_premier_champ.setFocus()` apporte une touche de finition très appréciée des correcteurs !"
-    },
-    {
-      "id": "qt-bac-workflow",
-      "category": "Modèles Types d'Examen",
-      "name": "Structure type complète d'un sujet pratique Bac (4 Étapes)",
-      "qtWidget": "Architecture de projet",
-      "qtProperty": "Qt Designer + Thonny Python",
-      "thonnyCode": "# ========================================================\n# ÉPREUVE PRATIQUE DU BACCALAURÉAT - ALGORITHMIQUE & PYTHON\n# ========================================================\nfrom PyQt5.uic import loadUi\nfrom PyQt5.QtWidgets import QApplication, QMessageBox\n\n# --- ÉTAPE 1 : FONCTIONS ALGORITHMIQUES PURES ---\ndef est_premier(n):\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\n# --- ÉTAPE 2 : FONCTION DE TRAITEMENT DU FORMULAIRE ---\ndef traiter():\n    # 2.1 Récupération des données\n    ch_n = windows.le_nombre.text().strip()\n    \n    # 2.2 Contrôles de validité avec QMessageBox\n    if ch_n == \"\" or not ch_n.isnumeric():\n        QMessageBox.critical(windows, \"Erreur\", \"Veuillez entrer un entier valide !\")\n        return\n    \n    n = int(ch_n)\n    if not (1 <= n <= 1000):\n        QMessageBox.critical(windows, \"Erreur\", \"Le nombre doit être entre 1 et 1000 !\")\n        return\n        \n    # 2.3 Appel de l'algorithme\n    if est_premier(n):\n        msg = f\"Le nombre {n} EST un nombre premier !\"\n        windows.lbl_res.setStyleSheet(\"color: #10b981; font-weight: bold;\")\n    else:\n        msg = f\"Le nombre {n} N'EST PAS premier.\"\n        windows.lbl_res.setStyleSheet(\"color: #ef4444; font-weight: bold;\")\n        \n    # 2.4 Affichage du résultat\n    windows.lbl_res.setText(msg)\n\n# --- ÉTAPE 3 : INITIALISATION DE L'INTERFACE ---\napp = QApplication([])\nwindows = loadUi(\"interface.ui\")\n\n# --- ÉTAPE 4 : CONNEXION DES SIGNAUX & LANCEMENT ---\nwindows.btn_verifier.clicked.connect(traiter)\nwindows.btn_quitter.clicked.connect(windows.close)\n\nwindows.show()\napp.exec_()",
-      "summary": "Le patron de conception universel qui garantit 20/20 à l'épreuve pratique en séparant l'algorithme, le contrôle de saisie et l'interface.",
-      "description": "Ce modèle structure proprement votre code en 4 étapes claires : 1. Fonctions de calcul 2. Contrôle et traitement 3. Initialisation 4. Événements et démarrage.",
-      "howToUse": "Copiez cette structure comme base de départ pour tous vos TPs et examens pratiques.",
-      "examples": [
-        {
-          "label": "Patron complet",
-          "code": "# Suivre les 4 étapes numérotées"
-        }
-      ],
-      "bacTips": "La séparation entre les fonctions algorithmiques pures et la fonction liée à Qt Designer est la marque des excellents candidats !"
+      "bacTips": "addItem() attend toujours une chaîne (str) : str(T[i]) évite toute erreur sur les tableaux d'entiers ou de réels !"
     }
   ],
   "algo_theorique": [

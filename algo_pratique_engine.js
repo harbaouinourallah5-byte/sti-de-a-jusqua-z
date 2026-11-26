@@ -4,14 +4,10 @@
 // ===================================================================
 
 const ALGO_CATEGORY_META = {
-  'all': { label: 'Tout afficher', count: 20, icon: 'sparkles', desc: 'Toutes les notions Qt Designer & Thonny Python' },
-  'Démarrage & Architecture': { label: 'Squelette & loadUi', count: 1, icon: 'terminal', desc: 'Initialisation de QApplication et chargement du fichier .ui' },
-  'Widgets de Saisie': { label: '⌨️ Widgets de Saisie', count: 4, icon: '⌨️', desc: 'QLineEdit, QTextEdit, QSpinBox, QDateEdit' },
-  "Widgets d'Action & Affichage": { label: 'Boutons & Affichage', count: 4, icon: 'zap', desc: 'QPushButton (.clicked), QLabel (.setText), QTableWidget, Réinitialisation' },
-  'Widgets de Choix & Sélection': { label: 'Choix & Menus', count: 3, icon: 'check-circle', desc: 'QRadioButton, QCheckBox, QComboBox' },
-  'Boîtes de Dialogue (QMessageBox)': { label: 'Alertes QMessageBox', count: 3, icon: 'alert-circle', desc: 'QMessageBox.critical, information, warning' },
-  'Contrôles de Saisie Bac': { label: 'Contrôles de Saisie', count: 4, icon: 'shield', desc: 'Vérifications obligatoires au Bac : vide, alpha, intervalle, longueur' },
-  "Modèles Types d'Examen": { label: 'Sujet Type Bac', count: 1, icon: 'edit', desc: 'Structure complète en 4 étapes de l\'épreuve pratique' }
+  'all': { label: 'Tout afficher', count: 6, icon: 'sparkles', desc: 'Tous les modèles d’affichage Qt Designer & Thonny Python' },
+  'Fichiers → Liste Widget': { label: 'Fichiers → Liste Widget', count: 2, icon: 'clipboard', desc: 'Afficher un fichier texte (.txt) ou binaire (.dat) dans une List Widget' },
+  'Fichiers → Table Widget': { label: 'Fichiers → Table Widget', count: 2, icon: 'bar-chart', desc: 'Afficher un fichier texte (.txt) ou binaire (.dat) dans une Table Widget' },
+  'Tableau → Affichage': { label: 'Tableau → Affichage', count: 2, icon: 'layers', desc: 'Afficher un tableau T dans une Table Widget ou une List Widget' }
 };
 
 // -------------------------------------------------------------
@@ -28,12 +24,13 @@ function highlightPythonCode(code) {
 
   const builtins = new Set([
     'print', 'input', 'int', 'float', 'str', 'range', 'len',
-    'open', 'load', 'dump', 'append', 'strip', 'loadUi',
+    'open', 'load', 'dump', 'readline', 'close', 'find',
+    'append', 'strip', 'loadUi', 'QTableWidgetItem',
     'exec_', 'show', 'text', 'setText', 'clear', 'setFocus',
     'clicked', 'connect', 'isChecked', 'setChecked', 'currentText',
     'currentIndex', 'setCurrentIndex', 'addItem', 'addItems',
     'value', 'setValue', 'date', 'toString', 'critical',
-    'information', 'warning', 'setRowCount', 'setColumnCount',
+    'information', 'warning', 'setRowCount', 'insertRow', 'setColumnCount',
     'setItem', 'rowCount', 'currentRow', 'isdigit', 'isalpha', 'isnumeric'
   ]);
 
@@ -79,6 +76,63 @@ function escapeHtmlSafe(str) {
 // -------------------------------------------------------------
 function buildQtDesignerSimStage(item) {
   const id = item.id;
+
+  // Modèles List Widget (fichier texte, fichier .dat, ou tableau)
+  if (id === 'qt-afficher-ftexte-liste' || id === 'qt-afficher-fdat-liste' || id === 'qt-afficher-tab-liste') {
+    const srcLabel = (id === 'qt-afficher-ftexte-liste')
+      ? 'Source : nomfichier.txt (lignes texte)'
+      : (id === 'qt-afficher-fdat-liste' ? 'Source : nomfichier.dat (binaire)' : 'Source : Tableau T[0..n-1]');
+    return `
+      <div class="qt-window-mockup">
+        <div class="qt-window-titlebar">
+          <div class="qt-window-controls"><span class="qt-dot close"></span><span class="qt-dot min"></span><span class="qt-dot max"></span></div>
+          <span class="qt-window-title">Qt Designer • QListWidget (lw)</span>
+        </div>
+        <div class="qt-window-canvas">
+          <div style="font-size:0.78rem;color:#94a3b8;margin-bottom:8px;">${srcLabel}</div>
+          <div style="margin-bottom:10px;">
+            <button type="button" class="sim-qt-btn" onclick="runAlgoPratiqueSim('${id}')">
+              ▶ windows.btn_afficher → afficher()
+            </button>
+          </div>
+          <ul id="sim_lw_output_${id}" style="list-style:none;margin:0;padding:8px;min-height:92px;background:#0f172a;border:1px solid #334155;border-radius:8px;font-family:monospace;font-size:0.84rem;color:#cbd5e1;">
+            <li style="color:#64748b;font-style:italic;">(Liste vide — cliquez sur Exécuter pour remplir lw)</li>
+          </ul>
+        </div>
+      </div>
+    `;
+  }
+
+  // Modèles Table Widget (fichier texte, fichier .dat, ou tableau)
+  if (id === 'qt-afficher-ftexte-table' || id === 'qt-afficher-fdat-table' || id === 'qt-afficher-tab-table') {
+    const headers = (id === 'qt-afficher-fdat-table')
+      ? ['champ1', 'champ2', 'champ3', 'champ4', 'champ5']
+      : (id === 'qt-afficher-ftexte-table' ? ['Col 0', 'Col 1', 'Col 2'] : ['champ1', 'champ2']);
+    const thHtml = headers.map(h => `<th style="padding:6px 8px;border:1px solid #334155;background:#1e293b;color:#38bdf8;font-size:0.76rem;text-align:left;">${h}</th>`).join('');
+    return `
+      <div class="qt-window-mockup">
+        <div class="qt-window-titlebar">
+          <div class="qt-window-controls"><span class="qt-dot close"></span><span class="qt-dot min"></span><span class="qt-dot max"></span></div>
+          <span class="qt-window-title">Qt Designer • QTableWidget (tw)</span>
+        </div>
+        <div class="qt-window-canvas">
+          <div style="margin-bottom:10px;">
+            <button type="button" class="sim-qt-btn" onclick="runAlgoPratiqueSim('${id}')">
+              ▶ windows.btn_afficher → afficher()
+            </button>
+          </div>
+          <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;font-family:monospace;font-size:0.8rem;">
+              <thead><tr>${thHtml}</tr></thead>
+              <tbody id="sim_tw_output_${id}">
+                <tr><td colspan="${headers.length}" style="padding:10px;border:1px solid #334155;color:#64748b;text-align:center;font-style:italic;">0 ligne (setRowCount(0))</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    `;
+  }
 
   // 1. Squelette officiel loadUi
   if (id === 'qt-starter-template') {
@@ -576,7 +630,50 @@ function runAlgoPratiqueSim(itemId) {
 
   let logLines = [];
 
-  if (itemId === 'qt-starter-template') {
+  if (itemId === 'qt-afficher-ftexte-liste' || itemId === 'qt-afficher-fdat-liste' || itemId === 'qt-afficher-tab-liste') {
+    const sampleRows = (itemId === 'qt-afficher-ftexte-liste')
+      ? ['Ali BenSalah 14.5', 'Sami Tounsi 16.0', 'Nour Khelifi 18.25']
+      : (itemId === 'qt-afficher-fdat-liste'
+        ? ['101 Ali 14.5', '102 Sami 16.0', '103 Nour 18.25']
+        : ['12', '25', '18', '40']);
+    const ul = document.getElementById(`sim_lw_output_${itemId}`);
+    if (ul) {
+      ul.innerHTML = sampleRows.map(r => `<li style="padding:4px 6px;border-bottom:1px solid rgba(255,255,255,0.06);color:#34d399;">${escapeHtmlSafe(r)}</li>`).join('');
+    }
+    logLines = [
+      `>>> %Run script_bac.py`,
+      `[Thonny ${now}] lw.clear()`,
+      ...sampleRows.map(r => `[Thonny] lw.addItem("${r}")`),
+      `[OK] ${sampleRows.length} élément(s) affiché(s) dans la QListWidget.`
+    ];
+  } else if (itemId === 'qt-afficher-ftexte-table' || itemId === 'qt-afficher-fdat-table' || itemId === 'qt-afficher-tab-table') {
+    const sampleMatrix = (itemId === 'qt-afficher-fdat-table')
+      ? [
+          ['101', 'Ali', '4SI1', '14.5', 'Admis'],
+          ['102', 'Sami', '4SI2', '16.0', 'Admis']
+        ]
+      : (itemId === 'qt-afficher-ftexte-table'
+        ? [
+            ['Ali', 'BenSalah', '14.5'],
+            ['Sami', 'Tounsi', '16.0']
+          ]
+        : [
+            ['Tunis', '18'],
+            ['Sfax', '16']
+          ]);
+    const tbody = document.getElementById(`sim_tw_output_${itemId}`);
+    if (tbody) {
+      tbody.innerHTML = sampleMatrix.map(row =>
+        `<tr>${row.map(c => `<td style="padding:5px 8px;border:1px solid #334155;color:#e2e8f0;">${escapeHtmlSafe(c)}</td>`).join('')}</tr>`
+      ).join('');
+    }
+    logLines = [
+      `>>> %Run script_bac.py`,
+      `[Thonny ${now}] tw.setRowCount(0)`,
+      ...sampleMatrix.map((r, idx) => `[Thonny] tw.insertRow(${idx}) -> ${r.join(' | ')}`),
+      `[OK] ${sampleMatrix.length} ligne(s) affichée(s) dans la QTableWidget.`
+    ];
+  } else if (itemId === 'qt-starter-template') {
     const status = document.getElementById('sim_starter_status');
     if (status) {
       status.innerHTML = '<strong style="color: #10b981;">Fenêtre Qt active et affichée à l\'écran (app.exec_())</strong>';

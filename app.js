@@ -76,7 +76,7 @@ function updateSidebarProgressIndicators() {
     const sideBadgeTheorique = document.getElementById('sideBadgeTheorique');
     if (sideBadgeTheorique) sideBadgeTheorique.textContent = algoCount;
 
-    const pratiqueCount = (typeof DATA !== 'undefined' && DATA && DATA.algo_pratique) ? DATA.algo_pratique.length : 20;
+    const pratiqueCount = (typeof DATA !== 'undefined' && DATA && DATA.algo_pratique) ? DATA.algo_pratique.length : 6;
     const sideBadgeQt = document.getElementById('sideBadgeQt');
     if (sideBadgeQt) sideBadgeQt.textContent = pratiqueCount;
 
@@ -2049,7 +2049,7 @@ function updateDataCountersUI() {
     const cssCount = (typeof DATA !== 'undefined' && DATA.css) ? DATA.css.length : 61;
     const jsCount = (typeof DATA !== 'undefined' && DATA.js) ? DATA.js.length : 63;
     const sqlCount = (typeof DATA !== 'undefined' && DATA.sql) ? DATA.sql.length : 57;
-    const qtCount = (typeof DATA !== 'undefined' && DATA.algo_pratique) ? DATA.algo_pratique.length : 20;
+    const qtCount = (typeof DATA !== 'undefined' && DATA.algo_pratique) ? DATA.algo_pratique.length : 6;
     const algoTheoriqueCount = (typeof DATA !== 'undefined' && DATA.algo_theorique) ? DATA.algo_theorique.length : 80;
     const totalChapters = (typeof CURRICULUM !== 'undefined') ? CURRICULUM.getTotalAlgoChapters() : 8;
     const methodCount = (typeof METHODS_DATA !== 'undefined') ? METHODS_DATA.length : 7;
@@ -8465,13 +8465,9 @@ function renderAlgoPratiqueCards() {
   }
 
   const catColors = {
-    'Démarrage & Architecture': { color: '#38bdf8', bg: 'rgba(56, 189, 248, 0.12)', border: 'rgba(56, 189, 248, 0.3)' },
-    'Widgets de Saisie': { color: '#34d399', bg: 'rgba(52, 211, 153, 0.12)', border: 'rgba(52, 211, 153, 0.3)' },
-    "Widgets d'Action & Affichage": { color: '#60a5fa', bg: 'rgba(96, 165, 250, 0.12)', border: 'rgba(96, 165, 250, 0.3)' },
-    'Widgets de Choix & Sélection': { color: '#c084fc', bg: 'rgba(192, 132, 252, 0.12)', border: 'rgba(192, 132, 252, 0.3)' },
-    'Boîtes de Dialogue (QMessageBox)': { color: '#f43f5e', bg: 'rgba(244, 63, 94, 0.12)', border: 'rgba(244, 63, 94, 0.3)' },
-    'Contrôles de Saisie Bac': { color: '#fbbf24', bg: 'rgba(251, 191, 36, 0.12)', border: 'rgba(251, 191, 36, 0.3)' },
-    "Modèles Types d'Examen": { color: '#a78bfa', bg: 'rgba(167, 139, 250, 0.12)', border: 'rgba(167, 139, 250, 0.3)' }
+    'Fichiers → Liste Widget': { color: '#34d399', bg: 'rgba(52, 211, 153, 0.12)', border: 'rgba(52, 211, 153, 0.3)' },
+    'Fichiers → Table Widget': { color: '#38bdf8', bg: 'rgba(56, 189, 248, 0.12)', border: 'rgba(56, 189, 248, 0.3)' },
+    'Tableau → Affichage': { color: '#c084fc', bg: 'rgba(192, 132, 252, 0.12)', border: 'rgba(192, 132, 252, 0.3)' }
   };
 
   grid.innerHTML = filtered.map(item => {
@@ -13622,7 +13618,7 @@ function updatePageMeta(viewName) {
     },
     'algo-pratique': {
       title: "Pratique Qt Designer / Thonny Python • Algorithme Bac Info",
-      desc: "Simulateur visuel interactif et fiches pratiques des 20 notions Qt Designer et Python pour l'épreuve pratique du Bac."
+      desc: "Tableau officiel Qt Designer, traducteur live et 6 modèles d'affichage (fichiers et tableaux) pour l'épreuve pratique du Bac."
     },
     'algo-theorique': {
       title: `Algorithmique Théorique • ${totalAlgoCh} Chapitres Officiels Bac Informatique`,

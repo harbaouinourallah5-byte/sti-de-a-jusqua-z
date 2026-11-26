@@ -11,8 +11,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Dancing+Script:wght@600;700&family=Caveat:wght@600;700&family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@500;600;700&family=Patrick+Hand&family=Plus+Jakarta+Sans:wght@400;600;700&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=47.0">
-  <link rel="stylesheet" href="notebooks.css?v=47.0">
+  <link rel="stylesheet" href="style.css?v=48.0">
+  <link rel="stylesheet" href="notebooks.css?v=48.0">
   <!-- INITIALISATION IMMÉDIATE DU THÈME & TOGGLE SANS LATENCE -->
   <script>
     (function() {
@@ -500,7 +500,7 @@
                   <i data-icon="wrench" data-size="16"></i>
                   <span>Pratique (Qt Designer / Thonny)</span>
                 </div>
-                <span class="big-module-topic-badge" id="homeAlgoPratiqueBadge">20 notions &amp; simulateur</span>
+                <span class="big-module-topic-badge" id="homeAlgoPratiqueBadge">Tableau Qt &amp; 6 modèles</span>
               </li>
               <li class="big-module-topic-item" onclick="event.stopPropagation(); switchView('algo-theorique')">
                 <div class="big-module-topic-name">
@@ -2901,7 +2901,7 @@
           </button>
           <button id="tabBtnAlgoCards" class="view-mode-tab" onclick="switchAlgoPratiqueTab('cards')">
             <span><i data-icon="layers" data-size="15"></i></span>
-            <span>Fiches Détaillées &amp; Recherche (20 Notions)</span>
+            <span>Modèles d'Affichage Qt (6 Fiches)</span>
           </button>
           <button id="tabBtnAlgoPratiqueSerials" class="view-mode-tab" onclick="switchAlgoPratiqueTab('serials')">
             <span><i data-icon="clipboard" data-size="15"></i></span>
@@ -3371,7 +3371,7 @@
                 <i data-icon="sliders" data-size="15"></i> Ouvrir le Traducteur Live →
               </button>
               <button class="nav-btn" onclick="switchAlgoPratiqueTab('cards')" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); font-size: 0.84rem;">
-                <i data-icon="layers" data-size="15"></i> Voir les 20 Fiches Détaillées →
+                <i data-icon="layers" data-size="15"></i> Voir les 6 Modèles d'Affichage →
               </button>
             </div>
           </div>
@@ -3496,14 +3496,14 @@ app.exec_()</code></pre>
         </div>
 
         <!-- ==========================================
-             3. VUE FICHES DÉTAILLÉES & RECHERCHE (20 NOTIONS)
+             3. VUE MODÈLES D'AFFICHAGE QT (6 FICHES)
              ========================================== -->
         <div id="algoCardsGridView" style="display: none;">
           <!-- BARRE DE RECHERCHE & CATÉGORIES -->
           <div class="filter-search-bar" style="margin-bottom: 24px;">
             <div class="search-box-wrap">
               <span class="search-icon-inside"><i data-icon="search" data-size="15"></i></span>
-              <input type="text" id="algoPratiqueSearchInput" class="search-input" placeholder="Rechercher un widget Qt, une méthode Python (ex: text, clicked, isChecked, QMessageBox, loadUi, table...)" oninput="handleAlgoPratiqueSearch(this.value)">
+              <input type="text" id="algoPratiqueSearchInput" class="search-input" placeholder="Rechercher un modèle d'affichage (fichier texte, .dat, tableau, tw, lw, setItem...)" oninput="handleAlgoPratiqueSearch(this.value)">
             </div>
             <div class="categories-bar" id="algoPratiqueCategories">
               <!-- Rempli dynamiquement par JS -->
@@ -5340,41 +5340,41 @@ app.exec_()</code></pre>
 
   <!-- Fichiers Scripts -->
 
-  <script src="icons.js?v=47.0"></script>
-  <script src="store.js?v=47.0"></script>
-  <script src="data.js?v=47.0"></script>
-  <script src="data/curriculum.js?v=47.0"></script>
-  <script src="data/documents.js?v=47.0"></script>
-  <script src="data/exercises.js?v=47.0"></script>
-  <script src="data/methods.js?v=47.0"></script>
-  <script src="data/errors.js?v=47.0"></script>
-  <script src="data/tables/rappels.js?v=47.0"></script>
-  <script src="data/tables/fichiers.js?v=47.0"></script>
-  <script src="data/tables/recursivite.js?v=47.0"></script>
-  <script src="data/tables/bases.js?v=47.0"></script>
-  <script src="data/tables/arithmetique.js?v=47.0"></script>
-  <script src="data/tables/approximation.js?v=47.0"></script>
-  <script src="data/tables/tableaux.js?v=47.0"></script>
-  <script src="data/tables/matrices.js?v=47.0"></script>
-  <script src="data/tables/suites.js?v=47.0"></script>
-  <script src="data/tables.js?v=47.0"></script>
-  <script src="data/quiz/rappels.js?v=47.0"></script>
-  <script src="data/quiz/fichiers.js?v=47.0"></script>
-  <script src="data/quiz/recursivite.js?v=47.0"></script>
-  <script src="data/quiz/bases.js?v=47.0"></script>
-  <script src="data/quiz/arithmetique.js?v=47.0"></script>
-  <script src="data/quiz/approximation.js?v=47.0"></script>
-  <script src="data/quiz/tableaux.js?v=47.0"></script>
-  <script src="data/quiz/matrices.js?v=47.0"></script>
-  <script src="data/quiz/suites.js?v=47.0"></script>
-  <script src="data/quiz.js?v=47.0"></script>
-  <script src="css_engine.js?v=47.0"></script>
-  <script src="algo_pratique_engine.js?v=47.0"></script>
-  <script src="pomodoro_engine.js?v=47.0"></script>
-  <script src="data/notebooks_data.js?v=47.0"></script>
-  <script src="notebooks_store.js?v=47.0"></script>
-  <script src="notebooks_engine.js?v=47.0"></script>
-  <script src="app.js?v=47.0"></script>
+  <script src="icons.js?v=48.0"></script>
+  <script src="store.js?v=48.0"></script>
+  <script src="data.js?v=48.0"></script>
+  <script src="data/curriculum.js?v=48.0"></script>
+  <script src="data/documents.js?v=48.0"></script>
+  <script src="data/exercises.js?v=48.0"></script>
+  <script src="data/methods.js?v=48.0"></script>
+  <script src="data/errors.js?v=48.0"></script>
+  <script src="data/tables/rappels.js?v=48.0"></script>
+  <script src="data/tables/fichiers.js?v=48.0"></script>
+  <script src="data/tables/recursivite.js?v=48.0"></script>
+  <script src="data/tables/bases.js?v=48.0"></script>
+  <script src="data/tables/arithmetique.js?v=48.0"></script>
+  <script src="data/tables/approximation.js?v=48.0"></script>
+  <script src="data/tables/tableaux.js?v=48.0"></script>
+  <script src="data/tables/matrices.js?v=48.0"></script>
+  <script src="data/tables/suites.js?v=48.0"></script>
+  <script src="data/tables.js?v=48.0"></script>
+  <script src="data/quiz/rappels.js?v=48.0"></script>
+  <script src="data/quiz/fichiers.js?v=48.0"></script>
+  <script src="data/quiz/recursivite.js?v=48.0"></script>
+  <script src="data/quiz/bases.js?v=48.0"></script>
+  <script src="data/quiz/arithmetique.js?v=48.0"></script>
+  <script src="data/quiz/approximation.js?v=48.0"></script>
+  <script src="data/quiz/tableaux.js?v=48.0"></script>
+  <script src="data/quiz/matrices.js?v=48.0"></script>
+  <script src="data/quiz/suites.js?v=48.0"></script>
+  <script src="data/quiz.js?v=48.0"></script>
+  <script src="css_engine.js?v=48.0"></script>
+  <script src="algo_pratique_engine.js?v=48.0"></script>
+  <script src="pomodoro_engine.js?v=48.0"></script>
+  <script src="data/notebooks_data.js?v=48.0"></script>
+  <script src="notebooks_store.js?v=48.0"></script>
+  <script src="notebooks_engine.js?v=48.0"></script>
+  <script src="app.js?v=48.0"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
