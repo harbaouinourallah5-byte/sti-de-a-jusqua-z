@@ -327,8 +327,10 @@
 }
 
 .nb-cover-img-layer {
+  position: relative;
   width: 100%;
   height: 100%;
+  overflow: hidden;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -337,6 +339,32 @@
 .nb-cover-img-layer.is-wrap {
   background-size: 200% 100%;
   background-position: right center;
+}
+
+.nb-cover-native-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  user-select: none;
+}
+
+.nb-cover-native-img.is-wrap {
+  width: 200%;
+  height: 100%;
+  max-width: none;
+  position: relative;
+  left: -100%;
+}
+
+.nb-cover-native-img.is-wrap-back {
+  width: 200%;
+  height: 100%;
+  max-width: none;
+  position: relative;
+  left: 0;
 }
 
 .nb-book-card-body {
@@ -400,6 +428,9 @@
 }
 
 .nb-cover-option {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   border: 2px solid var(--border-color);
   border-radius: 12px;
   overflow: hidden;
@@ -420,8 +451,10 @@
 }
 
 .nb-cover-option-thumb {
+  position: relative;
   width: 100%;
   aspect-ratio: 3 / 4;
+  overflow: hidden;
   background-size: cover;
   background-position: center;
 }
@@ -432,6 +465,7 @@
 }
 
 .nb-cover-option-label {
+  width: 100%;
   padding: 6px 8px;
   font-size: 0.72rem;
   font-weight: 700;

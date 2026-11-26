@@ -4309,11 +4309,11 @@ const DATA = {
       "category": "Widgets de Saisie",
       "name": "Text Edit (QTextEdit - Zone de texte multilignes)",
       "qtWidget": "QTextEdit",
-      "qtProperty": "toPlainText() / setText()",
-      "thonnyCode": "# 1. Récupérer le contenu de la zone de saisie (multiligne)\ntexte = W.nomTextEdit.toPlainText()\n\n# 2. Modifier le contenu de la zone de texte\nW.nomTextEdit.setText(\"Nouveau texte multiligne...\")\n\n# 3. Vider la zone de texte\nW.nomTextEdit.clear()",
+      "qtProperty": "toPlainText() / setText() / clear() / setFocus()",
+      "thonnyCode": "# 1. Récupérer le contenu de la zone de saisie (multiligne)\ntexte = W.nomTextEdit.toPlainText()\n\n# 2. Modifier le contenu de la zone de texte\nW.nomTextEdit.setText(\"Nouveau texte multiligne...\")\n\n# 3. Vider la zone de texte\nW.nomTextEdit.clear()\n\n# 4. Mettre le curseur dans la zone de texte\nW.nomTextEdit.setFocus()",
       "summary": "Zone de saisie de texte multiligne pour saisir ou afficher de longs paragraphes ou plusieurs lignes.",
       "description": "Dans Qt Designer, glissez 'Text Edit' (QTextEdit). Dans Thonny Python, attention : on n'utilise PAS .text(), mais .toPlainText() pour extraire le texte saisi !",
-      "howToUse": "Dans Qt Designer : glisser 'Text Edit', nommer son objectName (ex: nomTextEdit). Dans Thonny : W.nomTextEdit.toPlainText() pour lire le contenu et W.nomTextEdit.setText(chaine) pour le modifier.",
+      "howToUse": "Dans Qt Designer : glisser 'Text Edit', nommer son objectName (ex: nomTextEdit). Dans Thonny : W.nomTextEdit.toPlainText(), setText(chaine), clear() et setFocus().",
       "examples": [
         {
           "label": "Récupérer le texte",
@@ -4428,7 +4428,7 @@ const DATA = {
       "name": "QLabel (Texte d'affichage / Résultat)",
       "qtWidget": "QLabel",
       "qtProperty": "objectName (ex: lbl_titre, lbl_resultat)",
-      "thonnyCode": "# 1. Afficher un texte simple ou un message\nwindows.lbl_resultat.setText(\"Le nombre 17 est Premier !\")\n\n# 2. Afficher une variable numérique (toujours convertir en str)\ntotal = 145.5\nwindows.lbl_resultat.setText(\"Total : \" + str(total) + \" DT\")\n\n# 3. Formater avec des f-strings en Python 3\nwindows.lbl_resultat.setText(f\"Moyenne : {moyenne:.2f} / 20\")\n\n# 4. Effacer le texte du label\nwindows.lbl_resultat.setText(\"\")",
+      "thonnyCode": "# 1. Afficher un texte simple ou un message\nwindows.lbl_resultat.setText(\"Le nombre 17 est Premier !\")\n\n# 2. Afficher une variable numérique (toujours convertir en str)\ntotal = 145.5\nwindows.lbl_resultat.setText(\"Total : \" + str(total) + \" DT\")\n\n# 3. Formater avec des f-strings en Python 3\nwindows.lbl_resultat.setText(f\"Moyenne : {moyenne:.2f} / 20\")\n\n# 4. Effacer le texte du label\nwindows.lbl_resultat.clear()",
       "summary": "Utilisé pour afficher des titres, des instructions ou le résultat final d'un algorithme.",
       "description": "Le QLabel est un widget passif d'affichage. Contrairement au QLineEdit, l'utilisateur ne peut pas modifier son contenu à la souris. La méthode .setText() attend obligatoirement une chaîne de caractères (str).",
       "howToUse": "Dans Qt Designer : placer un 'Label', vider son texte par défaut si c'est un résultat, et lui donner un objectName='lbl_res'. Dans Thonny : windows.lbl_res.setText(str(valeur)).",

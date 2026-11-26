@@ -83,8 +83,8 @@ var NOTEBOOKS_DATA = (function () {
         checkboxStyle: 'rounded',
         pattern: 'dots-soft',
         stickers: ['heart-filled', 'sparkle', 'star-filled', 'flower-minimal'],
-        coverTitleDefaults: { x: 50, y: 58, fontSize: 25, color: '#FFFFFF', fontFamily: "'Poppins', system-ui, sans-serif", bold: true, italic: false, align: 'center', pillBg: 'rgba(214, 69, 49, 0.88)' },
-        coverNameDefaults:  { x: 50, y: 70, fontSize: 16, color: '#831843', fontFamily: "'Poppins', system-ui, sans-serif", bold: true, italic: false, align: 'center', pillBg: 'rgba(255, 255, 255, 0.85)' }
+        coverTitleDefaults: { x: 50, y: 52, fontSize: 22, color: '#FFFFFF', fontFamily: "'Poppins', system-ui, sans-serif", bold: true, italic: false, align: 'center', pillBg: 'rgba(214, 69, 49, 0.88)' },
+        coverNameDefaults:  { x: 50, y: 79, fontSize: 16, color: '#831843', fontFamily: "'Poppins', system-ui, sans-serif", bold: true, italic: false, align: 'center', pillBg: 'rgba(255, 255, 255, 0.88)' }
       }
     },
     {
@@ -170,8 +170,8 @@ var NOTEBOOKS_DATA = (function () {
         checkboxStyle: 'circle',
         pattern: 'stripes-soft',
         stickers: ['flower-daisy', 'bow-coquette', 'leaf-botanical', 'heart-outline'],
-        coverTitleDefaults: { x: 50, y: 61, fontSize: 20, color: '#2E4F75', fontFamily: "'Playfair Display', Georgia, serif", bold: true, italic: true, align: 'center', pillBg: 'rgba(252, 251, 247, 0.90)' },
-        coverNameDefaults:  { x: 54, y: 78, fontSize: 15, color: '#243344', fontFamily: "'Dancing Script', cursive", bold: true, italic: false, align: 'center', pillBg: 'transparent' }
+        coverTitleDefaults: { x: 50, y: 56, fontSize: 19, color: '#2E4F75', fontFamily: "'Playfair Display', Georgia, serif", bold: true, italic: true, align: 'center', pillBg: 'rgba(252, 251, 247, 0.90)' },
+        coverNameDefaults:  { x: 54, y: 80, fontSize: 15, color: '#243344', fontFamily: "'Dancing Script', cursive", bold: true, italic: false, align: 'center', pillBg: 'rgba(252, 251, 247, 0.72)' }
       }
     },
     {
@@ -199,8 +199,8 @@ var NOTEBOOKS_DATA = (function () {
         checkboxStyle: 'heart',
         pattern: 'dots-blush',
         stickers: ['bow-coquette', 'heart-filled', 'flower-cherry', 'cherry'],
-        coverTitleDefaults: { x: 50, y: 67, fontSize: 19, color: '#A63A5B', fontFamily: "'Quicksand', system-ui, sans-serif", bold: true, italic: false, align: 'center', pillBg: 'rgba(255, 249, 251, 0.92)' },
-        coverNameDefaults:  { x: 52, y: 79, fontSize: 15, color: '#6E253C', fontFamily: "'Patrick Hand', cursive", bold: true, italic: false, align: 'center', pillBg: 'transparent' }
+        coverTitleDefaults: { x: 50, y: 58, fontSize: 18, color: '#A63A5B', fontFamily: "'Quicksand', system-ui, sans-serif", bold: true, italic: false, align: 'center', pillBg: 'rgba(255, 249, 251, 0.92)' },
+        coverNameDefaults:  { x: 52, y: 80, fontSize: 15, color: '#6E253C', fontFamily: "'Patrick Hand', cursive", bold: true, italic: false, align: 'center', pillBg: 'rgba(255, 249, 251, 0.85)' }
       }
     },
     {
@@ -228,8 +228,8 @@ var NOTEBOOKS_DATA = (function () {
         checkboxStyle: 'heart',
         pattern: 'floral-minimal',
         stickers: ['butterfly', 'flower-cherry', 'heart-filled', 'leaf-botanical'],
-        coverTitleDefaults: { x: 50, y: 70, fontSize: 22, color: '#9D174D', fontFamily: "'Dancing Script', cursive", bold: true, italic: false, align: 'center', pillBg: 'rgba(255, 255, 255, 0.92)' },
-        coverNameDefaults:  { x: 50, y: 80, fontSize: 16, color: '#BE185D', fontFamily: "'Quicksand', system-ui, sans-serif", bold: true, italic: false, align: 'center', pillBg: 'rgba(253, 242, 248, 0.92)' }
+        coverTitleDefaults: { x: 50, y: 68, fontSize: 21, color: '#9D174D', fontFamily: "'Dancing Script', cursive", bold: true, italic: false, align: 'center', pillBg: 'rgba(255, 255, 255, 0.92)' },
+        coverNameDefaults:  { x: 50, y: 87, fontSize: 15, color: '#BE185D', fontFamily: "'Quicksand', system-ui, sans-serif", bold: true, italic: false, align: 'center', pillBg: 'rgba(253, 242, 248, 0.92)' }
       }
     },
     {
@@ -257,8 +257,8 @@ var NOTEBOOKS_DATA = (function () {
         checkboxStyle: 'circle',
         pattern: 'none',
         stickers: ['leaf-botanical', 'sparkle', 'divider-ornate', 'frame-minimal'],
-        coverTitleDefaults: { x: 50, y: 54, fontSize: 25, color: '#4B4268', fontFamily: "'Cormorant Garamond', Georgia, serif", bold: true, italic: true, align: 'center', pillBg: 'rgba(245, 244, 242, 0.85)' },
-        coverNameDefaults:  { x: 50, y: 65, fontSize: 15, color: '#7A6F9B', fontFamily: "'DM Sans', system-ui, sans-serif", bold: true, italic: false, align: 'center', pillBg: 'rgba(245, 244, 242, 0.80)' }
+        coverTitleDefaults: { x: 50, y: 50, fontSize: 23, color: '#4B4268', fontFamily: "'Cormorant Garamond', Georgia, serif", bold: true, italic: true, align: 'center', pillBg: 'rgba(245, 244, 242, 0.88)' },
+        coverNameDefaults:  { x: 50, y: 76, fontSize: 15, color: '#7A6F9B', fontFamily: "'DM Sans', system-ui, sans-serif", bold: true, italic: false, align: 'center', pillBg: 'rgba(245, 244, 242, 0.85)' }
       }
     },
     {
@@ -286,8 +286,8 @@ var NOTEBOOKS_DATA = (function () {
         checkboxStyle: 'rounded',
         pattern: 'stars-subtle',
         stickers: ['star-filled', 'cloud', 'moon', 'sparkle'],
-        coverTitleDefaults: { x: 50, y: 78, fontSize: 24, color: '#FFFFFF', fontFamily: "'Caveat', cursive", bold: true, italic: false, align: 'center', pillBg: 'rgba(59, 43, 102, 0.72)' },
-        coverNameDefaults:  { x: 50, y: 87, fontSize: 15, color: '#FDE68A', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", bold: true, italic: false, align: 'center', pillBg: 'rgba(59, 43, 102, 0.68)' }
+        coverTitleDefaults: { x: 50, y: 73, fontSize: 22, color: '#FFFFFF', fontFamily: "'Caveat', cursive", bold: true, italic: false, align: 'center', pillBg: 'rgba(59, 43, 102, 0.78)' },
+        coverNameDefaults:  { x: 50, y: 89, fontSize: 15, color: '#FDE68A', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", bold: true, italic: false, align: 'center', pillBg: 'rgba(59, 43, 102, 0.74)' }
       }
     },
     {
@@ -315,8 +315,8 @@ var NOTEBOOKS_DATA = (function () {
         checkboxStyle: 'square',
         pattern: 'grid-subtle',
         stickers: ['cloud', 'star-outline', 'compass', 'line-geometric'],
-        coverTitleDefaults: { x: 50, y: 12, fontSize: 22, color: '#FFFFFF', fontFamily: "'Space Grotesk', system-ui, sans-serif", bold: true, italic: false, align: 'center', pillBg: 'rgba(3, 105, 161, 0.80)' },
-        coverNameDefaults:  { x: 50, y: 21, fontSize: 15, color: '#E0F2FE', fontFamily: "'IBM Plex Sans', system-ui, sans-serif", bold: true, italic: false, align: 'center', pillBg: 'rgba(15, 23, 42, 0.65)' }
+        coverTitleDefaults: { x: 50, y: 14, fontSize: 21, color: '#FFFFFF', fontFamily: "'Space Grotesk', system-ui, sans-serif", bold: true, italic: false, align: 'center', pillBg: 'rgba(3, 105, 161, 0.84)' },
+        coverNameDefaults:  { x: 50, y: 31, fontSize: 15, color: '#E0F2FE', fontFamily: "'IBM Plex Sans', system-ui, sans-serif", bold: true, italic: false, align: 'center', pillBg: 'rgba(15, 23, 42, 0.72)' }
       }
     }
   ];

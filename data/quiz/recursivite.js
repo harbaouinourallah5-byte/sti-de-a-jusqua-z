@@ -2,7 +2,7 @@
 // Conforme aux épreuves officielles de l'algorithmique (Section Informatique)
 'use strict';
 
-var QUIZ_QUESTIONS = [
+var QUIZ_RECURSIVITE = [
   {
     "id": "quiz-rec-01",
     "chapter": "recursivite",
@@ -196,5 +196,5 @@ var QUIZ_QUESTIONS = [
 ];
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = QUIZ_QUESTIONS;
+  module.exports = QUIZ_RECURSIVITE;
 }

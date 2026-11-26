@@ -2287,10 +2287,15 @@ function switchView(viewName, skipHashUpdate = false) {
   currentCategory = 'all';
   currentSearch = '';
 
-  // Fermer immédiatement le tiroir mobile
+  // Fermer immédiatement le tiroir mobile et toute modale ouverte
   if (typeof toggleSidebarDrawer === 'function') {
     toggleSidebarDrawer(false);
   }
+  if (typeof closePdfModal === 'function') closePdfModal();
+  if (typeof closeModal === 'function') closeModal();
+  if (typeof closeExamSimulatorSetup === 'function') closeExamSimulatorSetup();
+  if (typeof closeExamSimulatorReview === 'function') closeExamSimulatorReview();
+  if (typeof closeExamSimulatorHistory === 'function') closeExamSimulatorHistory();
 
   // Mise à jour des vues actives (display:none strict sur les autres)
   document.querySelectorAll('.view-section').forEach(sec => {
@@ -7387,7 +7392,7 @@ function renderLessons() {
 
           <div class="lesson-card-actions">
             <button class="lesson-btn-view" onclick="openPdfModal('${lesson.id}', 'enonce')" title="Consulter le document ou l'énoncé">
-              <span></span>
+              ${safeIcon('eye', 14)}
               <span>${hasCorr ? "Énoncé Série" : "Consulter le PDF"}</span>
             </button>
             ${hasCorr ? `
@@ -7449,8 +7454,105 @@ function dataUrlToBlob(dataUrl) {
   }
 }
 
+function findLessonOrDocById(lessonId) {
+  if ((!allLessons || allLessons.length === 0) && typeof buildVerifiedLocalLessons === 'function') {
+    allLessons = buildVerifiedLocalLessons();
+  }
+  let lesson = (allLessons || []).find(l => l.id === lessonId);
+  if (!lesson && typeof DOCUMENTS_DATA !== 'undefined' && typeof DOCUMENTS_DATA.getById === 'function') {
+    const d = DOCUMENTS_DATA.getById(lessonId);
+    if (d && d.file) {
+      lesson = {
+        id: d.id,
+        title: d.title,
+        subject: d.module || 'algo-theorique',
+        subjectLabel: (d.module === 'algo-pratique') ? 'Pratique Qt / Thonny' : 'Algorithme Théorique',
+        typeLabel: (d.kind === 'examen') ? "Sujet d'Examen" : ((d.kind === 'serie') ? 'Série / TP' : "Extrait d'Examen"),
+        date: (d.date && d.date !== 'inconnue') ? d.date : 'Bac Info',
+        author: d.teacher ? `Prof. ${d.teacher}` : (d.source || 'Enseignant'),
+        fileSize: d.pages ? `${d.pages} page${d.pages > 1 ? 's' : ''}` : 'PDF',
+        description: d.notes || d.source || '',
+        pdfUrl: d.file,
+        hasCorrection: Boolean(d.correction),
+        correctionUrl: d.correction || null,
+        downloadName: (d.id || 'document') + '.pdf'
+      };
+    }
+  }
+  return lesson || null;
+}
+
+function renderPdfModalCanvasPages(pdfSrc, containerId, statusId) {
+  const container = document.getElementById(containerId);
+  const statusEl = document.getElementById(statusId);
+  if (!container) return;
+
+  const showIframeFallback = () => {
+    if (statusEl) statusEl.style.display = 'none';
+    container.innerHTML = `<iframe src="${pdfSrc}" class="pdf-reader-frame" style="width:100%;height:100%;min-height:65vh;border:none;display:block;" title="Visionneuse PDF"></iframe>`;
+  };
+
+  const startRender = () => {
+    if (!window.pdfjsLib) {
+      showIframeFallback();
+      return;
+    }
+    window.pdfjsLib.getDocument(pdfSrc).promise.then(async pdf => {
+      if (!document.getElementById(containerId)) return;
+      if (statusEl) statusEl.textContent = `${pdf.numPages} page${pdf.numPages > 1 ? 's' : ''}`;
+      container.innerHTML = '';
+      const wrap = document.createElement('div');
+      wrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px;width:100%;box-sizing:border-box;';
+      container.appendChild(wrap);
+
+      const availW = Math.min(Math.max((container.clientWidth || 760) - 36, 280), 860);
+      for (let pNum = 1; pNum <= pdf.numPages; pNum++) {
+        if (!document.getElementById(containerId)) return;
+        const page = await pdf.getPage(pNum);
+        const baseVp = page.getViewport({ scale: 1 });
+        const scale = availW / baseVp.width;
+        const vp = page.getViewport({ scale });
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.floor(vp.width * dpr);
+        canvas.height = Math.floor(vp.height * dpr);
+        canvas.style.cssText = `width:${Math.floor(vp.width)}px;max-width:100%;height:auto;background:#fff;border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,0.45);display:block;`;
+        const ctx = canvas.getContext('2d');
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        wrap.appendChild(canvas);
+        await page.render({ canvasContext: ctx, viewport: vp }).promise;
+      }
+    }).catch(() => {
+      showIframeFallback();
+    });
+  };
+
+  if (window.pdfjsLib) {
+    startRender();
+  } else {
+    const existing = document.querySelector('script[data-pdfjs-cdn="1"]');
+    if (existing) {
+      existing.addEventListener('load', startRender, { once: true });
+      existing.addEventListener('error', showIframeFallback, { once: true });
+      return;
+    }
+    const script = document.createElement('script');
+    script.setAttribute('data-pdfjs-cdn', '1');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    script.onload = () => {
+      if (window.pdfjsLib) {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      }
+      startRender();
+    };
+    script.onerror = showIframeFallback;
+    document.head.appendChild(script);
+  }
+}
+
 function openPdfModal(lessonId, variant = 'enonce') {
-  const lesson = allLessons.find(l => l.id === lessonId);
+  const lesson = findLessonOrDocById(lessonId);
   if (!lesson) return;
 
   const modal = document.getElementById('pdfViewerModal');
@@ -7526,10 +7628,10 @@ function openPdfModal(lessonId, variant = 'enonce') {
         <span style="display:flex; align-items:center; gap:6px;">
           ${safeIcon(isCorrige ? 'check-circle' : 'file-text', 15)}
           <strong style="color:#f8fafc;">${escapeHtml(displayTitle)}</strong>
-          <span style="color:#64748b;">(${escapeHtml(activeSize)})</span>
+          <span id="pdfModalPagesStatus" style="color:#94a3b8;">(${escapeHtml(activeSize)})</span>
         </span>
         <div style="display: flex; gap: 10px; align-items: center;">
-          <a href="${pdfSrc}" target="_blank" style="color: #38bdf8; text-decoration: none; font-weight: 700; padding: 5px 12px; background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.3); border-radius: 4px; display: inline-flex; align-items: center; gap: 6px;">
+          <a href="${pdfSrc}" target="_blank" rel="noopener" style="color: #38bdf8; text-decoration: none; font-weight: 700; padding: 5px 12px; background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.3); border-radius: 4px; display: inline-flex; align-items: center; gap: 6px;">
             ${safeIcon('maximize', 14)} Plein écran
           </a>
           <button onclick="downloadLessonPdf('${lesson.id}', '${isCorrige ? 'corrige' : 'enonce'}')" style="background: #10b981; color: #000; font-weight: 700; padding: 5px 14px; border-radius: 4px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
@@ -7537,8 +7639,16 @@ function openPdfModal(lessonId, variant = 'enonce') {
           </button>
         </div>
       </div>
-      <iframe src="${pdfSrc}" class="pdf-reader-frame" style="width:100%; height:calc(100% - ${hasCorr ? '88px' : '46px'}); border:none;" title="${escapeHtml(displayTitle)}"></iframe>
+      <div id="pdfModalCanvasWrap" style="flex:1; min-height:0; overflow-y:auto; background:#0f172a; display:flex; flex-direction:column;">
+        <div style="margin:auto; padding:32px; text-align:center; color:#94a3b8; font-weight:600;">
+          Chargement du document PDF...
+        </div>
+      </div>
     `;
+
+    if (modal) modal.classList.add('active');
+    renderPdfModalCanvasPages(pdfSrc, 'pdfModalCanvasWrap', 'pdfModalPagesStatus');
+    return;
   } else {
     // Printable sheet fallback
     body.innerHTML = `
@@ -7610,7 +7720,7 @@ function closePdfModal() {
 }
 
 function downloadLessonPdf(lessonId, variant = 'enonce') {
-  const lesson = allLessons.find(l => l.id === lessonId);
+  const lesson = findLessonOrDocById(lessonId);
   if (!lesson) return;
 
   const isCorrige = (variant === 'corrige');
@@ -10219,15 +10329,23 @@ function renderAlgoPratiqueSerials() {
         <div style="display:flex;flex-wrap:wrap;gap:4px;">${chapHtml}</div>
       </div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-        <a href="${doc.file}" target="_blank" rel="noopener"
-           style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:8px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;font-weight:600;font-size:0.86rem;text-decoration:none;white-space:nowrap;">
-          Sujet PDF
-        </a>
+        <button type="button" onclick="openPdfModal('${escapeHtml(doc.id)}', 'enonce')"
+           style="display:inline-flex;align-items:center;gap:6px;padding:9px 15px;border-radius:8px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;font-weight:600;font-size:0.86rem;border:none;cursor:pointer;white-space:nowrap;">
+          ${safeIcon('eye', 15)} Voir PDF
+        </button>
         ${doc.correction ? `
-        <a href="${doc.correction}" target="_blank" rel="noopener"
-           style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:8px;background:linear-gradient(135deg,#0284c7,#38bdf8);color:#fff;font-weight:600;font-size:0.86rem;text-decoration:none;white-space:nowrap;">
-          Correction
-        </a>` : ''}
+        <button type="button" onclick="openPdfModal('${escapeHtml(doc.id)}', 'corrige')"
+           style="display:inline-flex;align-items:center;gap:6px;padding:9px 15px;border-radius:8px;background:linear-gradient(135deg,#0284c7,#38bdf8);color:#fff;font-weight:600;font-size:0.86rem;border:none;cursor:pointer;white-space:nowrap;">
+          ${safeIcon('check-circle', 15)} Correction
+        </button>` : ''}
+        <a href="${doc.file}" target="_blank" rel="noopener"
+           style="display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:8px;background:var(--surface-bg);border:1px solid var(--border-color);color:var(--text-primary);font-weight:600;font-size:0.84rem;text-decoration:none;white-space:nowrap;">
+          ${safeIcon('external-link', 14)} Ouvrir
+        </a>
+        <a href="${doc.file}" download
+           style="display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:8px;background:var(--surface-bg);border:1px solid var(--border-color);color:var(--text-secondary);font-weight:600;font-size:0.84rem;text-decoration:none;white-space:nowrap;">
+          ${safeIcon('download', 14)} PDF
+        </a>
       </div>
     </div>`;
   }).join('');
@@ -10591,12 +10709,15 @@ function copyEntireAnnexeTable() {
 WIDGET        | SYNTAXE                                | RÔLE
 ------------------------------------------------------------------------
 Label         | W.Nom_Label.setText(chaine)            | Modifier le texte de l’étiquette
+Label         | W.Nom_Label.clear()                    | Pour vider un label
 Line Edit     | W.Nom_LineEdit.text()                  | Pour récupérer un texte d'une zone de saisie
 Line Edit     | W.Nom_LineEdit.setText(chaine)         | Modifier le contenu de la zone de texte
 Line Edit     | W.Nom_LineEdit.clear()                 | Pour vider un champ
 Line Edit     | W.Nom_LineEdit.setFocus()              | Pour mettre le curseur dans une zone de saisie
 Text Edit     | W.nomTextEdit.toPlainText()            | Récupérer le contenu de la zone de saisie
 Text Edit     | W.nomTextEdit.setText(chaine)          | Modifier le contenu de la zone de texte
+Text Edit     | W.nomTextEdit.clear()                  | Pour vider un champ
+Text Edit     | W.nomTextEdit.setFocus()               | Pour mettre le curseur dans une zone de saisie
 Push Button   | W.nomPushButton.clicked.connect(module)| Ordonner à l'ordinateur d'effectuer une action (suite au clic)
 Radio Button  | W.nomRadioButton.isChecked()           | Vérifier si le bouton est sélectionné (True/False)
 Check Box     | W.nomCheckBox.isChecked()              | Vérifier si la case est cochée (True/False)
@@ -10604,6 +10725,7 @@ Combo Box     | W.nomComboBox.currentText()            | Récupérer le texte d�
 Combo Box     | W.nomComboBox.currentIndex()           | Récupérer l’indice du choix
 Combo Box     | W.nomComboBox.setCurrentIndex(-1)      | Aucun choix sélectionné (vider / réinitialiser liste)
 List Widget   | windows.LW.addItem(chaine)             | Pour ajouter une chaîne dans une liste widget
+List Widget   | windows.LW.clear()                     | Pour vider une liste
 ------------------------------------------------------------------------
 COMPLÉMENTS INDISPENSABLES AU BAC :
 QMessageBox   | QMessageBox.critical(W, "Err", msg)    | Pour afficher un message d'alerte (suivie de return)
@@ -12231,7 +12353,7 @@ function renderQuizChapterPicker() {
   let html = `
     <div class="quiz-chapter-card ${currentQuizState.selectedChapter === 'all' ? 'selected' : ''}"
          onclick="selectQuizChapter('all', this)">
-      <span style="font-size:1.4rem;"></span>
+      <span style="display:inline-flex;align-items:center;color:#f59e0b;">${safeIcon('layers', 20)}</span>
       <div style="flex:1;">
         <strong style="font-size:0.86rem;color:var(--text-primary);display:block;">Tous les chapitres</strong>
         <span style="font-size:0.75rem;color:var(--text-secondary);">${totalAll} questions (Mixte)</span>
@@ -12442,7 +12564,7 @@ function selectQuizAnswer(optIdx, btn) {
     if (q.links) {
       if (q.links.methodSheet) {
         linkHtml += `
-          <a href="#/algo/methodes/${q.links.methodSheet}" target="_blank"
+          <a href="#/algo/methodes/${q.links.methodSheet}" onclick="event.preventDefault(); navigateToHash('#/algo/methodes/${q.links.methodSheet}');"
              style="font-size:0.78rem;color:#c084fc;padding:4px 10px;border-radius:6px;background:rgba(192,132,252,0.1);border:1px solid rgba(192,132,252,0.3);text-decoration:none;font-weight:700;">
             Voir la Fiche Méthode
           </a>
@@ -12450,7 +12572,7 @@ function selectQuizAnswer(optIdx, btn) {
       }
       if (q.links.exerciseType) {
         linkHtml += `
-          <a href="#/algo/types/${q.links.exerciseType}" target="_blank"
+          <a href="#/algo/types/${q.links.exerciseType}" onclick="event.preventDefault(); navigateToHash('#/algo/types/${q.links.exerciseType}');"
              style="font-size:0.78rem;color:#38bdf8;padding:4px 10px;border-radius:6px;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);text-decoration:none;font-weight:700;">
             Exercice type associé
           </a>
@@ -12555,7 +12677,7 @@ function finishQuizSession() {
         <div class="quiz-recap-row">
           <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
             <div style="display:flex;align-items:center;gap:8px;">
-              <span style="font-size:1.1rem;">${a.isCorrect ? '' : ''}</span>
+              <span style="display:inline-flex;align-items:center;color:${a.isCorrect ? '#10b981' : '#ef4444'};">${safeIcon(a.isCorrect ? 'check-circle' : 'x-circle', 16)}</span>
               <strong style="font-size:0.88rem;color:var(--text-primary);">Question ${i + 1}</strong>
             </div>
             <div style="display:flex;align-items:center;gap:6px;">
@@ -12608,7 +12730,7 @@ function bookmarkQuizMistakes() {
     }
   });
 
-  alert(`${count} question(s) ajoutée(s) à votre espace "Ma révision" ! `);
+  alert(`${count} question(s) ajoutée(s) à votre espace "Ma révision" !`);
   const btn = document.getElementById('quizBookmarkMistakesBtn');
   if (btn) {
     btn.textContent = '✓ Ajouté aux favoris';
@@ -12764,11 +12886,21 @@ const VIEW_METAS = {
   'sql': { module: 'sti', modLabel: 'STI Web & BD', title: 'SQL & MySQL (Bases de Données)' },
   'lessons': { module: 'all', modLabel: 'Cours & Séries', title: 'Polycopiés & Examens PDF' },
   'examens': { module: 'all', modLabel: 'Examens & Sujets', title: 'Examens & Sujets du Baccalauréat' },
+  'exam-simulator': { module: 'algo', modLabel: 'Simulateur', title: 'Simulateur d\'Examen Bac' },
   'algo-home': { module: 'algo', modLabel: 'Algorithme', title: 'Accueil Algorithme' },
   'algo-pratique': { module: 'algo', modLabel: 'Algorithme', title: 'Pratique (Qt / Thonny Python)' },
   'algo-types': { module: 'algo', modLabel: 'Algorithme', title: 'Types d\'Exercices du Bac' },
   'algo-methodes': { module: 'algo', modLabel: 'Algorithme', title: 'Fiches Méthode' },
+  'algo-erreurs': { module: 'algo', modLabel: 'Algorithme', title: 'Erreurs Classiques' },
+  'methode': { module: 'algo', modLabel: 'Algorithme', title: 'Méthode & Erreurs Bac' },
+  'algo-quiz': { module: 'algo', modLabel: 'Algorithme', title: 'Quiz V/F & QCM' },
+  'algo-carte': { module: 'algo', modLabel: 'Algorithme', title: 'Carte de Révision & Fréquence' },
+  'algo-statistiques': { module: 'algo', modLabel: 'Algorithme', title: 'Statistiques Bac' },
+  'algo-theorique-resume': { module: 'algo', modLabel: 'Algorithme', title: 'Fiche Résumé A4' },
   'algo-theorique': { module: 'algo', modLabel: 'Algorithme', title: (typeof CURRICULUM !== 'undefined') ? `Théorique (${CURRICULUM.getTotalAlgoChapters()} Chapitres Bac Info)` : 'Théorique (8 Chapitres)' },
+  'revision': { module: 'all', modLabel: 'Ma Progression', title: 'Ma Révision' },
+  'revision-cartes': { module: 'all', modLabel: 'Ma Progression', title: 'Cartes Mémoire (Leitner)' },
+  'revision-plan': { module: 'all', modLabel: 'Ma Progression', title: 'Planning d\'Étude' },
   'notebooks': { module: 'all', modLabel: 'Studio Créatif', title: 'Mes Cahiers Numériques' }
 };
 

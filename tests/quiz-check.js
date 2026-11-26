@@ -13,6 +13,7 @@ const fs = require('fs');
 const path = require('path');
 
 const CHAPTER_FILES = [
+  'rappels.js',
   'fichiers.js',
   'recursivite.js',
   'bases.js',
@@ -24,6 +25,7 @@ const CHAPTER_FILES = [
 ];
 
 const VALID_CHAPTERS = [
+  'rappels',
   'fichiers',
   'recursivite',
   'bases',
@@ -45,6 +47,26 @@ let totalQuestions = 0;
 let errors = [];
 const seenIds = new Set();
 const traceSimulators = {
+  'quiz-rap-03': () => {
+    let a = 5, b = 5;
+    a = a + 10; // passé par @
+    return String(a + b);
+  },
+  'quiz-rap-06': () => {
+    let s = 0;
+    for (let i = 1; i <= 5; i++) {
+      if (i % 2 === 0) s += i;
+    }
+    return String(s);
+  },
+  'quiz-rap-10': () => {
+    let k = 20, count = 0;
+    while (k > 5) {
+      k = Math.floor(k / 2);
+      count++;
+    }
+    return String(count);
+  },
   'quiz-fich-06': () => {
     const s = 'Bac2024';
     let sum = 0;

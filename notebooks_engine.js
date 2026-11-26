@@ -452,8 +452,12 @@ var NOTEBOOKS_APP = (function () {
           '<div class="nb-wizard-section-title">2. Choisissez votre couverture (génère le thème automatiquement !)</div>' +
           '<div class="nb-cover-gallery">' +
             NOTEBOOKS_DATA.COVERS.map(function (c) {
+              var fallBg = 'linear-gradient(135deg, ' + esc(c.theme.paperTint) + ' 0%, ' + esc(c.theme.accent) + ' 100%)';
+              var imgCls = 'nb-cover-native-img' + (c.isWrap ? ' is-wrap' : '');
               return '<button type="button" class="nb-cover-option ' + (c.id === w.coverId ? 'selected' : '') + '" onclick="NOTEBOOKS_APP.selectWizardCover(\'' + esc(c.id) + '\')">' +
-                '<div class="nb-cover-option-thumb ' + (c.isWrap ? 'is-wrap' : '') + '" style="background-image:url(\'' + esc(c.image) + '\')"></div>' +
+                '<div class="nb-cover-option-thumb" style="background:' + fallBg + ';">' +
+                  '<img class="' + imgCls + '" src="' + esc(c.image) + '" alt="' + esc(c.name) + '" loading="eager" decoding="async" onerror="this.style.opacity=\'0\'">' +
+                '</div>' +
                 '<div class="nb-cover-option-label" title="' + esc(c.name) + '">' + esc(c.name) + '</div>' +
               '</button>';
             }).join('') +
@@ -693,8 +697,12 @@ var NOTEBOOKS_APP = (function () {
         '<button type="button" class="nb-btn nb-btn-sm" style="width:100%;margin-bottom:10px;" onclick="NOTEBOOKS_APP.reapplyCoverTheme()">' + ico('palette', 14) + ' Appliquer le thème de la couverture actuelle</button>' +
         '<div class="nb-cover-gallery" style="grid-template-columns:1fr 1fr;">' +
           NOTEBOOKS_DATA.COVERS.map(function (c) {
+            var fallBg = 'linear-gradient(135deg, ' + esc(c.theme.paperTint) + ' 0%, ' + esc(c.theme.accent) + ' 100%)';
+            var imgCls = 'nb-cover-native-img' + (c.isWrap ? ' is-wrap' : '');
             return '<button type="button" class="nb-cover-option ' + (c.id === nb.coverId ? 'selected' : '') + '" onclick="NOTEBOOKS_APP.changeCover(\'' + esc(c.id) + '\')">' +
-              '<div class="nb-cover-option-thumb ' + (c.isWrap ? 'is-wrap' : '') + '" style="background-image:url(\'' + esc(c.image) + '\')"></div>' +
+              '<div class="nb-cover-option-thumb" style="background:' + fallBg + ';">' +
+                '<img class="' + imgCls + '" src="' + esc(c.image) + '" alt="' + esc(c.name) + '" loading="eager" decoding="async" onerror="this.style.opacity=\'0\'">' +
+              '</div>' +
               '<div class="nb-cover-option-label">' + esc(c.name) + '</div>' +
             '</button>';
           }).join('') +
@@ -951,23 +959,18 @@ var NOTEBOOKS_APP = (function () {
     var nSt = cfg.nameStyle || cover.theme.coverNameDefaults;
 
     var imgUrl = cover.image;
-    var wrapCls = cover.isWrap ? 'is-wrap' : '';
+    var imgCls = 'nb-cover-native-img' + (cover.isWrap ? ' is-wrap' : '');
     if (!isThumb && state.coverFace === 'back') {
       if (cover.backImage) {
         imgUrl = cover.backImage;
-        wrapCls = '';
+        imgCls = 'nb-cover-native-img';
       } else if (cover.isWrap) {
-        wrapCls = '';
-        // Montre le dos (côté gauche)
+        imgCls = 'nb-cover-native-img is-wrap-back';
       }
     }
 
-    var bgStyle = 'background-image:url(\'' + esc(imgUrl) + '\');';
-    if (!isThumb && state.coverFace === 'back' && cover.isWrap && !cover.backImage) {
-      bgStyle += 'background-size:200% 100%;background-position:left center;';
-    }
-
-    var scaleFactor = (isThumb === 'wizard') ? 0.56 : (isThumb ? 0.44 : 1);
+    var fallBg = 'background:linear-gradient(135deg, ' + esc(cover.theme.paperTint) + ' 0%, ' + esc(cover.theme.accent) + ' 100%);';
+    var scaleFactor = (isThumb === 'wizard') ? 0.48 : (isThumb ? 0.42 : 1);
 
     var overlays = '';
     if (isThumb || state.coverFace === 'front') {
@@ -977,7 +980,7 @@ var NOTEBOOKS_APP = (function () {
         'font-family:' + esc(tSt.fontFamily) + ';font-size:' + Math.max(9, Math.round(tSt.fontSize * scaleFactor)) + 'px;' +
         'color:' + esc(tSt.color) + ';font-weight:' + (tSt.bold ? '700' : '400') + ';font-style:' + (tSt.italic ? 'italic' : 'normal') + ';' +
         'text-align:' + esc(tSt.align || 'center') + ';background:' + esc(tSt.pillBg || 'transparent') + ';' +
-        'padding:' + (isThumb ? '2px 5px' : '5px 14px') + ';border-radius:10px;max-width:84%;line-height:1.18;box-shadow:' + (tSt.pillBg && tSt.pillBg !== 'transparent' ? '0 2px 10px rgba(0,0,0,0.18)' : 'none') + ';">' +
+        'padding:' + (isThumb === 'wizard' ? '3px 7px' : (isThumb ? '2px 5px' : '5px 14px')) + ';border-radius:10px;max-width:88%;line-height:1.15;box-shadow:' + (tSt.pillBg && tSt.pillBg !== 'transparent' ? '0 2px 10px rgba(0,0,0,0.18)' : 'none') + ';">' +
         esc(nb.title) +
       '</div>';
 
@@ -987,14 +990,16 @@ var NOTEBOOKS_APP = (function () {
         'font-family:' + esc(nSt.fontFamily) + ';font-size:' + Math.max(8, Math.round(nSt.fontSize * scaleFactor)) + 'px;' +
         'color:' + esc(nSt.color) + ';font-weight:' + (nSt.bold ? '700' : '400') + ';font-style:' + (nSt.italic ? 'italic' : 'normal') + ';' +
         'text-align:' + esc(nSt.align || 'center') + ';background:' + esc(nSt.pillBg || 'transparent') + ';' +
-        'padding:' + (isThumb ? '1px 5px' : '4px 12px') + ';border-radius:8px;max-width:80%;line-height:1.18;">' +
+        'padding:' + (isThumb === 'wizard' ? '2px 6px' : (isThumb ? '1px 5px' : '4px 12px')) + ';border-radius:8px;max-width:82%;line-height:1.15;">' +
         esc(nb.ownerDisplayName) +
       '</div>';
 
       overlays += renderFloatingElementsHTML(cfg.elements || [], isThumb);
     }
 
-    return '<div class="nb-cover-img-layer ' + wrapCls + '" style="' + bgStyle + '"></div>' +
+    return '<div class="nb-cover-img-layer" style="' + fallBg + '">' +
+        '<img class="' + imgCls + '" src="' + esc(imgUrl) + '" alt="' + esc(cover.name) + '" loading="eager" decoding="async" onerror="this.style.opacity=\'0\'">' +
+      '</div>' +
       '<div class="nb-floating-layer">' + overlays + '</div>';
   }
 

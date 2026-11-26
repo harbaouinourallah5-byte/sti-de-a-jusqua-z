@@ -11,8 +11,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Dancing+Script:wght@600;700&family=Caveat:wght@600;700&family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@500;600;700&family=Patrick+Hand&family=Plus+Jakarta+Sans:wght@400;600;700&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=46.0">
-  <link rel="stylesheet" href="notebooks.css?v=46.0">
+  <link rel="stylesheet" href="style.css?v=47.0">
+  <link rel="stylesheet" href="notebooks.css?v=47.0">
   <!-- INITIALISATION IMMÉDIATE DU THÈME & TOGGLE SANS LATENCE -->
   <script>
     (function() {
@@ -2958,9 +2958,9 @@
                 </tr>
               </thead>
               <tbody>
-                <!-- 1. LABEL -->
+                <!-- 1. LABEL (2 SYNTAXES) -->
                 <tr class="annexe-row" onclick="loadIntoTranslator('QLabel', 'Nom_Label', 'set_text')" title="Cliquer pour essayer dans le Traducteur Live">
-                  <td class="widget-cell" rowspan="1">
+                  <td class="widget-cell" rowspan="2">
                     <div class="widget-badge-wrap">
                       <span class="widget-icon-box"><i data-icon="tag" data-size="15"></i></span>
                       <span class="widget-name-label">Label</span>
@@ -2973,7 +2973,18 @@
                     </div>
                   </td>
                   <td class="role-cell">
-                    Modifier le texte de l’étiquette
+                    Modifier le texte de l’étiquette (affecter un message)
+                  </td>
+                </tr>
+                <tr class="annexe-row" onclick="loadIntoTranslator('QLabel', 'Nom_Label', 'clear')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">W</span>.<span class="code-obj">Nom_Label</span>.<span class="code-method">clear</span>()</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('W.Nom_Label.clear()', this)" title="Copier la syntaxe"><i data-icon="clipboard" data-size="15"></i></button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Pour vider un label
                   </td>
                 </tr>
 
@@ -3029,9 +3040,9 @@
                   </td>
                 </tr>
 
-                <!-- 3. TEXT EDIT (2 SYNTAXES) -->
+                <!-- 3. TEXT EDIT (4 SYNTAXES) -->
                 <tr class="annexe-row" onclick="loadIntoTranslator('QTextEdit', 'nomTextEdit', 'read_plain_text')" title="Cliquer pour essayer dans le Traducteur Live">
-                  <td class="widget-cell" rowspan="2">
+                  <td class="widget-cell" rowspan="4">
                     <div class="widget-badge-wrap">
                       <span class="widget-icon-box"><i data-icon="edit" data-size="15"></i></span>
                       <span class="widget-name-label">Text Edit</span>
@@ -3056,6 +3067,28 @@
                   </td>
                   <td class="role-cell">
                     Modifier le contenu de la zone de texte
+                  </td>
+                </tr>
+                <tr class="annexe-row" onclick="loadIntoTranslator('QTextEdit', 'nomTextEdit', 'clear')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">W</span>.<span class="code-obj">nomTextEdit</span>.<span class="code-method">clear</span>()</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('W.nomTextEdit.clear()', this)" title="Copier la syntaxe"><i data-icon="clipboard" data-size="15"></i></button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Pour vider un champ
+                  </td>
+                </tr>
+                <tr class="annexe-row" onclick="loadIntoTranslator('QTextEdit', 'nomTextEdit', 'focus')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">W</span>.<span class="code-obj">nomTextEdit</span>.<span class="code-method">setFocus</span>()</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('W.nomTextEdit.setFocus()', this)" title="Copier la syntaxe"><i data-icon="clipboard" data-size="15"></i></button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Pour mettre le curseur dans une zone de saisie
                   </td>
                 </tr>
 
@@ -3153,13 +3186,13 @@
                     </div>
                   </td>
                   <td class="role-cell">
-                    Aucun choix sélectionné (vider_initialiser liste)
+                    Aucun choix sélectionné (vider / réinitialiser la liste)
                   </td>
                 </tr>
 
-                <!-- 8. LIST WIDGET -->
+                <!-- 8. LIST WIDGET (2 SYNTAXES) -->
                 <tr class="annexe-row" onclick="loadIntoTranslator('QListWidget', 'LW', 'add_item')" title="Cliquer pour essayer dans le Traducteur Live">
-                  <td class="widget-cell" rowspan="1">
+                  <td class="widget-cell" rowspan="2">
                     <div class="widget-badge-wrap">
                       <span class="widget-icon-box"><i data-icon="clipboard" data-size="15"></i></span>
                       <span class="widget-name-label">List Widget</span>
@@ -3173,6 +3206,17 @@
                   </td>
                   <td class="role-cell">
                     Pour ajouter une chaîne dans une liste widget
+                  </td>
+                </tr>
+                <tr class="annexe-row" onclick="loadIntoTranslator('QListWidget', 'LW', 'clear')" title="Cliquer pour essayer dans le Traducteur Live">
+                  <td class="syntax-cell">
+                    <div class="syntax-code-wrap">
+                      <code><span class="code-w">windows</span>.<span class="code-obj">LW</span>.<span class="code-method">clear</span>()</code>
+                      <button class="mini-copy-btn" onclick="event.stopPropagation(); copyCodeText('windows.LW.clear()', this)" title="Copier la syntaxe"><i data-icon="clipboard" data-size="15"></i></button>
+                    </div>
+                  </td>
+                  <td class="role-cell">
+                    Pour vider une liste
                   </td>
                 </tr>
 
@@ -3735,7 +3779,7 @@ app.exec_()</code></pre>
               </div>
               <div>
                 <h2 class="annexe-title-text" style="font-size:1.6rem;color:#f59e0b;">Quiz V/F &amp; QCM • Algorithmique Bac</h2>
-                <span style="font-size:0.9rem;color:var(--text-secondary);">Entraînement express format Exercice 1 • Rétroaction immédiate • 80 questions rédigées pour la révision, à valider avec ton professeur</span>
+                <span style="font-size:0.9rem;color:var(--text-secondary);">Entraînement express format Exercice 1 • Rétroaction immédiate • 90 questions rédigées pour la révision, à valider avec ton professeur</span>
               </div>
             </div>
             <div id="quizGlobalStatsBadge" style="font-size:0.82rem;font-weight:700;padding:6px 14px;border-radius:20px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);color:#f59e0b;">
@@ -5296,40 +5340,41 @@ app.exec_()</code></pre>
 
   <!-- Fichiers Scripts -->
 
-  <script src="icons.js?v=46.0"></script>
-  <script src="store.js?v=46.0"></script>
-  <script src="data.js?v=46.0"></script>
-  <script src="data/curriculum.js?v=46.0"></script>
-  <script src="data/documents.js?v=46.0"></script>
-  <script src="data/exercises.js?v=46.0"></script>
-  <script src="data/methods.js?v=46.0"></script>
-  <script src="data/errors.js?v=46.0"></script>
-  <script src="data/tables/rappels.js?v=46.0"></script>
-  <script src="data/tables/fichiers.js?v=46.0"></script>
-  <script src="data/tables/recursivite.js?v=46.0"></script>
-  <script src="data/tables/bases.js?v=46.0"></script>
-  <script src="data/tables/arithmetique.js?v=46.0"></script>
-  <script src="data/tables/approximation.js?v=46.0"></script>
-  <script src="data/tables/tableaux.js?v=46.0"></script>
-  <script src="data/tables/matrices.js?v=46.0"></script>
-  <script src="data/tables/suites.js?v=46.0"></script>
-  <script src="data/tables.js?v=46.0"></script>
-  <script src="data/quiz/fichiers.js?v=46.0"></script>
-  <script src="data/quiz/recursivite.js?v=46.0"></script>
-  <script src="data/quiz/bases.js?v=46.0"></script>
-  <script src="data/quiz/arithmetique.js?v=46.0"></script>
-  <script src="data/quiz/approximation.js?v=46.0"></script>
-  <script src="data/quiz/tableaux.js?v=46.0"></script>
-  <script src="data/quiz/matrices.js?v=46.0"></script>
-  <script src="data/quiz/suites.js?v=46.0"></script>
-  <script src="data/quiz.js?v=46.0"></script>
-  <script src="css_engine.js?v=46.0"></script>
-  <script src="algo_pratique_engine.js?v=46.0"></script>
-  <script src="pomodoro_engine.js?v=46.0"></script>
-  <script src="data/notebooks_data.js?v=46.0"></script>
-  <script src="notebooks_store.js?v=46.0"></script>
-  <script src="notebooks_engine.js?v=46.0"></script>
-  <script src="app.js?v=46.0"></script>
+  <script src="icons.js?v=47.0"></script>
+  <script src="store.js?v=47.0"></script>
+  <script src="data.js?v=47.0"></script>
+  <script src="data/curriculum.js?v=47.0"></script>
+  <script src="data/documents.js?v=47.0"></script>
+  <script src="data/exercises.js?v=47.0"></script>
+  <script src="data/methods.js?v=47.0"></script>
+  <script src="data/errors.js?v=47.0"></script>
+  <script src="data/tables/rappels.js?v=47.0"></script>
+  <script src="data/tables/fichiers.js?v=47.0"></script>
+  <script src="data/tables/recursivite.js?v=47.0"></script>
+  <script src="data/tables/bases.js?v=47.0"></script>
+  <script src="data/tables/arithmetique.js?v=47.0"></script>
+  <script src="data/tables/approximation.js?v=47.0"></script>
+  <script src="data/tables/tableaux.js?v=47.0"></script>
+  <script src="data/tables/matrices.js?v=47.0"></script>
+  <script src="data/tables/suites.js?v=47.0"></script>
+  <script src="data/tables.js?v=47.0"></script>
+  <script src="data/quiz/rappels.js?v=47.0"></script>
+  <script src="data/quiz/fichiers.js?v=47.0"></script>
+  <script src="data/quiz/recursivite.js?v=47.0"></script>
+  <script src="data/quiz/bases.js?v=47.0"></script>
+  <script src="data/quiz/arithmetique.js?v=47.0"></script>
+  <script src="data/quiz/approximation.js?v=47.0"></script>
+  <script src="data/quiz/tableaux.js?v=47.0"></script>
+  <script src="data/quiz/matrices.js?v=47.0"></script>
+  <script src="data/quiz/suites.js?v=47.0"></script>
+  <script src="data/quiz.js?v=47.0"></script>
+  <script src="css_engine.js?v=47.0"></script>
+  <script src="algo_pratique_engine.js?v=47.0"></script>
+  <script src="pomodoro_engine.js?v=47.0"></script>
+  <script src="data/notebooks_data.js?v=47.0"></script>
+  <script src="notebooks_store.js?v=47.0"></script>
+  <script src="notebooks_engine.js?v=47.0"></script>
+  <script src="app.js?v=47.0"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {

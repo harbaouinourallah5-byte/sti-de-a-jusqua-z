@@ -2,7 +2,7 @@
 // Conforme aux épreuves officielles de l'algorithmique (Section Informatique)
 'use strict';
 
-var QUIZ_QUESTIONS = [
+var QUIZ_TABLEAUX = [
   {
     "id": "quiz-tab-01",
     "chapter": "tableaux",
@@ -191,5 +191,5 @@ var QUIZ_QUESTIONS = [
 ];
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = QUIZ_QUESTIONS;
+  module.exports = QUIZ_TABLEAUX;
 }

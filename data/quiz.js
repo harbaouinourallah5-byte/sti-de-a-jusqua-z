@@ -2,11 +2,12 @@
  * MODULE PRINCIPAL DES QUIZ BAC INFORMATIQUE
  * STI de A à Z — Conforme au programme officiel tunisien
  * 
- * Regroupe les 8 chapitres et les 80 questions certifiées.
+ * Regroupe les 9 chapitres et les 90 questions certifiées.
  */
 
 const QUIZ_DATA = {
   chapters: {
+    rappels: (typeof QUIZ_RAPPELS !== 'undefined') ? QUIZ_RAPPELS : [],
     fichiers: (typeof QUIZ_FICHIERS !== 'undefined') ? QUIZ_FICHIERS : [],
     recursivite: (typeof QUIZ_RECURSIVITE !== 'undefined') ? QUIZ_RECURSIVITE : [],
     bases: (typeof QUIZ_BASES !== 'undefined') ? QUIZ_BASES : [],
@@ -19,6 +20,7 @@ const QUIZ_DATA = {
 
   getAllQuestions() {
     return [
+      ...((typeof QUIZ_RAPPELS !== 'undefined') ? QUIZ_RAPPELS : []),
       ...((typeof QUIZ_FICHIERS !== 'undefined') ? QUIZ_FICHIERS : []),
       ...((typeof QUIZ_RECURSIVITE !== 'undefined') ? QUIZ_RECURSIVITE : []),
       ...((typeof QUIZ_BASES !== 'undefined') ? QUIZ_BASES : []),

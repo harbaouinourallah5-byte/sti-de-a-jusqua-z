@@ -162,7 +162,7 @@
 }
 
 html {
-  overflow-x: hidden;
+  overflow-x: clip;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
 }
@@ -174,7 +174,7 @@ body {
   min-height: 100vh;
   font-size: 16px;
   line-height: var(--line-height-body);
-  overflow-x: hidden;
+  overflow-x: clip;
   transition: background-color 0.25s ease, color 0.25s ease;
   padding-left: var(--safe-left);
   padding-right: var(--safe-right);
@@ -4094,11 +4094,11 @@ input, select, textarea {
 }
 
 .annexe-official-table th {
-  padding: 12px 18px;
+  padding: 12px 14px;
   text-align: left;
   font-weight: 800;
-  font-size: 0.95rem;
-  letter-spacing: 0.5px;
+  font-size: 0.92rem;
+  letter-spacing: 0.4px;
   color: #f8fafc;
 }
 
